@@ -4,9 +4,9 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('tappt', ['ionic', 'tappt.controllers', 'ngStorage', 'restangular'])
+angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.services', 'ngStorage', 'restangular'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, auth, $ionicHistory, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -18,6 +18,19 @@ angular.module('tappt', ['ionic', 'tappt.controllers', 'ngStorage', 'restangular
       StatusBar.styleDefault();
     }
   });
+
+  $rootScope.$on('$stateChangeStart', 
+    function(event, toState, toParams, fromState, fromParams){ 
+      if (toState.authenticate && !auth.isLoggedIn()) {
+        $ionicPlatform.ready(function() {
+          //$ionicViewService.nextViewOptions({
+          //  historyRoot: true
+          //});
+
+          $state.go('app.login');
+        });
+      }
+    });
 })
 
 .config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider',
@@ -28,6 +41,7 @@ function($stateProvider, $urlRouterProvider, rest) {
   .state('app', {
     url: "/app",
     abstract: true,
+    noAuth: true,
     templateUrl: "templates/menu.html",
     controller: 'AppCtrl'
   })
@@ -42,6 +56,16 @@ function($stateProvider, $urlRouterProvider, rest) {
     }
   })
 
+  .state('app.register', {
+    url: "/register",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/register.html",
+        controller: 'RegisterCtrl'
+      }
+    }
+  })
+
   .state('app.search', {
     url: "/search",
     views: {
@@ -52,11 +76,12 @@ function($stateProvider, $urlRouterProvider, rest) {
   })
 
 
-  .state('app.browse', {
-    url: "/browse",
+  .state('app.home', {
+    authenticate: true,
+    url: "/home",
     views: {
       'menuContent': {
-        templateUrl: "templates/browse.html"
+        templateUrl: "templates/home.html"
       }
     }
   })
@@ -80,8 +105,8 @@ function($stateProvider, $urlRouterProvider, rest) {
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/login');
+  $urlRouterProvider.otherwise('/app/home');
 
   // Restangular setup
-  rest.setBaseUrl('http://localhost:2483/api')
-});
+  rest.setBaseUrl('http://localhost:2483');
+}]);
