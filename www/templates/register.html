@@ -1,0 +1,32 @@
+<ion-view view-title="Register">
+  <ion-content>
+    <form name="registerForm" ng-submit="register()">
+      <div class="list">
+        <label class="item item-input" ng-class="{ 'has-error' : registerForm.email.$invalid || errors['model.Email']}">
+          <span class="input-label">Email</span>
+          <input type="text" ng-model="registerData.email">
+        </label>
+        <div class="form-errors" data-ng-repeat="error in errors['model.Email']" data-ng-show="registerForm.$submitted" data-ng-cloak>
+          <div class="form-error" ng-bind="error"></div>
+        </div>
+        <label class="item item-input" ng-class="{ 'has-error' : registerForm.userName.$invalid || errors['model.UserName']}">
+          <span class="input-label">Username</span>
+          <input type="text" ng-model="registerData.userName">
+        </label>
+        <div class="form-errors" data-ng-repeat="error in errors['model.UserName']" data-ng-show="registerForm.$submitted" data-ng-cloak>
+          <div class="form-error" ng-bind="error"></div>
+        </div>
+        <label class="item item-input" ng-class="{ 'has-error' : registerForm.password.$invalid || errors['model.Password']}">
+          <span class="input-label">Password</span>
+          <input type="password" ng-model="registerData.password">
+        </label>
+        <div class="form-errors" data-ng-repeat="error in errors['model.Password']" data-ng-show="registerForm.$submitted" data-ng-cloak>
+          <div class="form-error" ng-bind="error"></div>
+        </div>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit" ng-disabled="!registerData.email || !registerData.userName || !registerData.password || registering">Register</button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>
