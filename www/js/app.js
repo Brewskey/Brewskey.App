@@ -6,7 +6,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.services', 'ngStorage', 'restangular'])
 
-.run(function($ionicPlatform, $rootScope, auth, $ionicHistory, $state) {
+.run(function($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,22 +17,48 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+
+    if (typeof device !== 'undefined' && device.platform == "windows") {
+      // Get the back button working in WP8.1
+      WinJS.Application.onbackclick = function () {
+        if (!$ionicHistory.backView()) {
+          window.close();
+
+          return false;
+        }
+
+        $ionicHistory.goBack();
+        return true; // This line is important, without it the app closes.
+      }
+    }
+
+    $localStorage.$default({
+        'settings': {
+          pushNotifications: true,
+          manageLocations: false
+        }
+    });
   });
 
   $rootScope.$on('$stateChangeStart', 
     function(event, toState, toParams, fromState, fromParams){ 
       if (toState.authenticate && !auth.isLoggedIn()) {
         $ionicPlatform.ready(function() {
-          //$ionicViewService.nextViewOptions({
-          //  historyRoot: true
-          //});
-
+          $ionicHistory.nextViewOptions({
+            historyRoot: true
+          });
+          
           $state.go('app.login');
         });
       }
     });
-})
 
+
+})
+.config(function($stateProvider, $urlRouterProvider, $compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0):/);
+})
 .config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider',
 
 function($stateProvider, $urlRouterProvider, rest) {
@@ -75,7 +101,6 @@ function($stateProvider, $urlRouterProvider, rest) {
     }
   })
 
-
   .state('app.home', {
     authenticate: true,
     url: "/home",
@@ -85,25 +110,136 @@ function($stateProvider, $urlRouterProvider, rest) {
       }
     }
   })
+  .state('app.locations', {
+    authenticate: true,
+    cache: false,
+    url: "/locations",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/locations.html",
+        controller: 'LocationsCtrl'
+      }
+    }
+  })
+
+  .state('app.new-locations', {
+    authenticate: true,
+    url: "/location/new",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-location.html",
+        controller: 'NewLocationCtrl'
+      }
+    }
+  })
+  .state('app.location', {
+    authenticate: true,
+    cache: false,
+    url: "/location/:locationId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/location.html",
+        controller: 'LocationCtrl'
+      }
+    }
+  })
+  .state('app.edit-location', {
+    authenticate: true,
+    url: "/location/:locationId/edit",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-location.html",
+        controller: 'NewLocationCtrl'
+      }
+    }
+  })
+
+  .state('app.new-tap', {
+    authenticate: true,
+    url: "/tap/new/:locationId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-tap.html",
+        controller: 'NewTapCtrl'
+      }
+    }
+  })
+  .state('app.tap', {
+    authenticate: true,
+    cache: false,
+    url: "/tap/:tapId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/tap.html",
+        controller: 'TapCtrl'
+      }
+    }
+  })
+  .state('app.edit-tap', {
+    authenticate: true,
+    url: "/tap/:tapId/edit",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-tap.html",
+        controller: 'NewTapCtrl'
+      }
+    }
+  })
+
+  .state('app.new-keg', {
+    authenticate: true,
+    url: "/keg/new/:tapId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-keg.html",
+        controller: 'NewKegCtrl'
+      }
+    }
+  })
+  .state('app.keg', {
+    authenticate: true,
+    cache: false,
+    url: "/tap/:kegId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/keg.html",
+        controller: 'KegCtrl'
+      }
+    }
+  })
+  .state('app.edit-keg', {
+    authenticate: true,
+    url: "/keg/:kegId/edit",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/new-keg.html",
+        controller: 'NewKegCtrl'
+      }
+    }
+  })
+
+  .state('app.write-tags', {
+    url: "/write-tags",
+    authenticate: true,
+    views: {
+      'menuContent': {
+        templateUrl: "templates/write-tags.html",
+        controller: 'WriteTagsCtrl'
+      }
+    }
+  })
+
   .state('app.settings', {
     url: "/settings",
+    authenticate: true,
     views: {
       'menuContent': {
         templateUrl: "templates/settings.html",
         controller: 'SettingsCtrl'
       }
     }
-  })
-
-  .state('app.single', {
-    url: "/playlists/:playlistId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
-      }
-    }
   });
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
 

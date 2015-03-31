@@ -1,0 +1,34 @@
+<ion-view view-title="Tappt">
+  <ion-content>
+    <div class="list card">
+    	<div class="item">
+			<h1>
+				<span ng-bind="tap.name"></span>
+				<a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
+					<span class="button button-positive">
+					  <i class="icon ion-edit"></i>
+					</span>
+				</a>
+			</h1>
+			<p ng-bind="location.summary"></p>
+		</div>
+    	<div class="item item-body">
+    		<div>On Tap</div>
+			 <div class="list card">
+				<a href="#/app/keg/new" class="item item-button-right" ng-if="canEdit">
+					New Keg
+					<span class="button button-positive">
+					  <i class="icon ion-plus"></i>
+					</span>
+				</a>
+
+				<!-- Location ngRepeat goes here -->
+		  		<div class="item item-divider" ng-if="canEdit && location.taps.length"></div>
+		  		<a ng-repeat="keg in tap.kegs" href="#/app/keg/{{tap.id}}" class="item">
+					{{keg.name}}
+				</a>
+			</div>
+		</div>
+	</div>
+  </ion-content>
+</ion-view>

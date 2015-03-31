@@ -1,0 +1,32 @@
+<ion-view view-title="Tappt">
+	<ion-content>
+		<h1>Write Access to NFC tag</h1>
+		<p>
+			You can use this utility to grant access to your taps to people who do not have 
+			a supported phone.  Simply select what taps you want to grant access on and write 
+			to a chip.
+		</p>
+ 		<div class="list">
+ 			<div class="" ng-repeat="location in locations" ng-if="location.taps.length">
+				<div class="item item-checkbox">
+					{{location.name}}
+					<label class="checkbox">
+				    	<input type="checkbox" ng-model="location.selected" ng-change="locationChanged(location)">
+				    </label>
+				</div>
+				<div class="padding-left">
+ 					<div class="item item-checkbox " ng-repeat="tap in location.taps">
+ 						<label class="checkbox">
+					    	<input type="checkbox" ng-model="tap.selected" ng-change="tapChanged(location)">
+					    </label>
+ 						{{tap.name}}
+ 					</div>
+ 				</div>
+ 			</div>
+ 		</div>
+	 	<div class="item item-divider"></div>
+ 		<div class="list">
+ 			<div data-win-control="WinJS.UI.DatePicker"></div>
+ 		</div>
+	</ion-content>
+</ion-view>

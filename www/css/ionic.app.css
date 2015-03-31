@@ -7623,3 +7623,37 @@ label.item.valid-lr {
 .form-error {
   padding: 2px 0 2px 16px;
   color: red; }
+
+/* Full width select */
+.item-select-full select {
+  border: 0;
+  width: 100%;
+  display: block;
+  padding-top: 2px;
+  padding-left: 0;
+  height: 34px;
+  color: #111;
+  vertical-align: middle;
+  font-size: 14px;
+  line-height: 16px; }
+  .item-select-full select.invalid {
+    color: #aaaaaa; }
+  .item-select-full select option {
+    color: #111; }
+  .item-select-full select option.default-value {
+    display: none; }
+
+.center-text {
+  text-align: center; }
+
+.help-text, .item p.help-text {
+  color: #777;
+  margin-top: 0px;
+  font-size: 14px;
+  line-height: 14px; }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+  display: none !important; }
+
+ng\:form {
+  display: block; }

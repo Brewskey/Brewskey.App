@@ -6,12 +6,12 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services', [])
 .factory("auth", 
-  [ 'Restangular', '$localStorage',
-  function (rest, storage) { 
+  [ 'Restangular', '$localStorage', '$ionicHistory', '$state',
+  function (rest, storage, $ionicHistory, $state) { 
 
     var output = {
       isLoggedIn: function () {
-        return storage.authDetails !== null;
+        return !(!storage.authDetails);
       },
       register: function (model) {
         return rest.one('api/account').post('register', model);
@@ -33,13 +33,19 @@ angular.module('tappt.services', [])
       },
       logout: function () {
         storage.authDetails = null;
+
+        $ionicHistory.nextViewOptions({
+          historyRoot: true
+        });
+
+        $state.go('app.login');
       }
     };
 
     // Handle authenticating with web services
     rest.addFullRequestInterceptor(function (element, operation, route, url, headers, params, httpConfig) {
         if (output.isLoggedIn()) {
-          headers.Authorization = 'Bearer ' + storage.authDetails.auth.access_token;
+          headers.Authorization = 'Bearer ' + storage.authDetails.access_token;
         }
 
         return {
@@ -53,7 +59,7 @@ angular.module('tappt.services', [])
     rest.setErrorInterceptor(function (response, deferred, responseHandler) {
         if(response.status === 401) {
           output.logout();
-
+          
           return false; // error handled
         }
 

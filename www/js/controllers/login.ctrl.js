@@ -12,6 +12,8 @@ angular.module('tappt.controllers')
     // code if using a login system
     auth.login($scope.loginData)
       .then(function (response) {
+        $scope.loggingIn = false;
+        
         $ionicHistory.nextViewOptions({
           historyRoot: true
         });

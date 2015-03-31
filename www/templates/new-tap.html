@@ -1,0 +1,43 @@
+<ion-view view-title="Tappt">
+  <ion-content>
+    <form name="form" ng-submit="submitForm()">
+      <div class="list">
+		<div class="item">
+			<h1 ng-if="!model.id">New Tap</h1>
+    		<h1 ng-if="model.id">Edit Tap</h1>
+		</div>
+		<div class="form-errors" ng-if="errorDescription" data-ng-cloak>
+			<div class="form-error" ng-bind="errorDescription"></div>
+		</div>
+        <div class="list list-inset">
+	        <label class="item item-input" ng-class="{ 'has-error' : form.name.$invalid || errors['model.Name']}">
+	          <input type="text" ng-model="model.name" placeholder="Name" required>
+	        </label>
+	        <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
+	          <div class="form-error" ng-bind="error"></div>
+	        </div>
+	        
+	        <label class="item item-input" ng-class="{ 'has-error' : form.friendlyName.$invalid || errors['model.Name']}">
+	          <input type="text" ng-model="model.friendlyName" placeholder="Friendly Name" required>
+	        </label>
+	        <div class="form-errors" data-ng-repeat="error in errors['model.FriendlyName']" data-ng-cloak>
+	          <div class="form-error" ng-bind="error"></div>
+	        </div>
+
+	        <label class="item item-input" ng-class="{ 'has-error' : form.communicationKey.$invalid || errors['model.CommunicationKey']}">
+	          <input type="text" ng-model="model.communicationKey" placeholder="Spark Key" required>
+	        </label>
+	        <div class="form-errors" data-ng-repeat="error in errors['model.CommunicationKey']" data-ng-cloak>
+	          <div class="form-error" ng-bind="error"></div>
+	        </div>
+		</div>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid">
+          	<span ng-if="!model.id">Create Tap</span>
+          	<span ng-if="model.id">Update Tap</span>
+          </button>
+        </label>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

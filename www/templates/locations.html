@@ -1,0 +1,20 @@
+<ion-view view-title="Tappt">
+  <ion-content>
+    <h1>Locations</h1>
+    <div class="list">
+		<a href="#/app/location/new" class="item item-button-right">
+			New Location
+			<span class="button button-positive">
+			  <i class="icon ion-plus"></i>
+			</span>
+		</a>
+
+		<!-- Location ngRepeat goes here -->
+  		<div class="item item-divider"></div>
+  		<a ng-repeat="location in locations | orderBy: 'name'" href="#/app/location/{{location.id}}" class="item">
+			{{location.name}}
+			<p ng-bind="location.summary"></p>
+		</a>
+	</div>
+  </ion-content>
+</ion-view>
