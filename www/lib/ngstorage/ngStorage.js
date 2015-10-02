@@ -30,11 +30,9 @@
         return [
             '$rootScope',
             '$window',
-            '$ionicPlatform',
             function(
                 $rootScope,
-                $window,
-                $ionicPlatform
+                $window
             ){
                 // #9: Assign a placeholder object if Web Storage is unavailable to prevent breaking the entire AngularJS app
                 var webStorage = $window[storageType] || (console.warn('This browser does not support Web Storage!'), {}),
