@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+﻿angular.module('tappt.controllers')
 .controller('LocationCtrl', ['$scope', '$stateParams', 'Restangular', function($scope, $stateParams, rest) {
 	
 	rest.one('api/locations', $stateParams.locationId).get().then(function (response) {

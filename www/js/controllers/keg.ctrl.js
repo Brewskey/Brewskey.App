@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+﻿angular.module('tappt.controllers')
 .controller('KegCtrl', ['$scope', '$stateParams', 'Restangular', function($scope, $stateParams, rest) {
 	rest.one('api/kegs', $stateParams.kegId).get().then(function (response) {
 		$scope.tap = response;

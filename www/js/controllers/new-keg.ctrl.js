@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+﻿angular.module('tappt.controllers')
 .controller('NewKegCtrl', ['$scope', 'Restangular', '$stateParams', '$ionicModal', '$ionicHistory', '$state', function($scope, rest, $stateParams, $ionicModal, $ionicHistory, $state) {
 	$scope.model = {
 		id: $stateParams.kegId,

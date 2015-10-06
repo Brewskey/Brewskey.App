@@ -1,4 +1,4 @@
-var appActivated;
+﻿var appActivated;
 var deferred;
 
 if (typeof window.WinJS != 'undefined') {

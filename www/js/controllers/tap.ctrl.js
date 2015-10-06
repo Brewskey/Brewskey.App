@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+﻿angular.module('tappt.controllers')
 .controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', function ($scope, $stateParams, rest) {
     function setupTap(response) {
         $scope.tap = response;

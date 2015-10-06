@@ -1,4 +1,4 @@
-// Ionic Starter App
+﻿// Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
@@ -6,9 +6,10 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services')
 .factory("nfc",
-  ['$q', '$ionicPopup', '$state',
-  function ($q, $ionicPopup, $state) {
+  ['$q', '$ionicPopup', '$state', 'Restangular',
+  function ($q, $ionicPopup, $state, rest) {
       var requestPour = false;
+      var authenticating = false;
       var popup;
 
       function getQueryVariable(query, variable) {
@@ -31,8 +32,18 @@ angular.module('tappt.services')
                   nfc.write(message, resolve, reject);
               });
           },
-          authenticatePour: function () {
+          authenticatePour: function (deviceId) {
+              if (authenticating) {
+                  return;
+              }
 
+              authenticating = true;
+              rest.all('api/authorizations/pour').post({ deviceId: deviceId }).then(function() {
+                  authenticating = false;
+                  popup.close();
+              }, function(e) {
+                  authenticating = false;
+              });
           },
           processUri: function (rawUri) {
               var parser = document.createElement('a');
@@ -55,24 +66,24 @@ angular.module('tappt.services')
 
           },
           showPopup: function () {
-              requestPour = true;
-
               if (popup) {
-                  popup.close();
+                  return;
               }
 
+              requestPour = true;
               popup = $ionicPopup.show({
                   title: 'Tap phone to pour beer',
                   subTitle: 'Place your phone on the Tappt box to begin pouring.',
                   buttons: [
                       {
                           text: 'Cancel',
-                          onTap: function () {
+                          onTap: function() {
                               requestPour = false;
                           },
                       },
                   ]
-              }).then(function () {
+              });
+              popup.then(function () {
                   requestPour = false;
                   popup = null;
               });
