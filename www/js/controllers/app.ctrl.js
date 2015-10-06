@@ -1,6 +1,6 @@
 angular.module('tappt.controllers', [])
 
-.controller('AppCtrl', function($scope, auth, $localStorage, $ionicHistory, $state) {
+.controller('AppCtrl', function($scope, auth, $localStorage, $ionicHistory, $state, nfc) {
 	$scope.isLoggedIn = auth.isLoggedIn;
 
 	$scope.settings = $localStorage.settings;
@@ -14,4 +14,8 @@ angular.module('tappt.controllers', [])
 
         $state.go('app.login');
 	};
+
+    $scope.showPopup = function() {
+        nfc.showPopup();
+    };
 });
