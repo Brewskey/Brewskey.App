@@ -1,5 +1,7 @@
 ﻿angular.module('tappt.controllers')
-.controller('WriteTagsCtrl', ['$scope', '$stateParams', 'Restangular', 'nfc', '$ionicPopup', function($scope, $stateParams, rest, nfc, $ionicPopup) {	rest.one('api/locations/mine').get().then(function (response) {
+.controller('WriteTagsCtrl', ['$scope', '$stateParams', 'Restangular', 'nfcService', '$ionicPopup',
+function ($scope, $stateParams, rest, nfcService, $ionicPopup) {
+        rest.one('api/locations/mine').get().then(function (response) {
 		$scope.locations = response;
 	});
 

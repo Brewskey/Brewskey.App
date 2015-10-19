@@ -288,6 +288,6 @@ function ($stateProvider, $urlRouterProvider, rest) {
     $urlRouterProvider.otherwise('/app/home');
 
     // Restangular setup
-    rest.setBaseUrl('http://tappt.azurewebsites.net/');
+    rest.setBaseUrl('https://tappt.io');
     //rest.setBaseUrl('http://localhost:2483');
 }]);
