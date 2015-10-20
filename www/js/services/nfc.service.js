@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services')
-.factory("nfc",
+.factory("nfcService",
   ['$q', '$ionicPopup', '$state', 'Restangular',
   function ($q, $ionicPopup, $state, rest) {
       var requestPour = false;
@@ -29,7 +29,18 @@ angular.module('tappt.services')
               ];
 
               return $q(function (resolve, reject) {
-                  nfc.write(message, resolve, reject);
+                  function write() {
+                      nfc.write(message, resolve, reject);
+                      if (window.cordova && window.cordova.platformId === 'android') {
+                          nfc.removeTagDiscoveredListener(write);
+                      }
+                  }
+
+                  if (window.cordova && window.cordova.platformId === 'android') {
+                      nfc.addTagDiscoveredListener(write);
+                  } else {
+                      write();
+                  }
               });
           },
           authenticatePour: function (deviceId) {
@@ -38,10 +49,10 @@ angular.module('tappt.services')
               }
 
               authenticating = true;
-              rest.all('api/authorizations/pour').post({ deviceId: deviceId }).then(function() {
+              rest.all('api/authorizations/pour').post({ deviceId: deviceId }).then(function () {
                   authenticating = false;
                   popup.close();
-              }, function(e) {
+              }, function (e) {
                   authenticating = false;
               });
           },
@@ -77,7 +88,7 @@ angular.module('tappt.services')
                   buttons: [
                       {
                           text: 'Cancel',
-                          onTap: function() {
+                          onTap: function () {
                               requestPour = false;
                           },
                       },

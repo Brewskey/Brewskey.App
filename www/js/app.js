@@ -1,23 +1,24 @@
 ﻿var appActivated;
 var deferred;
-
-if (typeof window.WinJS != 'undefined') {
-    angular.injector(['ng']).invoke([
-        '$q', function ($q) {
-            deferred = $q.defer();
+angular.injector(['ng']).invoke([
+    '$q', function ($q) {
+        deferred = $q.defer();
+    }
+]);
+if (window.WinJS !== undefined) {
+    WinJS.Application.addEventListener("activated", function (eventArgs) {
+        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
+            deferred.promise.then(function() {
+                appActivated(eventArgs);
+            });
         }
-    ]);
-    WinJS.Application.addEventListener("activated", function (event) {
-        deferred.promise.then(function () {
-            appActivated(event);
-        });
     }, false);
 }
 
 
 angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.services', 'ngStorage', 'restangular'])
 
-.run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfc) {
+.run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -28,7 +29,6 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
             // org.apache.cordova.statusbar required
             StatusBar.styleDefault();
         }
-
 
         if (window.cordova && window.cordova.platformId === 'windows') {
             // Get the back button working in WP8.1
@@ -44,12 +44,27 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
             }
 
             appActivated = function (eventArgs) {
-                if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-                    nfc.processUri(eventArgs.detail.uri.rawUri);
-                }
+                nfcService.processUri(eventArgs.detail.uri.rawUri);
             };
             deferred.resolve();
         }
+
+        nfc.addNdefListener(
+            function (nfcEvent) {
+                if (!nfcEvent.tag[0].payload[0]) {
+                    nfcEvent.tag[0].payload.shift();
+                }
+
+                var tagValue = String.fromCharCode.apply(null, nfcEvent.tag[0].payload);
+                nfcService.processUri(tagValue);
+            },
+            function () {
+                console.log("Listening for NDEF tags.");
+            },
+            function (e) {
+                console.log('bar');
+            }
+        );
 
         $localStorage.$default({
             'settings': {
@@ -283,6 +298,6 @@ function ($stateProvider, $urlRouterProvider, rest) {
     $urlRouterProvider.otherwise('/app/home');
 
     // Restangular setup
-    rest.setBaseUrl('https://tappt.io/');
+    rest.setBaseUrl('https://tappt.io');
     //rest.setBaseUrl('http://localhost:2483');
 }]);
