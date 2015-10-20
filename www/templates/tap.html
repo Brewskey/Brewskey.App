@@ -12,7 +12,14 @@
 			</h1>
 			<p ng-bind="location.summary"></p>
 		</div>
-
+        <div class="item">
+            <div class="item item-divider">
+                <strong>Recent Pours</strong>
+            </div>
+            <div ng-repeat="pour in tap.currentKeg.pours" ui-sref="app.tap({tapId: tap.id})" class="item">
+                {{pour.pouredBy}} Ounces - {{pour.pulses / 10313 * 128}}
+            </div>
+        </div>
     	<div class="item">
     		<div class="item item-divider">
 	    		<strong>On Tap</strong>
