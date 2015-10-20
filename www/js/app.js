@@ -198,10 +198,20 @@ function ($stateProvider, $urlRouterProvider, rest) {
             }
         }
     })
-
+    .state('app.taps', {
+        authenticate: true,
+        cache: false,
+        url: "/taps/",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/taps.html",
+                controller: 'TapsCtrl'
+            }
+        }
+    })
     .state('app.new-tap', {
         authenticate: true,
-        url: "/tap/new/:locationId",
+        url: "/taps/new/?:locationId",
         views: {
             'menuContent': {
                 templateUrl: "templates/new-tap.html",
@@ -223,7 +233,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
     .state('app.tap', {
         authenticate: true,
         cache: false,
-        url: "/tap/:tapId",
+        url: "/taps/:tapId",
         views: {
             'menuContent': {
                 templateUrl: "templates/tap.html",
@@ -233,7 +243,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
     })
     .state('app.edit-tap', {
         authenticate: true,
-        url: "/tap/:tapId/edit",
+        url: "/taps/:tapId/edit",
         views: {
             'menuContent': {
                 templateUrl: "templates/new-tap.html",

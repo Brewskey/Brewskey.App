@@ -22,13 +22,13 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close href="#/app/home">
+        <ion-item nav-clear menu-close ui-sref="app.home">
           Home
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/locations" ng-if="settings.manageLocations">
+        <ion-item nav-clear menu-close ui-sref="app.locations" ng-if="settings.manageLocations">
           My Locations
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/taps" ng-if="settings.manageLocations">
+        <ion-item nav-clear menu-close ui-sref="app.taps" ng-if="settings.manageLocations">
           My Taps
         </ion-item>
         <ion-item nav-clear menu-close href="#/app/write-tags" ng-if="settings.manageLocations">

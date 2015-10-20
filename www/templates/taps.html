@@ -1,0 +1,19 @@
+<ion-view view-title="Tappt">
+  <ion-content>
+    <h1>Taps</h1>
+    <div class="list">
+        <a ui-sref="app.app.new-tap" class="item item-button-right">
+            New Tap
+            <span class="button button-positive">
+                <i class="icon ion-plus"></i>
+            </span>
+        </a>
+
+		<!-- Location ngRepeat goes here -->
+  		<div class="item item-divider"></div>
+        <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap({tapId: tap.id})" class="item">
+            {{tap.name}}
+        </a>
+	</div>
+  </ion-content>
+</ion-view>
