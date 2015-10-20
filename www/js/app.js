@@ -51,11 +51,23 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
 
         nfc.addNdefListener(
             function (nfcEvent) {
-                if (!nfcEvent.tag[0].payload[0]) {
-                    nfcEvent.tag[0].payload.shift();
+                var payload;
+                if (nfcEvent.tag.ndefMessage) {
+                    payload = nfcEvent.tag.ndefMessage[0].payload;
+                } else {
+                    if (!nfcEvent.tag[0].payload[0]) {
+                        nfcEvent.tag[0].payload.shift();
+                    }
+
+                    payload = nfcEvent.tag[0].payload;
                 }
 
-                var tagValue = String.fromCharCode.apply(null, nfcEvent.tag[0].payload);
+                var tagValue = String.fromCharCode.apply(null, payload);
+
+                if (tagValue.indexOf('tappt://') < 0) {
+                    return;
+                }
+
                 nfcService.processUri(tagValue);
             },
             function () {
