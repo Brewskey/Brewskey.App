@@ -49,34 +49,36 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
             deferred.resolve();
         }
 
-        nfc.addNdefListener(
-            function (nfcEvent) {
-                var payload;
-                if (nfcEvent.tag.ndefMessage) {
-                    payload = nfcEvent.tag.ndefMessage[0].payload;
-                } else {
-                    if (!nfcEvent.tag[0].payload[0]) {
-                        nfcEvent.tag[0].payload.shift();
+        if (typeof nfc !== 'undefined') {
+            nfc.addNdefListener(
+                function(nfcEvent) {
+                    var payload;
+                    if (nfcEvent.tag.ndefMessage) {
+                        payload = nfcEvent.tag.ndefMessage[0].payload;
+                    } else {
+                        if (!nfcEvent.tag[0].payload[0]) {
+                            nfcEvent.tag[0].payload.shift();
+                        }
+
+                        payload = nfcEvent.tag[0].payload;
                     }
 
-                    payload = nfcEvent.tag[0].payload;
+                    var tagValue = String.fromCharCode.apply(null, payload);
+
+                    if (tagValue.indexOf('tappt://') < 0) {
+                        return;
+                    }
+
+                    nfcService.processUri(tagValue);
+                },
+                function() {
+                    console.log("Listening for NDEF tags.");
+                },
+                function(e) {
+                    console.log('bar');
                 }
-
-                var tagValue = String.fromCharCode.apply(null, payload);
-
-                if (tagValue.indexOf('tappt://') < 0) {
-                    return;
-                }
-
-                nfcService.processUri(tagValue);
-            },
-            function () {
-                console.log("Listening for NDEF tags.");
-            },
-            function (e) {
-                console.log('bar');
-            }
-        );
+            );
+        }
 
         $localStorage.$default({
             'settings': {
