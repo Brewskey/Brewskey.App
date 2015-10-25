@@ -1,100 +1,130 @@
 <ion-view view-title="Tappt">
-  <ion-content>
-    <div class="list">
-    	<div class="item">
-			<h1>
-				<span ng-bind="tap.name"></span>
-				<a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
-					<span class="button button-positive">
-					  <i class="icon ion-edit"></i>
-					</span>
-				</a>
-			</h1>
-			<p ng-bind="location.summary"></p>
-		</div>
-        <div class="item">
-            <div class="item item-divider">
-                <strong>Recent Pours</strong>
+    <ion-content>
+        <div class="list">
+            <div class="item">
+                <h1>
+                    <span ng-bind="tap.name"></span>
+                    <a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
+                        <span class="button button-positive">
+                            <i class="icon ion-edit"></i>
+                        </span>
+                    </a>
+                </h1>
+                <p ng-bind="location.summary"></p>
             </div>
-            <div ng-repeat="pour in tap.currentKeg.pours" ui-sref="app.tap({tapId: tap.id})" class="item">
-                {{pour.pouredBy}} Ounces - {{pour.pulses / 10313 * 128}}
+            <div class="item" ng-init="leaderboard = getLeaderboard()">
+                <div class="item item-divider">
+                    <strong>Today's Leaderboard</strong>
+                </div>
+                <div ng-repeat="pour in leaderboard" class="item">
+                    <div class="clearfix">
+                        <div class="pull-left leaderboard-info">
+                            <strong>{{$index + 1}}.&nbsp;{{pour.userName}}</strong>
+                            &nbsp;&mdash;&nbsp;
+                            {{translateToOunces(pour.totalPulses)}} oz
+                            <br />
+                            <span>Most recent </span><em am-time-ago="pour.lastPourDate" am-preprocess="utc"></em>
+                        </div>
+                        <div class="pull-left">
+                            <pint-list count="pour.totalPulses" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item" ng-init="pours = getPours()">
+                <div class="item item-divider">
+                    <strong>Recent Pours</strong>
+                </div>
+                <div ng-repeat="pour in pours|limitTo:5" class="item">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <strong>{{pour.pouredBy}}</strong>
+                            &nbsp;&mdash;&nbsp;
+                            {{translateToOunces(pour.pulses)}} oz
+                            <br />
+                            <span am-time-ago="pour.pourDate" am-preprocess="utc"></span>
+                        </div>
+                        <div class="pull-right">
+                            <pint-list count="pour.pulses" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="item item-divider">
+                    <strong>On Tap</strong>
+                </div>
+                <div class="item center-text">
+                    <h1>{{tap.currentKeg.beerName}}</h1>
+                    <img ng-src="{{beer.labels.medium}}" ng-if="beer.labels.icon">
+                </div>
+                <div class="item row center-text">
+                    <div class="col" ng-if="beer.abv">
+                        <strong>ABV</strong><br /><span>{{beer.abv}}%</span>
+                    </div>
+                    <div class="col" ng-if="beer.ibu">
+                        <strong>IBU</strong><br /><span ng-if="beer.ibu">{{beer.ibu}}</span>
+                    </div>
+                    <div class="col" ng-if="beer.srm">
+                        <strong>SRM</strong><br /><span>{{beer.srm.name}}</span>
+                    </div>
+                    <div class="col" ng-if="beer.originalGravity">
+                        <strong>OG</strong><br /><span ng-if="beer.originalGravity">{{beer.originalGravity}}</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="row">
+                        <div class="col"><strong>Name:</strong></div>
+                        <div class="col col-75">{{beer.name}}</div>
+                    </div>
+                    <!--<div class="row">
+                        <div class="col"><strong>Brewed By:</strong></div>
+                        <div class="col col-75"></div>
+                    </div>-->
+                    <div class="row">
+                        <div class="col"><strong>Style:</strong></div>
+                        <div class="col col-75">
+                            <span>{{beer.style.name}}</span><br />
+                            <!--<p class="help-text">{{beer.style.description}}</p>-->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><strong>Availability:</strong></div>
+                        <div class="col col-75">{{beer.available.name}}</div>
+                    </div>
+                    <div class="row" ng-if="beer.servingTemperatureDisplay">
+                        <div class="col"><strong>Serving Temperature:</strong></div>
+                        <div class="col col-75">{{beer.servingTemperatureDisplay}}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col"><strong>Is Organic:</strong></div>
+                        <div class="col col-75">
+                            <span ng-if="beer.isOrganic !== 'N'">Yes</span>
+                            <span ng-if="beer.isOrganic === 'N'">No</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><strong>Serve In:</strong></div>
+                        <div class="col col-75">{{beer.glass.name}}</div>
+                    </div>
+                </div>
+                <div class="item item-body">
+                    {{beer.description}}
+                </div>
+                <!-- Location ngRepeat goes here -->
+                <div class="item item-divider" ng-if="tap.kegs.length"></div>
+                <a href="#/app/keg/new/{{tap.id}}" class="item item-button-right" ng-if="canEdit">
+                    New Keg
+                    <span class="button button-positive">
+                        <i class="icon ion-plus"></i>
+                    </span>
+                </a>
+                <div ng-repeat="keg in tap.kegs" class="item item-avatar">
+                    <img ng-src="{{keg.beerIcon}}" />
+                    {{keg.beerName}}
+                </div>
             </div>
         </div>
-    	<div class="item">
-    		<div class="item item-divider">
-	    		<strong>On Tap</strong>
-	    	</div>
-			<div class="item center-text">
-				<h1>{{tap.currentKeg.beerName}}</h1>
-			    <img ng-src="{{beer.labels.medium}}" ng-if="beer.labels.icon">
-			</div>
-	    	<div class="item row center-text">
-				<div class="col" ng-if="beer.abv">
-					<strong>ABV</strong><br/><span>{{beer.abv}}%</span>
-				</div>
-				<div class="col" ng-if="beer.ibu">
-					<strong>IBU</strong><br/><span ng-if="beer.ibu">{{beer.ibu}}</span>
-				</div>
-				<div class="col" ng-if="beer.srm">
-					<strong>SRM</strong><br/><span>{{beer.srm.name}}</span>
-				</div>
-				<div class="col" ng-if="beer.originalGravity">
-					<strong>OG</strong><br/><span ng-if="beer.originalGravity">{{beer.originalGravity}}</span>
-				</div>
-			</div>
-			<div class="item">
-				<div class="row">
-  					<div class="col"><strong>Name:</strong></div>
-					<div class="col col-75">{{beer.name}}</div>
-				</div>
-				<!--<div class="row">
-  					<div class="col"><strong>Brewed By:</strong></div>
-					<div class="col col-75"></div>
-				</div>-->
-				<div class="row">
-  					<div class="col"><strong>Style:</strong></div>
-					<div class="col col-75">
-						<span>{{beer.style.name}}</span><br/>
-						<!--<p class="help-text">{{beer.style.description}}</p>-->
-					</div>
-				</div>
-				<div class="row">
-  					<div class="col"><strong>Availability:</strong></div>
-					<div class="col col-75">{{beer.available.name}}</div>
-				</div>
-				<div class="row" ng-if="beer.servingTemperatureDisplay">
-  					<div class="col"><strong>Serving Temperature:</strong></div>
-					<div class="col col-75">{{beer.servingTemperatureDisplay}}</div>
-				</div>
-
-				<div class="row">
-  					<div class="col"><strong>Is Organic:</strong></div>
-					<div class="col col-75">
-						<span ng-if="beer.isOrganic !== 'N'">Yes</span>
-						<span ng-if="beer.isOrganic === 'N'">No</span>
-					</div>
-				</div>
-				<div class="row">
-  					<div class="col"><strong>Serve In:</strong></div>
-					<div class="col col-75">{{beer.glass.name}}</div>
-				</div>
-			</div>
-			<div class="item item-body">
-				{{beer.description}}
-			</div>
-			<!-- Location ngRepeat goes here -->
-	  		<div class="item item-divider" ng-if="tap.kegs.length"></div>
-	  		<a href="#/app/keg/new/{{tap.id}}" class="item item-button-right" ng-if="canEdit">
-				New Keg
-				<span class="button button-positive">
-				  <i class="icon ion-plus"></i>
-				</span>
-			</a>
-	  		<div ng-repeat="keg in tap.kegs" class="item item-avatar">
-				<img ng-src="{{keg.beerIcon}}" />
-				{{keg.beerName}}
-			</div>
-		</div>
-	</div>
-  </ion-content>
+    </ion-content>
 </ion-view>

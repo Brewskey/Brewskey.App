@@ -16,7 +16,7 @@ if (window.WinJS !== undefined) {
 }
 
 
-angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.services', 'ngStorage', 'restangular'])
+angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR'])
 
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
@@ -309,7 +309,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise('/app/taps/2');
 
     // Restangular setup
     rest.setBaseUrl('https://tappt.io');
