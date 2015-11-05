@@ -19,7 +19,7 @@
 		var promise;
 
 		if (!$scope.model.id) {
-			promise = rest.all('api/taps').post($scope.model)
+		    promise = rest.all('api/taps').post($scope.model);
 		} else {
 			promise = $scope.model.put();
 		}

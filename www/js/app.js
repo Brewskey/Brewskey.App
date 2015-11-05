@@ -153,7 +153,8 @@ function ($stateProvider, $urlRouterProvider, rest) {
         url: "/home",
         views: {
             'menuContent': {
-                templateUrl: "templates/home.html"
+                controller: 'HomeCtrl',
+                templateUrl: "templates/home.html",
             }
         }
     })
