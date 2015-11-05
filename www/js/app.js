@@ -16,7 +16,7 @@ if (window.WinJS !== undefined) {
 }
 
 
-angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.services', 'ngStorage', 'restangular'])
+angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR'])
 
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
@@ -49,22 +49,36 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.serv
             deferred.resolve();
         }
 
-        nfc.addNdefListener(
-            function (nfcEvent) {
-                if (!nfcEvent.tag[0].payload[0]) {
-                    nfcEvent.tag[0].payload.shift();
-                }
+        if (typeof nfc !== 'undefined') {
+            nfc.addNdefListener(
+                function(nfcEvent) {
+                    var payload;
+                    if (nfcEvent.tag.ndefMessage) {
+                        payload = nfcEvent.tag.ndefMessage[0].payload;
+                    } else {
+                        if (!nfcEvent.tag[0].payload[0]) {
+                            nfcEvent.tag[0].payload.shift();
+                        }
 
-                var tagValue = String.fromCharCode.apply(null, nfcEvent.tag[0].payload);
-                nfcService.processUri(tagValue);
-            },
-            function () {
-                console.log("Listening for NDEF tags.");
-            },
-            function (e) {
-                console.log('bar');
-            }
-        );
+                        payload = nfcEvent.tag[0].payload;
+                    }
+
+                    var tagValue = String.fromCharCode.apply(null, payload);
+
+                    if (tagValue.indexOf('tappt://') < 0) {
+                        return;
+                    }
+
+                    nfcService.processUri(tagValue);
+                },
+                function() {
+                    console.log("Listening for NDEF tags.");
+                },
+                function(e) {
+                    console.log('bar');
+                }
+            );
+        }
 
         $localStorage.$default({
             'settings': {
@@ -139,7 +153,8 @@ function ($stateProvider, $urlRouterProvider, rest) {
         url: "/home",
         views: {
             'menuContent': {
-                templateUrl: "templates/home.html"
+                controller: 'HomeCtrl',
+                templateUrl: "templates/home.html",
             }
         }
     })
@@ -295,7 +310,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/home');
+    $urlRouterProvider.otherwise('/app/taps/2');
 
     // Restangular setup
     rest.setBaseUrl('https://tappt.io');
