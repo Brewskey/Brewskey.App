@@ -6,11 +6,13 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services')
 .factory("nfcService",
-  ['$q', '$ionicPopup', '$state', 'Restangular',
-  function ($q, $ionicPopup, $state, rest) {
+  ['$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform',
+  function ($q, $ionicPopup, $state, rest, $ionicPlatform) {
       var requestPour = false;
       var authenticating = false;
       var popup;
+
+      var androidBeamNagCounter = 0;
 
       function getQueryVariable(query, variable) {
           var vars = query.split('&');
@@ -21,6 +23,92 @@ angular.module('tappt.services')
               }
           }
       }
+
+      function checkAndroidBeam() {
+          return $q(function (resolve, reject) {
+              if (window.WinJS !== undefined) {
+                  resolve();
+                  return;
+              }
+
+              nfc.beamEnabled(
+                  function(isEnabled) {
+                      if (!isEnabled || androidBeamNagCounter >= 2) {
+                          resolve();
+                          return;
+                      }
+
+                      if (popup) {
+                          return;
+                      }
+
+                      androidBeamNagCounter++;
+
+                      popup = $ionicPopup.show({
+                        title: 'Please turn off Android Beam',
+                        subTitle: 'Android Beam causes issues with Tappt.  Please turn it off for now.',
+                        buttons: [
+                            {
+                                text: 'OK, Take Me There',
+                                type: 'button-positive',
+                                onTap: function(e) {
+                                    nfc.openNfcSettings(true);
+                                    reject();
+                                }
+                            },
+                            {
+                                text: 'Maybe Later',
+                                onTap: function (e) {
+                                    setTimeout(function() {
+                                        resolve();
+                                    }, 10);
+                                }
+                            },
+                        ]
+                      });
+
+                      popup.then(function () {
+                          popup = null;
+                      });
+                  },
+                  function () {
+                      if (popup) {
+                          return;
+                      }
+
+                      androidBeamNagCounter = 0;
+
+                      popup = $ionicPopup.show({
+                          title: 'NFC is required',
+                          subTitle: 'To pour any beer you need your NFC enabled.',
+                          buttons: [
+                              {
+                                  text: 'OK, Take Me There',
+                                  type: 'button-positive',
+                                  onTap: function(e) {
+                                      nfc.openNfcSettings(false);
+                                      reject();
+                                  }
+                              },
+                              {
+                                  text: 'Maybe Later',
+                                  onTap: function (e) {
+                                      reject();
+                                  }
+                              },
+                          ]
+                      });
+                      popup.then(function () {
+                          popup = null;
+                      });
+                  }
+              );
+          });
+      }
+
+      $ionicPlatform.ready(function() {
+          checkAndroidBeam();
+      });
 
       var output = {
           writeTag: function (authKey) {
@@ -57,11 +145,10 @@ angular.module('tappt.services')
               });
           },
           processUri: function (rawUri) {
-              var parser = document.createElement('a');
-              parser.href = rawUri;
+              var index = rawUri.indexOf('d/');
 
-              if (rawUri.indexOf('//view-tap') >= 0) {
-                  var deviceId = getQueryVariable(parser.search.substring(1), 'deviceId');
+              if (index >= 0) {
+                  var deviceId = rawUri.substring(index).match(/\d+/)[0];
 
                   if (!deviceId) {
                       return;
@@ -69,6 +156,7 @@ angular.module('tappt.services')
 
                   if (requestPour) {
                       output.authenticatePour(deviceId);
+                      return;
                   }
 
                   // navigate
@@ -77,26 +165,28 @@ angular.module('tappt.services')
 
           },
           showPopup: function () {
-              if (popup) {
-                  return;
-              }
+              checkAndroidBeam().then(function() {
+                  if (popup) {
+                      return;
+                  }
 
-              requestPour = true;
-              popup = $ionicPopup.show({
-                  title: 'Tap phone to pour beer',
-                  subTitle: 'Place your phone on the Tappt box to begin pouring.',
-                  buttons: [
-                      {
-                          text: 'Cancel',
-                          onTap: function () {
-                              requestPour = false;
+                  requestPour = true;
+                  popup = $ionicPopup.show({
+                      title: 'Tap phone to pour beer',
+                      subTitle: 'Place your phone on the Tappt box to begin pouring.',
+                      buttons: [
+                          {
+                              text: 'Cancel',
+                              onTap: function() {
+                                  requestPour = false;
+                              },
                           },
-                      },
-                  ]
-              });
-              popup.then(function () {
-                  requestPour = false;
-                  popup = null;
+                      ]
+                  });
+                  popup.then(function() {
+                      requestPour = false;
+                      popup = null;
+                  });
               });
           }
       };

@@ -7,8 +7,8 @@ angular.injector(['ng']).invoke([
 ]);
 if (window.WinJS !== undefined) {
     WinJS.Application.addEventListener("activated", function (eventArgs) {
-        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-            deferred.promise.then(function() {
+        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.launch) {
+            deferred.promise.then(function () {
                 appActivated(eventArgs);
             });
         }
@@ -51,30 +51,30 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.dire
 
         if (typeof nfc !== 'undefined') {
             nfc.addNdefListener(
-                function(nfcEvent) {
+                function (nfcEvent) {
                     var payload;
                     if (nfcEvent.tag.ndefMessage) {
-                        payload = nfcEvent.tag.ndefMessage[0].payload;
+                        payload = nfcEvent.tag.ndefMessage[1].payload;
                     } else {
-                        if (!nfcEvent.tag[0].payload[0]) {
-                            nfcEvent.tag[0].payload.shift();
+                        if (!nfcEvent.tag[1].payload[0]) {
+                            nfcEvent.tag[1].payload.shift();
                         }
 
-                        payload = nfcEvent.tag[0].payload;
+                        payload = nfcEvent.tag[1].payload;
                     }
 
                     var tagValue = String.fromCharCode.apply(null, payload);
 
-                    if (tagValue.indexOf('tappt://') < 0) {
+                    if (tagValue.indexOf('https://tappt.io/') < 0) {
                         return;
                     }
 
                     nfcService.processUri(tagValue);
                 },
-                function() {
+                function () {
                     console.log("Listening for NDEF tags.");
                 },
-                function(e) {
+                function (e) {
                     console.log('bar');
                 }
             );
