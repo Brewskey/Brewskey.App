@@ -7,7 +7,7 @@ angular.injector(['ng']).invoke([
 ]);
 if (window.WinJS !== undefined) {
     WinJS.Application.addEventListener("activated", function (eventArgs) {
-        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.launch) {
+        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
             deferred.promise.then(function () {
                 appActivated(eventArgs);
             });
