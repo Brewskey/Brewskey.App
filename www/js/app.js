@@ -1,22 +1,4 @@
-﻿var appActivated;
-var deferred;
-angular.injector(['ng']).invoke([
-    '$q', function ($q) {
-        deferred = $q.defer();
-    }
-]);
-if (window.WinJS !== undefined) {
-    WinJS.Application.addEventListener("activated", function (eventArgs) {
-        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
-            deferred.promise.then(function () {
-                appActivated(eventArgs);
-            });
-        }
-    }, false);
-}
-
-
-angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR'])
+﻿angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR'])
 
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
@@ -42,42 +24,6 @@ angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.dire
                 $ionicHistory.goBack();
                 return true; // This line is important, without it the app closes.
             }
-
-            appActivated = function (eventArgs) {
-                nfcService.processUri(eventArgs.detail.uri.rawUri);
-            };
-            deferred.resolve();
-        }
-
-        if (typeof nfc !== 'undefined') {
-            nfc.addNdefListener(
-                function (nfcEvent) {
-                    var payload;
-                    if (nfcEvent.tag.ndefMessage) {
-                        payload = nfcEvent.tag.ndefMessage[1].payload;
-                    } else {
-                        if (!nfcEvent.tag[1].payload[0]) {
-                            nfcEvent.tag[1].payload.shift();
-                        }
-
-                        payload = nfcEvent.tag[1].payload;
-                    }
-
-                    var tagValue = String.fromCharCode.apply(null, payload);
-
-                    if (tagValue.indexOf('https://tappt.io/') < 0) {
-                        return;
-                    }
-
-                    nfcService.processUri(tagValue);
-                },
-                function () {
-                    console.log("Listening for NDEF tags.");
-                },
-                function (e) {
-                    console.log('bar');
-                }
-            );
         }
 
         $localStorage.$default({
@@ -150,6 +96,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
 
     .state('app.home', {
         authenticate: true,
+        cache: false,
         url: "/home",
         views: {
             'menuContent': {
@@ -234,12 +181,43 @@ function ($stateProvider, $urlRouterProvider, rest) {
         }
     })
     .state('app.tap', {
-        authenticate: true,
-        cache: false,
+        abstract: true,
         url: "/taps/:tapId",
         views: {
             'menuContent': {
                 templateUrl: "templates/tap.html",
+            }
+        }
+    })
+    .state('app.tap.leaderboard', {
+        authenticate: true,
+        cache: false,
+        url: "/leaderboard",
+        views: {
+            'leaderboard-tab': {
+                templateUrl: "templates/tap.leaderboard.html",
+                controller: 'TapCtrl'
+            }
+        }
+    })
+    .state('app.tap.info', {
+        authenticate: true,
+        cache: false,
+        url: "/info",
+        views: {
+            'info-tab': {
+                templateUrl: "templates/tap.info.html",
+                controller: 'TapCtrl'
+            }
+        }
+    })
+    .state('app.tap.stats', {
+        authenticate: true,
+        cache: false,
+        url: "/stats",
+        views: {
+            'stats-tab': {
+                templateUrl: "templates/tap.stats.html",
                 controller: 'TapCtrl'
             }
         }
@@ -310,7 +288,7 @@ function ($stateProvider, $urlRouterProvider, rest) {
     });
 
     // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/taps/2');
+    $urlRouterProvider.otherwise('/app/home');
 
     // Restangular setup
     rest.setBaseUrl('https://tappt.io');

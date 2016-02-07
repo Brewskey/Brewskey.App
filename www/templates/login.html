@@ -1,13 +1,13 @@
 <ion-view view-title="Login">
   <ion-content>
-    <form name="loginForm" ng-submit="doLogin()">
+    <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate">
       <div class="form-errors" ng-if="errorDescription" data-ng-show="loginForm.$submitted" data-ng-cloak>
         <div class="form-error" ng-bind="errorDescription"></div>
       </div>
       <div class="list">
         <label class="item item-input" ng-class="{ 'has-error' : loginForm.userName.$invalid || errors['model.UserName']}">
           <span class="input-label">Username</span>
-          <input type="text" ng-model="loginData.userName">
+          <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false">
         </label>
         <div class="form-errors" data-ng-repeat="error in errors['model.Username']" data-ng-show="loginForm.$submitted" data-ng-cloak>
           <div class="form-error" ng-bind="error"></div>
@@ -22,7 +22,7 @@
         <label class="item">
           <button class="button button-block button-positive" type="submit" ng-disabled="!loginData.userName || !loginData.password || loggingIn">Log in</button>
         </label>
-        <a class="item button button-clear button-positive" href="#/app/register">Register</a>
+        <a class="item button button-clear button-light" ui-sref="app.register">Register</a>
       </div>
     </form>
   </ion-content>

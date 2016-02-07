@@ -4,7 +4,7 @@
       <div class="list">
         <label class="item item-input" ng-class="{ 'has-error' : registerForm.email.$invalid || errors['model.Email']}">
           <span class="input-label">Email</span>
-          <input type="text" ng-model="registerData.email">
+          <input type="email" ng-model="registerData.email">
         </label>
         <div class="form-errors" data-ng-repeat="error in errors['model.Email']" data-ng-show="registerForm.$submitted" data-ng-cloak>
           <div class="form-error" ng-bind="error"></div>

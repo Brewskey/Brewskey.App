@@ -1,0 +1,38 @@
+<ion-view view-title="Tappt">
+    <ion-content>
+        <div class="list">
+            <div class="item sub-header">
+                <h1>
+                    <span ng-bind="tap.name"></span>
+                    <a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
+                        <span class="button button-positive">
+                            <i class="icon ion-edit"></i>
+                        </span>
+                    </a>
+                </h1>
+            </div>
+            <div class="item no-color" ng-init="leaderboard = getLeaderboard()">
+                <div class="item item-divider">
+                    <strong>Today's Leaderboard</strong>
+                </div>
+                <div ng-repeat="pour in leaderboard" class="item">
+                    <div class="clearfix">
+                        <div class="pull-left leaderboard-info">
+                            <strong>{{$index + 1}}.&nbsp;{{pour.userName}}</strong>
+                            &nbsp;&mdash;&nbsp;
+                            {{translateToOunces(pour.totalPulses)}} oz
+                            <br />
+                            <span>Most recent </span><em am-time-ago="pour.lastPourDate" am-preprocess="utc"></em>
+                        </div>
+                        <div class="pull-left">
+                            <pint-list count="pour.totalPulses" />
+                        </div>
+                    </div>
+                </div>
+                <div class="item" ng-if="leaderboard && leaderboard.length === 0">
+                    <h2>No pours today!</h2>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

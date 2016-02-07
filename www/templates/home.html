@@ -1,5 +1,19 @@
-<ion-view view-title="Tappt">
-  <ion-content>
-    <h1>Home</h1>
-  </ion-content>
+<ion-view view-title="Home">
+    <ion-content>
+        <div class="card" ng-repeat="pourEvent in pourEvents">
+            <div class="item item-text-wrap">
+                <div>
+                    <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong><br />
+                    {{pourEvent.userName}} poured {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
+                    with {{pourEvent.pourCount}} pours.
+                    <br />
+                    <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                </div>
+                <br />
+                <div class="pull-left">
+                    <pint-list count="pourEvent.pulses" />
+                </div>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

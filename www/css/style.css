@@ -1,4 +1,33 @@
 /* Empty. Add your own CSS if you like */
+.pane, .view {
+    background: rgba(146,153,191,1);
+background: -moz-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
+background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(146,153,191,1)), color-stop(100%, rgba(1,33,96,1)));
+background: -webkit-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
+background: -o-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
+background: -ms-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
+background: linear-gradient(135deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9299bf', endColorstr='#012160', GradientType=1 );
+}
+a, a:visited {
+    color: #000;
+}
+
+.sub-header {
+    margin: 8px 16px 0;
+    padding: 0 8px;
+}
+
+.item a,
+.item a:visited {
+    color: #444;
+}
+
+.no-color {
+    background: transparent;
+    border-color: transparent;
+}
+
 .leaderboard-info {
     margin-right: 20px;
 }

@@ -1,113 +1,101 @@
-﻿// Ionic Starter App
+﻿var appActivated;
+var deferred;
+angular.injector(['ng']).invoke([
+    '$q', function ($q) {
+        deferred = $q.defer();
+    }
+]);
+if (window.WinJS !== undefined) {
+    WinJS.Application.addEventListener("activated", function (eventArgs) {
+        if (eventArgs.detail.kind == Windows.ApplicationModel.Activation.ActivationKind.protocol) {
+            deferred.promise.then(function () {
+                appActivated(eventArgs);
+            });
+        }
+    }, false);
+}
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
 angular.module('tappt.services')
 .factory("nfcService",
-  ['$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform',
-  function ($q, $ionicPopup, $state, rest, $ionicPlatform) {
+  ['$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout',
+  function ($q, $ionicPopup, $state, rest, $ionicPlatform, $timeout) {
       var requestPour = false;
       var authenticating = false;
       var popup;
 
-      var androidBeamNagCounter = 0;
-
-      function getQueryVariable(query, variable) {
-          var vars = query.split('&');
-          for (var i = 0; i < vars.length; i++) {
-              var pair = vars[i].split('=');
-              if (decodeURIComponent(pair[0]) == variable) {
-                  return decodeURIComponent(pair[1]);
-              }
-          }
-      }
-
-      function checkAndroidBeam() {
-          return $q(function (resolve, reject) {
-              if (window.WinJS !== undefined) {
-                  resolve();
-                  return;
-              }
-
-              nfc.beamEnabled(
-                  function(isEnabled) {
-                      if (!isEnabled || androidBeamNagCounter >= 2) {
-                          resolve();
-                          return;
-                      }
-
-                      if (popup) {
-                          return;
-                      }
-
-                      androidBeamNagCounter++;
-
-                      popup = $ionicPopup.show({
-                        title: 'Please turn off Android Beam',
-                        subTitle: 'Android Beam causes issues with Tappt.  Please turn it off for now.',
-                        buttons: [
-                            {
-                                text: 'OK, Take Me There',
-                                type: 'button-positive',
-                                onTap: function(e) {
-                                    nfc.openNfcSettings(true);
-                                    reject();
-                                }
-                            },
-                            {
-                                text: 'Maybe Later',
-                                onTap: function (e) {
-                                    setTimeout(function() {
-                                        resolve();
-                                    }, 10);
-                                }
-                            },
-                        ]
-                      });
-
-                      popup.then(function () {
-                          popup = null;
-                      });
-                  },
-                  function () {
-                      if (popup) {
-                          return;
-                      }
-
-                      androidBeamNagCounter = 0;
-
-                      popup = $ionicPopup.show({
-                          title: 'NFC is required',
-                          subTitle: 'To pour any beer you need your NFC enabled.',
-                          buttons: [
-                              {
-                                  text: 'OK, Take Me There',
-                                  type: 'button-positive',
-                                  onTap: function(e) {
-                                      nfc.openNfcSettings(false);
-                                      reject();
-                                  }
-                              },
-                              {
-                                  text: 'Maybe Later',
-                                  onTap: function (e) {
-                                      reject();
-                                  }
-                              },
-                          ]
-                      });
-                      popup.then(function () {
-                          popup = null;
-                      });
-                  }
-              );
+      function checkNfc() {
+          return $q(function (resolve) {
+              nfc.enabled(resolve, nfcError);
           });
       }
 
-      $ionicPlatform.ready(function() {
-          checkAndroidBeam();
+      function nfcError(e) {
+          if (popup) {
+              return;
+          }
+
+          popup = $ionicPopup.show({
+              title: 'NFC is required',
+              subTitle: 'To pour any beer you need your NFC enabled.',
+              buttons: [
+                  {
+                      text: 'OK, Take Me There',
+                      type: 'button-positive',
+                      onTap: function (e) {
+                          nfc.showSettings();
+                      }
+                  },
+                  {
+                      text: 'Maybe Later',
+                      onTap: function (e) {
+                      }
+                  },
+              ]
+          });
+          popup.then(function () {
+              popup = null;
+          });
+      }
+
+      $ionicPlatform.ready(function () {
+          if (window.cordova && window.cordova.platformId === 'windows') {
+              appActivated = function (eventArgs) {
+                  output.processUri(eventArgs.detail.uri.rawUri);
+              };
+              deferred.resolve();
+          }
+
+          if (typeof nfc !== 'undefined') {
+              $timeout(function () {
+                  nfc.addNdefListener(
+                      function (nfcEvent) {
+                          var payload;
+                          if (nfcEvent.tag.ndefMessage) {
+                              payload = nfcEvent.tag.ndefMessage[1].payload;
+                          } else {
+                              if (!nfcEvent.tag[1].payload[0]) {
+                                  nfcEvent.tag[1].payload.shift();
+                              }
+
+                              payload = nfcEvent.tag[1].payload;
+                          }
+
+                          var tagValue = String.fromCharCode.apply(null, payload);
+
+                          if (tagValue.indexOf('https://tappt.io/') < 0) {
+                              return;
+                          }
+
+                          output.processUri(tagValue);
+                      },
+                      function () {
+                          console.log("Listening for NDEF tags.");
+                      },
+                      nfcError
+                  );
+              }, 20);
+
+          }
       });
 
       var output = {
@@ -120,26 +108,26 @@ angular.module('tappt.services')
                   function write() {
                       nfc.write(message, resolve, reject);
                       if (window.cordova && window.cordova.platformId === 'android') {
-                          nfc.removeTagDiscoveredListener(write);
+                          nfc.removeTagDiscoveredListener(write, nfcError);
                       }
                   }
 
                   if (window.cordova && window.cordova.platformId === 'android') {
-                      nfc.addTagDiscoveredListener(write);
+                      nfc.addTagDiscoveredListener(write, nfcError);
                   } else {
                       write();
                   }
               });
           },
           authenticatePour: function (deviceId) {
-              if (authenticating) {
+              if (authenticating || !deviceId) {
                   return;
               }
 
               authenticating = true;
+              popup.close();
               rest.all('api/authorizations/pour').post({ deviceId: deviceId }).then(function () {
                   authenticating = false;
-                  popup.close();
               }, function (e) {
                   authenticating = false;
               });
@@ -160,12 +148,14 @@ angular.module('tappt.services')
                   }
 
                   // navigate
-                  $state.go('app.device-taps', { deviceId: deviceId });
+                  rest.one('api/devices', deviceId).getList('taps').then(function (response) {
+                      $state.go('app.tap.leaderboard', { tapId: response[0].id });
+                  });
               }
 
           },
           showPopup: function () {
-              checkAndroidBeam().then(function() {
+              checkNfc().then(function () {
                   if (popup) {
                       return;
                   }
@@ -177,13 +167,13 @@ angular.module('tappt.services')
                       buttons: [
                           {
                               text: 'Cancel',
-                              onTap: function() {
+                              onTap: function () {
                                   requestPour = false;
                               },
                           },
                       ]
                   });
-                  popup.then(function() {
+                  popup.then(function () {
                       requestPour = false;
                       popup = null;
                   });

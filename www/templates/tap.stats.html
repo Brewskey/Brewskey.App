@@ -1,0 +1,35 @@
+<ion-view view-title="Tappt">
+    <ion-content>
+        <div class="list">
+            <div class="item sub-header">
+                <h1>
+                    <span ng-bind="tap.name"></span>
+                    <a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
+                        <span class="button button-positive">
+                            <i class="icon ion-edit"></i>
+                        </span>
+                    </a>
+                </h1>
+            </div>
+            <div class="item no-color" ng-init="pours = getPours()">
+                <div class="item item-divider">
+                    <strong>Recent Pours</strong>
+                </div>
+                <div ng-repeat="pour in pours|limitTo:5" class="item">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <strong>{{pour.pouredBy}}</strong>
+                            &nbsp;&mdash;&nbsp;
+                            {{translateToOunces(pour.pulses)}} oz
+                            <br />
+                            <span am-time-ago="pour.pourDate" am-preprocess="utc"></span>
+                        </div>
+                        <div class="pull-right">
+                            <pint-list count="pour.pulses" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
