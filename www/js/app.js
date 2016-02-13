@@ -75,6 +75,15 @@ function ($stateProvider, $urlRouterProvider, rest) {
         }
     })
 
+    .state('app.accounts', {
+        url: "/accounts",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/accounts.html",
+                controller: 'AccountsCtrl'
+            }
+        }
+    })
     .state('app.register', {
         url: "/register",
         views: {

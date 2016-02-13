@@ -2,10 +2,12 @@
   "name": "Tappt",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0-rc.1"
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.1",
+    "angular-chart.js": "~0.8.8"
   },
   "dependencies": {
     "ngstorage": "~0.3.0",
-    "restangular": "~1.4.0"
+    "restangular": "~1.4.0",
+    "angular-chart.js": "~0.8.8"
   }
 }

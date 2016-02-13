@@ -5,7 +5,7 @@
   $scope.loginData = {};
 
   // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
+  $scope.doLogin = function(modal) {
     $scope.loggingIn = true;
 
     // Simulate a login delay. Remove this and replace with your login
@@ -18,7 +18,11 @@
           historyRoot: true
         });
 
-        $state.go('app.home');
+        if (modal) {
+            modal.hide();
+        } else {
+            $state.go('app.home');
+        }
       }, function (error) {
         $scope.loggingIn = false;
         if (!error.data) {

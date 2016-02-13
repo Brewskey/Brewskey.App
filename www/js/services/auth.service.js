@@ -5,66 +5,70 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services', [])
-.factory("auth", 
-  [ 'Restangular', '$localStorage', '$ionicHistory', '$state',
-  function (rest, storage, $ionicHistory, $state) { 
+.factory("auth",
+  ['Restangular', '$localStorage', '$ionicHistory', '$state',
+  function (rest, storage, $ionicHistory, $state) {
 
-    var output = {
-      isLoggedIn: function () {
-        return !(!storage.authDetails);
-      },
-      register: function (model) {
-        return rest.one('api/account').post('register', model);
-      },
-      login: function (model) {
-        var authorization = rest.one('token').withHttpConfig({transformRequest: angular.identity});
-        
-        var data = "grant_type=password&username=" + encodeURIComponent(model.userName) + "&password=" + encodeURIComponent(model.password)
+      var output = {
+          isLoggedIn: function () {
+              return !(!storage.authDetails);
+          },
+          register: function (model) {
+              return rest.one('api/account').post('register', model);
+          },
+          login: function (model) {
+              var authorization = rest.one('token').withHttpConfig({ transformRequest: angular.identity });
 
-        return authorization
-          .customPOST(data, '', {}, { 
-              'Content-Type' : 'application/x-www-form-urlencoded'
-            })
-          .then(function (response) {
-            storage.authDetails = response;
+              var data = "grant_type=password&username=" + encodeURIComponent(model.userName) + "&password=" + encodeURIComponent(model.password)
 
-            return response;
-          });
-      },
-      logout: function () {
-        storage.authDetails = null;
+              return authorization
+                .customPOST(data, '', {}, {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                })
+                .then(function (response) {
+                    storage.authDetails = response;
+                    if (storage.settings.multiAuth) {
+                        storage.authList = (storage.authList || []).concat(response);
+                    }
 
-        $ionicHistory.nextViewOptions({
-          historyRoot: true
-        });
+                    return response;
+                });
+          },
+          logout: function () {
+              storage.authDetails = null;
+              storage.authList = null;
 
-        $state.go('app.login');
-      }
-    };
+              $ionicHistory.nextViewOptions({
+                  historyRoot: true
+              });
 
-    // Handle authenticating with web services
-    rest.addFullRequestInterceptor(function (element, operation, route, url, headers, params, httpConfig) {
-        if (output.isLoggedIn()) {
-          headers.Authorization = 'Bearer ' + storage.authDetails.access_token;
-        }
+              $state.go('app.login');
+          }
+      };
 
-        return {
-            element: element,
-            headers: headers,
-            params: params,
-            httpConfig: httpConfig
-        };
+      // Handle authenticating with web services
+      rest.addFullRequestInterceptor(function (element, operation, route, url, headers, params, httpConfig) {
+          if (output.isLoggedIn()) {
+              headers.Authorization = 'Bearer ' + storage.authDetails.access_token;
+          }
+
+          return {
+              element: element,
+              headers: headers,
+              params: params,
+              httpConfig: httpConfig
+          };
       });
 
-    rest.setErrorInterceptor(function (response, deferred, responseHandler) {
-        if(response.status === 401) {
-          output.logout();
-          
-          return false; // error handled
-        }
+      rest.setErrorInterceptor(function (response, deferred, responseHandler) {
+          if (response.status === 401) {
+              output.logout();
 
-        return true; // error not handled
+              return false; // error handled
+          }
+
+          return true; // error not handled
       });
 
-    return output;
+      return output;
   }]);
