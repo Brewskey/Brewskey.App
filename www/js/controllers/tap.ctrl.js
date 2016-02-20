@@ -27,6 +27,7 @@
     
     function setupPours(tapId) {
         $scope.getPours = function () { return tapHub.getPours(tapId); };
+        $scope.getKegPours = function () { return tapHub.getKegPours(tapId); };
         $scope.getLeaderboard = function () { return tapHub.getLeaderboard(tapId); };
     }
 

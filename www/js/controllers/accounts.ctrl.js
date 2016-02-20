@@ -21,7 +21,7 @@
     $scope.showLogin = function($event) {
         $scope.modal.show($event);
     };
-    $ionicModal.fromTemplateUrl('/templates/login.modal.html', {
+    $ionicModal.fromTemplateUrl('templates/login.modal.html', {
         animation: 'slide-in-up',
         scope: $scope,
     }).then(function (modal) {

@@ -13,7 +13,8 @@
     auth.login($scope.loginData)
       .then(function (response) {
         $scope.loggingIn = false;
-        
+        $scope.loginData = {};
+
         $ionicHistory.nextViewOptions({
           historyRoot: true
         });

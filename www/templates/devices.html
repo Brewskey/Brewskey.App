@@ -2,19 +2,19 @@
     <ion-content>
         <div class="list">
             <div class="item sub-header">
-                <h1>Taps</h1>
+                <h1>Devices</h1>
             </div>
             <div class="item no-color">
-                <a ui-sref="app.new-tap" class="item item-button-right">
-                    New Tap
+                <a ui-sref="app.new-device" class="item item-button-right">
+                    New Device
                     <span class="button button-positive">
                         <i class="icon ion-plus"></i>
                     </span>
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>
-                <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item">
-                    {{tap.name}}
+                <a ng-repeat="device in devices | orderBy: 'name'" ui-sref="app.device({deviceId: device.id})" class="item">
+                    {{device.name}}
                 </a>
             </div>
         </div>

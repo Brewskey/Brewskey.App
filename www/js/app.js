@@ -1,4 +1,4 @@
-﻿angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR'])
+﻿angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR', 'chart.js'])
 
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
@@ -114,6 +114,51 @@ function ($stateProvider, $urlRouterProvider, rest) {
             }
         }
     })
+
+    .state('app.devices', {
+        authenticate: true,
+        cache: false,
+        url: "/devices",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/devices.html",
+                controller: 'DevicesCtrl'
+            }
+        }
+    })
+    .state('app.new-device', {
+        authenticate: true,
+        url: "/devices/new",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/new-device.html",
+                controller: 'NewDeviceCtrl'
+            }
+        }
+    })
+    .state('app.device', {
+        authenticate: true,
+        cache: false,
+        url: "/devices/:deviceId",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/device.html",
+                controller: 'DeviceCtrl'
+            }
+        }
+    })
+    .state('app.edit-device', {
+        authenticate: true,
+        cache: false,
+        url: "/devices/:deviceId/edit",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/new-device.html",
+                controller: 'NewDeviceCtrl'
+            }
+        }
+    })
+
     .state('app.locations', {
         authenticate: true,
         cache: false,

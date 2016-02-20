@@ -1,6 +1,6 @@
 <ion-view view-title="Tappt">
     <ion-content>
-        <div class="list">
+        <div class="list" ng-init="pours = getPours()">
             <div class="item sub-header">
                 <h1>
                     <span ng-bind="tap.name"></span>
@@ -11,11 +11,14 @@
                     </a>
                 </h1>
             </div>
-            <div class="item no-color" ng-init="pours = getPours()">
+            <div class="item  no-color">
+                <pour-chart pours="getKegPours()" class="item"></pour-chart>
+            </div>
+            <div class="item no-color">
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
-                <div ng-repeat="pour in pours|limitTo:5" class="item">
+                <div ng-repeat="pour in pours" class="item">
                     <div class="clearfix">
                         <div class="pull-left">
                             <strong>{{pour.pouredBy}}</strong>

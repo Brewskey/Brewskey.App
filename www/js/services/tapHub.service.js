@@ -2,6 +2,7 @@ angular.module('tappt.services')
     .factory('tapHub', ['$rootScope', '$q', 'Hub', 'Restangular',
     function ($rootScope, $q, Hub, rest) {
         var pours = {};
+        var kegPours = {};
         var subscriptions = {};
         var leaderboards = [];
 
@@ -9,10 +10,11 @@ angular.module('tappt.services')
         var hub = new Hub('tapHub', {
             //client side methods
             listeners: {
-                'newPour': function (pour) {
+                'newPour': function(pour) {
                     (pours[pour.tapId] || []).splice(0, 0, pour);
+                    (kegPours[pour.tapId] || []).splice(0, 0, pour);
                     var leaderboard = leaderboards[pour.tapId];
-                    var userPours = _.find(leaderboard, function (item) { return item.userName === pour.pouredBy; });
+                    var userPours = _.find(leaderboard, function(item) { return item.userName === pour.pouredBy; });
                     if (!userPours) {
                         userPours = {
                             lastPourDate: null,
@@ -21,8 +23,8 @@ angular.module('tappt.services')
                         };
                         leaderboard.push(userPours);
                     }
-                    userPours.lastPourDate = pour.pourDate,
-                        userPours.totalPulses += pour.pulses;
+                    userPours.lastPourDate = pour.pourDate;
+                    userPours.totalPulses += pour.pulses;
                     $rootScope.$apply();
                 }
             },
@@ -35,6 +37,21 @@ angular.module('tappt.services')
             rootPath: 'https://tappt.io/signalr',
         });
 
+        var getKegPours = function(tapId) {
+            if (!kegPours[tapId]) {
+                if (!subscriptions[tapId]) {
+                    subscriptions[tapId] = true;
+                    hub.promise.then(function () {
+                        hub.subscribe(tapId);
+                    });
+                }
+                rest.one('api/taps', tapId).getList('keg-pours').then(function (result) {
+                    angular.extend(kegPours[tapId], result);
+                });
+                kegPours[tapId] = [];
+            }
+            return kegPours[tapId];
+        };
         var getPours = function (tapId) {
             if (!pours[tapId]) {
                 if (!subscriptions[tapId]) {
@@ -66,6 +83,7 @@ angular.module('tappt.services')
             return leaderboards[tapId];
         };
         return {
+            getKegPours: getKegPours,
             getPours: getPours,
             getLeaderboard: getLeaderboard
         };

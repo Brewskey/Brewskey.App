@@ -26,6 +26,9 @@
                 <ion-item nav-clear menu-close href="#/app/accounts" ng-if="settings.multiAuth">
                     Accounts
                 </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.devices" ng-if="settings.manageLocations">
+                    My Devices
+                </ion-item>
                 <ion-item nav-clear menu-close ui-sref="app.locations" ng-if="settings.manageLocations">
                     My Locations
                 </ion-item>

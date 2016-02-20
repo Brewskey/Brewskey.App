@@ -9,5 +9,9 @@
     "ngstorage": "~0.3.0",
     "restangular": "~1.4.0",
     "angular-chart.js": "~0.8.8"
+  },
+  "resolutions": {
+    "lodash": "~4.3.0",
+    "restangular": "^1.5.1"
   }
 }

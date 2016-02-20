@@ -28,7 +28,9 @@ angular.module('tappt.services', [])
                 .then(function (response) {
                     storage.authDetails = response;
                     if (storage.settings.multiAuth) {
-                        storage.authList = (storage.authList || []).concat(response);
+                        storage.authList = _.uniq((storage.authList || []).concat(response), function(item) {
+                            return item.userName;
+                        });
                     }
 
                     return response;

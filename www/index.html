@@ -11,6 +11,7 @@
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="lib/angular-chart.js/dist/angular-chart.css" rel="stylesheet">
 
     <script src="js/winstore-jscompat.js"></script>
 
@@ -29,8 +30,13 @@
     <script src="lib/angular-signalr-hub/signalr-hub.min.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/lodash/dist/lodash.min.js"></script>
+    <script type="text/javascript">
+        _.contains = _.includes;
+    </script>
     <script src="lib/restangular/dist/restangular.min.js"></script>
     <script src="lib/softap-browser.min.js"></script>
+    <script src="lib/Chart.js/Chart.min.js"></script>
+    <script src="lib/angular-chart.js/dist/angular-chart.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
@@ -40,10 +46,14 @@
     <script src="js/controllers/home.ctrl.js"></script>
     <script src="js/controllers/accounts.ctrl.js"></script>
     <script src="js/controllers/locations.ctrl.js"></script>
+    <script src="js/controllers/devices.ctrl.js"></script>
     <script src="js/controllers/taps.ctrl.js"></script>
 
     <script src="js/controllers/write-tags.ctrl.js"></script>
 
+    <script src="js/controllers/new-device.ctrl.js"></script>
+    <script src="js/controllers/device.ctrl.js"></script>
+    
     <script src="js/controllers/new-location.ctrl.js"></script>
     <script src="js/controllers/location.ctrl.js"></script>
 
@@ -61,6 +71,7 @@
     <script src="js/services/tapHub.service.js"></script>
 
     <script src="js/directives/pintList.directive.js"></script>
+    <script src="js/directives/pourChart.directive.js"></script>
 
 </head>
 
