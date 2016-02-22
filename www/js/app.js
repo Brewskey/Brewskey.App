@@ -74,9 +74,19 @@ function ($stateProvider, $urlRouterProvider, rest) {
             }
         }
     })
-
+    .state('app.profile', {
+        url: "/profile/:userName",
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: "templates/profile.html",
+                controller: 'ProfileCtrl'
+            }
+        }
+    })
     .state('app.accounts', {
         url: "/accounts",
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: "templates/accounts.html",
@@ -346,5 +356,6 @@ function ($stateProvider, $urlRouterProvider, rest) {
 
     // Restangular setup
     rest.setBaseUrl('https://tappt.io');
+    rest.setRequestSuffix('/');
     //rest.setBaseUrl('http://localhost:2483');
 }]);

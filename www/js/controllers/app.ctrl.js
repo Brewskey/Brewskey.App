@@ -1,7 +1,8 @@
 ﻿angular.module('tappt.controllers', [])
 
 .controller('AppCtrl', function ($scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
-	$scope.isLoggedIn = auth.isLoggedIn;
+    $scope.isLoggedIn = auth.isLoggedIn;
+    $scope.userName = $localStorage.authDetails.userName;
 
 	$scope.settings = $localStorage.settings;
 

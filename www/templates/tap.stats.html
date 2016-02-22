@@ -21,7 +21,9 @@
                 <div ng-repeat="pour in pours" class="item">
                     <div class="clearfix">
                         <div class="pull-left">
-                            <strong>{{pour.pouredBy}}</strong>
+                            <a ui-sref="app.profile({userName: pour.pouredBy})">
+                                <strong>{{pour.pouredBy}}</strong>
+                            </a>
                             &nbsp;&mdash;&nbsp;
                             {{translateToOunces(pour.pulses)}} oz
                             <br />

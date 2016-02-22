@@ -1,4 +1,4 @@
-<ion-view view-title="Tappt">
+<ion-view view-title="Leaderboard">
     <ion-content>
         <div class="list">
             <div class="item sub-header">
@@ -11,14 +11,14 @@
                     </a>
                 </h1>
             </div>
-            <div class="item no-color" ng-init="leaderboard = getLeaderboard()">
+            <div class="item no-color">
                 <div class="item item-divider">
-                    <strong>Today's Leaderboard</strong>
+                    <strong>Today</strong>
                 </div>
                 <div ng-repeat="pour in leaderboard" class="item">
                     <div class="clearfix">
                         <div class="pull-left leaderboard-info">
-                            <strong>{{$index + 1}}.&nbsp;{{pour.userName}}</strong>
+                            <strong>{{$index + 1}}.&nbsp;<a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
                             &nbsp;&mdash;&nbsp;
                             {{translateToOunces(pour.totalPulses)}} oz
                             <br />
@@ -31,6 +31,28 @@
                 </div>
                 <div class="item" ng-if="leaderboard && leaderboard.length === 0">
                     <h2>No pours today!</h2>
+                </div>
+            </div>
+            <div class="item no-color">
+                <div class="item item-divider">
+                    <strong>Current Keg</strong>
+                </div>
+                <div ng-repeat="pour in kegLeaderboard" class="item">
+                    <div class="clearfix">
+                        <div class="leaderboard-info">
+                            <strong>{{$index + 1}}.&nbsp;<a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
+                            &nbsp;&mdash;&nbsp;
+                            {{translateToOunces(pour.totalPulses)}} oz
+                            <br />
+                            <span>Most recent </span><em am-time-ago="pour.lastPourDate" am-preprocess="utc"></em>
+                        </div>
+                        <div>
+                            <pint-list count="pour.totalPulses" />
+                        </div>
+                    </div>
+                </div>
+                <div class="item" ng-if="currentKeg && currentKeg.length === 0">
+                    <h2>No pours!</h2>
                 </div>
             </div>
         </div>

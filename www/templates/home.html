@@ -1,19 +1,23 @@
 <ion-view view-title="Home">
     <ion-content>
-        <div class="card" ng-repeat="pourEvent in pourEvents">
-            <div class="item item-text-wrap">
-                <div>
-                    <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong><br />
-                    {{pourEvent.userName}} poured {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
-                    with {{pourEvent.pourCount}} pours.
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="card" ng-repeat="pourEvent in pourEvents">
+                <div class="item item-text-wrap">
+                    <div>
+                        <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong><br />
+                        <a ui-sref="app.profile({userName: pourEvent.userName})">{{renderUserName(pourEvent.userName)}}</a> poured {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
+                        with {{pourEvent.pourCount}} pours.
+                        <br />
+                        <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                    </div>
                     <br />
-                    <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
-                </div>
-                <br />
-                <div class="pull-left">
-                    <pint-list count="pourEvent.pulses" />
+                    <div class="pull-left">
+                        <pint-list count="pourEvent.pulses" />
+                    </div>
                 </div>
             </div>
-        </div>
+        </ion-list>
     </ion-content>
 </ion-view>

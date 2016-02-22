@@ -38,7 +38,8 @@ a, a:visited {
 .pint-glass {
     display: inline-block;
     height: 40px;
-    margin-right: 5px;
+    float: left;
+    margin: 5px 5px 0 0;
     position: relative;
     width: 23px;
 }

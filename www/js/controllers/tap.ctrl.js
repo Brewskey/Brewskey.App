@@ -14,6 +14,8 @@
         rest.one('api/beer/', response.currentKeg.beerId).get().then(function (response) {
             $scope.beer = response.data;
         });
+        $scope.kegId = response.currentKeg.id;
+        $scope.kegLeaderboard = tapHub.getKegLeaderboard(response.id, $scope.kegId);
     }
 
     if ($stateParams.deviceId) {
@@ -28,7 +30,7 @@
     function setupPours(tapId) {
         $scope.getPours = function () { return tapHub.getPours(tapId); };
         $scope.getKegPours = function () { return tapHub.getKegPours(tapId); };
-        $scope.getLeaderboard = function () { return tapHub.getLeaderboard(tapId); };
+        $scope.leaderboard = tapHub.getLeaderboard(tapId);
     }
 
     if ($stateParams.tapId) {

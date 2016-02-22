@@ -5,6 +5,9 @@ angular.module('tappt.services')
         var kegPours = {};
         var subscriptions = {};
         var leaderboards = [];
+        var kegLeaderboards = [];
+
+        var output;
 
         //declaring the hub connection
         var hub = new Hub('tapHub', {
@@ -14,7 +17,9 @@ angular.module('tappt.services')
                     (pours[pour.tapId] || []).splice(0, 0, pour);
                     (kegPours[pour.tapId] || []).splice(0, 0, pour);
                     var leaderboard = leaderboards[pour.tapId];
-                    var userPours = _.find(leaderboard, function(item) { return item.userName === pour.pouredBy; });
+                    var kegLeaderboard = kegLeaderboards[pour.kegId];
+                    var userPours = _.find(leaderboard, function (item) { return item.userName === pour.pouredBy; });
+                    var userKegPours = _.find(kegLeaderboard, function (item) { return item.userName === pour.pouredBy; });
                     if (!userPours) {
                         userPours = {
                             lastPourDate: null,
@@ -23,8 +28,16 @@ angular.module('tappt.services')
                         };
                         leaderboard.push(userPours);
                     }
-                    userPours.lastPourDate = pour.pourDate;
-                    userPours.totalPulses += pour.pulses;
+                    if (!userKegPours) {
+                        userKegPours = {
+                            lastPourDate: null,
+                            userName: pour.pouredBy,
+                            totalPulses: 0,
+                        };
+                        kegLeaderboard.push(userKegPours);
+                    }
+                    userKegPours.lastPourDate = pour.pourDate;
+                    userKegPours.totalPulses += pour.pulses;
                     $rootScope.$apply();
                 }
             },
@@ -69,6 +82,7 @@ angular.module('tappt.services')
         };
         var getLeaderboard = function (tapId) {
             if (!leaderboards[tapId]) {
+                leaderboards[tapId] = [];
                 if (!subscriptions[tapId]) {
                     subscriptions[tapId] = true;
                     hub.promise.then(function () {
@@ -78,13 +92,31 @@ angular.module('tappt.services')
                 rest.one('api/taps', tapId).getList('leaderboard').then(function (result) {
                     angular.extend(leaderboards[tapId], result);
                 });
-                leaderboards[tapId] = [];
             }
             return leaderboards[tapId];
         };
-        return {
+        var getKegLeaderboard = function (tapId, kegId) {
+            if (!kegLeaderboards[kegId]) {
+                kegLeaderboards[kegId] = [];
+                if (!subscriptions[tapId]) {
+                    subscriptions[tapId] = true;
+                    hub.promise.then(function () {
+                        hub.subscribe(tapId);
+                    });
+                }
+                rest.one('api/taps', tapId).one('leaderboard', kegId).getList().then(function (result) {
+                    angular.extend(kegLeaderboards[kegId], result);
+                });
+            }
+            return kegLeaderboards[kegId];
+        };
+
+        output = {
             getKegPours: getKegPours,
             getPours: getPours,
-            getLeaderboard: getLeaderboard
+            getLeaderboard: getLeaderboard,
+            getKegLeaderboard: getKegLeaderboard,
         };
+
+        return output;
     }]);

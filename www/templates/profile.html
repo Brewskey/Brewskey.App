@@ -1,0 +1,32 @@
+<ion-view view-title="Profile">
+    <ion-content>
+        <div class="list" ng-init="pours = getPours()">
+            <div class="item sub-header">
+                <h1 ng-bind="userName"></h1>
+            </div>
+            <div class="item no-color">
+                <div class="item">
+                    Total Pints {{profile.totalPints}}
+                </div>
+            </div>
+            <div class="item no-color">
+                <div class="item item-divider">
+                    <strong>Recent Pours</strong>
+                </div>
+                <div ng-repeat="pour in profile.recentPours" class="item item-avatar">
+                    <img ng-src="{{pour.beerIcon}}">
+                    <div class="item-text-wrap">
+                        <div>
+                            {{translateToOunces(pour.pulses)}} oz of <em>{{pour.beerName}}</em> on <a ui-sref="app.tap.leaderboard({tapId: pour.tapId})">{{pour.tapName}}</a> <!--at {{pour.locationName}}-->
+                            <br />
+                            <small>{{pour.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                        </div>
+                        <div>
+                            <pint-list count="pour.pulses" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

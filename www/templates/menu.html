@@ -23,6 +23,9 @@
                 <ion-item nav-clear menu-close ui-sref="app.home">
                     Home
                 </ion-item>
+                <ion-item nav-clear menu-close ui-sref="app.profile({userName: userName})">
+                    My Profile
+                </ion-item>
                 <ion-item nav-clear menu-close href="#/app/accounts" ng-if="settings.multiAuth">
                     Accounts
                 </ion-item>
