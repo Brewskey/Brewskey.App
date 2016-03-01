@@ -1,5 +1,6 @@
 ﻿angular.module('tappt.controllers')
-.controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage', function($scope, rest, converter, $storage) {
+.controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage',
+function ($scope, rest, converter, $storage) {
     $scope.loading = true;
     $scope.refresh = function() {
         rest.all('api/feed').getList()

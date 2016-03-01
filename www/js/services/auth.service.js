@@ -6,8 +6,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('tappt.services', [])
 .factory("auth",
-  ['Restangular', '$localStorage', '$ionicHistory', '$state',
-  function (rest, storage, $ionicHistory, $state) {
+  ['Restangular', '$localStorage', '$ionicHistory', '$state', 'achievements',
+  function (rest, storage, $ionicHistory, $state, achievements) {
 
       var output = {
           isLoggedIn: function () {
@@ -29,10 +29,15 @@ angular.module('tappt.services', [])
                     storage.authDetails = response;
                     storage.authList = _.uniqBy((storage.authList || []).concat(response), 'userName');
 
+                    achievements.subscribe(storage.authDetails.userName);
+
                     return response;
                 });
           },
           logout: function () {
+              if (storage.authDetails) {
+                achievements.unsubscribe(storage.authDetails.userName);
+              }
               storage.authDetails = null;
               storage.authList = null;
 

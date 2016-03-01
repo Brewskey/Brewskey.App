@@ -2,9 +2,12 @@
 
 .controller('AppCtrl', function ($scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
     $scope.isLoggedIn = auth.isLoggedIn;
-    $scope.userName = $localStorage.authDetails.userName;
 
-	$scope.settings = $localStorage.settings;
+    if ($localStorage.authDetails) {
+        $scope.userName = $localStorage.authDetails.userName;
+    }
+
+    $scope.settings = $localStorage.settings;
 
 	$scope.logout = function () {
 		auth.logout();

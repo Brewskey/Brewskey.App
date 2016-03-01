@@ -4,7 +4,7 @@
         </ion-refresher>
         <ion-list>
             <div class="card" ng-repeat="pourEvent in pourEvents">
-                <div class="item item-text-wrap">
+                <div class="item item-text-wrap clearfix">
                     <div>
                         <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong><br />
                         <a ui-sref="app.profile({userName: pourEvent.userName})">{{renderUserName(pourEvent.userName)}}</a> poured {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>

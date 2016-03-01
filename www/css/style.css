@@ -60,6 +60,49 @@ a, a:visited {
         width: 100%;
     }
 
+.achievement-popup .popup-head {
+    display: none;
+}
+.achievement {
+    border-radius: 50%;
+}
+.achievement-icon-container {
+    position: relative;
+}
+.achievement-icon-container > img {
+    position: relative;
+    vertical-align: middle;
+}
+.achievement-button {
+    border: 0;
+    font-size: 35px;
+    margin: -61px 0 0;
+    max-height: initial;
+    min-height: initial;
+    min-width: initial;
+    padding: 40px 0;
+    position: absolute;
+    top: 50%;
+    vertical-align: middle;
+}
+    .achievement-button.achievement-button-left {
+        left: 0;
+        padding-right: 18px;
+    }
+    .achievement-button.achievement-button-right {
+        padding-left: 18px;
+        right: 0;
+    }
+.achievement-small {
+    width: 70px;
+    height: 70px;
+    margin-right: 5px;
+}
+.achievement-large {
+    width: 150px;
+    height: 150px;
+}
+
 .pull-left {
     float: left;
 }
