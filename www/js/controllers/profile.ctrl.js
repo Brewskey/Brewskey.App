@@ -1,13 +1,25 @@
 ﻿angular.module('tappt.controllers')
-.controller('ProfileCtrl', ['$scope', 'Restangular', '$stateParams', '$localStorage', 'converter',
-    function ($scope, rest, $stateParams, $storage, converter) {
-    $scope.userName = $stateParams.userName || $storage.authDetails.userName;
+.controller('ProfileCtrl', ['$scope', 'Restangular', '$stateParams', '$localStorage', 'converter', 'achievements',
+    function ($scope, rest, $stateParams, $storage, converter, achievements) {
+        $scope.userName = $stateParams.userName || $storage.authDetails.userName;
 
 
-    rest.one('api/profile', escape($scope.userName)).get().then(function (response) {
-        response.totalPints = Math.round(converter.translateToPints(response.lifetimeTotal));
-        $scope.profile = response;
-    });
+        rest.one('api/profile', escape($scope.userName)).get().then(function (response) {
+            response.totalPints = Math.round(converter.translateToPints(response.lifetimeTotal));
+            $scope.profile = response;
+        });
 
-    $scope.translateToOunces = converter.translateToOunces;
-}]);
+        $scope.translateToOunces = converter.translateToOunces;
+
+        var items = [];
+        for (var i = 0; i < 10; i++) {
+            items.push({
+                url: 'http://fillmurray.com/70/70',
+            });
+        }
+
+        $scope.achievements = items;
+        $scope.clickAchievement = function (index) {
+            achievements.showPopups($scope.achievements, index);
+        };
+    }]);

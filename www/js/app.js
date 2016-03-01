@@ -52,9 +52,9 @@
 .config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0):/);
 })
-.config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider',
+.config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$ionicConfigProvider',
 
-function ($stateProvider, $urlRouterProvider, rest) {
+function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     $stateProvider
 
     .state('app', {
@@ -358,4 +358,8 @@ function ($stateProvider, $urlRouterProvider, rest) {
     rest.setBaseUrl('https://tappt.io');
     rest.setRequestSuffix('/');
     //rest.setBaseUrl('http://localhost:2483');
+
+    if (window.cordova && window.cordova.platformId === 'windows' || true) {
+        $ionicConfigProvider.scrolling.jsScrolling(false);
+    }
 }]);

@@ -14,18 +14,9 @@
                     <strong>Achievements</strong>
                 </div>
                 <div class="item">
-                    <ion-scroll zooming="true" direction="x">
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                        <img class="achievement achievement-small" src="http://fillmurray.com/70/70" />
-                    </ion-scroll>
+                    <div class="clearfix" style="overflow-x: scroll;">
+                        <img ng-repeat="achievement in achievements" ng-click="clickAchievement($index)" class="achievement achievement-small" ng-src="{{achievement.url}}" />
+                    </div>
                 </div>
             </div>
             <div class="item no-color">

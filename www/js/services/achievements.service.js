@@ -21,7 +21,7 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
             return;
         }
 
-        authList.map(function(authDetails) {
+        authList.map(function (authDetails) {
             subscribe(authDetails.userName);
         });
     });
@@ -38,9 +38,9 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
         });
     }
 
-    function showPopups(achievements) {
+    function showPopups(achievements, index) {
         var scope = $rootScope.$new();
-        scope.index = 0;
+        scope.index = index || 0;
         scope.achievements = achievements;
         scope.currentAchievement = achievements[scope.index];
 

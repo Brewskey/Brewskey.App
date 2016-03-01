@@ -4,14 +4,16 @@
             class="button button-clear button-dark ion-chevron-left achievement-button achievement-button-left" 
             ng-click="prev($event)" 
             ng-disabled="index === 0"
-            ng-show="achievements.length > 1">
+            ng-show="achievements.length > 1"
+            type="button">
         </button>
         <img class="achievement achievement-large" src="http://fillmurray.com/150/150" />
         <button 
             class="button button-clear button-dark ion-chevron-right achievement-button achievement-button-right" 
             ng-click="next($event)" 
             ng-disabled="index === achievements.length - 1"
-            ng-show="achievements.length > 1">
+            ng-show="achievements.length > 1"
+            type="button">
         </button>
     </div>
     <h3>{{currentAchievement.title}}</h3>
