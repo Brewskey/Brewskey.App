@@ -4,15 +4,18 @@
         </ion-refresher>
         <ion-list>
             <div class="card" ng-repeat="pourEvent in pourEvents">
+                <div class="item item-avatar">
+                    <img ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=40&h=40&mode=crop" load-fail="img/blank-profile-40.png">
+                    <h2 class="profile-link"><strong><a ui-sref="app.profile({userName: pourEvent.userName})">{{pourEvent.userName}} </a></strong></h2>
+                    <p>
+                        <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                    </p>
+                </div>
                 <div class="item item-text-wrap clearfix">
                     <div>
-                        <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong><br />
-                        <a ui-sref="app.profile({userName: pourEvent.userName})">{{renderUserName(pourEvent.userName)}}</a> poured {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
-                        with {{pourEvent.pourCount}} pours.
-                        <br />
-                        <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                        <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong>&nbsp;&mdash;&nbsp;{{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
+                        with {{pourEvent.pourCount}} pours
                     </div>
-                    <br />
                     <div class="pull-left">
                         <pint-list count="pourEvent.pulses" />
                     </div>

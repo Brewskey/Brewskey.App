@@ -4,7 +4,12 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
     var hub = new Hub('achievementHub', {
         //client side methods
         listeners: {
-            'newAchievements': showPopups
+            'newAchievements': function (achievements) {
+                if (navigator.vibrate) {
+                    navigator.vibrate([300, 10, 300, 10, 300]);
+                }
+                showPopups(achievements, 0);
+            }
         },
         //server side methods
         methods: ['subscribe', 'unsubscribe'],

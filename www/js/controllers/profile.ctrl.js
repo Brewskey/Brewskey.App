@@ -3,6 +3,9 @@
     function ($scope, rest, $stateParams, $storage, converter, achievements) {
         $scope.userName = $stateParams.userName || $storage.authDetails.userName;
 
+        if (navigator.userAgent.match(/iemobile/i)) {
+            $scope.isWP8 = true;
+        }
 
         rest.one('api/profile', escape($scope.userName)).get().then(function (response) {
             response.totalPints = Math.round(converter.translateToPints(response.lifetimeTotal));

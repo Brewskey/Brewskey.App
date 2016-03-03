@@ -8,6 +8,9 @@ angular.module('tappt.services', [])
 .factory("auth",
   ['Restangular', '$localStorage', '$ionicHistory', '$state', 'achievements',
   function (rest, storage, $ionicHistory, $state, achievements) {
+      if (storage.authDetails && !storage.authList) {
+          storage.authList = [storage.authDetails];
+      }
 
       var output = {
           isLoggedIn: function () {

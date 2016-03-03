@@ -2,21 +2,25 @@
     <ion-content>
         <div class="list" ng-init="pours = getPours()">
             <div class="item sub-header">
-                <h1 ng-bind="userName"></h1>
-            </div>
-            <div class="item no-color">
-                <div class="item">
-                    Total Pints {{profile.totalPints}}
-                </div>
+                <h1 ng-bind="userName" class="text-center"></h1>
+                <profile-photo user-name="userName"></profile-photo>
             </div>
             <div class="item no-color">
                 <div class="item item-divider">
                     <strong>Achievements</strong>
                 </div>
                 <div class="item">
-                    <div class="clearfix" style="overflow-x: scroll;">
+                    <ion-scroll zooming="false" direction="x" ng-if="!isWP8">
+                        <img ng-repeat="achievement in achievements" ng-click="clickAchievement($index)" class="achievement achievement-small" ng-src="{{achievement.url}}" />
+                    </ion-scroll>
+                    <div ng-if="isWP8" style="overflow-x: scroll">
                         <img ng-repeat="achievement in achievements" ng-click="clickAchievement($index)" class="achievement achievement-small" ng-src="{{achievement.url}}" />
                     </div>
+                </div>
+            </div>
+            <div class="item no-color">
+                <div class="item">
+                    Total Pints {{profile.totalPints}}
                 </div>
             </div>
             <div class="item no-color">

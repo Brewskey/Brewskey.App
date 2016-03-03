@@ -1,5 +1,7 @@
-﻿angular.module('tappt', ['ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular', 'angularMoment', 'SignalR', 'chart.js'])
-
+﻿angular.module('tappt', [
+    'ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular',
+    'angularMoment', 'SignalR', 'chart.js'
+])
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -359,7 +361,34 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setRequestSuffix('/');
     //rest.setBaseUrl('http://localhost:2483');
 
-    if (window.cordova && window.cordova.platformId === 'windows' || true) {
+    if (window.cordova && window.cordova.platformId === 'windows') {
         $ionicConfigProvider.scrolling.jsScrolling(false);
+    }
+
+    if (typeof PushNotification !== "undefined") {
+        var push = PushNotification.init({
+            android: {
+                senderID: "12345679"
+            },
+            ios: {
+                alert: "true",
+                badge: true,
+                sound: 'false'
+            },
+            windows: {}
+        });
+
+        push.on('registration', function (data) {
+            console.log(data.registrationId);
+        });
+
+        push.on('notification', function (data) {
+            console.log(data.message);
+            console.log(data.title);
+            console.log(data.count);
+            console.log(data.sound);
+            console.log(data.image);
+            console.log(data.additionalData);
+        });
     }
 }]);
