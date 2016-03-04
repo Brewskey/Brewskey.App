@@ -1,6 +1,6 @@
 ﻿angular.module('tappt.controllers')
-.controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage',
-function ($scope, rest, converter, $storage) {
+.controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage', 'cache',
+function ($scope, rest, converter, $storage, cache) {
     $scope.loading = true;
     $scope.refresh = function() {
         rest.all('api/feed').getList()
@@ -20,4 +20,6 @@ function ($scope, rest, converter, $storage) {
     $scope.renderUserName = function(userName) {
         return userName === $storage.authDetails.userName ? "You" : userName;
     };
+
+    $scope.cacheBuster = cache.value;
 }]);

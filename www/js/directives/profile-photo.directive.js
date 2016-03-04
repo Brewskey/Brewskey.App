@@ -1,12 +1,10 @@
 ﻿angular.module('tappt.directives')
 .directive('profilePhoto', [
-'$ionicModal', 'Restangular', '$localStorage',
-function ($ionicModal, rest, storage) {
-    var index = 0;
+'$ionicModal', 'Restangular', '$localStorage', 'cache',
+function ($ionicModal, rest, storage, cache) {
     return {
         link: function (scope, element) {
             scope.isUsersProfile = scope.userName === storage.authDetails.userName;
-            scope.index = index;
             $ionicModal.fromTemplateUrl('templates/photo-select.html', {
                 scope: scope,
                 animation: 'slide-in-up'
@@ -25,6 +23,7 @@ function ($ionicModal, rest, storage) {
                 }, function (error) {
                     scope.showError = true;
                 }, {
+                    correctOrientation: true,
                     destinationType: Camera.DestinationType.DATA_URL,
                     cameraDirection: Camera.Direction.FRONT,
                     saveToPhotoAlbum: false,
@@ -42,21 +41,22 @@ function ($ionicModal, rest, storage) {
 
             scope.savePhoto = function () {
                 rest.one("api/profile").customPUT({ photo: scope.image }, "photo").then(function () {
+                    cache.reset();
+                    scope.cache = cache.value;
                     scope.closeModal();
-                }).catch(function (e) {
-                    var v = 0;
                 });
             };
 
             scope.closeModal = function () {
                 scope.image = null;
-                index = scope.index = index + 1;
                 scope.modal.hide();
             };
             //Cleanup the modal when we're done with it!
             scope.$on('$destroy', function () {
                 scope.modal.remove();
             });
+
+            scope.cache = cache.value;
         },
         scope: {
             userName: '=',

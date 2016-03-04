@@ -1,12 +1,8 @@
 ﻿<ion-modal-view>
     <ion-content class="padding">
         <div class="square">
-            <div class="square-content">
-                <div>
-                    <span style="vertical-align: middle">
-                        <img ng-src="data:image/jpeg;base64,{{image}}" ng-if="image" style="width: 100%;" />
-                    </span>
-                </div>
+            <div class="square-content selected-photo" ng-style="{'background-image': 'url(data:image/jpeg;base64,' + image + ')'}">
+                <!--<img ng-src="" ng-if="image" style="width: 100%;" />-->
             </div>
         </div>
         <div class="button-bar">

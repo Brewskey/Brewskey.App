@@ -5,7 +5,9 @@
         <ion-list>
             <div class="card" ng-repeat="pourEvent in pourEvents">
                 <div class="item item-avatar">
-                    <img ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=40&h=40&mode=crop" load-fail="img/blank-profile-40.png">
+                    <img class="default-profile-small"
+                         ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=40&h=40&mode=crop&cachebust={{cacheBuster}}"
+                         load-fail="img/blank-profile-40.png">
                     <h2 class="profile-link"><strong><a ui-sref="app.profile({userName: pourEvent.userName})">{{pourEvent.userName}} </a></strong></h2>
                     <p>
                         <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>

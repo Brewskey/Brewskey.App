@@ -67,6 +67,7 @@ h2.profile-link {
     background: #e7e6e4;
     border-radius: 10px;
     margin-bottom: 10px;
+    overflow: hidden;
     position: relative;       
 }
 .profile-edit-button {
@@ -82,6 +83,17 @@ h2.profile-link {
 }
 .profile-photo {
     width: 100%;
+}
+.selected-photo {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.default-profile-small {
+    background: url('../img/blank-profile-40.png');
 }
 
 .achievement-popup .popup-head {
@@ -131,31 +143,19 @@ h2.profile-link {
 }
 
 .square {
-    position: relative;
-    overflow: hidden;
+	position: relative;
 }
-
 .square:before {
-    content: "";
-    display: block;
-    padding-top: 100%;
+	content: "";
+	display: block;
+	padding-top: 100%;
 }
-
 .square-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-}
-
-.square-content > div {
-   display: table;
-   width: 100%;
-   height: 100%;
-}
-.square-content > div > span {
-    display: table-cell;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 .pull-left {
