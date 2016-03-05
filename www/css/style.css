@@ -35,6 +35,12 @@ a, a:visited {
 .leaderboard-info {
     margin-right: 20px;
 }
+.leaderboard-pint-list {
+    padding-left: 30px;
+}
+.pint-list {
+    display: block;
+}
 .pint-glass {
     display: inline-block;
     height: 40px;
@@ -59,6 +65,20 @@ a, a:visited {
         top: 0;
         width: 100%;
     }
+
+    .too-many-pints {
+        font-size: 18px;
+        padding-top: 15px;
+        position: relative;
+    }
+        .too-many-pints .pint-glass {
+            bottom: -10px;
+            position: absolute;
+        }
+    .too-many-pints-count {
+        padding: 0 16px 0 26px;
+    }
+
 .profile-link,
 h2.profile-link {
     font-size: 20px;
@@ -93,7 +113,11 @@ h2.profile-link {
 }
 
 .default-profile-small {
-    background: url('../img/blank-profile-40.png');
+    background: url('../img/blank-profile-40.png') center no-repeat;
+    background-size: cover;
+    border-radius: 4px;
+    height: 50px;
+    width: 50px;
 }
 
 .achievement-popup .popup-head {
@@ -158,6 +182,25 @@ h2.profile-link {
 	bottom: 0;
 }
 
+.home-story-info {
+    padding-left: 65px;
+}
+
+.leaderboard-rank {
+    width: 25px;
+    text-align: right;
+}
+.leaderboard-profile-pic {
+    margin-left: 5px;
+}
+.leaderboard-content {
+    padding-left: 88px;
+}
+
+/* stats */
+.recent-pour-info {
+    padding-left: 65px;
+}
 .pull-left {
     float: left;
 }

@@ -1,0 +1,22 @@
+﻿<div ng-if="wholePints.length <= 10">
+    <div class="pint-glass" ng-repeat="i in wholePints track by $index" title="14 ounces">
+        <div class="beer"></div>
+        <div class="pint"></div>
+    </div>
+    <div class="pint-glass" ng-if="partialPintHeight > 0" title="{{leftoverOunces}} ounces">
+        <div class="beer" ng-style="{height: partialPintHeight + '%'}"></div>
+        <div class="pint"></div>
+    </div>
+</div>
+<div ng-if="wholePints.length > 10" class="too-many-pints pull-left">
+    <div class="pint-glass" title="14 ounces">
+        <div class="beer"></div>
+        <div class="pint"></div>
+    </div>
+    <strong class="too-many-pints-count">X {{wholePints.length}}</strong>
+    <div class="pint-glass" ng-if="partialPintHeight > 0" title="{{leftoverOunces}} ounces">
+        <div class="beer" ng-style="{height: partialPintHeight + '%'}"></div>
+        <div class="pint"></div>
+    </div>
+</div>
+

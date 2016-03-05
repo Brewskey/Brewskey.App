@@ -16,18 +16,24 @@
                     <strong>Today</strong>
                 </div>
                 <div ng-repeat="pour in leaderboard" class="item">
-                    <div class="clearfix">
-                        <div class="pull-left leaderboard-info">
-                            <strong>{{$index + 1}}.&nbsp;<a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
+                    <div class="leaderboard-info clearfix">
+                        <div class="pull-left">
+                            <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
+                            <a ui-sref="app.profile({userName: pour.userName})">
+                                <img class="default-profile-small leaderboard-profile-pic"
+                                     ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop"
+                                     load-fail="img/blank-profile-40.png" />
+                            </a>
+                        </div>
+                        <div class="leaderboard-content">
+                            <strong><a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
                             &nbsp;&mdash;&nbsp;
                             {{translateToOunces(pour.totalPulses)}} oz
                             <br />
                             <span>Most recent </span><em am-time-ago="pour.lastPourDate" am-preprocess="utc"></em>
                         </div>
-                        <div class="pull-left">
-                            <pint-list count="pour.totalPulses" />
-                        </div>
                     </div>
+                    <pint-list count="pour.totalPulses" class="pint-list leaderboard-pint-list clearfix" />
                 </div>
                 <div class="item" ng-if="leaderboard && leaderboard.length === 0">
                     <h2>No pours today!</h2>
@@ -38,18 +44,24 @@
                     <strong>Current Keg</strong>
                 </div>
                 <div ng-repeat="pour in kegLeaderboard" class="item">
-                    <div class="clearfix">
-                        <div class="leaderboard-info">
-                            <strong>{{$index + 1}}.&nbsp;<a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
+                    <div class="leaderboard-info clearfix">
+                        <div class="pull-left">
+                            <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
+                            <a ui-sref="app.profile({userName: pour.userName})">
+                                <img class="default-profile-small leaderboard-profile-pic"
+                                        ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop"
+                                        load-fail="img/blank-profile-40.png" />
+                            </a>
+                        </div>
+                        <div class="leaderboard-content">
+                            <strong><a ui-sref="app.profile({userName: pour.userName})">{{pour.userName}}</a></strong>
                             &nbsp;&mdash;&nbsp;
                             {{translateToOunces(pour.totalPulses)}} oz
                             <br />
                             <span>Most recent </span><em am-time-ago="pour.lastPourDate" am-preprocess="utc"></em>
                         </div>
-                        <div>
-                            <pint-list count="pour.totalPulses" />
-                        </div>
                     </div>
+                    <pint-list count="pour.totalPulses" class="pint-list leaderboard-pint-list clearfix" />
                 </div>
                 <div class="item" ng-if="currentKeg && currentKeg.length === 0">
                     <h2>No pours!</h2>

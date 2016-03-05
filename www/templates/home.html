@@ -4,14 +4,18 @@
         </ion-refresher>
         <ion-list>
             <div class="card" ng-repeat="pourEvent in pourEvents">
-                <div class="item item-avatar">
-                    <img class="default-profile-small"
-                         ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=40&h=40&mode=crop&cachebust={{cacheBuster}}"
-                         load-fail="img/blank-profile-40.png">
-                    <h2 class="profile-link"><strong><a ui-sref="app.profile({userName: pourEvent.userName})">{{pourEvent.userName}} </a></strong></h2>
-                    <p>
-                        <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
-                    </p>
+                <div class="item clearfix">
+                    <a ui-sref="app.profile({userName: pourEvent.userName})" class="pull-left">
+                        <img class="default-profile-small leaderboard-profile-pic"
+                             ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop"
+                             load-fail="img/blank-profile-40.png" />
+                    </a>
+                    <div class="home-story-info">
+                        <h2 class="profile-link"><strong><a ui-sref="app.profile({userName: pourEvent.userName})">{{pourEvent.userName}} </a></strong></h2>
+                        <p>
+                            <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                        </p>
+                    </div>
                 </div>
                 <div class="item item-text-wrap clearfix">
                     <div>
@@ -19,7 +23,7 @@
                         with {{pourEvent.pourCount}} pours
                     </div>
                     <div class="pull-left">
-                        <pint-list count="pourEvent.pulses" />
+                        <pint-list count="pourEvent.pulses" class="pint-list"/>
                     </div>
                 </div>
             </div>

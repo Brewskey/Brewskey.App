@@ -21,17 +21,22 @@
                 <div ng-repeat="pour in pours" class="item">
                     <div class="clearfix">
                         <div class="pull-left">
-                            <a ui-sref="app.profile({userName: pour.pouredBy})">
-                                <strong>{{pour.pouredBy}}</strong>
+                            <a ui-sref="app.profile({userName: pour.pouredBy})" class="pull-left">
+                                <img class="default-profile-small leaderboard-profile-pic"
+                                     ng-src="https://tappt.io/cdn/photos/{{pour.pouredBy}}.jpg?w=50&h=50&mode=crop"
+                                     load-fail="img/blank-profile-40.png" />
                             </a>
-                            &nbsp;&mdash;&nbsp;
-                            {{translateToOunces(pour.pulses)}} oz
-                            <br />
-                            <span am-time-ago="pour.pourDate" am-preprocess="utc"></span>
+                            <div class="recent-pour-info">
+                                <a ui-sref="app.profile({userName: pour.pouredBy})">
+                                    <strong>{{pour.pouredBy}}</strong>
+                                </a>
+                                &nbsp;&mdash;&nbsp;
+                                {{translateToOunces(pour.pulses)}} oz
+                                <br />
+                                <span am-time-ago="pour.pourDate" am-preprocess="utc"></span>
+                            </div>
                         </div>
-                        <div class="pull-right">
-                            <pint-list count="pour.pulses" />
-                        </div>
+                        <pint-list count="pour.pulses" class="pint-list pint-list-float pull-right" />
                     </div>
                 </div>
             </div>

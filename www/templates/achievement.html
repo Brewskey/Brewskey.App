@@ -1,5 +1,4 @@
 ﻿<div class="text-center">
-    <h3>{{currentAchievement.title}}</h3>
     <div class="achievement-icon-container">
         <button 
             class="button button-clear button-dark ion-chevron-left achievement-button achievement-button-left" 
@@ -8,7 +7,7 @@
             ng-show="achievements.length > 1"
             type="button">
         </button>
-        <img class="achievement achievement-large" src="http://fillmurray.com/150/150" />
+        <img class="achievement achievement-large" ng-src="{{image}}" />
         <button 
             class="button button-clear button-dark ion-chevron-right achievement-button achievement-button-right" 
             ng-click="next($event)" 
@@ -17,5 +16,6 @@
             type="button">
         </button>
     </div>
+    <h3>{{currentAchievement.title}}</h3>
     <p>{{currentAchievement.text}}</p>
 </div>

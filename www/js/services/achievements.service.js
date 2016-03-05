@@ -1,6 +1,27 @@
 ﻿angular.module('tappt.services')
 .factory('achievements', ['$rootScope', '$ionicPopup', 'Restangular', 'Hub', '$localStorage',
 function ($rootScope, $ionicPopup, rest, Hub, $storage) {
+    var achievementImages = {
+        1: 'img/icons/beer-cap.png',
+        100: 'img/icons/bottle-opener.png',
+        101: 'img/icons/bottle-opener.png',
+        102: 'img/icons/glass-with-foam.png',
+        103: 'img/icons/mug-without-foam.png',
+        104: 'img/icons/mug-lined-with-foam.png',
+        105: 'img/icons/glass-seven.png',
+        106: 'img/icons/mug-broken.png',
+        200: 'img/icons/bottle.png',
+        201: 'img/icons/bottle.png',
+        202: 'img/icons/bottle.png',
+        203: 'img/icons/bottle.png',
+        301: 'img/icons/keg.png',
+        302: 'img/icons/keg.png',
+        303: 'img/icons/keg.png',
+        304: 'img/icons/glass-empty.png',
+        305: 'img/icons/bottle.png',
+        306: 'img/icons/mug-broken.png',
+    }
+
     var hub = new Hub('achievementHub', {
         //client side methods
         listeners: {
@@ -48,6 +69,7 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
         scope.index = index || 0;
         scope.achievements = achievements;
         scope.currentAchievement = achievements[scope.index];
+        scope.image = achievementImages[scope.currentAchievement.achievementType];
 
         var popup = $ionicPopup.alert({
             cssClass: 'achievement-popup',
@@ -64,6 +86,7 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
             }
 
             scope.currentAchievement = achievements[scope.index];
+            scope.image = achievementImages[scope.currentAchievement.achievementType];
         };
 
         scope.prev = function ($event) {
@@ -74,10 +97,12 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
             }
 
             scope.currentAchievement = achievements[scope.index];
+            scope.image = achievementImages[scope.currentAchievement.achievementType];
         };
     }
 
     return {
+        images: achievementImages,
         showPopups: showPopups,
         subscribe: subscribe,
         unsubscribe: unsubscribe,

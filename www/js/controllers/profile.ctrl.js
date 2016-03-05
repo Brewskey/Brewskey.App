@@ -10,18 +10,17 @@
         rest.one('api/profile', escape($scope.userName)).get().then(function (response) {
             response.totalPints = Math.round(converter.translateToPints(response.lifetimeTotal));
             $scope.profile = response;
+            $scope.achievements = response.achievements.map(function(item) {
+                return angular.extend({}, { count: item.count }, item.achievement);
+            });
         });
 
         $scope.translateToOunces = converter.translateToOunces;
 
-        var items = [];
-        for (var i = 0; i < 10; i++) {
-            items.push({
-                url: 'http://fillmurray.com/70/70',
-            });
-        }
+        $scope.getImage = function (achievement) {
+            return achievements.images[achievement.achievementType];
+        };
 
-        $scope.achievements = items;
         $scope.clickAchievement = function (index) {
             achievements.showPopups($scope.achievements, index);
         };

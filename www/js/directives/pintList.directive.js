@@ -16,13 +16,6 @@ angular.module('tappt.directives', [])
             scope: {
                 count: '=',
             },
-            template: '<div class="pint-glass" ng-repeat="i in wholePints track by $index" title="14 ounces">' +
-                '<div class="beer"></div>' +
-                '<div class="pint"></div>' +
-                '</div>' +
-                '<div class="pint-glass" ng-if="partialPintHeight > 0" title="{{leftoverOunces}} ounces">' +
-                '<div class="beer" ng-style="{height: partialPintHeight + \'%\'}"></div>' +
-                '<div class="pint"></div>' +
-                '</div>',
+            templateUrl: 'templates/pint-list.html',
         };
     }]);
