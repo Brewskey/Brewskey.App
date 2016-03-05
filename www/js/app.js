@@ -52,7 +52,8 @@
 
 })
 .config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|x-wmapp0):/);
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|ms-appx-web|x-wmapp0):/);
+    $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|file|ms-appx|ms-appx-web|x-wmapp0):|data:image\//);
 })
 .config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$ionicConfigProvider',
 
