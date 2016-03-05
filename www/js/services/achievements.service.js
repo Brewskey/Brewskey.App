@@ -19,7 +19,7 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
         303: 'img/icons/keg.png',
         304: 'img/icons/glass-empty.png',
         305: 'img/icons/bottle.png',
-        306: 'img/icons/mug-broken.png',
+        400: 'img/icons/mug-broken.png',
     }
 
     var hub = new Hub('achievementHub', {

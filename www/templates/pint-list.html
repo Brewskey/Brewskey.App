@@ -1,4 +1,4 @@
-﻿<div ng-if="wholePints.length <= 10">
+﻿<div ng-if="wholePints.length <= 8">
     <div class="pint-glass" ng-repeat="i in wholePints track by $index" title="14 ounces">
         <div class="beer"></div>
         <div class="pint"></div>
@@ -8,7 +8,7 @@
         <div class="pint"></div>
     </div>
 </div>
-<div ng-if="wholePints.length > 10" class="too-many-pints pull-left">
+<div ng-if="wholePints.length > 8" class="too-many-pints pull-left">
     <div class="pint-glass" title="14 ounces">
         <div class="beer"></div>
         <div class="pint"></div>
