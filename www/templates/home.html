@@ -7,7 +7,7 @@
                 <div class="item clearfix">
                     <a ui-sref="app.profile({userName: pourEvent.userName})" class="pull-left">
                         <img class="default-profile-small leaderboard-profile-pic"
-                             ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop"
+                             ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
                              load-fail="img/blank-profile-40.png" />
                     </a>
                     <div class="home-story-info">

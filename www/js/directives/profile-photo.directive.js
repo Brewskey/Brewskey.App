@@ -3,8 +3,10 @@
 '$ionicModal', 'Restangular', '$localStorage', 'cache',
 function ($ionicModal, rest, storage, cache) {
     return {
-        link: function (scope, element) {
+        link: function (scope) {
             scope.isUsersProfile = scope.userName === storage.authDetails.userName;
+            scope.cache = cache.value;
+
             $ionicModal.fromTemplateUrl('templates/photo-select.html', {
                 scope: scope,
                 animation: 'slide-in-up'
@@ -43,7 +45,9 @@ function ($ionicModal, rest, storage, cache) {
                 rest.one("api/profile").customPUT({ photo: scope.image }, "photo").then(function () {
                     cache.reset();
                     scope.cache = cache.value;
-                    scope.closeModal();
+                    setTimeout(function () {
+                        scope.closeModal();
+                    });
                 });
             };
 
@@ -55,8 +59,6 @@ function ($ionicModal, rest, storage, cache) {
             scope.$on('$destroy', function () {
                 scope.modal.remove();
             });
-
-            scope.cache = cache.value;
         },
         scope: {
             userName: '=',

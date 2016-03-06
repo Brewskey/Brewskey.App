@@ -1,5 +1,5 @@
 ﻿angular.module('tappt.controllers')
-.controller('AccountsCtrl', ['$scope', '$localStorage', '$ionicModal', function ($scope, $storage, $ionicModal) {
+.controller('AccountsCtrl', ['$scope', '$localStorage', '$ionicModal', function ($scope, $storage, $ionicModal, achievements) {
     var setup = function() {
         $scope.accounts = $storage.authList;
         $scope.currentUsername = $storage.authDetails.userName;
@@ -8,9 +8,13 @@
     setup();
     $scope.$on('modal.hidden', setup);
 
-    $scope.accountSelected = function(account) {
+    $scope.accountSelected = function (account) {
+        achievements.unsubscribe($scope.currentUsername);
         $storage.authDetails = account;
         $scope.currentUsername = account.userName;
+        achievements.subscribe($scope.currentUsername);
+
+        $scope.$emit('userChanged', account);
     };
     $scope.removeAccount = function(account) {
         $scope.accounts = $storage.authList = _.filter($scope.accounts, function(a) {

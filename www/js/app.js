@@ -251,6 +251,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.tap', {
         abstract: true,
+        cache: false,
         url: "/taps/:tapId",
         views: {
             'menuContent': {

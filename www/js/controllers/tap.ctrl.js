@@ -1,6 +1,6 @@
 ﻿angular.module('tappt.controllers')
-.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter',
-    function ($scope, $stateParams, rest, tapHub, converter) {
+.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache',
+    function ($scope, $stateParams, rest, tapHub, converter, cache) {
     function setupTap(response) {
         $scope.tap = response;
         $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
@@ -38,4 +38,5 @@
     }
 
     $scope.translateToOunces = converter.translateToOunces;
+    $scope.cacheBuster = cache.value;
 }]);
