@@ -1,5 +1,6 @@
 ﻿angular.module('tappt.controllers')
-.controller('AccountsCtrl', ['$scope', '$localStorage', '$ionicModal', function ($scope, $storage, $ionicModal, achievements) {
+.controller('AccountsCtrl', ['$scope', '$localStorage', '$ionicModal', 'achievements',
+function ($scope, $storage, $ionicModal, achievements) {
     var setup = function() {
         $scope.accounts = $storage.authList;
         $scope.currentUsername = $storage.authDetails.userName;

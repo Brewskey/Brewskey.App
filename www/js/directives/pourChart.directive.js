@@ -21,7 +21,7 @@
                                 date: moment.utc(pour.pourDate),
                                 pulses: pour.pulses,
                             };
-                        });
+                        }).reverse();
                         scope.series = ['Ounces'];
                         data = _.map(pourSets, function (item) {
                             return converter.translateToOunces(item.pulses);
@@ -67,7 +67,7 @@
                             return item.date.format('l');
                         });
                     }
-                    
+
                     scope.data = [data];
                 }, true);
             },

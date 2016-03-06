@@ -42,14 +42,12 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
     });
 
     hub.promise.then(function () {
-        var authList = $storage.authList;
-        if (!authList) {
+        var authDetails = $storage.authDetails;
+        if (!authDetails) {
             return;
         }
 
-        authList.map(function (authDetails) {
-            subscribe(authDetails.userName);
-        });
+        subscribe(authDetails.userName);
     });
 
     function subscribe(userName) {

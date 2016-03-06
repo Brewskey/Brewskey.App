@@ -15,7 +15,7 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "com.ionic.keyboard",
+    "ionic-plugin-keyboard",
     "cordova-plugin-camera",
     "cordova-plugin-splashscreen",
     "cordova-plugin-vibration",
