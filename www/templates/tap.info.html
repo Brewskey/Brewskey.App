@@ -1,16 +1,7 @@
-<ion-view view-title="Tappt">
+<ion-view>
+    <ion-nav-title>{{tap.name}}</ion-nav-title>
     <ion-content>
         <div class="list">
-            <div class="item sub-header">
-                <h1>
-                    <span ng-bind="tap.name"></span>
-                    <a href="#/app/tap/{{tap.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
-                        <span class="button button-positive">
-                            <i class="icon ion-edit"></i>
-                        </span>
-                    </a>
-                </h1>
-            </div>
             <div class="item no-color">
                 <div class="item item-divider">
                     <strong>On Tap</strong>
