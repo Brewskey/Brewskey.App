@@ -21,7 +21,7 @@
                             <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
                             <a ui-sref="app.profile({userName: pour.userName})">
                                 <img class="default-profile-small leaderboard-profile-pic"
-                                     ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop"
+                                     ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
                                      load-fail="img/blank-profile-40.png" />
                             </a>
                         </div>
@@ -49,7 +49,7 @@
                             <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
                             <a ui-sref="app.profile({userName: pour.userName})">
                                 <img class="default-profile-small leaderboard-profile-pic"
-                                        ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop"
+                                        ng-src="https://tappt.io/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
                                         load-fail="img/blank-profile-40.png" />
                             </a>
                         </div>

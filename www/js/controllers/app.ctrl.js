@@ -9,17 +9,25 @@
 
     $scope.settings = $localStorage.settings;
 
-	$scope.logout = function () {
-		auth.logout();
+    $scope.$on('settingChanged', function (event, settings) {
+        $scope.settings = $localStorage.settings = settings;
+    });
+    $scope.$on('userChanged', function (event, account) {
+        $localStorage.authDetails = account;
+        $scope.userName = $localStorage.authDetails.userName;
+    });
 
-		$ionicHistory.nextViewOptions({
-          historyRoot: true
+    $scope.logout = function () {
+        auth.logout();
+
+        $ionicHistory.nextViewOptions({
+            historyRoot: true
         });
 
         $state.go('app.login');
-	};
+    };
 
-    $scope.showPopup = function() {
+    $scope.showPopup = function () {
         nfcService.showPopup();
     };
 });
