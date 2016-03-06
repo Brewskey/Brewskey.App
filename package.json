@@ -22,13 +22,13 @@
     "cordova-plugin-whitelist",
     "org.apache.cordova.console",
     "org.apache.cordova.device",
-    "phonegap-nfc",
-    "phonegap-plugin-push"
+    "phonegap-nfc"
   ],
   "cordovaPlatforms": [
     {
       "platform": "android",
       "locator": "windows"
-    }
+    },
+    "ios"
   ]
 }
