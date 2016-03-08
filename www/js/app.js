@@ -14,7 +14,7 @@
             StatusBar.styleDefault();
         }
 
-        navigator.splashscreen.hide();
+        //navigator.splashscreen.hide();
 
         if (window.cordova && window.cordova.platformId === 'windows') {
             // Get the back button working in WP8.1
