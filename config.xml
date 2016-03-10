@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.tappt.app" version="0.0.10" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.tappt.app" version="0.0.11" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Tappt</name>
-  <description>
-    Because beer is good.
+  <description>
+    Because beer is good.
   </description>
-  <author email="support@tappt.io" href="http://tappt.io/">
-      Tappt
+  <author email="support@tappt.io" href="http://tappt.io/">
+      Tappt
     </author>
   <content src="index.html"/>
   <access origin="*"/>
