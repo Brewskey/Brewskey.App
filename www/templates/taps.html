@@ -1,9 +1,6 @@
-<ion-view view-title="Tappt">
+<ion-view view-title="Taps">
     <ion-content>
         <div class="list">
-            <div class="item sub-header">
-                <h1>Taps</h1>
-            </div>
             <div class="item no-color">
                 <a ui-sref="app.new-tap" class="item item-button-right">
                     New Tap
@@ -13,8 +10,10 @@
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>
-                <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item">
-                    {{tap.name}}
+                <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
+                    <img ng-src="{{tap.currentKeg.beerIcon}}">
+                    <h2>{{tap.name}}</h2>
+                    <p>{{tap.summary}}</p>
                 </a>
             </div>
         </div>

@@ -13,11 +13,34 @@ a, a:visited {
     color: #000;
 }
 
+.dl-horizontal dt {
+    clear: left;
+    float: left;
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 28%;
+}
+.dl-horizontal dd {
+    margin-left: 28%;
+    padding: 0 0 5px 10px;
+}
+
 .sub-header {
     margin: 8px 16px 0;
     padding: 0 8px;
 }
 
+
+.sub-header h2 {
+    font-size: 24px;
+    padding-bottom: 5px;
+}
+
+.list-colored {
+    background: #ffffff;
+}
 .item a,
 .item a:visited {
     color: #444;
@@ -31,7 +54,11 @@ a, a:visited {
     background: transparent;
     border-color: transparent;
 }
-
+.no-margin,
+.button.button-block.no-margin, 
+.button.button-full.no-margin {
+    margin: 0;
+}
 .leaderboard-info {
     margin-right: 20px;
 }
@@ -186,6 +213,37 @@ h2.profile-link {
     padding-left: 65px;
 }
 
+/* device */
+.connectionStatus {
+    padding-left: 18px;
+    position: relative;
+}
+    .connectionStatus::before {
+        background: #ff0000;
+        border: #555;
+        border-radius: 50%;
+        content: ' ';
+        display: block;
+        height: 14px;
+        left: 0;
+        position: absolute;
+        top: 3px;
+        width: 14px;
+    }
+
+    .connectionStatus.deviceConnected::before {
+        -webkit-animation: pulseOpacity 3.5s ease-in-out infinite;
+        -moz-animation: pulseOpacity 3.5s ease-in-out infinite;
+        animation: pulseOpacity 3.5s ease-in-out infinite;
+        background: #00ff21;
+    }
+.help-block {
+    color: #959595;
+    display: block;
+    font-style: italic;
+}
+
+/* leaderboard */
 .leaderboard-rank {
     width: 25px;
     text-align: right;

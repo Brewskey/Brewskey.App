@@ -7,6 +7,9 @@
             $scope.loading = false;
             $scope.device = response;
         });
+        rest.one('api/devices', $stateParams.deviceId).one('taps').get().then(function (response) {
+            $scope.taps = response;
+        });
         rest.one('api/devices', $stateParams.deviceId).one('status').get().then(function (response) {
             $scope.particleStatus = response.particleStatus;
         });

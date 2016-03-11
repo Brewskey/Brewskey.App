@@ -9,5 +9,8 @@
         <ion-tab title="Stats" icon="ion-podium" ui-sref="app.tap.stats">
             <ion-nav-view name="stats-tab"></ion-nav-view>
         </ion-tab>
+        <ion-tab title="Edit" icon="ion-edit" ui-sref="app.tap.edit" ng-if="canEdit">
+            <ion-nav-view name="edit-tab"></ion-nav-view>
+        </ion-tab>
     </ion-tabs>
 </ion-view>

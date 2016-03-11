@@ -1,49 +1,78 @@
-<ion-view view-title="Tappt">
-  <ion-content>
-	
-    
-    <div class="list card">
-
-    	<div class="item">
-			<h1>
-				<span ng-bind="location.name"></span>
-				<a href="#/app/location/{{location.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
-					<span class="button button-positive">
-					  <i class="icon ion-edit"></i>
-					</span>
-				</a>
-			</h1>
-			<p ng-bind="location.summary"></p>
-		</div>
-    	<div class="item item-body">
-    		<div class="card">
-				<div class="item item-text-wrap">
-    				<span ng-bind="location.street"></span>&nbsp;<span ng-bind="location.suite"></span>
-    				<br/>
-    				<span ng-bind="location.city"></span>&nbsp;<span ng-bind="location.state"></span>,&nbsp;<span ng-bind="location.zipCode">
-				</div>
-			</div>
-    		<div>
-    		</div>
-			<p ng-bind="location.description"></p>
-		</div>
-    	<div class="item item-body">
-    		<div>On Tap</div>
-			 <div class="list card">
-				<a href="#/app/tap/new/{{location.id}}" class="item item-button-right" ng-if="canEdit">
-					New Tap
-					<span class="button button-positive">
-					  <i class="icon ion-plus"></i>
-					</span>
-				</a>
-
-				<!-- Location ngRepeat goes here -->
-		  		<div class="item item-divider" ng-if="canEdit && location.taps.length"></div>
-		  		<a ng-repeat="tap in location.taps | orderBy: 'name'" href="#/app/tap/{{tap.id}}" class="item">
-					{{tap.name}}
-				</a>
-			</div>
-		</div>
-	</div>
-  </ion-content>
+<ion-view view-title="Device">
+    <ion-content>
+        <div class="list card">
+            <div class="item">
+                <h1>
+                    <span ng-bind="device.name"></span>
+                    <a ui-sref="app.edit-device({deviceId: device.id})" class="pull-right">
+                        <span class="button button-positive button-small">
+                            <i class="icon ion-edit"></i>
+                        </span>
+                    </a>
+                    <!--<a class="delete-link text-danger" data-toggle="modal" data-target="#deleteDeviceModal">
+                            <small><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete</small>
+                        </a>-->
+                </h1>
+            </div>
+            <div class="item item-text-wrap">
+                <dl class="dl-horizontal">
+                    <dt>Status:</dt>
+                    <dd>
+                        <div ng-if="device.deviceStatus === 0">
+                            Unlocked
+                            <small class="help-block"><em>Your device is currently unlocked and may be transferred to another account.</em></small>
+                        </div>
+                        <div ng-if="device.deviceStatus === 1">
+                            Active
+                            <small class="help-block"><em>Your device is currently active and can pour beers.</em></small>
+                        </div>
+                        <div ng-if="device.deviceStatus === 2">
+                            Disabled
+                            <small class="help-block"><em>Your device is currently inactive and cannot pour beers.</em></small>
+                        </div>
+                    </dd>
+                    <dt>Particle Id:</dt>
+                    <dd>{{device.particleId}}</dd>
+                    <dt>Token:</dt>
+                    <dd class="clearfix">
+                        <div>
+                            <div>
+                                {{device.clientSecret}}<br />
+                                <button class="button button-small button-stable" ng-click="resetToken()" ng-disabled="resettingToken">Reset Token</button>
+                            </div>
+                            <small class="help-block"><em>The access token used by your device for connecting to the Tappt API.</em></small>
+                        </div>
+                    </dd>
+                    <dt>Status:</dt>
+                    <dd ng-if="particleStatus">
+                        <div class="connectionStatus" ng-class="{'deviceConnected': particleStatus.connected}">
+                            <span ng-if="!particleStatus.connected">
+                                Device is disconnected
+                            </span>
+                            <span ng-if="particleStatus.connected">Connected</span>
+                        </div>
+                        <small ng-if="!particleStatus.connected" class="help-block"><em>Check that your device is powered on and connected to WiFi</em></small>
+                    </dd>
+                </dl>
+                <div class="text-right clearfix">
+                    <small>
+                        <em>
+                            Last edited by <strong ng-bind="device.lastEditedByUserName"></strong>
+                            <span am-time-ago="device.lastEdited" am-preprocess="utc"></span>
+                        </em>
+                    </small>
+                </div>
+            </div>
+            <div class="list">
+                <div class="item sub-header">
+                    <h2>Taps</h2>
+                </div>
+                <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
+                    <img ng-src="{{tap.currentKeg.beerIcon}}">
+                    <h2>{{tap.name}}</h2>
+                    <p>{{tap.summary}}</p>
+                </a>
+            </div>
+        </div>
+    </ion-content>
 </ion-view>

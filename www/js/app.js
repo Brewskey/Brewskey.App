@@ -169,7 +169,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         views: {
             'menuContent': {
                 templateUrl: "templates/new-device.html",
-                controller: 'NewDeviceCtrl'
             }
         }
     })
@@ -255,6 +254,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         url: "/taps/:tapId",
         views: {
             'menuContent': {
+                controller: 'TapCtrl',
                 templateUrl: "templates/tap.html",
             }
         }
@@ -266,7 +266,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         views: {
             'leaderboard-tab': {
                 templateUrl: "templates/tap.leaderboard.html",
-                controller: 'TapCtrl'
             }
         }
     })
@@ -277,7 +276,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         views: {
             'info-tab': {
                 templateUrl: "templates/tap.info.html",
-                controller: 'TapCtrl'
             }
         }
     })
@@ -288,15 +286,14 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         views: {
             'stats-tab': {
                 templateUrl: "templates/tap.stats.html",
-                controller: 'TapCtrl'
             }
         }
     })
-    .state('app.edit-tap', {
+    .state('app.tap.edit', {
         authenticate: true,
-        url: "/taps/:tapId/edit",
+        url: "/edit",
         views: {
-            'menuContent': {
+            'edit-tab': {
                 templateUrl: "templates/new-tap.html",
                 controller: 'NewTapCtrl'
             }

@@ -4,7 +4,7 @@
     function setupTap(response) {
         $scope.tap = response;
         $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
-            return permission.permissionType === 3;
+            return permission.permissionType === 4;
         }).length;
 
         $scope.tap.kegs = _.filter($scope.tap.kegs, function (keg) {

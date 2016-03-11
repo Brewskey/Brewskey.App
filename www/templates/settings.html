@@ -1,8 +1,8 @@
 <ion-view view-title="Settings">
     <ion-content>
-        <ion-toggle ng-change="settingChange()" ng-model="settings.pushNotifications" toggle-class="toggle-calm">Push Notifications</ion-toggle>
+        <!--<ion-toggle ng-change="settingChange()" ng-model="settings.pushNotifications" toggle-class="toggle-calm">Push Notifications</ion-toggle>-->
+        <ion-toggle ng-change="settingChange()" ng-model="settings.multiAuth" toggle-class="toggle-calm">Multi-Account Mode</ion-toggle>
         <ion-toggle ng-change="settingChange()" ng-model="settings.manageLocations" toggle-class="toggle-calm">Manage Locations</ion-toggle>
-        <div class="item item-divider"></div>
         <!--<ion-list>
             <ion-item href="#/app/settings/foo">
                 Foo
@@ -11,6 +11,5 @@
                 Bar
             </ion-item>
         </ion-list>-->
-        <ion-toggle ng-change="settingChange()" ng-model="settings.multiAuth" toggle-class="toggle-calm">Multi-Account Mode</ion-toggle>
     </ion-content>
 </ion-view>

@@ -1,0 +1,23 @@
+﻿<ion-modal-view>
+    <ion-header-bar class="item-input-inset">
+        <label class="item-input-wrapper">
+            <i class="icon ion-ios-search placeholder-icon"></i>
+            <input ng-model="$parent.$parent.query"
+                   ng-model-options="{debounce: 750}"
+                   type="search"
+                   placeholder="Search">
+        </label>
+        <button class="button button-clear" ng-click="closeModal()">
+            Cancel
+        </button>
+    </ion-header-bar>
+    <ion-content class="padding">
+        <div class="list">
+            <a class="item item-avatar" ng-repeat="beer in $parent.$parent.beers" ng-click="$parent.$parent.onSelect(beer)">
+                <img src="{{beer.labels.icon}}" ng-if="beer.labels.icon">
+                <h2 ng-bind="beer.name"></h2>
+                <p ng-bind="beer.style.shortName"></p>
+            </a>
+        </div>
+    </ion-content>
+</ion-modal-view>

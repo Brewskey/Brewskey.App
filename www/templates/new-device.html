@@ -1,11 +1,8 @@
 ﻿<ion-view view-title="Tappt">
-    <ion-content>
-        <form name="form" ng-submit="submitForm()">
+    <ion-nav-title>{{!model.id ? "New Device" : "Edit Device"}}</ion-nav-title>
+    <ion-content ng-controller="NewDeviceCtrl">
+        <form name="form" ng-submit="submitForm()" novalidate>
             <div class="list">
-                <div class="item">
-                    <h1 ng-if="!model.id">New Device</h1>
-                    <h1 ng-if="model.id">Edit Device</h1>
-                </div>
                 <div class="form-errors" ng-if="errorDescription" data-ng-cloak>
                     <div class="form-error" ng-bind="errorDescription"></div>
                 </div>
@@ -50,13 +47,13 @@
                         </div>
                         <select ng-model="statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
                     </label>
+                    <label class="item">
+                        <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid">
+                            <span ng-if="!model.id">Sync Device</span>
+                            <span ng-if="model.id">Update Device</span>
+                        </button>
+                    </label>
                 </div>
-                <label class="item">
-                    <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid">
-                        <span ng-if="!model.id">Sync Device</span>
-                        <span ng-if="model.id">Update Device</span>
-                    </button>
-                </label>
             </div>
         </form>
     </ion-content>
