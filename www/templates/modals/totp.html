@@ -1,0 +1,8 @@
+﻿<div class="item item-input-inset no-color totp">
+    <label class="item-input-wrapper list-colored">
+        <input type="number" placeholder="Pass code" step="1" ng-keyup="$parent.checkTotp($event)">
+    </label>
+    <button class="button button-small" ng-click="$parent.submitTotp(totp)" ng-disabled="$parent.isDisabled()">
+        Submit
+    </button>
+</div>

@@ -2,6 +2,7 @@
 .controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache',
     function ($scope, $stateParams, rest, tapHub, converter, cache) {
     function setupTap(response) {
+        $scope.$emit('device-id', response.deviceId);
         $scope.tap = response;
         $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
             return permission.permissionType === 4;

@@ -150,7 +150,7 @@ h2.profile-link {
 .achievement-popup .popup-head {
     display: none;
 }
-.achievement-popup .popup-body {
+.popup-body {
     overflow: hidden;
 }
 .achievement {
@@ -261,7 +261,7 @@ h2.profile-link {
 }
 
 /* ios */
-.platform-ios .start-pour-button {
+.platform-ios .hide-on-ios {
   display: none;
 }
 
@@ -270,4 +270,11 @@ h2.profile-link {
 }
 .pull-right {
     float: right;
+}
+
+/* android */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

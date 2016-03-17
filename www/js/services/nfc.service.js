@@ -17,14 +17,31 @@ if (window.WinJS !== undefined) {
 
 angular.module('tappt.services')
 .factory("nfcService",
-  ['$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout',
-  function ($q, $ionicPopup, $state, rest, $ionicPlatform, $timeout) {
+  ['$rootScope', '$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout', '$ionicLoading',
+  function ($rootScope, $q, $ionicPopup, $state, rest, $ionicPlatform, $timeout, $ionicLoading) {
       var requestPour = false;
       var authenticating = false;
       var popup;
+      var currentDeviceId;
+
+      $rootScope.$on('device-id', function(event, value) {
+          currentDeviceId = value;
+      });
+      $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+          if (toState.name.indexOf('app.tap.') === 0) {
+              return;
+          }
+
+          currentDeviceId = null;
+      });
 
       function checkNfc() {
           return $q(function (resolve) {
+              if (typeof nfc === "undefined") {
+                  resolve();
+                  return;
+              }
+
               nfc.enabled(resolve, nfcError);
           });
       }
@@ -98,6 +115,8 @@ angular.module('tappt.services')
           }
       });
 
+      var scope;
+
       var output = {
           writeTag: function (authKey) {
               var message = [
@@ -119,17 +138,34 @@ angular.module('tappt.services')
                   }
               });
           },
-          authenticatePour: function (deviceId) {
+          authenticatePour: function (deviceId, totp) {
               if (authenticating || !deviceId) {
                   return;
               }
 
               authenticating = true;
+
               popup.close();
-              rest.all('api/authorizations/pour').post({ deviceId: deviceId }).then(function () {
+              if (totp) {
+                  $ionicLoading.show();
+              } 
+
+              rest.all('api/authorizations/pour').post({ deviceId: deviceId, totp: totp }).then(function () {
                   authenticating = false;
+                  if (totp) {
+                      $ionicLoading.hide();
+                      popup.close();
+                  }
               }, function (e) {
                   authenticating = false;
+
+                  if (totp) {
+                      $ionicLoading.hide();
+                      $ionicPopup.alert({
+                          title: 'Invalid passcode',
+                          template: 'The passcode you entered was incorrect or expired.  Please try a new code.'
+                      });
+                  }
               });
           },
           processUri: function (rawUri) {
@@ -160,10 +196,29 @@ angular.module('tappt.services')
                       return;
                   }
 
+                  scope = $rootScope.$new(true);
+                  scope.submitTotp = function() {
+                      output.authenticatePour(currentDeviceId, scope.totp);
+                  };
+
+                  scope.isDisabled = function() {
+                      return !scope.totp || scope.totp.toString().length !== 6;
+                  };
+
+                  scope.checkTotp = function ($event) {
+                      scope.totp = $event.target.value;
+                  };
+
                   requestPour = true;
                   popup = $ionicPopup.show({
                       title: 'Tap phone to pour beer',
-                      subTitle: 'Place your phone on the Tappt box to begin pouring.',
+                      subTitle: currentDeviceId
+                       ? 'Place your phone on the Tappt box to begin pouring or enter the 6 digit code.'
+                       : 'Place your phone on the Tappt box to begin pouring',
+                      templateUrl: currentDeviceId
+                       ? 'templates/modals/totp.html'
+                       : null,
+                      scope: scope,
                       buttons: [
                           {
                               text: 'Cancel',

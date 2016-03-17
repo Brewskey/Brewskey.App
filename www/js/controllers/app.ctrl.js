@@ -1,6 +1,6 @@
 ﻿angular.module('tappt.controllers', [])
 
-.controller('AppCtrl', function ($scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
+.controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
     $scope.isLoggedIn = auth.isLoggedIn;
 
     if ($localStorage.authDetails) {
@@ -30,4 +30,15 @@
     $scope.showPopup = function () {
         nfcService.showPopup();
     };
+
+    $rootScope.$on('device-id', function (event, value) {
+        $scope.deviceId = value;
+    });
+    $rootScope.$on('$stateChangeSuccess', function (event, toState) {
+        if (toState.name.indexOf('app.tap.') === 0) {
+            return;
+        }
+
+        $scope.deviceId = null;
+    });
 });
