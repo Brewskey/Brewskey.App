@@ -1,4 +1,4 @@
-<a name="0.2.13"></a>
+﻿<a name="0.2.13"></a>
 ### 0.2.13 (2014-11-20)
 
 This release primarily fixes issues reported against 0.2.12

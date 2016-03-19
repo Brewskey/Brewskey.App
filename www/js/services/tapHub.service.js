@@ -1,4 +1,4 @@
-angular.module('tappt.services')
+﻿angular.module('tappt.services')
     .factory('tapHub', ['$rootScope', '$q', 'Hub', 'Restangular',
     function ($rootScope, $q, Hub, rest) {
         var pours = {};

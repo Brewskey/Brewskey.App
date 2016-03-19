@@ -1,4 +1,4 @@
-script: script/test
+﻿script: script/test
 language: node_js
 notifications:
   campfire:

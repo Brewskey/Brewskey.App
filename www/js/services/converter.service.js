@@ -1,4 +1,4 @@
-angular.module('tappt.services')
+﻿angular.module('tappt.services')
     .factory('converter', ['Restangular',
     function (rest) {
         var converter = {

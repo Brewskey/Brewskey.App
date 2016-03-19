@@ -1,4 +1,4 @@
-Mobify Plugin Factory
+﻿Mobify Plugin Factory
 ======
 
 A generic plugin factory method for creating Mobify plugins.

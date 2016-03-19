@@ -1,1 +1,1 @@
-window.testValue = 1;
+﻿window.testValue = 1;

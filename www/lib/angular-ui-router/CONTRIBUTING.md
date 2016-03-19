@@ -1,4 +1,4 @@
-
+﻿
 # Report an Issue
 
 Help us make UI-Router better! If you think you might have found a bug, or some other weirdness, start by making sure
