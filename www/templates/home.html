@@ -3,6 +3,13 @@
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
+            <div class="card">
+                <div class="qr-row clearfix" ng-repeat="row in qr">
+                    <div class="qr-cell" ng-repeat="cell in row track by $index" ng-class="{'qr-dark': !!cell}"></div>
+                </div>
+            </div>
+            
+
             <div class="card" ng-repeat="pourEvent in pourEvents">
                 <div class="item clearfix">
                     <a ui-sref="app.profile({userName: pourEvent.userName})" class="pull-left">

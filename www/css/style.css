@@ -278,3 +278,16 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
+
+.qr-row {
+    
+}
+
+.qr-cell {
+    float: left;
+    width: 2px;
+    height: 2px;
+}
+.qr-dark {
+    background: #000;
+}
