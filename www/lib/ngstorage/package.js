@@ -1,4 +1,4 @@
-Package.describe({
+﻿Package.describe({
   name: 'gsklee:ngstorage',
   version: '0.3.10',
   summary: 'ngStorage package for Meteor',

@@ -1,4 +1,4 @@
-require.config({
+﻿require.config({
     baseUrl: '../../',
     paths: {
         'text': 'bower_components/requirejs-text/text',

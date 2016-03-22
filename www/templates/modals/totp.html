@@ -1,8 +1,13 @@
-﻿<div class="item item-input-inset no-color totp">
-    <label class="item-input-wrapper list-colored">
-        <input type="number" placeholder="Pass code" step="1" pattern="[0-9]*" inputmode="numeric" ng-keyup="$parent.checkTotp($event)">
-    </label>
-    <button class="button button-small" ng-click="$parent.submitTotp(totp)" ng-disabled="$parent.isDisabled()">
-        Submit
+﻿<div>
+    <button class="button button-full button-positive" ng-click="$parent.scanBarcode()" ng-disabled="$parent.qrRunning">
+        Scan QR Code
     </button>
+    <div class="item item-input-inset no-color totp" ng-if="$parent.hasDeviceID">
+        <label class="item-input-wrapper list-colored">
+            <input type="number" placeholder="Pass code" step="1" pattern="[0-9]*" inputmode="numeric" ng-keyup="$parent.checkTotp($event)">
+        </label>
+        <button class="button button-small" ng-click="$parent.submitTotp(totp)" ng-disabled="$parent.isDisabled()">
+            Submit
+        </button>
+    </div>
 </div>

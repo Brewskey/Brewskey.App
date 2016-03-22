@@ -1,4 +1,4 @@
-{
+﻿{
     "name": "ngstorage",
     "version": "0.3.10",
     "main": "./ngStorage.js",

@@ -1,4 +1,4 @@
-#!/usr/bin/env coffee
+﻿#!/usr/bin/env coffee
 require 'shelljs/make'
 fs = require 'fs'
 

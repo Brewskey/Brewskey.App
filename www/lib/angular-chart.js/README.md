@@ -1,4 +1,4 @@
-# angular-chart.js
+﻿# angular-chart.js
 
 [![Bower version](https://badge.fury.io/bo/angular-chart.js.svg)](http://badge.fury.io/bo/angular-chart.js)
 [![npm version](https://badge.fury.io/js/angular-chart.js.svg)](http://badge.fury.io/js/angular-chart.js)
