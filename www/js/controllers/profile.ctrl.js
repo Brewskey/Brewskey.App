@@ -18,7 +18,8 @@
         $scope.translateToOunces = converter.translateToOunces;
 
         $scope.getImage = function (achievement) {
-            return achievements.images[achievement.achievementType];
+            var image = achievements.images[achievement.achievementType];
+            return 'img/icons/70x70/' + image + '-70x70.png';
         };
 
         $scope.clickAchievement = function (index) {

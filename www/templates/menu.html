@@ -1,6 +1,6 @@
 ﻿<ion-side-menus enable-menu-with-back-views="false">
     <ion-side-menu-content>
-        <ion-nav-bar class="bar-dark">
+        <ion-nav-bar class="bar-tappt">
             <ion-nav-back-button>
             </ion-nav-back-button>
 
@@ -8,7 +8,8 @@
                 <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-if="isLoggedIn()"></button>
             </ion-nav-buttons>
             <ion-nav-buttons side="right">
-                <button class="button button-icon button-clear ion-beer start-pour-button" ng-if="isLoggedIn()" ng-class="{'hide-on-ios': !deviceId }" style="color:#ffc900;" ng-click="showPopup()"></button>
+                <button class="start-pour-button" ng-if="isLoggedIn()" ng-class="{'hide-on-ios': !deviceId }" ng-click="showPopup()" type="button">
+                </button>
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="menuContent"></ion-nav-view>

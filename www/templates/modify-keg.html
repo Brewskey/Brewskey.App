@@ -14,7 +14,7 @@
             </div>
             <select ng-change="onKegTypeChange()"
                     data-ng-model="model.kegType"
-                    data-ng-options="kvp.value as kvp.key for kvp in kegTypes"
+                    data-ng-options="key as value for (key, value) in kegTypes"
                     required="required">
                 <option>Select Keg Size</option>
             </select>

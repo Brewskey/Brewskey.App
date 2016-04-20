@@ -1,6 +1,9 @@
 ﻿<div class="profile-photo-container square">
     <div class="square-content">
-        <img ng-src="https://tappt.io/cdn/photos/{{userName}}.jpg?w=400&h=400&mode=crop&cachebust={{cache}}" load-fail="img/blank-profile.png" class="profile-photo">
-        <a class="icon ion-camera profile-edit-button balanced" ng-click="openModal()" ng-if="isUsersProfile" ng-cloak></a>
+        <img ng-src="https://tappt.io/cdn/photos/{{userName}}.jpg?w=400&h=400&mode=crop&cachebust={{cache}}" load-fail="img/blank-profile.png" loaded="hideLoading()" class="profile-photo">
+        <div class="profile-photo-loading" ng-if="loading">
+            <ion-spinner></ion-spinner>
+        </div>
+        <a class="icon ion-camera profile-edit-button balanced" ng-click="selectPhoto()" ng-if="isUsersProfile" ng-cloak></a>
     </div>
 </div>
