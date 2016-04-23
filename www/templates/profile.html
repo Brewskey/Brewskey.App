@@ -27,11 +27,12 @@
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
-                <div ng-repeat="pour in profile.recentPours" class="item item-avatar">
+                <a ui-sref="app.tap.leaderboard({tapId: pour.tapId})" ng-repeat="pour in profile.recentPours" class="item item-avatar">
                     <img ng-src="{{pour.beerIcon}}">
                     <div class="item-text-wrap">
                         <div>
-                            {{translateToOunces(pour.pulses)}} oz of <em>{{pour.beerName}}</em> on <a ui-sref="app.tap.leaderboard({tapId: pour.tapId})">{{pour.tapName}}</a> <!--at {{pour.locationName}}-->
+                            {{translateToOunces(pour.pulses)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}} <!--at </a>me <!--at
+                            {{pour.locationName}}-->
                             <br />
                             <small>{{pour.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
                         </div>
@@ -39,7 +40,7 @@
                             <pint-list count="pour.pulses" />
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </ion-content>

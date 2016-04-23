@@ -4,7 +4,7 @@
         return {
             link: function (scope, element) {
                 scope.$watch('pours', function (pours, oldValue) {
-                    if (pours.length === 0) {
+                    if (!pours || pours.length === 0) {
                         return;
                     }
 

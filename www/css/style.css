@@ -59,6 +59,26 @@ a, a:visited {
 .button.button-full.no-margin {
     margin: 0;
 }
+
+.bar-tappt {
+    background: #1d5f68;
+    color: #ffffff;
+}
+.bar-tappt .button-clear.button-clear {
+    color: #ffffff;
+}
+.tabs-stable > .tabs, .tabs.tabs-stable {
+    background-color: #238393;
+    color: #ffffff;
+}
+.start-pour-button {
+    background: url(../img/pour-icon.png) no-repeat;
+    background-size: cover;
+    border: 0;
+    height: 34px;
+    width: 30px;
+}
+
 .leaderboard-info {
     margin-right: 20px;
 }
@@ -78,7 +98,7 @@ a, a:visited {
 }
     .pint-glass .beer {
         background: url('../img/beer.png') 0 100% no-repeat;
-        bottom: 3px;
+        bottom: 0;
         height: 100%;
         position: absolute;
         width: 100%;
@@ -131,6 +151,19 @@ h2.profile-link {
 .profile-photo {
     width: 100%;
 }
+.profile-photo-loading {
+    background: rgba(255, 255, 255, .6);
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+    .profile-photo-loading .spinner {
+        left: 50%;
+        margin: -14px 0 0 -14px;
+        position: absolute;
+        top: 50%;
+    }
 .selected-photo {
     width: 100%;
     height: 100%;
@@ -241,6 +274,9 @@ h2.profile-link {
     color: #959595;
     display: block;
     font-style: italic;
+}
+small.help-text {
+    font-size: 9px;
 }
 
 /* leaderboard */

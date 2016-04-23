@@ -22,11 +22,7 @@
     "cordova-plugin-whitelist",
     "org.apache.cordova.console",
     "org.apache.cordova.device",
-    "phonegap-nfc",
-    {
-      "locator": "https://github.com/phonegap/phonegap-plugin-barcodescanner",
-      "id": "phonegap-plugin-barcodescanner"
-    }
+    "phonegap-nfc"
   ],
   "cordovaPlatforms": [
     {

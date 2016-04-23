@@ -7,7 +7,8 @@
 
 	if ($scope.model.id) {
 		rest.one('api/taps', $stateParams.tapId).get().then(function (response) {
-			$scope.model = response;
+		    response.currentKeg.kegType += '';
+		    $scope.model = response;
 		});
 	}
 
