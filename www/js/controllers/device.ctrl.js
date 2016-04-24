@@ -1,4 +1,4 @@
-﻿angular.module('tappt')
+angular.module('tappt.controllers')
     .controller('DeviceCtrl', [
     '$scope', 'Restangular', '$stateParams', '$state',
     function ($scope, rest, $stateParams, $state) {

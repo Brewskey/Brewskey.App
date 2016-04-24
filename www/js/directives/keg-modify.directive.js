@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives')
+angular.module('tappt.directives')
     .directive('kegModify', [
     'Restangular', '$ionicModal', 'kegTypes',
     function (rest, $ionicModal, kegTypes) {

@@ -1,4 +1,4 @@
-﻿/*  evidence.js, version 0.6
+/*  evidence.js, version 0.6
  *
  *  Copyright (c) 2009 Tobie Langel (http://tobielangel.com)
  *

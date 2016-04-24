@@ -1,4 +1,4 @@
-﻿angular.module('tappt')
+angular.module('tappt')
 .controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state',
 function ($scope, rest, $stateParams, $state) {
     $scope.model = {

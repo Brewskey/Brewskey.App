@@ -1,4 +1,4 @@
-﻿module.exports = {
+module.exports = {
     targets: [
         'src/js/plugin.js'
     ],

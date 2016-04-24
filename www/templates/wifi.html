@@ -1,0 +1,83 @@
+﻿<ion-view view-title="Setup Device Wifi">
+    <ion-content>
+        <div class="item no-color" ng-if="state === 0">
+            <div class="item item-divider text-center"><strong>Time to set up your device!</strong></div>
+            <div class="item item-text-wrap">
+                <ol>
+                    <li>Please power on your device by plugging it in.</li>
+                    <li>The LED on the device should be blinking blue. If not, hold the button for 3 seconds.</li>
+                    <li>Make sure your phone is to the internet</li>
+                </ol>
+                <button type="button" class="button button-full button-positive" ng-click="nextState()">Ready</button>
+            </div>
+        </div>
+        <div class="item no-color" ng-if="state === 1">
+            <div class="item item-text-wrap">
+                <ol>
+                    <li>Open your nearby networks on your phone</li>
+                    <li>Make sure Wi-Fi is turned on, and choose a network that looks like <strong>Photon-XXXX</strong>.</li>
+                    <li>Once connected, you will move to the next step.</li>
+                    <li>
+                        If your Photon is definitely blinking blue but still not showing up in your computer
+                        or smart phone's WiFi list, try turning your WiFi off and then on again.
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="item no-color" ng-if="state === 2">
+            <div class="item item-divider text-center">Select the network to connect your device to</div>
+            <div class="item no-padding">
+                <div class="padding text-center" ng-show="!networks || !networks.length">
+                    <ion-spinner></ion-spinner>
+                </div>
+                <div class="list">
+                    <div class="" ng-repeat="network in networks|orderBy:'-rssi'">
+                        <div class="item item-icon-right" ng-click="selectNetwork(network)" ng-if="selectedNetwork !== network">
+                            {{network.ssid}}
+                            <i class="icon ion-locked" ng-if="network.sec !== 0"></i>
+                        </div>
+                        <form ng-if="selectedNetwork === network" ng-submit="connect()">
+                            <div class="item item-input-inset item-selected" ng-show="network.sec !== 0">
+                                <label class="item-input-wrapper">
+                                    <input type="password" class="form-control" placeholder="WiFi Password" ng-model="model.password" autofocus />
+                                </label>
+                                <button class="button button-small button-positive" type="submit" ng-disabled="!model.password">
+                                    Connect
+                                </button>
+                            </div>
+                            <div class="item item-button-right item-selected" ng-show="network.sec === 0">
+                                <strong>{{network.ssid}}</strong>
+                                <button class="button button-small button-positive">
+                                    Connect
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="item no-color" ng-if="state >= 3">
+            <div class="item item-divider text-center item-text-wrap">
+                <strong>The WiFi information<br />has been sent to your device!</strong>
+            </div>
+            <div class="item item-text-wrap">
+                <p>
+                    The LED should now turn green, and eventually blue.
+                </p>
+                <hr />
+                <p>
+                    If the LED continues to flash green for a minute or more, it means the password was
+                    entered incorrectly.  You will need to restart the setup process.
+                </p>
+                <hr />
+                <p>
+                    If your phone has not already reverted back to your regular WiFi network,
+                    re-connect to it now to get back online.
+                </p>
+                <br />
+                <a href="#" class="button button-full button-balanced" ui-sref="app.devices()">Continue</a>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
+

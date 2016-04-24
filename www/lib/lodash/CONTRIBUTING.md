@@ -1,4 +1,4 @@
-﻿# Contributing to lodash
+# Contributing to lodash
 
 Contributions are always welcome. Before contributing, please read the [code of conduct](https://github.com/lodash/lodash/blob/master/CODE_OF_CONDUCT.md) & [search the issue tracker](https://github.com/lodash/lodash/issues);
 your issue may have already been discussed or fixed in `master`. To contribute, [fork](https://help.github.com/articles/fork-a-repo/) lodash, commit your changes, & [send a pull request](https://help.github.com/articles/using-pull-requests/).

@@ -1,7 +1,4 @@
-﻿<div>
-    <button class="button button-full button-positive" ng-click="$parent.scanBarcode()" ng-disabled="$parent.qrRunning">
-        Scan QR Code
-    </button>
+<div>
     <div class="item item-input-inset no-color totp" ng-if="$parent.hasDeviceID">
         <label class="item-input-wrapper list-colored">
             <input type="number" placeholder="Pass code" step="1" ng-keyup="$parent.checkTotp($event)">

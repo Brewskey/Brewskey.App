@@ -1,4 +1,4 @@
-﻿angular.module('tappt', [
+angular.module('tappt', [
     'ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular',
     'angularMoment', 'SignalR', 'chart.js'
 ])
@@ -126,6 +126,18 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 controller: 'HomeCtrl',
                 templateUrl: "templates/home.html",
+            }
+        }
+    })
+
+    .state('app.setup-wifi', {
+        authenticate: true,
+        cache: false,
+        url: "/setup-wifi",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/wifi.html",
+                controller: 'WifiCtrl'
             }
         }
     })

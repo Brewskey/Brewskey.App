@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license
  * lodash 4.3.0 (Custom Build) <https://lodash.com/>
  * Build: `lodash core -o ./dist/lodash.core.js`

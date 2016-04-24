@@ -1,4 +1,4 @@
-﻿angular.module('tappt.services')
+angular.module('tappt.services')
     .factory('cache', [
     function () {
         var reset = function () {

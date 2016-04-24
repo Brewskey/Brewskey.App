@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Device">
+<ion-view view-title="Device">
     <ion-content>
         <div class="list card">
             <div class="item">
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="list">
-                <div class="item sub-header">
+                <div class="item sub-header" ng-if="taps && taps.length < 1">
                     <h2>Taps</h2>
                 </div>
                 <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">

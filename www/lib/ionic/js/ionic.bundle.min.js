@@ -1,4 +1,4 @@
-﻿/*!
+/*!
  * ionic.bundle.js is a concatenation of:
  * ionic.js, angular.js, angular-animate.js,
  * angular-sanitize.js, angular-ui-router.js,

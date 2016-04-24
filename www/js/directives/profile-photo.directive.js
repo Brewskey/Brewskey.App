@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives')
+angular.module('tappt.directives')
 .directive('profilePhoto', [
 '$ionicModal', 'Restangular', '$localStorage', 'cache',
 function ($ionicModal, rest, storage, cache) {

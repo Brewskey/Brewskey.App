@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers', [])
+angular.module('tappt.controllers', [])
 
 .controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
     $scope.isLoggedIn = auth.isLoggedIn;

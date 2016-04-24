@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 port=3999
 
 export PATH=node_modules/.bin:"$PATH"

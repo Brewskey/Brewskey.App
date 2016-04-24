@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives')
+angular.module('tappt.directives')
 .directive('loadFail', [
 function () {
     return {

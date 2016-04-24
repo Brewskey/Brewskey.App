@@ -1,4 +1,4 @@
-﻿angular.module('tappt.services')
+angular.module('tappt.services')
 .factory('achievements', ['$rootScope', '$ionicPopup', 'Restangular', 'Hub', '$localStorage',
 function ($rootScope, $ionicPopup, rest, Hub, $storage) {
     var achievementImages = {

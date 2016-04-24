@@ -1,4 +1,4 @@
-﻿var gulp = require('gulp'),
+var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
 	util = require('gulp-util'),

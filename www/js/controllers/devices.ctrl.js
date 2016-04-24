@@ -1,11 +1,18 @@
-﻿angular.module('tappt')
+angular.module('tappt.controllers')
     .controller('DevicesCtrl', [
     '$scope', 'Restangular',
     function ($scope, rest) {
         $scope.loading = true;
-        rest.all('api/devices').getList().then(function (devices) {
-            $scope.devices = devices;
-            $scope.loading = false;
-        }).catch(function () { return $scope.loading = false; });
+
+        $scope.refresh = function () {
+            rest.all('api/devices').getList().then(function (devices) {
+                $scope.devices = devices;
+            }).finally(function () {
+                $scope.loading = false;
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        };
+
+        $scope.refresh();
     }
 ]);

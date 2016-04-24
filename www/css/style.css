@@ -1,6 +1,11 @@
-﻿/* Empty. Add your own CSS if you like */
+﻿html, body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Empty. Add your own CSS if you like */
 .pane, .view {
     background: rgba(146,153,191,1);
+    /*
     background: -moz-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(146,153,191,1)), color-stop(100%, rgba(1,33,96,1)));
     background: -webkit-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
@@ -8,11 +13,19 @@
     background: -ms-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: linear-gradient(135deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9299bf', endColorstr='#012160', GradientType=1 );
+        */
 }
 a, a:visited {
     color: #000;
 }
-
+ol {
+    list-style-type: decimal;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+    ol li {
+        padding-bottom: 5px;
+    }
 .dl-horizontal dt {
     clear: left;
     float: left;
@@ -59,18 +72,38 @@ a, a:visited {
 .button.button-full.no-margin {
     margin: 0;
 }
-
+.no-padding {
+    padding: 0;
+}
+.menu-bar {
+    background: #1d5f68;
+}
 .bar-tappt {
     background: #1d5f68;
     color: #ffffff;
 }
+.tappt-light-bg {
+  background-color: #238393;
+}
 .bar-tappt .button-clear.button-clear {
     color: #ffffff;
 }
-.tabs-stable > .tabs, .tabs.tabs-stable {
-    background-color: #238393;
-    color: #ffffff;
+.tabs-background-tappt .tabs, .tabs-background-tappt > .tabs {
+  background-color: #238393;
+  background-image: linear-gradient(0deg, #c3c3c3, #c3c3c3 50%, transparent 50%);
+  border-color: #c3c3c3; 
+
 }
+
+.alert-error {
+    color: #ef473a;
+    text-align: center;
+}
+    .alert-error h3 {
+        color: #ef473a;
+        font-weight: bold;
+    }
+
 .start-pour-button {
     background: url(../img/pour-icon.png) no-repeat;
     background-size: cover;

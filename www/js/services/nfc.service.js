@@ -1,4 +1,4 @@
-﻿var appActivated;
+var appActivated;
 var deferred;
 angular.injector(['ng']).invoke([
     '$q', function ($q) {
@@ -210,30 +210,12 @@ angular.module('tappt.services')
                       scope.totp = $event.target.value;
                   };
 
-                  scope.scanBarcode = function() {
-                      scope.qrRunning = true;
-                      cordova.plugins.barcodeScanner.scan(
-                          function (result) {
-                              scope.$apply(function() {
-                                  scope.qrRunning = false;
-                              });
-                              var v = 0;
-                          },
-                          function(error) {
-                              scope.$apply(function () {
-                                  scope.qrRunning = false;
-                              });
-                              var g = 0;
-                          }
-                      );
-                  };
-
                   requestPour = true;
                   popup = $ionicPopup.show({
                       title: 'Tap phone to pour beer',
                       subTitle: currentDeviceId
-                       ? 'Place your phone on the Tappt box, scan QR code, or enter the 6 digit code to begin pouring'
-                       : 'Place your phone on the Tappt box or scan QR code to begin pouring',
+                       ? 'Place your phone on the Tappt box or enter the 6 digit code to begin pouring'
+                       : 'Place your phone on the Tappt box to begin pouring',
                       templateUrl: 'templates/modals/totp.html',
                       scope: scope,
                       buttons: [

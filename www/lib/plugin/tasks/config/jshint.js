@@ -1,4 +1,4 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
     var jslint = require('../jslinting');
     var jshintrcPath = 'node_modules/mobify-code-style/javascript/.jshintrc';
 

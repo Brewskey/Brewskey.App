@@ -1,4 +1,4 @@
-﻿
+
 $ViewProvider.$inject = [];
 function $ViewProvider() {
 
