@@ -2,6 +2,9 @@
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
+        <div class="padding text-center" ng-show="loading">
+            <ion-spinner></ion-spinner>
+        </div>
         <ion-list>
             <div class="card" ng-repeat="pourEvent in pourEvents">
                 <a ui-sref="app.profile({userName: pourEvent.userName})" class="item clearfix">
