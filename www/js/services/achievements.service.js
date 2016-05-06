@@ -1,4 +1,4 @@
-angular.module('tappt.services')
+angular.module('brewskey.services')
 .factory('achievements', ['$rootScope', '$ionicPopup', 'Restangular', 'Hub', '$localStorage',
 function ($rootScope, $ionicPopup, rest, Hub, $storage) {
     var achievementImages = {
@@ -39,7 +39,7 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
         errorHandler: function (error) {
             console.error(error);
         },
-        rootPath: 'https://tappt.io/signalr',
+        rootPath: 'https://brewskey.com/signalr',
     });
 
     hub.promise.then(function () {

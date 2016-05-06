@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('ProfileCtrl', ['$scope', 'Restangular', '$stateParams', '$localStorage', 'converter', 'achievements',
     function ($scope, rest, $stateParams, $storage, converter, achievements) {
         $scope.userName = $stateParams.userName || $storage.authDetails.userName;

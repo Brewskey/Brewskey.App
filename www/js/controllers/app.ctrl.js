@@ -1,4 +1,4 @@
-angular.module('tappt.controllers', [])
+angular.module('brewskey.controllers', [])
 
 .controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
     $scope.isLoggedIn = auth.isLoggedIn;

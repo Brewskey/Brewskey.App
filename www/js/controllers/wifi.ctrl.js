@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers')
+﻿angular.module('brewskey.controllers')
 .controller('WifiCtrl', ['$scope', 'softAP', '$ionicPopup',
 function ($scope, softAP, $ionicPopup) {
     $scope.state = 0;
@@ -47,7 +47,7 @@ function ($scope, softAP, $ionicPopup) {
             cssClass: 'alert-error',
             title: 'Wifi Setup Error',
             template: 'There was an error when attempting to setup the wifi on your device.  Please ' +
-                'try resetting the device and if that fails, restart the Tappt app.'
+                'try resetting the device and if that fails, restart the Brewskey app.'
         }).then(function () {
             $scope.state = 0;
         });

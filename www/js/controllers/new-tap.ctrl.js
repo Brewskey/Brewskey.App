@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('NewTapCtrl', ['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', function($scope, rest, $stateParams, $ionicHistory, $state) {
 	$scope.model = {
 		id: $stateParams.tapId,

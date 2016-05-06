@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage', 'cache',
 function ($scope, rest, converter, $storage, cache) {
     $scope.loading = true;

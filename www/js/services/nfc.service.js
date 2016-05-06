@@ -15,7 +15,7 @@ if (window.WinJS !== undefined) {
     }, false);
 }
 
-angular.module('tappt.services')
+angular.module('brewskey.services')
 .factory("nfcService",
   ['$rootScope', '$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout', '$ionicLoading',
   function ($rootScope, $q, $ionicPopup, $state, rest, $ionicPlatform, $timeout, $ionicLoading) {
@@ -99,7 +99,7 @@ angular.module('tappt.services')
 
                           var tagValue = String.fromCharCode.apply(null, payload);
 
-                          if (tagValue.indexOf('https://tappt.io/') < 0) {
+                          if (tagValue.indexOf('https://brewskey.com/') < 0) {
                               return;
                           }
 
@@ -148,7 +148,7 @@ angular.module('tappt.services')
               popup.close();
               if (totp) {
                   $ionicLoading.show();
-              } 
+              }
 
               rest.all('api/authorizations/pour').post({ deviceId: deviceId, totp: totp }).then(function () {
                   authenticating = false;
@@ -214,8 +214,8 @@ angular.module('tappt.services')
                   popup = $ionicPopup.show({
                       title: 'Tap phone to pour beer',
                       subTitle: currentDeviceId
-                       ? 'Place your phone on the Tappt box or enter the 6 digit code to begin pouring'
-                       : 'Place your phone on the Tappt box to begin pouring',
+                       ? 'Place your phone on the Brewskey box or enter the 6 digit code to begin pouring'
+                       : 'Place your phone on the Brewskey box to begin pouring',
                       templateUrl: 'templates/modals/totp.html',
                       scope: scope,
                       buttons: [

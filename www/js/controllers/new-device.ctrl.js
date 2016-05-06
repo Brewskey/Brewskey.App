@@ -1,4 +1,4 @@
-angular.module('tappt')
+angular.module('brewskey')
 .controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state',
 function ($scope, rest, $stateParams, $state) {
     $scope.model = {

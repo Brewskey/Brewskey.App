@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
     function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
         $scope.kegTypes = kegTypes;

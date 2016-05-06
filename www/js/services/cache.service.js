@@ -1,4 +1,4 @@
-angular.module('tappt.services')
+angular.module('brewskey.services')
     .factory('cache', [
     function () {
         var reset = function () {

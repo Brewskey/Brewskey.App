@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives')
+﻿angular.module('brewskey.directives')
 .directive('focusInput', function ($timeout, $parse) {
     return {
         link: function (scope, element, attrs) {

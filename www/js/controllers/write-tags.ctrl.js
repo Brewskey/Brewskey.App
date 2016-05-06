@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('WriteTagsCtrl', ['$scope', '$stateParams', 'Restangular', 'nfcService', '$ionicPopup',
 function ($scope, $stateParams, rest, nfcService, $ionicPopup) {
     $scope.writing = false;

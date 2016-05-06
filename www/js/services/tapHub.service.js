@@ -1,4 +1,4 @@
-angular.module('tappt.services')
+angular.module('brewskey.services')
     .factory('tapHub', ['$rootScope', '$q', 'Hub', 'Restangular',
     function ($rootScope, $q, Hub, rest) {
         var subscriptions = {};
@@ -87,7 +87,7 @@ angular.module('tappt.services')
             errorHandler: function (error) {
                 console.error(error);
             },
-            rootPath: 'https://tappt.io/signalr',
+            rootPath: 'https://brewskey.com/signalr',
         });
 
         var getByType = function(type, tapId, kegId) {

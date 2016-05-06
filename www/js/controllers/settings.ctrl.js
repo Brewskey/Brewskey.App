@@ -1,4 +1,4 @@
-angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('SettingsCtrl', ['$scope', '$localStorage', function($scope, $localStorage) {
     $scope.settings = $localStorage.settings;
     $scope.settingChange = function() {

@@ -1,4 +1,4 @@
-angular.module('tappt.directives')
+angular.module('brewskey.directives')
 .directive('pourChart', ['converter',
     function (converter) {
         return {
