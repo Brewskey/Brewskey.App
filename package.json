@@ -1,7 +1,7 @@
 {
-  "name": "tappt",
+  "name": "brewskey",
   "version": "1.0.0",
-  "description": "Tappt: An Ionic project",
+  "description": "Unlock the power of your kegerator",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
