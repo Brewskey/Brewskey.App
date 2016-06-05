@@ -221,9 +221,35 @@ h2.profile-link {
 .achievement-popup .popup-head {
     display: none;
 }
+
 .popup-body {
     overflow: hidden;
 }
+
+.green-popup.popup-container .popup {
+    background-color: rgba(35,131,147,.9);
+}
+.green-popup .popup-head {
+    border: 0;
+}
+.green-popup .popup-title {
+    border-bottom: solid 1px #fff;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+.green-popup .popup-sub-title {
+    color: #fff;
+    font-size: 15px;
+    padding-top: 8px;
+}
+.green-popup .popup-body {
+    color: #fff;
+    padding: 0;
+    text-align: center;
+}
+
 .achievement {
     border-radius: 50%;
 }
