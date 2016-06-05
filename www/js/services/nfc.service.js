@@ -162,6 +162,7 @@ angular.module('brewskey.services')
                   if (totp) {
                       $ionicLoading.hide();
                       $ionicPopup.alert({
+                          cssClass: 'green-popup',
                           title: 'Invalid passcode',
                           template: 'The passcode you entered was incorrect or expired.  Please try a new code.'
                       });
@@ -212,12 +213,12 @@ angular.module('brewskey.services')
 
                   requestPour = true;
                   popup = $ionicPopup.show({
+                      cssClass: 'green-popup',
                       title: 'Tap phone to pour beer',
-                      template: '<div class="text-center"><strong>' +
-                          (currentDeviceId
+                      subTitle: currentDeviceId
                            ? 'Place your phone on the Brewskey box or enter the 6 digit code to begin pouring'
-                           : 'Place your phone on the Brewskey box to begin pouring') +
-                        '</strong></div>',
+                           : 'Place your phone on the Brewskey box to begin pouring',
+                      templateUrl: 'templates/modals/totp.html',
                       scope: scope,
                       buttons: [
                           {
