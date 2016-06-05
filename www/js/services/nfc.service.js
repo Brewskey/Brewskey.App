@@ -211,13 +211,20 @@ angular.module('brewskey.services')
                       scope.totp = $event.target.value;
                   };
 
+                  var subTitle = null;
+                  if (ionic.Platform.isIOS()) {
+                    subTitle = 'Enter the 6 digit code on the Brewskey Box to begin pouring';
+                  } else if (currentDeviceId) {
+                    subTitle = 'Place your phone on the Brewskey box or enter the 6 digit code on the Brewskey Box to begin pouring';
+                  } else {
+                    subTitle = 'Place your phone on the Brewskey box to begin pouring';
+                  }
+
                   requestPour = true;
                   popup = $ionicPopup.show({
                       cssClass: 'green-popup',
                       title: 'Tap phone to pour beer',
-                      subTitle: currentDeviceId
-                           ? 'Place your phone on the Brewskey box or enter the 6 digit code to begin pouring'
-                           : 'Place your phone on the Brewskey box to begin pouring',
+                      subTitle: subTitle,
                       templateUrl: 'templates/modals/totp.html',
                       scope: scope,
                       buttons: [
