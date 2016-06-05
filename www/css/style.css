@@ -1,6 +1,11 @@
-﻿/* Empty. Add your own CSS if you like */
+﻿html, body {
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Empty. Add your own CSS if you like */
 .pane, .view {
     background: rgba(146,153,191,1);
+    /*
     background: -moz-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(146,153,191,1)), color-stop(100%, rgba(1,33,96,1)));
     background: -webkit-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
@@ -8,11 +13,24 @@
     background: -ms-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: linear-gradient(135deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9299bf', endColorstr='#012160', GradientType=1 );
+        */
 }
+.beer-background {
+    background: url(../img/beer-background.jpg) no-repeat center;
+    background-size: cover;
+}
+
 a, a:visited {
     color: #000;
 }
-
+ol {
+    list-style-type: decimal;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+    ol li {
+        padding-bottom: 5px;
+    }
 .dl-horizontal dt {
     clear: left;
     float: left;
@@ -59,6 +77,46 @@ a, a:visited {
 .button.button-full.no-margin {
     margin: 0;
 }
+.no-padding {
+    padding: 0;
+}
+.menu-bar {
+    background: #1d5f68;
+}
+.bar-brewskey {
+    background: #1d5f68;
+    color: #ffffff;
+}
+.brewskey-light-bg {
+  background-color: #238393;
+}
+.bar-brewskey .button-clear.button-clear {
+    color: #ffffff;
+}
+.tabs-background-brewskey .tabs, .tabs-background-brewskey > .tabs {
+  background-color: #238393;
+  background-image: linear-gradient(0deg, #c3c3c3, #c3c3c3 50%, transparent 50%);
+  border-color: #c3c3c3; 
+
+}
+
+.alert-error {
+    color: #ef473a;
+    text-align: center;
+}
+    .alert-error h3 {
+        color: #ef473a;
+        font-weight: bold;
+    }
+
+.start-pour-button {
+    background: url(../img/pour-icon.png) no-repeat;
+    background-size: cover;
+    border: 0;
+    height: 34px;
+    width: 30px;
+}
+
 .leaderboard-info {
     margin-right: 20px;
 }
@@ -78,7 +136,7 @@ a, a:visited {
 }
     .pint-glass .beer {
         background: url('../img/beer.png') 0 100% no-repeat;
-        bottom: 3px;
+        bottom: 0;
         height: 100%;
         position: absolute;
         width: 100%;
@@ -131,6 +189,19 @@ h2.profile-link {
 .profile-photo {
     width: 100%;
 }
+.profile-photo-loading {
+    background: rgba(255, 255, 255, .6);
+    height: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+    .profile-photo-loading .spinner {
+        left: 50%;
+        margin: -14px 0 0 -14px;
+        position: absolute;
+        top: 50%;
+    }
 .selected-photo {
     width: 100%;
     height: 100%;
@@ -241,6 +312,9 @@ h2.profile-link {
     color: #959595;
     display: block;
     font-style: italic;
+}
+small.help-text {
+    font-size: 9px;
 }
 
 /* leaderboard */

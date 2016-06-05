@@ -1,38 +1,32 @@
-﻿<ion-view view-title="Home">
+<ion-view view-title="Home">
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
+        <div class="padding text-center" ng-show="loading">
+            <ion-spinner></ion-spinner>
+        </div>
         <ion-list>
-            <div class="card">
-                <div class="qr-row clearfix" ng-repeat="row in qr">
-                    <div class="qr-cell" ng-repeat="cell in row track by $index" ng-class="{'qr-dark': !!cell}"></div>
-                </div>
-            </div>
-            
-
             <div class="card" ng-repeat="pourEvent in pourEvents">
-                <div class="item clearfix">
-                    <a ui-sref="app.profile({userName: pourEvent.userName})" class="pull-left">
-                        <img class="default-profile-small leaderboard-profile-pic"
-                             ng-src="https://tappt.io/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                             load-fail="img/blank-profile-40.png" />
-                    </a>
+                <a ui-sref="app.profile({userName: pourEvent.userName})" class="item clearfix">
+                    <img class="default-profile-small leaderboard-profile-pic pull-left"
+                         ng-src="https://brewskey.com/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
+                         load-fail="img/blank-profile-40.png" />
                     <div class="home-story-info">
-                        <h2 class="profile-link"><strong><a ui-sref="app.profile({userName: pourEvent.userName})">{{pourEvent.userName}} </a></strong></h2>
+                        <h2 class="profile-link"><strong>{{pourEvent.userName}}</strong></h2>
                         <p>
                             <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
                         </p>
                     </div>
-                </div>
-                <div class="item item-text-wrap clearfix">
+                </a>
+                <a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})" class="item item-text-wrap clearfix">
                     <div>
-                        <strong><a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})">{{pourEvent.tapName}}</a></strong>&nbsp;&mdash;&nbsp;{{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
-                        with {{pourEvent.pourCount}} pours
+                        {{normalize(pourEvent.ounces)}} oz of <em>{{pourEvent.beerName}}</em>
+                        with {{pourEvent.pourCount}} pours on <strong>{{pourEvent.tapName}}</strong>
                     </div>
-                    <div class="pull-left">
-                        <pint-list count="pourEvent.pulses" class="pint-list"/>
+                    <div class="clearfix">
+                        <pint-list count="pourEvent.ounces" class="pint-list" />
                     </div>
-                </div>
+                </a>
             </div>
         </ion-list>
     </ion-content>

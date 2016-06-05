@@ -1,5 +1,5 @@
-﻿angular.module('tappt', [
-    'ionic', 'ngMessages', 'tappt.controllers', 'tappt.directives', 'tappt.services', 'ngStorage', 'restangular',
+angular.module('brewskey', [
+    'ionic', 'ngMessages', 'brewskey.controllers', 'brewskey.directives', 'brewskey.services', 'ngStorage', 'restangular',
     'angularMoment', 'SignalR', 'chart.js'
 ])
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
@@ -126,6 +126,18 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 controller: 'HomeCtrl',
                 templateUrl: "templates/home.html",
+            }
+        }
+    })
+
+    .state('app.setup-wifi', {
+        authenticate: true,
+        cache: false,
+        url: "/setup-wifi",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/wifi.html",
+                controller: 'WifiCtrl'
             }
         }
     })
@@ -358,9 +370,10 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     $urlRouterProvider.otherwise('/app/home');
 
     // Restangular setup
-    rest.setBaseUrl('https://tappt.io');
+    rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
+    rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2483');
+    //rest.setBaseUrl('http://localhost:2484');
 
     if (window.cordova && window.cordova.platformId === 'windows') {
         $ionicConfigProvider.scrolling.jsScrolling(false);

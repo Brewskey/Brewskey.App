@@ -1,4 +1,4 @@
-﻿<script id="find-beer.html" type="text/ng-template">
+<script id="find-beer.html" type="text/ng-template">
   <ion-modal-view>
     <ion-header-bar>
       	<h1 class="title">Find Beer</h1>
@@ -22,7 +22,7 @@
   </ion-modal-view>
 </script>
 
-<ion-view view-title="Tappt">
+<ion-view view-title="Brewskey">
   <ion-content>
     <form name="form" ng-submit="submitForm()">
       <div class="list">
@@ -37,7 +37,7 @@
 	        <a href="#" class="item item-button-right" ng-click="openModal()">
 				<span ng-if="!model.beerId">Find beer</span>
 				<strong ng-if="model.beerId" ng-bind="beer.name"></strong>
-			</a> 
+			</a>
 	        <label class="item item-input item-select-full">
 				<select ng-model="model.kegType" required ng-class="{ 'invalid' : !model.kegType }">
 					<option value="" selected="selected" disabled class="default-value">Keg Type</option>
@@ -48,7 +48,7 @@
 					<option value="1">Cornelius Keg</option>
 					<option value="0">Mini Keg</option>
 				</select>
-    		</label> 
+    		</label>
 		</div>
 		<div class="item item-divider">
 			<div class="list card" ng-if="beer">

@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Tappt">
+<ion-view view-title="Brewskey">
   <ion-content>
     <form name="form" ng-submit="submitForm()">
       <div class="list">
@@ -16,7 +16,7 @@
 	        <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
 	          <div class="form-error" ng-bind="error"></div>
 	        </div>
-	  		
+
 	  		<label class="item item-input">
 				<textarea ng-model="model.summary" placeholder="Summary" rows="3"></textarea>
 			</label>
@@ -52,7 +52,7 @@
   			Address
   		</div>
         <div class="list list-inset">
-        
+
 	        <label class="item item-input" ng-class="{ 'has-error' : form.street.$invalid || errors['model.Street']}">
 	          <input type="text" ng-model="model.street" placeholder="Street Address" required>
 	        </label>
@@ -73,7 +73,7 @@
 	        <div class="form-errors" data-ng-repeat="error in errors['model.City']" data-ng-cloak>
 	          <div class="form-error" ng-bind="error"></div>
 	        </div>
-			
+
 			<div class="row" style="padding:0;">
 				<div class="col col-75" style="padding:0;">
 					<label class="item item-input item-select-full">

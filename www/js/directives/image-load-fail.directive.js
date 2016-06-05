@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives')
+angular.module('brewskey.directives')
 .directive('loadFail', [
 function () {
     return {
@@ -11,6 +11,19 @@ function () {
                 }
             };
             element.on('error', errorHandler);
+        }
+    };
+}])
+.directive('loaded', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+            var fn = $parse(attrs.loaded);
+            elem.on('load', function (event) {
+                scope.$apply(function () {
+                    fn(scope, { $event: event });
+                });
+            });
         }
     };
 }]);

@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Device">
+<ion-view view-title="Device">
     <ion-content>
         <div class="list card">
             <div class="item">
@@ -40,7 +40,7 @@
                                 {{device.clientSecret}}<br />
                                 <button class="button button-small button-stable" ng-click="resetToken()" ng-disabled="resettingToken">Reset Token</button>
                             </div>
-                            <small class="help-block"><em>The access token used by your device for connecting to the Tappt API.</em></small>
+                            <small class="help-block"><em>The access token used by your device for connecting to the Brewskey API.</em></small>
                         </div>
                     </dd>
                     <dt>Status:</dt>
@@ -58,13 +58,13 @@
                     <small>
                         <em>
                             Last edited by <strong ng-bind="device.lastEditedByUserName"></strong>
-                            <span am-time-ago="device.lastEdited" am-preprocess="utc"></span>
+                            <span am-time-ago="device.lastEdited | amUtc"></span>
                         </em>
                     </small>
                 </div>
             </div>
             <div class="list">
-                <div class="item sub-header">
+                <div class="item sub-header" ng-if="taps && taps.length < 1">
                     <h2>Taps</h2>
                 </div>
                 <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">

@@ -1,4 +1,4 @@
-﻿angular.module('tappt.directives', [])
+angular.module('brewskey.directives', [])
     .directive('pintList', [
     'converter',
     function (converter) {

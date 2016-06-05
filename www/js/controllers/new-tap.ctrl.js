@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('NewTapCtrl', ['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', function($scope, rest, $stateParams, $ionicHistory, $state) {
 	$scope.model = {
 		id: $stateParams.tapId,
@@ -7,7 +7,8 @@
 
 	if ($scope.model.id) {
 		rest.one('api/taps', $stateParams.tapId).get().then(function (response) {
-			$scope.model = response;
+		    response.currentKeg.kegType += '';
+		    $scope.model = response;
 		});
 	}
 

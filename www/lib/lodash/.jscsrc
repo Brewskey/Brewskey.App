@@ -1,4 +1,4 @@
-﻿{
+{
     "maxErrors": "2000",
     "maximumLineLength": {
       "value": 180,
@@ -84,6 +84,7 @@
     "disallowSpacesInsideArrayBrackets": true,
     "disallowSpacesInsideParentheses": true,
     "disallowTrailingWhitespace": true,
+    "disallowUnusedVariables": true,
 
     "jsDoc": {
         "checkRedundantAccess": true,

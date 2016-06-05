@@ -1,10 +1,10 @@
-﻿angular.module('tappt.directives')
+angular.module('brewskey.directives')
 .directive('pourChart', ['converter',
     function (converter) {
         return {
             link: function (scope, element) {
                 scope.$watch('pours', function (pours, oldValue) {
-                    if (pours.length === 0) {
+                    if (!pours || pours.length === 0) {
                         return;
                     }
 
@@ -19,12 +19,12 @@
                         pourSets = _.map(pours, function(pour) {
                             return {
                                 date: moment.utc(pour.pourDate),
-                                pulses: pour.pulses,
+                                ounces: pour.ounces,
                             };
                         }).reverse();
                         scope.series = ['Ounces'];
                         data = _.map(pourSets, function (item) {
-                            return converter.translateToOunces(item.pulses);
+                            return item.ounces;
                         });
                         scope.labels = _.map(pourSets, function (item) {
                             return item.date.format('M/D/YY LT');
@@ -53,7 +53,7 @@
                             _.map(groupedPours, function(group) {
                                 return {
                                     date: moment.utc(group[0].pourDate),
-                                    pulses: _.sumBy(group, 'pulses'),
+                                    ounces: _.sumBy(group, 'ounces'),
                                 }
                             }),
                             function(item) {
@@ -61,7 +61,7 @@
                             }
                         );
                         data = _.map(pourSets, function (item) {
-                            return Math.round(converter.translateToPints(item.pulses));
+                            return Math.round(item.ounces);
                         });
                         scope.labels = _.map(pourSets, function (item) {
                             return item.date.format('l');

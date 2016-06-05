@@ -1,7 +1,7 @@
 {
-  "name": "tappt",
+  "name": "brewskey",
   "version": "1.0.0",
-  "description": "Tappt: An Ionic project",
+  "description": "Unlock the power of your kegerator",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^0.7.1",
@@ -22,11 +22,7 @@
     "cordova-plugin-whitelist",
     "org.apache.cordova.console",
     "org.apache.cordova.device",
-    "phonegap-nfc",
-    {
-      "locator": "https://github.com/phonegap/phonegap-plugin-barcodescanner",
-      "id": "phonegap-plugin-barcodescanner"
-    }
+    "phonegap-nfc"
   ],
   "cordovaPlatforms": [
     {

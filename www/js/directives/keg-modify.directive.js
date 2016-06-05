@@ -1,16 +1,7 @@
-﻿angular.module('tappt.directives')
+angular.module('brewskey.directives')
     .directive('kegModify', [
-    'Restangular', '$ionicModal',
-    function (rest, $ionicModal) {
-        var kegTypes = [
-            { "key": "Mini Keg", "value": 0 },
-            { "key": "Cornelius Keg", "value": 1 },
-            { "key": "Sixth Barrel Keg", "value": 2 },
-            { "key": "Quarter Barrel Keg", "value": 3 },
-            { "key": "Slim Quarter Keg", "value": 4 },
-            { "key": "Half Barrel Keg", "value": 5 }
-        ];
-
+    'Restangular', '$ionicModal', 'kegTypes',
+    function (rest, $ionicModal, kegTypes) {
         return {
             link: function (scope, element) {
                 scope.kegTypes = kegTypes;
@@ -43,7 +34,7 @@
                     scope.closeModal();
                 };
 
-                scope.onKegTypeChange = function() {
+                scope.onKegTypeChange = function () {
                     var model = scope.model;
                     model.changed = true;
                 };

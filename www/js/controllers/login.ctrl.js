@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('LoginCtrl', ['$scope', 'auth', '$ionicHistory', '$state', function($scope, auth, $ionicHistory, $state) {
   // Form data for the login modal
   $scope.loggingIn = false;

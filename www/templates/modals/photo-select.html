@@ -1,0 +1,14 @@
+<ion-modal-view>
+    <ion-content class="padding">
+        <div class="square">
+            <div class="square-content selected-photo" ng-style="{'background-image': 'url(data:image/jpeg;base64,' + image + ')'}">
+                <!--<img ng-src="" ng-if="image" style="width: 100%;" />-->
+            </div>
+        </div>
+        <div class="button-bar">
+            <a class="button button-positive" ng-click="savePhoto()">Update Photo</a>
+            <a class="button button-balanced" ng-click="selectPhoto()">View Gallery</a>
+        </div>
+        <a class="button button-block button-assertive" ng-click="closeModal()">Cancel</a>
+    </ion-content>
+</ion-modal-view>

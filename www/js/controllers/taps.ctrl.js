@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('TapsCtrl', [
     '$scope', 'Restangular', function($scope, rest) {
         $scope.loading = true;

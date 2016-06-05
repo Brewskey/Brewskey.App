@@ -1,6 +1,7 @@
-﻿<ion-view>
-    <ion-nav-title>{{tap.name}}</ion-nav-title>
+<ion-view>
+    <ion-nav-title>Info - {{tap.name}}</ion-nav-title>
     <ion-content>
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <div class="list">
             <div class="item no-color">
                 <div class="item item-divider">
@@ -67,16 +68,14 @@
                     {{beer.description}}
                 </div>
                 <!-- Location ngRepeat goes here -->
-                <div class="item item-divider" ng-if="tap.kegs.length"></div>
-                <a href="#/app/keg/new/{{tap.id}}" class="item item-button-right" ng-if="canEdit">
-                    New Keg
-                    <span class="button button-positive">
-                        <i class="icon ion-plus"></i>
-                    </span>
-                </a>
-                <div ng-repeat="keg in tap.kegs" class="item item-avatar">
+                <div class="item item-divider" ng-if="tap.kegs.length">
+                    Past Kegs
+                </div>
+                <div ng-repeat="keg in tap.kegs | orderBy:'-id'" class="item item-avatar">
                     <img ng-src="{{keg.beerIcon}}" />
-                    {{keg.beerName}}
+                    <h2>{{keg.beerName}}</h2>
+                    <p>{{kegTypes[keg.kegType]}}</p>
+                    
                 </div>
             </div>
         </div>

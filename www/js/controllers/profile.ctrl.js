@@ -1,4 +1,4 @@
-﻿angular.module('tappt.controllers')
+angular.module('brewskey.controllers')
 .controller('ProfileCtrl', ['$scope', 'Restangular', '$stateParams', '$localStorage', 'converter', 'achievements',
     function ($scope, rest, $stateParams, $storage, converter, achievements) {
         $scope.userName = $stateParams.userName || $storage.authDetails.userName;
@@ -15,10 +15,11 @@
             });
         });
 
-        $scope.translateToOunces = converter.translateToOunces;
+        $scope.normalize = converter.normalize;
 
         $scope.getImage = function (achievement) {
-            return achievements.images[achievement.achievementType];
+            var image = achievements.images[achievement.achievementType];
+            return 'img/icons/70x70/' + image + '-70x70.png';
         };
 
         $scope.clickAchievement = function (index) {

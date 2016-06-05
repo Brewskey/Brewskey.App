@@ -1,11 +1,51 @@
-﻿angular.module('tappt.services')
+angular.module('brewskey.services')
     .factory('tapHub', ['$rootScope', '$q', 'Hub', 'Restangular',
     function ($rootScope, $q, Hub, rest) {
+        var subscriptions = {};
         var pours = {};
         var kegPours = {};
-        var subscriptions = {};
         var leaderboards = [];
         var kegLeaderboards = [];
+
+        var setArrayToType = {
+            'keg-pours': kegPours,
+            'pours': pours,
+            'leaderboards': leaderboards,
+            'keg-leaderboards': kegLeaderboards
+        }
+
+
+        function reloadSet(type, tapId, kegId) {
+            var promise;
+            if (type === 'keg-pours') {
+                promise = rest.one('api/taps', tapId).getList('keg-pours');
+            } else if (type === 'pours') {
+                promise = rest.one('api/taps', tapId).getList('pours');
+            } else if (type === 'leaderboards') {
+                promise = rest.one('api/taps', tapId).getList('leaderboard');
+            } else if (type === 'keg-leaderboards') {
+                promise = rest.one('api/taps', tapId).one('leaderboard', kegId).getList();
+            } else {
+                throw "Bad type " + type;
+            }
+
+            var array = setArrayToType[type];
+
+            var id = type === 'keg-leaderboards'
+                ? kegId
+                : tapId;
+
+            var shouldRemoveExisting = array[id] && array[id].length;
+
+            var arrayToExtend = array[id] = _.compact([].concat(array[id]));
+            promise.then(function (result) {
+                if (shouldRemoveExisting) {
+                    arrayToExtend.splice(0, arrayToExtend.length);
+                }
+                angular.extend(arrayToExtend, result);
+            });
+            return arrayToExtend;
+        }
 
         var output;
 
@@ -24,7 +64,7 @@
                         userPours = {
                             lastPourDate: null,
                             userName: pour.pouredBy,
-                            totalPulses: 0,
+                            totalOunces: 0,
                         };
                         leaderboard.push(userPours);
                     }
@@ -32,12 +72,12 @@
                         userKegPours = {
                             lastPourDate: null,
                             userName: pour.pouredBy,
-                            totalPulses: 0,
+                            totalOunces: 0,
                         };
                         kegLeaderboard.push(userKegPours);
                     }
                     userKegPours.lastPourDate = pour.pourDate;
-                    userKegPours.totalPulses += pour.pulses;
+                    userKegPours.totalOunces += pour.ounces;
                     $rootScope.$apply();
                 }
             },
@@ -47,68 +87,39 @@
             errorHandler: function (error) {
                 console.error(error);
             },
-            rootPath: 'https://tappt.io/signalr',
+            rootPath: 'https://brewskey.com/signalr',
         });
 
-        var getKegPours = function(tapId) {
-            if (!kegPours[tapId]) {
+        var getByType = function(type, tapId, kegId) {
+            var array = setArrayToType[type];
+            if (!array) {
+                throw "WTF";
+            }
+            
+            if (!array[kegId || tapId]) {
                 if (!subscriptions[tapId]) {
                     subscriptions[tapId] = true;
                     hub.promise.then(function () {
                         hub.subscribe(tapId);
                     });
                 }
-                rest.one('api/taps', tapId).getList('keg-pours').then(function (result) {
-                    angular.extend(kegPours[tapId], result);
-                });
-                kegPours[tapId] = [];
+
+                reloadSet(type, tapId, kegId);
             }
-            return kegPours[tapId];
+
+            return array[kegId || tapId];
+        }
+        var getKegPours = function(tapId) {
+            return getByType('keg-pours', tapId);
         };
         var getPours = function (tapId) {
-            if (!pours[tapId]) {
-                if (!subscriptions[tapId]) {
-                    subscriptions[tapId] = true;
-                    hub.promise.then(function () {
-                        hub.subscribe(tapId);
-                    });
-                }
-                rest.one('api/taps', tapId).getList('pours').then(function (result) {
-                    angular.extend(pours[tapId], result);
-                });
-                pours[tapId] = [];
-            }
-            return pours[tapId];
+            return getByType('pours', tapId);
         };
         var getLeaderboard = function (tapId) {
-            if (!leaderboards[tapId]) {
-                leaderboards[tapId] = [];
-                if (!subscriptions[tapId]) {
-                    subscriptions[tapId] = true;
-                    hub.promise.then(function () {
-                        hub.subscribe(tapId);
-                    });
-                }
-                rest.one('api/taps', tapId).getList('leaderboard').then(function (result) {
-                    angular.extend(leaderboards[tapId], result);
-                });
-            }
-            return leaderboards[tapId];
+            return getByType('leaderboards', tapId);
         };
         var getKegLeaderboard = function (tapId, kegId) {
-            if (!kegLeaderboards[kegId]) {
-                kegLeaderboards[kegId] = [];
-                if (!subscriptions[tapId]) {
-                    subscriptions[tapId] = true;
-                    hub.promise.then(function () {
-                        hub.subscribe(tapId);
-                    });
-                }
-                rest.one('api/taps', tapId).one('leaderboard', kegId).getList().then(function (result) {
-                    angular.extend(kegLeaderboards[kegId], result);
-                });
-            }
-            return kegLeaderboards[kegId];
+            return getByType('keg-leaderboards', tapId, kegId);
         };
 
         output = {
@@ -116,6 +127,15 @@
             getPours: getPours,
             getLeaderboard: getLeaderboard,
             getKegLeaderboard: getKegLeaderboard,
+            reload: function (types, tapId, kegId) {
+                if (!types) {
+                    return;
+                }
+
+                types.forEach(function (type) {
+                    reloadSet(type, tapId, kegId);
+                });
+            },
         };
 
         return output;

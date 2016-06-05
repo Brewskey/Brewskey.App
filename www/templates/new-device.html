@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Tappt">
+<ion-view view-title="Brewskey">
     <ion-nav-title>{{!model.id ? "New Device" : "Edit Device"}}</ion-nav-title>
     <ion-content ng-controller="NewDeviceCtrl">
         <form name="form" ng-submit="submitForm()" novalidate>
@@ -38,7 +38,7 @@
                     </div>
                     <div class="form-errors" ng-show="model.particleId && particleIdLoaded && particleIdError">
                         <span class="form-error">
-                            The particle device ID you entered is not registered Tappt.  Please contact an administrator if you think this is incorrect.
+                            The particle device ID you entered is not registered Brewskey.  Please contact an administrator if you think this is incorrect.
                         </span>
                     </div>
                     <label class="item item-input item-select">

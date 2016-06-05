@@ -1,4 +1,4 @@
-﻿(function(){
+(function(){
   var ConsoleTestRunner = Evidence.AutoRunner.RUNNERS.console,
       ConsoleTestResult = Evidence.UI.Console.TestResult,
       AutoRunner = Evidence.AutoRunner,

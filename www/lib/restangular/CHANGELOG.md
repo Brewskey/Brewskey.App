@@ -1,4 +1,4 @@
-﻿# New release information
+# New release information
 New releases are in Releases section of Github
 https://github.com/mgonto/restangular/releases
 
