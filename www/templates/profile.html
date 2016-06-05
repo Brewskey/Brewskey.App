@@ -20,7 +20,7 @@
             </div>
             <div class="item no-color">
                 <div class="item">
-                    Total Pints {{profile.totalPints}}
+                    Total Pints &mdash; {{profile.totalPints}}
                 </div>
             </div>
             <div class="item no-color">
@@ -31,13 +31,13 @@
                     <img ng-src="{{pour.beerIcon}}">
                     <div class="item-text-wrap">
                         <div>
-                            {{translateToOunces(pour.pulses)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}} <!--at </a>me <!--at
+                            {{normalize(pour.ounces)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}} <!--at </a>me <!--at
                             {{pour.locationName}}-->
                             <br />
-                            <small>{{pour.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                            <small>{{pour.pourDate | amUtc | amLocal | amDateFormat:'MMMM Do YYYY'}}</small>
                         </div>
                         <div>
-                            <pint-list count="pour.pulses" />
+                            <pint-list count="pour.ounces" />
                         </div>
                     </div>
                 </a>

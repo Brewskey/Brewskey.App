@@ -370,9 +370,10 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     $urlRouterProvider.otherwise('/app/home');
 
     // Restangular setup
+    rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2483');
+    //rest.setBaseUrl('http://localhost:2484');
 
     if (window.cordova && window.cordova.platformId === 'windows') {
         $ionicConfigProvider.scrolling.jsScrolling(false);

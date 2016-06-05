@@ -1,9 +1,9 @@
 <ion-view>
-    <ion-nav-title>{{tap.name}}</ion-nav-title>
+    <ion-nav-title>Stats - {{tap.name}}</ion-nav-title>
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()"></ion-refresher>
         <div class="list">
-            <div class="item  no-color">
+            <div class="item  no-color" ng-if="getKegPours.length">
                 <pour-chart pours="getKegPours" class="item"></pour-chart>
             </div>
             <div class="item no-color">
@@ -18,12 +18,12 @@
                         <div class="recent-pour-info">
                             <strong>{{pour.pouredBy}}</strong>
                             &nbsp;&mdash;&nbsp;
-                            {{translateToOunces(pour.pulses)}} oz
+                            {{normalize(pour.ounces)}} oz
                             <br />
-                            <span am-time-ago="pour.pourDate" am-preprocess="utc"></span>
+                            <span am-time-ago="pour.pourDate | amUtc"></span>
                         </div>
                     </div>
-                    <pint-list count="pour.pulses" class="pint-list pint-list-float pull-right" />
+                    <pint-list count="pour.ounces" class="pint-list pint-list-float pull-right" />
                 </a>
             </div>
         </div>

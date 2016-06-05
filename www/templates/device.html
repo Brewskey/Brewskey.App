@@ -58,7 +58,7 @@
                     <small>
                         <em>
                             Last edited by <strong ng-bind="device.lastEditedByUserName"></strong>
-                            <span am-time-ago="device.lastEdited" am-preprocess="utc"></span>
+                            <span am-time-ago="device.lastEdited | amUtc"></span>
                         </em>
                     </small>
                 </div>

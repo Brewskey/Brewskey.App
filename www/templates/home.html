@@ -20,11 +20,11 @@
                 </a>
                 <a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})" class="item item-text-wrap clearfix">
                     <div>
-                        {{translateToOunces(pourEvent.pulses)}} oz of <em>{{pourEvent.beerName}}</em>
+                        {{normalize(pourEvent.ounces)}} oz of <em>{{pourEvent.beerName}}</em>
                         with {{pourEvent.pourCount}} pours on <strong>{{pourEvent.tapName}}</strong>
                     </div>
                     <div class="clearfix">
-                        <pint-list count="pourEvent.pulses" class="pint-list" />
+                        <pint-list count="pourEvent.ounces" class="pint-list" />
                     </div>
                 </a>
             </div>

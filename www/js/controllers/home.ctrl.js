@@ -15,7 +15,7 @@ function ($scope, rest, converter, $storage, cache) {
     };
     $scope.refresh();
 
-    $scope.translateToOunces = converter.translateToOunces;
+    $scope.normalize = converter.normalize;
 
     $scope.renderUserName = function (userName) {
         return userName === $storage.authDetails.userName ? "You" : userName;

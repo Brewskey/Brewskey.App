@@ -2,11 +2,11 @@ angular.module('brewskey.services')
     .factory('converter', ['Restangular',
     function (rest) {
         var converter = {
-            translateToOunces: function (pulses) {
-                return Math.round(pulses / 10313 * 128) || 1;
+            normalize: function(ounces) {
+                return Math.round(ounces) || 1;
             },
-            translateToPints: function (pulses) {
-                return converter.translateToOunces(pulses) / 14;
+            translateToPints: function (ounces) {
+                return converter.normalize(ounces) / 14;
             }
         };
         return converter;

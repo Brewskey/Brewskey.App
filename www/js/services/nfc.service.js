@@ -213,10 +213,11 @@ angular.module('brewskey.services')
                   requestPour = true;
                   popup = $ionicPopup.show({
                       title: 'Tap phone to pour beer',
-                      subTitle: currentDeviceId
-                       ? 'Place your phone on the Brewskey box or enter the 6 digit code to begin pouring'
-                       : 'Place your phone on the Brewskey box to begin pouring',
-                      templateUrl: 'templates/modals/totp.html',
+                      template: '<div class="text-center"><strong>' +
+                          (currentDeviceId
+                           ? 'Place your phone on the Brewskey box or enter the 6 digit code to begin pouring'
+                           : 'Place your phone on the Brewskey box to begin pouring') +
+                        '</strong></div>',
                       scope: scope,
                       buttons: [
                           {

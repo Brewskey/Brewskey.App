@@ -26,7 +26,7 @@ angular.module('brewskey.controllers')
             $scope.leaderboard = tapHub.getLeaderboard(tapId);
         }
 
-        $scope.translateToOunces = converter.translateToOunces;
+        $scope.normalize = converter.normalize;
         $scope.cacheBuster = cache.value;
 
         if ($stateParams.deviceId) {

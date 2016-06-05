@@ -64,7 +64,7 @@ angular.module('brewskey.services')
                         userPours = {
                             lastPourDate: null,
                             userName: pour.pouredBy,
-                            totalPulses: 0,
+                            totalOunces: 0,
                         };
                         leaderboard.push(userPours);
                     }
@@ -72,12 +72,12 @@ angular.module('brewskey.services')
                         userKegPours = {
                             lastPourDate: null,
                             userName: pour.pouredBy,
-                            totalPulses: 0,
+                            totalOunces: 0,
                         };
                         kegLeaderboard.push(userKegPours);
                     }
                     userKegPours.lastPourDate = pour.pourDate;
-                    userKegPours.totalPulses += pour.pulses;
+                    userKegPours.totalOunces += pour.ounces;
                     $rootScope.$apply();
                 }
             },

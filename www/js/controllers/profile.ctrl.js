@@ -15,7 +15,7 @@ angular.module('brewskey.controllers')
             });
         });
 
-        $scope.translateToOunces = converter.translateToOunces;
+        $scope.normalize = converter.normalize;
 
         $scope.getImage = function (achievement) {
             var image = achievements.images[achievement.achievementType];
