@@ -73,7 +73,7 @@ ol {
     border-color: transparent;
 }
 .no-margin,
-.button.button-block.no-margin, 
+.button.button-block.no-margin,
 .button.button-full.no-margin {
     margin: 0;
 }
@@ -82,6 +82,10 @@ ol {
 }
 .menu-bar {
     background: #1d5f68;
+}
+.menu-bar-logo {
+  margin-left: auto;
+  margin-right: auto;
 }
 .bar-brewskey {
     background: #1d5f68;
@@ -96,7 +100,7 @@ ol {
 .tabs-background-brewskey .tabs, .tabs-background-brewskey > .tabs {
   background-color: #238393;
   background-image: linear-gradient(0deg, #c3c3c3, #c3c3c3 50%, transparent 50%);
-  border-color: #c3c3c3; 
+  border-color: #c3c3c3;
 
 }
 
@@ -396,7 +400,7 @@ input::-webkit-inner-spin-button {
 }
 
 .qr-row {
-    
+
 }
 
 .qr-cell {
