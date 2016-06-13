@@ -44,7 +44,7 @@ function ($scope, softAP, $ionicPopup) {
 
     function error() {
         $ionicPopup.alert({
-            cssClass: 'alert-error',
+            cssClass: 'alert-error green-popup',
             title: 'Wifi Setup Error',
             template: 'There was an error when attempting to setup the wifi on your device.  Please ' +
                 'try resetting the device and if that fails, restart the Brewskey app.'

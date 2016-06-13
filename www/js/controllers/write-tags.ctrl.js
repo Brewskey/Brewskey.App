@@ -11,12 +11,14 @@ function ($scope, $stateParams, rest, nfcService, $ionicPopup) {
 					.then(function () {
 					    $scope.writing = false;
 					    $ionicPopup.alert({
+					        cssClass: 'green-popup',
 					        title: 'Successfully wrote tag!'
 					    });
 					},
 					function () {
 					    $scope.writing = false;
 					    $ionicPopup.alert({
+					        cssClass: 'green-popup',
 					        title: 'Error writing Tag!',
 					        template: 'Sorry, there was an error when writing your tag.  Please try again later.'
 					    });

@@ -70,11 +70,14 @@ function ($rootScope, $ionicPopup, rest, Hub, $storage) {
         scope.currentAchievement = achievements[scope.index];
         scope.image = achievementImages[scope.currentAchievement.achievementType];
 
-        var popup = $ionicPopup.alert({
-            cssClass: 'achievement-popup',
+        var popup = $ionicPopup.show({
+            cssClass: 'achievement-popup green-popup',
             scope: scope,
             templateUrl: 'templates/achievement.html',
             title: "Achievement",
+            buttons: [
+                { text: 'Okay', type: 'button-energized', },
+            ],
         });
 
         scope.next = function ($event) {

@@ -1,7 +1,7 @@
 <div class="text-center">
     <div class="achievement-icon-container">
         <button 
-            class="button button-clear button-dark ion-chevron-left achievement-button achievement-button-left" 
+            class="button button-clear button-light ion-chevron-left achievement-button achievement-button-left" 
             ng-click="prev($event)" 
             ng-disabled="index === 0"
             ng-show="achievements.length > 1"
@@ -9,7 +9,7 @@
         </button>
         <img class="achievement achievement-large" ng-src="img/icons/150x150/{{image}}.png" />
         <button 
-            class="button button-clear button-dark ion-chevron-right achievement-button achievement-button-right" 
+            class="button button-clear button-light ion-chevron-right achievement-button achievement-button-right" 
             ng-click="next($event)" 
             ng-disabled="index === achievements.length - 1"
             ng-show="achievements.length > 1"

@@ -32,9 +32,10 @@ angular.module('brewskey.controllers')
 
         if (error.data.ModelState) {
           $scope.errors = error.data.ModelState;
-        }
-        if (error.data['error_description']) {
+        } else if (error.data['error_description']) {
           $scope.errorDescription = error.data['error_description'];
+        } else {
+            $scope.errorDescription = 'Whoa! Brewskey had an error.  We\'ll try to get it fixed soon.';
         }
       });
   };

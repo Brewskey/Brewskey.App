@@ -4,10 +4,12 @@
       <img src="img/login-splash.png" class="img-responsive" style="width: 100%;" />
     </div>
     <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate">
-      <div class="form-errors" ng-if="errorDescription" data-ng-show="loginForm.$submitted" data-ng-cloak>
-        <div class="form-error" ng-bind="errorDescription"></div>
-      </div>
       <div class="list">
+        <div class="item no-padding item-text-wrap text-center" ng-if="errorDescription" ng-cloak>
+            <div class="form-errors"  data-ng-show="loginForm.$submitted">
+                <div class="form-error" ng-bind="errorDescription"></div>
+            </div>
+        </div>
         <label class="item item-input" ng-class="{ 'has-error' : loginForm.userName.$invalid || errors['model.UserName']}">
           <span class="input-label">Username</span>
           <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -25,8 +27,7 @@
         <div class="item">
           <button class="button button-block button-positive" type="submit" ng-disabled="!loginData.userName || !loginData.password || loggingIn">Log in</button>
           <a href="#" class="button button-block button-light" ui-sref="app.register">Register</a>
-
-        </label>
+        </div>
       </div>
     </form>
   </ion-content>

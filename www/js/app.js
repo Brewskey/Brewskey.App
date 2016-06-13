@@ -1,3 +1,9 @@
+ionic.Platform.noScroll = function () {
+    return ionic.Platform.isWindowsPhone() ||
+        ionic.Platform.ua.toLowerCase().indexOf('trident') > -1 ||
+        ionic.Platform.ua.toLowerCase().indexOf('edge') > -1 ||
+        ionic.Platform.platform() === "edge";
+};
 angular.module('brewskey', [
     'ionic', 'ngMessages', 'brewskey.controllers', 'brewskey.directives', 'brewskey.services', 'ngStorage', 'restangular',
     'angularMoment', 'SignalR', 'chart.js'
@@ -373,9 +379,9 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
+    rest.setBaseUrl('http://localhost:2484');
 
-    if (window.cordova && window.cordova.platformId === 'windows') {
+    if (ionic.Platform.noScroll()) {
         $ionicConfigProvider.scrolling.jsScrolling(false);
     }
 
