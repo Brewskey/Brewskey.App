@@ -71,6 +71,10 @@
                     <img ng-src="{{tap.currentKeg.beerIcon}}">
                     <h2>{{tap.name}}</h2>
                     <p>{{tap.summary}}</p>
+
+                    <span class="badge badge-positive">
+                        {{getPercentLeft(tap.currentKeg) | number : 1}}%
+                    </span>
                 </a>
             </div>
         </div>

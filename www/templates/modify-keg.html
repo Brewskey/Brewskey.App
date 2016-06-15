@@ -20,11 +20,11 @@
             </select>
         </label>
         <div class="item">
-            <button class="button button-full button-balanced no-margin" ng-click="submit(true)" ng-cloak ng-disabled="!model.ounces">
+            <button class="button button-block button-balanced" ng-click="submit(true)"  ng-cloak ng-disabled="!model.ounces">
                 <span ng-if="model.id">Replace Current Keg</span>
                 <span ng-if="!model.id">Set Current Keg</span>
             </button>
-            <button class="button button-full button-stable no-margin" ng-click="submit(false)" ng-if="model.id" ng-cloak ng-disabled="!model.changed">
+            <button class="button button-block button-stable" ng-click="submit(false)" ng-if="model.id" ng-cloak ng-disabled="!model.changed">
                 Update Current Keg
             </button>
         </div>

@@ -51,6 +51,14 @@ angular.module('brewskey.controllers')
 
         getInfo();
 
+        $scope.$on('tap-updated', function (scope, updatedTap) {
+            $scope.tap = updatedTap;
+        });
+        $scope.$on('keg-updated', function (scope, updatedKeg) {
+            $scope.tap.currentKeg = updatedKeg;
+            setupTap($scope.tap);
+        });
+
         $scope.refresh = function () {
             var tapId = $scope.tap.id;
             var kegId = $scope.kegId;
