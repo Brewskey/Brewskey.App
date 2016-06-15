@@ -2,7 +2,12 @@ angular.module('brewskey.controllers')
 .controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
     function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
         $scope.kegTypes = kegTypes;
+        $scope.percentLeft = 0;
         function setupTap(response) {
+            var currentKeg = response.currentKeg;
+
+            $scope.percentLeft = (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100;
+
             $scope.$emit('device-id', response.deviceId);
             $scope.tap = response;
             $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
@@ -29,28 +34,36 @@ angular.module('brewskey.controllers')
         $scope.normalize = converter.normalize;
         $scope.cacheBuster = cache.value;
 
-        if ($stateParams.deviceId) {
-            rest.one('api/devices', $stateParams.deviceId).getList('taps').then(function (response) {
-                setupTap(response[0]);
-                setupPours(response[0].id);
-            });
-        } else {
-            rest.one('api/taps', $stateParams.tapId).get().then(setupTap);
+        function getInfo() {
+            if ($stateParams.deviceId) {
+                rest.one('api/devices', $stateParams.deviceId).getList('taps').then(function (response) {
+                    setupTap(response[0]);
+                    setupPours(response[0].id);
+                });
+            } else {
+                rest.one('api/taps', $stateParams.tapId).get().then(setupTap);
 
-            if ($stateParams.tapId) {
-                setupPours($stateParams.tapId);
+                if ($stateParams.tapId) {
+                    setupPours($stateParams.tapId);
+                }
             }
         }
+
+        getInfo();
+
+        $scope.$on('tap-updated', function (scope, updatedTap) {
+            $scope.tap = updatedTap;
+        });
+        $scope.$on('keg-updated', function (scope, updatedKeg) {
+            $scope.tap.currentKeg = updatedKeg;
+            setupTap($scope.tap);
+        });
 
         $scope.refresh = function () {
             var tapId = $scope.tap.id;
             var kegId = $scope.kegId;
             tapHub.reload(['pours', 'keg-pours', 'leaderboards', 'keg-leaderboards'], tapId, kegId);
-
-            $scope.getPours = tapHub.getPours(tapId);
-            $scope.getKegPours = tapHub.getKegPours(tapId);
-            $scope.leaderboard = tapHub.getLeaderboard(tapId);
-            $scope.kegLeaderboard = tapHub.getKegLeaderboard(tapId, kegId);
+            getInfo();
 
             $scope.$broadcast('scroll.refreshComplete');
         };

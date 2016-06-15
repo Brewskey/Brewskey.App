@@ -230,6 +230,15 @@ h2.profile-link {
     overflow: hidden;
 }
 
+.green-popup h2,
+.green-popup h3,
+.green-popup h4 {
+    color: #ffffff;
+}
+
+.green-popup .popup {
+    border: solid 1px #ffffff;
+}
 .green-popup.popup-container .popup {
     background-color: rgba(35,131,147,.9);
 }
@@ -250,7 +259,6 @@ h2.profile-link {
 }
 .green-popup .popup-body {
     color: #fff;
-    padding: 0;
     text-align: center;
 }
 
@@ -312,6 +320,14 @@ h2.profile-link {
 
 .home-story-info {
     padding-left: 65px;
+}
+
+.home-card {
+    padding-bottom: 20px
+}
+
+.home-card .card {
+    margin: 0 10px 0;
 }
 
 /* device */
@@ -394,4 +410,17 @@ input::-webkit-inner-spin-button {
 }
 .qr-dark {
     background: #000;
+}
+
+.form-error {
+    font-size: 12px;
+    padding: 2px 20px;
+}
+
+/* */
+.progress-bar {
+    background: #ffaa00;
+    height: 30px;
+    transition: width 1s;
+    width: 0;
 }

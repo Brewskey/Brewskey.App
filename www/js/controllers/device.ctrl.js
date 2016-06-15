@@ -25,5 +25,8 @@ angular.module('brewskey.controllers')
                 $scope.device.clientSecret = response.clientSecret;
             });
         };
+        $scope.getPercentLeft = function (keg) {
+            return (keg.maxOunces - keg.ounces) / keg.maxOunces * 100;
+        };
     }
 ]);

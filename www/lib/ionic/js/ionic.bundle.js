@@ -49408,7 +49408,7 @@ IonicModule
 .factory('$ionicCollectionManager', RepeatManagerFactory);
 
 var ONE_PX_TRANSPARENT_IMG_SRC = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-var WIDTH_HEIGHT_REGEX = /height:.*?px;\s*width:.*?px/;
+var WIDTH_HEIGHT_REGEX = /(height:.*?px;\s*width:.*?px)|(width:.*?px;\s*height:.*?px)/;
 var DEFAULT_RENDER_BUFFER = 3;
 
 CollectionRepeatDirective.$inject = ['$ionicCollectionManager', '$parse', '$window', '$$rAF', '$rootScope', '$timeout'];

@@ -7,6 +7,14 @@
                 <pour-chart pours="getKegPours" class="item"></pour-chart>
             </div>
             <div class="item no-color">
+                <div class="item">
+                    <strong>{{percentLeft | number : 1}}% left</strong>
+                    <div class="progress-bar" ng-style="{'width': percentLeft + '%'}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="item no-color">
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
@@ -16,9 +24,14 @@
                              ng-src="https://brewskey.com/cdn/photos/{{pour.pouredBy}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
                              load-fail="img/blank-profile-40.png" />
                         <div class="recent-pour-info">
-                            <strong>{{pour.pouredBy}}</strong>
-                            &nbsp;&mdash;&nbsp;
-                            {{normalize(pour.ounces)}} oz
+                            <span ng-if="pour.pouredBy">
+                                <strong>{{pour.pouredBy}}</strong>
+                                &nbsp;&mdash;&nbsp;
+                                {{normalize(pour.ounces)}} oz
+                            </span>
+                            <span ng-if="!pour.pouredBy">
+                                {{normalize(pour.ounces)}} oz
+                            </span>
                             <br />
                             <span am-time-ago="pour.pourDate | amUtc"></span>
                         </div>

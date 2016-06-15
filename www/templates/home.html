@@ -2,32 +2,40 @@
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
-        <div class="padding text-center" ng-show="loading">
+        <div class="padding text-center" ng-show="initialLoad">
             <ion-spinner></ion-spinner>
         </div>
         <ion-list>
-            <div class="card" ng-repeat="pourEvent in pourEvents">
-                <a ui-sref="app.profile({userName: pourEvent.userName})" class="item clearfix">
-                    <img class="default-profile-small leaderboard-profile-pic pull-left"
-                         ng-src="https://brewskey.com/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                         load-fail="img/blank-profile-40.png" />
-                    <div class="home-story-info">
-                        <h2 class="profile-link"><strong>{{pourEvent.userName}}</strong></h2>
-                        <p>
-                            <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
-                        </p>
-                    </div>
-                </a>
-                <a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})" class="item item-text-wrap clearfix">
-                    <div>
-                        {{normalize(pourEvent.ounces)}} oz of <em>{{pourEvent.beerName}}</em>
-                        with {{pourEvent.pourCount}} pours on <strong>{{pourEvent.tapName}}</strong>
-                    </div>
-                    <div class="clearfix">
-                        <pint-list count="pourEvent.ounces" class="pint-list" />
-                    </div>
-                </a>
+            <div  style="padding-top: 20px"></div>
+            <div brewskey-repeat="pourEvent in pourEvents" force-refresh-images="true" class="home-card">
+                <div class="card">
+                    <a ui-sref="app.profile({userName: pourEvent.userName})" class="item clearfix">
+                        <img class="default-profile-small leaderboard-profile-pic pull-left"
+                             ng-src="https://brewskey.com/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
+                             load-fail="img/blank-profile-40.png" />
+                        <div class="home-story-info">
+                            <h2 class="profile-link"><strong>{{pourEvent.userName}}</strong></h2>
+                            <p>
+                                <small>{{pourEvent.pourDate | amDateFormat:'MMMM Do YYYY'}}</small>
+                            </p>
+                        </div>
+                    </a>
+                    <a ui-sref="app.tap.leaderboard({tapId: pourEvent.tapId})" class="item item-text-wrap clearfix">
+                        <div>
+                            {{normalize(pourEvent.ounces)}} oz of <em>{{pourEvent.beerName}}</em>
+                            with {{pourEvent.pourCount}} pours on <strong>{{pourEvent.tapName}}</strong>
+                        </div>
+                        <div class="clearfix">
+                            <pint-list count="pourEvent.ounces" class="pint-list" />
+                        </div>
+                    </a>
+                </div>
             </div>
         </ion-list>
+        <ion-infinite-scroll distance="5%"
+                             immediate-check="false"
+                             ng-if="moreDataCanBeLoaded()"
+                             on-infinite="loadMore()">
+        </ion-infinite-scroll>
     </ion-content>
 </ion-view>

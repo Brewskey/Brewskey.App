@@ -5,7 +5,6 @@ angular.module('brewskey.directives')
         return {
             link: function (scope, element) {
                 scope.kegTypes = kegTypes;
-                scope.model = scope.model || {}
 
                 scope.$watch('query', function (val) {
                     scope.selectedBeer = null;
@@ -69,9 +68,11 @@ angular.module('brewskey.directives')
 
                     promise.then(function (response) {
                         scope.editing = false;
-                        scope.model = response;
                         scope.model.changed = false;
                         scope.onOkay && scope.onOkay(response);
+
+                        scope.$emit('keg-updated', response);
+
                     }, function (error) {
                         scope.editing = true;
                         if (!error.data) {

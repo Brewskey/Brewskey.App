@@ -14,8 +14,8 @@ angular.module('brewskey.controllers')
 
 	$scope.editing = false;
 
-	$scope.submitForm = function () {
-		$scope.editing = false;
+	$scope.submitForm = function (form) {
+		$scope.editing = true;
 
 		var promise;
 
@@ -27,10 +27,10 @@ angular.module('brewskey.controllers')
 		
 		promise.then(function (response) {
 	        $scope.editing = false;
-	        
-	        $ionicHistory.goBack();
-	        $state.go('app.tap', { tapId: response.id });
-      	}, function (error) {
+
+	        form.$setPristine();
+		    $scope.$emit('tap-updated', response);
+		}, function (error) {
 	        $scope.editing = false;
 	        if (!error.data) {
 	          return;

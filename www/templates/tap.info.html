@@ -7,11 +7,11 @@
                 <div class="item item-divider">
                     <strong>On Tap</strong>
                 </div>
-                <div class="item center-text">
-                    <h1>{{tap.currentKeg.beerName}}</h1>
+                <div class="item center-text item-text-wrap">
+                    <h2>{{tap.currentKeg.beerName}}</h2>
                     <img ng-src="{{beer.labels.medium}}" ng-if="beer.labels.icon">
                 </div>
-                <div class="item">
+                <div class="item" ng-if="beer.abv || beer.ibu || beer.srm || beer.originalGravity">
                     <div class="row center-text">
                         <div class="col" ng-if="beer.abv">
                             <strong>ABV</strong><br /><span>{{beer.abv}}%</span>
@@ -28,39 +28,47 @@
                     </div>
                 </div>
                 <div class="item">
+                    <!--
                     <div class="row">
-                        <div class="col col-25"><strong>Name:</strong></div>
-                        <div class="col col-75">{{beer.name}}</div>
+                        <div class="col col-25"><strong>Name:</strong>
+                        </div>
+                        <div class="col col-75 item-text-wrap">{{beer.name}}</div>
                     </div>
+                        -->
                     <!--<div class="row">
-                            <div class="col"><strong>Brewed By:</strong></div>
-                            <div class="col col-75"></div>
-                        </div>-->
+                        <div class="col"><strong>Brewed By:</strong></div>
+                        <div class="col col-75"></div>
+                    </div>-->
                     <div class="row">
-                        <div class="col col-25"><strong>Style:</strong></div>
-                        <div class="col col-75">
-                            <span>{{beer.style.name}}</span><br />
+                        <div class="col col-25"><strong>Style:</strong>
+                        </div>
+                        <div class="col col-75 item-text-wrap">
+                            <span>{{beer.style.name}}</span><br/>
                             <!--<p class="help-text">{{beer.style.description}}</p>-->
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col col-25"><strong>Available:</strong></div>
-                        <div class="col col-75">{{beer.available.name}}</div>
+                        <div class="col col-34"><strong>Available:</strong>
+                        </div>
+                        <div class="col col-66">{{beer.available.name}}</div>
                     </div>
                     <div class="row" ng-if="beer.servingTemperatureDisplay">
-                        <div class="col col-25"><strong>Serving <i class="ion-thermometer"></i>:</strong></div>
+                        <div class="col col-25"><strong>Serving <i class="ion-thermometer"></i>:</strong>
+                        </div>
                         <div class="col col-75">{{beer.servingTemperatureDisplay}}</div>
                     </div>
 
                     <div class="row">
-                        <div class="col col-25"><strong>Organic:</strong></div>
+                        <div class="col col-25"><strong>Organic:</strong>
+                        </div>
                         <div class="col col-75">
                             <span ng-if="beer.isOrganic !== 'N'">Yes</span>
                             <span ng-if="beer.isOrganic === 'N'">No</span>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col col-25"><strong>Glass:</strong></div>
+                        <div class="col col-25"><strong>Glass:</strong>
+                        </div>
                         <div class="col col-75">{{beer.glass.name}}</div>
                     </div>
                 </div>
