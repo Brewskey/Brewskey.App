@@ -10,10 +10,21 @@ angular.module('brewskey.controllers')
         rest.one('api/profile', escape($scope.userName)).get().then(function (response) {
             response.totalPints = Math.round(converter.translateToPints(response.lifetimeTotal));
             $scope.profile = response;
-            $scope.achievements = response.achievements.map(function(item) {
-                return angular.extend({}, { count: item.count }, item.achievement);
-            });
+
+            if (response.achievements) {
+                $scope.achievements = response.achievements.map(function(item) {
+                    return angular.extend({}, { count: item.count }, item.achievement);
+                });
+            } else {
+                $scope.notFriends = true;
+            }
         });
+
+        $scope.addFriend = function() {
+            $scope.addFriendDisabled = true;
+
+            rest.one('api/friends/' + $scope.userName).post();
+        };
 
         $scope.normalize = converter.normalize;
 

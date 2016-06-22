@@ -5,6 +5,11 @@
                 <h1 ng-bind="userName" class="text-center"></h1>
                 <profile-photo user-name="userName"></profile-photo>
             </div>
+            <div class="item no-color" ng-cloak ng-if="notFriends">
+                <button type="button" class="button button-large button-full button-balanced" ng-click="addFriend()" ng-disabled="addFriendDisabled">
+                    <i class="icon ion-android-person-add"></i> Add Friend
+                </button>
+            </div>
             <div class="item no-color" ng-cloak ng-if="achievements.length">
                 <div class="item item-divider">
                     <strong>Achievements</strong>
@@ -18,12 +23,12 @@
                     </div>
                 </div>
             </div>
-            <div class="item no-color">
+            <div class="item no-color" ng-if="profile.totalPints">
                 <div class="item">
                     Total Pints &mdash; {{profile.totalPints}}
                 </div>
             </div>
-            <div class="item no-color">
+            <div class="item no-color" ng-if="profile.recentPours.length">
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
@@ -31,7 +36,8 @@
                     <img ng-src="{{pour.beerIcon}}">
                     <div class="item-text-wrap">
                         <div>
-                            {{normalize(pour.ounces)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}} <!--at </a>me <!--at
+                            {{normalize(pour.ounces)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}}
+                            <!--at </a>me <!--at
                             {{pour.locationName}}-->
                             <br />
                             <small>{{pour.pourDate | amUtc | amLocal | amDateFormat:'MMMM Do YYYY'}}</small>

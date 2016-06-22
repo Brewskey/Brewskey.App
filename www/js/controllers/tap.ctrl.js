@@ -1,6 +1,10 @@
 angular.module('brewskey.controllers')
 .controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
     function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+        });
+
         $scope.kegTypes = kegTypes;
         $scope.percentLeft = 0;
         function setupTap(response) {
@@ -20,6 +24,7 @@ angular.module('brewskey.controllers')
 
             rest.one('api/beer/', response.currentKeg.beerId).get().then(function (response) {
                 $scope.beer = response.data;
+                $scope.loaded = true;
             });
             $scope.kegId = response.currentKeg.id;
             $scope.kegLeaderboard = tapHub.getKegLeaderboard(response.id, $scope.kegId);

@@ -193,6 +193,18 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         }
     })
 
+    .state('app.friends', {
+        authenticate: true,
+        cache: false,
+        url: "/friends",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/friends.html",
+                controller: 'FriendsCtrl'
+            }
+        }
+    })
+
     .state('app.locations', {
         authenticate: true,
         cache: false,
@@ -381,7 +393,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
+    rest.setBaseUrl('http://localhost:2484');
 
     if (ionic.Platform.noScroll()) {
         $ionicConfigProvider.scrolling.jsScrolling(false);

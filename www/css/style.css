@@ -380,6 +380,11 @@ small.help-text {
     padding-left: 65px;
 }
 
+/* Friends */
+.friend-item-info {
+    padding-left: 65px;
+}
+
 /* ios */
 .platform-ios .hide-on-ios {
   display: none;

@@ -1,19 +1,21 @@
 <ion-view>
-    <div class="padding text-center" style="margin-top: 60px" ng-if="!tap">
-        <ion-spinner></ion-spinner>
-    </div>
-    <ion-tabs class="tabs-icon-top tabs-color-light tabs-background-brewskey" ng-if="tap">
-        <ion-tab title="Info" icon="ion-information" ui-sref="app.tap.info">
-            <ion-nav-view name="info-tab"></ion-nav-view>
-        </ion-tab>
-        <ion-tab title="Stats" icon="ion-podium" ui-sref="app.tap.stats" hidden="{{tap.hideStats && !canEdit}}">
-            <ion-nav-view name="stats-tab"></ion-nav-view>
-        </ion-tab>
-        <ion-tab title="Leaderboard" icon="ion-trophy" ui-sref="app.tap.leaderboard" hidden="{{tap.hideLeaderboard}}">
-            <ion-nav-view name="leaderboard-tab"></ion-nav-view>
-        </ion-tab>
-        <ion-tab title="Edit" icon="ion-edit" ui-sref="app.tap.edit" hidden="{{!canEdit}}">
-            <ion-nav-view name="edit-tab"></ion-nav-view>
-        </ion-tab>
-    </ion-tabs>
+    <ion-pane>
+        <div class="padding text-center" style="margin-top: 60px" ng-if="!tap">
+            <ion-spinner></ion-spinner>
+        </div>
+        <ion-tabs class="tabs-icon-top tabs-color-light tabs-background-brewskey" ng-if="tap">
+            <ion-tab title="Info" icon="ion-information" ui-sref="app.tap.info">
+                <ion-nav-view name="info-tab"></ion-nav-view>
+            </ion-tab>
+            <ion-tab title="Stats" icon="ion-podium" ui-sref="app.tap.stats" hidden="{{tap.hideStats && !canEdit}}">
+                <ion-nav-view name="stats-tab"></ion-nav-view>
+            </ion-tab>
+            <ion-tab title="Leaderboard" icon="ion-trophy" ui-sref="app.tap.leaderboard" hidden="{{tap.hideLeaderboard}}">
+                <ion-nav-view name="leaderboard-tab"></ion-nav-view>
+            </ion-tab>
+            <ion-tab title="Edit" icon="ion-edit" ui-sref="app.tap.edit" hidden="{{!canEdit}}">
+                <ion-nav-view name="edit-tab"></ion-nav-view>
+            </ion-tab>
+        </ion-tabs>
+    </ion-pane>
 </ion-view>
