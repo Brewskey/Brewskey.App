@@ -5,12 +5,12 @@
                 <ion-content class="has-header">
                     <div class="list">
                         <div class="item no-color" ng-if="friends.length">
-                            <a ng-repeat="friend in friends | orderBy: 'name'" class="item">
+                            <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
                                 <img class="default-profile-small leaderboard-profile-pic pull-left"
                                      ng-src="https://brewskey.com/cdn/photos/{{friend.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
                                      load-fail="img/blank-profile-40.png"/>
-                                <div class="profile">
-                                    <h2 class="profile-link">
+                                <div class="friend-item-info clearfix">
+                                    <h2>
                                         <strong>{{friend.userName}}</strong>
                                     </h2>
                                 </div>

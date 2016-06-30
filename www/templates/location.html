@@ -27,10 +27,10 @@
     		</div>
 			<p ng-bind="location.description"></p>
 		</div>
-    	<div class="item item-body">
+    	<div class="item">
     		<div>On Tap</div>
-			 <div class="list card">
-				<a href="#/app/tap/new/{{location.id}}" class="item item-button-right" ng-if="canEdit">
+			 <div class="list card" style="margin-left: 0; margin-right: 0;">
+				<a ui-sref="app.new-tap({locationId: location.id})" class="item item-button-right" ng-if="canEdit">
 					New Tap
 					<span class="button button-positive">
 					  <i class="icon ion-plus"></i>
@@ -39,8 +39,13 @@
 
 				<!-- Location ngRepeat goes here -->
 		  		<div class="item item-divider" ng-if="canEdit && location.taps.length"></div>
-		  		<a ng-repeat="tap in location.taps | orderBy: 'name'" href="#/app/tap/{{tap.id}}" class="item">
-					{{tap.name}}
+		  		<a ng-repeat="tap in location.taps | orderBy: 'name'" ui-sref="app.tap.stats({tapId: tap.id})" class="item item-avatar">
+                  <img ng-src="{{tap.currentKeg.beerIcon}}">
+                  <h2>{{tap.name}}</h2>
+                  <p>{{tap.summary}}</p>
+                  <span class="badge badge-positive">
+                      {{getPercentLeft(tap.currentKeg) | number : 1}}%
+                  </span>
 				</a>
 			</div>
 		</div>

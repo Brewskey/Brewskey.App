@@ -97,7 +97,7 @@ ol {
 .bar-brewskey .button-clear.button-clear {
     color: #ffffff;
 }
-.tabs-background-brewskey .tabs, .tabs-background-brewskey > .tabs {
+.tabs-background-brewskey.tabs, .tabs-background-brewskey .tabs, .tabs-background-brewskey > .tabs {
   background-color: #238393;
   background-image: linear-gradient(0deg, #c3c3c3, #c3c3c3 50%, transparent 50%);
   border-color: #c3c3c3;

@@ -1,6 +1,6 @@
 <ion-view view-title="Profile">
     <ion-content>
-        <div class="list" ng-init="pours = getPours()">
+        <div class="list">
             <div class="item sub-header">
                 <h1 ng-bind="userName" class="text-center"></h1>
                 <profile-photo user-name="userName"></profile-photo>
@@ -32,7 +32,7 @@
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
-                <a ui-sref="app.tap.leaderboard({tapId: pour.tapId})" ng-repeat="pour in profile.recentPours" class="item item-avatar">
+                <a ui-sref="app.tap.info({tapId: pour.tapId})" ng-repeat="pour in profile.recentPours" class="item item-avatar">
                     <img ng-src="{{pour.beerIcon}}">
                     <div class="item-text-wrap">
                         <div>

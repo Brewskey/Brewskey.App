@@ -7,4 +7,9 @@ angular.module('brewskey.controllers')
 			return permission.permissionType === 0 || permission.permissionType === 1;
 		}).length;
 	});
+
+
+	$scope.getPercentLeft = function (keg) {
+	    return (keg.maxOunces - keg.ounces) / keg.maxOunces * 100;
+	};
 }]);

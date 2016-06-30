@@ -192,14 +192,14 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     })
-
+ 
     .state('app.friends', {
         authenticate: true,
         cache: false,
         url: "/friends",
         views: {
             'menuContent': {
-                templateUrl: "templates/friends.html",
+                templateUrl: 'templates/friends.html',
                 controller: 'FriendsCtrl'
             }
         }
@@ -280,6 +280,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     })
+
     .state('app.tap', {
         abstract: true,
         cache: false,
@@ -296,7 +297,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         cache: false,
         url: "/leaderboard",
         views: {
-            'leaderboard-tab': {
+            'tab-view': {
                 templateUrl: "templates/tap.leaderboard.html",
             }
         }
@@ -306,7 +307,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         cache: false,
         url: "/info",
         views: {
-            'info-tab': {
+            'tab-view': {
                 templateUrl: "templates/tap.info.html",
             }
         }
@@ -316,7 +317,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         cache: false,
         url: "/stats",
         views: {
-            'stats-tab': {
+            'tab-view': {
                 templateUrl: "templates/tap.stats.html",
             }
         }
@@ -325,7 +326,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         authenticate: true,
         url: "/edit",
         views: {
-            'edit-tab': {
+            'tab-view': {
                 templateUrl: "templates/new-tap.html",
                 controller: 'NewTapCtrl'
             }
@@ -393,7 +394,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    rest.setBaseUrl('http://localhost:2484');
+    //rest.setBaseUrl('http://localhost:2484');
 
     if (ionic.Platform.noScroll()) {
         $ionicConfigProvider.scrolling.jsScrolling(false);
