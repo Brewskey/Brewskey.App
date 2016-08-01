@@ -1,4 +1,4 @@
-<ion-view view-title="Devices">
+<ion-view view-title="Brewskey Boxes">
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
@@ -6,11 +6,11 @@
             <div class="item no-color">
                 <a ui-sref="app.setup-wifi" class="item item-icon-left">
                     <i class="icon ion-wifi"></i>
-                    Setup Device Wifi
+                    Setup Brewskey box Wifi
                 </a>
-                <a ui-sref="app.new-device" class="item item-icon-left">
+                <a ui-sref="app.setup-wifi({isCreatingNewDevice: true})" class="item item-icon-left">
                     <i class="icon ion-plus"></i>
-                    New Device
+                    New Brewskey box
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>

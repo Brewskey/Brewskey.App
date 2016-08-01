@@ -2,8 +2,8 @@ angular.module('brewskey')
 .controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state',
 function ($scope, rest, $stateParams, $state) {
     $scope.model = {
-        id: $stateParams.deviceId,
-        particleId: $stateParams.particleId,
+        id: $stateParams.deviceId || undefined,
+        particleId: $stateParams.particleId || '2C0040000547343337373737',
     };
     $scope.deviceStatusTypes = [{ "value": 1, "text": "Active" }, { "value": 2, "text": "Disabled" }, { "value": 0, "text": "Unlocked" }];
     $scope.statusModel = $scope.deviceStatusTypes[0];
@@ -25,9 +25,14 @@ function ($scope, rest, $stateParams, $state) {
         }
     };
     $scope.submitForm = function () {
+        if (navigator.connection.type === Connection.NONE) {
+            return;
+        }
+
         if (!$scope.form.$valid) {
             return;
         }
+        $scope.disabled = true;
         $scope.editing = false;
         var promise;
         $scope.model.deviceStatus = $scope.statusModel.value;
@@ -38,7 +43,7 @@ function ($scope, rest, $stateParams, $state) {
             promise = $scope.model.put();
         }
         promise.then(function (response) {
-            $state.go('app.device', { deviceId: response.id }, { reload: true });
+            $state.go('app.device', { deviceId: response.id }, { reload: true, replace: "replace" });
         }, function (error) {
             $scope.editing = true;
             if (!error.data) {
@@ -54,6 +59,8 @@ function ($scope, rest, $stateParams, $state) {
             if (error.data.Message) {
                 $scope.errorDescription = error.data.Message;
             }
+        }).finally(function () {
+            $scope.disabled = false;
         });
     };
     $scope.getDeviceStatus = function () {
@@ -68,12 +75,22 @@ function ($scope, rest, $stateParams, $state) {
             $scope.particleIdLoaded = true;
             $scope.particleIdValid = response.status === 0;
             $scope.particleIdInUse = response.status !== 0;
-        }).catch(function () {
+        }).catch(function (exception) {
             $scope.particleIdLoaded = true;
             $scope.particleIdError = true;
         });
     };
     if ($scope.model.particleId) {
-        $scope.getDeviceStatus();
+        function onOffline() {
+            document.removeEventListener("offline", onOffline);
+            document.addEventListener("online", onOnline, false);
+        }
+
+        function onOnline() {
+            document.removeEventListener("online", onOnline);
+            $scope.getDeviceStatus();
+        }
+
+        document.addEventListener("offline", onOffline, false);
     }
 }]);

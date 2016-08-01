@@ -132,8 +132,8 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         url: "/home",
         views: {
             'menuContent': {
-                controller: 'HomeCtrl',
-                templateUrl: "templates/home.html",
+                controller: 'NearyLocationsCtrl',
+                templateUrl: "templates/nearby-locations.html",
             }
         }
     })
@@ -141,6 +141,9 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     .state('app.setup-wifi', {
         authenticate: true,
         cache: false,
+        params: {
+            isCreatingNewDevice: false,
+        },
         url: "/setup-wifi",
         views: {
             'menuContent': {
@@ -163,6 +166,11 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.new-device', {
         authenticate: true,
+        cache: false,
+        params: {
+            deviceId: null,
+            particleId: null,
+        },
         url: "/devices/new",
         views: {
             'menuContent': {

@@ -1,5 +1,5 @@
 <ion-view view-title="Brewskey">
-    <ion-nav-title>{{!model.id ? "New Device" : "Edit Device"}}</ion-nav-title>
+    <ion-nav-title>{{!model.id ? "New Brewskey Box" : "Edit Brewskey Box"}}</ion-nav-title>
     <ion-content ng-controller="NewDeviceCtrl">
         <form name="form" ng-submit="submitForm()" novalidate>
             <div class="list">
@@ -14,7 +14,7 @@
                         <div class="form-error" ng-bind="error"></div>
                     </div>
 
-                    <label class="item item-input">
+                    <!--<label class="item item-input">
                         <i class="icon ion-chevron-right placeholder-icon" ng-show="!model.particleId || !particleIdLoaded"></i>
                         <i class="icon ion-checkmark balanced" ng-show="model.particleId && particleIdLoaded && particleIdValid"></i>
                         <i class="icon ion-alert energized" ng-show="model.particleId && particleIdLoaded && particleIdInUse"></i>
@@ -38,19 +38,19 @@
                     </div>
                     <div class="form-errors" ng-show="model.particleId && particleIdLoaded && particleIdError">
                         <span class="form-error">
-                            The particle device ID you entered is not registered Brewskey.  Please contact an administrator if you think this is incorrect.
+                            The particle device ID you entered is not registered in Brewskey.  Please contact an administrator with the ID if you think this is incorrect.
                         </span>
-                    </div>
+                    </div>-->
                     <label class="item item-input item-select">
                         <div class="input-label">
-                            Device Status
+                            Brewskey Box Status
                         </div>
                         <select ng-model="statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
                     </label>
                     <label class="item">
-                        <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid">
-                            <span ng-if="!model.id">Sync Device</span>
-                            <span ng-if="model.id">Update Device</span>
+                        <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid || disabled">
+                            <span ng-if="!model.id">Create Brewskey Box</span>
+                            <span ng-if="model.id">Update Brewskey Box</span>
                         </button>
                     </label>
                 </div>

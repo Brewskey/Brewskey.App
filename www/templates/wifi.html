@@ -4,9 +4,9 @@
             <div class="item item-divider text-center"><strong>Time to set up your device!</strong></div>
             <div class="item item-text-wrap">
                 <ol>
-                    <li>Please power on your device by plugging it in.</li>
-                    <li>The LED on the device should be blinking blue. If not, hold the button for 3 seconds.</li>
-                    <li>Make sure your phone is to the internet</li>
+                    <li>Please power on your Brewskey box by plugging it in.</li>
+                    <li>The LED on the Brewskey box should be blinking blue. If not, hold the button for 3 seconds.</li>
+                    <li>Make sure your phone is connected to the internet.</li>
                 </ol>
                 <button type="button" class="button button-full button-positive" ng-click="nextState()">Ready</button>
             </div>
@@ -14,19 +14,54 @@
         <div class="item no-color" ng-if="state === 1">
             <div class="item item-text-wrap">
                 <ol>
-                    <li>Open your nearby networks on your phone</li>
-                    <li>Make sure Wi-Fi is turned on, and choose a network that looks like <strong>Photon-XXXX</strong>.</li>
+                    <li>Open your nearby networks on your phone.</li>
+                    <li>Make sure WiFi is turned on, and choose a network that looks like <strong>Photon-XXXX</strong>.</li>
                     <li>Once connected, you will move to the next step.</li>
                     <li>
-                        If your Photon is definitely blinking blue but still not showing up in your computer
-                        or smart phone's WiFi list, try turning your WiFi off and then on again.
+                        If your Brewskey box is blinking blue but still not showing up in your
+                        smart phone's WiFi list, try turning your WiFi off and then on again.
+                    </li>
+                    <li>
+                        If you are still having trouble, try unplugging and plugging the Brewskey box back in.
                     </li>
                 </ol>
             </div>
         </div>
         <div class="item no-color" ng-if="state === 2">
-            <div class="item item-divider text-center">Select the network to connect your device to</div>
+            <div class="item item-divider text-center item-text-wrap">Select a WiFi network</div>
             <div class="item no-padding">
+                <div class="item">
+                    <div class="item-button-right clearfix" ng-click="toggleForm()">
+                        Use a hidden network
+                    </div>
+                    <div ng-if="hiddenForm">
+                        <form class="list clearfix" ng-submit="connect(true)">
+                            <br />
+                            <label class="item item-input">
+                                <span class="input-label">SSID</span>
+                                <input type="text" class="form-control" ng-model="model.ssid" autofocus />
+                            </label>
+                            <label class="item item-input item-select">
+                                <div class="input-label">
+                                    Security
+                                </div>
+                                <select data-ng-model="model.security"
+                                        data-ng-options="item.value as item.key for item in securityTypes"
+                                        required="required">
+                                    <!--<option>Select Keg Size</option>-->
+                                </select>
+                            </label>
+                            <label class="item item-input" ng-show="model.security !== 'open'">
+                                <span class="input-label">Password</span>
+                                <input type="password" class="form-control" ng-model="model.password" />
+                            </label>
+                            <button class="button button-block button-positive" ng-disabled="!model.ssid || disabled || (model.security !== 'open' && !model.password)">
+                                Connect
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="item item-divider"></div>
                 <div class="padding text-center" ng-show="!networks || !networks.length">
                     <ion-spinner></ion-spinner>
                 </div>
@@ -41,7 +76,7 @@
                                 <label class="item-input-wrapper">
                                     <input type="password" class="form-control" placeholder="WiFi Password" ng-model="model.password" autofocus />
                                 </label>
-                                <button class="button button-small button-positive" type="submit" ng-disabled="!model.password">
+                                <button class="button button-small button-positive" type="submit" ng-disabled="!model.password || disabled">
                                     Connect
                                 </button>
                             </div>
@@ -58,7 +93,7 @@
         </div>
         <div class="item no-color" ng-if="state >= 3">
             <div class="item item-divider text-center item-text-wrap">
-                <strong>The WiFi information<br />has been sent to your device!</strong>
+                <strong>The WiFi information<br />has been sent to your Brewskey box!</strong>
             </div>
             <div class="item item-text-wrap">
                 <p>
