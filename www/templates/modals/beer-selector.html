@@ -14,7 +14,7 @@
     <ion-content class="padding">
         <div class="list">
             <a class="item item-avatar" ng-repeat="beer in $parent.$parent.beers" ng-click="$parent.$parent.onSelect(beer)">
-                <img src="{{beer.labels.icon}}" ng-if="beer.labels.icon">
+                <img ng-src="{{beer.labels.icon}}" ng-if="beer.labels.icon">
                 <h2 ng-bind="beer.name"></h2>
                 <p ng-bind="beer.style.shortName"></p>
             </a>

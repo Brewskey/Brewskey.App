@@ -1,17 +1,17 @@
 <form ng-submit="submitForm()" class="form-horizontal" novalidate>   
     <div class="list list-inset list-colored">
-        <a class="item" ng-if="!model.id" ng-click="openModal()">
+        <a class="item" ng-if="!model.id && !model.beerId" ng-click="openModal()">
             Pick a beer
         </a>
-        <a class="item item-avatar" ng-if="model.id" ng-click="openModal()">
+        <a class="item item-avatar" ng-if="model.id || model.beerId" ng-click="openModal()">
             <img ng-src="{{model.beerIcon}}" ng-if="model.beerIcon">
             <h2>{{model.beerName}}</h2>
             <p>Click to change the beer.</p>
         </a>
         <label class="item item-input item-select">
-            <div class="input-label">
+            <span class="input-label">
                 Keg Type
-            </div>
+            </span>
             <select ng-change="onKegTypeChange()"
                     data-ng-model="model.kegType"
                     data-ng-options="key as value for (key, value) in kegTypes"
@@ -20,7 +20,11 @@
             </select>
         </label>
         <div class="item">
-            <button class="button button-block button-balanced" ng-click="submit(true)"  ng-cloak ng-disabled="!model.ounces">
+            <button 
+                    class="button button-block button-balanced" 
+                    ng-click="submit(true)"
+                    ng-cloak 
+                    ng-disabled="!model.beerId || model.kegType === 'undefined'">
                 <span ng-if="model.id">Replace Current Keg</span>
                 <span ng-if="!model.id">Set Current Keg</span>
             </button>

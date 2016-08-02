@@ -40,10 +40,10 @@
 				<!-- Location ngRepeat goes here -->
 		  		<div class="item item-divider" ng-if="canEdit && location.taps.length"></div>
 		  		<a ng-repeat="tap in location.taps | orderBy: 'name'" ui-sref="app.tap.stats({tapId: tap.id})" class="item item-avatar">
-                  <img ng-src="{{tap.currentKeg.beerIcon}}">
+                  <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg && tap.currentKeg.beerIcon">
                   <h2>{{tap.name}}</h2>
                   <p>{{tap.summary}}</p>
-                  <span class="badge badge-positive">
+                  <span class="badge badge-positive" ng-if="tap.currentKeg">
                       {{getPercentLeft(tap.currentKeg) | number : 1}}%
                   </span>
 				</a>

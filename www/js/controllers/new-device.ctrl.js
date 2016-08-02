@@ -3,7 +3,7 @@ angular.module('brewskey')
 function ($scope, rest, $stateParams, $state) {
     $scope.model = {
         id: $stateParams.deviceId || undefined,
-        particleId: $stateParams.particleId || '2C0040000547343337373737',
+        particleId: $stateParams.particleId || undefined,
     };
     $scope.deviceStatusTypes = [{ "value": 1, "text": "Active" }, { "value": 2, "text": "Disabled" }, { "value": 0, "text": "Unlocked" }];
     $scope.statusModel = $scope.deviceStatusTypes[0];

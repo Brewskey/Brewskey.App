@@ -9,14 +9,20 @@ angular.module('brewskey.controllers')
         $scope.percentLeft = 0;
         function setupTap(response) {
             var currentKeg = response.currentKeg;
-
-            $scope.percentLeft = (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100;
-
             $scope.$emit('device-id', response.deviceId);
-            $scope.tap = response;
             $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
                 return permission.permissionType === 4;
             }).length;
+            $scope.tap = response;
+
+            if (!currentKeg) {
+                $scope.loaded = true;
+                return;
+            }
+
+            $scope.percentLeft = (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100;
+
+            
 
             $scope.tap.kegs = _.filter($scope.tap.kegs, function (keg) {
                 return keg.id !== $scope.tap.currentKeg.id;

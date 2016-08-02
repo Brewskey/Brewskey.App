@@ -269,7 +269,12 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.new-tap', {
         authenticate: true,
-        url: "/taps/new/?:locationId",
+        params: {
+            deviceId: null,
+            locationId: null,
+            tapId: null,
+        },
+        url: "/taps/new/",
         views: {
             'menuContent': {
                 templateUrl: "templates/new-tap.html",
@@ -332,6 +337,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.tap.edit', {
         authenticate: true,
+        cache: false,
         url: "/edit",
         views: {
             'tab-view': {

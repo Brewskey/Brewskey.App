@@ -16,6 +16,12 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>
+                    <label class="item item-input" ng-class="{ 'has-error' : form.name.$invalid || errors['model.Summary']}">
+                        <textarea ng-model="model.summary" placeholder="Short Description"></textarea>
+                    </label>
+                    <div class="form-errors" data-ng-repeat="error in errors['model.Summary']" data-ng-cloak>
+                        <div class="form-error" ng-bind="error"></div>
+                    </div>
                     <!--
                     <label class="item item-input" ng-class="{ 'has-error' : form.friendlyName.$invalid || errors['model.Name']}">
                         <input type="text" ng-model="model.friendlyName" placeholder="Friendly Name" required>
@@ -24,6 +30,22 @@
                         <div class="form-error" ng-bind="error"></div>
                     </div>
                     -->
+                    <label class="item item-input item-select">
+                        <span class="input-label">
+                            Location
+                        </span>
+                        <select ng-model="model.locationId"
+                                required
+                                ng-options="obj.id as obj.name for obj in locations"></select>
+                    </label>
+                    <label class="item item-input item-select">
+                        <span class="input-label">
+                            Brewskey Box
+                        </span>
+                        <select ng-model="model.deviceId"
+                                required
+                                ng-options="obj.id as obj.name for obj in devices"></select>
+                    </label>
 
                     <div class="item item-toggle">
                         Hide Stats from Users
@@ -68,6 +90,6 @@
                 -->
             </div>
         </form>
-        <keg-modify tap-id="model.id" keg="model.currentKeg"/>
+        <keg-modify tap-id="model.id" keg="model.currentKeg" ng-show="model.id"/>
     </ion-content>
 </ion-view>

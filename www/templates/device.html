@@ -1,20 +1,17 @@
-<ion-view view-title="Device">
+<ion-view>
+    <ion-nav-title>{{device.name}}</ion-nav-title>
     <ion-content>
         <div class="list card">
-            <div class="item">
-                <h1>
-                    <span ng-bind="device.name"></span>
-                    <a ui-sref="app.edit-device({deviceId: device.id})" class="pull-right">
-                        <span class="button button-positive button-small">
-                            <i class="icon ion-edit"></i>
-                        </span>
-                    </a>
-                    <!--<a class="delete-link text-danger" data-toggle="modal" data-target="#deleteDeviceModal">
-                            <small><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete</small>
-                        </a>-->
-                </h1>
-            </div>
             <div class="item item-text-wrap">
+                <a ui-sref="app.edit-device({deviceId: device.id})" class="pull-right">
+                    <span class="button button-positive button-small">
+                        <i class="icon ion-edit"></i>
+                    </span>
+                </a>
+                <!--<a class="delete-link text-danger" data-toggle="modal" data-target="#deleteDeviceModal">
+        <small><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete</small>
+    </a>-->
+
                 <dl class="dl-horizontal">
                     <dt>Status:</dt>
                     <dd>
@@ -31,13 +28,13 @@
                             <small class="help-block"><em>Your device is currently inactive and cannot pour beers.</em></small>
                         </div>
                     </dd>
-                    <dt>Particle Id:</dt>
-                    <dd>{{device.particleId}}</dd>
+                    <dt>Box Id:</dt>
+                    <dd><small>{{device.particleId}}</small></dd>
                     <dt>Token:</dt>
                     <dd class="clearfix">
                         <div>
                             <div>
-                                {{device.clientSecret}}<br />
+                                <div><small>{{device.clientSecret}}</small></div>
                                 <button class="button button-small button-stable" ng-click="resetToken()" ng-disabled="resettingToken">Reset Token</button>
                             </div>
                             <small class="help-block"><em>The access token used by your device for connecting to the Brewskey API.</em></small>
@@ -64,15 +61,20 @@
                 </div>
             </div>
             <div class="list">
-                <div class="item sub-header" ng-if="taps && taps.length < 1">
-                    <h2>Taps</h2>
+                <div class="item sub-header clearfix" ng-if="taps && taps.length < 1">
+                    <h2 class="pull-left">Taps</h2>
+                    <a ui-sref="app.new-tap({deviceId: device.id})" class="pull-right">
+                        <span class="button button-positive button-small">
+                            <i class="icon ion-plus"></i>
+                        </span>
+                    </a>
                 </div>
                 <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
-                    <img ng-src="{{tap.currentKeg.beerIcon}}">
+                    <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg && tap.currentKeg.beerIcon">
                     <h2>{{tap.name}}</h2>
                     <p>{{tap.summary}}</p>
 
-                    <span class="badge badge-positive">
+                    <span class="badge badge-positive" ng-if="tap.currentKeg">
                         {{getPercentLeft(tap.currentKeg) | number : 1}}%
                     </span>
                 </a>
