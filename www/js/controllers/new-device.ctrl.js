@@ -43,7 +43,7 @@ function ($scope, rest, $stateParams, $state) {
             promise = $scope.model.put();
         }
         promise.then(function (response) {
-            $state.go('app.device', { deviceId: response.id }, { reload: true, replace: "replace" });
+            $state.go('app.device', { deviceId: response.id }, { location: 'replace' });
         }, function (error) {
             $scope.editing = true;
             if (!error.data) {

@@ -80,7 +80,7 @@
                     Past Kegs
                 </div>
                 <div ng-repeat="keg in tap.kegs | orderBy:'-id'" class="item item-avatar">
-                    <img ng-src="{{keg.beerIcon}}" />
+                    <img ng-src="{{keg.beerIcon}}" ng-if="keg.beerIcon" />
                     <h2>{{keg.beerName}}</h2>
                     <p>{{kegTypes[keg.kegType]}}</p>
                     

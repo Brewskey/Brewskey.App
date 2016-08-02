@@ -54,7 +54,7 @@ angular.module('brewskey.controllers')
 	        $scope.$emit('tap-updated', response);
 
 	        if (!$scope.model.id) {
-	            $state.go('app.tap.edit', { tapId: response.id }, { replace: "replace" });
+	            $state.go('app.tap.edit', { tapId: response.id }, { location: 'replace' });
 	        }
 		}, function (error) {
 	        $scope.editing = false;

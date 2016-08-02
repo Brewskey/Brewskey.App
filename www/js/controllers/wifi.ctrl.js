@@ -86,7 +86,7 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
             softAP.publicKey();
         } else if ($scope.state === 3) {
             if ($stateParams.isCreatingNewDevice) {
-                $state.go('app.new-device', { particleId: $scope.device.id }, { location: "replace" });
+                $state.go('app.new-device', { particleId: $scope.device.id }, { location: 'replace' });
             }
         }
     }

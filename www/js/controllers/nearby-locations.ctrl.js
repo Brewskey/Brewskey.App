@@ -12,7 +12,8 @@ function ($scope, rest, nfcService) {
         };
 
         function onError(error) {
-            // TODO - show error
+            $scope.loading = false;
+            $scope.locationDisabled = true;
         }
 
         navigator.geolocation.getCurrentPosition(onSuccess, onError);

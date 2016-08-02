@@ -5,8 +5,16 @@
         <div class="padding text-center" ng-show="loading">
             <ion-spinner></ion-spinner>
         </div>
-        <ion-list>
-            <div ng-repeat="location in locations" class="item">
+        <div class="list" ng-if="locationDisabled && !loading">
+            <div class="item item-text-wrap text-center">
+                <strong>You must allow locations for<br/>Brewskey to find nearby taps!</strong>
+            </div>
+        </div>
+        <ion-list ng-if="!locationDisabled && !loading">
+            <div class="item item-text-wrap text-center" ng-if="!locations.length">
+                Sorry, there aren't any taps nearby that you have access to.
+            </div>
+            <div ng-repeat="location in locations" class="item" ng-if="locations.length">
                 {{location.name}}
                 <p ng-bind="location.summary"></p>
                 <br/>
