@@ -1,0 +1,33 @@
+<ion-view view-title="Friends">
+    <ion-content class="has-header">
+        <div class="list">
+            <div class="item no-color" ng-if="contacts.length">
+                <a ng-repeat="contact in contacts" class="item">
+                    <div class="friend-item-info clearfix">
+                        <h2>
+                            <strong>{{contact.displayName}}</strong>
+                        </h2>
+                        <div class="pull-right">
+                            <a class="button button-small button-positive" ng-click="acceptFriend(request)">Send Request</a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!--<div class="item no-color" ng-if="!friends.length && !loading">
+                <div class="item text-center">
+                    <h2 style="font-size: 20px;">
+                        <strong>
+                            You don't have any friends on Brewskey
+                        </strong>
+                    </h2>
+                    <br />
+                    <h2>
+                        <strong>
+                            Visit someone's profile to add them!
+                        </strong>
+                    </h2>
+                </div>
+            </div>-->
+        </div>
+    </ion-content>
+</ion-view> 

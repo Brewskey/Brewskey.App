@@ -1,0 +1,32 @@
+<ion-view view-title="Friends">
+    <ion-content class="has-header">
+        <div class="list">
+            <div class="item no-color" ng-if="friends.length">
+                <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
+                    <img class="default-profile-small leaderboard-profile-pic pull-left"
+                         ng-src="https://brewskey.com/cdn/photos/{{friend.userName}}.jpg?w=50&h=50&mode=crop" />
+                    <div class="friend-item-info clearfix">
+                        <h2>
+                            <strong>{{friend.userName}}</strong>
+                        </h2>
+                    </div>
+                </a>
+            </div>
+            <div class="item no-color" ng-if="!friends.length && !loading">
+                <div class="item text-center">
+                    <h2 style="font-size: 20px;">
+                        <strong>
+                            You don't have any friends on Brewskey
+                        </strong>
+                    </h2>
+                    <br />
+                    <h2>
+                        <strong>
+                            Visit someone's profile to add them!
+                        </strong>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view> 

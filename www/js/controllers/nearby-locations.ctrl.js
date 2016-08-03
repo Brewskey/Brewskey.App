@@ -27,7 +27,7 @@ function ($scope, rest, nfcService) {
         rest.one('api/locations/nearby').get({
             longitude: coords.longitude,
             latitude: coords.latitude,
-            radius: 1000,
+            radius: -1,
         }).then(function (response) {
             $scope.locations = response;
             $scope.loading = false;

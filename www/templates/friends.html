@@ -1,73 +1,18 @@
 <ion-view view-title="Friends">
+    <div ng-if="loaded">
+        <ion-nav-view name="tab-view"></ion-nav-view>
+    </div>
     <ion-tabs class="tabs-icon-top tabs-color-light tabs-background-brewskey">
-        <ion-tab title="Friends" icon="ion-person">
-            <ion-nav-view>
-                <ion-content class="has-header">
-                    <div class="list">
-                        <div class="item no-color" ng-if="friends.length">
-                            <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
-                                <img class="default-profile-small leaderboard-profile-pic pull-left"
-                                     ng-src="https://brewskey.com/cdn/photos/{{friend.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                                     load-fail="img/blank-profile-40.png"/>
-                                <div class="friend-item-info clearfix">
-                                    <h2>
-                                        <strong>{{friend.userName}}</strong>
-                                    </h2>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="item no-color" ng-if="!friends.length">
-                            <div class="item text-center">
-                                <h2 style="font-size: 20px;">
-                                    <strong>
-                                        You don't have any friends on Brewskey
-                                    </strong>
-                                </h2>
-                                <br/>
-                                <h2>
-                                    <strong>
-                                        Visit someone's profile to add them!
-                                    </strong>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                </ion-content>
-            </ion-nav-view>
+        <ion-tab title="Friends" icon="ion-person" ui-sref="app.friends.list">
+            <ion-nav-view name="friends-list-view"></ion-nav-view>
         </ion-tab>
 
-        <ion-tab title="Requests" icon="ion-android-person-add" badge="requests.length" badge-style="badge-assertive">
-            <ion-nav-view>
-                <ion-content class="has-header">
-                    <div class="list">
-                        <div class="item no-color" ng-if="requests.length">
-                            <div ng-repeat="request in requests | orderBy: 'name'" class="item">
-                                <img class="default-profile-small leaderboard-profile-pic pull-left"
-                                     ng-src="https://brewskey.com/cdn/photos/{{request.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                                     load-fail="img/blank-profile-40.png"/>
-                                <div class="friend-item-info clearfix">
-                                    <h2>
-                                        <strong>{{request.userName}}</strong>
-                                    </h2>
-                                    <div class="pull-right">
-                                        <a class="button button-small button-positive" ng-click="acceptFriend(request)">Accept</a>
-                                        <a class="button button-small button-light" ng-click="denyFriend(request)">Not Now</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item no-color" ng-if="!requests.length">
-                            <div class="item text-center">
-                                <h2 style="font-size: 20px;">
-                                    <strong>
-                                        You don't have any friend requests
-                                    </strong>
-                                </h2>
-                            </div>
-                        </div>
-                    </div>
-                </ion-content>
-            </ion-nav-view>
+        <ion-tab title="Requests" icon="ion-android-person-add" ui-sref="app.friends.requests" badge="requests.length" badge-style="badge-assertive">
+            <ion-nav-view name="requests-list-view"></ion-nav-view>
+        </ion-tab>
+
+        <ion-tab title="Requests" icon="ion-ios-book" ui-sref="app.friends.address-book">
+            <ion-nav-view name="requests-list-view"></ion-nav-view>
         </ion-tab>
     </ion-tabs>
 </ion-view>

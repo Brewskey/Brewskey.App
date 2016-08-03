@@ -202,6 +202,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
  
     .state('app.friends', {
+        abstract: true,
         authenticate: true,
         cache: false,
         url: "/friends",
@@ -209,6 +210,58 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 templateUrl: 'templates/friends.html',
                 controller: 'FriendsCtrl'
+            }
+        }
+    })
+    .state('app.friends.list', {
+        authenticate: true,
+        cache: false,
+        url: "/list",
+        views: {
+            'friends-list-view': {
+                templateUrl: "templates/friends.list.html",
+            }
+        }
+    })
+    .state('app.friends.list.friend', {
+        authenticate: true,
+        cache: false,
+        url: "/:userName",
+        views: {
+            'friends-list-view': {
+                templateUrl: "templates/profile.html",
+                controller: 'ProfileCtrl',
+            }
+        }
+    })
+    .state('app.friends.requests', {
+        authenticate: true,
+        cache: false,
+        url: "/requests",
+        views: {
+            'requests-list-view': {
+                templateUrl: "templates/friends.requests.html",
+            }
+        }
+    })
+    .state('app.friends.requests.friend', {
+        authenticate: true,
+        cache: false,
+        url: "/:userName",
+        views: {
+            'requests-list-view': {
+                templateUrl: "templates/profile.html",
+                controller: 'ProfileCtrl',
+            }
+        }
+    })
+    .state('app.friends.contacts', {
+        authenticate: true,
+        cache: false,
+        url: "/:userName",
+        views: {
+            'contacts-list-view': {
+                templateUrl: "templates/friends.contacts.html",
             }
         }
     })

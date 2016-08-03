@@ -1,6 +1,9 @@
 angular.module('brewskey.directives')
-.directive('pourChart', ['converter',
-    function (converter) {
+.directive('pourChart', [
+    function () {
+        var translateFromUtc = function (dateTime) {
+            return moment.utc(dateTime).local();
+        }
         return {
             link: function (scope, element) {
                 scope.$watch('pours', function (pours, oldValue) {
@@ -11,14 +14,14 @@ angular.module('brewskey.directives')
                     var data;
                     var pourSets;
                     var groupedPours = _.groupBy(pours, function (item) {
-                        var dateMoment = moment.utc(item.pourDate);
+                        var dateMoment = translateFromUtc(item.pourDate);
                         return dateMoment.dayOfYear();
                     });
 
                     if (_.keys(groupedPours).length <= 1) {
                         pourSets = _.map(pours, function(pour) {
                             return {
-                                date: moment.utc(pour.pourDate),
+                                date: translateFromUtc(pour.pourDate),
                                 ounces: pour.ounces,
                             };
                         }).reverse();
@@ -30,29 +33,29 @@ angular.module('brewskey.directives')
                             return item.date.format('M/D/YY LT');
                         });
                     } else {
-                        scope.series = ['Pints per day'];
+                        scope.series = ['Ounces per day'];
 
                         if (_.keys(groupedPours).length > 10) {
                             groupedPours = _.groupBy(pours, function(item) {
-                                var dateMoment = moment.utc(item.pourDate);
+                                var dateMoment = translateFromUtc(item.pourDate);
                                 return dateMoment.week();
                             });
-                            scope.series = ['Pints per week'];
+                            scope.series = ['Ounces per week'];
 
                         }
 
                         if (_.keys(groupedPours).length > 10) {
                             groupedPours = _.groupBy(pours, function(item) {
-                                var dateMoment = moment.utc(item.pourDate);
+                                var dateMoment = translateFromUtc(item.pourDate);
                                 return dateMoment.month();
                             });
-                            scope.series = ['Pints per month'];
+                            scope.series = ['Ounces per month'];
                         }
 
                         pourSets = _.sortBy(
                             _.map(groupedPours, function(group) {
                                 return {
-                                    date: moment.utc(group[0].pourDate),
+                                    date: translateFromUtc(group[0].pourDate),
                                     ounces: _.sumBy(group, 'ounces'),
                                 }
                             }),

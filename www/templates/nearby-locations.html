@@ -1,4 +1,4 @@
-﻿<ion-view view-title="Nearby Locations">
+﻿<ion-view view-title="Nearby">
     <ion-content>
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="getNearbyLocations()">
         </ion-refresher>
@@ -12,14 +12,15 @@
         </div>
         <ion-list ng-if="!locationDisabled && !loading">
             <div class="item item-text-wrap text-center" ng-if="!locations.length">
-                Sorry, there aren't any taps nearby that you have access to.
+                Sorry, there aren't any nearby taps that you have access to.<br /><br />Either have the 
+                tap owner grant you access or walk closer to the tap.
             </div>
             <div ng-repeat="location in locations" class="item" ng-if="locations.length">
                 {{location.name}}
                 <p ng-bind="location.summary"></p>
                 <br/>
                 <div>
-                    <a ng-repeat="tap in location.taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar item-text-wrap  item-button-right">
+                    <a ng-repeat="tap in location.taps" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar item-text-wrap  item-button-right">
                         <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg.beerIcon">
                         <h2>{{tap.name}}</h2>
                         <p>
