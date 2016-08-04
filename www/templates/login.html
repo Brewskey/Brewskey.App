@@ -3,7 +3,7 @@
     <div class="text-center" style="padding: 10px 40px;">
       <img src="img/login-splash.png" class="img-responsive" style="width: 100%;" />
     </div>
-    <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate">
+    <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate" style="background: #fff;">
       <div class="list">
         <div class="item no-padding item-text-wrap text-center" ng-if="errorDescription" ng-cloak>
             <div class="form-errors"  data-ng-show="loginForm.$submitted">
@@ -26,7 +26,7 @@
         </div>
         <div class="item">
           <button class="button button-block button-positive" type="submit" ng-disabled="!loginData.userName || !loginData.password || loggingIn">Log in</button>
-          <a href="#" class="button button-block button-light" ui-sref="app.register">Register</a>
+          <a ui-sref="app.register" class="button button-block button-light" ui-sref="app.register">Register</a>
         </div>
       </div>
     </form>

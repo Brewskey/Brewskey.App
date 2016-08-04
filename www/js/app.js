@@ -68,6 +68,15 @@ angular.module('brewskey', [
 .config(['$stateProvider', '$urlRouterProvider', 'RestangularProvider', '$ionicConfigProvider',
 
 function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/app/home');
+
+    // Restangular setup
+    rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
+    rest.setBaseUrl('https://brewskey.com');
+    rest.setRequestSuffix('/');
+    //rest.setBaseUrl('http://localhost:2484');
+
     $stateProvider
 
     .state('app', {
@@ -453,15 +462,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     });
-
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/home');
-
-    // Restangular setup
-    rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
-    rest.setBaseUrl('https://brewskey.com');
-    rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
 
     if (ionic.Platform.noScroll()) {
         $ionicConfigProvider.scrolling.jsScrolling(false);
