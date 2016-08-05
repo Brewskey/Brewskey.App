@@ -7,7 +7,7 @@ function ($scope, rest, nfcService) {
     if (navigator.geolocation) {
         var onSuccess = function (position) {
             coords = position.coords;
-            
+
             $scope.getNearbyLocations();
         };
 
@@ -16,7 +16,12 @@ function ($scope, rest, nfcService) {
             $scope.locationDisabled = true;
         }
 
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        function onDeviceReady() {
+          navigator.geolocation.getCurrentPosition(onSuccess, onError);
+          document.removeEventListener("deviceready", onDeviceReady);
+        }
+
+        document.addEventListener("deviceready", onDeviceReady, false);
     }
 
     $scope.getPercentLeft = function (keg) {

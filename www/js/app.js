@@ -114,7 +114,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
                 controller: 'ProfileCtrl'
             }
         }
-    })
+    })/*
     .state('app.profile.edit', {
         url: "/edit",
         cache: false,
@@ -124,7 +124,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
                 controller: 'ProfileEditCtrl'
             }
         }
-    })
+    })*/
     .state('app.accounts', {
         url: "/accounts",
         cache: false,
@@ -228,7 +228,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     })
- 
+
     .state('app.friends', {
         abstract: true,
         authenticate: true,
