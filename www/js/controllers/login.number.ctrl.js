@@ -1,10 +1,19 @@
 angular.module('brewskey.controllers')
-.controller('LoginCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils',
+.controller('LoginNumberCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils',
 function ($scope, auth, $ionicHistory, $state, utils) {
     // Form data for the login modal
     $scope.loggingIn = false;
     $scope.loginData = {};
+    $scope.showTotp = false;
 
+    $scope.sendTotp = function () {
+        auth.sendTotp($scope.phoneNumber)
+            .then(function (response) {
+
+            }, function (error) {
+                $scope.errors = utils.filterErrors(error);
+            });
+    };
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function (modal) {

@@ -2,6 +2,7 @@ angular.module('brewskey.controllers')
 .controller('ProfileCtrl', ['$scope', 'Restangular', '$stateParams', '$localStorage', 'converter', 'achievements',
     function ($scope, rest, $stateParams, $storage, converter, achievements) {
         $scope.userName = $stateParams.userName || $storage.authDetails.userName;
+        $scope.canEdit = !$stateParams.userName;
 
         if (navigator.userAgent.match(/iemobile/i)) {
             $scope.isWP8 = true;

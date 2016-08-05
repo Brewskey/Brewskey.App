@@ -49,7 +49,13 @@ angular.module('brewskey.services', [])
               });
 
               $state.go('app.login');
-          }
+          },
+          sendTotp: function (phoneNumber) {
+              return rest.one('api/account').post('send-totp', { phoneNumber: phoneNumber });
+          },
+          loginTotp: function (totp) {
+              return rest.one('api/account').post('login-totp', { totp: totp });
+          },
       };
 
       // Handle authenticating with web services

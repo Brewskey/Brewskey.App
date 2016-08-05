@@ -96,6 +96,15 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     })
+    .state('app.login-number', {
+        url: "/login-number",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/login.number.html",
+                controller: 'LoginNumberCtrl'
+            }
+        }
+    })
     .state('app.profile', {
         url: "/profile/:userName",
         cache: false,
@@ -103,6 +112,16 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 templateUrl: "templates/profile.html",
                 controller: 'ProfileCtrl'
+            }
+        }
+    })
+    .state('app.profile.edit', {
+        url: "/edit",
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: "templates/profile.edit.html",
+                controller: 'ProfileEditCtrl'
             }
         }
     })
