@@ -89,6 +89,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
 
     .state('app.login', {
         url: "/login",
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: "templates/login.html",
@@ -137,6 +138,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.register', {
         url: "/register",
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: "templates/register.html",
