@@ -5,9 +5,9 @@
         </div>
         <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate" style="background: #fff;">
             <div class="list">
-                <div class="item no-padding item-text-wrap text-center" ng-if="errorDescription" ng-cloak>
+                <div class="item no-padding item-text-wrap text-center" ng-if="errors.generic" ng-cloak>
                     <div class="form-errors" data-ng-show="loginForm.$submitted">
-                        <div class="form-error" ng-bind="errorDescription"></div>
+                        <div class="form-error" ng-bind="errors.generic"></div>
                     </div>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : loginForm.userName.$invalid || errors['model.UserName']}">

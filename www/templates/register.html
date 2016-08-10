@@ -2,6 +2,11 @@
   <ion-content>
     <form name="registerForm" ng-submit="register()" style="margin-top: 120px; background: #fff;">
       <div class="list">
+        <div class="item no-padding item-text-wrap text-center" ng-if="errors.generic" ng-cloak>
+            <div class="form-errors" data-ng-show="registerForm.$submitted">
+                <div class="form-error" ng-bind="errors.generic"></div>
+            </div>
+        </div>
         <label class="item item-input" ng-class="{ 'has-error' : registerForm.email.$invalid || errors['model.Email']}">
           <span class="input-label">Email</span>
           <input type="email" ng-model="registerData.email">
