@@ -1,6 +1,6 @@
 angular.module('brewskey.controllers')
-.controller('NearyLocationsCtrl', ['$scope', 'Restangular', 'nfcService',
-function ($scope, rest, nfcService) {
+.controller('NearyLocationsCtrl', ['$scope', 'Restangular', 'nfcService', '$ionicPlatform',
+function ($scope, rest, nfcService, $ionicPlatform) {
     $scope.loading = true;
     var coords = null;
 
@@ -16,12 +16,9 @@ function ($scope, rest, nfcService) {
             $scope.locationDisabled = true;
         }
 
-        function onDeviceReady() {
-          navigator.geolocation.getCurrentPosition(onSuccess, onError);
-          document.removeEventListener("deviceready", onDeviceReady);
-        }
-
-        document.addEventListener("deviceready", onDeviceReady, false);
+        $ionicPlatform.ready(function () {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        });
     }
 
     $scope.getPercentLeft = function (keg) {

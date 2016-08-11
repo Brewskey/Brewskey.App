@@ -7,8 +7,8 @@
     	<div class="item">
 			<h1>
 				<span ng-bind="location.name"></span>
-				<a href="#/app/location/{{location.id}}/edit" style="float:right;" ng-if="canEdit" ng-cloak>
-					<span class="button button-positive">
+				<a ui-sref="app.edit-location({locationId: location.id})" style="float:right;" ng-if="canEdit" ng-cloak>
+					<span class="button button-positive button-small">
 					  <i class="icon ion-edit"></i>
 					</span>
 				</a>

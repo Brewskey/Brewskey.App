@@ -4,8 +4,7 @@ angular.module('brewskey.controllers')
         $scope.loading = true;
         rest.all('api/taps').getList().then(function(taps) {
             $scope.taps = taps;
-            $scope.loading = false;
-        }).catch(function () { $scope.loading = false; });
+        }).finally(function () { $scope.loading = false; });
 
         $scope.getPercentLeft = function (keg) {
             return (keg.maxOunces - keg.ounces) / keg.maxOunces * 100;

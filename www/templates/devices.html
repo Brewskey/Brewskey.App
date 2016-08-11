@@ -14,9 +14,14 @@
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>
-                <a ng-repeat="device in devices | orderBy: 'name'" ui-sref="app.device({deviceId: device.id})" class="item">
-                    {{device.name}}
-                </a>
+                <div class="item text-center" ng-show="loading">
+                    <ion-spinner></ion-spinner>
+                </div>
+                <div ng-show="!loading">
+                    <a ng-repeat="device in devices | orderBy: 'name'" ui-sref="app.device({deviceId: device.id})" class="item">
+                        {{device.name}}
+                    </a>
+                </div>
             </div>
         </div>
     </ion-content>

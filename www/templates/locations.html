@@ -10,10 +10,15 @@
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>
-                <a ng-repeat="location in locations | orderBy: 'name'" href="#/app/location/{{location.id}}" class="item">
-                    {{location.name}}
-                    <p ng-bind="location.summary"></p>
-                </a>
+                <div class="item text-center" ng-show="loading">
+                    <ion-spinner></ion-spinner>
+                </div>
+                <div ng-show="!loading">
+                    <a ng-repeat="location in locations | orderBy: 'name'" href="#/app/location/{{location.id}}" class="item">
+                        {{location.name}}
+                        <p ng-bind="location.summary"></p>
+                    </a>
+                </div>
             </div>
         </div>
     </ion-content>

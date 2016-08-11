@@ -4,7 +4,7 @@
 
 /* Empty. Add your own CSS if you like */
 .pane, .view {
-    background: rgba(146,153,191,1);
+    background: rgb(146, 153, 191);
     /*
     background: -moz-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(146,153,191,1)), color-stop(100%, rgba(1,33,96,1)));
