@@ -6,7 +6,7 @@ angular.module('brewskey.services')
   function () {
       return {
           filterErrors: function (error) {
-              if (error.data.ModelState) {
+              if (error.data && error.data.ModelState) {
                   return _.mapValues(error.data.ModelState, function (values, key) {
                       return _.uniq(values);
                   });

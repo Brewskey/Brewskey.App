@@ -4,12 +4,14 @@
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.0.0-rc.1",
     "angular-chart.js": "~0.8.8",
-    "plugin": "^3.1.0"
+    "plugin": "^3.1.0",
+    "ngMask": "angular-mask#^3.1.1"
   },
   "dependencies": {
     "ngstorage": "~0.3.0",
     "restangular": "~1.4.0",
-    "angular-chart.js": "~0.8.8"
+    "angular-chart.js": "~0.8.8",
+    "ngMask": "angular-mask#^3.1.1"
   },
   "resolutions": {
     "lodash": "~4.3.0",

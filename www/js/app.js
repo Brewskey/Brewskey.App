@@ -6,7 +6,7 @@ ionic.Platform.noScroll = function () {
 };
 angular.module('brewskey', [
     'ionic', 'ngMessages', 'brewskey.controllers', 'brewskey.directives', 'brewskey.services', 'ngStorage', 'restangular',
-    'angularMoment', 'SignalR', 'chart.js'
+    'angularMoment', 'SignalR', 'chart.js', 'ngMask',
 ])
 .run(function ($ionicPlatform, $rootScope, auth, $ionicHistory, $state, $localStorage, nfcService) {
     $ionicPlatform.ready(function () {
@@ -48,18 +48,25 @@ angular.module('brewskey', [
 
     $rootScope.$on('$stateChangeStart',
       function (event, toState, toParams, fromState, fromParams) {
-          if (toState.authenticate && !auth.isLoggedIn()) {
-              $ionicPlatform.ready(function () {
+          $ionicPlatform.ready(function () {
+              // All accounts need to set up a phone number.
+              if (auth.isLoggedIn() && !$localStorage.authDetails.phoneNumber && toState.name !== 'app.profile-edit') {
+                  setTimeout(function() {
+                      $ionicHistory.clearHistory();
+                      $state.go('app.profile-edit');
+                  }, 10);
+                  return;
+              }
+
+              if (toState.authenticate && !auth.isLoggedIn()) {
                   $ionicHistory.nextViewOptions({
                       historyRoot: true
                   });
 
                   $state.go('app.login');
-              });
-          }
+              }
+          });
       });
-
-
 })
 .config(function ($stateProvider, $urlRouterProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|ghttps?|ms-appx|ms-appx-web|x-wmapp0):/);
@@ -75,7 +82,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
+    rest.setBaseUrl('http://localhost:2484');
 
     $stateProvider
 
@@ -115,17 +122,17 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
                 controller: 'ProfileCtrl'
             }
         }
-    })/*
-    .state('app.profile.edit', {
-        url: "/edit",
+    })
+    .state('app.profile-edit', {
+        url: "/profile-edit",
         cache: false,
         views: {
             'menuContent': {
-                templateUrl: "templates/profile.edit.html",
+                templateUrl: "templates/profile-edit.html",
                 controller: 'ProfileEditCtrl'
             }
         }
-    })*/
+    })
     .state('app.accounts', {
         url: "/accounts",
         cache: false,
@@ -288,7 +295,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     .state('app.friends.contacts', {
         authenticate: true,
         cache: false,
-        url: "/:userName",
+        url: "/contacts",
         views: {
             'contacts-list-view': {
                 templateUrl: "templates/friends.contacts.html",

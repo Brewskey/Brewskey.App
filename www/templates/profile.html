@@ -3,11 +3,11 @@
         <div class="list">
             <div class="item sub-header">
                 <h1 ng-bind="userName" class="text-center"></h1>
-                <!--<a ui-sref="app.profile.edit({userName: userName})" style="position: absolute; top: 10px; right: 10px;" ng-if="canEdit" ng-cloak>
+                <a ui-sref="app.profile-edit" style="position: absolute; top: 10px; right: 10px;" ng-if="canEdit" ng-cloak>
                     <span class="button button-small button-positive">
                         <i class="icon ion-edit"></i>
                     </span>
-                </a>-->
+                </a>
                 <profile-photo user-name="userName"></profile-photo>
             </div>
             <div class="item no-color" ng-cloak ng-if="notFriends">

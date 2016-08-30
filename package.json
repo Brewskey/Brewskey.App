@@ -25,7 +25,8 @@
     "phonegap-nfc",
     "cordova-plugin-network-information",
     "cordova-plugin-contacts",
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    "cordova-sms-plugin"
   ],
   "cordovaPlatforms": [
     {
