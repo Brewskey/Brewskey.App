@@ -1,6 +1,6 @@
 angular.module('brewskey.controllers')
-.controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils',
-function ($scope, auth, storage, utils) {
+.controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils', '$state',
+function ($scope, auth, storage, utils, $state) {
     $scope.model = angular.copy(storage.authDetails);
     $scope.sending = false;
 
@@ -12,7 +12,7 @@ function ($scope, auth, storage, utils) {
             if (storage.authDetails.phoneNumber !== oldNumber) {
                 $scope.enterToken = true;
             } else if (storage.authDetails.phoneNumber) {
-                // go to profile
+                $state.go('app.profile');
             }
         }, function(error) {
             $scope.errors = utils.filterErrors(error);
@@ -26,16 +26,21 @@ function ($scope, auth, storage, utils) {
         $scope.errors = null;
         auth.sendPhoneToken($scope.model)
             .then(function(e) {
-                // go to profile
+                auth.refreshToken()
+                    .then(function() {
+                        $state.go('app.profile');
+                    });
             }, function (error) {
                 $scope.errors = utils.filterErrors(error);
             })
             .finally(function () {
+                $scope.model.token = null;
                 $scope.sending = false;
             });
     };
 
     $scope.toggleForms = function () {
+        $scope.model.token = null;
         $scope.errors = null;
         $scope.enterToken = !$scope.enterToken;
     };

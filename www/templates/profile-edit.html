@@ -10,7 +10,7 @@
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : profileForm.phoneNumber.$invalid || errors['model.PhoneNumber']}">
                     <span class="input-label">Phone Number</span>
-                    <input type="text" name="phone" mask="(999) 999-9999" clean="false" ng-model="model.phoneNumber"  inputmode="numeric">
+                    <input type="text" name="phone" mask="(999) 999-9999" clean="true" ng-model="model.phoneNumber"  inputmode="numeric">
                 </label>
                 <div class="item item-divider"></div>
                 <label class="item item-input" ng-class="{ 'has-error' : profileForm.email.$invalid || errors['model.Email']}">
@@ -54,10 +54,10 @@
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : tokenForm.token.$invalid || errors['model.Token']}">
                     <span class="input-label">Token</span>
-                    <input type="number" placeholder="Enter Token" step="1" pattern="[0-9]*" inputmode="numeric" limit-to="6" ng-model="model.token"/>
+                    <input type="tel" placeholder="Enter Token" step="1" pattern="[0-9]*" inputmode="numeric" limit-to="6" ng-model="model.token"/>
                 </label>
                 <div class="item">
-                    <button class="button button-block button-positive" type="submit" ng-disabled="sending || !model.token || model.token.length !== 6">Send Token</button>
+                    <button class="button button-block button-positive" type="submit" ng-disabled="sending || !model.token || (model.token + '').length !== 6">Send Token</button>
                     <button class="button button-block button-stable" type="button" ng-click="$parent.toggleForms()">Cancel</button>
                 </div>
             </div>

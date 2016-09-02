@@ -95,7 +95,7 @@ angular.module('brewskey.services', [])
                       }));
               }
 
-              if (model.phoneNumber !== storage.authDetails.phoneNumber) {
+              if (model.phoneNumber !== storage.authDetails.phoneNumber || true) {
                   promises.push(
                       rest.one('api/account/update-phone-number')
                       .put({ phoneNumber: model.phoneNumber })

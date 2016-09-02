@@ -41,7 +41,9 @@ angular.module('brewskey.controllers')
 
     function getRegisteredUsers() {
         var md5PhoneNumbers = $scope.contacts.map(function (contact, index) {
-            return $scope.contacts[index].md5 = md5(contact.phoneNumbers[0].value);
+            return $scope.contacts[index].md5 = md5(
+                (contact.phoneNumbers[0].value || '').replace(/\D/g, '')
+            );
         });
 
         rest.all('api/friends/check-contacts').post(md5PhoneNumbers)
@@ -67,7 +69,7 @@ angular.module('brewskey.controllers')
             navigator.contacts.find(fields, onSuccess, onError, options);
         }, 10);
     } else {
-        $scope.contacts = JSON.parse('[{"id":"{5.70002.22d}","rawId":null,"displayName":"Aaron","name":{"formatted":"Aaron","familyName":null,"givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"3602048864","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null},{"id":"{5.70002.280}","rawId":null,"displayName":"Aaron Bronow","name":{"formatted":"Aaron Bronow","familyName":"Bronow","givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"2063954495","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null}]');
+        $scope.contacts = JSON.parse('[{"id":"{5.70002.22d}","rawId":null,"displayName":"Aaron","name":{"formatted":"Aaron","familyName":null,"givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"4064805936","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null},{"id":"{5.70002.280}","rawId":null,"displayName":"Aaron Bronow","name":{"formatted":"Aaron Bronow","familyName":"Bronow","givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"2063954495","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null}]');
         getRegisteredUsers();
     }
     $scope.acceptFriend = function (request) {
