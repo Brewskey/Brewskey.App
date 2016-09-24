@@ -6,11 +6,11 @@ angular.module('brewskey.services')
   function () {
       return {
           filterErrors: function (error) {
-              if (error.data && error.data.ModelState) {
+              if (error && error.data && error.data.ModelState) {
                   return _.mapValues(error.data.ModelState, function (values, key) {
                       return _.uniq(values);
                   });
-              } else if (error.data['error_description']) {
+              } else if (error && error.data && error.data['error_description']) {
                   return { generic: error.data['error_description'] };
               } else {
                   return {

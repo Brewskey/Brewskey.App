@@ -27,7 +27,8 @@
                 <ion-item nav-clear menu-close ui-sref="app.profile({userName: userName})">
                     My Profile
                 </ion-item>
-                <ion-item nav-clear menu-close ui-sref="app.friends.list()">
+                <ion-item nav-clear menu-close ui-sref="app.friends.list()" class="item">
+                    <span ng-if="friendRequestCount" class="badge badge-positive">{{friendRequestCount}}</span>
                     Friends
                 </ion-item>
                 <ion-item nav-clear menu-close href="#/app/accounts" ng-if="settings.multiAuth">

@@ -1,7 +1,9 @@
 angular.module('brewskey.controllers')
-.controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils', '$state',
-function ($scope, auth, storage, utils, $state) {
-    $scope.model = angular.copy(storage.authDetails);
+.controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils', '$state', '$stateParams',
+function ($scope, auth, storage, utils, $state, $stateParams) {
+    $scope.isSetup = $stateParams.isSetup;
+    $scope.model = angular.copy(storage.authDetails) || {};
+    $scope.model.email = 'asdf';
     $scope.sending = false;
 
     $scope.submit = function () {

@@ -78,4 +78,8 @@ angular.module('brewskey.controllers')
 
             $scope.$broadcast('scroll.refreshComplete');
         };
+
+        $scope.timeAgo = function (time) {
+            return moment.utc(time).fromNow();
+        };
     }]);

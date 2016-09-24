@@ -6,27 +6,12 @@
                     <h2 class="pull-left">
                         <strong>{{contact.displayName}}</strong>
                     </h2>
-                    <div class="pull-right" ng-if="!contact.hasRequested">
+                    <div class="pull-right" ng-if="!contact.hasRequested && contactsLoaded">
                         <a class="button button-small button-positive" ng-click="addFriend(contact, $index)" ng-if="contact.found">Add Friend</a>
                         <a class="button button-small button-positive" ng-click="invite(contact, $index)" ng-if="!contact.found">Invite To Brewskey</a>
                     </div>
                 </div>
             </div>
-            <!--<div class="item no-color" ng-if="!friends.length && !loading">
-                <div class="item text-center">
-                    <h2 style="font-size: 20px;">
-                        <strong>
-                            You don't have any friends on Brewskey
-                        </strong>
-                    </h2>
-                    <br />
-                    <h2>
-                        <strong>
-                            Visit someone's profile to add them!
-                        </strong>
-                    </h2>
-                </div>
-            </div>-->
         </div>
     </ion-content>
 </ion-view> 

@@ -1,24 +1,3 @@
-
-<script type="text/ng-template" id="stats-pour.html">
-    <div class="pull-left">
-        <img class="default-profile-small leaderboard-profile-pic pull-left"
-             ng-src="https://brewskey.com/cdn/photos/{{pour.pouredBy}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-             load-fail="img/blank-profile-40.png" />
-        <div class="recent-pour-info">
-            <span ng-if="pour.pouredBy">
-                <strong>{{pour.pouredBy}}</strong>
-                &nbsp;&mdash;&nbsp;
-                {{normalize(pour.ounces)}} oz
-            </span>
-            <span ng-if="!pour.pouredBy">
-                {{normalize(pour.ounces)}} oz
-            </span>
-            <br />
-            <span am-time-ago="pour.pourDate | amUtc"></span>
-        </div>
-    </div>
-    <pint-list count="pour.ounces" class="pint-list pint-list-float pull-right" />
-</script>
 <ion-view>
     <ion-nav-title>Stats - {{tap.name}}</ion-nav-title>
     <ion-content class="has-tabs">
@@ -40,9 +19,9 @@
                     <strong>Recent Pours</strong>
                 </div>
                 <div ng-repeat="pour in getPours">
-                    <a ng-include="'stats-pour.html'"  ui-sref="app.profile({userName: pour.pouredBy})" class="item clearfix" ng-if="pour.pouredBy">
+                    <a ng-include src="'templates/section/stats-pour.html'"  ui-sref="app.profile({userName: pour.pouredBy})" class="item clearfix" ng-if="pour.pouredBy">
                     </a>
-                    <div ng-include="'stats-pour.html'" class="item clearfix" ng-if="!pour.pouredBy">
+                    <div ng-include src="'templates/section/stats-pour.html'" class="item clearfix" ng-if="!pour.pouredBy">
                     </div>
                 </div>
             </div>

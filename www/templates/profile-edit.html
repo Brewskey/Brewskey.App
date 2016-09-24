@@ -12,28 +12,30 @@
                     <span class="input-label">Phone Number</span>
                     <input type="text" name="phone" mask="(999) 999-9999" clean="true" ng-model="model.phoneNumber"  inputmode="numeric">
                 </label>
-                <div class="item item-divider"></div>
-                <label class="item item-input" ng-class="{ 'has-error' : profileForm.email.$invalid || errors['model.Email']}">
-                    <span class="input-label">Email</span>
-                    <input type="email" ng-model="model.email">
-                </label>
-                <div class="form-errors" data-ng-repeat="error in errors['model.Email']" data-ng-show="profileForm.$submitted" data-ng-cloak>
-                    <div class="form-error" ng-bind="error"></div>
-                </div>
-                <div class="item item-divider"></div>
-                <label class="item item-input" ng-class="{ 'has-error' : profileForm.oldPassword.$invalid || errors['model.OldPassword']}">
-                    <span class="input-label">Old Password</span>
-                    <input type="password" ng-model="model.oldPassword">
-                </label>
-                <div class="form-errors" data-ng-repeat="error in errors['model.OldPassword'] track by $index" data-ng-show="profileForm.$submitted" data-ng-cloak>
-                    <div class="form-error" ng-bind="error"></div>
-                </div>
-                <label class="item item-input" ng-class="{ 'has-error' : profileForm.newPassword.$invalid || errors['model.NewPassword']}">
-                    <span class="input-label">New Password</span>
-                    <input type="password" ng-model="model.newPassword">
-                </label>
-                <div class="form-errors" data-ng-repeat="error in errors['model.NewPassword'] track by $index" data-ng-show="profileForm.$submitted" data-ng-cloak>
-                    <div class="form-error" ng-bind="error"></div>
+                <div ng-if="!isSetup">
+                    <div class="item item-divider"></div>
+                    <label class="item item-input" ng-class="{ 'has-error' : profileForm.email.$invalid || errors['model.Email']}">
+                        <span class="input-label">Email</span>
+                        <input type="email" ng-model="model.email">
+                    </label>
+                    <div class="form-errors" data-ng-repeat="error in errors['model.Email']" data-ng-show="profileForm.$submitted" data-ng-cloak>
+                        <div class="form-error" ng-bind="error"></div>
+                    </div>
+                    <div class="item item-divider"></div>
+                    <label class="item item-input" ng-class="{ 'has-error' : profileForm.oldPassword.$invalid || errors['model.OldPassword']}">
+                        <span class="input-label">Old Password</span>
+                        <input type="password" ng-model="model.oldPassword">
+                    </label>
+                    <div class="form-errors" data-ng-repeat="error in errors['model.OldPassword'] track by $index" data-ng-show="profileForm.$submitted" data-ng-cloak>
+                        <div class="form-error" ng-bind="error"></div>
+                    </div>
+                    <label class="item item-input" ng-class="{ 'has-error' : profileForm.newPassword.$invalid || errors['model.NewPassword']}">
+                        <span class="input-label">New Password</span>
+                        <input type="password" ng-model="model.newPassword">
+                    </label>
+                    <div class="form-errors" data-ng-repeat="error in errors['model.NewPassword'] track by $index" data-ng-show="profileForm.$submitted" data-ng-cloak>
+                        <div class="form-error" ng-bind="error"></div>
+                    </div>
                 </div>
                 <div class="item item-divider"></div>
                 <div class="item">

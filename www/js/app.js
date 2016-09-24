@@ -126,6 +126,9 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     .state('app.profile-edit', {
         url: "/profile-edit",
         cache: false,
+        params: {
+            isSetup: false,
+        },
         views: {
             'menuContent': {
                 templateUrl: "templates/profile-edit.html",
@@ -150,6 +153,16 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 templateUrl: "templates/register.html",
                 controller: 'RegisterCtrl'
+            }
+        }
+    })
+    .state('app.forgot-password', {
+        url: "/forgot-password",
+        cache: false,
+        views: {
+            'menuContent': {
+                templateUrl: "templates/forgot-password.html",
+                controller: 'ForgotPasswordCtrl'
             }
         }
     })

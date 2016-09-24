@@ -1,11 +1,19 @@
 angular.module('brewskey.controllers')
-.controller('FriendsCtrl', ['$scope', 'Restangular', '$localStorage', function ($scope, rest, storage) {
+.controller('FriendsCtrl', [
+'$scope', '$localStorage', 'friends',
+function ($scope, storage, friends) {
     $scope.loading = true;
-    rest.all('api/friends').getList().then(function (friends) {
-        $scope.loading = false;
-        $scope.friends = friends;
-    });
-    rest.all('api/friends/requests').getList().then(function (requests) {
+   
+    function getFriends() {
+        friends.getFriends().then(function (friends) {
+            $scope.loading = false;
+            $scope.friends = friends;
+        });
+    }
+
+    getFriends();
+
+    friends.getRequests().then(function (requests) {
         $scope.requests = requests;
     });
 
@@ -40,14 +48,9 @@ angular.module('brewskey.controllers')
     };
 
     function getRegisteredUsers() {
-        var md5PhoneNumbers = $scope.contacts.map(function (contact, index) {
-            return $scope.contacts[index].md5 = md5(
-                (contact.phoneNumbers[0].value || '').replace(/\D/g, '')
-            );
-        });
-
-        rest.all('api/friends/check-contacts').post(md5PhoneNumbers)
+        friends.checkContacts($scope.contacts)
             .then(function (response) {
+                $scope.contactsLoaded = true;
                 $scope.contacts = $scope.contacts.map(function (contact, index) {
                     var contactInfo = response[index];
                     contact.found = contactInfo.found;
@@ -74,7 +77,9 @@ angular.module('brewskey.controllers')
     }
     $scope.acceptFriend = function (request) {
         request.status = 1;
-        request.put();
+        request.put().then(function () {
+            getFriends();
+        });;
 
         $scope.requests = _.filter($scope.requests, function (r) {
             return r !== request;
@@ -133,8 +138,8 @@ angular.module('brewskey.controllers')
         contact.hasRequested = true;
         $scope.contacts[index] = contact;
 
-        rest.one('api/friends/request-by-md5/' + contact.md5).post().then(function (a) {
-            var a = 0;
+        friends.addFriend(contact).then(function (a) {
+            var c = 0;
         }, function (g, e, d) {
             var b = 0;
         });

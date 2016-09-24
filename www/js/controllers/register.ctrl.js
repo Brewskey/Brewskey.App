@@ -1,6 +1,6 @@
 angular.module('brewskey.controllers')
-.controller('RegisterCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils',
-function ($scope, auth, $ionicHistory, $state, utils) {
+.controller('RegisterCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils', '$ionicPopup',
+function ($scope, auth, $ionicHistory, $state, utils, $ionicPopup) {
     // Form data for the login modal
     $scope.registering = false;
     $scope.registerData = {};
@@ -11,13 +11,19 @@ function ($scope, auth, $ionicHistory, $state, utils) {
 
         auth.register($scope.registerData)
           .then(function (response) {
+
               auth.login($scope.registerData).then(function () {
                   // go to 
                   $ionicHistory.nextViewOptions({
                       historyRoot: true
                   });
 
-                  $state.go('app.home');
+                  $ionicPopup.alert({
+                      title: 'Almost done',
+                      template: 'Please enter your phone number. This allows your friends to add you by searching their phone contacts.'
+                  });
+
+                  $state.go('app.profile-edit', { isSetup: true });
               })
           }, function (error) {
               $scope.registering = false;

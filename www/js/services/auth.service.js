@@ -95,7 +95,7 @@ angular.module('brewskey.services', [])
                       }));
               }
 
-              if (model.phoneNumber !== storage.authDetails.phoneNumber || true) {
+              if (model.phoneNumber !== storage.authDetails.phoneNumber) {
                   promises.push(
                       rest.one('api/account/update-phone-number')
                       .put({ phoneNumber: model.phoneNumber })
@@ -117,6 +117,9 @@ angular.module('brewskey.services', [])
           loginTotp: function (totp) {
               return rest.one('api/account').post('login-totp', { totp: totp });
           },
+          forgotPassword: function (model) {
+              return rest.one('api/account').post('reset-password', { email: model.email });
+          }
       };
 
 
@@ -147,8 +150,10 @@ angular.module('brewskey.services', [])
 
           output.refreshToken()
             .then(function () {
+                var authDetails = storage.authDetails || {};
+
                 // Any requests that failed because of a token refresh
-                response.config.headers.Authorization = 'Bearer ' + storage.authDetails.access_token;
+                response.config.headers.Authorization = 'Bearer ' + authDetails.access_token;
                 $http(response.config).then(function (refreshResponse) {
                     // TODO restangularize
                     deferred.resolve(refreshResponse.data);

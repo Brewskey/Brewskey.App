@@ -1,6 +1,6 @@
 angular.module('brewskey.controllers', [])
 
-.controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService) {
+.controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService, $ionicSideMenuDelegate, friends) {
     $scope.isLoggedIn = auth.isLoggedIn;
 
     if ($localStorage.authDetails) {
@@ -15,6 +15,18 @@ angular.module('brewskey.controllers', [])
     $scope.$on('userChanged', function (event, account) {
         $localStorage.authDetails = account;
         $scope.userName = $localStorage.authDetails.userName;
+    });
+
+    $scope.$watch(function () {
+        return $ionicSideMenuDelegate.getOpenRatio();
+    }, function (value) {
+        if (!value) {
+            return;
+        }
+
+        friends.getRequests().then(function (requests) {
+            $scope.friendRequestCount = requests.length;
+        });
     });
 
     $scope.logout = function () {
