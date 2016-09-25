@@ -19,7 +19,7 @@ function ($scope, storage, friends) {
 
     function onSuccess(contacts) {
         $scope.contactsLoaded = true;
-        $scope.contacts = contacts.filter(function (contact) {
+        contacts = contacts.filter(function (contact) {
             var displayName = contact.displayName;
             if (!displayName) {
                 return false;
@@ -29,16 +29,21 @@ function ($scope, storage, friends) {
                 return false;
             }
 
-            if (!contact.nickname) {
-                return false;
-            }
-
             if (!contact.phoneNumbers.length) {
                 return false;
             }
 
             return true;
         });
+
+        if (contacts.some(function (contact) { return contact.name && contact.name.familyName; })) {
+            contacts = _.sortBy(contacts,
+                function(contact) {
+                    return contact.name.familyName;
+                });
+        }
+
+        $scope.contacts = contacts;
 
         getRegisteredUsers();
     };
@@ -131,6 +136,10 @@ function ($scope, storage, friends) {
             });
         } else {
             sendSms();
+        }
+
+        if (ionic.Platform.isWindowsPhone()) {
+            $scope.addFriend(contact, index);
         }
     };
 

@@ -82,7 +82,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    rest.setBaseUrl('http://localhost:2484');
+    //rest.setBaseUrl('http://localhost:2484');
 
     $stateProvider
 
