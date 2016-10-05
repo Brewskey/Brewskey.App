@@ -20,7 +20,8 @@
                             &nbsp;&mdash;&nbsp;
                             {{normalize(pour.totalOunces)}} oz
                             <br />
-                            <span>Most recent </span><em am-time-ago="pour.lastPourDate | amUtc"></em>
+                            <span>Most recent </span>
+                            <em><time ng-bind="timeAgo(pour.lastPourDate)"></time></em>
                         </div>
                     </div>
                     <pint-list count="pour.totalOunces" class="pint-list leaderboard-pint-list clearfix" />
@@ -46,7 +47,7 @@
                             &nbsp;&mdash;&nbsp;
                             {{normalize(pour.totalOunces)}} oz
                             <br />
-                            <span>Most recent </span><em am-time-ago="pour.lastPourDate | amUtc"></em>
+                            <span>Most recent </span><em><time ng-bind="timeAgo(pour.lastPourDate)"></time></em>
                         </div>
                     </div>
                     <pint-list count="pour.totalOunces" class="pint-list leaderboard-pint-list clearfix" />

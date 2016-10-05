@@ -1,6 +1,8 @@
 angular.module('brewskey.controllers')
-.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
-    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
+.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes', '$localStorage',
+    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes, storage) {
+        var email = storage.authDetails && storage.authDetails.email;
+
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
         });
@@ -11,7 +13,7 @@ angular.module('brewskey.controllers')
             var currentKeg = response.currentKeg;
             $scope.$emit('device-id', response.deviceId);
             $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
-                return permission.permissionType === 4;
+                return permission.forEmail === email || permission.permissionType === 4;
             }).length;
             $scope.tap = response;
 
@@ -21,8 +23,6 @@ angular.module('brewskey.controllers')
             }
 
             $scope.percentLeft = (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100;
-
-            
 
             $scope.tap.kegs = _.filter($scope.tap.kegs, function (keg) {
                 return keg.id !== $scope.tap.currentKeg.id;

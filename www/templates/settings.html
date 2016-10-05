@@ -1,5 +1,10 @@
 <ion-view view-title="Settings">
     <ion-content>
+        <ion-item ui-sref="app.profile-edit" class="item-icon-left">
+          <i class="icon ion-edit"></i>
+          Edit My Profile
+        </ion-item>
+        <div class="item item-divider"></div>
         <!--<ion-toggle ng-change="settingChange()" ng-model="settings.pushNotifications" toggle-class="toggle-calm">Push Notifications</ion-toggle>-->
         <ion-toggle ng-change="settingChange()" ng-model="settings.multiAuth" toggle-class="toggle-calm">Multi-Account Mode</ion-toggle>
         <ion-toggle ng-change="settingChange()" ng-model="settings.manageLocations" toggle-class="toggle-calm">Manage Locations</ion-toggle>

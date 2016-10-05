@@ -80,6 +80,9 @@ ol {
 .no-padding {
     padding: 0;
 }
+.center-text {
+  text-align: center;
+}
 .menu-bar {
     background: #1d5f68;
 }
