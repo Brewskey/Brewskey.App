@@ -24,11 +24,11 @@ gulp.task('sass', function(done) {
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
-*/
+
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
 });
-
+*/
 gulp.task('install', ['git-check'], function() {
   return bower.commands.install()
     .on('log', function(data) {

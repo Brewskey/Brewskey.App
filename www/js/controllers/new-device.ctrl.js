@@ -1,11 +1,16 @@
 angular.module('brewskey')
-.controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state',
-function ($scope, rest, $stateParams, $state) {
+.controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state', '$ionicPopup',
+function ($scope, rest, $stateParams, $state, $ionicPopup) {
     $scope.model = {
         id: $stateParams.deviceId || undefined,
         particleId: $stateParams.particleId || undefined,
     };
-    $scope.deviceStatusTypes = [{ "value": 1, "text": "Active" }, { "value": 2, "text": "Disabled" }, { "value": 0, "text": "Unlocked" }];
+    $scope.deviceStatusTypes = [
+        { "value": 1, "text": "Active" },
+        { "value": 2, "text": "Disabled" },
+        { "value": 3, "text": "Cleaning" },
+        { "value": 4, "text": "Open Valve" }
+    ];
     $scope.statusModel = $scope.deviceStatusTypes[0];
     if ($scope.model.id) {
         $scope.particleIdLoaded = true;
@@ -13,6 +18,9 @@ function ($scope, rest, $stateParams, $state) {
         rest.one('api/devices', $stateParams.deviceId).get().then(function (response) {
             $scope.statusModel = _.find($scope.deviceStatusTypes, function (item) { return item.value === response.deviceStatus; });
             $scope.model = response;
+            $scope.isAdmin = (response.permissions || []).some(function (p) {
+                return p.permissionType === 0;
+            });
         });
     }
     $scope.editing = true;
@@ -24,8 +32,9 @@ function ($scope, rest, $stateParams, $state) {
             $state.go('^');
         }
     };
+
     $scope.submitForm = function () {
-        if (navigator.connection.type === Connection.NONE) {
+        if (navigator.connection && navigator.connection.type === Connection.NONE) {
             return;
         }
 
@@ -93,4 +102,21 @@ function ($scope, rest, $stateParams, $state) {
 
         document.addEventListener("offline", onOffline, false);
     }
+
+    $scope.deleteDevice = function () {
+        var confirmPopup = $ionicPopup.confirm({
+            cssClass: 'green-popup',
+            title: 'Delete ' + ($scope.model.name || 'Brewskey Box'),
+            template: 'Are you sure you want to delete this Brewskey Box?'
+        });
+
+        confirmPopup.then(function (res) {
+            if (!res) {
+                return;
+            }
+            $scope.model.remove().then(function () {
+                $state.go('app.devices');
+            });
+        });
+    };
 }]);

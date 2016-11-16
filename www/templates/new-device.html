@@ -13,46 +13,36 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>
-
-                    <!--<label class="item item-input">
-                        <i class="icon ion-chevron-right placeholder-icon" ng-show="!model.particleId || !particleIdLoaded"></i>
-                        <i class="icon ion-checkmark balanced" ng-show="model.particleId && particleIdLoaded && particleIdValid"></i>
-                        <i class="icon ion-alert energized" ng-show="model.particleId && particleIdLoaded && particleIdInUse"></i>
-                        <i class="icon ion-alert-circled assertive" ng-show="model.particleId && particleIdLoaded && particleIdError"></i>
-                        <input type="text"
-                               ng-model="model.particleId"
-                               class="form-control"
-                               id="particleId"
-                               name="particleId"
-                               placeholder="Particle ID"
-                               ng-change="getDeviceStatus()"
-                               ng-disabled="model.id"
-                               ng-model-options="{debounce: 1000}"
-                               required ng-class="{ 'input-validation-error' : form.particleId.$dirty && !form.particleId.$valid || errors['model.ParticleId']}"
-                               style="padding-left: 10px" />
-                    </label>
-                    <div class="form-errors" ng-show="model.particleId && particleIdLoaded && particleIdInUse">
-                        <span class="form-error">
-                            The particle device ID you entered is already in use.  Please contact an administrator if you think this is incorrect.
-                        </span>
-                    </div>
-                    <div class="form-errors" ng-show="model.particleId && particleIdLoaded && particleIdError">
-                        <span class="form-error">
-                            The particle device ID you entered is not registered in Brewskey.  Please contact an administrator with the ID if you think this is incorrect.
-                        </span>
-                    </div>-->
                     <label class="item item-input item-select">
                         <span class="input-label">
                             Status
                         </span>
                         <select ng-model="statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
                     </label>
-                    <label class="item">
+                    <p ng-if="statusModel.value == 1" class="help-block item item-text-wrap text-center">
+                        The Brewskey Box is currently in the standard mode.  If you have a valve it will be closed and the sensors will
+                        track pours normally.
+                    </p>
+                    <p ng-if="statusModel.value == 2" class="help-block item item-text-wrap text-center">
+                        Your Brewskey Box is disabled. The valve will not open and pours will not be tracked.
+                    </p>
+                    <p ng-if="statusModel.value == 3" class="help-block item item-text-wrap text-center">
+                        Your Brewskey Box is in cleaning mode.<br/>After an hour the box will be put into
+                        "disabled" mode.
+                    </p>
+                    <p ng-if="statusModel.value == 4" class="help-block item item-text-wrap text-center">
+                        Your Brewskey box will open the valve and allow users to pour without authentication.
+                    </p>
+                    <div class="item">
                         <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid || disabled">
                             <span ng-if="!model.id">Create Brewskey Box</span>
                             <span ng-if="model.id">Update Brewskey Box</span>
                         </button>
-                    </label>
+
+                        <!--<button class="button button-block button-assertive button-small" type="button" ng-click="deleteDevice()" ng-disabled="!editing" ng-if="model.id && isAdmin">
+                        Delete Device
+                    </button>-->
+                    </div>
                 </div>
             </div>
         </form>

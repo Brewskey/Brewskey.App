@@ -38,10 +38,6 @@ function ($scope, rest, $stateParams, $ionicHistory, $state, utils) {
 	        $state.go('app.location', { locationId: response.id });
       	}, function (error) {
       	    $scope.editing = true;
-	        if (!error.data) {
-	          return;
-	        }
-
 	        utils.filterErrors(error);
       });
 	};

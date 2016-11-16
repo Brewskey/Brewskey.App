@@ -6,6 +6,7 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
     $scope.model = { security: 'wpa2_aes' };
     $scope.device = null;
     $scope.selectedNetwork = null;
+    $scope.isCreatingNewDevice = $stateParams.isCreatingNewDevice;
     $scope.securityTypes = [
         { key: 'No Security', value: 'open' },
         { key: 'WEP pre-shared key', value: 'wep_psk' },
@@ -37,6 +38,11 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
         $scope.model.password = '';
     };
 
+
+    $scope.onUseInternalDeviceID = function () {
+        $scope.useInternal = true;
+    };
+
     $scope.connect = function (usingForm) {
         $scope.disabled = true;
         var network = $scope.selectedNetwork;
@@ -60,6 +66,10 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
 
     $scope.toggleForm = function () {
         $scope.hiddenForm = !$scope.hiddenForm;
+    };
+
+    $scope.submitInternalID = function(internalId) {
+        $state.go('app.new-device', { particleId: internalId }, { location: 'replace' });
     };
 
     function error() {

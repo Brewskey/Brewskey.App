@@ -1,7 +1,7 @@
 angular.module('brewskey.directives')
     .directive('kegModify', [
-    'Restangular', '$ionicModal', 'kegTypes',
-    function (rest, $ionicModal, kegTypes) {
+    'Restangular', '$ionicModal', 'kegTypes', 'kegSize', '$state',
+    function (rest, $ionicModal, kegTypes, kegSize, $state) {
         return {
             link: function (scope, element) {
                 scope.kegTypes = kegTypes;
@@ -50,11 +50,21 @@ angular.module('brewskey.directives')
                 scope.closeModal = function () {
                     scope.modal.hide();
                 };
+                scope.toggleAdvanced = function() {
+                    scope.showAdvanced = !scope.showAdvanced;
+                };
+                scope.getOunces = function () {
+                    if (scope.model.kegType === "undefined") {
+                        return 0;
+                    }
+
+                    return Math.round(scope.model.startingPercentage * .01 * kegSize[scope.model.kegType]);
+                };
 
 
-                scope.editing = true;
+                scope.isSending = false;
                 scope.submit = function (shouldReplace) {
-                    scope.editing = false;
+                    scope.isSending = true;
 
                     var model = scope.model;
                     model.tapId = scope.tapId;
@@ -67,14 +77,21 @@ angular.module('brewskey.directives')
                     }
 
                     promise.then(function (response) {
-                        scope.editing = false;
+                        scope.isSending = false;
                         scope.model.changed = false;
                         scope.onOkay && scope.onOkay(response);
 
                         scope.$emit('keg-updated', response);
 
+                        // If the sensor hasn't been set up, add one now :(
+                        if (!response.flowSensorId) {
+                            $state.go('app.tap.set-sensor', { tapId: scope.tapId }, { location: 'replace' });
+                        } else {
+                            $state.go('app.tap.edit', { tapId: scope.tapId }, { location: 'replace' });
+                        }
+
                     }, function (error) {
-                        scope.editing = true;
+                        scope.isSending = false;
                         if (!error.data) {
                             return;
                         }

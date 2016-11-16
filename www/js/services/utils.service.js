@@ -12,6 +12,8 @@ angular.module('brewskey.services')
                   });
               } else if (error && error.data && error.data['error_description']) {
                   return { generic: error.data['error_description'] };
+              } else if (error && error.data && error.data['Message']) {
+                  return { generic: error.data['Message'] };
               } else {
                   return {
                     generic: 'Whoa! Brewskey had an error.  We\'ll try to get it fixed soon.',

@@ -19,6 +19,7 @@ function ($scope, auth, $ionicHistory, $state, utils, $ionicPopup) {
                   });
 
                   $ionicPopup.alert({
+                      cssClass: 'green-popup',
                       title: 'Almost done',
                       template: 'Please enter your phone number. This allows your friends to add you by searching their phone contacts.'
                   });

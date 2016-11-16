@@ -1,12 +1,12 @@
-<form ng-submit="submitForm()" class="form-horizontal" novalidate>   
+<form ng-submit="submitForm()" class="form-horizontal" novalidate>
     <div class="list list-inset list-colored">
         <a class="item" ng-if="!model.id && !model.beerId" ng-click="openModal()">
-            Pick a beer
+            Pick a Beverage
         </a>
         <a class="item item-avatar" ng-if="model.id || model.beerId" ng-click="openModal()">
             <img ng-src="{{model.beerIcon}}" ng-if="model.beerIcon">
             <h2>{{model.beerName}}</h2>
-            <p>Click to change the beer.</p>
+            <p>Click to change the beverage.</p>
         </a>
         <label class="item item-input item-select">
             <span class="input-label">
@@ -19,12 +19,27 @@
                 <option>Select Keg Size</option>
             </select>
         </label>
+        <div class="item item-text-wrap text-center" ng-if="!model.id">
+            <p>
+                <strong>Is your keg not completely full?</strong>
+                <br />
+                Here you can manually set the level on your keg.
+            </p>
+            <br />
+            <div class="item range">
+                <i class="icon ion-ios-pint-outline"></i>
+                <input type="range" name="percentage" min="0" max="100" value="100" ng-model="model.startingPercentage">
+                <i class="icon ion-ios-pint"></i>
+            </div>
+            <br />
+            <strong ng-if="model && model.kegType !== 'undefined'">{{model.startingPercentage}}% &mdash; {{getOunces()}} oz</strong>
+        </div>
+
         <div class="item">
-            <button 
-                    class="button button-block button-balanced" 
+            <button class="button button-block button-balanced"
                     ng-click="submit(true)"
-                    ng-cloak 
-                    ng-disabled="!model.beerId || model.kegType === 'undefined'">
+                    ng-cloak
+                    ng-disabled="!model.beerId || model.kegType === 'undefined' || isSending">
                 <span ng-if="model.id">Replace Current Keg</span>
                 <span ng-if="!model.id">Set Current Keg</span>
             </button>

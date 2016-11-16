@@ -64,7 +64,11 @@ angular.module('brewskey.controllers')
 	        $scope.editing = false;
 	        
 	        $ionicHistory.goBack();
-	        $state.go('app.tap', { tapId: response.tapId });
+	        if (response.flowSensorId) {
+	            $state.go('app.tap.edit', { tapId: response.tapId }, { location: 'replace' });
+            } else {
+	            $state.go('app.tap.set-sensor', { tapId: response.tapId }, { location: 'replace' });
+            }
       	}, function (error) {
 	        $scope.editing = false;
 	        if (!error.data) {

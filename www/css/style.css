@@ -421,8 +421,9 @@ input::-webkit-inner-spin-button {
 }
 
 .form-error {
+    color: #e42012;
     font-size: 12px;
-    padding: 2px 20px;
+    padding: 4px 20px;
 }
 
 /* */

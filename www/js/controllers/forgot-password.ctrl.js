@@ -12,6 +12,7 @@ function ($scope, auth, $ionicHistory, $state, utils, $ionicPopup) {
         auth.forgotPassword($scope.model)
           .then(function (response) {
               $ionicPopup.alert({
+                  cssClass: 'green-popup',
                   title: 'Email sent!',
                   template: 'We\'ve sent an email to the address you provided with instructions on how to reset your password.'
               });

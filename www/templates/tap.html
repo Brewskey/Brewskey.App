@@ -1,6 +1,6 @@
 <ion-view>
     <ion-pane>
-        <div class="padding text-center" style="margin-top: 60px" ng-if="!tap">
+        <div class="padding text-center" style="margin-top: 60px" ng-if="!tap && !hasError">
             <ion-spinner></ion-spinner>
         </div>
         <!--<ion-tabs class="tabs-icon-top tabs-color-light tabs-background-brewskey" ng-if="tap">
@@ -17,8 +17,13 @@
                 <ion-nav-view name="edit-tab"></ion-nav-view>
             </ion-tab>
         </ion-tabs>-->
-        <div ng-if="loaded">
+        <div ng-if="loaded && !hasError">
             <ion-nav-view name="tab-view"></ion-nav-view>
+        </div>
+        <div ng-if="loaded && hasError" style="margin-top: 60px">
+            <div class="item text-center item-text-wrap">
+                There was an error loading this tap or it may no longer exist.
+            </div>
         </div>
         <div class="tabs tabs-icon-top tabs-color-light tabs-background-brewskey">
             <a class="tab-item" ui-sref="app.tap.info" ui-sref-opts="{location:'replace'}" ui-sref-active="active">

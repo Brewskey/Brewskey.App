@@ -2,13 +2,36 @@
     <ion-content>
         <div class="item no-color" ng-if="state === 0">
             <div class="item item-divider text-center"><strong>Time to set up your device!</strong></div>
-            <div class="item item-text-wrap">
+            <div class="item item-text-wrap clearfix">
                 <ol>
                     <li>Please power on your Brewskey box by plugging it in.</li>
                     <li>The LED on the Brewskey box should be blinking blue. If not, hold the button for 3 seconds.</li>
                     <li>Make sure your phone is connected to the internet.</li>
                 </ol>
                 <button type="button" class="button button-full button-positive" ng-click="nextState()">Ready</button>
+                <div ng-if="isCreatingNewDevice">
+                    <br />
+                    <hr />
+                    <a ng-if="!useInternal" ng-click="onUseInternalDeviceID()" style="text-decoration: underline; font-size: 11px;">
+                        I know my internal device ID
+                    </a>
+                    <div ng-if="useInternal">
+                        <p class="text-center">
+                            Enter the hardware ID of your Brewskey Box.
+                            <br/>
+                            We'll skip the WiFi setup for now
+                            but you'll still be able to set up your taps.
+                        </p>
+                        <div class="item-input-inset">
+                            <label class="item-input-wrapper">
+                                <input type="text" placeholder="Internal ID" ng-model="internalId">
+                            </label>
+                            <button class="button button-small button-positive" ng-click="submitInternalID(internalId)" type="button">
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="item no-color" ng-if="state === 1">

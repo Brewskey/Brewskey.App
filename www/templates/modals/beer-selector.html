@@ -1,5 +1,8 @@
 <ion-modal-view>
     <ion-header-bar class="item-input-inset">
+        <button class="button button-stable" ng-click="showNewBeerForm()" style="margin-right: 10px;padding: 0 10px;">
+            +
+        </button>
         <label class="item-input-wrapper">
             <i class="icon ion-ios-search placeholder-icon"></i>
             <input ng-model="$parent.$parent.query"
@@ -7,17 +10,22 @@
                    type="search"
                    placeholder="Search">
         </label>
-        <button class="button button-clear" ng-click="closeModal()">
+        <button class="button button-stable" ng-click="closeModal()">
             Cancel
         </button>
     </ion-header-bar>
     <ion-content class="padding">
-        <div class="list">
+        <div class="list" ng-show="$parent.$parent.beers && $parent.$parent.beers.length">
             <a class="item item-avatar" ng-repeat="beer in $parent.$parent.beers" ng-click="$parent.$parent.onSelect(beer)">
                 <img ng-src="{{beer.labels.icon}}" ng-if="beer.labels.icon">
                 <h2 ng-bind="beer.name"></h2>
                 <p ng-bind="beer.style.shortName"></p>
             </a>
+        </div>
+        <div class="list" ng-show="!$parent.$parent.beers || !$parent.$parent.beers.length">
+            <h3 class="text-center">
+                Search for a beverage to set on your tap. If you've homebrewed something, add it by clicking the "+" button.
+            </h3>
         </div>
     </ion-content>
 </ion-modal-view>

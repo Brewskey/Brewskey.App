@@ -9,8 +9,8 @@
                     </span>
                 </a>
                 <!--<a class="delete-link text-danger" data-toggle="modal" data-target="#deleteDeviceModal">
-        <small><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete</small>
-    </a>-->
+                    <small><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Delete</small>
+                </a>-->
 
                 <dl class="dl-horizontal">
                     <dt>Status:</dt>
@@ -55,29 +55,35 @@
                     <small>
                         <em>
                             Last edited by <strong ng-bind="device.lastEditedByUserName"></strong>
-                            <span am-time-ago="device.lastEdited | amUtc"></span>
+                            <time ng-bind="timeAgo(pour.lastPourDate)"></time>
                         </em>
                     </small>
                 </div>
             </div>
-            <div class="list">
-                <div class="item sub-header clearfix" ng-if="taps && taps.length < 1">
-                    <h2 class="pull-left">Taps</h2>
-                    <a ui-sref="app.new-tap({deviceId: device.id})" class="pull-right">
-                        <span class="button button-positive button-small">
-                            <i class="icon ion-plus"></i>
+        </div>
+        <div class="list">
+            <div class="item no-color">
+                <a ui-sref="app.new-tap" class="item item-button-right">
+                    New Tap
+                    <span class="button button-positive">
+                        <i class="icon ion-plus"></i>
+                    </span>
+                </a>
+                <!-- Location ngRepeat goes here -->
+                <div class="item item-divider"></div>
+                <div class="item text-center" ng-show="loading">
+                    <ion-spinner></ion-spinner>
+                </div>
+                <div ng-show="!loading">
+                    <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
+                        <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg && tap.currentKeg.beerIcon">
+                        <h2>{{tap.name}}</h2>
+                        <p>{{tap.summary}}</p>
+                        <span class="badge badge-positive" ng-if="tap.currentKeg">
+                            {{getPercentLeft(tap.currentKeg) | number : 1}}%
                         </span>
                     </a>
                 </div>
-                <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
-                    <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg && tap.currentKeg.beerIcon">
-                    <h2>{{tap.name}}</h2>
-                    <p>{{tap.summary}}</p>
-
-                    <span class="badge badge-positive" ng-if="tap.currentKeg">
-                        {{getPercentLeft(tap.currentKeg) | number : 1}}%
-                    </span>
-                </a>
             </div>
         </div>
     </ion-content>

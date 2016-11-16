@@ -8,23 +8,22 @@
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
     "gulp-rename": "^1.2.0",
-    "gulp-sass": "^0.7.1",
     "moment": "^2.15.1"
   },
   "devDependencies": {
     "bower": "^1.3.3",
-    "gulp-sass": "^2.3.2",
-    "gulp-util": "^2.2.14",
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
     "ionic-plugin-keyboard",
     "cordova-plugin-camera",
-    "cordova-plugin-splashscreen",
     "cordova-plugin-vibration",
     "cordova-plugin-whitelist",
-    "org.apache.cordova.console",
-    "org.apache.cordova.device",
+    "cordova-plugin-console",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-device",
+    "cordova-plugin-splashscreen",
+    "ionic-plugin-keyboard",
     "phonegap-nfc",
     "cordova-plugin-network-information",
     "cordova-plugin-contacts",

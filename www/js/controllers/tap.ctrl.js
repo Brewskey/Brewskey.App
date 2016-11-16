@@ -1,10 +1,8 @@
 angular.module('brewskey.controllers')
-.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes', '$localStorage',
-    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes, storage) {
-        var email = storage.authDetails && storage.authDetails.email;
-
+.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
+    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-            viewData.enableBack = true;
+            viewData.enableBack = false;
         });
 
         $scope.kegTypes = kegTypes;
@@ -12,9 +10,9 @@ angular.module('brewskey.controllers')
         function setupTap(response) {
             var currentKeg = response.currentKeg;
             $scope.$emit('device-id', response.deviceId);
-            $scope.canEdit = response.permissions && _.filter(response.permissions, function (permission) {
-                return permission.forEmail === email || permission.permissionType === 4;
-            }).length;
+            $scope.canEdit = (response.permissions || []).some(function (permission) {
+                return permission.permissionType === 0 || permission.permissionType === 1;
+            });
             $scope.tap = response;
 
             if (!currentKeg) {
@@ -50,9 +48,16 @@ angular.module('brewskey.controllers')
                 rest.one('api/devices', $stateParams.deviceId).getList('taps').then(function (response) {
                     setupTap(response[0]);
                     setupPours(response[0].id);
+                }, function (error) {
+                    $scope.loaded = true;
+                    $scope.hasError = true;
                 });
             } else {
-                rest.one('api/taps', $stateParams.tapId).get().then(setupTap);
+                rest.one('api/taps', $stateParams.tapId).get()
+                    .then(setupTap, function (error) {
+                        $scope.loaded = true;
+                        $scope.hasError = true;
+                    });
 
                 if ($stateParams.tapId) {
                     setupPours($stateParams.tapId);

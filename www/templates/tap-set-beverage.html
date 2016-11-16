@@ -1,0 +1,9 @@
+﻿<ion-view view-title="Brewskey">
+    <ion-nav-title>Set Beverage</ion-nav-title>
+    <ion-content class="has-tabs">
+        <div class="padding text-center" style="margin-top: 20px" ng-if="!model">
+            <ion-spinner></ion-spinner>
+        </div>
+        <keg-modify tap-id="model.id" keg="model.currentKeg" ng-show="model.id" />
+    </ion-content>
+</ion-view>

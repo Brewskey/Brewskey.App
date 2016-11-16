@@ -82,7 +82,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
+    rest.setBaseUrl('http://localhost:2484');
 
     $stateProvider
 
@@ -221,7 +221,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             deviceId: null,
             particleId: null,
         },
-        url: "/devices/new",
+        url: "/devices/new/:particleId",
         views: {
             'menuContent': {
                 templateUrl: "templates/new-device.html",
@@ -446,6 +446,28 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'tab-view': {
                 templateUrl: "templates/new-tap.html",
                 controller: 'NewTapCtrl'
+            }
+        }
+    })
+    .state('app.tap.set-beverage', {
+        authenticate: true,
+        cache: false,
+        url: "/set-beverage",
+        views: {
+            'tab-view': {
+                templateUrl: "templates/tap-set-beverage.html",
+                controller: 'TapSetBeverageCtrl'
+            }
+        }
+    })
+    .state('app.tap.set-sensor', {
+        authenticate: true,
+        cache: false,
+        url: "/set-sensor",
+        views: {
+            'tab-view': {
+                templateUrl: "templates/tap-set-sensor.html",
+                controller: 'TapSetSensorCtrl'
             }
         }
     })

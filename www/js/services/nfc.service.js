@@ -52,6 +52,7 @@ angular.module('brewskey.services')
           }
 
           popup = $ionicPopup.show({
+              cssClass: 'green-popup',
               title: 'NFC is required',
               subTitle: 'To pour any beer you need your NFC enabled.',
               buttons: [
@@ -186,7 +187,7 @@ angular.module('brewskey.services')
 
                   // navigate
                   rest.one('api/devices', deviceId).getList('taps').then(function (response) {
-                      $state.go('app.tap.leaderboard', { tapId: response[0].id });
+                      $state.go('app.tap.leaderboard', { tapId: response[0].id }, { location: 'replace' });
                   });
               }
 

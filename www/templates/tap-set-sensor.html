@@ -1,0 +1,51 @@
+﻿<ion-view view-title="Brewskey">
+    <ion-nav-title>Set Tap Sensor</ion-nav-title>
+    <ion-content class="has-tabs">
+        <div class="padding text-center" style="margin-top: 20px" ng-if="loading">
+            <ion-spinner></ion-spinner>
+        </div>
+        <form name="form" ng-submit="submitForm(form)" novalidate ng-if="!loading">
+            <div class="list">
+                <div class="item item-text-wrap text-center">
+                    <strong>
+                        Select the type of flow sensor you're hooking up to your kegerator.
+                    </strong>
+                </div>
+                <ion-list>
+                    <ion-radio ng-model="model.currentSensor" ng-value="sensor" ng-repeat="sensor in sensors" class="item-avatar" ng-change="sensorChanged(sensor)">
+                        <img ng-src="/img/sensors/{{sensor.image}}" ng-if="sensor.image">
+                        <h2 ng-bind="sensor.name"></h2>
+                        <p ng-bind="sensor.description"></p>
+                    </ion-radio>
+                </ion-list>
+
+                <div class="item item-text-wrap text-center" ng-if="model.currentSensor">
+                    <img ng-src="/img/sensors/{{model.currentSensor.image}}" ng-if="model.currentSensor.image"/>
+                </div>
+                <div class="item item-text-wrap text-center">
+                    <p>
+                        <strong>Tweak your sensor.</strong>
+                        <br/>
+                        You can calibrate your sensor if it's not measuring correctly. Add more pulses if your sensor is
+						over-reporting the amount of beer poured.
+                    </p>
+                    <br/>
+                    <div class="item range">
+                        <i>-10%</i>
+                        <input type="range" name="percentage" min="-100" max="100" value="0" ng-model="model.percentage">
+                        <i>+10%</i>
+                    </div>
+                    <br/>
+                    <strong>{{calculatePercentage().toFixed(1)}}%</strong>
+                    <br />
+                    <strong>{{calculatePulses()}} pulses per gallon</strong>
+                </div>
+                <div class="item">
+                    <button class="button button-block button-positive" type="submit" ng-disabled="!tap || form.$invalid || editing">
+                        Set Sensor
+                    </button>
+                </div>
+            </div>
+        </form>
+    </ion-content>
+</ion-view>
