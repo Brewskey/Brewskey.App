@@ -27,7 +27,6 @@ angular.module('brewskey.directives')
                     model.tapId = scope.tapId;
                     model.beerId = selectedBeer.id;
                     model.beerName = selectedBeer.name;
-                    model.beerIcon = (selectedBeer.labels || {}).medium || null;
                     model.changed = true;
 
                     scope.closeModal();
@@ -61,6 +60,10 @@ angular.module('brewskey.directives')
                     return Math.round(scope.model.startingPercentage * .01 * kegSize[scope.model.kegType]);
                 };
 
+                scope.createBeverage = function() {
+                    $state.go('app.new-homebrew');
+                    scope.closeModal();
+                };
 
                 scope.isSending = false;
                 scope.submit = function (shouldReplace) {

@@ -327,7 +327,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             }
         }
     })
-
     .state('app.new-locations', {
         authenticate: true,
         url: "/location/new",
@@ -500,6 +499,51 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
             'menuContent': {
                 templateUrl: "templates/new-keg.html",
                 controller: 'NewKegCtrl'
+            }
+        }
+    })
+
+    .state('app.homebrew', {
+        authenticate: true,
+        cache: false,
+        url: "/homebrews",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/beverage/beverages.html",
+                controller: 'BeveragesCtrl'
+            }
+        }
+    })
+    .state('app.homebrew-details', {
+        authenticate: true,
+        cache: false,
+        url: "/:beverageId",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/beverage/beverage.html",
+                controller: 'BeverageCtrl'
+            }
+        }
+    })
+    .state('app.new-homebrew', {
+        authenticate: true,
+        cache: false,
+        url: "/homebrews/new",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/beverage/new-beverage.html",
+                controller: 'NewBeverageCtrl'
+            }
+        }
+    })
+    .state('app.edit-homebrew', {
+        authenticate: true,
+        cache: false,
+        url: "/homebrews/:beverageId",
+        views: {
+            'menuContent': {
+                templateUrl: "templates/beverage/new-beverages.html",
+                controller: 'NewBeveragesCtrl'
             }
         }
     })

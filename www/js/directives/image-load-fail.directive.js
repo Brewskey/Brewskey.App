@@ -1,13 +1,23 @@
 angular.module('brewskey.directives')
 .directive('loadFail', [
-function () {
+'$parse',
+function ($parse) {
     return {
         transclude: true,
         link: function (scope, element, attr) {
-            var errorHandler = function () {
+            var errorHandler = function (event) {
                 element.off('error', errorHandler);
                 var newSrc = attr.loadFail;
-                if (element[0].src !== newSrc) {
+
+                var fn = $parse(newSrc);
+                if (fn) {
+                    scope.$apply(function () {
+                        fn(scope, { $event: event });
+                    });
+                    return;
+                }
+
+                if (newSrc && element[0].src !== newSrc) {
                     element[0].src = newSrc;
                 }
             };

@@ -21,6 +21,9 @@
                     <a ng-repeat="device in devices | orderBy: 'name'" ui-sref="app.device({deviceId: device.id})" class="item">
                         {{device.name}}
                     </a>
+                    <div ng-if="!devices || !devices.length" class="item text-center item-text-wrap">
+                        You haven't added any Brewskey boxes yet.<br/>Click the "+" to add one.
+                    </div>
                 </div>
             </div>
         </div>

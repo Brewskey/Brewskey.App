@@ -1,4 +1,5 @@
 <ion-view view-title="Brewskey">
+    <ion-nav-title>{{!model.id ? "New Location" : "Edit Location"}}</ion-nav-title>
     <ion-content>
         <div class="padding text-center" ng-show="!loaded">
             <ion-spinner></ion-spinner>

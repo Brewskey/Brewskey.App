@@ -80,26 +80,39 @@ function ($scope, rest, $stateParams, $state) {
 
             var decimalPercentage = response.pulsesPerGallon / $scope.model.currentSensor.defaultPulses;
 
-            $scope.model.percentage = -1000 * (1 - decimalPercentage);
+            if (response.flowSensorType !== 'Custom') {
+                $scope.model.percentage = -1000 * (1 - decimalPercentage);
+            } else {
+                $scope.model.customPulses = response.pulsesPerGallon;
+            }
         });
     });
 
     $scope.editing = false;
-    $scope.submitForm = function () {
+    $scope.submitForm = function() {
         $scope.model.tapId = $scope.tap.id;
         $scope.editing = true;
+        var currentSensor = $scope.model.currentSensor;
 
-        rest.all('api/v2/flow-sensors').post({
-            flowSensorType: $scope.model.currentSensor.value,
-            pulsesPerGallon: $scope.calculatePulses(),
-            tapId: $stateParams.tapId
-        }).then(function(response) {
-            // go to somewhere :)
-            if ($scope.tap.currentKeg) {
-                $state.go('app.tap.edit', { tapId: $stateParams.tapId }, { location: 'replace' });
-            } else {
-                $state.go('app.tap.set-beverage', { tapId: $stateParams.tapId }, { location: 'replace' });
-            }
-        });
-    }
+        rest.all('api/v2/flow-sensors')
+            .post({
+                flowSensorType: currentSensor.value,
+                pulsesPerGallon: currentSensor.serverEnum !== 'Custom'
+                    ? $scope.calculatePulses()
+                    : $scope.model.customPulses,
+                tapId: $stateParams.tapId
+            })
+            .then(function(response) {
+                // go to somewhere :)
+                if ($scope.tap.currentKeg) {
+                    $state.go('app.tap.edit', { tapId: $stateParams.tapId }, { location: 'replace' });
+                } else {
+                    $state.go('app.tap.set-beverage', { tapId: $stateParams.tapId }, { location: 'replace' });
+                }
+            });
+    };
+
+    $scope.cancel = function() {
+        $state.go('app.tap.edit', { tapId: $stateParams.tapId }, { location: 'replace' });
+    };
 }]);

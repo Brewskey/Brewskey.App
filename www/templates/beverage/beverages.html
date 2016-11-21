@@ -1,9 +1,9 @@
-<ion-view view-title="Locations">
+﻿<ion-view view-title="Homebrew">
     <ion-content>
         <div class="list">
             <div class="item no-color">
-                <a href="#/app/location/new" class="item item-button-right">
-                    New Location
+                <a ui-sref="app.new-homebrew" class="item item-button-right">
+                    New Homebrew
                     <span class="button button-positive">
                         <i class="icon ion-plus"></i>
                     </span>
@@ -14,12 +14,12 @@
                     <ion-spinner></ion-spinner>
                 </div>
                 <div ng-show="!loading">
-                    <a ng-repeat="location in locations | orderBy: 'name'" href="#/app/location/{{location.id}}" class="item">
-                        {{location.name}}
-                        <p ng-bind="location.summary"></p>
+                    <a ng-repeat="beverage in beverages | orderBy: 'name'" ui-sref="app.homebrew-details({beverageId: beverage.id})" class="item">
+                        {{beverage.name}}
+                        <p ng-bind="beverage.description"></p>
                     </a>
-                    <div ng-if="!locations || !locations.length" class="item text-center item-text-wrap">
-                        You haven't added any locations yet.<br />Click the "+" to add one.
+                    <div ng-if="!beverages || !beverages.length" class="item text-center item-text-wrap">
+                        You haven't added any beverages yet.<br />Click the "+" to add one.
                     </div>
                 </div>
             </div>

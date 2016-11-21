@@ -1,0 +1,68 @@
+﻿<div>
+    <div class="item center-text item-text-wrap">
+        <h1>{{beverage.name}}</h1>
+        <!--<img class="responsive" ng-src="http://brewskey.com/cdn/beverages/{{beverage.id}}.jpg?width=480&mode=crop" load-fail="beverage.hideImage = true" ng-if="!beverage.hideImage">-->
+        <img class="responsive" ng-src="{{beverage.labels.medium}}" ng-if="beverage.labels.medium">
+    </div>
+    <div class="item item-body" ng-if="beverage.description">
+        {{beverage.description}}
+    </div>
+    <div class="item" ng-if="beverage.type == 0 && (beverage.abv || beverage.ibu || beverage.srm || beverage.originalGravity)" ng-style="beerColor">
+        <div class="row center-text">
+            <div class="col" ng-if="beverage.abv">
+                <strong>ABV</strong><br /><span>{{beverage.abv}}%</span>
+            </div>
+            <div class="col" ng-if="beverage.ibu">
+                <strong>IBU</strong><br /><span ng-if="beverage.ibu">{{beverage.ibu}}</span>
+            </div>
+            <div class="col" ng-if="beverage.originalGravity">
+                <strong>OG</strong><br /><span ng-if="beverage.originalGravity">{{beverage.originalGravity}}</span>
+            </div>
+            <div class="col" ng-if="beverage.srm">
+                <strong>SRM</strong><br /><span>{{beverage.srm.name}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="item">
+        <!--<div class="row">
+            <div class="col"><strong>Brewed By:</strong></div>
+            <div class="col col-75"></div>
+        </div>-->
+        <div class="row" ng-if="beverage.style">
+            <div class="col col-25">
+                <strong>Style:</strong>
+            </div>
+            <div class="col col-75 item-text-wrap">
+                <span>{{beverage.style.name}}</span><br />
+                <!--<p class="help-text">{{beverage.style.description}}</p>-->
+            </div>
+        </div>
+        <div class="row" ng-if="beverage.availability">
+            <div class="col col-25">
+                <strong>Available:</strong>
+            </div>
+            <div class="col col-75">{{beverage.availability.name}}</div>
+        </div>
+        <div class="row" ng-if="beverage.servingTemperatureDisplay">
+            <div class="col col-25">
+                <strong>Serving <i class="ion-thermometer"></i>:</strong>
+            </div>
+            <div class="col col-75">{{beverage.servingTemperatureDisplay}}</div>
+        </div>
+        <div class="row" ng-if="beverage.glass">
+            <div class="col col-25">
+                <strong>Glass:</strong>
+            </div>
+            <div class="col col-75">{{beverage.glass.name}}</div>
+        </div>
+        <div class="row">
+            <div class="col col-25">
+                <strong>Organic:</strong>
+            </div>
+            <div class="col col-75">
+                <span ng-if="beverage.isOrganic === true || beverage.isOrganic !== 'N'">Yes</span>
+                <span ng-if="beverage.isOrganic === false || beverage.isOrganic === 'N'">No</span>
+            </div>
+        </div>
+    </div>
+</div>

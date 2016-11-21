@@ -26,10 +26,21 @@ angular.module('brewskey.controllers')
                 return keg.id !== $scope.tap.currentKeg.id;
             });
 
-            rest.one('api/beer/', response.currentKeg.beerId).get().then(function (response) {
-                $scope.beer = response.data;
+            if (response.currentKeg.beverage) {
+                $scope.beverage = response.currentKeg.beverage;
+                if (!$scope.beverage.labels) {
+                    $scope.beverage.labels = { medium: $scope.tap.currentKeg.beerIcon };
+                }
+                if ($scope.beverage.srm) {
+                    var srm = $scope.beverage.srm;
+                    $scope.beerColor = {
+                        'color': srm.name === 'Over 40' || parseInt(srm.name, 10) > 9 ? '#fff' : '',
+                        'background-color': ('#' + $scope.beverage.srm.hex)
+                    };
+                }
                 $scope.loaded = true;
-            });
+            }
+
             $scope.kegId = response.currentKeg.id;
             $scope.kegLeaderboard = tapHub.getKegLeaderboard(response.id, $scope.kegId);
         }

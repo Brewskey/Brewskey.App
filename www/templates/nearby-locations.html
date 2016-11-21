@@ -23,7 +23,7 @@
                     <a ng-repeat="tap in location.taps" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar item-text-wrap  item-button-right">
                         <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg.beerIcon">
                         <h2>{{tap.name}}</h2>
-                        <p>
+                        <p ng-if="tap.currentKeg.beerName">
                             <em ng-bind="tap.currentKeg.beerName"></em> on tap
                         </p>
                         <button class="button button-light" ng-click="showPopup(tap.deviceId)">

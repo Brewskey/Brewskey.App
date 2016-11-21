@@ -22,6 +22,9 @@
                             {{getPercentLeft(tap.currentKeg) | number : 1}}%
                         </span>
                     </a>
+                    <div ng-if="!taps || !taps.length" class="item text-center item-text-wrap">
+                        You haven't added any taps yet.<br />Click the "+" to add one.
+                    </div>
                 </div>
             </div>
         </div>
