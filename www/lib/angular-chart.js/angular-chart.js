@@ -1,4 +1,4 @@
-(function (factory) {
+﻿(function (factory) {
   'use strict';
   if (typeof exports === 'object') {
     // Node/CommonJS

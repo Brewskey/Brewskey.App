@@ -1,4 +1,4 @@
-# ngMask
+﻿# ngMask
 
 ### Best Angular JS mask alternative!
 

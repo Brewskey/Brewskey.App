@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * Copyright 2015 Drifty Co.
  * http://drifty.com/
  *

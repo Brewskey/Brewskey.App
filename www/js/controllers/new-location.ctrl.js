@@ -1,4 +1,4 @@
-angular.module('brewskey.controllers')
+﻿angular.module('brewskey.controllers')
 .controller('NewLocationCtrl', ['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', 'utils',
 function ($scope, rest, $stateParams, $ionicHistory, $state, utils) {
     $scope.loaded = false;

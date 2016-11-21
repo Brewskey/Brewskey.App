@@ -127,7 +127,7 @@ var walk = function(dir, done) {
   });
 };
 
-walk(__dirname + "\\www", function(err, results) {
+walk(__dirname + "\\platforms\\windows\\www", function(err, results) {
   if (err) throw err;
   
   results.forEach(saveFile);

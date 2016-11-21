@@ -1,4 +1,4 @@
-# packaged angular
+﻿# packaged angular
 
 This repo is for distribution on `npm` and `bower`. The source for this module is in the
 [main AngularJS repo](https://github.com/angular/angular.js).

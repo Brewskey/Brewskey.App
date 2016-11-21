@@ -1,4 +1,4 @@
-define([
+﻿define([
     '$',
     'plugin'
 ], function($, Plugin) {

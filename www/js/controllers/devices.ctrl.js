@@ -1,4 +1,4 @@
-angular.module('brewskey.controllers')
+﻿angular.module('brewskey.controllers')
     .controller('DevicesCtrl', [
     '$scope', 'Restangular',
     function ($scope, rest) {

@@ -1,4 +1,4 @@
-(function(QUnit) {
+﻿(function(QUnit) {
 
   var Library = Backbone.Collection.extend({
     url: function() { return '/library'; }

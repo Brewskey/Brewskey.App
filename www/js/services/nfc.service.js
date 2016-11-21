@@ -1,4 +1,4 @@
-var appActivated;
+﻿var appActivated;
 var deferred;
 angular.injector(['ng']).invoke([
     '$q', function ($q) {

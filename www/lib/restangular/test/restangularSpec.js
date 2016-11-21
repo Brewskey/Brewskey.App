@@ -1,4 +1,4 @@
-describe("Restangular", function() {
+﻿describe("Restangular", function() {
   // API
   var Restangular, $httpBackend;
   var accountsModel, restangularAccounts, restangularAccount0, restangularAccount1;

@@ -1,4 +1,4 @@
-angular.module('brewskey.services')
+﻿angular.module('brewskey.services')
 .factory('achievements', ['$rootScope', '$ionicPopup', 'Restangular', 'Hub', '$localStorage',
 function ($rootScope, $ionicPopup, rest, Hub, $storage) {
     var achievementImages = {

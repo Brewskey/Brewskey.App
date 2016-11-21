@@ -1,4 +1,4 @@
-## Contributing to Zepto
+﻿## Contributing to Zepto
 
 **Thanks for helping out!**
 

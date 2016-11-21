@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "js-md5",
   "version": "0.4.1",
   "description": "A simple MD5 hash function for JavaScript supports UTF-8 encoding.",

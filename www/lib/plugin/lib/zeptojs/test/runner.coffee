@@ -1,4 +1,4 @@
-# Test runner for PhantomJS <phantomjs.org>
+﻿# Test runner for PhantomJS <phantomjs.org>
 # Usage:
 #   $ phantomjs test/runner.coffee <url-prefix> [<page1>, <page2>, ...]
 #

@@ -1,4 +1,4 @@
-angular.module('brewskey.services')
+﻿angular.module('brewskey.services')
     .factory('kegSize', [
     function () {
         return {

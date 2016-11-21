@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   'use strict';
   angular.module('ngMask')
     .directive('mask', ['$log', '$timeout', 'MaskService', function($log, $timeout, MaskService) {

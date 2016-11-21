@@ -1,4 +1,4 @@
-function parseStateRef(ref, current) {
+﻿function parseStateRef(ref, current) {
   var preparsed = ref.match(/^\s*({[^}]*})\s*$/), parsed;
   if (preparsed) ref = current + '(' + preparsed[1] + ')';
   parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);

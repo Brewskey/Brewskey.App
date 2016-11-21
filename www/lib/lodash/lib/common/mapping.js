@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 var _mapping = require('../../fp/_mapping'),
     util = require('./util'),

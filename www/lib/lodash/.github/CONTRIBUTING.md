@@ -1,4 +1,4 @@
-# Contributing to Lodash
+﻿# Contributing to Lodash
 
 Contributions are always welcome. Before contributing please read the
 [code of conduct](https://jquery.org/conduct/) &

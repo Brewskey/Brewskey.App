@@ -1,4 +1,4 @@
-angular.module('brewskey.services')
+﻿angular.module('brewskey.services')
     .factory('tapHub', ['$rootScope', '$q', 'Hub', 'Restangular',
     function ($rootScope, $q, Hub, rest) {
         var subscriptions = {};

@@ -1,4 +1,4 @@
-Contributing to Chart.js
+﻿Contributing to Chart.js
 ========================
 
 Contributions to Chart.js are welcome and encouraged, but please have a look through the guidelines in this document before raising an issue, or writing code for the project.

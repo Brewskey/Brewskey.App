@@ -1,2 +1,2 @@
-require('./angular-sanitize');
+﻿require('./angular-sanitize');
 module.exports = 'ngSanitize';

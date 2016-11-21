@@ -1,4 +1,4 @@
-In order to Contribute just git clone the repository and then run:
+﻿In order to Contribute just git clone the repository and then run:
 
 ```
 npm install grunt-cli --global

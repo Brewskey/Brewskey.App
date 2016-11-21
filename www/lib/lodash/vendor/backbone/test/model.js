@@ -1,4 +1,4 @@
-(function(QUnit) {
+﻿(function(QUnit) {
 
   var ProxyModel = Backbone.Model.extend();
   var Klass = Backbone.Collection.extend({

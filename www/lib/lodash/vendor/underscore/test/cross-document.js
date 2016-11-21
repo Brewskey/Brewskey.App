@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   if (typeof document == 'undefined') return;
 
   var _ = typeof require == 'function' ? require('..') : window._;

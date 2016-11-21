@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 delete global['__core-js_shared__'];
 

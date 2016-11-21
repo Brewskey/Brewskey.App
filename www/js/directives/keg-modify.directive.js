@@ -1,4 +1,4 @@
-angular.module('brewskey.directives')
+﻿angular.module('brewskey.directives')
     .directive('kegModify', [
     'Restangular', '$ionicModal', 'kegTypes', 'kegSize', '$state',
     function (rest, $ionicModal, kegTypes, kegSize, $state) {

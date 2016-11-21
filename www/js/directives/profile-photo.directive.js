@@ -1,4 +1,4 @@
-angular.module('brewskey.directives')
+﻿angular.module('brewskey.directives')
 .directive('profilePhoto', [
 '$ionicModal', 'Restangular', '$localStorage', 'cache',
 function ($ionicModal, rest, storage, cache) {

@@ -1,4 +1,4 @@
-(function(QUnit) {
+﻿(function(QUnit) {
 
   var a, b, c, d, e, col, otherCol;
 
