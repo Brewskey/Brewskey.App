@@ -517,7 +517,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     .state('app.homebrew-details', {
         authenticate: true,
         cache: false,
-        url: "/:beverageId",
+        url: "/homebrews/:beverageId",
         views: {
             'menuContent': {
                 templateUrl: "templates/beverage/beverage.html",
