@@ -1,4 +1,4 @@
-﻿# text
+# text
 
 A [RequireJS](http://requirejs.org)/AMD loader plugin for loading text
 resources.

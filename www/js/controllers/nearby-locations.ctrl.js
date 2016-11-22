@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('NearyLocationsCtrl', ['$scope', 'Restangular', 'nfcService', '$ionicPlatform', 'gps',
 function ($scope, rest, nfcService, $ionicPlatform, gps) {
     $scope.loading = true;

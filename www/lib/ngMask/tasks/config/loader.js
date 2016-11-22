@@ -1,4 +1,4 @@
-﻿module.exports = function(path) {
+module.exports = function(path) {
   var glob = require('glob'),
       object = {},
       key;

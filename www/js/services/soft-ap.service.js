@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.services')
+angular.module('brewskey.services')
     .factory('softAP', ['$q', '$timeout',
     function ($q, $timeout) {
         var sap = new SoftAPSetup({ 'host': '192.168.0.1', 'protocol': 'http', 'timeout': '5000' });

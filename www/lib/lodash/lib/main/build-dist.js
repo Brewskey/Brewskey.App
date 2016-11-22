@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 var async = require('async'),
     path = require('path');

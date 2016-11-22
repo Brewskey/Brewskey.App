@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "ng-mask",
   "version": "3.1.0",
   "description": "Angular mask without dependencies (NO JQUERY). Pure javascript and only ~6kb! It gives you power to create your mask with optional fields in accordance with your business.",

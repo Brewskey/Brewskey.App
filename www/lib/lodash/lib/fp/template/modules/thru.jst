@@ -1,4 +1,4 @@
-﻿var convert = require('./convert'),
+var convert = require('./convert'),
     func = convert('<%= name %>', require('../<%= _.get(mapping.remap, name, name) %>'), require('./_falseOptions'));
 
 func.placeholder = require('./placeholder');

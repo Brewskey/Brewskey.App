@@ -1,4 +1,4 @@
-﻿.DS_Store
+.DS_Store
 *.log
 doc/*.html
 node_modules

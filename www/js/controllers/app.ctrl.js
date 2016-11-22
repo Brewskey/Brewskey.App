@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers', [])
+angular.module('brewskey.controllers', [])
 
 .controller('AppCtrl', function ($rootScope, $scope, auth, $localStorage, $ionicHistory, $state, nfcService, $ionicSideMenuDelegate, friends) {
     $scope.isLoggedIn = auth.isLoggedIn;

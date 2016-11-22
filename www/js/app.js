@@ -1,4 +1,4 @@
-﻿ionic.Platform.noScroll = function () {
+ionic.Platform.noScroll = function () {
     return ionic.Platform.isWindowsPhone() ||
         ionic.Platform.ua.toLowerCase().indexOf('trident') > -1 ||
         ionic.Platform.ua.toLowerCase().indexOf('edge') > -1 ||

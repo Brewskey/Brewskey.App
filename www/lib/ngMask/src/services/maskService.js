@@ -1,4 +1,4 @@
-﻿(function() {
+(function() {
   'use strict';
   angular.module('ngMask')
     .factory('MaskService', ['$q', 'OptionalService', 'UtilService', function($q, OptionalService, UtilService) {

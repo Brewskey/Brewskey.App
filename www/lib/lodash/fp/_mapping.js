@@ -1,4 +1,4 @@
-﻿/** Used to map aliases to their real names. */
+/** Used to map aliases to their real names. */
 exports.aliasToReal = {
 
   // Lodash aliases.

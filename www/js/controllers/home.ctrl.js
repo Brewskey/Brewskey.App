@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('HomeCtrl', ['$scope', 'Restangular', 'converter', '$localStorage', 'cache', '$timeout',
 function ($scope, rest, converter, $storage, cache, $timeout) {
     var startTime;

@@ -1,4 +1,4 @@
-﻿ngStorage
+ngStorage
 =========
 
 [![Build Status](https://travis-ci.org/gsklee/ngStorage.svg)](https://travis-ci.org/gsklee/ngStorage)

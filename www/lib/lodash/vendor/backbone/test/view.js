@@ -1,4 +1,4 @@
-﻿(function(QUnit) {
+(function(QUnit) {
 
   var view;
 

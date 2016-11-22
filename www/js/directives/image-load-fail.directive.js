@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.directives')
+angular.module('brewskey.directives')
 .directive('loadFail', [
 '$parse',
 function ($parse) {

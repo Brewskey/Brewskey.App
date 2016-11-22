@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 
 /**
  * The UglifyJS options object for

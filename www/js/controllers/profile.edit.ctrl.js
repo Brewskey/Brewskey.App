@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils', '$state', '$stateParams',
 function ($scope, auth, storage, utils, $state, $stateParams) {
     $scope.isSetup = $stateParams.isSetup;

@@ -1,4 +1,4 @@
-﻿angular.module('brewskey')
+angular.module('brewskey')
 .controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state', '$ionicPopup',
 function ($scope, rest, $stateParams, $state, $ionicPopup) {
     $scope.model = {

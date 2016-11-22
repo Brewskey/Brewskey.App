@@ -1,4 +1,4 @@
-﻿module.exports = {
+module.exports = {
   options: {
     bump: true, //default: true
     file: 'bower.json', //default: package.json

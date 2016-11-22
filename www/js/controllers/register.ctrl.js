@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('RegisterCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils', '$ionicPopup',
 function ($scope, auth, $ionicHistory, $state, utils, $ionicPopup) {
     // Form data for the login modal

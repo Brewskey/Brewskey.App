@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @ngdoc object
  * @name ui.router.state.$stateProvider
  *

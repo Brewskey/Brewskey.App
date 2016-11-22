@@ -1,4 +1,4 @@
-﻿# <a href="https://lodash.com/">lodash</a> <span>v4.14.2</span>
+# <a href="https://lodash.com/">lodash</a> <span>v4.14.2</span>
 
 <!-- div class="toc-container" -->
 

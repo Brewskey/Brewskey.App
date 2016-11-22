@@ -1,4 +1,4 @@
-﻿module.exports = {
+module.exports = {
   dist: {
     expand: true,
     cwd: 'dist/',

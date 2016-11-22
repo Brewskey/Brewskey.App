@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('AccountsCtrl', ['$scope', '$localStorage', '$ionicModal', 'achievements',
 function ($scope, $storage, $ionicModal, achievements) {
     var setup = function() {

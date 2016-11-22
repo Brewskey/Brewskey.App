@@ -1,4 +1,4 @@
-﻿module.exports = function(grunt) {
+module.exports = function(grunt) {
     return {
         tagRelease: {
             command: 'git tag -a <%= releaseName %> -m "<%= releaseMessage %>" &&' +

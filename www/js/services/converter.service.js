@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.services')
+angular.module('brewskey.services')
     .factory('converter', ['Restangular',
     function (rest) {
         var converter = {

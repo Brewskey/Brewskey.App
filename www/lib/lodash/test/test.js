@@ -1,4 +1,4 @@
-﻿;(function() {
+;(function() {
 
   /** Used as a safe reference for `undefined` in pre-ES5 environments. */
   var undefined;

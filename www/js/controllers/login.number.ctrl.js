@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('LoginNumberCtrl', ['$scope', 'auth', '$ionicHistory', '$state', 'utils',
 function ($scope, auth, $ionicHistory, $state, utils) {
     // Form data for the login modal

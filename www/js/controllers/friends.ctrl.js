@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('FriendsCtrl', [
 '$scope', '$localStorage', 'friends',
 function ($scope, storage, friends) {

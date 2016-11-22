@@ -1,4 +1,4 @@
-﻿express = require 'express'
+express = require 'express'
 app     = express()
 path    = require 'path'
 

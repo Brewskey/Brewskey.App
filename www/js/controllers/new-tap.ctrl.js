@@ -1,4 +1,4 @@
-﻿angular.module('brewskey.controllers')
+angular.module('brewskey.controllers')
 .controller('NewTapCtrl',
 ['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', '$ionicPopup', 'utils',
 function ($scope, rest, $stateParams, $ionicHistory, $state, $ionicPopup, utils) {
