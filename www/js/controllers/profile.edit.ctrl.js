@@ -3,7 +3,6 @@
 function ($scope, auth, storage, utils, $state, $stateParams) {
     $scope.isSetup = $stateParams.isSetup;
     $scope.model = angular.copy(storage.authDetails) || {};
-    $scope.model.email = 'asdf';
     $scope.sending = false;
 
     $scope.submit = function () {
