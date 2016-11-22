@@ -8,5 +8,13 @@
 	        .then(function (response) {
 	            $scope.beverage = response;
 	            $scope.loaded = true;
+
+              if ($scope.beverage.srm) {
+                  var srm = $scope.beverage.srm;
+                  $scope.beerColor = {
+                      'color': srm.name === 'Over 40' || parseInt(srm.name, 10) > 9 ? '#fff' : '',
+                      'background-color': ('#' + $scope.beverage.srm.hex)
+                  };
+              }
 	        });
 }]);

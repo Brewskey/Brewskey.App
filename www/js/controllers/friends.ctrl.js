@@ -3,7 +3,7 @@ angular.module('brewskey.controllers')
 '$scope', '$localStorage', 'friends',
 function ($scope, storage, friends) {
     $scope.loading = true;
-   
+
     function getFriends() {
         friends.getFriends().then(function (friends) {
             $scope.loading = false;
@@ -20,7 +20,9 @@ function ($scope, storage, friends) {
     function onSuccess(contacts) {
         $scope.contactsLoaded = true;
         contacts = contacts.filter(function (contact) {
-            var displayName = contact.displayName;
+            var displayName = contact.displayName =
+              contact.name && contact.name.formatted;
+              
             if (!displayName) {
                 return false;
             }
@@ -29,7 +31,7 @@ function ($scope, storage, friends) {
                 return false;
             }
 
-            if (!contact.phoneNumbers.length) {
+            if (!contact.phoneNumbers || !contact.phoneNumbers.length) {
                 return false;
             }
 
@@ -101,7 +103,7 @@ function ($scope, storage, friends) {
 
     $scope.invite = function (contact, index) {
         contact.hasRequested = true;
-        // Send SMS  
+        // Send SMS
 
         var number = contact.phoneNumbers[0].value;
         var message = "Add me on Brewskey!\nUsername: " + storage.authDetails.userName + "\nhttps://app.brewskey.com";

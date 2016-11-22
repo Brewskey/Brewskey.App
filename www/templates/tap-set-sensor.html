@@ -13,14 +13,14 @@
                 </div>
                 <ion-list>
                     <ion-radio ng-model="model.currentSensor" ng-value="sensor" ng-repeat="sensor in sensors" class="item-avatar" ng-change="sensorChanged(sensor)">
-                        <img ng-src="/img/sensors/{{sensor.image}}" ng-if="sensor.image">
+                        <img ng-src="img/sensors/{{sensor.image}}" ng-if="sensor.image">
                         <h2 ng-bind="sensor.name"></h2>
                         <p ng-bind="sensor.description"></p>
                     </ion-radio>
                 </ion-list>
 
                 <div class="item item-text-wrap text-center" ng-if="model.currentSensor">
-                    <img ng-src="/img/sensors/{{model.currentSensor.image}}" ng-if="model.currentSensor.image"/>
+                    <img ng-src="img/sensors/{{model.currentSensor.image}}" ng-if="model.currentSensor.image"/>
                 </div>
                 <div class="item item-text-wrap text-center" ng-if="model.currentSensor.serverEnum !== 'Custom'">
                     <p>

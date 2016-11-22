@@ -7,7 +7,7 @@
     <div class="item item-body" ng-if="beverage.description">
         {{beverage.description}}
     </div>
-    <div class="item" ng-if="beverage.type == 0 && (beverage.abv || beverage.ibu || beverage.srm || beverage.originalGravity)" ng-style="beerColor">
+    <div class="item" ng-if="beverage.beverageType === 'Beer' && (beverage.abv || beverage.ibu || beverage.srm || beverage.originalGravity)" ng-style="beerColor">
         <div class="row center-text">
             <div class="col" ng-if="beverage.abv">
                 <strong>ABV</strong><br /><span>{{beverage.abv}}%</span>

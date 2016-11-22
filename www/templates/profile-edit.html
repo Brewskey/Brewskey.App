@@ -40,7 +40,7 @@
                 <div class="item item-divider"></div>
                 <div class="item">
                     <button class="button button-block button-positive" type="submit" ng-disabled="sending || !model.phoneNumber || !model.email">Update</button>
-                    <button class="button button-block button-stable" type="button" ng-click="$parent.toggleForms()">Enter SMS Token</button>
+                    <button class="button button-block button-stable" type="button" ng-click="$parent.toggleForms()" ng-disabled="sending || !model.phoneNumber">Enter SMS Token</button>
                 </div>
             </div>
         </form>
