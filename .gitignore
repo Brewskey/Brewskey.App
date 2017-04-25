@@ -8,3 +8,4 @@ plugins/
 #ide
 .idea
 .vs
+.vscode
