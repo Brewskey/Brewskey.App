@@ -18,7 +18,7 @@ angular
     'angularMoment',
     'SignalR',
     'chart.js',
-    'ngMask'
+    'ngMask',
   ])
   .run(function(
     $ionicPlatform,
@@ -63,8 +63,8 @@ angular
       $localStorage.$default({
         settings: {
           pushNotifications: true,
-          manageLocations: false
-        }
+          manageLocations: false,
+        },
       });
     });
 
@@ -91,7 +91,7 @@ angular
 
         if (toState.authenticate && !auth.isLoggedIn()) {
           $ionicHistory.nextViewOptions({
-            historyRoot: true
+            historyRoot: true,
           });
 
           $state.go('app.login');
@@ -119,7 +119,7 @@ angular
 
       // Restangular setup
       rest.setDefaultHeaders({
-        timezoneOffset: new Date().getTimezoneOffset()
+        timezoneOffset: new Date().getTimezoneOffset(),
       });
       rest.setBaseUrl('https://brewskey.com');
       rest.setRequestSuffix('/');
@@ -131,7 +131,7 @@ angular
           abstract: true,
           noAuth: true,
           templateUrl: 'templates/menu.html',
-          controller: 'AppCtrl'
+          controller: 'AppCtrl',
         })
         .state('app.login', {
           url: '/login',
@@ -139,9 +139,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/login.html',
-              controller: 'LoginCtrl'
-            }
-          }
+              controller: 'LoginCtrl',
+            },
+          },
         })
         .state('app.login-number', {
           url: '/login-number',
@@ -149,9 +149,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/login.number.html',
-              controller: 'LoginNumberCtrl'
-            }
-          }
+              controller: 'LoginNumberCtrl',
+            },
+          },
         })
         .state('app.profile', {
           url: '/profile/:userName',
@@ -159,22 +159,22 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/profile.html',
-              controller: 'ProfileCtrl'
-            }
-          }
+              controller: 'ProfileCtrl',
+            },
+          },
         })
         .state('app.profile-edit', {
           url: '/profile-edit',
           cache: false,
           params: {
-            isSetup: false
+            isSetup: false,
           },
           views: {
             menuContent: {
               templateUrl: 'templates/profile-edit.html',
-              controller: 'ProfileEditCtrl'
-            }
-          }
+              controller: 'ProfileEditCtrl',
+            },
+          },
         })
         .state('app.accounts', {
           url: '/accounts',
@@ -182,9 +182,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/accounts.html',
-              controller: 'AccountsCtrl'
-            }
-          }
+              controller: 'AccountsCtrl',
+            },
+          },
         })
         .state('app.register', {
           url: '/register',
@@ -192,9 +192,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/register.html',
-              controller: 'RegisterCtrl'
-            }
-          }
+              controller: 'RegisterCtrl',
+            },
+          },
         })
         .state('app.forgot-password', {
           url: '/forgot-password',
@@ -202,17 +202,17 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/forgot-password.html',
-              controller: 'ForgotPasswordCtrl'
-            }
-          }
+              controller: 'ForgotPasswordCtrl',
+            },
+          },
         })
         .state('app.search', {
           url: '/search',
           views: {
             menuContent: {
-              templateUrl: 'templates/search.html'
-            }
-          }
+              templateUrl: 'templates/search.html',
+            },
+          },
         })
         .state('app.home', {
           authenticate: true,
@@ -221,23 +221,23 @@ angular
           views: {
             menuContent: {
               controller: 'NearyLocationsCtrl',
-              templateUrl: 'templates/nearby-locations.html'
-            }
-          }
+              templateUrl: 'templates/nearby-locations.html',
+            },
+          },
         })
         .state('app.setup-wifi', {
           authenticate: true,
           cache: false,
           params: {
-            isCreatingNewDevice: false
+            isCreatingNewDevice: false,
           },
           url: '/setup-wifi',
           views: {
             menuContent: {
               templateUrl: 'templates/wifi.html',
-              controller: 'WifiCtrl'
-            }
-          }
+              controller: 'WifiCtrl',
+            },
+          },
         })
         .state('app.devices', {
           authenticate: true,
@@ -246,24 +246,24 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/devices.html',
-              controller: 'DevicesCtrl'
-            }
-          }
+              controller: 'DevicesCtrl',
+            },
+          },
         })
         .state('app.new-device', {
           authenticate: true,
           cache: false,
           params: {
             deviceId: null,
-            particleId: null
+            particleId: null,
           },
           url: '/devices/new/:particleId',
           views: {
             menuContent: {
               templateUrl: 'templates/new-device.html',
-              controller: 'NewDeviceCtrl'
-            }
-          }
+              controller: 'NewDeviceCtrl',
+            },
+          },
         })
         .state('app.device', {
           authenticate: true,
@@ -272,9 +272,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/device.html',
-              controller: 'DeviceCtrl'
-            }
-          }
+              controller: 'DeviceCtrl',
+            },
+          },
         })
         .state('app.edit-device', {
           authenticate: true,
@@ -283,9 +283,9 @@ angular
           views: {
             menuContent: {
               controller: 'NewDeviceCtrl',
-              templateUrl: 'templates/new-device.html'
-            }
-          }
+              templateUrl: 'templates/new-device.html',
+            },
+          },
         })
         .state('app.friends', {
           abstract: true,
@@ -295,9 +295,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/friends.html',
-              controller: 'FriendsCtrl'
-            }
-          }
+              controller: 'FriendsCtrl',
+            },
+          },
         })
         .state('app.friends.list', {
           authenticate: true,
@@ -305,9 +305,9 @@ angular
           url: '/list',
           views: {
             'friends-list-view': {
-              templateUrl: 'templates/friends.list.html'
-            }
-          }
+              templateUrl: 'templates/friends.list.html',
+            },
+          },
         })
         .state('app.friends.list.friend', {
           authenticate: true,
@@ -316,9 +316,9 @@ angular
           views: {
             'friends-list-view': {
               templateUrl: 'templates/profile.html',
-              controller: 'ProfileCtrl'
-            }
-          }
+              controller: 'ProfileCtrl',
+            },
+          },
         })
         .state('app.friends.requests', {
           authenticate: true,
@@ -326,9 +326,9 @@ angular
           url: '/requests',
           views: {
             'requests-list-view': {
-              templateUrl: 'templates/friends.requests.html'
-            }
-          }
+              templateUrl: 'templates/friends.requests.html',
+            },
+          },
         })
         .state('app.friends.requests.friend', {
           authenticate: true,
@@ -337,9 +337,9 @@ angular
           views: {
             'requests-list-view': {
               templateUrl: 'templates/profile.html',
-              controller: 'ProfileCtrl'
-            }
-          }
+              controller: 'ProfileCtrl',
+            },
+          },
         })
         .state('app.friends.contacts', {
           authenticate: true,
@@ -347,9 +347,9 @@ angular
           url: '/contacts',
           views: {
             'contacts-list-view': {
-              templateUrl: 'templates/friends.contacts.html'
-            }
-          }
+              templateUrl: 'templates/friends.contacts.html',
+            },
+          },
         })
         .state('app.locations', {
           authenticate: true,
@@ -358,9 +358,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/locations.html',
-              controller: 'LocationsCtrl'
-            }
-          }
+              controller: 'LocationsCtrl',
+            },
+          },
         })
         .state('app.new-locations', {
           authenticate: true,
@@ -369,9 +369,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/new-location.html',
-              controller: 'NewLocationCtrl'
-            }
-          }
+              controller: 'NewLocationCtrl',
+            },
+          },
         })
         .state('app.location', {
           authenticate: true,
@@ -380,9 +380,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/location.html',
-              controller: 'LocationCtrl'
-            }
-          }
+              controller: 'LocationCtrl',
+            },
+          },
         })
         .state('app.edit-location', {
           authenticate: true,
@@ -391,9 +391,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/new-location.html',
-              controller: 'NewLocationCtrl'
-            }
-          }
+              controller: 'NewLocationCtrl',
+            },
+          },
         })
         .state('app.taps', {
           authenticate: true,
@@ -402,9 +402,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/taps.html',
-              controller: 'TapsCtrl'
-            }
-          }
+              controller: 'TapsCtrl',
+            },
+          },
         })
         .state('app.new-tap', {
           authenticate: true,
@@ -412,15 +412,15 @@ angular
           params: {
             deviceId: null,
             locationId: null,
-            tapId: null
+            tapId: null,
           },
           url: '/taps/new/',
           views: {
             menuContent: {
               templateUrl: 'templates/new-tap.html',
-              controller: 'NewTapCtrl'
-            }
-          }
+              controller: 'NewTapCtrl',
+            },
+          },
         })
         .state('app.device-taps', {
           authenticate: true,
@@ -429,9 +429,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/tap.html',
-              controller: 'TapCtrl'
-            }
-          }
+              controller: 'TapCtrl',
+            },
+          },
         })
         .state('app.tap', {
           abstract: true,
@@ -440,9 +440,9 @@ angular
           views: {
             menuContent: {
               controller: 'TapCtrl',
-              templateUrl: 'templates/tap.html'
-            }
-          }
+              templateUrl: 'templates/tap.html',
+            },
+          },
         })
         .state('app.tap.leaderboard', {
           authenticate: true,
@@ -450,9 +450,9 @@ angular
           url: '/leaderboard',
           views: {
             'tab-view': {
-              templateUrl: 'templates/tap.leaderboard.html'
-            }
-          }
+              templateUrl: 'templates/tap.leaderboard.html',
+            },
+          },
         })
         .state('app.tap.info', {
           authenticate: true,
@@ -460,9 +460,9 @@ angular
           url: '/info',
           views: {
             'tab-view': {
-              templateUrl: 'templates/tap.info.html'
-            }
-          }
+              templateUrl: 'templates/tap.info.html',
+            },
+          },
         })
         .state('app.tap.stats', {
           authenticate: true,
@@ -470,9 +470,9 @@ angular
           url: '/stats',
           views: {
             'tab-view': {
-              templateUrl: 'templates/tap.stats.html'
-            }
-          }
+              templateUrl: 'templates/tap.stats.html',
+            },
+          },
         })
         .state('app.tap.edit', {
           authenticate: true,
@@ -481,9 +481,9 @@ angular
           views: {
             'tab-view': {
               templateUrl: 'templates/new-tap.html',
-              controller: 'NewTapCtrl'
-            }
-          }
+              controller: 'NewTapCtrl',
+            },
+          },
         })
         .state('app.tap.set-beverage', {
           authenticate: true,
@@ -492,9 +492,9 @@ angular
           views: {
             'tab-view': {
               templateUrl: 'templates/tap-set-beverage.html',
-              controller: 'TapSetBeverageCtrl'
-            }
-          }
+              controller: 'TapSetBeverageCtrl',
+            },
+          },
         })
         .state('app.tap.set-sensor', {
           authenticate: true,
@@ -503,9 +503,9 @@ angular
           views: {
             'tab-view': {
               templateUrl: 'templates/tap-set-sensor.html',
-              controller: 'TapSetSensorCtrl'
-            }
-          }
+              controller: 'TapSetSensorCtrl',
+            },
+          },
         })
         .state('app.keg', {
           authenticate: true,
@@ -514,9 +514,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/keg.html',
-              controller: 'KegCtrl'
-            }
-          }
+              controller: 'KegCtrl',
+            },
+          },
         })
         .state('app.homebrew', {
           authenticate: true,
@@ -525,9 +525,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/beverage/beverages.html',
-              controller: 'BeveragesCtrl'
-            }
-          }
+              controller: 'BeveragesCtrl',
+            },
+          },
         })
         .state('app.homebrew-details', {
           authenticate: true,
@@ -536,9 +536,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/beverage/beverage.html',
-              controller: 'BeverageCtrl'
-            }
-          }
+              controller: 'BeverageCtrl',
+            },
+          },
         })
         .state('app.new-homebrew', {
           authenticate: true,
@@ -547,9 +547,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/beverage/new-beverage.html',
-              controller: 'NewBeverageCtrl'
-            }
-          }
+              controller: 'NewBeverageCtrl',
+            },
+          },
         })
         .state('app.edit-homebrew', {
           authenticate: true,
@@ -558,9 +558,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/beverage/new-beverages.html',
-              controller: 'NewBeveragesCtrl'
-            }
-          }
+              controller: 'NewBeveragesCtrl',
+            },
+          },
         })
         .state('app.write-tags', {
           url: '/write-tags',
@@ -568,9 +568,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/write-tags.html',
-              controller: 'WriteTagsCtrl'
-            }
-          }
+              controller: 'WriteTagsCtrl',
+            },
+          },
         })
         .state('app.settings', {
           url: '/settings',
@@ -578,9 +578,9 @@ angular
           views: {
             menuContent: {
               templateUrl: 'templates/settings.html',
-              controller: 'SettingsCtrl'
-            }
-          }
+              controller: 'SettingsCtrl',
+            },
+          },
         });
 
       if (ionic.Platform.noScroll()) {
@@ -590,14 +590,14 @@ angular
       if (typeof PushNotification !== 'undefined') {
         var push = PushNotification.init({
           android: {
-            senderID: '12345679'
+            senderID: '12345679',
           },
           ios: {
             alert: 'true',
             badge: true,
-            sound: 'false'
+            sound: 'false',
           },
-          windows: {}
+          windows: {},
         });
 
         push.on('registration', function(data) {
@@ -613,5 +613,5 @@ angular
           console.log(data.additionalData);
         });
       }
-    }
+    },
   ]);

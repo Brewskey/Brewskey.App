@@ -67,13 +67,13 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
     $scope.timeAgo = function(time) {
       return moment.utc(time).fromNow();
     };
-	$scope.onTapHeld = function (tap) {
-      modal.delete('Tap', 'api/taps', tap).then(function (result) {
+    $scope.onTapHeld = function(tap) {
+      modal.delete('Tap', 'api/taps', tap).then(function(result) {
         if (!result) {
           return;
         }
-        $scope.taps = _.filter($scope.taps, function (t) {
-            return t !== tap;
+        $scope.taps = _.filter($scope.taps, function(t) {
+          return t !== tap;
         });
       });
     };
