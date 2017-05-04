@@ -30,6 +30,9 @@ angular
     nfcService
   ) {
     $ionicPlatform.ready(function() {
+      // Fancy Updater :)
+      codePush.sync();
+
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
       if (
@@ -66,6 +69,11 @@ angular
           manageLocations: false,
         },
       });
+    });
+
+    // Get updates if the app is resumed
+    document.addEventListener("resume", function () {
+      codePush.sync();
     });
 
     $rootScope.$on('$stateChangeStart', function(

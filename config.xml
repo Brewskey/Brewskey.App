@@ -24,6 +24,7 @@
   </feature>
   <platform name="android">
     <allow-navigation href="https://brewskey.com/*"/>
+    <preference name="CodePushDeploymentKey" value="MSpRU-1FgCr-d5aRnU2hAsv9jrEuVk-QkVzyX" />
     <splash src="resources\android\splash\drawable-port-ldpi-screen.png" density="port-ldpi"/>
     <splash src="resources\android\splash\drawable-port-mdpi-screen.png" density="port-mdpi"/>
     <splash src="resources\android\splash\drawable-port-hdpi-screen.png" density="port-hdpi"/>
@@ -57,6 +58,7 @@
     <splash src="resources\wp8\splash\SplashScreenImage.png" width="768" height="1280"/>
   </platform>
   <platform name="ios">
+    <preference name="CodePushDeploymentKey" value="PZeezosHlliSHlyey8_1NS4mEY2ZVk-QkVzyX" />
     <icon src="resources/ios/icon/icon.png" width="57" height="57"/>
     <icon src="resources/ios/icon/icon@2x.png" width="114" height="114"/>
     <icon src="resources/ios/icon/icon-40.png" width="40" height="40"/>
