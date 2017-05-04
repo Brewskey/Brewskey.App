@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 angular.module('brewskey.controllers')
 .controller('TapsCtrl', [
     '$scope', 'Restangular', 'modal',
@@ -25,3 +26,25 @@ angular.module('brewskey.controllers')
         };
     }
 ]);
+=======
+angular.module('brewskey.controllers').controller('TapsCtrl', [
+  '$scope',
+  'Restangular',
+  function($scope, rest) {
+    $scope.loading = true;
+    rest
+      .all('api/taps')
+      .getList()
+      .then(function(taps) {
+        $scope.taps = taps;
+      })
+      .finally(function() {
+        $scope.loading = false;
+      });
+
+    $scope.getPercentLeft = function(keg) {
+      return (keg.maxOunces - keg.ounces) / keg.maxOunces * 100;
+    };
+  },
+]);
+>>>>>>> 2773b5ddce7b41ac35feb246e97d991357e4b40d

@@ -1,48 +1,62 @@
-angular.module('brewskey.controllers')
-.controller('ProfileEditCtrl', ['$scope', 'auth', '$localStorage', 'utils', '$state', '$stateParams',
-function ($scope, auth, storage, utils, $state, $stateParams) {
+angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
+  '$scope',
+  'auth',
+  '$localStorage',
+  'utils',
+  '$state',
+  '$stateParams',
+  function($scope, auth, storage, utils, $state, $stateParams) {
     $scope.isSetup = $stateParams.isSetup;
     $scope.model = angular.copy(storage.authDetails) || {};
     $scope.sending = false;
 
-    $scope.submit = function () {
-        $scope.errors = null;
-        $scope.sending = true;
-        var oldNumber = $scope.model.phoneNumber;
-        auth.updateAccount($scope.model).then(function(a) {
+    $scope.submit = function() {
+      $scope.errors = null;
+      $scope.sending = true;
+      var oldNumber = $scope.model.phoneNumber;
+      auth
+        .updateAccount($scope.model)
+        .then(
+          function(a) {
             if (storage.authDetails.phoneNumber !== oldNumber) {
-                $scope.enterToken = true;
+              $scope.enterToken = true;
             } else if (storage.authDetails.phoneNumber) {
-                $state.go('app.profile');
+              $state.go('app.profile');
             }
-        }, function(error) {
+          },
+          function(error) {
             $scope.errors = utils.filterErrors(error);
-        })
-        .finally(function () {
-            $scope.sending = false;
+          }
+        )
+        .finally(function() {
+          $scope.sending = false;
         });
     };
     $scope.sendToken = function() {
-        $scope.sending = true;
-        $scope.errors = null;
-        auth.sendPhoneToken($scope.model)
-            .then(function(e) {
-                auth.refreshToken()
-                    .then(function() {
-                        $state.go('app.profile');
-                    });
-            }, function (error) {
-                $scope.errors = utils.filterErrors(error);
-            })
-            .finally(function () {
-                $scope.model.token = null;
-                $scope.sending = false;
+      $scope.sending = true;
+      $scope.errors = null;
+      auth
+        .sendPhoneToken($scope.model)
+        .then(
+          function(e) {
+            auth.refreshToken().then(function() {
+              $state.go('app.profile');
             });
+          },
+          function(error) {
+            $scope.errors = utils.filterErrors(error);
+          }
+        )
+        .finally(function() {
+          $scope.model.token = null;
+          $scope.sending = false;
+        });
     };
 
-    $scope.toggleForms = function () {
-        $scope.model.token = null;
-        $scope.errors = null;
-        $scope.enterToken = !$scope.enterToken;
+    $scope.toggleForms = function() {
+      $scope.model.token = null;
+      $scope.errors = null;
+      $scope.enterToken = !$scope.enterToken;
     };
-}]);
+  },
+]);
