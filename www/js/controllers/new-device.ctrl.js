@@ -1,6 +1,6 @@
 angular.module('brewskey')
-.controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state', '$ionicPopup',
-function ($scope, rest, $stateParams, $state, $ionicPopup) {
+.controller('NewDeviceCtrl', ['$scope', 'Restangular', '$stateParams', '$state', 'modal', '$ionicHistory',
+function ($scope, rest, $stateParams, $state, modal, $ionicHistory) {
     $scope.model = {
         id: $stateParams.deviceId || undefined,
         particleId: $stateParams.particleId || undefined,
@@ -33,6 +33,14 @@ function ($scope, rest, $stateParams, $state, $ionicPopup) {
         }
     };
 
+    rest.all('api/locations').getList().then(function (locations) {
+        $scope.locations = locations;
+
+        if (locations && locations.length === 1) {
+            $scope.model.locationId = locations[0].id;
+        }
+    });
+
     $scope.submitForm = function () {
         if (navigator.connection && navigator.connection.type === Connection.NONE) {
             return;
@@ -52,6 +60,7 @@ function ($scope, rest, $stateParams, $state, $ionicPopup) {
             promise = $scope.model.put();
         }
         promise.then(function (response) {
+            $ionicHistory.currentView($ionicHistory.backView());
             $state.go('app.device', { deviceId: response.id }, { location: 'replace' });
         }, function (error) {
             $scope.editing = true;
@@ -104,19 +113,17 @@ function ($scope, rest, $stateParams, $state, $ionicPopup) {
     }
 
     $scope.deleteDevice = function () {
-        var confirmPopup = $ionicPopup.confirm({
-            cssClass: 'green-popup',
-            title: 'Delete ' + ($scope.model.name || 'Brewskey Box'),
-            template: 'Are you sure you want to delete this Brewskey Box?'
-        });
-
-        confirmPopup.then(function (res) {
+      modal.delete('Brewskey Box', 'api/devices', $scope.model)
+        .then(function (res) {
             if (!res) {
                 return;
             }
-            $scope.model.remove().then(function () {
-                $state.go('app.devices');
+            $ionicHistory.clearCache();
+            $ionicHistory.nextViewOptions({
+                disableBack: true,
+                historyRoot: true
             });
+            $state.go('app.devices');
         });
     };
 }]);

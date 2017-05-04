@@ -39,7 +39,7 @@
             <button class="button button-block button-balanced"
                     ng-click="submit(true)"
                     ng-cloak
-                    ng-disabled="!model.beerId || model.kegType === 'undefined' || isSending || !model.pours.length">
+                    ng-disabled="!model.beerId || model.kegType === 'undefined' || isSending || (model.id && !model.pours.length)">
                 <span ng-if="model.id">Replace Current Keg</span>
                 <span ng-if="!model.id">Set Current Keg</span>
             </button>

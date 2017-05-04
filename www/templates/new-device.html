@@ -1,6 +1,6 @@
 <ion-view view-title="Brewskey">
     <ion-nav-title>{{!model.id ? "New Brewskey Box" : "Edit Brewskey Box"}}</ion-nav-title>
-    <ion-content ng-controller="NewDeviceCtrl">
+    <ion-content>
         <form name="form" ng-submit="submitForm()" novalidate>
             <div class="list">
                 <div class="form-errors" ng-if="errorDescription" data-ng-cloak>
@@ -13,6 +13,14 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>
+                    <label class="item item-input item-select">
+                        <span class="input-label">
+                            Location
+                        </span>
+                        <select ng-model="model.locationId"
+                                required
+                                ng-options="obj.id as obj.name for obj in locations"></select>
+                    </label>
                     <label class="item item-input item-select">
                         <span class="input-label">
                             Status
@@ -39,9 +47,9 @@
                             <span ng-if="model.id">Update Brewskey Box</span>
                         </button>
 
-                        <!--<button class="button button-block button-assertive button-small" type="button" ng-click="deleteDevice()" ng-disabled="!editing" ng-if="model.id && isAdmin">
-                        Delete Device
-                    </button>-->
+                        <button class="button button-block button-assertive button-small" type="button" ng-click="deleteDevice()" ng-disabled="!editing" ng-if="model.id && isAdmin">
+                          Delete Device
+                        </button>
                     </div>
                 </div>
             </div>

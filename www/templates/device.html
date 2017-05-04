@@ -13,6 +13,8 @@
                 </a>-->
 
                 <dl class="dl-horizontal">
+                    <dt>Location:</dt>
+                    <dd>{{location.name}}</dd>
                     <dt>Status:</dt>
                     <dd>
                         <div ng-if="device.deviceStatus === 0">
@@ -61,9 +63,9 @@
                 </div>
             </div>
         </div>
-        <div class="list">
-            <div class="item no-color">
-                <a ui-sref="app.new-tap" class="item item-button-right">
+        <div class="list card">
+            <div class="item no-color no-padding">
+                <a ui-sref="app.new-tap({deviceId: device.id})" class="item item-button-right" ng-if="taps.length < 4">
                     New Tap
                     <span class="button button-positive">
                         <i class="icon ion-plus"></i>
@@ -75,7 +77,7 @@
                     <ion-spinner></ion-spinner>
                 </div>
                 <div ng-show="!loading">
-                    <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar">
+                    <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item" ng-class="{'item-avatar': tap.currentKeg && tap.currentKeg.beerIcon}" on-hold="onTapHeld(tap)">
                         <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg && tap.currentKeg.beerIcon">
                         <h2>{{tap.name}}</h2>
                         <p>{{tap.summary}}</p>

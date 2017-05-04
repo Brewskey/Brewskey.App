@@ -17,8 +17,8 @@ if (window.WinJS !== undefined) {
 
 angular.module('brewskey.services')
 .factory("nfcService",
-  ['$rootScope', '$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout', '$ionicLoading',
-  function ($rootScope, $q, $ionicPopup, $state, rest, $ionicPlatform, $timeout, $ionicLoading) {
+  ['$rootScope', '$q', '$ionicPopup', '$state', 'Restangular', '$ionicPlatform', '$timeout', '$ionicLoading', '$ionicHistory',
+  function ($rootScope, $q, $ionicPopup, $state, rest, $ionicPlatform, $timeout, $ionicLoading, $ionicHistory) {
       var requestPour = false;
       var authenticating = false;
       var popup;
@@ -98,7 +98,12 @@ angular.module('brewskey.services')
                               payload = nfcEvent.tag[1].payload;
                           }
 
-                          var tagValue = String.fromCharCode.apply(null, payload);
+                          var tagValue = String.fromCharCode.apply(
+                            null,
+                            payload[0] === 0
+                              ? payload.slice(1)
+                              : payload
+                          );
 
                           if (tagValue.indexOf('https://brewskey.com/') < 0) {
                               return;
@@ -187,6 +192,7 @@ angular.module('brewskey.services')
 
                   // navigate
                   rest.one('api/devices', deviceId).getList('taps').then(function (response) {
+                      $ionicHistory.currentView($ionicHistory.backView());
                       $state.go('app.tap.leaderboard', { tapId: response[0].id }, { location: 'replace' });
                   });
               }

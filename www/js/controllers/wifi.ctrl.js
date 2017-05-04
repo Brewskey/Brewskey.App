@@ -1,6 +1,6 @@
 ﻿angular.module('brewskey.controllers')
-.controller('WifiCtrl', ['$scope', 'softAP', '$ionicPopup', '$stateParams', '$state',
-function ($scope, softAP, $ionicPopup, $stateParams, $state) {
+.controller('WifiCtrl', ['$scope', 'softAP', '$ionicPopup', '$stateParams', '$state', '$ionicHistory',
+function ($scope, softAP, $ionicPopup, $stateParams, $state, $ionicHistory) {
     $scope.state = 0;
     $scope.hiddenForm = false;
     $scope.model = { security: 'wpa2_aes' };
@@ -69,6 +69,7 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
     };
 
     $scope.submitInternalID = function(internalId) {
+        $ionicHistory.currentView($ionicHistory.backView());
         $state.go('app.new-device', { particleId: internalId }, { location: 'replace' });
     };
 
@@ -96,6 +97,7 @@ function ($scope, softAP, $ionicPopup, $stateParams, $state) {
             softAP.publicKey();
         } else if ($scope.state === 3) {
             if ($stateParams.isCreatingNewDevice) {
+                $ionicHistory.currentView($ionicHistory.backView());
                 $state.go('app.new-device', { particleId: $scope.device.id }, { location: 'replace' });
             }
         }

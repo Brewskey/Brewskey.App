@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="img-src * android-webview-video-poster: cdvphotolibrary:  'self' data:; default-src * blob: 'self' gap: wss: ws: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' brewskey.com;">
+    <meta http-equiv="Content-Security-Policy" content="img-src * android-webview-video-poster: cdvphotolibrary:  'self' data:; default-src * blob: 'self' gap: wss: ws: ; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' brewskey.com localhost:35729;">
 
     <title></title>
 
@@ -24,11 +24,11 @@
 
     <!-- your app's js plugins -->
     <script src="lib/jquery/dist/jquery.min.js"></script>
-    <script src="lib/jquery.signalr-2.2.0.min.js"></script>
+    <script src="lib/jquery.signalR-2.2.1.min.js"></script>
     <script src="lib/moment/min/moment.min.js"></script>
     <script src="lib/angular-messages/angular-messages.min.js"></script>
     <script src="lib/angular-moment/angular-moment.min.js"></script>
-    <script src="lib/angular-signalr-hub/signalr-hub.min.js"></script>
+    <script src="lib/angular-signalr-hub/signalr-hub.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript">
@@ -75,7 +75,6 @@
     <script src="js/controllers/new-tap.ctrl.js"></script>
     <script src="js/controllers/tap.ctrl.js"></script>
 
-    <script src="js/controllers/new-keg.ctrl.js"></script>
     <script src="js/controllers/keg.ctrl.js"></script>
 
     <script src="js/controllers/settings.ctrl.js"></script>
@@ -92,6 +91,7 @@
     <script src="js/services/utils.service.js"></script>
     <script src="js/services/gps.service.js"></script>
     <script src="js/services/friends.service.js"></script>
+    <script src="js/services/modal.service.js"></script>
 
     <script src="js/directives/pintList.directive.js"></script>
     <script src="js/directives/image-load-fail.directive.js"></script>

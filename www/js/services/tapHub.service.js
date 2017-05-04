@@ -88,6 +88,7 @@ angular.module('brewskey.services')
                 console.error(error);
             },
             rootPath: 'https://brewskey.com/signalr',
+            //rootPath: 'http://localhost:2484/signalr',
         });
 
         var getByType = function(type, tapId, kegId) {
@@ -95,12 +96,12 @@ angular.module('brewskey.services')
             if (!array) {
                 throw "WTF";
             }
-            
+
             if (!array[kegId || tapId]) {
                 if (!subscriptions[tapId]) {
                     subscriptions[tapId] = true;
                     hub.promise.then(function () {
-                        hub.subscribe(tapId);
+                        hub.subscribe('*');
                     });
                 }
 

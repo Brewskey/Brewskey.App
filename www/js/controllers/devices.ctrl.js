@@ -1,7 +1,7 @@
 angular.module('brewskey.controllers')
     .controller('DevicesCtrl', [
-    '$scope', 'Restangular',
-    function ($scope, rest) {
+    '$scope', 'Restangular', 'modal',
+    function ($scope, rest, modal) {
         $scope.loading = true;
 
         $scope.refresh = function () {
@@ -14,5 +14,17 @@ angular.module('brewskey.controllers')
         };
 
         $scope.refresh();
+
+        $scope.onDeviceHeld = function (device) {
+          modal.delete('Brewskey Box', 'api/devices', device)
+            .then(function (result) {
+              if (!result) {
+                return;
+              }
+              $scope.devices = _.filter($scope.devices, function (d) {
+                  return d !== device;
+              });
+            });
+        };
     }
 ]);

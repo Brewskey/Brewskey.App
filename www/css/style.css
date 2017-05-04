@@ -231,6 +231,21 @@ h2.profile-link {
     display: none;
 }
 
+.popup-vertical-buttons .popup-buttons button {
+    margin-bottom: 5px;
+    min-width: 100%;
+}
+.popup-vertical-buttons button.button-small {
+    padding: 2px 4px 1px;
+    min-height: 30px;
+    font-size: 12px;
+    line-height: 26px;
+}
+
+.popup-vertical-buttons .popup-buttons {
+    display: block;
+}
+
 .popup-body {
     overflow: hidden;
 }

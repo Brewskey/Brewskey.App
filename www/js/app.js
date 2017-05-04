@@ -14,8 +14,13 @@ angular.module('brewskey', [
 
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
-        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        if (
+          window.cordova &&
+          window.cordova.plugins &&
+          window.cordova.plugins.Keyboard &&
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar
+        ) {
+          cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
         if (window.StatusBar) {
             // org.apache.cordova.statusbar required
@@ -82,7 +87,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     rest.setDefaultHeaders({ timezoneOffset: (new Date()).getTimezoneOffset() })
     rest.setBaseUrl('https://brewskey.com');
     rest.setRequestSuffix('/');
-    //rest.setBaseUrl('http://localhost:2484');
+    rest.setBaseUrl('http://localhost:2484');
 
     $stateProvider
 
@@ -246,6 +251,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         url: "/devices/:deviceId/edit",
         views: {
             'menuContent': {
+                controller: 'NewDeviceCtrl',
                 templateUrl: "templates/new-device.html",
             }
         }
@@ -329,6 +335,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.new-locations', {
         authenticate: true,
+        cache: false,
         url: "/location/new",
         views: {
             'menuContent': {
@@ -350,6 +357,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.edit-location', {
         authenticate: true,
+        cache: false,
         url: "/location/:locationId/edit",
         views: {
             'menuContent': {
@@ -371,6 +379,7 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
     })
     .state('app.new-tap', {
         authenticate: true,
+        cache: false,
         params: {
             deviceId: null,
             locationId: null,
@@ -471,16 +480,6 @@ function ($stateProvider, $urlRouterProvider, rest, $ionicConfigProvider) {
         }
     })
 
-    .state('app.new-keg', {
-        authenticate: true,
-        url: "/keg/new/:tapId",
-        views: {
-            'menuContent': {
-                templateUrl: "templates/new-keg.html",
-                controller: 'NewKegCtrl'
-            }
-        }
-    })
     .state('app.keg', {
         authenticate: true,
         cache: false,

@@ -1,13 +1,22 @@
 angular.module('brewskey.controllers')
     .controller('DeviceCtrl', [
-    '$scope', 'Restangular', '$stateParams', '$state', '$ionicPopup',
-    function ($scope, rest, $stateParams, $state, $ionicPopup) {
+    '$scope', 'Restangular', '$stateParams', '$state', '$ionicPopup', 'modal',
+    function ($scope, rest, $stateParams, $state, $ionicPopup, modal) {
         $scope.loading = true;
+        $scope.location = {
+          name: '–',
+        };
         rest.one('api/devices', $stateParams.deviceId).get().then(function (response) {
             $scope.loading = false;
             $scope.device = response;
+
+            rest.one('api/locations', response.locationId)
+      	        .get()
+      	        .then(function(response) {
+      	            $scope.location = response;
+      	        });
         });
-        rest.one('api/devices', $stateParams.deviceId).one('taps').get().then(function (response) {
+        rest.one('api/devices', $stateParams.deviceId).getList('taps').then(function (response) {
             if (!response.length) {
                 $ionicPopup.confirm({
                     buttons: [
@@ -17,9 +26,13 @@ angular.module('brewskey.controllers')
                           onTap: function (e) {
                               $state.go('app.new-tap', { deviceId: $scope.device.id });
                           }
-                      }
+                      },
+                      {
+                          text: 'Not Now',
+                          type: 'button-light button-small',
+                      },
                     ],
-                    cssClass: 'text-center green-popup',
+                    cssClass: 'text-center green-popup popup-vertical-buttons',
                     title: 'Add Some Taps!',
                     template: 'In order to finish setting up your Brewskey box you\'ll need to add some taps. ' +
                         'Each Brewskey box can have a maximum of four taps.'
@@ -48,6 +61,17 @@ angular.module('brewskey.controllers')
         };
         $scope.timeAgo = function (time) {
             return moment.utc(time).fromNow();
+        };
+
+        $scope.onTapHeld = function (tap) {
+          modal.delete('Tap', 'api/taps', tap).then(function (result) {
+            if (!result) {
+              return;
+            }
+            $scope.taps = _.filter($scope.taps, function (t) {
+                return t !== tap;
+            });
+          });
         };
     }
 ]);

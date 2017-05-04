@@ -1,7 +1,7 @@
 angular.module('brewskey.directives')
     .directive('kegModify', [
-    'Restangular', '$ionicModal', 'kegTypes', 'kegSize', '$state',
-    function (rest, $ionicModal, kegTypes, kegSize, $state) {
+    'Restangular', '$ionicModal', 'kegTypes', 'kegSize', '$state', '$ionicHistory',
+    function (rest, $ionicModal, kegTypes, kegSize, $state, $ionicHistory) {
         return {
             link: function (scope, element) {
                 scope.kegTypes = kegTypes;
@@ -27,6 +27,7 @@ angular.module('brewskey.directives')
                     model.tapId = scope.tapId;
                     model.beerId = selectedBeer.id;
                     model.beerName = selectedBeer.name;
+                    model.beerIcon = selectedBeer.labels.icon;
                     model.changed = true;
 
                     scope.closeModal();
@@ -87,6 +88,7 @@ angular.module('brewskey.directives')
                         scope.$emit('keg-updated', response);
 
                         // If the sensor hasn't been set up, add one now :(
+                        $ionicHistory.currentView($ionicHistory.backView());
                         if (!response.flowSensorId) {
                             $state.go('app.tap.set-sensor', { tapId: scope.tapId }, { location: 'replace' });
                         } else {

@@ -1,7 +1,7 @@
 angular.module('brewskey.controllers')
 .controller('NewTapCtrl',
-['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', '$ionicPopup', 'utils',
-function ($scope, rest, $stateParams, $ionicHistory, $state, $ionicPopup, utils) {
+['$scope', 'Restangular', '$stateParams', '$ionicHistory', '$state', 'modal', 'utils',
+function ($scope, rest, $stateParams, $ionicHistory, $state, modal, utils) {
     $scope.model = {
         deviceId: $stateParams.deviceId || undefined,
         locationId: $stateParams.locationId || undefined,
@@ -24,7 +24,6 @@ function ($scope, rest, $stateParams, $ionicHistory, $state, $ionicPopup, utils)
                 return p.permissionType === 0;
             });
             $scope.model.deviceId = $stateParams.deviceId || response.deviceId;
-            $scope.model.locationId = $stateParams.locationId || response.locationId;
         });
     }
 
@@ -33,13 +32,6 @@ function ($scope, rest, $stateParams, $ionicHistory, $state, $ionicPopup, utils)
 
         if (devices && devices.length === 1) {
             $scope.model.deviceId = devices[0].id;
-        }
-    });
-    rest.all('api/locations').getList().then(function (locations) {
-        $scope.locations = locations;
-
-        if (locations && locations.length === 1) {
-            $scope.model.locationId = locations[0].id;
         }
     });
 
@@ -64,37 +56,30 @@ function ($scope, rest, $stateParams, $ionicHistory, $state, $ionicPopup, utils)
             $scope.$emit('tap-updated', response);
 
             if (!$scope.model.id) {
+                $ionicHistory.currentView($ionicHistory.backView());
                 $state.go('app.tap.set-sensor', { tapId: response.id }, { location: 'replace' });
             }
         }, function (error) {
             $scope.editing = false;
-            
+
             $scope.errors = utils.filterErrors(error);
         });
     };
 
     $scope.deleteTap = function () {
-        var confirmPopup = $ionicPopup.confirm({
-            cssClass: 'green-popup',
-            title: 'Delete ' + ($scope.model.name || 'tap'),
-            template: 'Are you sure you want to delete this tap?'
-        });
-
-        confirmPopup.then(function (res) {
-            $scope.editing = true;
-
+      modal.delete('Tap', 'api/taps', $scope.modal)
+        .then(function (res) {
             if (!res) {
                 return;
             }
-            $scope.model.remove().then(function () {
-                $scope.editing = false;
-                $ionicHistory.clearCache();
-                $ionicHistory.nextViewOptions({
-                    disableBack: true,
-                    historyRoot: true
-                });
-                $state.go('app.taps');
+
+            $scope.editing = false;
+            $ionicHistory.clearCache();
+            $ionicHistory.nextViewOptions({
+                disableBack: true,
+                historyRoot: true
             });
+            $state.go('app.taps');
         });
     };
 

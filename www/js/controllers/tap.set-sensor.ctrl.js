@@ -1,7 +1,7 @@
 ﻿angular.module('brewskey.controllers')
 .controller('TapSetSensorCtrl',
-['$scope', 'Restangular', '$stateParams', '$state',
-function ($scope, rest, $stateParams, $state) {
+['$scope', 'Restangular', '$stateParams', '$state', '$ionicHistory',
+function ($scope, rest, $stateParams, $state, $ionicHistory) {
     $scope.sensors = [
         {
             name: 'Titan 300',
@@ -103,7 +103,7 @@ function ($scope, rest, $stateParams, $state) {
                 tapId: $stateParams.tapId
             })
             .then(function(response) {
-                // go to somewhere :)
+                $ionicHistory.currentView($ionicHistory.backView());
                 if ($scope.tap.currentKeg) {
                     $state.go('app.tap.edit', { tapId: $stateParams.tapId }, { location: 'replace' });
                 } else {
@@ -113,6 +113,7 @@ function ($scope, rest, $stateParams, $state) {
     };
 
     $scope.cancel = function() {
+        $ionicHistory.currentView($ionicHistory.backView());
         $state.go('app.tap.edit', { tapId: $stateParams.tapId }, { location: 'replace' });
     };
 }]);

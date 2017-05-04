@@ -1,6 +1,6 @@
 angular.module('brewskey.controllers')
-.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes',
-    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes) {
+.controller('TapCtrl', ['$scope', '$stateParams', 'Restangular', 'tapHub', 'converter', 'cache', 'kegTypes', '$ionicHistory',
+    function ($scope, $stateParams, rest, tapHub, converter, cache, kegTypes, $ionicHistory) {
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = false;
         });
@@ -98,4 +98,8 @@ angular.module('brewskey.controllers')
         $scope.timeAgo = function (time) {
             return moment.utc(time).fromNow();
         };
+
+        $scope.tabClicked = function () {
+          $ionicHistory.currentView($ionicHistory.backView());
+        }
     }]);
