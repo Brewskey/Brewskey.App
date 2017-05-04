@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-﻿angular.module('brewskey.controllers')
-.controller('BeverageCtrl', ['$scope', 'Restangular', '$stateParams', function ($scope, rest, $stateParams) {
-    $scope.loading = true;
-    var beverageId = $stateParams.beverageId;
-    var select = 'style,glass,availability,srm';
-    rest.one('api/v2/beverages(' + beverageId + ')')
-	        .get({'$expand': select})
-	        .then(function (response) {
-	            $scope.beverage = response;
-	            $scope.loaded = true;
-
-              if ($scope.beverage.srm) {
-                  var srm = $scope.beverage.srm;
-                  $scope.beerColor = {
-                      'color': srm.name === 'Over 40' || parseInt(srm.name, 10) > 9 ? '#fff' : '',
-                      'background-color': ('#' + $scope.beverage.srm.hex)
-                  };
-              }
-	        });
-}]);
-=======
 angular.module('brewskey.controllers').controller('BeverageCtrl', [
   '$scope',
   'Restangular',
@@ -47,4 +25,3 @@ angular.module('brewskey.controllers').controller('BeverageCtrl', [
       });
   },
 ]);
->>>>>>> 2773b5ddce7b41ac35feb246e97d991357e4b40d
