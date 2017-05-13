@@ -7,13 +7,19 @@
                 <div class="item item-divider">
                     <strong>Today</strong>
                 </div>
-                <a ui-sref="app.profile({userName: pour.userName})" ng-repeat="pour in leaderboard" class="item">
+                <a ui-sref="app.profile({userName: pour.userName})" ng-repeat="pour in leaderboard" class="item item-text-wrap leaderboard-item">
                     <div class="leaderboard-info clearfix">
                         <div class="pull-left">
-                            <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
-                                <img class="default-profile-small leaderboard-profile-pic"
-                                     ng-src="https://brewskey.com/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                                     load-fail="img/blank-profile-40.png" />
+                          <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
+                          <img
+                            brewskey-img
+                            class="default-profile-small leaderboard-profile-pic"
+                            id="pour.userName"
+                            params="cache={{cacheBuster}}"
+                            type="photo"
+                            height="50"
+                            width="50"
+                            load-fail="img/blank-profile-40.png" />
                         </div>
                         <div class="leaderboard-content">
                             <strong>{{pour.userName}}</strong>
@@ -34,17 +40,23 @@
                 <div class="item item-divider">
                     <strong>Current Keg</strong>
                 </div>
-                <a ui-sref="app.profile({userName: pour.userName})" ng-repeat="pour in kegLeaderboard" class="item">
+                <a ui-sref="app.profile({userName: pour.userName})" ng-repeat="pour in kegLeaderboard" class="item item-text-wrap leaderboard-item">
                     <div class="leaderboard-info clearfix">
                         <div class="pull-left">
-                            <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
-                            <img class="default-profile-small leaderboard-profile-pic"
-                                 ng-src="https://brewskey.com/cdn/photos/{{pour.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                                 load-fail="img/blank-profile-40.png" />
+                          <strong class="leaderboard-rank pull-left">{{$index + 1}}.</strong>
+                          <img
+                            brewskey-img
+                            class="default-profile-small leaderboard-profile-pic"
+                            id="pour.userName"
+                            params="cache={{cacheBuster}}"
+                            type="photo"
+                            height="50"
+                            width="50"
+                            load-fail="img/blank-profile-40.png" />
                         </div>
                         <div class="leaderboard-content">
                             <strong>{{pour.userName}}</strong>
-                            &nbsp;&mdash;&nbsp;
+                            &nbsp;&ndash;&nbsp;
                             {{normalize(pour.totalOunces)}} oz
                             <br />
                             <span>Most recent </span><em><time ng-bind="timeAgo(pour.lastPourDate)"></time></em>

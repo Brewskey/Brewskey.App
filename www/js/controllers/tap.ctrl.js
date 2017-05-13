@@ -38,6 +38,8 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
         return;
       }
 
+      response.currentKeg.beverageId = response.currentKeg.beverage.id;
+
       $scope.percentLeft =
         (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100;
 
@@ -47,9 +49,6 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
 
       if (response.currentKeg.beverage) {
         $scope.beverage = response.currentKeg.beverage;
-        if (!$scope.beverage.labels) {
-          $scope.beverage.labels = { medium: $scope.tap.currentKeg.beerIcon };
-        }
         if ($scope.beverage.srm) {
           var srm = $scope.beverage.srm;
           $scope.beerColor = {

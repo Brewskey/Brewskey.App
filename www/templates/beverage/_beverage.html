@@ -1,8 +1,7 @@
 ﻿<div>
     <div class="item center-text item-text-wrap">
         <h1>{{beverage.name}}</h1>
-        <!--<img class="responsive" ng-src="http://brewskey.com/cdn/beverages/{{beverage.id}}.jpg?width=480&mode=crop" load-fail="beverage.hideImage = true" ng-if="!beverage.hideImage">-->
-        <img class="responsive" ng-src="{{beverage.labels.medium}}" ng-if="beverage.labels.medium">
+        <img brewskey-img id="beverage.id" size="m" type="beverage" class="responsive" loaded="beverage.loaded" />
     </div>
     <div class="item item-body" ng-if="beverage.description">
         {{beverage.description}}

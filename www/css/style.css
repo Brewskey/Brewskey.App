@@ -70,6 +70,13 @@ ol {
     background: #eee;
 }
 
+.item .badge {
+  font-size: 11px;
+  padding: 2px 4px;
+  right: 12px;
+  top: 12px;
+}
+
 .no-color {
     background: transparent;
     border-color: transparent;
@@ -126,6 +133,10 @@ ol {
     width: 30px;
 }
 
+.leaderboard-item {
+  font-size: 14px;
+  padding: 16px 5px;
+}
 .leaderboard-info {
     margin-right: 20px;
 }

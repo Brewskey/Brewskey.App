@@ -32,6 +32,8 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
         }
 
         response.currentKeg.kegType += '';
+        response.currentKeg.beverageName = response.currentKeg.beverage.name;
+        response.currentKeg.beverageId = response.currentKeg.beverage.id;
         $scope.model = response;
         $scope.isAdmin = (response.permissions || []).some(function(p) {
           return p.permissionType === 0;

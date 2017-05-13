@@ -10,6 +10,7 @@ angular
             element.off('error', errorHandler);
             var newSrc = attr.loadFail;
 
+            /*
             var fn = $parse(newSrc);
             if (fn) {
               scope.$apply(function() {
@@ -17,6 +18,7 @@ angular
               });
               return;
             }
+            */
 
             if (newSrc && element[0].src !== newSrc) {
               element[0].src = newSrc;

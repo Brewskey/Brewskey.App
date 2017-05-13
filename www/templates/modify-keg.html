@@ -1,11 +1,11 @@
 <form ng-submit="submitForm()" class="form-horizontal" novalidate>
     <div class="list list-inset list-colored">
-        <a class="item" ng-if="!model.id && !model.beerId" ng-click="openModal()">
+        <a class="item" ng-if="!model.id && !model.beverageId" ng-click="openModal()">
             Pick a Beverage
         </a>
-        <a class="item item-avatar" ng-if="model.id || model.beerId" ng-click="openModal()">
-            <img ng-src="{{model.beerIcon}}" ng-if="model.beerIcon">
-            <h2>{{model.beerName}}</h2>
+        <a class="item" ng-if="model.id || model.beverageId"  ng-class="{'item-avatar': model.loaded}" ng-click="openModal()">
+            <img brewskey-img id="model.beverageId" size="s" type="beverage" width="40" loaded="model.loaded"/>
+            <h2>{{model.beverageName}}</h2>
             <p>Click to change the beverage.</p>
         </a>
         <label class="item item-input item-select">

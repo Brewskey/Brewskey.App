@@ -10,9 +10,15 @@
             <div brewskey-repeat="pourEvent in pourEvents" force-refresh-images="true" class="home-card">
                 <div class="card">
                     <a ui-sref="app.profile({userName: pourEvent.userName})" class="item clearfix">
-                        <img class="default-profile-small leaderboard-profile-pic pull-left"
-                             ng-src="https://brewskey.com/cdn/photos/{{pourEvent.userName}}.jpg?w=50&h=50&mode=crop&cache={{cacheBuster}}"
-                             load-fail="img/blank-profile-40.png" />
+                       <img
+                         brewskey-img
+                         class="default-profile-small leaderboard-profile-pic pull-left"
+                         id="pourEvent.userName"
+                         params="cache={{cacheBuster}}"
+                         type="photo"
+                         height="50"
+                         width="50"
+                         load-fail="img/blank-profile-40.png" />
                         <div class="home-story-info">
                             <h2 class="profile-link"><strong>{{pourEvent.userName}}</strong></h2>
                             <p>

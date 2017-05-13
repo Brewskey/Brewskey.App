@@ -3,8 +3,9 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
   'Restangular',
   '$stateParams',
   '$state',
+  '$ionicPopup',
   'modal',
-  function($scope, rest, $stateParams, $state, modal) {
+  function($scope, rest, $stateParams, $state, $ionicPopup, modal) {
     $scope.loading = true;
     rest
       .one('api/devices', $stateParams.deviceId)
@@ -28,8 +29,12 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
                   $state.go('app.new-tap', { deviceId: $scope.device.id });
                 },
               },
+              {
+                text: 'Not Now',
+                type: 'button-neutral button-small',
+              },
             ],
-            cssClass: 'text-center green-popup',
+            cssClass: 'text-center green-popup popup-vertical-buttons',
             title: 'Add Some Taps!',
             template: "In order to finish setting up your Brewskey box you'll need to add some taps. " +
               'Each Brewskey box can have a maximum of four taps.',

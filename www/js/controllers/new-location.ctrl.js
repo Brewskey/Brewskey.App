@@ -41,7 +41,7 @@ angular.module('brewskey.controllers').controller('NewLocationCtrl', [
         function(response) {
           $scope.editing = true;
 
-          $ionicHistory.goBack();
+          $ionicHistory.currentView($ionicHistory.backView());
           $state.go('app.location', { locationId: response.id });
         },
         function(error) {

@@ -3,8 +3,14 @@
         <div class="list">
             <div class="item no-color" ng-if="friends.length">
                 <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
-                    <img class="default-profile-small leaderboard-profile-pic pull-left"
-                         ng-src="https://brewskey.com/cdn/photos/{{friend.userName}}.jpg?w=50&h=50&mode=crop" />
+                   <img
+                     brewskey-img
+                     class="default-profile-small leaderboard-profile-pic pull-left"
+                     id="friend.userName"
+                     type="photo"
+                     height="50"
+                     width="50"
+                     load-fail="img/blank-profile-40.png" />
                     <div class="friend-item-info clearfix">
                         <h2>
                             <strong>{{friend.userName}}</strong>
@@ -29,4 +35,4 @@
             </div>
         </div>
     </ion-content>
-</ion-view> 
+</ion-view>

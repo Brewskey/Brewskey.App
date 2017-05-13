@@ -12,7 +12,7 @@
         </div>
         <ion-list ng-if="!locationDisabled && !loading">
             <div class="item item-text-wrap text-center" ng-if="!locations.length">
-                Sorry, there aren't any nearby taps that you have access to.<br /><br />Either have the 
+                Sorry, there aren't any nearby taps that you have access to.<br /><br />Either have the
                 tap owner grant you access or walk closer to the tap.
             </div>
             <div ng-repeat="location in locations" class="item" ng-if="locations.length">
@@ -20,16 +20,16 @@
                 <p ng-bind="location.summary"></p>
                 <br/>
                 <div>
-                    <a ng-repeat="tap in location.taps" ui-sref="app.tap.info({tapId: tap.id})" class="item item-avatar item-text-wrap  item-button-right">
-                        <img ng-src="{{tap.currentKeg.beerIcon}}" ng-if="tap.currentKeg.beerIcon">
-                        <h2>{{tap.name}}</h2>
-                        <p ng-if="tap.currentKeg.beerName">
-                            <em ng-bind="tap.currentKeg.beerName"></em> on tap
-                        </p>
-                        <button class="button button-light" ng-click="showPopup(tap.deviceId)">
-                            Pour
-                        </button>
-                    </a>
+                  <a ng-repeat="tap in location.taps" ui-sref="app.tap.info({tapId: tap.id})" class="item item-text-wrap item-button-right" ng-class="{'item-avatar': tap.loaded}">
+                    <img brewskey-img id="tap.currentKeg.beverageId" size="s" type="beverage" width="40" loaded="tap.loaded"/>
+                    <h2>{{tap.name}}</h2>
+                    <p ng-if="tap.currentKeg.beerName">
+                        <em ng-bind="tap.currentKeg.beerName"></em> on tap
+                    </p>
+                    <button class="button button-light" ng-click="showPopup(tap.deviceId)">
+                        Pour
+                    </button>
+                  </a>
                 </div>
             </div>
         </ion-list>

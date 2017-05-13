@@ -16,10 +16,10 @@
     </ion-header-bar>
     <ion-content class="padding">
         <div class="list" ng-show="$parent.$parent.beers && $parent.$parent.beers.length">
-            <a class="item item-avatar" ng-repeat="beer in $parent.$parent.beers" ng-click="$parent.$parent.onSelect(beer)">
-                <img ng-src="{{beer.labels.icon}}" ng-if="beer.labels.icon">
+            <a class="item" ng-repeat="beer in $parent.$parent.beers" ng-click="$parent.$parent.onSelect(beer)" ng-class="{'item-avatar': beer.loaded}">
+                <img brewskey-img id="beer.id" size="s" type="beverage" width="40" loaded="beer.loaded"/>
                 <h2 ng-bind="beer.name"></h2>
-                <p ng-bind="beer.style.shortName"></p>
+                <p ng-bind="beer.style"></p>
             </a>
         </div>
         <div class="list" ng-show="!$parent.$parent.beers || !$parent.$parent.beers.length">

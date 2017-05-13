@@ -19,11 +19,11 @@ angular.module('brewskey.directives').directive('kegModify', [
             .one('api/beer')
             .customGET('search', { query: val })
             .then(function(response) {
-              if (!response || !response.data) {
+              if (!response) {
                 return null;
               }
 
-              scope.beers = response.data;
+              scope.beers = data;
             });
         });
 
@@ -32,9 +32,8 @@ angular.module('brewskey.directives').directive('kegModify', [
 
           var model = scope.model;
           model.tapId = scope.tapId;
-          model.beerId = selectedBeer.id;
-          model.beerName = selectedBeer.name;
-          model.beerIcon = selectedBeer.labels.icon;
+          model.beverageId = selectedBeer.id;
+          model.beverageName = selectedBeer.name;
           model.changed = true;
 
           scope.closeModal();

@@ -1,6 +1,14 @@
 <div class="profile-photo-container square">
     <div class="square-content">
-        <img ng-src="https://brewskey.com/cdn/photos/{{userName}}.jpg?w=400&h=400&mode=crop&cachebust={{cache}}" load-fail="img/blank-profile.png" loaded="hideLoading()" class="profile-photo">
+        <img
+          brewskey-img
+          class="profile-photo"
+          id="userName"
+          params="cachebust={{cache}}"
+          type="photo"
+          height="400"
+          width="400"
+          load-fail="img/blank-profile.png" />
         <div class="profile-photo-loading" ng-if="loading">
             <ion-spinner></ion-spinner>
         </div>

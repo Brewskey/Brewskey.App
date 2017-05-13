@@ -37,8 +37,14 @@
                 <div class="item item-divider">
                     <strong>Recent Pours</strong>
                 </div>
-                <a ui-sref="app.tap.info({tapId: pour.tapId})" ng-repeat="pour in profile.recentPours" class="item item-avatar">
-                    <img ng-src="{{pour.beerIcon}}">
+                <a ui-sref="app.tap.info({tapId: pour.tapId})" ng-repeat="pour in profile.recentPours" class="item" ng-class="{'item-avatar': pour.loaded}">
+                    <img
+                      brewskey-img
+                      id="pour.beverageId"
+                      size="s"
+                      type="beverage"
+                      width="40"
+                      loaded="pour.loaded" />
                     <div class="item-text-wrap">
                         <div>
                             {{normalize(pour.ounces)}} oz of <em>{{pour.beerName}}</em> on {{pour.tapName}}
