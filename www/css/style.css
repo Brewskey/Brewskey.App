@@ -612,3 +612,28 @@ input::-webkit-inner-spin-button {
 .button.button-dark.button-outline {
     border-color: #444;
 }
+
+.time-picker .popup-head {
+  display: none;
+}
+
+.time-picker .popup-body {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.time-picker .pick-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0.5em;
+}
+
+.time-picker .text-box {
+  border: 1px solid gray;
+  height: 2.5em;
+  line-height: 2.5em;
+  text-align: center;
+  width: 2.5em;
+}
