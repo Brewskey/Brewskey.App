@@ -62,7 +62,7 @@ angular.module('brewskey.directives').directive('timePicker', [
           scope.timeMoment = moment.utc(scope.time);
 
           $ionicPopup.show({
-            templateUrl: '/templates/popups/time-picker.html',
+            templateUrl: 'templates/popups/time-picker.html',
             scope: scope,
             cssClass: 'time-picker',
             buttons: [
