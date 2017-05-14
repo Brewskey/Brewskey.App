@@ -1,4 +1,4 @@
-﻿html, body {
+html, body {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -637,3 +637,8 @@ input::-webkit-inner-spin-button {
   text-align: center;
   width: 2.5em;
 }
+
+.list-item-selected {
+  background-color: #7bb4be;
+}
+
