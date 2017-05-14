@@ -128,6 +128,7 @@ angular
       // Restangular setup
       rest.setDefaultHeaders({
         timezoneOffset: new Date().getTimezoneOffset(),
+        Prefer: 'return=representation',
       });
       rest.setBaseUrl('https://brewskey.com');
       rest.setRequestSuffix('/');
@@ -392,14 +393,45 @@ angular
             },
           },
         })
-        .state('app.edit-location', {
+        .state('app.location.info', {
+          authenticate: true,
+          cache: false,
+          url: '/info',
+          views: {
+            'tab-view': {
+              templateUrl: 'templates/location.info.html',
+            },
+          },
+        })
+        .state('app.location.schedules', {
+          authenticate: true,
+          cache: false,
+          url: '/schedules',
+          views: {
+            'tab-view': {
+              controller: 'SchedulesCtrl',
+              templateUrl: 'templates/schedules.html',
+            },
+          },
+        })
+        .state('app.location.new-schedule', {
+          url: '/schedules/new',
+          authenticate: true,
+          views: {
+            'tab-view': {
+              templateUrl: 'templates/new-schedule.html',
+              controller: 'NewScheduleCtrl',
+            },
+          },
+        })
+        .state('app.location.edit', {
           authenticate: true,
           cache: false,
           url: '/location/:locationId/edit',
           views: {
-            menuContent: {
-              templateUrl: 'templates/new-location.html',
+            'tab-view': {
               controller: 'NewLocationCtrl',
+              templateUrl: 'templates/new-location.html',
             },
           },
         })
@@ -587,6 +619,28 @@ angular
             menuContent: {
               templateUrl: 'templates/settings.html',
               controller: 'SettingsCtrl',
+            },
+          },
+        })
+        .state('app.edit-schedule', {
+          authenticate: true,
+          cache: false,
+          url: '/schedules/:scheduleId/edit',
+          views: {
+            menuContent: {
+              templateUrl: 'templates/new-schedule.html',
+              controller: 'NewScheduleCtrl',
+            },
+          },
+        })
+        .state('app.schedule', {
+          authenticate: true,
+          cache: false,
+          url: '/schedules/:scheduleId',
+          views: {
+            menuContent: {
+              templateUrl: 'templates/schedule.html',
+              controller: 'ScheduleCtrl',
             },
           },
         });

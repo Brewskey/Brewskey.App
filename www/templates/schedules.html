@@ -1,0 +1,43 @@
+<ion-view view-title="Schedules">
+  <ion-content>
+     <div class="list">
+        <div class="item no-color">
+            <a 
+              class="item item-button-right"
+              ui-sref-active="active"
+              ui-sref-opts="{location:'replace'}"
+              ui-sref="app.location.new-schedule({locationId: location.id})" 
+            >
+                New Schedule
+                <span class="button button-positive">
+                    <i class="icon ion-plus"></i>
+                </span>
+            </a>
+            <div class="item item-divider"></div>
+            <div class="item text-center" ng-show="loading">
+                <ion-spinner></ion-spinner>
+            </div>
+            <div ng-show="!loading">
+                <a 
+                  class="item"
+                  href="#/app/schedules/{{schedule.id}}" 
+                  ng-repeat="schedule in schedules" 
+                >
+                  <div><strong>Name: </strong>{{ schedule.name }}</div>
+                  <div style="white-space: normal;">
+                    <strong>Days: </strong>
+                    {{ schedule.days }}
+                  </div>
+                  <div>
+                    <strong>From: </strong>{{ schedule.startTime }}
+                    <strong>To: </strong>{{ schedule.endTime }}
+                  </div>
+                </a>
+                <div ng-if="!schedules || !schedules.length" class="item text-center item-text-wrap">
+                  You haven't added any schedules yet.<br />Click the "+" to add one.
+                </div>
+            </div>
+        </div>
+      </div>  
+  </ion-content>
+</ion-view>

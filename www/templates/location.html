@@ -1,54 +1,50 @@
-<ion-view view-title="Brewskey">
-  <ion-content>
-
-
-    <div class="list card">
-
-    	<div class="item">
-			<h1>
-				<span ng-bind="location.name"></span>
-				<a ui-sref="app.edit-location({locationId: location.id})" style="float:right;" ng-if="canEdit" ng-cloak>
-					<span class="button button-positive button-small">
-					  <i class="icon ion-edit"></i>
-					</span>
-				</a>
-			</h1>
-			<p ng-bind="location.summary"></p>
-		</div>
-    	<div class="item item-body">
-    		<div class="card">
-				<div class="item item-text-wrap">
-    				<span ng-bind="location.street"></span>&nbsp;<span ng-bind="location.suite"></span>
-    				<br/>
-    				<span ng-bind="location.city"></span>&nbsp;<span ng-bind="location.state"></span>,&nbsp;<span ng-bind="location.zipCode">
-				</div>
-			</div>
-    		<div>
-    		</div>
-			<p ng-bind="location.description"></p>
-		</div>
-    	<div class="item">
-    		<div>Taps</div>
-			 <div class="list card" style="margin-left: 0; margin-right: 0;">
-				<a ui-sref="app.new-tap({locationId: location.id})" class="item item-button-right" ng-if="canEdit">
-					New Tap
-					<span class="button button-positive">
-					  <i class="icon ion-plus"></i>
-					</span>
-				</a>
-
-				<!-- Location ngRepeat goes here -->
-		  		<div class="item item-divider" ng-if="canEdit && location.taps.length"></div>
-		  		<a ng-repeat="tap in location.taps | orderBy: 'name'" ui-sref="app.tap.stats({tapId: tap.id})" class="item" ng-class="{'item-avatar': tap.beverageId && tap.loaded}">
-            <img brewskey-img id="tap.beverageId" size="s" type="beverage" width="40" loaded="tap.loaded"/>
-            <h2>{{tap.name}}</h2>
-            <p>{{tap.summary}}</p>
-            <span class="badge badge-positive" ng-if="tap.maxOunces">
-              {{getPercentLeft(tap) | number : 1}}%
-            </span>
-				</a>
-			</div>
-		</div>
-	</div>
-  </ion-content>
+<ion-view view-title="{{ location.name }}">
+  <ion-pane>
+  <div
+    class="padding text-center"
+    style="margin-top: 60px"
+    ng-if="!location && !hasError"
+  >
+    <ion-spinner></ion-spinner>
+  </div>
+  <div ng-if="location && !hasError">
+    <ion-nav-view name="tab-view"></ion-nav-view>
+  </div>
+  <div
+    class="tabs tabs-icon-top tabs-color-light tabs-background-brewskey"
+    ng-if="location && !hasError"
+  >
+    <a
+      class="tab-item"
+      ng-click="tabClicked()"
+      ui-sref-active="active"
+      ui-sref-opts="{location:'replace'}"
+      ui-sref="app.location.info"
+    >
+      <i class="icon ion-information"></i>
+      Info
+    </a>
+    <a
+      class="tab-item"
+      ng-click="tabClicked()"
+      ui-sref-active="active"
+      ui-sref-opts="{location:'replace'}"
+      ui-sref="app.location.schedules({locationId: location.id})"
+    >
+      <i class="icon ion-clock"></i>
+      Scheduels
+    </a>
+    <a
+      class="tab-item"
+      ng-click="tabClicked()"
+      ui-sref-active="active"
+      ui-sref-opts="{location:'replace'}"
+      ui-sref="app.location.edit({locationId: location.id})"
+      ng-if="canEdit"
+    >
+      <i class="icon ion-edit"></i>
+      Edit
+    </a>
+  </div>
+  </ion-pane>
 </ion-view>
