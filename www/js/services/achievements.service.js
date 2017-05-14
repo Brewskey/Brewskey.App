@@ -39,6 +39,9 @@ angular.module('brewskey.services').factory('achievements', [
       },
       //server side methods
       methods: ['subscribe', 'unsubscribe'],
+      queryParams: {
+        access_token: ($storage.authDetails || {}).access_token,
+      },
       //handle connection error
       errorHandler: function(error) {
         console.error(error);

@@ -3,7 +3,8 @@ angular.module('brewskey.services').factory('tapHub', [
   '$q',
   'Hub',
   'Restangular',
-  function($rootScope, $q, Hub, rest) {
+  '$localStorage',
+  function($rootScope, $q, Hub, rest, $storage) {
     var subscriptions = {};
     var pours = {};
     var kegPours = {};
@@ -90,6 +91,9 @@ angular.module('brewskey.services').factory('tapHub', [
       },
       //server side methods
       methods: ['subscribe', 'unsubscribe'],
+      queryParams: {
+        access_token: ($storage.authDetails || {}).access_token,
+      },
       //handle connection error
       errorHandler: function(error) {
         console.error(error);

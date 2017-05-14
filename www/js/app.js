@@ -131,7 +131,7 @@ angular
       });
       rest.setBaseUrl('https://brewskey.com');
       rest.setRequestSuffix('/');
-      rest.setBaseUrl('http://localhost:2484');
+      //rest.setBaseUrl('http://localhost:2484');
 
       $stateProvider
         .state('app', {
