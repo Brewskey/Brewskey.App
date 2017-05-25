@@ -1,7 +1,7 @@
 <ion-view view-title="Brewskey">
     <ion-nav-title>{{!model.id ? "New Brewskey Box" : "Edit Brewskey Box"}}</ion-nav-title>
     <ion-content>
-        <form name="form" ng-submit="submitForm()" novalidate>
+        <form name="$parent.form" ng-submit="submitForm()" novalidate>
             <div class="list">
                 <div class="form-errors" ng-if="errorDescription" data-ng-cloak>
                     <div class="form-error" ng-bind="errorDescription"></div>

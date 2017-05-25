@@ -42,7 +42,7 @@ angular.module('brewskey.controllers').controller('NewLocationCtrl', [
           $scope.editing = true;
           $ionicHistory.currentView($ionicHistory.backView());
           $state.go(
-            'app.location',
+            'app.location.info',
             { locationId: response.id },
             { location: 'replace' }
           );

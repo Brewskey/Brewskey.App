@@ -28,7 +28,13 @@
     "cordova-plugin-network-information",
     "cordova-plugin-contacts",
     "cordova-plugin-geolocation",
-    "cordova-sms-plugin"
+    "cordova-sms-plugin",
+    {
+      "variables": {
+        "SENDER_ID": "394986866677"
+      },
+      "locator": "phonegap-plugin-push"
+    }
   ],
   "cordovaPlatforms": [
     {

@@ -383,6 +383,7 @@ angular
           },
         })
         .state('app.location', {
+          abstract: true,
           authenticate: true,
           cache: false,
           url: '/location/:locationId',
