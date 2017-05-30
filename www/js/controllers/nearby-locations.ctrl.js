@@ -19,7 +19,7 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
           .get({
             longitude: coords.longitude,
             latitude: coords.latitude,
-            radius: -1,
+            radius: 1500,
           })
           .then(function(response) {
             $scope.locations = response;
