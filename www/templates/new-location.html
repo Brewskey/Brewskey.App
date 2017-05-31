@@ -22,7 +22,7 @@
                     </div>
 
                     <label class="item item-input">
-                        <textarea ng-model="model.summary" placeholder="Summary" rows="3"></textarea>
+                        <textarea ng-model="model.summary" placeholder="Summary" rows="3" required></textarea>
                     </label>
 
                     <label class="item item-input">
@@ -33,8 +33,8 @@
                     Location Type
                 </div>
                 <div class="list list-inset">
-                    <ion-radio ng-model="model.locationType" ng-value="1">Kegerator</ion-radio>
-                    <ion-radio ng-model="model.locationType" ng-value="2">Bar</ion-radio>
+                    <ion-radio ng-model="model.locationType" ng-value="1" required>Kegerator</ion-radio>
+                    <ion-radio ng-model="model.locationType" ng-value="2" required>Bar</ion-radio>
                     <div class="form-errors" data-ng-repeat="error in errors['model.LocationType']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>

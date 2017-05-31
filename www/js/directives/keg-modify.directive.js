@@ -99,19 +99,20 @@ angular.module('brewskey.directives').directive('kegModify', [
               scope.$emit('keg-updated', response);
 
               // If the sensor hasn't been set up, add one now :(
-              $ionicHistory.currentView($ionicHistory.backView());
               if (!response.flowSensorId) {
+                $ionicHistory.currentView($ionicHistory.backView());
                 $state.go(
                   'app.tap.set-sensor',
                   { tapId: scope.tapId },
                   { location: 'replace' }
                 );
               } else {
-                $state.go(
-                  'app.tap.edit',
-                  { tapId: scope.tapId },
-                  { location: 'replace' }
-                );
+                $ionicHistory.goBack();
+                // $state.go(
+                //   'app.tap.edit',
+                //   { tapId: scope.tapId },
+                //   { location: 'replace' }
+                // );
               }
             },
             function(error) {

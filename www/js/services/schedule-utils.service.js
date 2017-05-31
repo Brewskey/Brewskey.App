@@ -16,7 +16,7 @@ angular.module('brewskey.services').factory('scheduleUtils', [
     var DAYS = _.range(7).map(function(_, index) {
       var name = moment(index, 'e').format('dddd');
       return {
-        name,
+        name: name,
         shortLabel: moment(index, 'e').format('ddd'),
       };
     });
@@ -26,11 +26,11 @@ angular.module('brewskey.services').factory('scheduleUtils', [
     }
 
     return {
-      DAYS,
-      getBoundedMoment,
+      DAYS: DAYS,
+      getBoundedMoment: getBoundedMoment,
       getCombinedFlag: function(days) {
         return days.reduce(
-          (total, day) => total | SCHEDULE_DAY_BIT_MAP[day],
+          function (total, day) { return total | SCHEDULE_DAY_BIT_MAP[day]},
           0
         );
       },
@@ -39,7 +39,7 @@ angular.module('brewskey.services').factory('scheduleUtils', [
       isDaySelected: function(scheduleDaysFlag, dayName) {
         return !!(SCHEDULE_DAY_BIT_MAP[dayName] & scheduleDaysFlag);
       },
-      SCHEDULE_DAY_BIT_MAP,
+      SCHEDULE_DAY_BIT_MAP: SCHEDULE_DAY_BIT_MAP,
     };
   },
 ]);

@@ -38,7 +38,8 @@ angular
       if (
         window.cordova &&
         window.cordova.plugins &&
-        window.cordova.plugins.Keyboard
+        window.cordova.plugins.Keyboard &&
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar
       ) {
         cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       }
