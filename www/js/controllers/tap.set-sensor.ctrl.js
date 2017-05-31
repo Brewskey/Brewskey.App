@@ -114,14 +114,10 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
           tapId: $stateParams.tapId,
         })
         .then(function(response) {
-          $ionicHistory.currentView($ionicHistory.backView());
           if ($scope.tap.currentKeg) {
-            $state.go(
-              'app.tap.edit',
-              { tapId: $stateParams.tapId },
-              { location: 'replace' }
-            );
+            $ionicHistory.goBack();
           } else {
+            $ionicHistory.currentView($ionicHistory.backView());
             $state.go(
               'app.tap.set-beverage',
               { tapId: $stateParams.tapId },
