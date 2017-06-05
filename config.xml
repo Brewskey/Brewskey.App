@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.brewskey.app" version="0.0.51" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.brewskey.app" version="0.0.53" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Brewskey</name>
     <description>
     Unlock the power of you kegerator
@@ -91,6 +91,7 @@
         <variable name="CAMERA_USAGE_DESCRIPTION" value="Brewskey uses your camera for profile photos." />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="Brewskey uses your photo library for profile photos." />
     </plugin>
+    <plugin name="cordova-plugin-code-push" spec="^1.9.4-beta" />
     <plugin name="cordova-plugin-console" spec="^1.0.7" />
     <plugin name="cordova-plugin-contacts" spec="^2.3.1">
         <variable name="CONTACTS_USAGE_DESCRIPTION" value="Brewskey uses your contacts to add friends." />

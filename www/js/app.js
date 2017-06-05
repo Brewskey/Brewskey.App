@@ -31,7 +31,11 @@ angular
   ) {
     $ionicPlatform.ready(function() {
       // Fancy Updater :)
-      window.codePush !== undefined && codePush.sync();
+      var codePushParams = {
+        installMode: InstallMode && InstallMode.IMMEDIATE,
+        updateDialog: false
+      };
+      window.codePush !== undefined && codePush.sync(null, codePushParams);
 
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -74,7 +78,7 @@ angular
 
     // Get updates if the app is resumed
     document.addEventListener("resume", function () {
-      window.codePush && codePush.sync();
+      window.codePush && codePush.sync(null, codePushParams);
     });
 
     $rootScope.$on('$stateChangeStart', function(
