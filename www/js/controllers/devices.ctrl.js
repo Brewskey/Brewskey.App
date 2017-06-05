@@ -5,6 +5,7 @@ angular.module('brewskey.controllers').controller('DevicesCtrl', [
   function($scope, rest, modal) {
     $scope.loading = true;
 
+    var counter = 0;
     $scope.refresh = function() {
       rest
         .all('api/devices')

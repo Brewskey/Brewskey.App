@@ -42,14 +42,28 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
       }
     };
 
-    rest.all('api/locations').getList().then(function(locations) {
-      $scope.locations = locations;
+    function getLocations () {
+      rest.all('api/locations').getList().then(
+        function(locations) {
+          $scope.locations = locations;
 
-      if (locations && locations.length === 1) {
-        $scope.model.locationId = locations[0].id;
-      }
-    });
+          if (locations && locations.length === 1) {
+            $scope.model.locationId = locations[0].id;
+          }
+        },
+        function (error) {
+          if (counter === 3) {
+            return;
+          }
 
+          counter++;
+          setTimeout(function () {
+            getLocations();
+          }, 1000);
+        },
+      );
+    }
+    getLocations();
     $scope.submitForm = function() {
       if (
         navigator.connection &&
