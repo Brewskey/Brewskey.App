@@ -20,7 +20,8 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
           function(a) {
             if (storage.authDetails.phoneNumber !== oldNumber) {
               $scope.enterToken = true;
-            } else if (storage.authDetails.phoneNumber) {
+            } else if (storage.authDetails.phoneNumber) {              
+              $ionicHistory.currentView($ionicHistory.backView());
               $state.go('app.profile');
             }
           },

@@ -122,7 +122,7 @@ angular.module('brewskey.services', []).factory('auth', [
         if (model.newPassword && model.oldPassword) {
           promises.push(
             rest.one('api/account').post('change-password', {
-              confirmPassword: model.oldPassword,
+              confirmPassword: model.newPassword,
               newPassword: model.newPassword,
               oldPassword: model.oldPassword,
             })
@@ -205,7 +205,10 @@ angular.module('brewskey.services', []).factory('auth', [
           $http(response.config).then(function(refreshResponse) {
             // TODO restangularize
             deferred.resolve(refreshResponse.data);
-          }, deferred.reject);
+          }, function (error) {
+            deferred.reject(error);
+            output.logout();
+          });
         },
         function() {
           output.logout();

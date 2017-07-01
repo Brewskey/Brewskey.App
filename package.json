@@ -2,6 +2,10 @@
     "name": "brewskey",
     "version": "1.0.0",
     "description": "Unlock the power of your kegerator",
+    "scripts": {
+      "ls:android": "code-push deployment ls Brewskey.Android",
+      "release:android": "ionic prepare android && code-push release-cordova Brewskey.Android android -d Production && npm run ls:android"
+    },
     "dependencies": {
         "angular-moment": "^1.0.0-beta.6",
         "code-push": "^1.9.0-beta",

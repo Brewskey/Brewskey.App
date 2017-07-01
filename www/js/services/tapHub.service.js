@@ -68,7 +68,7 @@ angular.module('brewskey.services').factory('tapHub', [
           var userKegPours = _.find(kegLeaderboard, function(item) {
             return item.userName === pour.pouredBy;
           });
-          if (!userPours) {
+          if (!userPours && leaderboard) {
             userPours = {
               lastPourDate: null,
               userName: pour.pouredBy,
@@ -76,7 +76,7 @@ angular.module('brewskey.services').factory('tapHub', [
             };
             leaderboard.push(userPours);
           }
-          if (!userKegPours) {
+          if (!userKegPours && kegLeaderboard) {
             userKegPours = {
               lastPourDate: null,
               userName: pour.pouredBy,

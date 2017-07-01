@@ -133,6 +133,20 @@ ol {
     width: 30px;
 }
 
+/* login */
+.fb-button {
+  background: url('../img/FB-f-Logo__white_29.png') 8px 50% no-repeat #3B5998;
+  color: #fff;
+  font-weight: bold;
+}
+
+.brewskey-button {
+  background: url('../img/icon-29-filled.png') 8px 50% no-repeat #fa0;
+  border: solid 1px #c80;
+  color: #fff;
+  font-weight: bold;
+}
+
 .leaderboard-item {
   font-size: 14px;
   padding: 16px 5px;
@@ -641,4 +655,3 @@ input::-webkit-inner-spin-button {
 .list-item-selected {
   background-color: #7bb4be;
 }
-

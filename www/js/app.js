@@ -32,7 +32,7 @@ angular
     $ionicPlatform.ready(function() {
       // Fancy Updater :)
       var codePushParams = {
-        installMode: InstallMode && InstallMode.IMMEDIATE,
+        installMode: window.InstallMode && InstallMode.IMMEDIATE,
         updateDialog: false
       };
       window.codePush !== undefined && codePush.sync(null, codePushParams);
@@ -137,7 +137,7 @@ angular
       });
       rest.setBaseUrl('https://brewskey.com');
       rest.setRequestSuffix('/');
-      //rest.setBaseUrl('http://localhost:2484');
+      rest.setBaseUrl('http://localhost:2484');
 
       $stateProvider
         .state('app', {
