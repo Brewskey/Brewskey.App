@@ -10,11 +10,19 @@ angular.module('brewskey.controllers').controller('LoginCtrl', [
     $scope.loginData = {};
 
     $scope.oauthLogin = function (provider) {
-      var ref = window.open('https://brewskey.com/Account/ExternalLogin?provider=Facebook&returnUrl=http://localhost/callback');
-      ref.addEventListener('loadstart', function (event) {
-        console.log(event);
-        if((event.url).startsWith("http://localhost/callback")) {
-            ref.close();
+      var redirectUri = location.protocol + '//' + location.host + '/callback';
+      var ref = window.open(
+        'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
+      //  'http://localhost:2484/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
+
+        'Authenticate Account',
+        'location=0,status=0,width=600,height=750'
+      );
+      ref.addEventListener('load', function (event) {
+        var url = event.target.URL;
+        console.log(url)
+        if(url.startsWith(redirectUri)) {
+          ref.close();
         }
       })
     }
