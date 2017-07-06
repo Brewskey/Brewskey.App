@@ -8,10 +8,9 @@
                         <div class="form-error" ng-bind="errors.generic"></div>
                     </div>
                 </div>
-                <label class="item item-input" ng-class="{ 'has-error' : profileForm.phoneNumber.$invalid || errors['model.PhoneNumber']}">
-                    <span class="input-label">Phone Number</span>
-                    <input type="text" name="phone" mask="(999) 999-9999" clean="true" ng-model="model.phoneNumber"  inputmode="numeric">
-                </label>
+                <div class="item-input" style="overflow: visible" ng-class="{ 'has-error' : profileForm.phoneNumber.$invalid || errors['model.PhoneNumber']}">
+                  <input type="tel" ng-model="model.phoneNumber" ng-intl-tel-input data-initial-country="us" inputmode="numeric">
+                </div>
                 <div ng-if="!isSetup">
                     <div class="item item-divider"></div>
                     <label class="item item-input" ng-class="{ 'has-error' : profileForm.email.$invalid || errors['model.Email']}">

@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "Unlock the power of your kegerator",
     "scripts": {
-      "ls:android": "code-push deployment ls Brewskey.Android",
-      "release:android": "ionic prepare android && code-push release-cordova Brewskey.Android android -d Production && npm run ls:android"
+        "ls:android": "code-push deployment ls Brewskey.Android",
+        "release:android": "ionic prepare android && code-push release-cordova Brewskey.Android android -d Production && npm run ls:android"
     },
     "dependencies": {
         "angular-moment": "^1.0.0-beta.6",
@@ -32,8 +32,10 @@
         "gulp-concat": "^2.2.0",
         "gulp-minify-css": "^0.3.0",
         "gulp-rename": "^1.2.0",
+        "intl-tel-input": "^11.1.0",
         "ionic-plugin-keyboard": "^2.2.1",
         "moment": "^2.15.1",
+        "ng-intl-tel-input": "^2.0.0",
         "phonegap-nfc": "^0.6.6",
         "phonegap-plugin-push": "^1.10.4"
     },

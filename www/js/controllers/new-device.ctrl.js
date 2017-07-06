@@ -60,7 +60,7 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
           setTimeout(function () {
             getLocations();
           }, 1000);
-        },
+        }
       );
     }
     getLocations();
@@ -168,7 +168,7 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
           $ionicHistory.clearCache();
           $ionicHistory.nextViewOptions({
             disableBack: true,
-            historyRoot: true,
+            historyRoot: true
           });
           $state.go('app.devices');
         });

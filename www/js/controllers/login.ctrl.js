@@ -10,29 +10,39 @@ angular.module('brewskey.controllers').controller('LoginCtrl', [
     $scope.loginData = {};
 
     $scope.oauthLogin = function (provider) {
-      var redirectUri = location.protocol + '//' + location.host + '/callback';
-      var ref = window.open(
-        'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
-      //  'http://localhost:2484/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
-
-        'Authenticate Account',
-        'location=0,status=0,width=600,height=750'
-      );
-      ref.addEventListener('load', function (event) {
-        var url = event.target.URL;
-        console.log(url)
-        if(url.startsWith(redirectUri)) {
-          ref.close();
+      auth.getExternalLoginPermission(provider).then(function (result) {
+        var hasLocalAccount = result.hasLocalAccount;
+        var externalAuthToken = result.externalAuthToken;
+        if (hasLocalAccount === 'True') {
+          auth.loginWithToken(externalAuthToken).then(function () {
+            $ionicHistory.nextViewOptions({
+              historyRoot: true,
+            });
+            $state.go('app.home');
+          });
+        } else {
+          $scope.$apply(function () {
+            $scope.externalAuthToken = externalAuthToken;
+            $scope.showLoginForm = true;
+          });
         }
       })
-    }
+    };
 
     // Perform the login action when the user submits the login form
     $scope.doLogin = function(modal) {
       $scope.loggingIn = true;
 
       auth.login($scope.loginData).then(
-        function(response) {
+        function () {
+          if (!$scope.externalAuthToken) {
+            return;
+          }
+
+          return auth.addExternalLogin($scope.externalAuthToken);
+        }
+      ).then(
+        function() {
           $scope.loggingIn = false;
           $scope.loginData = {};
 

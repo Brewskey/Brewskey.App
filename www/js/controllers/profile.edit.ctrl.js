@@ -5,7 +5,8 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
   'utils',
   '$state',
   '$stateParams',
-  function($scope, auth, storage, utils, $state, $stateParams) {
+  '$ionicHistory',
+  function($scope, auth, storage, utils, $state, $stateParams, $ionicHistory) {
     $scope.isSetup = $stateParams.isSetup;
     $scope.model = angular.copy(storage.authDetails) || {};
     $scope.sending = false;
@@ -20,7 +21,7 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
           function(a) {
             if (storage.authDetails.phoneNumber !== oldNumber) {
               $scope.enterToken = true;
-            } else if (storage.authDetails.phoneNumber) {              
+            } else if (storage.authDetails.phoneNumber) {
               $ionicHistory.currentView($ionicHistory.backView());
               $state.go('app.profile');
             }

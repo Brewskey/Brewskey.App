@@ -19,6 +19,7 @@ angular
     'SignalR',
     'chart.js',
     'ngMask',
+    'ngIntlTelInput'
   ])
   .run(function(
     $ionicPlatform,
@@ -120,6 +121,12 @@ angular
       /^\s*(https?|ftp|file|ms-appx|ms-appx-web|x-wmapp0):|data:image\//
     );
   })
+  .config(function (ngIntlTelInputProvider) {
+    ngIntlTelInputProvider.set({
+      initialCountry: 'us',
+      utilsScript: './lib/intl-tel-input/js/utils.js',
+    });
+  })
   .config([
     '$stateProvider',
     '$urlRouterProvider',
@@ -137,7 +144,7 @@ angular
       });
       rest.setBaseUrl('https://brewskey.com');
       rest.setRequestSuffix('/');
-      rest.setBaseUrl('http://localhost:2484');
+      //rest.setBaseUrl('http://localhost:2484');
 
       $stateProvider
         .state('app', {
@@ -203,6 +210,9 @@ angular
         .state('app.register', {
           url: '/register',
           cache: false,
+          params: {
+            externalAuthToken: null,
+          },
           views: {
             menuContent: {
               templateUrl: 'templates/register.html',
@@ -621,6 +631,7 @@ angular
         .state('app.settings', {
           url: '/settings',
           authenticate: true,
+          cache: false,
           views: {
             menuContent: {
               templateUrl: 'templates/settings.html',

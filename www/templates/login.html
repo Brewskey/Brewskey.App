@@ -9,6 +9,9 @@
           <button class="button button-block brewskey-button" type="button" ng-click="showLoginForm = true">Username + Password</button>
         </div>
         <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate" style="background: #fff;" ng-show="showLoginForm">
+            <div class="item item-text-wrap text-center" ng-if="externalAuthToken">
+              Your external login is not linked to an account. Login with an existing Brewskey account or register link them.
+            </div>
             <div class="list">
                 <div class="item no-padding item-text-wrap text-center" ng-if="errors.generic" ng-cloak>
                     <div class="form-errors" data-ng-show="loginForm.$submitted">
@@ -32,9 +35,9 @@
                 <div class="item">
                     <button class="button button-block button-positive" type="submit" ng-disabled="!loginData.userName || !loginData.password || loggingIn">Log in</button>
                     <!--<a ui-sref="app.login-number" class="button button-block button-balanced">Log in with your phone number</a>-->
-                    <a ui-sref="app.register" class="button button-block button-light button-small">Register</a>
+                    <a ui-sref="app.register({externalAuthToken: externalAuthToken})" class="button button-block button-light button-small">Register</a>
                     <a ui-sref="app.forgot-password" class="button button-block button-light button-small">Forgot Password</a>
-                    <button type="button" class="button button-block button-light button-small" ng-click="showLoginForm = false">Back</a>
+                    <button type="button" class="button button-block button-light button-small" ng-click="showLoginForm = false" ng-if="!externalAuthToken">Back</a>
                 </div>
             </div>
         </form>

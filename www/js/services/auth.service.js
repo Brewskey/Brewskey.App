@@ -19,6 +19,32 @@ angular.module('brewskey.services', []).factory('auth', [
 
     var refreshTokenPromise = null;
 
+    function handleLogin(response) {
+      if (response.userLogins) {
+        response.userLogins = JSON.parse(response.userLogins);
+      }
+
+      storage.authDetails = response;
+      storage.authList = _.uniqBy(
+        (storage.authList || []).concat(response),
+        'userName'
+      );
+
+      achievements.subscribe(storage.authDetails.userName);
+
+      return response;
+    }
+
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, "\\$&");
+      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
     var output = {
       isLoggedIn: function() {
         return !!storage.authDetails;
@@ -46,17 +72,77 @@ angular.module('brewskey.services', []).factory('auth', [
               'Content-Type': 'application/x-www-form-urlencoded',
             }
           )
-          .then(function(response) {
-            storage.authDetails = response;
-            storage.authList = _.uniqBy(
-              (storage.authList || []).concat(response),
-              'userName'
-            );
+          .then(handleLogin);
+      },
+      getExternalLoginPermission: function (provider) {
+        var redirectUri = location.protocol + '//' + location.host + '/callback';
+        if (redirectUri.indexOf('file') !== -1) {
+          redirectUri = 'http://localhost/callback';
+        }
 
-            achievements.subscribe(storage.authDetails.userName);
+        var ref = window.open(
+          'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
+          'Authenticate Account',
+          'location=0,status=0,width=600,height=750'
+        );
 
-            return response;
-          });
+        return new Promise(function (resolve) {
+          ref.addEventListener('loadstart', function (event) {
+            var url = event.url;
+            if (url.startsWith(redirectUri)) {
+              var hasLocalAccount = getParameterByName('hasLocalAccount', url);
+              var externalAuthToken =
+                getParameterByName('external_auth_token', url);
+
+              if (!externalAuthToken) {
+                reject();
+              }
+
+              resolve({
+                externalAuthToken: externalAuthToken,
+                hasLocalAccount: hasLocalAccount,
+                provider: provider
+              });
+
+              ref.close();
+            }
+          })
+        })
+      },
+      loginWithToken: function (externalAuthToken) {
+        var authorization = rest
+          .one('token')
+          .withHttpConfig({ transformRequest: angular.identity });
+
+        var data =
+          'grant_type=external_auth_token&token=' +
+          encodeURIComponent(externalAuthToken);
+
+        return authorization
+          .customPOST(
+            data,
+            '',
+            {},
+            {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            }
+          )
+          .then(handleLogin);
+      },
+      addExternalLogin: function (externalAuthToken) {
+        return rest.one('api/account').post('AddExternalLogin', {
+          externalAccessToken: externalAuthToken,
+        }).then(function (response) {
+          return output.refreshToken();
+        });
+      },
+      removeExternalLogin: function (providerName, providerKey) {
+        return rest.one('api/account').post('RemoveLogin', {
+          providerName: providerName,
+          providerKey: providerKey,
+        }).then(function (response) {
+          return output.refreshToken();
+        });
       },
       refreshToken: function() {
         if (refreshTokenPromise) {
@@ -86,17 +172,9 @@ angular.module('brewskey.services', []).factory('auth', [
               'Content-Type': 'application/x-www-form-urlencoded',
             }
           )
-          .then(
+          .then(handleLogin).then(
             function(response) {
-              storage.authDetails = response;
-              storage.authList = _.uniqBy(
-                (storage.authList || []).concat(response),
-                'userName'
-              );
-
-              achievements.subscribe(storage.authDetails.userName);
               refreshTokenPromise = null;
-
               return response;
             },
             function() {

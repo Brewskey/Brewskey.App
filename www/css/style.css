@@ -147,6 +147,10 @@ ol {
   font-weight: bold;
 }
 
+.fb-button:hover, .brewskey-button:hover {
+  color: #fff;
+}
+
 .leaderboard-item {
   font-size: 14px;
   padding: 16px 5px;
@@ -654,4 +658,7 @@ input::-webkit-inner-spin-button {
 
 .list-item-selected {
   background-color: #7bb4be;
+}
+.intl-tel-input .country-list {
+  z-index: 999999;
 }
