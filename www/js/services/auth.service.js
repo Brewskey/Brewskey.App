@@ -37,12 +37,12 @@ angular.module('brewskey.services', []).factory('auth', [
 
     function getParameterByName(name, url) {
       if (!url) url = window.location.href;
-      name = name.replace(/[\[\]]/g, "\\$&");
-      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-          results = regex.exec(url);
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
       if (!results) return null;
       if (!results[2]) return '';
-      return decodeURIComponent(results[2].replace(/\+/g, " "));
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
     }
 
     var output = {
@@ -69,47 +69,60 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/x-www-form-urlencoded'
             }
           )
           .then(handleLogin);
       },
-      getExternalLoginPermission: function (provider) {
-        var redirectUri = location.protocol + '//' + location.host + '/callback';
-        if (redirectUri.indexOf('file') !== -1) {
-          redirectUri = 'http://localhost/callback';
+      getExternalLoginPermission: function(provider) {
+        var host = location.protocol + '//' + location.host;
+        if (host.indexOf('file') !== -1) {
+          host = 'http://localhost';
         }
 
+        var redirectUri = host + '/auth.html';
+
         var ref = window.open(
-          'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' + redirectUri,
+          'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' +
+            redirectUri,
           'Authenticate Account',
           'location=0,status=0,width=600,height=750'
         );
 
-        return new Promise(function (resolve) {
-          ref.addEventListener('loadstart', function (event) {
-            var url = event.url;
-            if (url.startsWith(redirectUri)) {
-              var hasLocalAccount = getParameterByName('hasLocalAccount', url);
-              var externalAuthToken =
-                getParameterByName('external_auth_token', url);
+        return new Promise(function(resolve) {
+          ref.addEventListener('message', receiveMessage, false);
 
-              if (!externalAuthToken) {
-                reject();
-              }
-
-              resolve({
-                externalAuthToken: externalAuthToken,
-                hasLocalAccount: hasLocalAccount,
-                provider: provider
-              });
-
-              ref.close();
+          function receiveMessage(event) {
+            if (event.origin !== host) {
+              return;
             }
-          })
-        })
+
+            var url = event.data;
+            if (!url.startsWith(redirectUri)) {
+              return;
+            }
+            var hasLocalAccount = getParameterByName('hasLocalAccount', url);
+            var externalAuthToken = getParameterByName(
+              'external_auth_token',
+              url
+            );
+
+            if (!externalAuthToken) {
+              reject();
+            }
+
+            resolve({
+              externalAuthToken: externalAuthToken,
+              hasLocalAccount: hasLocalAccount,
+              provider: provider
+            });
+
+            ref.removeEventListener('message', receiveMessage);
+            ref.close();
+          }
+        });
       },
-      loginWithToken: function (externalAuthToken) {
+      loginWithToken: function(externalAuthToken) {
         var authorization = rest
           .one('token')
           .withHttpConfig({ transformRequest: angular.identity });
@@ -124,25 +137,31 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/x-www-form-urlencoded'
             }
           )
           .then(handleLogin);
       },
-      addExternalLogin: function (externalAuthToken) {
-        return rest.one('api/account').post('AddExternalLogin', {
-          externalAccessToken: externalAuthToken,
-        }).then(function (response) {
-          return output.refreshToken();
-        });
+      addExternalLogin: function(externalAuthToken) {
+        return rest
+          .one('api/account')
+          .post('AddExternalLogin', {
+            externalAccessToken: externalAuthToken
+          })
+          .then(function(response) {
+            return output.refreshToken();
+          });
       },
-      removeExternalLogin: function (providerName, providerKey) {
-        return rest.one('api/account').post('RemoveLogin', {
-          providerName: providerName,
-          providerKey: providerKey,
-        }).then(function (response) {
-          return output.refreshToken();
-        });
+      removeExternalLogin: function(providerName, providerKey) {
+        return rest
+          .one('api/account')
+          .post('RemoveLogin', {
+            providerName: providerName,
+            providerKey: providerKey
+          })
+          .then(function(response) {
+            return output.refreshToken();
+          });
       },
       refreshToken: function() {
         if (refreshTokenPromise) {
@@ -169,10 +188,11 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Type': 'application/x-www-form-urlencoded'
             }
           )
-          .then(handleLogin).then(
+          .then(handleLogin)
+          .then(
             function(response) {
               refreshTokenPromise = null;
               return response;
@@ -190,7 +210,7 @@ angular.module('brewskey.services', []).factory('auth', [
         storage.authList = null;
 
         $ionicHistory.nextViewOptions({
-          historyRoot: true,
+          historyRoot: true
         });
 
         $state.go('app.login');
@@ -202,7 +222,7 @@ angular.module('brewskey.services', []).factory('auth', [
             rest.one('api/account').post('change-password', {
               confirmPassword: model.newPassword,
               newPassword: model.newPassword,
-              oldPassword: model.oldPassword,
+              oldPassword: model.oldPassword
             })
           );
         }
@@ -212,6 +232,12 @@ angular.module('brewskey.services', []).factory('auth', [
             rest
               .one('api/account/update-phone-number')
               .put({ phoneNumber: model.phoneNumber })
+          );
+        }
+
+        if (model.email !== storage.authDetails.email) {
+          promises.push(
+            rest.one('api/account/change-email').put({ email: model.email })
           );
         }
 
@@ -237,7 +263,7 @@ angular.module('brewskey.services', []).factory('auth', [
         return rest
           .one('api/account')
           .post('reset-password', { email: model.email });
-      },
+      }
     };
 
     var timeToAdd = 60 * 1000 * 60 * 24; // 1 day
@@ -264,7 +290,7 @@ angular.module('brewskey.services', []).factory('auth', [
         element: element,
         headers: headers,
         params: params,
-        httpConfig: httpConfig,
+        httpConfig: httpConfig
       };
     });
 
@@ -280,13 +306,16 @@ angular.module('brewskey.services', []).factory('auth', [
           // Any requests that failed because of a token refresh
           response.config.headers.Authorization =
             'Bearer ' + authDetails.access_token;
-          $http(response.config).then(function(refreshResponse) {
-            // TODO restangularize
-            deferred.resolve(refreshResponse.data);
-          }, function (error) {
-            deferred.reject(error);
-            output.logout();
-          });
+          $http(response.config).then(
+            function(refreshResponse) {
+              // TODO restangularize
+              deferred.resolve(refreshResponse.data);
+            },
+            function(error) {
+              deferred.reject(error);
+              output.logout();
+            }
+          );
         },
         function() {
           output.logout();
@@ -297,5 +326,5 @@ angular.module('brewskey.services', []).factory('auth', [
     });
 
     return output;
-  },
+  }
 ]);
