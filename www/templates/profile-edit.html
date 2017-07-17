@@ -20,6 +20,9 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Email']" data-ng-show="profileForm.$submitted" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>
+                    <div class="form-errors" data-ng-repeat="error in errors['model.Password']" data-ng-show="profileForm.$submitted" data-ng-cloak>
+                        <div class="form-error" ng-bind="error"></div>
+                    </div>
                     <div class="item item-divider"></div>
                     <label class="item item-input" ng-class="{ 'has-error' : profileForm.oldPassword.$invalid || errors['model.OldPassword']}">
                         <span class="input-label">Old Password</span>

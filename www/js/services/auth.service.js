@@ -12,7 +12,19 @@ angular.module('brewskey.services', []).factory('auth', [
   '$state',
   'achievements',
   '$http',
-  function($q, rest, storage, $ionicHistory, $state, achievements, $http) {
+  '$ionicPopup',
+  '$rootScope',
+  function(
+    $q,
+    rest,
+    storage,
+    $ionicHistory,
+    $state,
+    achievements,
+    $http,
+    $ionicPopup,
+    $rootScope
+  ) {
     if (storage.authDetails && !storage.authList) {
       storage.authList = [storage.authDetails];
     }
@@ -236,8 +248,42 @@ angular.module('brewskey.services', []).factory('auth', [
         }
 
         if (model.email !== storage.authDetails.email) {
+          var $scope = $rootScope.$new();
+          $scope.data = {};
           promises.push(
-            rest.one('api/account/change-email').put({ email: model.email })
+            $ionicPopup
+              .show({
+                template: '<input type="password" ng-model="data.password">',
+                title: 'Enter Password',
+                scope: $scope,
+                subTitle:
+                  'Enter your password in order to change your email address.',
+                buttons: [
+                  { text: 'Cancel' },
+                  {
+                    text: '<b>OK</b>',
+                    type: 'button-positive',
+                    onTap: function(event) {
+                      if (!$scope.data.password) {
+                        event.preventDefault();
+                      } else {
+                        return $scope.data.password;
+                      }
+                    }
+                  }
+                ]
+              })
+              .then(function(password) {
+                if (!password) {
+                  throw { data: { Message: 'Invalid password' } };
+                }
+                return rest
+                  .one('api/account/change-email')
+                  .customPUT({ email: model.email, password: password });
+              })
+              .then(function() {
+                return output.refreshToken();
+              })
           );
         }
 

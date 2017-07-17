@@ -60,5 +60,5 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
       $scope.errors = null;
       $scope.enterToken = !$scope.enterToken;
     };
-  },
+  }
 ]);
