@@ -18,48 +18,49 @@
                         <p ng-bind="sensor.description"></p>
                     </ion-radio>
                 </ion-list>
-
-                <div class="item item-text-wrap text-center" ng-if="model.currentSensor">
-                    <img ng-src="img/sensors/{{model.currentSensor.image}}" ng-if="model.currentSensor.image"/>
+                <div id="currentImage" class="item item-text-wrap text-center">
+                  <img ng-src="img/sensors/{{model.currentSensor.image}}" ng-if="model.currentSensor && model.currentSensor.image"/>
                 </div>
-                <div class="item item-text-wrap text-center" ng-if="model.currentSensor.serverEnum !== 'Custom'">
-                    <p>
-                        <strong>Tweak your sensor.</strong>
-                        <br/>
-                        You can calibrate your sensor if it's not measuring correctly. Add more pulses if your sensor is
-                        over-reporting the amount of beer poured.
-                    </p>
-                    <br/>
-                    <div class="item range">
-                        <i>-10%</i>
-                        <input type="range" name="percentage" min="-100" max="100" value="0" ng-model="model.percentage">
-                        <i>+10%</i>
-                    </div>
-                    <br/>
-                    <strong>{{calculatePercentage().toFixed(1)}}%</strong>
-                    <br />
-                    <strong>{{calculatePulses()}} pulses per gallon</strong>
-                </div>
-                <div class="item item-text-wrap text-center" ng-if="model.currentSensor.serverEnum == 'Custom'">
-                    <p>
-                        <strong>Set custom pulses.</strong>
-                        <br />
-                        Find out the number of pulses per gallon for your flow sensor and type it here.
-                    </p>
-                    <br />
-                    <div class="item item-input-inset">
-                        <label class="item-input-wrapper">
-                            <input type="text" placeholder="Set Pulses" ng-model="model.customPulses">
-                        </label>
-                    </div>
-                </div>
-                <div class="item">
-                    <button class="button button-block button-positive" type="submit" ng-disabled="!tap || form.$invalid || editing">
-                        Set Sensor
-                    </button>
-                    <button class="button button-block button-stable" type="button" ng-click="cancel()">
-                        Cancel
-                    </button>
+                <div ng-if="model.currentSensor">
+                  <div class="item item-text-wrap text-center" ng-if="model.currentSensor.serverEnum !== 'Custom'">
+                      <p>
+                          <strong>Tweak your sensor.</strong>
+                          <br/>
+                          You can calibrate your sensor if it's not measuring correctly. Add more pulses if your sensor is
+                          over-reporting the amount of beer poured.
+                      </p>
+                      <br/>
+                      <div class="item range">
+                          <i>-10%</i>
+                          <input type="range" name="percentage" min="-100" max="100" value="0" ng-model="model.percentage">
+                          <i>+10%</i>
+                      </div>
+                      <br/>
+                      <strong>{{calculatePercentage().toFixed(1)}}%</strong>
+                      <br />
+                      <strong>{{calculatePulses()}} pulses per gallon</strong>
+                  </div>
+                  <div class="item item-text-wrap text-center" ng-if="model.currentSensor.serverEnum == 'Custom'">
+                      <p>
+                          <strong>Set custom pulses.</strong>
+                          <br />
+                          Find out the number of pulses per gallon for your flow sensor and type it here.
+                      </p>
+                      <br />
+                      <div class="item item-input-inset">
+                          <label class="item-input-wrapper">
+                              <input type="text" placeholder="Set Pulses" ng-model="model.customPulses">
+                          </label>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <button class="button button-block button-positive" type="submit" ng-disabled="!tap || form.$invalid || editing">
+                          Set Sensor
+                      </button>
+                      <button class="button button-block button-stable" type="button" ng-click="cancel()">
+                          Cancel
+                      </button>
+                  </div>
                 </div>
             </div>
         </form>

@@ -5,7 +5,8 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
   '$state',
   'modal',
   '$ionicHistory',
-  function($scope, rest, $stateParams, $state, modal, $ionicHistory) {
+  '$ionicPopup',
+  function($scope, rest, $stateParams, $state, modal, $ionicHistory, $ionicPopup) {
     $scope.model = {
       id: $stateParams.deviceId || undefined,
       particleId: $stateParams.particleId || undefined,
@@ -36,31 +37,70 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
     $scope.editing = true;
     $scope.cancel = function() {
       if ($scope.model.id) {
+        $ionicHistory.currentView($ionicHistory.backView());
         $state.go('^.details', { deviceId: $scope.model.id });
       } else {
         $state.go('^');
       }
     };
 
+    function showLocationPopup() {
+      // If locations still aren't showing up, show a modal to redirect
+      // them to create a location or refresh the list.
+      $ionicPopup
+        .show({
+          cssClass: 'text-center green-popup popup-vertical-buttons',
+          title: 'Could not find any locations',
+          scope: $scope,
+          subTitle:
+            'We didn\'t find any locations for your account.  In order ' +
+            'to set up a device you need some locations',
+          buttons: [
+            {
+              text: '<b>Refresh Locations</b>',
+              type: 'button-balanced',
+              onTap: function(event) {
+                getLocations();
+              }
+            },
+            {
+              text: '<b>Create New Location</b>',
+              type: 'button-positive',
+              onTap: function(event) {
+                $state.go('app.new-location');
+              }
+            }
+          ]
+        })
+    }
+
+    var counter = 0;
+    function handleLocationsNotFound() {
+      if (counter >= 3) {
+        showLocationPopup();
+        return;
+      }
+
+      counter++;
+      setTimeout(function () {
+        getLocations();
+      }, 1000);
+    }
     function getLocations () {
       rest.all('api/locations').getList().then(
         function(locations) {
+          if (!locations || !locations.length) {
+            handleLocationsNotFound();
+            return;
+          }
+
           $scope.locations = locations;
 
           if (locations && locations.length === 1) {
             $scope.model.locationId = locations[0].id;
           }
         },
-        function (error) {
-          if (counter === 3) {
-            return;
-          }
-
-          counter++;
-          setTimeout(function () {
-            getLocations();
-          }, 1000);
-        }
+        handleLocationsNotFound
       );
     }
     getLocations();

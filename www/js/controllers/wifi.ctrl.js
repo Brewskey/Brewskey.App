@@ -1,17 +1,54 @@
 angular.module('brewskey.controllers').controller('WifiCtrl', [
   '$scope',
+  'Restangular',
   'softAP',
   '$ionicPopup',
   '$stateParams',
   '$state',
   '$ionicHistory',
-  function($scope, softAP, $ionicPopup, $stateParams, $state, $ionicHistory) {
+  function($scope, rest, softAP, $ionicPopup, $stateParams, $state, $ionicHistory) {
     $scope.state = 0;
     $scope.hiddenForm = false;
     $scope.model = { security: 'wpa2_aes' };
     $scope.device = null;
     $scope.selectedNetwork = null;
     $scope.isCreatingNewDevice = $stateParams.isCreatingNewDevice;
+
+    // Check if there is an existing location in order to create the device
+    if ($stateParams.isCreatingNewDevice) {
+      rest
+        .all('api/locations')
+        .getList()
+        .then(function(locations) {
+          if (locations.length) {
+            return;
+          }
+
+          return $ionicPopup.show({
+            cssClass: 'green-popup',
+            title: 'You haven\'t created any locations!',
+            subTitle: 'In order to set up your Brewskey box, you first need ' +
+              'to create a location.',
+            scope: $scope,
+            buttons: [
+              {
+                text: '<b>Go Now</b>',
+                type: 'button-positive',
+                onTap: function() {
+                  $state.go('app.new-location');
+                }
+              },
+              {
+                text: 'No Thanks',
+                onTap: function() {
+                  $ionicHistory.goBack();
+                }
+              }
+            ]
+          })
+        });
+    }
+
     $scope.securityTypes = [
       { key: 'No Security', value: 'open' },
       { key: 'WEP pre-shared key', value: 'wep_psk' },

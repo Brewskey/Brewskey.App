@@ -19,6 +19,23 @@ html, body {
     background: url(../img/beer-background.jpg) no-repeat center;
     background-size: cover;
 }
+.content-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  margin-top: -1px;
+  padding-top: 1px;
+  margin-bottom: -1px;
+  width: auto;
+  height: auto;
+}
+.has-footer {
+  bottom: 44px;
+}
+
 img.responsive {
     width: 100%;
 }
@@ -103,6 +120,9 @@ ol {
     background: #1d5f68;
     color: #ffffff;
 }
+.bar-brewskey-yellow {
+  background: #ffc247;
+}
 .brewskey-light-bg {
   background-color: #238393;
 }
@@ -124,13 +144,60 @@ ol {
         color: #ef473a;
         font-weight: bold;
     }
-
-.start-pour-button {
+    .btn-green {
+      background-color: #238393;
+      border-color: #238393;
+      color: #fff;
+    }
+.btn-green:hover,
+.btn-green:focus,
+.btn-green:active,
+.btn-green.active {
+  background-color: #1e717e;
+  border-color: #195e6a;
+  color: #fff;
+}
+.btn-green.disabled:hover,
+.btn-green.disabled:focus,
+.btn-green.disabled:active,
+.btn-green.disabled.active,
+.btn-green[disabled]:hover,
+.btn-green[disabled]:focus,
+.btn-green[disabled]:active,
+.btn-green[disabled].active,
+fieldset[disabled] .btn-green:hover,
+fieldset[disabled] .btn-green:focus,
+fieldset[disabled] .btn-green:active,
+fieldset[disabled] .btn-green.active {
+  background-color: #238393;
+  border-color: #238393;
+}
+button.start-pour-button {
+  border: 0;
+  position: relative;
+  font-size: 26px;
+  letter-spacing: 4px;
+  text-align: center;
+  width: 100%;
+}
+.start-pour-button::before,
+.start-pour-button::after {
     background: url(../img/pour-icon.png) no-repeat;
     background-size: cover;
-    border: 0;
+    content: ' ';
+    display: block;
     height: 34px;
+    left: 10px;
+    position: absolute;
     width: 30px;
+}
+.start-pour-button::before {
+  transform: scaleX(-1);
+}
+.start-pour-button::after {
+  left: auto;
+  right: 10px;
+  top:0;
 }
 
 /* login */
@@ -149,6 +216,46 @@ ol {
 
 .fb-button:hover, .brewskey-button:hover {
   color: #fff;
+}
+
+.totp-timer {
+  height: 80px;
+  margin: -10px auto 10px;
+  position: relative;
+  width:80px;
+}
+
+.totp-timer__container {
+  transform: rotate(-90deg);
+}
+
+.totp-timer__seconds {
+  font-size: 28px;
+  height: 100%;
+  line-height: 80px;
+  position: absolute;
+  text-align: center;;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.totp-timer__meter,
+.totp-timer__value {
+  fill: none;
+}
+
+.totp-timer__meter {
+  stroke: #1d5f68;
+}
+
+.totp-timer__value {
+  stroke: #fa0;
+  stroke-linecap: round;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .leaderboard-item {

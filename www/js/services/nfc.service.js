@@ -33,6 +33,8 @@ angular.module('brewskey.services').factory('nfcService', [
   '$timeout',
   '$ionicLoading',
   '$ionicHistory',
+  '$interval',
+  'gps',
   function(
     $rootScope,
     $q,
@@ -42,7 +44,9 @@ angular.module('brewskey.services').factory('nfcService', [
     $ionicPlatform,
     $timeout,
     $ionicLoading,
-    $ionicHistory
+    $ionicHistory,
+    $interval,
+    gps
   ) {
     var requestPour = false;
     var authenticating = false;
@@ -163,8 +167,8 @@ angular.module('brewskey.services').factory('nfcService', [
           }
         });
       },
-      authenticatePour: function(deviceId, totp) {
-        if (authenticating || !deviceId) {
+      authenticatePour: function(deviceId, coordinates, totp) {
+        if (authenticating) {
           return;
         }
 
@@ -177,13 +181,18 @@ angular.module('brewskey.services').factory('nfcService', [
 
         rest
           .all('api/authorizations/pour')
-          .post({ deviceId: deviceId, totp: totp })
+          .post({
+            deviceId: deviceId || undefined,
+            latitude: coordinates.latitude,
+            longitude: coordinates.longitude,
+            totp: totp
+          })
           .then(
             function() {
               authenticating = false;
               if (totp) {
                 $ionicLoading.hide();
-                popup.close();
+                popup && popup.close();
               }
             },
             function(e) {
@@ -211,7 +220,10 @@ angular.module('brewskey.services').factory('nfcService', [
           }
 
           if (requestPour) {
-            output.authenticatePour(deviceId);
+            gps.getCoords()
+              .then(function(coordinates) {
+                  output.authenticatePour(deviceId, coordinates);
+              });
             return;
           }
 
@@ -230,15 +242,16 @@ angular.module('brewskey.services').factory('nfcService', [
         }
       },
       showPopup: function() {
-        checkNfc().then(function() {
+        return checkNfc().then(function () {
+          return gps.getCoords();
+        }).then(function(coordinates) {
           if (popup) {
             return;
           }
 
           scope = $rootScope.$new(true);
-          scope.hasDeviceID = !!currentDeviceId;
           scope.submitTotp = function() {
-            output.authenticatePour(currentDeviceId, scope.totp);
+            output.authenticatePour(currentDeviceId, coordinates, scope.totp);
           };
 
           scope.isDisabled = function() {
@@ -248,6 +261,36 @@ angular.module('brewskey.services').factory('nfcService', [
           scope.checkTotp = function($event) {
             scope.totp = $event.target.value;
           };
+
+          // Show 30 second interval timer
+          var RADIUS = 36;
+          var CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+          var animationElement = $('.totp-timer__value');
+          scope.init = function() {
+            animationElement = $('.totp-timer__value');
+            animationElement.css({strokeDasharray: CIRCUMFERENCE});
+          };
+
+          function setSeconds() {
+            scope.currentSeconds = 30 - ((new Date()).getSeconds() % 30);
+          }
+          setSeconds();
+          $interval(setSeconds, 1000);
+
+          var animationID,
+            startSeconds = scope.currentSeconds,
+            startTime = performance.now();
+
+          function animate(delta) {
+            var deltaSeconds = (delta - startTime) / 1000 % 30;
+            var progress = (deltaSeconds - startSeconds) % 30 / 30;
+            var dashoffset = CIRCUMFERENCE * progress;
+
+            animationElement &&
+              animationElement.css({strokeDashoffset: dashoffset});
+            animationID = requestAnimationFrame(animate);
+          }
+          animationID = requestAnimationFrame(animate);
 
           var subTitle = null;
           if (ionic.Platform.isIOS()) {
@@ -276,9 +319,10 @@ angular.module('brewskey.services').factory('nfcService', [
               },
             ],
           });
-          popup.then(function() {
+          return popup.then(function() {
             requestPour = false;
             popup = null;
+            cancelAnimationFrame(animationID);
           });
         });
       },

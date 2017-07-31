@@ -6,10 +6,6 @@
         </div>
         <form name="form" ng-submit="submitForm()" ng-if="loaded">
             <div class="list">
-                <div class="item">
-                    <h1 ng-if="!model.id">New Location</h1>
-                    <h1 ng-if="model.id">Edit Location</h1>
-                </div>
                 <div class="form-errors" ng-if="errors.generic" data-ng-cloak>
                     <div class="form-error" ng-bind="errors.generic"></div>
                 </div>
@@ -22,11 +18,11 @@
                     </div>
 
                     <label class="item item-input">
-                        <textarea ng-model="model.summary" placeholder="Summary" rows="3" required></textarea>
+                        <textarea ng-model="model.summary" placeholder="Summary (optional)" rows="3" required></textarea>
                     </label>
 
                     <label class="item item-input">
-                        <textarea ng-model="model.description" placeholder="Description" rows="6"></textarea>
+                        <textarea ng-model="model.description" placeholder="Description (optional)" rows="6"></textarea>
                     </label>
                 </div>
                 <div class="item item-divider">

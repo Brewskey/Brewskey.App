@@ -386,7 +386,7 @@ angular
             }
           }
         })
-        .state('app.new-locations', {
+        .state('app.new-location', {
           authenticate: true,
           cache: false,
           url: '/location/new',

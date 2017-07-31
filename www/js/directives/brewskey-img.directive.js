@@ -63,7 +63,7 @@ angular
                   url += '&h=' + scope.height;
                 }
 
-                url += '&mode=crop';
+                url += '&mode=crop&trim.threshold=80&trim.percentpadding=0.5';
 
                 if (scope.params) {
                   url += '&' + scope.params;

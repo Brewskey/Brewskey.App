@@ -4,7 +4,8 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
   '$stateParams',
   '$state',
   '$ionicHistory',
-  function($scope, rest, $stateParams, $state, $ionicHistory) {
+  '$ionicScrollDelegate',
+  function($scope, rest, $stateParams, $state, $ionicHistory, $ionicScrollDelegate) {
     $scope.sensors = [
       {
         name: 'Titan 300',
@@ -49,11 +50,12 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
     ];
 
     $scope.model = {
-      currentSensor: $scope.sensors[0],
+      currentSensor: null, //$scope.sensors[0],
       percentage: 0,
     };
 
     $scope.sensorChanged = function(sensor) {
+      $scope.scrollToImage();
       $scope.model.percentage = 0;
     };
 
@@ -61,7 +63,16 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
       return $scope.model.percentage * 0.1;
     };
 
+    $scope.scrollToImage = function () {
+      var position = $('#currentImage').offset()
+      $ionicScrollDelegate.scrollTo(0, position.top - 43, true);
+    };
+
     $scope.calculatePulses = function() {
+      if (!$scope.model.currentSensor) {
+        return;
+      }
+
       var defaultPulses = $scope.model.currentSensor.defaultPulses;
       return Math.round(
         defaultPulses + defaultPulses * $scope.calculatePercentage() * 0.01

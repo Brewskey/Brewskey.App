@@ -1,7 +1,11 @@
 <ion-view view-title="Brewskey">
     <ion-nav-title>{{!model.id ? "New Brewskey Box" : "Edit Brewskey Box"}}</ion-nav-title>
     <ion-content>
-        <form name="$parent.form" ng-submit="submitForm()" novalidate>
+
+        <div class="padding text-center" style="margin-top: 20px" ng-if="!locations">
+            <ion-spinner></ion-spinner>
+        </div>
+        <form name="$parent.form" ng-submit="submitForm()" novalidate ng-show="locations">
             <div class="list">
                 <div class="form-errors" ng-if="errorDescription" data-ng-cloak>
                     <div class="form-error" ng-bind="errorDescription"></div>

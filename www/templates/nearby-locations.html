@@ -1,5 +1,6 @@
 ﻿<ion-view view-title="Nearby">
     <ion-content>
+
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="getNearbyLocations()">
         </ion-refresher>
         <div class="padding text-center" ng-show="loading">
@@ -26,7 +27,7 @@
                     <p ng-if="tap.currentKeg.beerName">
                         <em ng-bind="tap.currentKeg.beerName"></em> on tap
                     </p>
-                    <button class="button button-light" ng-click="showPopup(tap.deviceId)">
+                    <button class="button button-light" ng-click="showPopup($event, tap.deviceId)">
                         Pour
                     </button>
                   </a>

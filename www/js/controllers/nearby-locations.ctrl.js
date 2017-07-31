@@ -31,9 +31,14 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
 
     $scope.getNearbyLocations();
 
-    $scope.showPopup = function(deviceId) {
+    $scope.showPopup = function(event, deviceId) {
+      event.preventDefault();
+      event.stopPropagation();
       $scope.$emit('device-id', deviceId);
-      nfcService.showPopup();
+      nfcService.showPopup().then(function () {
+        $scope.$emit('device-id', null);
+      });
+      return false;
     };
   },
 ]);
