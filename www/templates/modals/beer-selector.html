@@ -27,7 +27,7 @@
             <a class="item" ng-repeat="homebrew in $parent.$parent.homebrews" ng-click="$parent.$parent.onSelect(homebrew)" ng-class="{'item-avatar': homebrew.loaded}">
                 <img brewskey-img id="homebrew.id" size="s" type="beverage" width="40" loaded="homebrew.loaded"/>
                 <h2 ng-bind="homebrew.name"></h2>
-                <p ng-bind="homebrew.style"></p>
+                <p ng-bind="homebrew.description"></p>
             </a>
           </div>
           <h3 class="text-center" ng-hide="$parent.$parent.homebrews.length">

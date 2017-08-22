@@ -14,7 +14,10 @@ angular.module('brewskey.services').factory('modal', [
             if (!result) {
               return;
             }
-            rest.one(apiUrl, entity.id).remove();
+
+            rest
+              .one(apiUrl, apiUrl.indexOf(entity.id) >= 0 ? '' : entity.id)
+              .remove();
 
             return result;
           });

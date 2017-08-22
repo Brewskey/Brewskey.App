@@ -15,7 +15,11 @@
                     <ion-spinner></ion-spinner>
                 </div>
                 <div ng-show="!loading">
-                    <a ng-repeat="beverage in beverages | orderBy: 'name'" ui-sref="app.homebrew-details({beverageId: beverage.id})" class="item">
+                    <a
+                      ng-repeat="beverage in beverages | orderBy: 'name'"
+                      ui-sref="app.homebrew-details({beverageId: beverage.id})"
+                      on-hold="onBeverageHeld(beverage)"
+                      class="item">
                         {{beverage.name}}
                         <p ng-bind="beverage.description"></p>
                     </a>
