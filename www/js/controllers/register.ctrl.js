@@ -6,7 +6,15 @@ angular.module('brewskey.controllers').controller('RegisterCtrl', [
   '$state',
   'utils',
   '$ionicPopup',
-  function($scope, auth, $stateParams, $ionicHistory, $state, utils, $ionicPopup) {
+  function(
+    $scope,
+    auth,
+    $stateParams,
+    $ionicHistory,
+    $state,
+    utils,
+    $ionicPopup,
+  ) {
     // Form data for the login modal
     $scope.registering = false;
     $scope.registerData = {};
@@ -19,34 +27,52 @@ angular.module('brewskey.controllers').controller('RegisterCtrl', [
 
       auth.register($scope.registerData).then(
         function(response) {
-          auth.login($scope.registerData).then(function () {
-            if (!$stateParams.externalAuthToken) {
-              return;
-            }
+          auth
+            .login($scope.registerData)
+            .then(function() {
+              if (!$stateParams.externalAuthToken) {
+                return;
+              }
 
-            return auth.addExternalLogin(
-              $stateParams.externalAuthToken
-            );
-          }).then(function() {
-            // go to
-            $ionicHistory.nextViewOptions({
-              historyRoot: true
+              return auth.addExternalLogin($stateParams.externalAuthToken);
+            })
+            .then(function() {
+              // go to
+              $ionicHistory.nextViewOptions({
+                historyRoot: true,
+              });
+
+              $ionicPopup.show({
+                cssClass: 'text-center green-popup popup-vertical-buttons',
+                title: 'Almost done',
+                template:
+                  'Please enter your phone number. This allows your friends to add you by searching their phone contacts.',
+                buttons: [
+                  {
+                    text: 'Ok',
+                    type: 'button-balanced',
+                  },
+                  {
+                    text: 'Skip for now',
+                    type: 'button-stable',
+                    onTap: function(event) {
+                      $ionicHistory.nextViewOptions({
+                        historyRoot: true,
+                      });
+                      $state.go('app.home');
+                    },
+                  },
+                ],
+              });
+
+              $state.go('app.profile-edit', { isSetup: true });
             });
-
-            $ionicPopup.alert({
-              cssClass: 'green-popup',
-              title: 'Almost done',
-              template: 'Please enter your phone number. This allows your friends to add you by searching their phone contacts.',
-            });
-
-            $state.go('app.profile-edit', { isSetup: true });
-          });
         },
         function(error) {
           $scope.registering = false;
 
           $scope.errors = utils.filterErrors(error);
-        }
+        },
       );
     };
   },
