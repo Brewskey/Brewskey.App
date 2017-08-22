@@ -14,6 +14,7 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     $scope.getNearbyLocations = function() {
       gps.getCoords().then(function(coordinates) {
         coords = coordinates;
+        console.log('foo');
         rest
           .one('api/locations/nearby')
           .get({
@@ -35,7 +36,7 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
       event.preventDefault();
       event.stopPropagation();
       $scope.$emit('device-id', deviceId);
-      nfcService.showPopup().then(function () {
+      nfcService.showPopup().then(function() {
         $scope.$emit('device-id', null);
       });
       return false;

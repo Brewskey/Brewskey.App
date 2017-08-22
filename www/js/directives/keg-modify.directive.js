@@ -10,6 +10,10 @@ angular.module('brewskey.directives').directive('kegModify', [
       link: function(scope, element) {
         scope.kegTypes = kegTypes;
 
+        rest.one('api/v2/beverages').get().then(function(response) {
+          scope.homebrews = response.value;
+        });
+
         scope.$watch('query', function(val) {
           scope.selectedBeer = null;
           if (!val) {
@@ -67,7 +71,9 @@ angular.module('brewskey.directives').directive('kegModify', [
           }
 
           return Math.round(
-            scope.model.startingPercentage * 0.01 * kegSize[scope.model.kegType]
+            scope.model.startingPercentage *
+              0.01 *
+              kegSize[scope.model.kegType],
           );
         };
 
@@ -104,7 +110,7 @@ angular.module('brewskey.directives').directive('kegModify', [
                 $state.go(
                   'app.tap.set-sensor',
                   { tapId: scope.tapId },
-                  { location: 'replace' }
+                  { location: 'replace' },
                 );
               } else {
                 $ionicHistory.goBack();
@@ -129,7 +135,7 @@ angular.module('brewskey.directives').directive('kegModify', [
               if (error.data.Message) {
                 scope.errorDescription = error.data.Message;
               }
-            }
+            },
           );
         };
       },

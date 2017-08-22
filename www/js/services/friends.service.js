@@ -3,7 +3,7 @@ angular.module('brewskey.services').factory('friends', [
   function(rest) {
     function toMD5(contact) {
       return md5(
-        (contact.phoneNumbers[0].value || '').replace(/\D/g, '')
+        (contact.phoneNumbers[0].value || '').replace(/\D/g, ''),
       ).toUpperCase();
     }
 

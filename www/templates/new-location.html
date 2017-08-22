@@ -18,7 +18,7 @@
                     </div>
 
                     <label class="item item-input">
-                        <textarea ng-model="model.summary" placeholder="Summary (optional)" rows="3" required></textarea>
+                        <textarea ng-model="model.summary" placeholder="Summary (optional)" rows="3"></textarea>
                     </label>
 
                     <label class="item item-input">
@@ -64,7 +64,7 @@
                     <div class="row" style="padding: 0;">
                         <div class="col col-75" style="padding: 0;">
                             <label class="item item-input item-select-full">
-                                <select ng-model="model.state">
+                                <select ng-model="model.state" required>
                                     <option selected="selected">None</option>
                                     <option value="AL">Alabama</option>
                                     <option value="AK">Alaska</option>

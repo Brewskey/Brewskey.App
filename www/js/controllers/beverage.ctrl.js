@@ -4,6 +4,7 @@ angular.module('brewskey.controllers').controller('BeverageCtrl', [
   '$stateParams',
   function($scope, rest, $stateParams) {
     $scope.loading = true;
+    $scope.beverage = {};
     var beverageId = $stateParams.beverageId;
     var select = 'style,glass,availability,srm';
     rest
@@ -16,9 +17,10 @@ angular.module('brewskey.controllers').controller('BeverageCtrl', [
         if ($scope.beverage.srm) {
           var srm = $scope.beverage.srm;
           $scope.beerColor = {
-            color: srm.name === 'Over 40' || parseInt(srm.name, 10) > 9
-              ? '#fff'
-              : '',
+            color:
+              srm.name === 'Over 40' || parseInt(srm.name, 10) > 9
+                ? '#fff'
+                : '',
             'background-color': '#' + $scope.beverage.srm.hex,
           };
         }
