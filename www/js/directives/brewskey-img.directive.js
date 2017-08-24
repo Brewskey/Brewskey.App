@@ -9,7 +9,7 @@ angular.module('brewskey.directives').directive('brewskeyImg', [
         return {
           post: function(scope, iElement, iAttrs) {
             scope.$watch('id', setUrl);
-            iElement.style.position = 'absolute';
+            iElement.css({left: -9999999});
             scope.loaded = false;
             var removeElement = function() {
               iElement.off('error', removeElement);
@@ -24,7 +24,7 @@ angular.module('brewskey.directives').directive('brewskeyImg', [
             }
             iElement.on('load', function() {
               scope.loaded = true;
-              iElement.style.position = 'static';
+              iElement.css({left: ''});
             });
 
             function setUrl() {

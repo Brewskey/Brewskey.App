@@ -14,7 +14,6 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     $scope.getNearbyLocations = function() {
       gps.getCoords().then(function(coordinates) {
         coords = coordinates;
-        console.log('foo');
         rest
           .one('api/locations/nearby')
           .get({

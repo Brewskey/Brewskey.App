@@ -5,14 +5,17 @@ angular.module('brewskey.directives').directive('kegModify', [
   'kegSize',
   '$state',
   '$ionicHistory',
-  function(rest, $ionicModal, kegTypes, kegSize, $state, $ionicHistory) {
+  '$localStorage',
+  function(rest, $ionicModal, kegTypes, kegSize, $state, $ionicHistory, storage) {
     return {
       link: function(scope, element) {
         scope.kegTypes = kegTypes;
 
-        rest.one('api/v2/beverages').get().then(function(response) {
-          scope.homebrews = response.value;
-        });
+        rest.one('api/v2/beverages')
+          .get({ $filter: "createdBy/id eq '" + storage.authDetails.id + "'" })
+          .then(function(response) {
+            scope.homebrews = response.value;
+          });
 
         scope.$watch('query', function(val) {
           scope.selectedBeer = null;
