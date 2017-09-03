@@ -1,4 +1,4 @@
 (function() {
-  'use strict';
-  angular.module('ngMask', []);
+	"use strict";
+	angular.module("ngMask", []);
 })();

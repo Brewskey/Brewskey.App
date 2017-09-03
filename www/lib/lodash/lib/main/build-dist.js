@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
-var async = require('async'),
-    path = require('path');
+var async = require("async"),
+	path = require("path");
 
-var file = require('../common/file'),
-    util = require('../common/util');
+var file = require("../common/file"),
+	util = require("../common/util");
 
-var basePath = path.join(__dirname, '..', '..'),
-    distPath = path.join(basePath, 'dist'),
-    filename = 'lodash.js';
+var basePath = path.join(__dirname, "..", ".."),
+	distPath = path.join(basePath, "dist"),
+	filename = "lodash.js";
 
 var baseLodash = path.join(basePath, filename),
-    distLodash = path.join(distPath, filename);
+	distLodash = path.join(distPath, filename);
 
 /*----------------------------------------------------------------------------*/
 
@@ -22,10 +22,10 @@ var baseLodash = path.join(basePath, filename),
  * @param {string} target The output directory path.
  */
 function build() {
-  async.series([
-    file.copy(baseLodash, distLodash),
-    file.min(distLodash)
-  ], util.pitch);
+	async.series(
+		[file.copy(baseLodash, distLodash), file.min(distLodash)],
+		util.pitch
+	);
 }
 
 build();

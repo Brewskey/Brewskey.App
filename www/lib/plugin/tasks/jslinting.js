@@ -1,6 +1,4 @@
 module.exports = {
-    targets: [
-        'src/js/plugin.js'
-    ],
-    excludes: []
+	targets: ["src/js/plugin.js"],
+	excludes: []
 };
