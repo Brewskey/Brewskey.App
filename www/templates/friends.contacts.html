@@ -1,9 +1,0 @@
-<ion-view view-title="Contacts">
-    <ion-content class="has-header" style="padding: 20px;">
-        <div ng-repeat="contact in contacts" class="item item-button-right">
-            <strong>{{contact.displayName}}</strong>
-            <a class="button button-positive" ng-click="addFriend(contact, $index)" ng-if="!contact.hasRequested && contactsLoaded && contact.found">Add Friend</a>
-            <a class="button button-positive" ng-click="invite(contact, $index)" ng-if="!contact.hasRequested && contactsLoaded && !contact.found">Invite</a>
-        </div>
-    </ion-content>
-</ion-view> 
