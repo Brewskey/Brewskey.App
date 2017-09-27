@@ -1,4 +1,1 @@
-$('body').append(
-    '<div id="qunit"></div>' +
-    '<div id="qunit-fixture"></div>'
-);
+$("body").append('<div id="qunit"></div>' + '<div id="qunit-fixture"></div>');

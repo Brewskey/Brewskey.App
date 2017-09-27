@@ -9,10 +9,9 @@
  * @description
  * Service. Manages loading of templates.
  */
-$TemplateFactory.$inject = ['$http', '$templateCache', '$injector'];
-function $TemplateFactory(  $http,   $templateCache,   $injector) {
-
-  /**
+$TemplateFactory.$inject = ["$http", "$templateCache", "$injector"];
+function $TemplateFactory($http, $templateCache, $injector) {
+	/**
    * @ngdoc function
    * @name ui.router.util.$templateFactory#fromConfig
    * @methodOf ui.router.util.$templateFactory
@@ -37,16 +36,17 @@ function $TemplateFactory(  $http,   $templateCache,   $injector) {
    * @return {string|object}  The template html as a string, or a promise for 
    * that string,or `null` if no template is configured.
    */
-  this.fromConfig = function (config, params, locals) {
-    return (
-      isDefined(config.template) ? this.fromString(config.template, params) :
-      isDefined(config.templateUrl) ? this.fromUrl(config.templateUrl, params) :
-      isDefined(config.templateProvider) ? this.fromProvider(config.templateProvider, params, locals) :
-      null
-    );
-  };
+	this.fromConfig = function(config, params, locals) {
+		return isDefined(config.template)
+			? this.fromString(config.template, params)
+			: isDefined(config.templateUrl)
+				? this.fromUrl(config.templateUrl, params)
+				: isDefined(config.templateProvider)
+					? this.fromProvider(config.templateProvider, params, locals)
+					: null;
+	};
 
-  /**
+	/**
    * @ngdoc function
    * @name ui.router.util.$templateFactory#fromString
    * @methodOf ui.router.util.$templateFactory
@@ -61,11 +61,11 @@ function $TemplateFactory(  $http,   $templateCache,   $injector) {
    * @return {string|object} The template html as a string, or a promise for that 
    * string.
    */
-  this.fromString = function (template, params) {
-    return isFunction(template) ? template(params) : template;
-  };
+	this.fromString = function(template, params) {
+		return isFunction(template) ? template(params) : template;
+	};
 
-  /**
+	/**
    * @ngdoc function
    * @name ui.router.util.$templateFactory#fromUrl
    * @methodOf ui.router.util.$templateFactory
@@ -79,15 +79,18 @@ function $TemplateFactory(  $http,   $templateCache,   $injector) {
    * @return {string|Promise.<string>} The template html as a string, or a promise 
    * for that string.
    */
-  this.fromUrl = function (url, params) {
-    if (isFunction(url)) url = url(params);
-    if (url == null) return null;
-    else return $http
-        .get(url, { cache: $templateCache, headers: { Accept: 'text/html' }})
-        .then(function(response) { return response.data; });
-  };
+	this.fromUrl = function(url, params) {
+		if (isFunction(url)) url = url(params);
+		if (url == null) return null;
+		else
+			return $http
+				.get(url, { cache: $templateCache, headers: { Accept: "text/html" } })
+				.then(function(response) {
+					return response.data;
+				});
+	};
 
-  /**
+	/**
    * @ngdoc function
    * @name ui.router.util.$templateFactory#fromProvider
    * @methodOf ui.router.util.$templateFactory
@@ -102,9 +105,9 @@ function $TemplateFactory(  $http,   $templateCache,   $injector) {
    * @return {string|Promise.<string>} The template html as a string, or a promise 
    * for that string.
    */
-  this.fromProvider = function (provider, params, locals) {
-    return $injector.invoke(provider, null, locals || { params: params });
-  };
+	this.fromProvider = function(provider, params, locals) {
+		return $injector.invoke(provider, null, locals || { params: params });
+	};
 }
 
-angular.module('ui.router.util').service('$templateFactory', $TemplateFactory);
+angular.module("ui.router.util").service("$templateFactory", $TemplateFactory);

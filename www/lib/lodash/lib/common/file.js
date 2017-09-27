@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-var _ = require('lodash'),
-    fs = require('fs-extra'),
-    glob = require('glob'),
-    path = require('path');
+var _ = require("lodash"),
+	fs = require("fs-extra"),
+	glob = require("glob"),
+	path = require("path");
 
-var minify = require('../common/minify.js');
+var minify = require("../common/minify.js");
 
 /*----------------------------------------------------------------------------*/
 
@@ -19,7 +19,7 @@ var minify = require('../common/minify.js');
  * @returns {Function} Returns the partially applied function.
  */
 function copy(srcPath, destPath) {
-  return _.partial(fs.copy, srcPath, destPath);
+	return _.partial(fs.copy, srcPath, destPath);
 }
 
 /**
@@ -30,10 +30,14 @@ function copy(srcPath, destPath) {
  * @returns {Object} Returns the object of compiled templates.
  */
 function globTemplate(pattern) {
-  return _.transform(glob.sync(pattern), function(result, filePath) {
-    var key = path.basename(filePath, path.extname(filePath));
-    result[key] = _.template(fs.readFileSync(filePath, 'utf8'));
-  }, {});
+	return _.transform(
+		glob.sync(pattern),
+		function(result, filePath) {
+			var key = path.basename(filePath, path.extname(filePath));
+			result[key] = _.template(fs.readFileSync(filePath, "utf8"));
+		},
+		{}
+	);
 }
 
 /**
@@ -45,7 +49,7 @@ function globTemplate(pattern) {
  * @returns {Function} Returns the partially applied function.
  */
 function min(srcPath, destPath) {
-  return _.partial(minify, srcPath, destPath);
+	return _.partial(minify, srcPath, destPath);
 }
 
 /**
@@ -58,14 +62,14 @@ function min(srcPath, destPath) {
  * @returns {Function} Returns the partially applied function.
  */
 function write(destPath, data) {
-  return _.partial(fs.writeFile, destPath, data);
+	return _.partial(fs.writeFile, destPath, data);
 }
 
 /*----------------------------------------------------------------------------*/
 
 module.exports = {
-  'copy': copy,
-  'globTemplate': globTemplate,
-  'min': min,
-  'write': write
+	copy: copy,
+	globTemplate: globTemplate,
+	min: min,
+	write: write
 };

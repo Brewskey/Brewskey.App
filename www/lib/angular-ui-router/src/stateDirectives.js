@@ -1,17 +1,19 @@
 function parseStateRef(ref, current) {
-  var preparsed = ref.match(/^\s*({[^}]*})\s*$/), parsed;
-  if (preparsed) ref = current + '(' + preparsed[1] + ')';
-  parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
-  if (!parsed || parsed.length !== 4) throw new Error("Invalid state ref '" + ref + "'");
-  return { state: parsed[1], paramExpr: parsed[3] || null };
+	var preparsed = ref.match(/^\s*({[^}]*})\s*$/),
+		parsed;
+	if (preparsed) ref = current + "(" + preparsed[1] + ")";
+	parsed = ref.replace(/\n/g, " ").match(/^([^(]+?)\s*(\((.*)\))?$/);
+	if (!parsed || parsed.length !== 4)
+		throw new Error("Invalid state ref '" + ref + "'");
+	return { state: parsed[1], paramExpr: parsed[3] || null };
 }
 
 function stateContext(el) {
-  var stateData = el.parent().inheritedData('$uiView');
+	var stateData = el.parent().inheritedData("$uiView");
 
-  if (stateData && stateData.state && stateData.state.name) {
-    return stateData.state;
-  }
+	if (stateData && stateData.state && stateData.state.name) {
+		return stateData.state;
+	}
 }
 
 /**
@@ -76,75 +78,90 @@ function stateContext(el) {
  * @param {string} ui-sref 'stateName' can be any valid absolute or relative state
  * @param {Object} ui-sref-opts options to pass to {@link ui.router.state.$state#go $state.go()}
  */
-$StateRefDirective.$inject = ['$state', '$timeout'];
+$StateRefDirective.$inject = ["$state", "$timeout"];
 function $StateRefDirective($state, $timeout) {
-  var allowedOptions = ['location', 'inherit', 'reload'];
+	var allowedOptions = ["location", "inherit", "reload"];
 
-  return {
-    restrict: 'A',
-    require: ['?^uiSrefActive', '?^uiSrefActiveEq'],
-    link: function(scope, element, attrs, uiSrefActive) {
-      var ref = parseStateRef(attrs.uiSref, $state.current.name);
-      var params = null, url = null, base = stateContext(element) || $state.$current;
-      var newHref = null, isAnchor = element.prop("tagName") === "A";
-      var isForm = element[0].nodeName === "FORM";
-      var attr = isForm ? "action" : "href", nav = true;
+	return {
+		restrict: "A",
+		require: ["?^uiSrefActive", "?^uiSrefActiveEq"],
+		link: function(scope, element, attrs, uiSrefActive) {
+			var ref = parseStateRef(attrs.uiSref, $state.current.name);
+			var params = null,
+				url = null,
+				base = stateContext(element) || $state.$current;
+			var newHref = null,
+				isAnchor = element.prop("tagName") === "A";
+			var isForm = element[0].nodeName === "FORM";
+			var attr = isForm ? "action" : "href",
+				nav = true;
 
-      var options = { relative: base, inherit: true };
-      var optionsOverride = scope.$eval(attrs.uiSrefOpts) || {};
+			var options = { relative: base, inherit: true };
+			var optionsOverride = scope.$eval(attrs.uiSrefOpts) || {};
 
-      angular.forEach(allowedOptions, function(option) {
-        if (option in optionsOverride) {
-          options[option] = optionsOverride[option];
-        }
-      });
+			angular.forEach(allowedOptions, function(option) {
+				if (option in optionsOverride) {
+					options[option] = optionsOverride[option];
+				}
+			});
 
-      var update = function(newVal) {
-        if (newVal) params = angular.copy(newVal);
-        if (!nav) return;
+			var update = function(newVal) {
+				if (newVal) params = angular.copy(newVal);
+				if (!nav) return;
 
-        newHref = $state.href(ref.state, params, options);
+				newHref = $state.href(ref.state, params, options);
 
-        var activeDirective = uiSrefActive[1] || uiSrefActive[0];
-        if (activeDirective) {
-          activeDirective.$$setStateInfo(ref.state, params);
-        }
-        if (newHref === null) {
-          nav = false;
-          return false;
-        }
-        attrs.$set(attr, newHref);
-      };
+				var activeDirective = uiSrefActive[1] || uiSrefActive[0];
+				if (activeDirective) {
+					activeDirective.$$setStateInfo(ref.state, params);
+				}
+				if (newHref === null) {
+					nav = false;
+					return false;
+				}
+				attrs.$set(attr, newHref);
+			};
 
-      if (ref.paramExpr) {
-        scope.$watch(ref.paramExpr, function(newVal, oldVal) {
-          if (newVal !== params) update(newVal);
-        }, true);
-        params = angular.copy(scope.$eval(ref.paramExpr));
-      }
-      update();
+			if (ref.paramExpr) {
+				scope.$watch(
+					ref.paramExpr,
+					function(newVal, oldVal) {
+						if (newVal !== params) update(newVal);
+					},
+					true
+				);
+				params = angular.copy(scope.$eval(ref.paramExpr));
+			}
+			update();
 
-      if (isForm) return;
+			if (isForm) return;
 
-      element.bind("click", function(e) {
-        var button = e.which || e.button;
-        if ( !(button > 1 || e.ctrlKey || e.metaKey || e.shiftKey || element.attr('target')) ) {
-          // HACK: This is to allow ng-clicks to be processed before the transition is initiated:
-          var transition = $timeout(function() {
-            $state.go(ref.state, params, options);
-          });
-          e.preventDefault();
+			element.bind("click", function(e) {
+				var button = e.which || e.button;
+				if (
+					!(
+						button > 1 ||
+						e.ctrlKey ||
+						e.metaKey ||
+						e.shiftKey ||
+						element.attr("target")
+					)
+				) {
+					// HACK: This is to allow ng-clicks to be processed before the transition is initiated:
+					var transition = $timeout(function() {
+						$state.go(ref.state, params, options);
+					});
+					e.preventDefault();
 
-          // if the state has no URL, ignore one preventDefault from the <a> directive.
-          var ignorePreventDefaultCount = isAnchor && !newHref ? 1: 0;
-          e.preventDefault = function() {
-            if (ignorePreventDefaultCount-- <= 0)
-              $timeout.cancel(transition);
-          };
-        }
-      });
-    }
-  };
+					// if the state has no URL, ignore one preventDefault from the <a> directive.
+					var ignorePreventDefaultCount = isAnchor && !newHref ? 1 : 0;
+					e.preventDefault = function() {
+						if (ignorePreventDefaultCount-- <= 0) $timeout.cancel(transition);
+					};
+				}
+			});
+		}
+	};
 }
 
 /**
@@ -221,48 +238,57 @@ function $StateRefDirective($state, $timeout) {
  * when the exact target state used in the `ui-sref` is active; no child states.
  *
  */
-$StateRefActiveDirective.$inject = ['$state', '$stateParams', '$interpolate'];
+$StateRefActiveDirective.$inject = ["$state", "$stateParams", "$interpolate"];
 function $StateRefActiveDirective($state, $stateParams, $interpolate) {
-  return  {
-    restrict: "A",
-    controller: ['$scope', '$element', '$attrs', function ($scope, $element, $attrs) {
-      var state, params, activeClass;
+	return {
+		restrict: "A",
+		controller: [
+			"$scope",
+			"$element",
+			"$attrs",
+			function($scope, $element, $attrs) {
+				var state, params, activeClass;
 
-      // There probably isn't much point in $observing this
-      // uiSrefActive and uiSrefActiveEq share the same directive object with some
-      // slight difference in logic routing
-      activeClass = $interpolate($attrs.uiSrefActiveEq || $attrs.uiSrefActive || '', false)($scope);
+				// There probably isn't much point in $observing this
+				// uiSrefActive and uiSrefActiveEq share the same directive object with some
+				// slight difference in logic routing
+				activeClass = $interpolate(
+					$attrs.uiSrefActiveEq || $attrs.uiSrefActive || "",
+					false
+				)($scope);
 
-      // Allow uiSref to communicate with uiSrefActive[Equals]
-      this.$$setStateInfo = function (newState, newParams) {
-        state = $state.get(newState, stateContext($element));
-        params = newParams;
-        update();
-      };
+				// Allow uiSref to communicate with uiSrefActive[Equals]
+				this.$$setStateInfo = function(newState, newParams) {
+					state = $state.get(newState, stateContext($element));
+					params = newParams;
+					update();
+				};
 
-      $scope.$on('$stateChangeSuccess', update);
+				$scope.$on("$stateChangeSuccess", update);
 
-      // Update route state
-      function update() {
-        if (isMatch()) {
-          $element.addClass(activeClass);
-        } else {
-          $element.removeClass(activeClass);
-        }
-      }
+				// Update route state
+				function update() {
+					if (isMatch()) {
+						$element.addClass(activeClass);
+					} else {
+						$element.removeClass(activeClass);
+					}
+				}
 
-      function isMatch() {
-        if (typeof $attrs.uiSrefActiveEq !== 'undefined') {
-          return state && $state.is(state.name, params);
-        } else {
-          return state && $state.includes(state.name, params);
-        }
-      }
-    }]
-  };
+				function isMatch() {
+					if (typeof $attrs.uiSrefActiveEq !== "undefined") {
+						return state && $state.is(state.name, params);
+					} else {
+						return state && $state.includes(state.name, params);
+					}
+				}
+			}
+		]
+	};
 }
 
-angular.module('ui.router.state')
-  .directive('uiSref', $StateRefDirective)
-  .directive('uiSrefActive', $StateRefActiveDirective)
-  .directive('uiSrefActiveEq', $StateRefActiveDirective);
+angular
+	.module("ui.router.state")
+	.directive("uiSref", $StateRefDirective)
+	.directive("uiSrefActive", $StateRefActiveDirective)
+	.directive("uiSrefActiveEq", $StateRefActiveDirective);

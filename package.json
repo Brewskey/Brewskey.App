@@ -4,11 +4,15 @@
     "description": "Unlock the power of your kegerator",
     "scripts": {
         "ls:android": "code-push deployment ls Brewskey.Android",
-        "release:android": "ionic prepare android && code-push release-cordova Brewskey.Android android -d Production && npm run ls:android"
+        "ls:ios": "code-push deployment ls Brewskey.iOS",
+        "release": "npm run release:android && npm run release:ios",
+        "release:android": "code-push release-cordova Brewskey.Android android -d Production && npm run ls:android",
+        "release:ios": "code-push release-cordova Brewskey.iOS ios -d Production && npm run ls:ios"
     },
     "dependencies": {
         "angular-moment": "^1.0.0-beta.6",
-        "code-push": "^1.9.0-beta",
+        "code-push": "^2.0.1-beta",
+        "cordova-android": "^6.2.3",
         "cordova-ios": "^4.4.0",
         "cordova-plugin-camera": "^2.4.1",
         "cordova-plugin-code-push": "^1.9.4-beta",
@@ -75,6 +79,7 @@
     ],
     "cordova": {
         "platforms": [
+            "android",
             "ios"
         ],
         "plugins": {

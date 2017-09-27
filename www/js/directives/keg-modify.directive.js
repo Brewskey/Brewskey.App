@@ -5,10 +5,37 @@ angular.module('brewskey.directives').directive('kegModify', [
   'kegSize',
   '$state',
   '$ionicHistory',
-  function(rest, $ionicModal, kegTypes, kegSize, $state, $ionicHistory) {
+  '$localStorage',
+  function(
+    rest,
+    $ionicModal,
+    kegTypes,
+    kegSize,
+    $state,
+    $ionicHistory,
+    storage
+  ) {
     return {
       link: function(scope, element) {
         scope.kegTypes = kegTypes;
+        scope.$watch('model', function(model) {
+          if (!model) {
+            return;
+          }
+
+          model.startingPercentage = model.id
+            ? model.maxOunces / kegSize[model.kegType] * 100
+            : 100;
+
+          console.log(model);
+        });
+
+        rest
+          .one('api/v2/beverages')
+          .get({ $filter: "createdBy/id eq '" + storage.authDetails.id + "'" })
+          .then(function(response) {
+            scope.homebrews = response.value;
+          });
 
         scope.$watch('query', function(val) {
           scope.selectedBeer = null;
@@ -42,12 +69,13 @@ angular.module('brewskey.directives').directive('kegModify', [
         scope.onKegTypeChange = function() {
           var model = scope.model;
           model.changed = true;
+          model.startingPercentage = 100;
         };
 
         $ionicModal
           .fromTemplateUrl('templates/modals/beer-selector.html', {
             scope: scope,
-            animation: 'slide-in-up',
+            animation: 'slide-in-up'
           })
           .then(function(modal) {
             scope.modal = modal;
@@ -138,9 +166,9 @@ angular.module('brewskey.directives').directive('kegModify', [
         model: '=keg',
         onCancel: '=onCancel',
         onOkay: '=onOkay',
-        tapId: '=tapId',
+        tapId: '=tapId'
       },
-      templateUrl: 'templates/modify-keg.html',
+      templateUrl: 'templates/modify-keg.html'
     };
-  },
+  }
 ]);

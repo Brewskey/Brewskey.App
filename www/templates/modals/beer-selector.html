@@ -23,9 +23,16 @@
             </a>
         </div>
         <div class="list" ng-show="!$parent.$parent.beers || !$parent.$parent.beers.length">
-            <h3 class="text-center">
-                Search for a beverage to set on your tap. If you've homebrewed something, add it by clicking the "+" button.
-            </h3>
+          <div ng-show="$parent.$parent.homebrews.length">
+            <a class="item" ng-repeat="homebrew in $parent.$parent.homebrews" ng-click="$parent.$parent.onSelect(homebrew)" ng-class="{'item-avatar': homebrew.loaded}">
+                <img brewskey-img id="homebrew.id" size="s" type="beverage" width="40" loaded="homebrew.loaded"/>
+                <h2 ng-bind="homebrew.name"></h2>
+                <p ng-bind="homebrew.description"></p>
+            </a>
+          </div>
+          <h3 class="text-center" ng-hide="$parent.$parent.homebrews.length">
+            Search for a beverage to set on your tap. If you've homebrewed something, add it by clicking the "+" button.
+          </h3>
         </div>
     </ion-content>
 </ion-modal-view>

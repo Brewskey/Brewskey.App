@@ -3,6 +3,7 @@
         <h1 class="title">Add Account</h1>
     </ion-header-bar>
     <ion-content>
+
         <form ng-controller="LoginCtrl" name="loginForm" ng-submit="doLogin(modal)" novalidate="novalidate">
             <div class="form-errors" ng-if="errorDescription" data-ng-show="loginForm.$submitted" data-ng-cloak>
                 <div class="form-error" ng-bind="errorDescription"></div>

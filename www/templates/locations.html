@@ -1,5 +1,6 @@
 <ion-view view-title="Locations">
     <ion-content>
+
         <div class="list">
             <div class="item no-color">
                 <a href="#/app/location/new" class="item item-button-right">
@@ -14,7 +15,11 @@
                     <ion-spinner></ion-spinner>
                 </div>
                 <div ng-show="!loading">
-                    <a ng-repeat="location in locations | orderBy: 'name'" ui-sref="app.location.info({locationId: location.id})" class="item">
+                    <a
+                      ng-repeat="location in locations | orderBy: 'name'"
+                      on-hold="onLocationHeld(location)"
+                      ui-sref="app.location.info({locationId: location.id})"
+                      class="item">
                         {{location.name}}
                         <p ng-bind="location.summary"></p>
                     </a>

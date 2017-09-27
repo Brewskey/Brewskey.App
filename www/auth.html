@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <style>
+      body {
+        background: url(./img/beer-background.jpg) no-repeat center;
+        background-size: cover;
+        padding-top: 50%;
+        text-align: center;
+      }
+      img {
+        width: 80%;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="img/login-splash.png">
+    <script type="text/javascript">
+      window.postMessage(window.location.href, '*');
+      setTimeout(function () {
+        window.close();
+      }, 6000)
+    </script>
+  </body>
+</html>
