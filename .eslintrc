@@ -1,0 +1,32 @@
+{
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "extends": [
+    "plugin:flowtype/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-native/all",
+    "plugin:react/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "flowtype",
+    "jsx-a11y",
+    "prettier",
+    "react-native",
+    "react",
+    "sorting"
+  ],
+  "rules": {
+    "sorting/sort-object-props": [
+      2,
+      {
+        "ignoreCase": true,
+        "ignoreMethods": false
+      }
+    ]
+  }
+}
