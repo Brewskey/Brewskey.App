@@ -14,19 +14,25 @@
     "eslint-plugin-react-native": "^3.1.0",
     "eslint-plugin-sorting": "^0.3.0",
     "flow-bin": "^0.56.0",
+    "husky": "^0.14.3",
     "jest-expo": "^21.0.2",
+    "lint-staged": "^4.2.3",
     "prettier": "^1.7.2",
     "react-native-scripts": "1.5.0",
     "react-test-renderer": "16.0.0-alpha.12"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "react-native-scripts start",
-    "eject": "react-native-scripts eject",
     "android": "react-native-scripts android",
+    "eject": "react-native-scripts eject",
     "ios": "react-native-scripts ios",
-    "test": "node node_modules/jest/bin/jest.js --watch",
-    "lint": "eslint ./ --fix"
+    "lint": "eslint --max-warnings 0 --fix",
+    "precommit": "lint-staged",
+    "start": "react-native-scripts start",
+    "test": "node node_modules/jest/bin/jest.js --watch"
+  },
+  "lint-staged": {
+    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
   },
   "jest": {
     "preset": "jest-expo"
