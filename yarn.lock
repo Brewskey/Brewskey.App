@@ -2910,7 +2910,7 @@ hoek@4.x.x:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-4.2.0.tgz#72d9d0754f7fe25ca2d01ad8f8f9a9449a89526d"
 
-hoist-non-react-statics@^2.2.1:
+hoist-non-react-statics@^2.2.1, hoist-non-react-statics@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.3.1.tgz#343db84c6018c650778898240135a1420ee22ce0"
 
@@ -4330,6 +4330,16 @@ mkdirp@*, "mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.1:
   dependencies:
     minimist "0.0.8"
 
+mobx-react@^4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.3.3.tgz#4ad76c03d1e942b431e942f9ea18df0756771655"
+  dependencies:
+    hoist-non-react-statics "^2.3.1"
+
+mobx@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.3.0.tgz#1bc1dd7e78547065af04b49bdb7f2098cada47aa"
+
 moment@2.x.x, moment@^2.10.6:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
@@ -4913,7 +4923,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.8:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -5231,15 +5241,14 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@16.0.0-alpha.12:
-  version "16.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0-alpha.12.tgz#8c59485281485df319b6f77682d8dd0621c08194"
+react@^16.0.0:
+  version "16.0.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0.tgz#ce7df8f1941b036f02b2cca9dbd0cb1f0e855e2d"
   dependencies:
-    create-react-class "^15.5.2"
-    fbjs "^0.8.9"
+    fbjs "^0.8.16"
     loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.6"
+    object-assign "^4.1.1"
+    prop-types "^15.6.0"
 
 read-chunk@^2.0.0:
   version "2.1.0"
