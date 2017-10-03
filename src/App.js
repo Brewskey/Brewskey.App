@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
+import { Button } from 'react-native-elements';
 
 @observer
 export default class App extends React.Component {
@@ -18,8 +19,9 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>brewskey supper dupa app</Text>
+        <Text>Brewskey supa dupa app</Text>
         <Text>Counter: {this.counter}</Text>
+        <Button raised title="Test Button" />
       </View>
     );
   }
