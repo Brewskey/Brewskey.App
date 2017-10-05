@@ -1,38 +1,33 @@
 // @flow
 
 import React from 'react';
+import DAOApi from 'brewskey.js-api';
 import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer, Provider } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { Button } from 'react-native-elements';
+import config from './config';
+import RootStore from './stores/RootStore';
+import RootRouter from './routes';
 
-@observer
-export default class App extends React.Component {
-  @observable counter = 0;
+DAOApi.initializeDAOApi({
+  endpoint: `${config.HOST}api/v2/`,
+});
 
-  @action increment = () => this.counter++;
+const rootStore = new RootStore();
+let stores = {};
+Object.getOwnPropertyNames(new RootStore()).map(
+  (storeName: string): Object => (stores[storeName] = rootStore[storeName]),
+);
 
-  componentDidMount() {
-    setInterval(this.increment, 1000);
-  }
-
+class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Brewskey supa dupa app</Text>
-        <Text>Counter: {this.counter}</Text>
-        <Button raised title="Test Button" />
-      </View>
+      <Provider {...stores}>
+        <RootRouter />
+      </Provider>
     );
   }
 }
 
-const backgroundColor = '#fb3';
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor,
-    flex: 1,
-    justifyContent: 'center',
-  },
-});
+export default App;

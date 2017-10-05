@@ -21,6 +21,8 @@
     "sorting"
   ],
   "rules": {
+    "flowtype/generic-spacing": 0,
+    "react/prop-types": 0,
     "sorting/sort-object-props": [
       2,
       {
