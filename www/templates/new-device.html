@@ -7,8 +7,10 @@
         </div>
         <form name="$parent.form" ng-submit="submitForm()" novalidate ng-show="locations">
             <div class="list">
-                <div class="form-errors" ng-if="errorDescription" data-ng-cloak>
-                    <div class="form-error" ng-bind="errorDescription"></div>
+                <div class="item no-padding item-text-wrap text-center" ng-if="errors.generic" ng-cloak>
+                    <div class="form-errors" data-ng-show="form.$submitted">
+                        <div class="form-error" ng-bind="errors.generic"></div>
+                    </div>
                 </div>
                 <div class="list list-inset">
                     <label class="item item-input" ng-class="{ 'has-error' : form.name.$invalid || errors['model.Name']}">
