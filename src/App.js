@@ -7,6 +7,7 @@ import { observer, Provider } from 'mobx-react';
 import { action, observable } from 'mobx';
 import { Button } from 'react-native-elements';
 import config from './config';
+import NavigationService from './NavigationService';
 import RootStore from './stores/RootStore';
 import RootRouter from './routes';
 
@@ -24,7 +25,9 @@ class App extends React.Component {
   render() {
     return (
       <Provider {...stores}>
-        <RootRouter />
+        <RootRouter
+          ref={(navigator: Object) => NavigationService.setNavigator(navigator)}
+        />
       </Provider>
     );
   }

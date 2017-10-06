@@ -10,7 +10,9 @@ import requireAuth from '../common/requireAuth';
 @observer
 class HomeScreen extends React.Component {
   onButtonPress = () => {
-    this.props.locationStore.fetchByID('275');
+    try {
+      this.props.locationStore.fetchByID('275');
+    } catch (error) {}
   };
 
   render() {

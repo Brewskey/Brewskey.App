@@ -1,13 +1,33 @@
-// @flow
-
 import * as React from 'react';
-import { TabNavigator } from 'react-navigation';
-import HomeScreen from './screens/HomeScreen';
+import {
+  DrawerNavigator,
+  StackNavigator,
+  TabNavigator,
+} from 'react-navigation';
 import LoginScreen from './screens/LoginScreen';
+import SplashScreen from './screens/SplashScreen';
 
-const RootRouter = TabNavigator({
-  home: { screen: HomeScreen },
-  login: { screen: LoginScreen },
-});
+import HomeScreen from './screens/HomeScreen';
+import MyLocationsScreen from './screens/MyLocationsScreen';
 
-export default RootRouter;
+// todo login should be own stacknavigator with login/register screens
+/* eslint-disable sorting/sort-object-props */
+const rootRouter = StackNavigator(
+  {
+    splash: { screen: SplashScreen },
+    login: { screen: LoginScreen },
+    main: {
+      screen: DrawerNavigator({
+        home: { screen: HomeScreen },
+        myLocations: { screen: MyLocationsScreen },
+      }),
+    },
+  },
+  {
+    navigationOptions: {
+      header: null,
+    },
+  },
+);
+
+export default rootRouter;

@@ -2,7 +2,7 @@
 
 import config from './config';
 
-type UserCredentials = {
+export type UserCredentials = {
   password: string,
   userName: string,
 };
@@ -24,3 +24,7 @@ export const login = ({
       return response;
     })
     .then((response: Object): Object => response.json());
+
+export default {
+  login,
+}

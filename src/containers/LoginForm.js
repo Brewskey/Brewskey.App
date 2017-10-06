@@ -8,7 +8,6 @@ import { login } from '../authApi';
 
 // todo use mobx-react-form instead?
 @inject('authStore')
-@inject('errorStore')
 @observer
 class LoginFormContainer extends React.Component {
   @observable userName = '';
@@ -32,18 +31,10 @@ class LoginFormContainer extends React.Component {
 
   onSubmit = async () => {
     try {
-      // todo move api call to authStore?
-      const authResponse = await login({
+      await this.props.authStore.login({
         password: this.password,
         userName: this.userName,
       });
-
-      const authState = {
-        roles: JSON.parse(authResponse.roles),
-        token: authResponse.access_token,
-        userName: authResponse.userName,
-      };
-      this.props.authStore.setAuthState(authState);
     } catch (error) {
       this.setLoginError(error.message);
     }

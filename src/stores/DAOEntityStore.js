@@ -12,26 +12,28 @@ import {
 
 class DAOEntityStore<TEntity, TEntityMutator> {
   _dao: DAO<TEntity, TEntityMutator>;
-  store: RootStore;
+  _rootStore: RootStore;
 
   @observable entityItemsByID: Array<TEntity> = new Map();
 
   constructor(rootStore: RootStore, dao: DAO<TEntity, TEntityMutator>) {
     this._dao = dao;
-    this.store = rootStore;
+    this._rootStore = rootStore;
   }
 
   //todo map another actions
   @action
-  fetchByID = async (id: string, queryOptions?: QueryOptions): Promise<*> => {
+  fetchByID = async (
+    id: string,
+    queryOptions?: QueryOptions,
+  ): Promise<?TEntity> => {
     const location = await this._doDAORequest('fetchByID', id, queryOptions);
-    if (!location) {
-      return;
-    }
     // todo add babel plugin to autobind async stuff to runInAction
     runInAction(() => {
       this.entityItemsByID.set(location.id, location);
     });
+
+    return location;
   };
 
   @computed
@@ -57,8 +59,10 @@ class DAOEntityStore<TEntity, TEntityMutator> {
     const result = await this._dao[methodName](...args);
     const error = result.getError();
     if (error) {
-      this.store.errorStore.setError(error);
-      return null;
+      if (error.status === 401) {
+        this._rootStore.authStore.clearAuthState();
+      }
+      throw error;
     }
 
     return result.getData();
