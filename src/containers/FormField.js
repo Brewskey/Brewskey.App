@@ -22,7 +22,6 @@ class FormField {
   @action
   onBlur = () => {
     this._pristine = false;
-    console.log('onBluer', this._pristine);
   };
 
   @action

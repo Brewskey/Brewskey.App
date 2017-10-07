@@ -18,11 +18,8 @@ type Props = {|
 class HomeScreen extends React.Component<Props> {
   onButtonPress = async (): Promise<void> => {
     try {
-      console.log('on button press');
       await this.props.locationStore.fetchMany();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   render(): React.Element<*> {
