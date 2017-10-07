@@ -7,24 +7,24 @@ export type UserCredentials = {
   userName: string,
 };
 
-export const login = ({
+export const login = async ({
   password,
   userName,
-}: UserCredentials): Promise<Object> =>
-  fetch(`${config.HOST}token/`, {
+}: UserCredentials): Promise<Object> => {
+  const response = await fetch(`${config.HOST}token/`, {
     body: `grant_type=password&userName=${userName}&password=${password}`,
     headers: { 'Content-type': 'application/x-www-form-urlencoded' },
     method: 'POST',
-  })
-    .then(async (response: Object): Object => {
-      if (!response.ok) {
-        const errorMessage = (await response.json()).error_description;
-        throw new Error(errorMessage);
-      }
-      return response;
-    })
-    .then((response: Object): Object => response.json());
+  });
+  const responseJson = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseJson.error_description);
+  }
+
+  return responseJson;
+};
 
 export default {
   login,
-}
+};
