@@ -1,54 +1,74 @@
 // @flow
 
+import type AuthStore from '../stores/AuthStore';
+
 import * as React from 'react';
+import { Keyboard } from 'react-native';
 import { inject, observer } from 'mobx-react/native';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import LoginForm from '../components/LoginForm';
 import { login } from '../authApi';
+import FormField from './FormField';
 
-// todo use mobx-react-form instead?
+const validateUserName = (userName: ?stirng): ?string =>
+  userName ? null : 'User name is required';
+
+const validatePassword = (password: ?string): ?string =>
+  password ? null : 'Password is required';
+
+type Props = {|
+  authStore: AuthStore,
+|};
+
 @inject('authStore')
 @observer
-class LoginFormContainer extends React.Component {
-  @observable userName = '';
-  @observable password = '';
-  @observable loginError = '';
+class LoginFormContainer extends React.Component<Props> {
+  userNameField = new FormField({
+    name: 'userName',
+    validate: validateUserName,
+  });
 
-  @action
-  changeUserName = (value: string) => {
-    this.userName = value;
-  };
+  passwordField = new FormField({
+    name: 'password',
+    validate: validatePassword,
+  });
 
-  @action
-  changePassword = (value: string) => {
-    this.password = value;
-  };
+  @observable loginError: ?string = '';
+  @observable submitting: boolean = false;
 
   @action
   setLoginError = (error: string) => {
     this.loginError = error;
   };
 
-  onSubmit = async () => {
+  @action
+  setSubmitting = (submitting: boolean) => {
+    this.submitting = submitting;
+  };
+
+  onSubmit = async (): Promise<void> => {
+    this.setSubmitting(true);
     try {
+      Keyboard.dismiss();
       await this.props.authStore.login({
-        password: this.password,
-        userName: this.userName,
+        password: this.passwordField.value,
+        userName: this.userNameField.value,
       });
     } catch (error) {
       this.setLoginError(error.message);
+    } finally {
+      this.setSubmitting(false);
     }
   };
 
-  render() {
+  render(): React.Element<*> {
     return (
       <LoginForm
         loginError={this.loginError}
-        onChangePassword={this.changePassword}
-        onChangeUserName={this.changeUserName}
         onSubmit={this.onSubmit}
-        password={this.password}
-        userName={this.userName}
+        passwordField={this.passwordField}
+        submitting={this.submitting}
+        userNameField={this.userNameField}
       />
     );
   }

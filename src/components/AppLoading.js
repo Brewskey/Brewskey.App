@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import splashImage from '../resources/splash.png';
 
 const styles = StyleSheet.create({
   container: {
@@ -9,14 +10,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 20,
+  splashImage: {
+    height: '100%',
+    width: '100%',
   },
 });
 
 const AppLoading = (): React.Element<*> => (
   <View style={styles.container}>
-    <Text style={styles.text}>AppLoading</Text>
+    <Image source={splashImage} style={styles.splashImage} />
   </View>
 );
 

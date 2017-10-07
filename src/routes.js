@@ -4,6 +4,9 @@ import {
   StackNavigator,
   TabNavigator,
 } from 'react-navigation';
+
+import MainDrawer from './components/MainDrawer';
+
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
 
@@ -17,16 +20,20 @@ const rootRouter = StackNavigator(
     splash: { screen: SplashScreen },
     login: { screen: LoginScreen },
     main: {
-      screen: DrawerNavigator({
-        home: { screen: HomeScreen },
-        myLocations: { screen: MyLocationsScreen },
-      }),
+      screen: DrawerNavigator(
+        {
+          home: { screen: HomeScreen },
+          myLocations: { screen: MyLocationsScreen },
+        },
+        {
+          contentComponent: MainDrawer,
+        },
+      ),
     },
   },
   {
-    navigationOptions: {
-      header: null,
-    },
+    initialRouteName: 'splash',
+    headerMode: 'none',
   },
 );
 

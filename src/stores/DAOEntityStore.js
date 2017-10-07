@@ -10,6 +10,7 @@ import {
   runInAction,
 } from 'mobx';
 
+// todo think how to remove some code duplication in actions
 class DAOEntityStore<TEntity, TEntityMutator> {
   _dao: DAO<TEntity, TEntityMutator>;
   _rootStore: RootStore;
@@ -21,19 +22,93 @@ class DAOEntityStore<TEntity, TEntityMutator> {
     this._rootStore = rootStore;
   }
 
-  //todo map another actions
+  @action
+  deleteByID = async (id: string): Promise<void> => {
+    await this._doDAORequest('deleteByID', id);
+    runInAction(() => {
+      this.entityItemsByID.delete(id);
+    });
+  };
+
   @action
   fetchByID = async (
     id: string,
     queryOptions?: QueryOptions,
   ): Promise<?TEntity> => {
-    const location = await this._doDAORequest('fetchByID', id, queryOptions);
+    const entity = await this._doDAORequest('fetchByID', id, queryOptions);
     // todo add babel plugin to autobind async stuff to runInAction
     runInAction(() => {
-      this.entityItemsByID.set(location.id, location);
+      this.entityItemsByID.set(entity.id, entity);
     });
 
-    return location;
+    return entity;
+  };
+
+  @action
+  fetchByIDs = async (
+    ids: Array<string>,
+    queryOptions?: QueryOptions,
+  ): Promise<Array<TEntity>> => {
+    const entities = await this._doDAORequest('fetchByIDs', ids, queryOptions);
+
+    runInAction(() => {
+      this.entityItemsByID.merge([
+        ...entities.map((entity: TEntity): [string, TEntity] => [
+          entity.id,
+          entity,
+        ]),
+      ]);
+    });
+
+    return entities;
+  };
+
+  @action
+  fetchMany = async (queryOptions?: QueryOptions): Promise<Array<TEntity>> => {
+    const entities = await this._doDAORequest('fetchMany', queryOptions);
+
+    runInAction(() => {
+      this.entityItemsByID.merge([
+        ...entities.map((entity: TEntity): [string, TEntity] => [
+          entity.id,
+          entity,
+        ]),
+      ]);
+    });
+
+    return entities;
+  };
+
+  @action
+  patch = async (id: string, mutator: TEntityMutator): Promise<TEntity> => {
+    const entity = await this._doDAORequest('patch', id, mutator);
+    runInAction(() => {
+      this.entityItemsByID.set(entity.id, entity);
+    });
+
+    return entity;
+  };
+
+  @action
+  post = async (mutator: TEntityMutator): Promise<TEntity> => {
+    const entity = await this._doDAORequest('post', mutator);
+
+    runInAction(() => {
+      this.entityItemsByID.set(entity.id, entity);
+    });
+
+    return entity;
+  };
+
+  @action
+  put = async (id: string, mutator: TEntityMutator): Promise<TEntity> => {
+    const entity = await this._doDAORequest('put', id, mutator);
+
+    runInAction(() => {
+      this.entityItemsByID.set(entity.id, entity);
+    });
+
+    return entity;
   };
 
   @computed

@@ -8,9 +8,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git",
     "mobx": "^3.3.0",
     "mobx-react": "^4.3.3",
+    "nullthrows": "^1.0.0",
     "react": "^16.0.0",
     "react-native": "0.48.4",
     "react-native-elements": "^0.17.0",
@@ -31,7 +34,6 @@
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-react-native": "^3.1.0",
     "eslint-plugin-sorting": "^0.3.0",
-    "flow-bin": "^0.56.0",
     "husky": "^0.14.3",
     "jest": "21.2.1",
     "lint-staged": "^4.2.3",

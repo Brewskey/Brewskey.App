@@ -64,24 +64,25 @@ class AuthStore {
   @action
   clearAuthState = () => {
     this.authState = initialState;
+    AsyncStorage.removeItem('authState');
   };
 
   @action
-  initialize = async () => {
+  initialize = async (): Promise<void> => {
     const authStateString = await AsyncStorage.getItem('authState');
     // todo move to parse/stringify to helpers
     const authState = authStateString && JSON.parse(authStateString);
     runInAction(() => {
       this.isInitialized = true;
       if (authState && authState.token) {
-        this.authState = authState;
+        this.setAuthState(authState);
       }
     });
   };
 
   // todo handle async
   @action
-  login = async (userCredentials: UserCredentials) => {
+  login = async (userCredentials: UserCredentials): Promise<void> => {
     const { access_token, roles, userName } = await authApi.login(
       userCredentials,
     );

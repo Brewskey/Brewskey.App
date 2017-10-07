@@ -5,8 +5,12 @@ import { Text, View } from 'react-native';
 import LoginForm from '../containers/LoginForm';
 import { inject } from 'mobx-react/native';
 
-class LoginScreen extends React.Component {
-  render() {
+type Props = {|
+  navigation: Object,
+|};
+
+class LoginScreen extends React.Component<Props> {
+  render(): React.Element<*> {
     return <LoginForm />;
   }
 }

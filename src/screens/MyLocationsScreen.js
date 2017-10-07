@@ -3,8 +3,12 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 
-class MyLocationsScreen extends React.Component {
-  render() {
+type Props = {|
+  navigation: Object,
+|};
+
+class MyLocationsScreen extends React.Component<Props> {
+  render(): React.Element<*> {
     return (
       <View>
         <Text>My locations screen</Text>

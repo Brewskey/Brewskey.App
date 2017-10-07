@@ -1,28 +1,38 @@
 // @flow
 
+import type { Location } from 'brewskey.js-api';
+import type DAOEntityStore from '../stores/DAOEnityStore';
+
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { Button } from 'react-native-elements';
-import requireAuth from '../common/requireAuth';
+
+type Props = {|
+  locationStore: DAOEntityStore<Location, Location>,
+  navigation: Object,
+|};
 
 @inject('locationStore')
 @observer
-class HomeScreen extends React.Component {
-  onButtonPress = () => {
+class HomeScreen extends React.Component<Props> {
+  onButtonPress = async (): Promise<void> => {
     try {
-      this.props.locationStore.fetchByID('275');
-    } catch (error) {}
+      console.log('on button press');
+      await this.props.locationStore.fetchMany();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  render() {
+  render(): React.Element<*> {
     return (
       <View>
-        <Text>home home</Text>
-        {this.props.locationStore.all.map(location => (
-          <Text key={location.id}>{location.name}</Text>
-        ))}
-        <Button title="fetch Location" onPress={this.onButtonPress} />
+        <Text>Home Home</Text>
+        {this.props.locationStore.all.map((location: Location): React.Element<
+          *,
+        > => <Text key={location.id}>{location.name}</Text>)}
+        <Button title="fetch Locations" onPress={this.onButtonPress} />
       </View>
     );
   }
