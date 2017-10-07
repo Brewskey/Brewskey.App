@@ -22,6 +22,14 @@ type Props = {|
 
 @observer
 class LoginForm extends React.Component<Props> {
+  passwordFieldRef: ?React.Element<*>;
+
+  onUserNameSubmit = () => {
+    if (this.passwordFieldRef) {
+      this.passwordFieldRef.focus();
+    }
+  };
+
   render(): React.Element<*> {
     const {
       loginError,
@@ -38,6 +46,7 @@ class LoginForm extends React.Component<Props> {
           disabled={submitting}
           onBlur={userNameField.onBlur}
           onChangeText={userNameField.onChange}
+          onSubmitEditing={this.onUserNameSubmit}
           value={userNameField.value}
         />
         <FormValidationMessage>{userNameField.error}</FormValidationMessage>
@@ -46,13 +55,15 @@ class LoginForm extends React.Component<Props> {
           disabled={submitting}
           onBlur={passwordField.onBlur}
           onChangeText={passwordField.onChange}
+          onSubmitEditing={onSubmit}
+          ref={(passwordFieldRef: React.Element<*>) => {
+            this.passwordFieldRef = passwordFieldRef;
+          }}
           secureTextEntry
           value={passwordField.value}
         />
-        <FormValidationMessage>
-          {passwordField.error}
-          {loginError}
-        </FormValidationMessage>
+        <FormValidationMessage>{passwordField.error}</FormValidationMessage>
+        <FormValidationMessage>{loginError}</FormValidationMessage>
         <Button
           disabled={
             submitting || !!passwordField.error || !!userNameField.error
