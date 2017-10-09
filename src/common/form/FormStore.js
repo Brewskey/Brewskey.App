@@ -6,6 +6,10 @@ import { action, computed, observable } from 'mobx';
 
 const FORM_ERROR_KEY = '_error';
 
+type FormStoreProps = {|
+  validate: ?(values: Object) => Object,
+|};
+
 class FormStore {
   _validate: (values: Object) => Object;
   @observable _fields: Map<string, Field> = new Map();
@@ -13,7 +17,7 @@ class FormStore {
   @observable formError: ?string = null;
   @observable submitting: boolean = false;
 
-  constructor({ validate = () => ({}) }) {
+  constructor({ validate = (): Object => ({}) }: FormStoreProps) {
     this._validate = validate;
   }
 
@@ -97,7 +101,7 @@ class FormStore {
   @computed
   get values(): Object {
     return this._fields.entries().reduce(
-      (result, [fieldName, field]: [string, Field]) => ({
+      (result: Object, [fieldName, field]: [string, Field]): Object => ({
         ...result,
         [fieldName]: field.value,
       }),

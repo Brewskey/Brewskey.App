@@ -27,7 +27,8 @@ class App extends React.Component {
     return (
       <Provider {...stores}>
         <RootRouter
-          ref={(navigator: Object) => NavigationService.setNavigator(navigator)}
+          ref={(navigator: Object): void =>
+            NavigationService.setNavigator(navigator)}
         />
       </Provider>
     );

@@ -16,7 +16,7 @@ import {
 import Form from '../common/form/Form';
 import FormField from '../common/form/FormField';
 
-const validate = (values: UserCreadentials) => {
+const validate = (values: UserCreadentials): Object => {
   let errors = {};
   if (!values.userName) {
     errors.userName = 'User name is required';
@@ -44,7 +44,7 @@ class LoginForm extends React.Component<Props> {
     }
   };
 
-  onSubmit = async (formValues): Promise<void> => {
+  onSubmit = async (formValues: Object): Promise<void> => {
     Keyboard.dismiss();
     await this.props.authStore.login(formValues);
   };
@@ -103,7 +103,7 @@ class LoginForm extends React.Component<Props> {
             <FormValidationMessage>{formError}</FormValidationMessage>
             <Button
               disabled={submitting || invalid}
-              onPress={() => handleSubmit(this.onSubmit)}
+              onPress={(): Promise<void> => handleSubmit(this.onSubmit)}
               title="Log in"
             />
           </View>

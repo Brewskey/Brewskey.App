@@ -11,9 +11,9 @@ class FormField extends React.Component {
     this.props.formStore.initField(this.props.name);
   }
 
-  onBlur = () => this.props.formStore.blurField(this.props.name);
+  onBlur = (): void => this.props.formStore.blurField(this.props.name);
 
-  onChange = (value: any) =>
+  onChange = (value: any): void =>
     this.props.formStore.changeFieldValue(this.props.name, value);
 
   render(): React.Element<*> {
