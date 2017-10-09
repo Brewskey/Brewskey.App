@@ -1,12 +1,19 @@
 // @flow
 
+import type FormStore from './FormStore';
+
 import * as React from 'react';
 import { View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
+type Props = {|
+  formStore: FormStore,
+  name: string,
+|};
+
 @inject('formStore')
 @observer
-class FormField extends React.Component {
+class FormField extends React.Component<Props> {
   componentWillMount() {
     this.props.formStore.initField(this.props.name);
   }

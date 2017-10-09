@@ -1,11 +1,17 @@
 // @flow
 
+import type { ValidateFunction } from './types';
+
 import * as React from 'react';
 import { Provider, observer } from 'mobx-react';
 import FormStore from './FormStore';
 
+type Props = {|
+  validate: ?ValiditeFunction,
+|};
+
 @observer
-class Form extends React.Component {
+class Form extends React.Component<Props> {
   formStore: FormStore;
 
   componentWillMount() {
@@ -13,7 +19,7 @@ class Form extends React.Component {
   }
 
   handleSubmit = async (
-    callback: (values: Object) => void | Promise<void>,
+    callback: (values: { [key: string]: any }) => void | Promise<void>,
   ): Promise<void> => {
     this.formStore.setFormError(null);
     this.formStore.validate();

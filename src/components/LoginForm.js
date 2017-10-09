@@ -16,7 +16,7 @@ import {
 import Form from '../common/form/Form';
 import FormField from '../common/form/FormField';
 
-const validate = (values: UserCreadentials): Object => {
+const validate = (values: UserCreadentials): { [key: string]: string } => {
   let errors = {};
   if (!values.userName) {
     errors.userName = 'User name is required';

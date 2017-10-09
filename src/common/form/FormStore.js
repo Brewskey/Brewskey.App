@@ -1,23 +1,25 @@
 // @flow
 
-import type { FormField } from '.types';
+import type { FormField, ValidateFunction } from '.types';
 
 import { action, computed, observable } from 'mobx';
 
 const FORM_ERROR_KEY = '_error';
 
 type FormStoreProps = {|
-  validate: ?(values: Object) => Object,
+  validate: ?ValidateFunction,
 |};
 
 class FormStore {
-  _validate: (values: Object) => Object;
+  _validate: ValidateFunction;
   @observable _fields: Map<string, Field> = new Map();
 
   @observable formError: ?string = null;
   @observable submitting: boolean = false;
 
-  constructor({ validate = (): Object => ({}) }: FormStoreProps) {
+  constructor({
+    validate = (): { [key: string]: string } => ({}),
+  }: FormStoreProps) {
     this._validate = validate;
   }
 

@@ -20,3 +20,7 @@ export type FormFieldChildProps = {|
   touched: boolean,
   value: any,
 |};
+
+export type ValidationFunction = (values: { [key: string]: any }) => {
+  [key: string]: string,
+};
