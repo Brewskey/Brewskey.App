@@ -45,7 +45,7 @@ class AuthStore {
   @observable authState: AuthState = initialState;
   @observable isInitialized: boolean = false;
 
-  constructor(rootStore) {
+  constructor(rootStore: RootStore) {
     this._rootStore = rootStore;
     // todo may be it better to use reaction here
     // it may help to avoid isInitialized prop, but I'm not sure

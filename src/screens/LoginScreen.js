@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import LoginForm from '../containers/LoginForm';
+import LoginForm from '../components/LoginForm';
 import { inject } from 'mobx-react/native';
 
 type Props = {|

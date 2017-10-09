@@ -1,25 +1,39 @@
 // @flow
 
-import type FormField from '../containers/FormField';
+import type AuthStore from '../stores/AuthStore';
+import type { UserCredentials } from '../authApi';
+import type { FormChildProps, FormFieldChildProps } from '../common/form/types';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
-import { Text, View } from 'react-native';
+import { inject, observer } from 'mobx-react';
+import { Keyboard, View } from 'react-native';
 import {
   Button,
   FormInput,
   FormLabel,
   FormValidationMessage,
 } from 'react-native-elements';
+import Form from '../common/form/Form';
+import FormField from '../common/form/FormField';
+
+const validate = (values: UserCreadentials): { [key: string]: string } => {
+  let errors = {};
+  if (!values.userName) {
+    errors.userName = 'User name is required';
+  }
+
+  if (!values.password) {
+    errors.password = 'Password is required';
+  }
+
+  return errors;
+};
 
 type Props = {|
-  loginError: ?string,
-  onSubmit: () => void,
-  passwordField: FormField,
-  submitting: boolean,
-  userNameField: FormField,
+  authStore: AuthStore,
 |};
 
+@inject('authStore')
 @observer
 class LoginForm extends React.Component<Props> {
   passwordFieldRef: ?React.Element<*>;
@@ -30,48 +44,71 @@ class LoginForm extends React.Component<Props> {
     }
   };
 
-  render(): React.Element<*> {
-    const {
-      loginError,
-      onSubmit,
-      passwordField,
-      submitting,
-      userNameField,
-    } = this.props;
+  onSubmit = async (formValues: Object): Promise<void> => {
+    Keyboard.dismiss();
+    await this.props.authStore.login(formValues);
+  };
 
+  render(): React.Element<*> {
     return (
-      <View>
-        <FormLabel>User name</FormLabel>
-        <FormInput
-          disabled={submitting}
-          onBlur={userNameField.onBlur}
-          onChangeText={userNameField.onChange}
-          onSubmitEditing={this.onUserNameSubmit}
-          value={userNameField.value}
-        />
-        <FormValidationMessage>{userNameField.error}</FormValidationMessage>
-        <FormLabel>Password</FormLabel>
-        <FormInput
-          disabled={submitting}
-          onBlur={passwordField.onBlur}
-          onChangeText={passwordField.onChange}
-          onSubmitEditing={onSubmit}
-          ref={(passwordFieldRef: React.Element<*>) => {
-            this.passwordFieldRef = passwordFieldRef;
-          }}
-          secureTextEntry
-          value={passwordField.value}
-        />
-        <FormValidationMessage>{passwordField.error}</FormValidationMessage>
-        <FormValidationMessage>{loginError}</FormValidationMessage>
-        <Button
-          disabled={
-            submitting || !!passwordField.error || !!userNameField.error
-          }
-          title="login"
-          onPress={onSubmit}
-        />
-      </View>
+      <Form validate={validate}>
+        {({
+          formError,
+          handleSubmit,
+          invalid,
+          submitting,
+        }: FormChildProps): React.Element<any> => (
+          <View>
+            <FormField name="userName">
+              {({
+                error,
+                onBlur,
+                onChange,
+                value,
+              }: FormFieldProps): React.Element<*> => (
+                <View>
+                  <FormLabel>User name</FormLabel>
+                  <FormInput
+                    onBlur={onBlur}
+                    onSubmitEditing={this.onUserNameSubmit}
+                    onChangeText={onChange}
+                    value={value}
+                  />
+                  <FormValidationMessage>{error}</FormValidationMessage>
+                </View>
+              )}
+            </FormField>
+            <FormField name="password">
+              {({
+                error,
+                onBlur,
+                onChange,
+                value,
+              }: FormFieldProps): React.Element<*> => (
+                <View>
+                  <FormLabel>Password</FormLabel>
+                  <FormInput
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    ref={(ref: React.Element<*>) => {
+                      this.passwordFieldRef = ref;
+                    }}
+                    secureTextEntry
+                    value={value}
+                  />
+                  <FormValidationMessage>{error}</FormValidationMessage>
+                </View>
+              )}
+            </FormField>
+            <FormValidationMessage>{formError}</FormValidationMessage>
+            <Button
+              disabled={submitting || invalid}
+              onPress={(): Promise<void> => handleSubmit(this.onSubmit)}
+              title="Log in"
+            />
+          </View>
+        )}
+      </Form>
     );
   }
 }

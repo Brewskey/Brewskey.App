@@ -32,8 +32,11 @@ const rootRouter = StackNavigator(
     },
   },
   {
-    initialRouteName: 'splash',
     headerMode: 'none',
+    initialRouteName: 'splash',
+    navigationOptions: {
+      gesturesEnabled: false,
+    },
   },
 );
 

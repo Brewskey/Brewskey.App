@@ -29,7 +29,6 @@ class HomeScreen extends React.Component<Props> {
         {this.props.locationStore.all.map((location: Location): React.Element<
           *,
         > => <Text key={location.id}>{location.name}</Text>)}
-        <Button title="fetch Locations" onPress={this.onButtonPress} />
       </View>
     );
   }

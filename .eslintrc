@@ -22,6 +22,8 @@
   ],
   "rules": {
     "flowtype/generic-spacing": 0,
+    "flowtype/require-parameter-type": 2,
+    "flowtype/require-return-type": 2,
     "react/prop-types": 0,
     "sorting/sort-object-props": [
       2,

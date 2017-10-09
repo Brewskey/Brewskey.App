@@ -130,7 +130,10 @@ class DAOEntityStore<TEntity, TEntityMutator> {
       ),
   );
 
-  _doDAORequest = async (methodName, ...args): Promise<*> => {
+  _doDAORequest = async (
+    methodName: string,
+    ...args: Array<any>
+  ): Promise<*> => {
     const result = await this._dao[methodName](...args);
     const error = result.getError();
     if (error) {
