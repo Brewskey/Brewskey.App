@@ -7,7 +7,7 @@ import { Provider, observer } from 'mobx-react';
 import FormStore from './FormStore';
 
 type Props = {|
-  validate: ?ValiditeFunction,
+  validate: ?ValidateFunction,
 |};
 
 @observer

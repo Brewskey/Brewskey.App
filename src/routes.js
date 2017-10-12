@@ -1,9 +1,4 @@
-import * as React from 'react';
-import {
-  DrawerNavigator,
-  StackNavigator,
-  TabNavigator,
-} from 'react-navigation';
+import { DrawerNavigator, StackNavigator } from 'react-navigation';
 
 import MainDrawer from './components/MainDrawer';
 

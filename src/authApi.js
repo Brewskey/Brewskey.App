@@ -7,10 +7,11 @@ export type UserCredentials = {
   userName: string,
 };
 
-export const login = async ({
+const login = async ({
   password,
   userName,
 }: UserCredentials): Promise<Object> => {
+  // eslint-disable-next-line no-undef
   const response = await fetch(`${config.HOST}token/`, {
     body: `grant_type=password&userName=${userName}&password=${password}`,
     headers: { 'Content-type': 'application/x-www-form-urlencoded' },

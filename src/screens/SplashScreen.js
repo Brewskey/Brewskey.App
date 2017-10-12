@@ -12,7 +12,7 @@ type Props = {|
 |};
 
 @inject('authStore')
-class SplashScreen extends React.Component {
+class SplashScreen extends React.Component<Props> {
   componentDidMount() {
     this.props.authStore.initialize();
   }

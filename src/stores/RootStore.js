@@ -22,7 +22,6 @@ import type {
 } from 'brewskey.js-api';
 
 import AuthStore from './AuthStore';
-import { login } from '../authApi';
 import DAOEntityStore from './DAOEntityStore';
 import DAOApi from 'brewskey.js-api';
 

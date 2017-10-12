@@ -9,6 +9,7 @@ import {
   observable,
   runInAction,
 } from 'mobx';
+import DAOApi from 'brewskey.js-api';
 
 // todo think how to remove some code duplication in actions
 class DAOEntityStore<TEntity, TEntityMutator> {
@@ -120,13 +121,13 @@ class DAOEntityStore<TEntity, TEntityMutator> {
     this.entityItemsByID.get(id),
   );
 
-  getByQueryFilters = createTransformer((queryFitlers: QueryFilters): Array<
+  getByQueryFilters = createTransformer((queryFilters: QueryFilters): Array<
     TEntity,
   > =>
     this.entityItemsByID
       .values()
       .filter((entityItem: TEntity): boolean =>
-        DAOApi.doesSatisfyToQueryFilters(item, queryFilters),
+        DAOApi.doesSatisfyToQueryFilters(entityItem, queryFilters),
       ),
   );
 

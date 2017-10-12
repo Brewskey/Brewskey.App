@@ -1,6 +1,6 @@
 // @flow
 
-import type { FormField, ValidateFunction } from '.types';
+import type { Field, ValidateFunction } from './types';
 
 import { action, computed, observable } from 'mobx';
 

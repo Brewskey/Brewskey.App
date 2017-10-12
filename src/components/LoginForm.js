@@ -1,7 +1,6 @@
 // @flow
 
 import type AuthStore from '../stores/AuthStore';
-import type { UserCredentials } from '../authApi';
 import type { FormChildProps, FormFieldChildProps } from '../common/form/types';
 
 import * as React from 'react';
@@ -17,7 +16,7 @@ import Form from '../common/form/Form';
 import FormField from '../common/form/FormField';
 
 const validate = (values: UserCreadentials): { [key: string]: string } => {
-  let errors = {};
+  const errors = {};
   if (!values.userName) {
     errors.userName = 'User name is required';
   }
@@ -65,7 +64,7 @@ class LoginForm extends React.Component<Props> {
                 onBlur,
                 onChange,
                 value,
-              }: FormFieldProps): React.Element<*> => (
+              }: FormFieldChildProps): React.Element<*> => (
                 <View>
                   <FormLabel>User name</FormLabel>
                   <FormInput
@@ -84,7 +83,7 @@ class LoginForm extends React.Component<Props> {
                 onBlur,
                 onChange,
                 value,
-              }: FormFieldProps): React.Element<*> => (
+              }: FormFieldChildProps): React.Element<*> => (
                 <View>
                   <FormLabel>Password</FormLabel>
                   <FormInput

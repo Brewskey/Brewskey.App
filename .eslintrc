@@ -6,6 +6,7 @@
     }
   },
   "extends": [
+    "airbnb",
     "plugin:flowtype/recommended",
     "plugin:jsx-a11y/recommended",
     "plugin:react-native/all",
@@ -24,7 +25,13 @@
     "flowtype/generic-spacing": 0,
     "flowtype/require-parameter-type": 2,
     "flowtype/require-return-type": 2,
+    "import/first": 0,
+    "no-underscore-dangle": 0,
+    "react/jsx-filename-extension": 0,
+    "react/no-unused-prop-types": 0,
+    "react/prefer-stateless-function": 0,
     "react/prop-types": 0,
+    "react/sort-comp": 0,
     "sorting/sort-object-props": [
       2,
       {
