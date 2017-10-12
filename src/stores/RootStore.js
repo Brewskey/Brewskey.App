@@ -23,6 +23,7 @@ import type {
 
 import AppSettingsStore from './AppSettingsStore';
 import AuthStore from './AuthStore';
+import RoutesSettingsStore from './RoutesSettingsStore';
 import DAOEntityStore from './DAOEntityStore';
 import DAOApi from 'brewskey.js-api';
 
@@ -66,8 +67,8 @@ class RootStore {
     this.tapStore = new DAOEntityStore(this, DAOApi.TapDAO);
   }
 
-  //todo not sure if its correct, since assignements in initialize actions,
-  //runs in callbacks, but seems working for now.
+  // todo not sure if its correct, since assignements in initialize actions,
+  // runs in callbacks, but seems working for now.
   initialize = async (): Promise<void> => {
     await this.authStore.initialize();
     await this.appSettingsStore.initialize();

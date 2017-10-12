@@ -19,7 +19,7 @@ type Props = {|
 
 @inject('routesSettingsStore')
 /* eslint-disable sorting/sort-object-props */
-export class AppRouter extends React.Component<Props> {
+class AppRouter extends React.Component<Props> {
   _addInitialRouteSettings = (
     routeObject: Object,
     settings: $Shape<RouteSettings>,

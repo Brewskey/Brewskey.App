@@ -2,13 +2,12 @@
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Text, View, Switch, StyleSheet } from 'react-native';
+import { Text, Switch } from 'react-native';
 import {
   Body,
   Container,
   Content,
   Header,
-  Left,
   List,
   ListItem,
   Right,

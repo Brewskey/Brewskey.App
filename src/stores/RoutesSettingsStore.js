@@ -26,9 +26,8 @@ class RoutesSettingsStore {
     });
   };
 
-  getRouteSettings = (routeName: string): ?RouteSettings => {
-    return this._settingsByRouteName.get(routeName);
-  };
+  getRouteSettings = (routeName: string): ?RouteSettings =>
+    this._settingsByRouteName.get(routeName);
 }
 
 export default RoutesSettingsStore;
