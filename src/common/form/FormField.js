@@ -3,7 +3,6 @@
 import type FormStore from './FormStore';
 
 import * as React from 'react';
-import { View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 
 type Props = {|

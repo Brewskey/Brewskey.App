@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import splashImage from '../resources/splash.png';
 
 const styles = StyleSheet.create({

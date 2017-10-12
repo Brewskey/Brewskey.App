@@ -1,6 +1,6 @@
 // @flow
 
-import type { NavigationParams, NavigationRoute } from 'react-navigation';
+import type { NavigationParams } from 'react-navigation';
 
 import nullthrows from 'nullthrows';
 import { NavigationActions } from 'react-navigation';
