@@ -11,7 +11,7 @@ import SplashScreen from './screens/SplashScreen';
 
 import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import MyLocationsScreen from './screens/MyLocationsScreen';
+import LocationsScreen from './screens/LocationsScreen';
 
 type Props = {|
   routesSettingsStore: RoutesSettingsStore,
@@ -41,7 +41,7 @@ class AppRouter extends React.Component<Props> {
             {
               home: { screen: HomeScreen },
               ...this._addInitialRouteSettings(
-                { myLocations: { screen: MyLocationsScreen } },
+                { locations: { screen: LocationsScreen } },
                 { requireManageTaps: true },
               ),
               settings: { screen: SettingsScreen },

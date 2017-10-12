@@ -11,10 +11,10 @@ type Props = {|
   rootStore: RootStore,
 |};
 
-@inject('authStore')
+@inject('rootStore')
 class SplashScreen extends React.Component<Props> {
-  componentDidMount() {
-    this.props.authStore.initialize();
+  async componentDidMount(): Promise<void> {
+    await this.props.rootStore.initialize();
   }
 
   render(): React.Element<*> {
