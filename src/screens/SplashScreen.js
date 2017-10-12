@@ -1,20 +1,20 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
+import type RootStore from '../stores/RootStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
 import AppLoading from '../components/AppLoading';
 
 type Props = {|
-  authStore: AuthStore,
   navigation: Object,
+  rootStore: RootStore,
 |};
 
-@inject('authStore')
+@inject('rootStore')
 class SplashScreen extends React.Component<Props> {
-  componentDidMount() {
-    this.props.authStore.initialize();
+  async componentDidMount(): Promise<void> {
+    await this.props.rootStore.initialize();
   }
 
   render(): React.Element<*> {

@@ -7,7 +7,7 @@ import { useStrict as mobxUseStrict } from 'mobx';
 import config from './config';
 import NavigationService from './NavigationService';
 import RootStore from './stores/RootStore';
-import RootRouter from './routes';
+import AppRouter from './routes';
 
 mobxUseStrict(true);
 
@@ -24,9 +24,9 @@ Object.getOwnPropertyNames(rootStore).forEach((storeName: string): Object => {
 class App extends React.Component {
   render(): React.Element<*> {
     return (
-      <Provider {...stores}>
-        <RootRouter
-          ref={(navigator: Object): void =>
+      <Provider rootStore={rootStore} {...stores}>
+        <AppRouter
+          rootRef={(navigator: Object): void =>
             NavigationService.setNavigator(navigator)}
         />
       </Provider>
