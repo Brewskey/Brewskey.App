@@ -1,18 +1,46 @@
 // @flow
 
+import type AppSettingsStore from '../stores/AppSettingsStore';
+import type RoutesSettingsStore from '../stores/RoutesSettingsStore';
+
 import * as React from 'react';
 import { View } from 'react-native';
+import { inject, observer } from 'mobx-react';
 import { DrawerItems } from 'react-navigation';
 import LogoutButton from './LogoutButton';
 
-// todo to make LogoutButton part of DrawerItems, we need to
-// create hucky item object, override onItemPress etc
-// so lets keep thins simple for now and do that hucky stuff later
-const MainDrawer = (props: Object): React.Element<*> => (
-  <View>
-    <DrawerItems {...props} />
-    <LogoutButton />
-  </View>
-);
+type DrawerItem = {|
+  key: string,
+  params?: Object,
+  routeName: string,
+|};
+
+type Props = {|
+  appSettingsStore: AppSettingsStore,
+  routesSettingsStore: RoutesSettingsStore,
+|};
+
+@inject('appSettingsStore')
+@inject('routesSettingsStore')
+@observer
+class MainDrawer extends React.Component<Props> {
+  render(): React.Element<*> {
+    const items = this.props.appSettingsStore.manageTapsEnabled
+      ? this.props.items
+      : this.props.items.filter((item: DrawerItem): boolean => {
+          const routeSettings = this.props.routesSettingsStore.getRouteSettings(
+            item.routeName,
+          );
+          return routeSettings ? !routeSettings.requireManageTaps : true;
+        });
+
+    return (
+      <View>
+        <DrawerItems {...this.props} items={items} />
+        <LogoutButton />
+      </View>
+    );
+  }
+}
 
 export default MainDrawer;

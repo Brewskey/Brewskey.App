@@ -8,6 +8,8 @@ import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
 
+const AUTH_STORAGE_KEY = 'auth_state';
+
 const setDAOHeaders = (token: string) => {
   const daoHeaders = DAOApi.getHeaders().filter(
     (header: { name: string, value: string }): boolean =>
@@ -54,9 +56,9 @@ class AuthStore {
         return;
       }
       if (this.isAuthorized) {
-        NavigationService.navigate('home');
+        NavigationService.reset('main');
       } else {
-        NavigationService.navigate('login');
+        NavigationService.reset('login');
       }
     });
   }
@@ -64,12 +66,12 @@ class AuthStore {
   @action
   clearAuthState = () => {
     this.authState = initialState;
-    AsyncStorage.removeItem('authState');
+    AsyncStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
   @action
   initialize = async (): Promise<void> => {
-    const authStateString = await AsyncStorage.getItem('authState');
+    const authStateString = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
     // todo move to parse/stringify to helpers
     const authState = authStateString && JSON.parse(authStateString);
     runInAction(() => {
@@ -102,7 +104,7 @@ class AuthStore {
     this.authState = authState;
     // todo move json stringify to helpers
     // todo may be move to reaction
-    AsyncStorage.setItem('authState', JSON.stringify(authState));
+    AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
   };
 
   @computed

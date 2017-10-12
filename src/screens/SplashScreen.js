@@ -1,14 +1,14 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
+import type RootStore from '../stores/RootStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
 import AppLoading from '../components/AppLoading';
 
 type Props = {|
-  authStore: AuthStore,
   navigation: Object,
+  rootStore: RootStore,
 |};
 
 @inject('authStore')
