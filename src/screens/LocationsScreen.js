@@ -11,6 +11,7 @@ import {
   Right,
   Title,
 } from 'native-base';
+import LocationsList from '../components/LocationsList';
 
 type Props = {|
   navigation: Object,
@@ -36,7 +37,9 @@ class LocationsScreen extends React.Component<Props> {
             </Button>
           </Right>
         </Header>
-        <Content />
+        <Content>
+          <LocationsList />
+        </Content>
       </Container>
     );
   }
