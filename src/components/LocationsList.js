@@ -3,10 +3,24 @@
 import * as React from 'react';
 import { action, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { FlatList, Text } from 'react-native';
+import { withNavigation } from 'react-navigation';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Button, Icon, SwipeRow } from 'native-base';
 
+const styles = StyleSheet.create({
+  listItemContainer: {
+    flex: 1,
+  },
+});
+
 // todo add pullToRefresh && loadingIndicator on bottom when loading
+@withNavigation
 @inject('locationStore')
 @observer
 class LocationsList extends React.Component<{}> {
@@ -63,7 +77,18 @@ class LocationsList extends React.Component<{}> {
     // todo very slow component, may be find something better or implement
     // by ourself
     <SwipeRow
-      body={<Text>{item.name}</Text>}
+      body={
+        <View style={styles.listItemContainer}>
+          <TouchableOpacity
+            onPress={(): void =>
+              this.props.navigation.navigate('locationDetails', {
+                id: item.id,
+              })}
+          >
+            <Text>{item.name}</Text>
+          </TouchableOpacity>
+        </View>
+      }
       disableRightSwipe
       right={
         <Button danger onPress={this._onDeleteItemPress(item.id)}>
