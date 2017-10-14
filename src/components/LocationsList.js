@@ -11,9 +11,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Button, Icon, SwipeRow } from 'native-base';
+import { Button, Icon, Spinner, SwipeRow } from 'native-base';
 
 const styles = StyleSheet.create({
+  footerContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
   listItemContainer: {
     flex: 1,
   },
@@ -73,6 +77,13 @@ class LocationsList extends React.Component<{}> {
     this.props.locationStore.deleteByID(id);
   };
 
+  _renderFooter = (): React.Element<*> =>
+    this._loading ? (
+      <View style={styles.footerContainer}>
+        <Spinner />
+      </View>
+    ) : null;
+
   _renderItem = ({ item }: { item: Location }): React.Element<*> => (
     // todo very slow component, may be find something better or implement
     // by ourself
@@ -102,6 +113,7 @@ class LocationsList extends React.Component<{}> {
   render(): React.Element<*> {
     return (
       <FlatList
+        ListFooterComponent={this._renderFooter}
         onEndReached={this._fetchNextData}
         data={this.props.locationStore.all}
         keyExtractor={this._keyExtractor}
