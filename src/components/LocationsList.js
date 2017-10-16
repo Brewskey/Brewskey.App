@@ -1,33 +1,35 @@
 // @flow
 
+import type { Location } from 'brewskey.js-api';
+import type DAOEntityStore from '../stores/DAOEntityStore';
+
 import * as React from 'react';
 import { action, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { Button, Icon, Spinner, SwipeRow } from 'native-base';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { Spinner } from 'native-base';
+
+import SwipeListItem from './SwipeListItem';
 
 const styles = StyleSheet.create({
   footerContainer: {
     alignItems: 'center',
     flex: 1,
   },
-  listItemContainer: {
-    flex: 1,
-  },
 });
+
+type Props = {|
+  locationStore: DAOEntityStore<Location, Location>,
+  // todo add better typing
+  navigation: Object,
+|};
 
 // todo add pullToRefresh && loadingIndicator on bottom when loading
 @withNavigation
 @inject('locationStore')
 @observer
-class LocationsList extends React.Component<{}> {
+class LocationsList extends React.Component<Props> {
   // todo move all observable/actions stuff to List store on refactoring
   @observable _lastItemIndex: boolean = 0;
   @observable _loading: boolean = false;
@@ -73,9 +75,14 @@ class LocationsList extends React.Component<{}> {
 
   _keyExtractor = (item: Location): string => item.id;
 
-  _onDeleteItemPress = (id: string): Promise<void> => () => {
+  _onDeleteItemPress = (id: string): Promise<void> => {
     this.props.locationStore.deleteByID(id);
   };
+
+  _onItemPress = (id: string): void =>
+    this.props.navigation.navigate('locationDetails', {
+      id,
+    });
 
   _renderFooter = (): React.Element<*> =>
     this._loading ? (
@@ -85,28 +92,10 @@ class LocationsList extends React.Component<{}> {
     ) : null;
 
   _renderItem = ({ item }: { item: Location }): React.Element<*> => (
-    // todo very slow component, may be find something better or implement
-    // by ourself
-    <SwipeRow
-      body={
-        <View style={styles.listItemContainer}>
-          <TouchableOpacity
-            onPress={(): void =>
-              this.props.navigation.navigate('locationDetails', {
-                id: item.id,
-              })}
-          >
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
-        </View>
-      }
-      disableRightSwipe
-      right={
-        <Button danger onPress={this._onDeleteItemPress(item.id)}>
-          <Icon active name="trash" />
-        </Button>
-      }
-      rightOpenValue={-75}
+    <SwipeListItem
+      item={item}
+      onDeleteItemPress={this._onDeleteItemPress}
+      onItemPress={this._onItemPress}
     />
   );
 
