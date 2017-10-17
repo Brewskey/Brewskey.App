@@ -11,6 +11,7 @@ import {
 } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 
+// todo implement optimistic updates for put/delete
 // todo think how to remove some code duplication in actions
 class DAOEntityStore<TEntity, TEntityMutator> {
   _dao: DAO<TEntity, TEntityMutator>;
