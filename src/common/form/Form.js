@@ -10,6 +10,8 @@ type Props = {|
   validate: ?ValidateFunction,
 |};
 
+// todo make validation on every data change
+// components will show errors when `touched && error`
 @observer
 class Form extends React.Component<Props> {
   formStore: FormStore;
