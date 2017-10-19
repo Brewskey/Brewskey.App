@@ -27,6 +27,8 @@
     "flowtype/require-return-type": 2,
     "import/first": 0,
     "no-underscore-dangle": 0,
+    "react-native/no-color-literals": 0,
+    "react/default-props-match-prop-types": 0,
     "react/jsx-filename-extension": 0,
     "react/no-unused-prop-types": 0,
     "react/prefer-stateless-function": 0,
