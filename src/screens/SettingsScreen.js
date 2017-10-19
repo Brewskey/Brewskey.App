@@ -2,62 +2,36 @@
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Text, Switch } from 'react-native';
-import {
-  Body,
-  Container,
-  Content,
-  Header,
-  List,
-  ListItem,
-  Right,
-  Title,
-} from 'native-base';
+import { List, ListItem } from 'react-native-elements';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 @inject('appSettingsStore')
 @observer
 class SettingsScreen extends React.Component<Props> {
   static navigationOptions = {
-    drawerLabel: 'Settings',
+    title: 'Settings',
   };
 
   render(): React.Element<*> {
     return (
-      <Container>
-        <Header>
-          <Body>
-            <Title>Settings</Title>
-          </Body>
-        </Header>
-        <Content>
-          <List>
-            <ListItem>
-              <Body>
-                <Text>Multi account mode</Text>
-              </Body>
-              <Right>
-                <Switch
-                  onValueChange={
-                    this.props.appSettingsStore.toggleMultiAccountMode
-                  }
-                  value={this.props.appSettingsStore.multiAccountModeEnabled}
-                />
-              </Right>
-            </ListItem>
-            <ListItem>
-              <Body>
-                <Text>Manage taps</Text>
-              </Body>
-              <Right>
-                <Switch
-                  onValueChange={this.props.appSettingsStore.toggleManageTaps}
-                  value={this.props.appSettingsStore.manageTapsEnabled}
-                />
-              </Right>
-            </ListItem>
-          </List>
-        </Content>
-      </Container>
+      <List>
+        <KeyboardAwareScrollView>
+          <ListItem
+            title="Multi account mode"
+            hideChevron
+            onSwitch={this.props.appSettingsStore.toggleMultiAccountMode}
+            switchButton
+            switched={this.props.appSettingsStore.multiAccountModeEnabled}
+          />
+          <ListItem
+            hideChevron
+            onSwitch={this.props.appSettingsStore.toggleManageTaps}
+            switchButton
+            switched={this.props.appSettingsStore.manageTapsEnabled}
+            title="Manage taps"
+          />
+        </KeyboardAwareScrollView>
+      </List>
     );
   }
 }

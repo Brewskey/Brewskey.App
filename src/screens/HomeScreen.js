@@ -11,6 +11,10 @@ type Props = {|
 @inject('locationStore')
 @observer
 class HomeScreen extends React.Component<Props> {
+  static navigationOptions = {
+    title: 'Home',
+  };
+
   render(): React.Element<*> {
     return (
       <View>
