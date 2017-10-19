@@ -10,6 +10,12 @@ type FormStoreProps = {|
   validate: ?ValidateFunction,
 |};
 
+type InitFieldProps = {|
+  name: string,
+  initialValue?: any,
+|};
+
+// todo change touched logic so it takes care about initialValue
 class FormStore {
   _validate: ValidateFunction;
   @observable _fields: Map<string, Field> = new Map();
@@ -24,11 +30,12 @@ class FormStore {
   }
 
   @action
-  initField = (fieldName: string) => {
-    this._fields.set(fieldName, {
+  initField = ({ name, initialValue = null }: InitFieldProps) => {
+    this._fields.set(name, {
       error: null,
+      initialValue,
       touched: false,
-      value: null,
+      value: initialValue,
     });
   };
 
@@ -98,6 +105,13 @@ class FormStore {
   @computed
   get invalid(): boolean {
     return this._fields.values().some((field: Field): boolean => !!field.error);
+  }
+
+  @computed
+  get pristine(): boolean {
+    return !this._fields
+      .values()
+      .some((field: Field): boolean => field.value !== field.initialValue);
   }
 
   @computed
