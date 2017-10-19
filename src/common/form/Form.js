@@ -10,8 +10,6 @@ type Props = {|
   validate: ?ValidateFunction,
 |};
 
-// todo make validation on every data change
-// components will show errors when `touched && error`
 @observer
 class Form extends React.Component<Props> {
   formStore: FormStore;
@@ -43,13 +41,20 @@ class Form extends React.Component<Props> {
     }
   };
 
-  render(): React.Element<*> {
+  render(): ?React.Element<*> {
+    if (!this.props.children) {
+      return null;
+    }
+    if (!this.props.children.call) {
+      throw new Error('Form children should be a function or null');
+    }
     return (
       <Provider formStore={this.formStore}>
         {this.props.children({
           formError: this.formStore.formError,
           handleSubmit: this.handleSubmit,
           invalid: this.formStore.invalid,
+          pristine: this.formStore.pristine,
           submitting: this.formStore.submitting,
         })}
       </Provider>

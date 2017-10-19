@@ -51,6 +51,7 @@ class LoginForm extends React.Component<Props> {
           formError,
           handleSubmit,
           invalid,
+          pristine,
           submitting,
         }: FormChildProps): React.Element<any> => (
           <View>
@@ -79,7 +80,7 @@ class LoginForm extends React.Component<Props> {
             </FormField>
             <FormValidationMessage>{formError}</FormValidationMessage>
             <Button
-              disabled={submitting || invalid}
+              disabled={submitting || invalid || pristine}
               onPress={(): Promise<void> => handleSubmit(this.onSubmit)}
               title="Log in"
             />
