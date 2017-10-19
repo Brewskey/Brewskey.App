@@ -8,7 +8,8 @@ import type { StateConfig } from './stateList';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';
 import Form from '../../common/form/Form';
@@ -42,12 +43,13 @@ const validate = (values: Location): { [key: string]: string } => {
 };
 
 const styles = StyleSheet.create({
-  formContainer: {
+  container: {
     paddingBottom: 15,
   },
 });
 
 type Props = {|
+  location?: Location,
   onSubmit: (values: Location) => Promise<void>,
   submitButtonLabel: string,
 |};
@@ -55,34 +57,37 @@ type Props = {|
 // todo figure out and implement good pattern for handling
 // fields focus order
 const LocationForm = observer(
-  ({ onSubmit, submitButtonLabel }: Props): React.Element<*> => (
+  ({ location = {}, onSubmit, submitButtonLabel }: Props): React.Element<*> => (
     <Form validate={validate}>
       {({
         formError,
         handleSubmit,
         invalid,
+        pristine,
         submitting,
       }: FormChildProps): React.Element<*> => (
-        <View style={styles.formContainer}>
-          <FormField name="name">
+        <KeyboardAwareScrollView style={styles.container}>
+          <FormField initialValue={location.name} name="name">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
+                returnKeyType="next"
                 disabled={submitting}
                 label="Name"
                 {...formFieldProps}
               />
             )}
           </FormField>
-          <FormField name="summary">
+          <FormField initialValue={location.summary} name="summary">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
+                returnKeyType="next"
                 disabled={submitting}
                 label="Summary"
                 {...formFieldProps}
               />
             )}
           </FormField>
-          <FormField name="description">
+          <FormField initialValue={location.description} name="description">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
                 disabled={submitting}
@@ -91,7 +96,7 @@ const LocationForm = observer(
               />
             )}
           </FormField>
-          <FormField name="locationType">
+          <FormField initialValue={location.locationType} name="locationType">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <Picker label="Location type" {...formFieldProps}>
                 <Picker.Item label="Kegerator" value="Kegerator" />
@@ -99,7 +104,7 @@ const LocationForm = observer(
               </Picker>
             )}
           </FormField>
-          <FormField name="street">
+          <FormField initialValue={location.street} name="street">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
                 disabled={submitting}
@@ -108,7 +113,7 @@ const LocationForm = observer(
               />
             )}
           </FormField>
-          <FormField name="suite">
+          <FormField initialValue={location.suite} name="suite">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
                 disabled={submitting}
@@ -117,7 +122,7 @@ const LocationForm = observer(
               />
             )}
           </FormField>
-          <FormField name="city">
+          <FormField initialValue={location.city} name="city">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
                 disabled={submitting}
@@ -126,7 +131,7 @@ const LocationForm = observer(
               />
             )}
           </FormField>
-          <FormField name="state">
+          <FormField initialValue={location.state} name="state">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <Picker label="State" {...formFieldProps}>
                 {STATE_LIST.map((stateConfig: StateConfig): React.Element<
@@ -135,7 +140,7 @@ const LocationForm = observer(
               </Picker>
             )}
           </FormField>
-          <FormField name="zipCode">
+          <FormField initialValue={location.zipCode} name="zipCode">
             {(formFieldProps: FormFieldChildProps): React.Element<*> => (
               <TextField
                 disabled={submitting}
@@ -145,13 +150,14 @@ const LocationForm = observer(
               />
             )}
           </FormField>
+          <FormField name="id" initialValue={location.id} />
           <FormValidationMessage>{formError}</FormValidationMessage>
           <Button
-            disabled={submitting || invalid}
+            disabled={submitting || invalid || pristine}
             onPress={(): void => handleSubmit(onSubmit)}
             title={submitButtonLabel}
           />
-        </View>
+        </KeyboardAwareScrollView>
       )}
     </Form>
   ),
