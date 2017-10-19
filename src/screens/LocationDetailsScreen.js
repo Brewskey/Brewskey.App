@@ -5,18 +5,8 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import flatNavigationParams from '../common/flatNavigationParams';
-import {
-  Body,
-  Button,
-  Container,
-  Content,
-  Header,
-  Icon,
-  Left,
-  Title,
-} from 'native-base';
 
 type Props = {|
   id: string,
@@ -28,28 +18,28 @@ type Props = {|
 @inject('locationStore')
 @observer
 class LocationDetailsScreen extends React.Component<Props> {
+  // todo find types for navigationOptions
+  static navigationOptions = ({ navigation }: Object): Object => ({
+    title:
+      navigation.state.params.location && navigation.state.params.location.name,
+  });
+
+  componentDidMount() {
+    // todo with this solution title on header appears after some lag :/
+    const { locationStore, id, navigation } = this.props;
+    navigation.setParams({ location: locationStore.getByID(id) });
+  }
+
   _onBackButtonPress = (): void => this.props.navigation.goBack(null);
 
   render(): React.Element<*> {
     const location = this.props.locationStore.getByID(this.props.id);
     // todo prettify and move content to separate component
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button onPress={this._onBackButtonPress} transparent>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>{location.name}</Title>
-          </Body>
-        </Header>
-        <Content padder>
-          <Text>{location.name}</Text>
-          <Text>{location.description}</Text>
-        </Content>
-      </Container>
+      <View>
+        <Text>{location.name}</Text>
+        <Text>{location.description}</Text>
+      </View>
     );
   }
 }

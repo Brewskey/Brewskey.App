@@ -12,6 +12,7 @@ import SplashScreen from './screens/SplashScreen';
 import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
+import EditLocationScreen from './screens/EditLocationScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
@@ -41,28 +42,37 @@ class AppRouter extends React.Component<Props> {
         main: {
           screen: DrawerNavigator(
             {
-              home: { screen: HomeScreen },
+              home: {
+                screen: StackNavigator({ home: { screen: HomeScreen } }),
+              },
               ...this._addInitialRouteSettings(
                 {
                   locations: {
                     screen: StackNavigator(
                       {
+                        // todo ordering matter figure out why initialRoute
+                        // doesn't work
                         locations: { screen: LocationsScreen },
+                        editLocation: { screen: EditLocationScreen },
                         locationDetails: { screen: LocationDetailsScreen },
                         newLocation: { screen: NewLocationScreen },
                       },
                       {
-                        headerMode: 'none',
+                        gesturesEnabled: false,
+                        headerStyle: { backgroundColor: 'black' },
                         initialRoute: 'locations',
                         lazy: true,
-                        gesturesEnabled: false,
                       },
                     ),
                   },
                 },
                 { requireManageTaps: true },
               ),
-              settings: { screen: SettingsScreen },
+              settings: {
+                screen: StackNavigator({
+                  settings: { screen: SettingsScreen },
+                }),
+              },
             },
             {
               contentComponent: MainDrawer,

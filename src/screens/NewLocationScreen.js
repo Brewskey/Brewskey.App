@@ -6,16 +6,6 @@ import type { DAOEntityStore } from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
-import {
-  Body,
-  Button,
-  Container,
-  Content,
-  Header,
-  Icon,
-  Left,
-  Title,
-} from 'native-base';
 import LocationForm from '../components/LocationForm';
 
 type Props = {|
@@ -38,24 +28,10 @@ class NewLocationScreen extends React.Component<Props> {
 
   render(): React.Element<*> {
     return (
-      <Container>
-        <Header>
-          <Left>
-            <Button onPress={this._onBackButtonPress} transparent>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>New location</Title>
-          </Body>
-        </Header>
-        <Content>
-          <LocationForm
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Create location"
-          />
-        </Content>
-      </Container>
+      <LocationForm
+        onSubmit={this._onFormSubmit}
+        submitButtonLabel="Create location"
+      />
     );
   }
 }
