@@ -1,4 +1,11 @@
+// The component is temporary stolen from
+// https://github.com/facebook/react-native/blob/master/Libraries/Experimental/SwipeableRow/SwipeableFlatList.js
+// it exists on master branch, but not in release yet.
+// I modified it in some places and made it actually works as expected
+// (open only one row at a time, close rows on scroll, these don't work in
+// original )
 /* eslint-disable */
+
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -7,19 +14,15 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule SwipeableFlatList
  * @flow
- * @format
  */
-'use strict';
 
 import type { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
 
-const PropTypes = require('prop-types');
-const React = require('React');
-const SwipeableRow = require('SwipeableRow');
-const FlatList = require('FlatList');
+import * as React from 'react';
+import PureSwipeableRow from './PureSwipeableRow';
+import FlatList from 'FlatList';
 
 type SwipableListProps = {
   /**
@@ -31,6 +34,7 @@ type SwipableListProps = {
   maxSwipeDistance: number | (Object => number),
   // Callback method to render the view that will be unveiled on swipe
   renderQuickActions: renderItemType,
+  preventSwipeRight?: boolean,
 };
 
 type Props<ItemT> = SwipableListProps & FlatListProps<ItemT>;
@@ -63,23 +67,6 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
   _flatListRef: ?FlatList<ItemT> = null;
   _shouldBounceFirstRowOnMount: boolean = false;
 
-  static propTypes = {
-    ...FlatList.propTypes,
-
-    /**
-     * To alert the user that swiping is possible, the first row can bounce
-     * on component mount.
-     */
-    bounceFirstRowOnMount: PropTypes.bool.isRequired,
-
-    // Maximum distance to open to after a swipe
-    maxSwipeDistance: PropTypes.oneOfType([PropTypes.number, PropTypes.func])
-      .isRequired,
-
-    // Callback method to render the view that will be unveiled on swipe
-    renderQuickActions: PropTypes.func.isRequired,
-  };
-
   static defaultProps = {
     ...FlatList.defaultProps,
     bounceFirstRowOnMount: true,
@@ -95,14 +82,22 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;
   }
 
+  resetOpenRow = () => {
+    this.setState({
+      openRowKey: null,
+    });
+  };
+
   render(): React.Node {
     return (
       <FlatList
         {...this.props}
+        extraData={this.state}
+        onScroll={this._onScroll}
         ref={ref => {
           this._flatListRef = ref;
         }}
-        onScroll={this._onScroll}
+        removeClippedSubviews
         renderItem={this._renderItem}
       />
     );
@@ -135,18 +130,20 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
     }
 
     return (
-      <SwipeableRow
-        slideoutView={slideoutView}
+      <PureSwipeableRow
+        extraData={info.item}
         isOpen={key === this.state.openRowKey}
         maxSwipeDistance={this._getMaxSwipeDistance(info)}
-        onOpen={() => this._onOpen(key)}
         onClose={() => this._onClose(key)}
-        shouldBounceOnMount={shouldBounceOnMount}
+        onOpen={() => this._onOpen(key)}
         onSwipeEnd={this._setListViewScrollable}
         onSwipeStart={this._setListViewNotScrollable}
+        preventSwipeRight={this.props.preventSwipeRight}
+        shouldBounceOnMount={shouldBounceOnMount}
+        slideoutView={slideoutView}
       >
         {this.props.renderItem(info)}
-      </SwipeableRow>
+      </PureSwipeableRow>
     );
   };
 
@@ -188,4 +185,4 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
   }
 }
 
-module.exports = SwipeableFlatList;
+export default SwipeableFlatList;

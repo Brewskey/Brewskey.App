@@ -7,15 +7,22 @@ import * as React from 'react';
 import { action, observable } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { Spinner } from 'native-base';
-
-import SwipeListItem from './SwipeListItem';
+import { StyleSheet, Text, View } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import SwipeableFlatList from '../common/SwipeableFlatList';
+import SwipeableActionButton from '../common/SwipeableFlatList/SwipeableActionButton';
+// imported from experimental react-native
+// eslint-disable-next-line
+import SwipeableQuickActions from 'SwipeableQuickActions';
 
 const styles = StyleSheet.create({
   footerContainer: {
     alignItems: 'center',
     flex: 1,
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  listItem: {
+    backgroundColor: 'white',
   },
 });
 
@@ -30,6 +37,7 @@ type Props = {|
 @inject('locationStore')
 @observer
 class LocationsList extends React.Component<Props> {
+  _swipeableFlatListRef: ?SwipeableFlatList;
   // todo move all observable/actions stuff to List store on refactoring
   @observable _lastItemIndex: boolean = 0;
   @observable _loading: boolean = false;
@@ -51,7 +59,7 @@ class LocationsList extends React.Component<Props> {
   };
 
   async componentDidMount(): Promise<void> {
-    this._fetchNextData();
+    await this._fetchNextData();
   }
 
   // todo for some reason onEndReached called twice sometimes
@@ -75,38 +83,78 @@ class LocationsList extends React.Component<Props> {
 
   _keyExtractor = (item: Location): string => item.id;
 
-  _onDeleteItemPress = (id: string): Promise<void> => {
-    this.props.locationStore.deleteByID(id);
+  _onDeleteItemPress = (id: string): Function => async (): Promise<void> => {
+    await this.props.locationStore.deleteByID(id);
   };
 
-  _onItemPress = (id: string): void =>
+  _onEditItemPress = (id: string): Function => () => {
+    this.props.navigation.navigate('editLocation', { id });
+    this._swipeableFlatListRef.resetOpenRow();
+  };
+
+  _onItemPress = (id: string): Function => (): void =>
     this.props.navigation.navigate('locationDetails', {
       id,
     });
 
+  _onEndReached = () => {
+    // todo onEndReach works very unstable.
+    // calls many times or not calls when it needed
+    // this causes wrong fetching logic
+    // figure out why
+    if (this.loading) {
+      return;
+    }
+    this._fetchNextData();
+  };
+
   _renderFooter = (): React.Element<*> =>
     this._loading ? (
       <View style={styles.footerContainer}>
-        <Spinner />
+        <Text>Loading...</Text>
       </View>
     ) : null;
 
   _renderItem = ({ item }: { item: Location }): React.Element<*> => (
-    <SwipeListItem
-      item={item}
-      onDeleteItemPress={this._onDeleteItemPress}
-      onItemPress={this._onItemPress}
+    <ListItem
+      key={item.id}
+      containerStyle={styles.listItem}
+      hideChevron
+      onPress={this._onItemPress(item.id)}
+      subtitle={item.summary || '-'}
+      title={item.name}
     />
+  );
+
+  _renderQuickActions = ({ item }: { item: Location }): React.Element<*> => (
+    <SwipeableQuickActions>
+      <SwipeableActionButton
+        iconName="create"
+        onPress={this._onEditItemPress(item.id)}
+      />
+      <SwipeableActionButton
+        iconName="delete"
+        onPress={this._onDeleteItemPress(item.id)}
+      />
+    </SwipeableQuickActions>
   );
 
   render(): React.Element<*> {
     return (
-      <FlatList
-        ListFooterComponent={this._renderFooter}
-        onEndReached={this._fetchNextData}
+      <SwipeableFlatList
         data={this.props.locationStore.all}
         keyExtractor={this._keyExtractor}
+        ListFooterComponent={this._renderFooter}
+        maxSwipeDistance={150}
+        maxToRenderPerBatch={20}
+        onEndReached={this._onEndReached}
+        onEndThreshold={0.5}
+        preventSwipeRight
+        ref={(ref: SwipeableFlatList) => {
+          this._swipeableFlatListRef = ref;
+        }}
         renderItem={this._renderItem}
+        renderQuickActions={this._renderQuickActions}
       />
     );
   }
