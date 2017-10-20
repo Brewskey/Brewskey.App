@@ -7,21 +7,12 @@ import type { InfiniteLoaderChildProps } from './InfiniteLoader';
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import { StyleSheet } from 'react-native';
-import { ListItem } from 'react-native-elements';
 import SwipeableFlatList from '../common/SwipeableFlatList';
-import SwipeableActionButton from '../common/SwipeableFlatList/SwipeableActionButton';
+import ListItem from '../common/ListItem';
+import QuickActions from '../common/QuickActions';
 // imported from experimental react-native
 // eslint-disable-next-line
-import SwipeableQuickActions from 'SwipeableQuickActions';
 import InfiniteLoader from './InfiniteLoader';
-
-const styles = StyleSheet.create({
-  // eslint-disable-next-line react-native/no-color-literals
-  listItem: {
-    backgroundColor: 'white',
-  },
-});
 
 type Props = {|
   locationStore: DAOEntityStore<Location, Location>,
@@ -51,42 +42,35 @@ class LocationsList extends React.Component<Props> {
 
   _keyExtractor = (item: Location): string => item.id;
 
-  _onDeleteItemPress = (id: string): Function => async (): Promise<void> => {
-    await this.props.locationStore.deleteByID(id);
-  };
+  _onDeleteItemPress = (item: Location): Promise<void> =>
+    this.props.locationStore.deleteByID(item.id);
 
-  _onEditItemPress = (id: string): Function => () => {
-    this.props.navigation.navigate('editLocation', { id });
+  _onEditItemPress = (item: Location) => {
+    this.props.navigation.navigate('editLocation', { id: item.id });
     this._swipeableFlatListRef.resetOpenRow();
   };
 
-  _onItemPress = (id: string): Function => (): void =>
+  _onItemPress = (item: Location): void =>
     this.props.navigation.navigate('locationDetails', {
-      id,
+      id: item.id,
     });
 
   _renderItem = ({ item }: { item: Location }): React.Element<*> => (
     <ListItem
-      containerStyle={styles.listItem}
       hideChevron
-      key={item.id}
-      onPress={this._onItemPress(item.id)}
+      item={item}
+      onPress={this._onItemPress}
       subtitle={item.summary || '-'}
       title={item.name}
     />
   );
 
-  _renderQuickActions = ({ item }: { item: Location }): React.Element<*> => (
-    <SwipeableQuickActions>
-      <SwipeableActionButton
-        iconName="create"
-        onPress={this._onEditItemPress(item.id)}
-      />
-      <SwipeableActionButton
-        iconName="delete"
-        onPress={this._onDeleteItemPress(item.id)}
-      />
-    </SwipeableQuickActions>
+  _renderQuickActions = ({ item }: { item: Location }): React.Node => (
+    <QuickActions
+      item={item}
+      onDeleteItemPress={this._onDeleteItemPress}
+      onEditItemPress={this._onEditItemPress}
+    />
   );
 
   render(): React.Node {
