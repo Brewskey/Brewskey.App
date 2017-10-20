@@ -28,9 +28,6 @@ class InfiniteLoader extends React.Component<Props> {
     this._fetchNextData();
   }
 
-  _loadingIndicator = (): React.Node =>
-    this._loading ? <ActivityIndicator animating size="large" /> : null;
-
   _fetchNextData = async (): Promise<void> => {
     this._setLoading(true);
     await this.props.fetchNextData();
@@ -53,7 +50,9 @@ class InfiniteLoader extends React.Component<Props> {
     }
 
     return this.props.children({
-      loadingIndicator: this._loadingIndicator,
+      loadingIndicator: this._loading ? (
+        <ActivityIndicator animating size="large" />
+      ) : null,
       onEndReached: this._onEndReached,
       onEndReachedThreshold: Platform.OS === 'ios' ? 0 : 0.5,
     });
