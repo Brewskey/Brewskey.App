@@ -6,6 +6,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 import * as React from 'react';
 import { inject } from 'mobx-react';
 import flatNavigationParams from '../common/flatNavigationParams';
+import TapForm from '../components/TapForm';
 
 type Props = {|
   id: string,
@@ -26,8 +27,13 @@ class EditTapScreen extends React.Component<Props> {
   };
 
   render(): React.Node {
-    return null;
-    // todo add TapForm
+    return (
+      <TapForm
+        onSubmit={this._onFormSubmit}
+        submitButtonLabel="Edit tap"
+        tap={this.props.tapStore.getByID(this.props.id)}
+      />
+    );
   }
 }
 

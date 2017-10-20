@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Picker as RNPicker, StyleSheet, View } from 'react-native';
+import { Picker, StyleSheet, View } from 'react-native';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';
 
 // todo
@@ -33,8 +33,13 @@ type Props = {
   // other react-native Picker props
 };
 
-class Picker extends React.Component<Props> {
+class PickerField extends React.Component<Props> {
   _onPickerValueChange = (value: any) => {
+    // the check handles case when we load options asynchronously
+    if (value === this.props.value) {
+      return;
+    }
+
     this.props.onChange(value);
     this.props.onBlur();
   };
@@ -54,15 +59,15 @@ class Picker extends React.Component<Props> {
     return (
       <View>
         <FormLabel>{label}</FormLabel>
-        <RNPicker
+        <Picker
           style={styles.picker}
           {...props}
           onValueChange={this._onPickerValueChange}
           selectedValue={value}
         >
-          <RNPicker.Item label={placeholder} value={null} />
+          <Picker.Item label={placeholder} value={undefined} />
           {children}
-        </RNPicker>
+        </Picker>
         <View style={styles.underline} />
         <FormValidationMessage>{error}</FormValidationMessage>
       </View>
@@ -70,6 +75,6 @@ class Picker extends React.Component<Props> {
   }
 }
 
-Picker.Item = RNPicker.Item;
+PickerField.Item = Picker.Item;
 
-export default Picker;
+export default PickerField;
