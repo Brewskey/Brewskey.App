@@ -15,7 +15,9 @@ type Props = {|
 
 @inject('locationStore')
 class NewLocationScreen extends React.Component<Props> {
-  _onBackButtonPress = (): void => this.props.navigation.goBack(null);
+  static navigationOptions = {
+    title: 'New location',
+  };
 
   _onFormSubmit = async (values: Location): Promise<void> => {
     const { locationStore, navigation } = this.props;
@@ -26,7 +28,7 @@ class NewLocationScreen extends React.Component<Props> {
     navigation.navigate('locationDetails', { id });
   };
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return (
       <LocationForm
         onSubmit={this._onFormSubmit}
