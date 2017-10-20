@@ -15,6 +15,7 @@ import LocationsScreen from './screens/LocationsScreen';
 import EditLocationScreen from './screens/EditLocationScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import TapsScreen from './screens/TapsScreen';
 
 type Props = {|
   routesSettingsStore: RoutesSettingsStore,
@@ -39,6 +40,7 @@ class AppRouter extends React.Component<Props> {
       {
         splash: { screen: SplashScreen },
         login: { screen: LoginScreen },
+        // main: { screen: TestScreen },
         main: {
           screen: DrawerNavigator(
             {
@@ -59,9 +61,18 @@ class AppRouter extends React.Component<Props> {
                       },
                       {
                         gesturesEnabled: false,
-                        headerStyle: { backgroundColor: 'black' },
                         initialRoute: 'locations',
-                        lazy: true,
+                      },
+                    ),
+                  },
+                  taps: {
+                    screen: StackNavigator(
+                      {
+                        taps: { screen: TapsScreen },
+                      },
+                      {
+                        gesturesEnabled: false,
+                        initialRoute: 'taps',
                       },
                     ),
                   },
