@@ -9,12 +9,16 @@ import MainDrawer from './components/MainDrawer';
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
 
+import EditLocationScreen from './screens/EditLocationScreen';
+import EditTapScreen from './screens/EditTapScreen';
 import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
-import EditLocationScreen from './screens/EditLocationScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
+import NewTapScreen from './screens/NewTapScreen';
 import SettingsScreen from './screens/SettingsScreen';
+import TapDetailsScreen from './screens/TapDetailsScreen';
+import TapsScreen from './screens/TapsScreen';
 
 type Props = {|
   routesSettingsStore: RoutesSettingsStore,
@@ -39,6 +43,7 @@ class AppRouter extends React.Component<Props> {
       {
         splash: { screen: SplashScreen },
         login: { screen: LoginScreen },
+        // main: { screen: TestScreen },
         main: {
           screen: DrawerNavigator(
             {
@@ -59,9 +64,21 @@ class AppRouter extends React.Component<Props> {
                       },
                       {
                         gesturesEnabled: false,
-                        headerStyle: { backgroundColor: 'black' },
                         initialRoute: 'locations',
-                        lazy: true,
+                      },
+                    ),
+                  },
+                  taps: {
+                    screen: StackNavigator(
+                      {
+                        taps: { screen: TapsScreen },
+                        editTap: { screen: EditTapScreen },
+                        tapDetails: { screen: TapDetailsScreen },
+                        newTap: { screen: NewTapScreen },
+                      },
+                      {
+                        gesturesEnabled: false,
+                        initialRoute: 'taps',
                       },
                     ),
                   },

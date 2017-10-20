@@ -19,8 +19,6 @@ class LocationsScreen extends React.Component<Props> {
     title: 'Locations',
   });
 
-  _onAddButtonPress = (): void => this.props.navigation.navigate('newLocation');
-
   render(): React.Element<*> {
     return <LocationsList />;
   }

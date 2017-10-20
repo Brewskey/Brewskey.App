@@ -1,6 +1,6 @@
 // @flow
 
-import type { Location } from 'brewskey.js-api';
+import type { Tap, TapMutator } from 'brewskey.js-api';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { InfiniteLoaderChildProps } from './InfiniteLoader';
 
@@ -12,55 +12,56 @@ import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 // imported from experimental react-native
 // eslint-disable-next-line
+import SwipeableQuickActions from 'SwipeableQuickActions';
 import InfiniteLoader from './InfiniteLoader';
 
 type Props = {|
-  locationStore: DAOEntityStore<Location, Location>,
+  tapStore: DAOEntityStore<Tap, TapMutator>,
   // todo add better typing
   navigation: Object,
 |};
 
 // todo add pullToRefresh
 @withNavigation
-@inject('locationStore')
+@inject('tapStore')
 @observer
-class LocationsList extends React.Component<Props> {
+class TapsList extends React.Component<Props> {
   _swipeableFlatListRef: ?SwipeableFlatList;
 
   _fetchNextData = async (): Promise<void> => {
-    await this.props.locationStore.fetchMany({
+    await this.props.tapStore.fetchMany({
       orderBy: [
         {
           column: 'id',
           direction: 'desc',
         },
       ],
-      skip: this.props.locationStore.all.length,
+      skip: this.props.tapStore.all.length,
       take: 20,
     });
   };
 
-  _keyExtractor = (item: Location): string => item.id;
+  _keyExtractor = (item: Tap): string => item.id;
 
-  _onDeleteItemPress = (item: Location): Promise<void> =>
-    this.props.locationStore.deleteByID(item.id);
+  _onDeleteItemPress = (item: Tap): Promise<void> =>
+    this.props.tapStore.deleteByID(item.id);
 
-  _onEditItemPress = (item: Location) => {
-    this.props.navigation.navigate('editLocation', { id: item.id });
+  _onEditItemPress = (item: Tap) => {
+    this.props.navigation.navigate('editTap', { id: item.id });
     this._swipeableFlatListRef.resetOpenRow();
   };
 
-  _onItemPress = (item: Location): void =>
-    this.props.navigation.navigate('locationDetails', {
+  _onItemPress = (item: Tap): void =>
+    this.props.navigation.navigate('tapDetails', {
       id: item.id,
     });
 
-  _renderItem = ({ item }: { item: Location }): React.Element<*> => (
+  _renderItem = ({ item }: { item: Tap }): React.Node => (
     <ListItem
       hideChevron
       item={item}
       onPress={this._onItemPress}
-      subtitle={item.summary || '-'}
+      subtitle={item.description || '-'}
       title={item.name}
     />
   );
@@ -82,7 +83,7 @@ class LocationsList extends React.Component<Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps): React.Node => (
           <SwipeableFlatList
-            data={this.props.locationStore.all}
+            data={this.props.tapStore.all}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
@@ -101,4 +102,4 @@ class LocationsList extends React.Component<Props> {
   }
 }
 
-export default LocationsList;
+export default TapsList;

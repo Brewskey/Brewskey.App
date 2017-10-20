@@ -1,6 +1,6 @@
 // @flow
 
-import type { Location } from 'brewskey.js-api';
+import type { Tap, TapMutator } from 'brewskey.js-api';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -10,36 +10,35 @@ import flatNavigationParams from '../common/flatNavigationParams';
 
 type Props = {|
   id: string,
-  locationStore: DAOEntityStore<Location, Location>,
   navigation: Object,
+  tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
 @flatNavigationParams
-@inject('locationStore')
+@inject('tapStore')
 @observer
-class LocationDetailsScreen extends React.Component<Props> {
+class TapDetailsScreen extends React.Component<Props> {
   // todo find types for navigationOptions
   static navigationOptions = ({ navigation }: Object): Object => ({
-    title:
-      navigation.state.params.location && navigation.state.params.location.name,
+    title: navigation.state.params.tap && navigation.state.params.tap.name,
   });
 
   componentDidMount() {
     // todo with this solution title on header appears after some lag :/
-    const { locationStore, id, navigation } = this.props;
-    navigation.setParams({ location: locationStore.getByID(id) });
+    const { tapStore, id, navigation } = this.props;
+    navigation.setParams({ tap: tapStore.getByID(id) });
   }
 
   render(): React.Node {
-    const location = this.props.locationStore.getByID(this.props.id);
+    const tap = this.props.tapStore.getByID(this.props.id);
     // todo prettify and move content to separate component
     return (
       <View>
-        <Text>{location.name}</Text>
-        <Text>{location.description}</Text>
+        <Text>{tap.name}</Text>
+        <Text>{tap.description}</Text>
       </View>
     );
   }
 }
 
-export default LocationDetailsScreen;
+export default TapDetailsScreen;
