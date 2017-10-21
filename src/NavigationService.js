@@ -29,7 +29,7 @@ class NavigationService {
       NavigationActions.reset({
         actions: [NavigationActions.navigate({ params, routeName })],
         index: 0,
-        key: routeName,
+        key: null,
       }),
     );
 }
