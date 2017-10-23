@@ -51,7 +51,7 @@ class InfiniteLoader extends React.Component<Props> {
 
     return this.props.children({
       loadingIndicator: this._loading ? (
-        <ActivityIndicator animating size="large" />
+        <ActivityIndicator size="large" />
       ) : null,
       onEndReached: this._onEndReached,
       onEndReachedThreshold: Platform.OS === 'ios' ? 0 : 0.5,
