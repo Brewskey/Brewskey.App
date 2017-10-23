@@ -30,12 +30,14 @@ const setDAOHeaders = (token: string) => {
 };
 
 type AuthState = {|
+  id: ?string,
   roles: ?Array<string>,
   token: ?string,
-  userName: string,
+  userName: ?string,
 |};
 
 const initialState = {
+  id: null,
   roles: null,
   token: null,
   userName: null,
@@ -85,11 +87,12 @@ class AuthStore {
   // todo handle async
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
-    const { access_token, roles, userName } = await authApi.login(
+    const { access_token, id, roles, userName } = await authApi.login(
       userCredentials,
     );
 
     const authState = {
+      id,
       roles: JSON.parse(roles),
       token: access_token,
       userName,
@@ -106,6 +109,11 @@ class AuthStore {
     // todo may be move to reaction
     AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
   };
+
+  @computed
+  get userID(): string {
+    return this.authState.id;
+  }
 
   @computed
   get isAuthorized(): boolean {
