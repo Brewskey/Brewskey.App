@@ -21,6 +21,7 @@ import type { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import PureSwipeableRow from './PureSwipeableRow';
 import FlatList from 'FlatList';
 
@@ -61,8 +62,9 @@ type State = {
  */
 
 class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
-  props: Props<ItemT>;
-  state: State;
+  state = {
+    openRowKey: null,
+  };
 
   _flatListRef: ?FlatList<ItemT> = null;
   _shouldBounceFirstRowOnMount: boolean = false;
@@ -75,9 +77,6 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
 
   constructor(props: Props<ItemT>, context: any): void {
     super(props, context);
-    this.state = {
-      openRowKey: null,
-    };
 
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;
   }
@@ -89,17 +88,27 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
   };
 
   render(): React.Node {
+    const { ListFooterComponent, ...rest } = this.props;
+    // We handle ListFooter by ourself
+    // to prevent onReachEnd callback loop inside InfiniteLoader
+    const footerElement = React.isValidElement(ListFooterComponent)
+      ? ListFooterComponent
+      : ListFooterComponent && <ListFooterComponent />;
+
     return (
-      <FlatList
-        {...this.props}
-        extraData={this.state}
-        onScroll={this._onScroll}
-        ref={ref => {
-          this._flatListRef = ref;
-        }}
-        removeClippedSubviews
-        renderItem={this._renderItem}
-      />
+      <View>
+        <FlatList
+          {...rest}
+          extraData={this.state}
+          onScroll={this._onScroll}
+          ref={ref => {
+            this._flatListRef = ref;
+          }}
+          removeClippedSubviews
+          renderItem={this._renderItem}
+        />
+        {footerElement}
+      </View>
     );
   }
 
