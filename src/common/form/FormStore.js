@@ -30,7 +30,7 @@ class FormStore {
   }
 
   @action
-  initField = ({ name, initialValue = null }: InitFieldProps) => {
+  initField = ({ name, initialValue }: InitFieldProps) => {
     this._fields.set(name, {
       error: null,
       initialValue,

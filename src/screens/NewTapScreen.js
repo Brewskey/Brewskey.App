@@ -5,6 +5,7 @@ import type { DAOEntityStore } from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
+import TapForm from '../components/TapForm';
 
 type Props = {|
   navigation: Object,
@@ -16,6 +17,7 @@ class NewTapScreen extends React.Component<Props> {
   static navigationOptions = {
     title: 'New tap',
   };
+
   _onFormSubmit = async (values: Tap): Promise<void> => {
     const { tapStore, navigation } = this.props;
     const { id } = await tapStore.post(values);
@@ -26,8 +28,9 @@ class NewTapScreen extends React.Component<Props> {
   };
 
   render(): React.Node {
-    // todo add TapForm
-    return null;
+    return (
+      <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
+    );
   }
 }
 

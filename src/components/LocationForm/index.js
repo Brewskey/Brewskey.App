@@ -14,9 +14,8 @@ import { Button, FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';
 import Form from '../../common/form/Form';
 import FormField from '../../common/form/FormField';
-
 import TextField from '../TextField';
-import Picker from '../Picker';
+import PickerField from '../PickerField';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -57,7 +56,7 @@ type Props = {|
 // todo figure out and implement good pattern for handling
 // fields focus order
 const LocationForm = observer(
-  ({ location = {}, onSubmit, submitButtonLabel }: Props): React.Element<*> => (
+  ({ location = {}, onSubmit, submitButtonLabel }: Props): React.Node => (
     <Form validate={validate}>
       {({
         formError,
@@ -65,10 +64,10 @@ const LocationForm = observer(
         invalid,
         pristine,
         submitting,
-      }: FormChildProps): React.Element<*> => (
+      }: FormChildProps): React.Node => (
         <KeyboardAwareScrollView style={styles.container}>
           <FormField initialValue={location.name} name="name">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 returnKeyType="next"
                 disabled={submitting}
@@ -78,7 +77,7 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.summary} name="summary">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 returnKeyType="next"
                 disabled={submitting}
@@ -88,7 +87,7 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.description} name="description">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 disabled={submitting}
                 label="Description"
@@ -97,15 +96,15 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.locationType} name="locationType">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
-              <Picker label="Location type" {...formFieldProps}>
-                <Picker.Item label="Kegerator" value="Kegerator" />
-                <Picker.Item label="Bar" value="Bar" />
-              </Picker>
+            {(formFieldProps: FormFieldChildProps): React.Node => (
+              <PickerField label="Location type" {...formFieldProps}>
+                <PickerField.Item label="Kegerator" value="Kegerator" />
+                <PickerField.Item label="Bar" value="Bar" />
+              </PickerField>
             )}
           </FormField>
           <FormField initialValue={location.street} name="street">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 disabled={submitting}
                 label="Street address"
@@ -114,7 +113,7 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.suite} name="suite">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 disabled={submitting}
                 label="Apt./Suite"
@@ -123,7 +122,7 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.city} name="city">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 disabled={submitting}
                 label="City"
@@ -132,16 +131,16 @@ const LocationForm = observer(
             )}
           </FormField>
           <FormField initialValue={location.state} name="state">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
-              <Picker label="State" {...formFieldProps}>
-                {STATE_LIST.map((stateConfig: StateConfig): React.Element<
-                  *,
-                > => <Picker.Item key={stateConfig.value} {...stateConfig} />)}
-              </Picker>
+            {(formFieldProps: FormFieldChildProps): React.Node => (
+              <PickerField label="State" {...formFieldProps}>
+                {STATE_LIST.map((stateConfig: StateConfig): React.Node => (
+                  <PickerField.Item key={stateConfig.value} {...stateConfig} />
+                ))}
+              </PickerField>
             )}
           </FormField>
           <FormField initialValue={location.zipCode} name="zipCode">
-            {(formFieldProps: FormFieldChildProps): React.Element<*> => (
+            {(formFieldProps: FormFieldChildProps): React.Node => (
               <TextField
                 disabled={submitting}
                 keyboardType="numeric"
