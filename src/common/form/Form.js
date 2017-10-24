@@ -56,6 +56,7 @@ class Form extends React.Component<Props> {
           invalid: this.formStore.invalid,
           pristine: this.formStore.pristine,
           submitting: this.formStore.submitting,
+          values: this.formStore.values,
         })}
       </Provider>
     );

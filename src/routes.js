@@ -9,11 +9,15 @@ import MainDrawer from './components/MainDrawer';
 import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
 
+import BeverageDetailsScreen from './screens/BeverageDetailsScreen';
+import EditBeverageScreen from './screens/EditBeverageScreen';
 import EditLocationScreen from './screens/EditLocationScreen';
 import EditTapScreen from './screens/EditTapScreen';
 import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
+import MyBeveragesScreen from './screens/MyBeveragesScreen';
+import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -79,6 +83,20 @@ class AppRouter extends React.Component<Props> {
                       {
                         gesturesEnabled: false,
                         initialRoute: 'taps',
+                      },
+                    ),
+                  },
+                  myBeverages: {
+                    screen: StackNavigator(
+                      {
+                        myBeverages: { screen: MyBeveragesScreen },
+                        beverageDetails: { screen: BeverageDetailsScreen },
+                        editBeverage: { screen: EditBeverageScreen },
+                        newBeverage: { screen: NewBeverageScreen },
+                      },
+                      {
+                        gesturesEnabled: false,
+                        initialRoute: 'myBeverages',
                       },
                     ),
                   },

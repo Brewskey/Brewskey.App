@@ -33,7 +33,7 @@ const TextField = ({
       ref={inputRef}
       onBlur={onBlur}
       onChangeText={onChange}
-      value={value}
+      value={value && value.toString()}
       {...props}
     />
     <FormValidationMessage>{error}</FormValidationMessage>
