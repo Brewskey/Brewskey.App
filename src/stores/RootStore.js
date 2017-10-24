@@ -7,6 +7,7 @@ import type {
   Beverage,
   Device,
   DeviceMutator,
+  Glass,
   Location,
   Organization,
   Permission,
@@ -37,6 +38,7 @@ class RootStore {
   availabilityStore: DAOEntityStore<Availability, Availability>;
   beverageStore: DAOEntityStore<Beverage, Beverage>;
   deviceStore: DAOEntityStore<Device, DeviceMutator>;
+  glassStore: DAOEntitySTore<Glass, Glass>;
   locationStore: DAOEntityStore<Location, Location>;
   organizationStore: DAOEntityStore<Organization, Organization>;
   permissionStore: DAOEntityStore<Permission, PermissionMutator>;
@@ -58,6 +60,7 @@ class RootStore {
     this.deviceStore = new DAOEntityStore(this, DAOApi.DeviceDAO);
     this.locationStore = new DAOEntityStore(this, DAOApi.LocationDAO);
     this.organizationStore = new DAOEntityStore(this, DAOApi.OrganizationDAO);
+    this.glassStore = new DAOEntityStore(this, DAOApi.GlassDAO);
     this.permissionStore = new DAOEntityStore(this, DAOApi.PermissionDAO);
     this.pourStore = new DAOEntityStore(this, DAOApi.PourDAO);
     this.reportStore = new DAOEntityStore(this, DAOApi.ReportDAO);
