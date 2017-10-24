@@ -15,6 +15,7 @@ export type FormChildProps = {|
   invalid: boolean,
   pristine: boolean,
   submitting: boolean,
+  values: Array<any>,
 |};
 
 export type FormFieldChildProps = {|
