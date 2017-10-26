@@ -1,5 +1,6 @@
 rootProject.name = 'brewskey'
 include ':react-native-vector-icons'
+include 'devicesetup'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 
 include ':app'
