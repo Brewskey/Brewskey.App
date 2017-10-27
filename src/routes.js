@@ -10,6 +10,8 @@ import LoginScreen from './screens/LoginScreen';
 import SplashScreen from './screens/SplashScreen';
 
 import BeverageDetailsScreen from './screens/BeverageDetailsScreen';
+import DeviceDetailsScreen from './screens/DeviceDetailsScreen';
+import DevicesScreen from './screens/DevicesScreen';
 import EditBeverageScreen from './screens/EditBeverageScreen';
 import EditLocationScreen from './screens/EditLocationScreen';
 import EditTapScreen from './screens/EditTapScreen';
@@ -83,6 +85,18 @@ class AppRouter extends React.Component<Props> {
                       {
                         gesturesEnabled: false,
                         initialRoute: 'taps',
+                      },
+                    ),
+                  },
+                  devices: {
+                    screen: StackNavigator(
+                      {
+                        devices: { screen: DevicesScreen },
+                        deviceDetails: { screen: DeviceDetailsScreen },
+                      },
+                      {
+                        gesturesEnabled: false,
+                        initialRoute: '',
                       },
                     ),
                   },
