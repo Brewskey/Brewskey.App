@@ -6,7 +6,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Text, View } from 'react-native';
-import flatNavigationParams from '../common/flatNavigationParams';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type Props = {|
   deviceStore: DAOEntityStore<Device, DeviceMutator>,
@@ -14,7 +14,7 @@ type Props = {|
   navigation: Object,
 |};
 
-@flatNavigationParams
+@flatNavigationParamsAndScreenProps
 @inject('deviceStore')
 @observer
 class DeviceDetailsScreen extends React.Component<Props> {

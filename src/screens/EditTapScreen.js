@@ -5,7 +5,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
-import flatNavigationParams from '../common/flatNavigationParams';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
 
 type Props = {|
@@ -14,7 +14,7 @@ type Props = {|
   tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
-@flatNavigationParams
+@flatNavigationParamsAndScreenProps
 @inject('tapStore')
 class EditTapScreen extends React.Component<Props> {
   static navigationOptions = {

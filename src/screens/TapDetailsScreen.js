@@ -6,7 +6,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Text, View } from 'react-native';
-import flatNavigationParams from '../common/flatNavigationParams';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type Props = {|
   id: string,
@@ -14,7 +14,7 @@ type Props = {|
   tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
-@flatNavigationParams
+@flatNavigationParamsAndScreenProps
 @inject('tapStore')
 @observer
 class TapDetailsScreen extends React.Component<Props> {
