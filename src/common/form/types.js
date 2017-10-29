@@ -29,3 +29,8 @@ export type FormFieldChildProps = {|
 export type ValidationFunction = (values: { [key: string]: any }) => {
   [key: string]: string,
 };
+
+export type FieldFocusManagerChildProps = {|
+  addFieldRef: (index: number) => (ref: React.Element<any>) => void,
+  focusField: (index: number) => () => void,
+|};
