@@ -2,7 +2,7 @@
 
 import type { Field, ValidateFunction } from './types';
 
-import { action, computed, observable } from 'mobx';
+import { action, computed, createTransformer, observable } from 'mobx';
 
 const FORM_ERROR_KEY = '_error';
 
@@ -48,6 +48,7 @@ class FormStore {
   @action
   changeFieldValue = (fieldName: string, value: any) => {
     this.updateFieldProps(fieldName, { error: null, touched: true, value });
+    this.validateField(fieldName);
   };
 
   @action
@@ -125,21 +126,20 @@ class FormStore {
     );
   }
 
-  // todo remove all that field existing checking code duplication
-  getFieldError = (fieldName: string): any => {
+  getFieldError = createTransformer((fieldName: string): ?string => {
     const field = this._fields.get(fieldName);
     return field && field.touched ? field.error : null;
-  };
+  });
 
-  getFieldTouched = (fieldName: string): any => {
+  getFieldTouched = createTransformer((fieldName: string): boolean => {
     const field = this._fields.get(fieldName);
     return field ? field.touched : false;
-  };
+  });
 
-  getFieldValue = (fieldName: string): any => {
+  getFieldValue = createTransformer((fieldName: string): any => {
     const field = this._fields.get(fieldName);
     return field ? field.value : null;
-  };
+  });
 }
 
 export default FormStore;

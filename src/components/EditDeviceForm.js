@@ -1,34 +1,37 @@
 // @flow
 
 import type { Device, DeviceMutator } from 'brewskey.js-api';
-import type { FormChildProps } from '../common/form/types';
+import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
-// todo replace with scroll view
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button } from 'react-native-elements';
 import DeviceBaseFormFields from './DeviceBaseFormFields';
-import Form from '../common/form/Form';
-import FormField from '../common/form/FormField';
+import { form, FormField } from '../common/form';
+import { validate } from './NewDeviceForm';
 
 type Props = {|
   device: Device,
   onSubmit: (values: DeviceMutator) => Promise<void>,
+  ...FormProps,
 |};
 
-const EditDeviceForm = ({ device, onSubmit }: Props): React.Node => (
-  <Form>
-    {({ handleSubmit }: FormChildProps): React.Node => (
-      <KeyboardAwareScrollView>
-        <DeviceBaseFormFields device={device} />
-        <FormField initialValue={device.particleId} name="particleId" />
-        <Button
-          title="Edit Brewskey box"
-          onPress={(): Promise<void> => handleSubmit(onSubmit)}
-        />
-      </KeyboardAwareScrollView>
-    )}
-  </Form>
+const EditDeviceForm = ({
+  device,
+  handleSubmit,
+  invalid,
+  pristine,
+  submitting,
+}: Props): React.Node => (
+  <KeyboardAwareScrollView>
+    <DeviceBaseFormFields device={device} />
+    <FormField initialValue={device.particleId} name="particleId" />
+    <Button
+      disabled={invalid || pristine || submitting}
+      onPress={handleSubmit}
+      title="Edit Brewskey box"
+    />
+  </KeyboardAwareScrollView>
 );
 
-export default EditDeviceForm;
+export default form({ validate })(EditDeviceForm);

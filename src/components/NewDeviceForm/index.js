@@ -3,7 +3,7 @@
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { StackNavigator } from 'react-navigation';
-import Form from '../../common/form/Form';
+import { form } from '../../common/form';
 import StepParticleId from './StepParticleId';
 import StepDeviceFields from './StepDeviceFields';
 
@@ -18,13 +18,13 @@ const Stepper = StackNavigator(
     stepDeviceFields: { screen: StepDeviceFields },
   },
   {
-    // headerMode: 'none',
+    headerMode: 'none',
     initialRoute: 'enterParticleId',
   },
 );
 /* eslint-enable */
 
-const validate = (values: DeviceMutator): { [key: string]: string } => {
+export const validate = (values: DeviceMutator): { [key: string]: string } => {
   const errors = {};
 
   if (!values.deviceStatus) {
@@ -52,16 +52,13 @@ const validate = (values: DeviceMutator): { [key: string]: string } => {
 
 type Props = {|
   onSubmit: (values: DeviceMutator) => Promise<void>,
+  ...FormProps,
 |};
 
-const NewDeviceForm = ({ onSubmit }: Props): React.Node => (
-  <Form validate={validate}>
-    {(formChildProps: FormChildProps): React.Node => (
-      <Container>
-        <Stepper screenProps={{ ...formChildProps, onSubmit }} />
-      </Container>
-    )}
-  </Form>
+const NewDeviceForm = (props: Props): React.Node => (
+  <Container>
+    <Stepper screenProps={props} />
+  </Container>
 );
 
-export default NewDeviceForm;
+export default form({ validate })(NewDeviceForm);

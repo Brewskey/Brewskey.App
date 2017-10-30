@@ -1,6 +1,6 @@
 // @flow
 
-import type { FormChildProps } from '../../common/form/types';
+import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
 import { View } from 'react-native';
@@ -11,24 +11,18 @@ import DeviceBaseFormFields from '../DeviceBaseFormFields';
 
 type Props = {|
   navigation: Object,
-  ...FormChildProps,
+  ...FormProps,
 |};
 
 @flatNavigationParamsAndScreenProps
 @observer
 class StepDeviceFields extends React.Component<Props> {
-  _onCreateButtonPress = (): Promise<void> =>
-    this.props.handleSubmit(this.props.onSubmit);
-
   render(): React.Node {
     return (
       <View>
         <DeviceBaseFormFields {...this.props} />
         <FormValidationMessage>{this.props.formError}</FormValidationMessage>
-        <Button
-          title="Create brewskey box"
-          onPress={this._onCreateButtonPress}
-        />
+        <Button title="Create brewskey box" onPress={this.props.handleSubmit} />
       </View>
     );
   }

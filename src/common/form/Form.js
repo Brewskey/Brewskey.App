@@ -54,6 +54,8 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
           <Component
             {...this.props}
             formError={this._formStore.formError}
+            getFieldError={this._formStore.getFieldError}
+            getFieldTouched={this._formStore.getFieldTouched}
             handleSubmit={this._handleSubmit}
             invalid={this._formStore.invalid}
             pristine={this._formStore.pristine}
