@@ -6,35 +6,34 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 import * as React from 'react';
 import { inject } from 'mobx-react';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import TapForm from '../components/TapForm';
+import EditDeviceForm from '../components/EditDeviceForm';
 
 type Props = {|
   id: string,
   navigation: Object,
-  tapStore: DAOEntityStore<Tap, TapMutator>,
+  deviceStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
 @flatNavigationParamsAndScreenProps
-@inject('tapStore')
-class EditTapScreen extends React.Component<Props> {
+@inject('deviceStore')
+class EditDeviceScreen extends React.Component<Props> {
   static navigationOptions = {
-    title: 'Edit tap',
+    title: 'Edit Brewskey box',
   };
 
-  _onFormSubmit = async (values: Location): Promise<void> => {
-    await this.props.tapStore.put(values.id, values);
+  _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
+    await this.props.deviceStore.put(values.id, values);
     this.props.navigation.goBack(null);
   };
 
   render(): React.Node {
     return (
-      <TapForm
+      <EditDeviceForm
         onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit tap"
-        tap={this.props.tapStore.getByID(this.props.id)}
+        device={this.props.deviceStore.getByID(this.props.id)}
       />
     );
   }
 }
 
-export default EditTapScreen;
+export default EditDeviceScreen;

@@ -5,7 +5,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
-import flatNavigationParams from '../common/flatNavigationParams';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageForm from '../components/BeverageForm';
 
 type Props = {|
@@ -14,7 +14,7 @@ type Props = {|
   navigation: Object,
 |};
 
-@flatNavigationParams
+@flatNavigationParamsAndScreenProps
 @inject('beverageStore')
 class EditBeverageScreen extends React.Component<Props> {
   static navigationOptions = {
