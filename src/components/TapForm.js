@@ -1,6 +1,6 @@
 // @flow
 
-import type { FormChildProps, FormFieldChildProps } from '../common/form/types';
+import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
@@ -9,8 +9,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import PickerField from './PickerField';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
-import Form from '../common/form/Form';
-import FormField from '../common/form/FormField';
+import { form, FormField } from '../common/form';
 
 const validate = (values: TapMutator): { [key: string]: string } => {
   const errors = {};
@@ -31,8 +30,10 @@ type Props = {|
   onSubmit: (values: DeviceMutator) => Promise<void>,
   submitButtonLabel: string,
   tap?: Tap,
+  ...FormProps,
 |};
 
+@form({ validate })
 @inject('deviceStore')
 @observer
 class TapForm extends React.Component<Props> {
@@ -42,90 +43,75 @@ class TapForm extends React.Component<Props> {
   }
 
   render(): React.Node {
-    const { onSubmit, submitButtonLabel, tap = {} } = this.props;
+    const {
+      formError,
+      handleSubmit,
+      invalid,
+      pristine,
+      submitButtonLabel,
+      submitting,
+      tap = {},
+    } = this.props;
+
     return (
-      <Form validate={validate}>
-        {({
-          formError,
-          handleSubmit,
-          invalid,
-          pristine,
-          submitting,
-        }: FormChildProps): React.Node => (
-          <KeyboardAwareScrollView>
-            <FormField initialValue={tap.name} name="name">
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <TextField
-                  disabled={submitting}
-                  label="Name"
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField initialValue={tap.description} name="description">
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <TextField
-                  disabled={submitting}
-                  label="Description"
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField initialValue={tap.deviceId} name="device">
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <PickerField label="Brewskey Box" {...formFieldProps}>
-                  {this.props.deviceStore.all.map(
-                    (device: Device): React.Node => (
-                      <PickerField.Item
-                        key={device.id}
-                        label={device.name}
-                        value={device}
-                      />
-                    ),
-                  )}
-                </PickerField>
-              )}
-            </FormField>
-            <FormField
-              initialValue={tap.hideLeaderboard}
-              name="hideLeaderboard"
-            >
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <CheckBoxField
-                  disabled={submitting}
-                  label="Hide leaderboard"
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField initialValue={tap.hideStats} name="hideStats">
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <CheckBoxField
-                  disabled={submitting}
-                  label="Hide stats"
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField initialValue={tap.disableBadges} name="disableBadges">
-              {(formFieldProps: FormFieldChildProps): React.Node => (
-                <CheckBoxField
-                  disabled={submitting}
-                  label="Disable badges"
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField initialValue={tap.id} name="id" />
-            <FormValidationMessage>{formError}</FormValidationMessage>
-            <Button
-              disabled={submitting || invalid || pristine}
-              onPress={(): void => handleSubmit(onSubmit)}
-              title={submitButtonLabel}
+      <KeyboardAwareScrollView>
+        <FormField
+          component={TextField}
+          initialValue={tap.name}
+          disabled={submitting}
+          name="name"
+          label="Name"
+        />
+        <FormField
+          component={TextField}
+          initialValue={tap.description}
+          name="description"
+          label="Description"
+        />
+        <FormField
+          component={PickerField}
+          initialValue={tap.device}
+          disabled={submitting}
+          name="device"
+          label="Brewskey box"
+        >
+          {this.props.deviceStore.all.map((device: Device): React.Node => (
+            <PickerField.Item
+              key={device.id}
+              label={device.name}
+              value={device}
             />
-          </KeyboardAwareScrollView>
-        )}
-      </Form>
+          ))}
+        </FormField>
+        <FormField
+          component={CheckBoxField}
+          initialValue={tap.hideLeaderboard}
+          disabled={submitting}
+          name="hideLeaderboard"
+          label="Hide leaderboard"
+        />
+        <FormField
+          component={CheckBoxField}
+          initialValue={tap.hideStats}
+          disabled={submitting}
+          name="hideStats"
+          label="Hide stats"
+        />
+        <FormField
+          component={CheckBoxField}
+          initialValue={tap.disableBadges}
+          disabled={submitting}
+          name="disableBadges"
+          label="Disable badges"
+        />
+        <FormField initialValue={tap.id} name="id" />
+        <FormValidationMessage>{formError}</FormValidationMessage>
+        <Button
+          disabled={submitting || invalid || pristine}
+          onPress={handleSubmit}
+          title={submitButtonLabel}
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }

@@ -1,14 +1,14 @@
 // @flow
 
 import type AuthStore from '../stores/AuthStore';
-import type { FormChildProps, FormFieldChildProps } from '../common/form/types';
+import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Keyboard, View } from 'react-native';
+import { Keyboard } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
-import Form from '../common/form/Form';
-import FormField from '../common/form/FormField';
+import { form, FormField } from '../common/form';
 import TextField from './TextField';
 
 const validate = (values: UserCredentials): { [key: string]: string } => {
@@ -26,67 +26,58 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
 
 type Props = {|
   authStore: AuthStore,
+  ...FormProps,
 |};
 
+@form({ validate })
 @inject('authStore')
 @observer
 class LoginForm extends React.Component<Props> {
   passwordFieldRef: ?React.Element<*>;
 
-  onUserNameSubmit = () => {
+  _onUserNameSubmit = () => {
     if (this.passwordFieldRef) {
       this.passwordFieldRef.focus();
     }
   };
 
-  onSubmit = async (formValues: Object): Promise<void> => {
+  _onSubmit = async (formValues: Object): Promise<void> => {
     Keyboard.dismiss();
     await this.props.authStore.login(formValues);
   };
 
+  _onSubmitButtonPress = (): Promise<void> =>
+    this.props.handleSubmit(this._onSubmit);
+
   render(): React.Element<*> {
+    const { formError, invalid, pristine, submitting } = this.props;
     return (
-      <Form validate={validate}>
-        {({
-          formError,
-          handleSubmit,
-          invalid,
-          pristine,
-          submitting,
-        }: FormChildProps): React.Element<any> => (
-          <View>
-            <FormField name="userName">
-              {(formFieldProps: FormFieldChildProps): React.Element<*> => (
-                <TextField
-                  disabled={submitting}
-                  label="User name"
-                  onSubmitEditing={this.onUserNameSubmit}
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormField name="password">
-              {(formFieldProps: FormFieldChildProps): React.Element<*> => (
-                <TextField
-                  disabled={submitting}
-                  label="Password"
-                  inputRef={(ref: React.Element<*>) => {
-                    this.passwordFieldRef = ref;
-                  }}
-                  secureTextEntry
-                  {...formFieldProps}
-                />
-              )}
-            </FormField>
-            <FormValidationMessage>{formError}</FormValidationMessage>
-            <Button
-              disabled={submitting || invalid || pristine}
-              onPress={(): Promise<void> => handleSubmit(this.onSubmit)}
-              title="Log in"
-            />
-          </View>
-        )}
-      </Form>
+      <KeyboardAwareScrollView>
+        <FormField
+          component={TextField}
+          disabled={submitting}
+          label="User name"
+          name="userName"
+          onSubmitEditing={this._onUserNameSubmit}
+        />
+        <FormField
+          component={TextField}
+          disabled={submitting}
+          label="Password"
+          inputRef={(ref: React.Element<*>) => {
+            this.passwordFieldRef = ref;
+          }}
+          name="password"
+          onSubmitEditing={this._onSubmitButtonPress}
+          secureTextEntry
+        />
+        <FormValidationMessage>{formError}</FormValidationMessage>
+        <Button
+          disabled={submitting || invalid || pristine}
+          onPress={this._onSubmitButtonPress}
+          title="Log in"
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }

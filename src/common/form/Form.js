@@ -1,66 +1,72 @@
 // @flow
 
-import type { ValidateFunction } from './types';
+import type { FormProps, ValidateFunction } from './types';
 
 import * as React from 'react';
+import hoistNonReactStatic from 'hoist-non-react-statics';
 import { Provider, observer } from 'mobx-react';
 import FormStore from './FormStore';
 
-type Props = {|
-  validate: ?ValidateFunction,
+type FormSetupProps = {|
+  validate?: ValidateFunction,
 |};
 
-@observer
-class Form extends React.Component<Props> {
-  formStore: FormStore;
+const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
+  Component: React.ComponentType<TProps>,
+): React.ComponentType<TProps & FormProps> => {
+  @observer
+  class Form extends React.Component<Props> {
+    _formStore: FormStore;
 
-  componentWillMount() {
-    this.formStore = new FormStore({ validate: this.props.validate });
-  }
-
-  handleSubmit = async (
-    callback: (values: { [key: string]: any }) => void | Promise<void>,
-  ): Promise<void> => {
-    this.formStore.setFormError(null);
-    this.formStore.validate();
-    if (this.formStore.invalid) {
-      return;
+    componentWillMount() {
+      this._formStore = new FormStore({ validate });
     }
 
-    try {
-      this.formStore.setSubmitting(true);
-      const result = callback(this.formStore.values);
-      if (result && result.then) {
-        await result;
+    _handleSubmit = async (
+      callback: (values: { [key: string]: any }) => void | Promise<void>,
+    ): Promise<void> => {
+      this._formStore.setFormError(null);
+      this._formStore.validate();
+      if (this._formStore.invalid) {
+        return;
       }
-    } catch (error) {
-      // todo what if no mesage in error?
-      this.formStore.setFormError(error.message);
-    } finally {
-      this.formStore.setSubmitting(false);
-    }
-  };
 
-  render(): ?React.Element<*> {
-    if (!this.props.children) {
-      return null;
+      try {
+        this._formStore.setSubmitting(true);
+        const result = callback.call
+          ? callback(this._formStore.values)
+          : this.props.onSubmit(this._formStore.values);
+
+        if (result && result.then) {
+          await result;
+        }
+      } catch (error) {
+        // todo what if no mesage in error?
+        this._formStore.setFormError(error.message);
+      } finally {
+        this._formStore.setSubmitting(false);
+      }
+    };
+
+    render(): ?React.Element<*> {
+      return (
+        <Provider formStore={this._formStore}>
+          <Component
+            {...this.props}
+            formError={this._formStore.formError}
+            handleSubmit={this._handleSubmit}
+            invalid={this._formStore.invalid}
+            pristine={this._formStore.pristine}
+            submitting={this._formStore.submitting}
+            values={this._formStore.values}
+          />
+        </Provider>
+      );
     }
-    if (!this.props.children.call) {
-      throw new Error('Form children should be a function or null');
-    }
-    return (
-      <Provider formStore={this.formStore}>
-        {this.props.children({
-          formError: this.formStore.formError,
-          handleSubmit: this.handleSubmit,
-          invalid: this.formStore.invalid,
-          pristine: this.formStore.pristine,
-          submitting: this.formStore.submitting,
-          values: this.formStore.values,
-        })}
-      </Provider>
-    );
   }
-}
 
-export default Form;
+  hoistNonReactStatic(Form, Component);
+  return Form;
+};
+
+export default form;
