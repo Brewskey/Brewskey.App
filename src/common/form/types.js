@@ -9,7 +9,7 @@ export type Field = {|
   value: any,
 |};
 
-export type FormChildProps = {|
+export type FormProps = {|
   formError: ?string,
   handleSubmit: (onSubmit: (values: Object) => void | Promise<void>) => void,
   invalid: boolean,

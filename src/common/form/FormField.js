@@ -21,25 +21,27 @@ class FormField extends React.Component<Props> {
     });
   }
 
-  onBlur = (): void => this.props.formStore.blurField(this.props.name);
+  _onBlur = (): void => this.props.formStore.blurField(this.props.name);
 
-  onChange = (value: any): void =>
+  _onChange = (value: any): void =>
     this.props.formStore.changeFieldValue(this.props.name, value);
 
-  render(): ?React.Element<*> {
-    if (!this.props.children) {
+  render(): React.Node {
+    const { component: Component } = this.props;
+    if (!Component) {
       return null;
     }
-    if (!this.props.children.call) {
-      throw new Error('FormField children should be a function or null');
-    }
-    return this.props.children({
-      error: this.props.formStore.getFieldError(this.props.name),
-      onBlur: this.onBlur,
-      onChange: this.onChange,
-      touched: this.props.formStore.getFieldTouched(this.props.name),
-      value: this.props.formStore.getFieldValue(this.props.name),
-    });
+
+    return (
+      <Component
+        {...this.props}
+        error={this.props.formStore.getFieldError(this.props.name)}
+        onBlur={this._onBlur}
+        onChange={this._onChange}
+        touched={this.props.formStore.getFieldTouched(this.props.name)}
+        value={this.props.formStore.getFieldValue(this.props.name)}
+      />
+    );
   }
 }
 
