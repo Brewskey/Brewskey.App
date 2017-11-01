@@ -16,11 +16,20 @@
 ; Ignore polyfills
 .*/Libraries/polyfills/.*
 
+; custom ignores, trying to fix 600+ node_modules errors
+.*/node_modules/react-navigation/src/**/.*
+.*/node_modules/react-navigation/lib/**/.*
+.*/node_modules/react-navigation/lib-rn/**/.*
+.*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
+.*/node_modules/react-native-side-menu/**/.*
+.*/node_modules/styled-components/src/**/.*
+
 [include]
 
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
 node_modules/react-native/flow/
+flow-typed
 
 [options]
 emoji=true
@@ -43,6 +52,10 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
 unsafe.enable_getters_and_setters=true
+
+; custom options
+esproposal.decorators=ignore
+esproposal.export_star_as=enable
 
 [version]
 ^0.53.0
