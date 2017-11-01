@@ -7,17 +7,17 @@ import { inject } from 'mobx-react';
 import AppLoading from '../components/AppLoading';
 
 type Props = {|
-  navigation: Object,
+  navigation: Navigation,
   rootStore: RootStore,
 |};
 
 @inject('rootStore')
 class SplashScreen extends React.Component<Props> {
-  async componentDidMount(): Promise<void> {
-    await this.props.rootStore.initialize();
+  componentDidMount() {
+    this.props.rootStore.initialize();
   }
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return <AppLoading />;
   }
 }

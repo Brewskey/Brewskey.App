@@ -1,6 +1,7 @@
 // @flow
 
 import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -10,7 +11,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 
 type Props = {|
   id: string,
-  navigation: Object,
+  navigation: Navigation,
   tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 

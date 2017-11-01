@@ -1,9 +1,17 @@
 // @flow
 
+import type { Navigation } from '../types';
+import type AppSettingsStore from '../stores/AppSettingsStore';
+
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+type Props = {|
+  navigation: Navigation,
+  appSettingsStore: AppSettingsStore,
+|};
 
 @inject('appSettingsStore')
 @observer
@@ -12,7 +20,7 @@ class SettingsScreen extends React.Component<Props> {
     title: 'Settings',
   };
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return (
       <List>
         <KeyboardAwareScrollView>

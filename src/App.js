@@ -21,8 +21,8 @@ Object.getOwnPropertyNames(rootStore).forEach((storeName: string): Object => {
   stores[storeName] = rootStore[storeName];
 });
 
-class App extends React.Component {
-  render(): React.Element<*> {
+class App extends React.Component<{}> {
+  render(): React.Node {
     return (
       <Provider rootStore={rootStore} {...stores}>
         <AppRouter

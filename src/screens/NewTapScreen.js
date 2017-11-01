@@ -1,6 +1,7 @@
 // @flow
 
 import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type { DAOEntityStore } from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -8,7 +9,7 @@ import { inject } from 'mobx-react';
 import TapForm from '../components/TapForm';
 
 type Props = {|
-  navigation: Object,
+  navigation: Navigation,
   tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 

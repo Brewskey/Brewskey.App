@@ -1,6 +1,7 @@
 // @flow
 
 import type { Beverage } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -11,7 +12,7 @@ import BeverageForm from '../components/BeverageForm';
 type Props = {|
   beverageStore: DAOEntityStore<Beverage, Beverage>,
   id: string,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps

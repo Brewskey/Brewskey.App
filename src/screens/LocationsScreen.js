@@ -1,11 +1,13 @@
 // @flow
 
+import type { Navigation } from '../types';
+
 import * as React from 'react';
 import HeaderIcon from '../common/HeaderIcon';
 import LocationsList from '../components/LocationsList';
 
 type Props = {|
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 class LocationsScreen extends React.Component<Props> {
@@ -19,7 +21,7 @@ class LocationsScreen extends React.Component<Props> {
     title: 'Locations',
   });
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return <LocationsList />;
   }
 }

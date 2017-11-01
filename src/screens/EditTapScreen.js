@@ -1,6 +1,7 @@
 // @flow
 
 import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -10,7 +11,7 @@ import TapForm from '../components/TapForm';
 
 type Props = {|
   id: string,
-  navigation: Object,
+  navigation: Navigation,
   tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
@@ -21,7 +22,7 @@ class EditTapScreen extends React.Component<Props> {
     title: 'Edit tap',
   };
 
-  _onFormSubmit = async (values: Location): Promise<void> => {
+  _onFormSubmit = async (values: TapMutator): Promise<void> => {
     await this.props.tapStore.put(values.id, values);
     this.props.navigation.goBack(null);
   };

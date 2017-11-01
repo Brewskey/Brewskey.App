@@ -2,6 +2,7 @@
 
 // todo add LocationMutator type to the lib
 import type { Location } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type { DAOEntityStore } from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -9,7 +10,7 @@ import { inject } from 'mobx-react';
 import LocationForm from '../components/LocationForm';
 
 type Props = {|
-  navigation: Object,
+  navigation: Navigation,
   locationStore: DAOEntityStore<Location, Location>,
 |};
 

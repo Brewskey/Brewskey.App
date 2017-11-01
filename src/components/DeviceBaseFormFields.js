@@ -1,5 +1,8 @@
 // @flow
 
+import type { Device } from 'brewskey.js-api';
+import type DAOEntityStore from '../stores/DAOEntityStore';
+
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import { FormField } from '../common/form';

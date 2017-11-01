@@ -1,5 +1,6 @@
 // @flow
 
+import type { Navigation } from '../types';
 import type AuthStore from '../stores/AuthStore';
 
 import * as React from 'react';
@@ -10,7 +11,7 @@ import DevicesList from '../components/DevicesList';
 
 type Props = {|
   authStore: AuthStore,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @inject('authStore')

@@ -39,10 +39,6 @@ type Props = {|
 @inject('styleStore')
 @observer
 class BeverageForm extends React.Component<Props> {
-  static defaultProps = {
-    beverage: {},
-  };
-
   componentWillMount() {
     // todo replace to fetchAll when it will be implemented
     this.props.availabilityStore.fetchMany();

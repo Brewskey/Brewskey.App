@@ -1,6 +1,7 @@
 // @flow
 
 import type { Beverage } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type { DAOEntityStore } from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -9,7 +10,7 @@ import BeverageForm from '../components/BeverageForm';
 
 type Props = {|
   beverageStore: DAOEntityStore<Beverage, Beverage>,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @inject('beverageStore')
@@ -18,7 +19,7 @@ class NewBeverageScreen extends React.Component<Props> {
     title: 'New beverage',
   };
 
-  _onFormSubmit = async (values: Location): Promise<void> => {
+  _onFormSubmit = async (values: Beverage): Promise<void> => {
     const { beverageStore, navigation } = this.props;
     const { id } = await beverageStore.post(values);
     // todo figure out how to replace page instead adding to stack history

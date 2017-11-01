@@ -1,6 +1,7 @@
 // @flow
 
 import type { Device, DeviceMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
@@ -11,7 +12,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 type Props = {|
   deviceStore: DAOEntityStore<Device, DeviceMutator>,
   id: string,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps

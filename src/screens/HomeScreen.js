@@ -1,21 +1,22 @@
 // @flow
 
+import type { Navigation } from '../types';
+
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 
 type Props = {|
-  navigation: Object,
+  navigation: Navigation,
 |};
 
-@inject('locationStore')
 @observer
 class HomeScreen extends React.Component<Props> {
   static navigationOptions = {
     title: 'Home',
   };
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return (
       <View>
         <Text>Home Home</Text>

@@ -1,14 +1,15 @@
 // @flow
 
 import type { Device, DeviceMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { inject, observer } from 'mobx-react';
 import NewDeviceForm from '../components/NewDeviceForm';
 
 type Props = {|
-  navigation: Object,
   deviceStore: DAOEntityStore<Device, DeviceMutator>,
+  navigation: Navigation,
 |};
 
 @inject('deviceStore')

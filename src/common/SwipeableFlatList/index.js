@@ -38,7 +38,7 @@ type SwipableListProps = {
   preventSwipeRight?: boolean,
 };
 
-type Props<ItemT> = SwipableListProps & FlatListProps<ItemT>;
+type Props<TItem> = SwipableListProps & FlatListProps<TItem>;
 
 type State = {
   openRowKey: ?string,
@@ -61,12 +61,12 @@ type State = {
  * - More to come
  */
 
-class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
+class SwipeableFlatList<TItem> extends React.Component<Props<TItem>, State> {
   state = {
     openRowKey: null,
   };
 
-  _flatListRef: ?FlatList<ItemT> = null;
+  _flatListRef: ?FlatList<TItem> = null;
   _shouldBounceFirstRowOnMount: boolean = false;
 
   static defaultProps = {
@@ -75,7 +75,7 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
     renderQuickActions: () => null,
   };
 
-  constructor(props: Props<ItemT>, context: any): void {
+  constructor(props: Props<TItem>, context: any): void {
     super(props, context);
 
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;

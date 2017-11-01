@@ -25,7 +25,7 @@ type Props = {|
 @inject('locationStore')
 @observer
 class LocationsList extends React.Component<Props> {
-  _swipeableFlatListRef: ?SwipeableFlatList;
+  _swipeableFlatListRef: ?SwipeableFlatList<Location>;
 
   _fetchNextData = async (): Promise<void> => {
     await this.props.locationStore.fetchMany({
@@ -89,7 +89,7 @@ class LocationsList extends React.Component<Props> {
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: SwipeableFlatList) => {
+            ref={(ref: mixed) => {
               this._swipeableFlatListRef = ref;
             }}
             renderItem={this._renderItem}

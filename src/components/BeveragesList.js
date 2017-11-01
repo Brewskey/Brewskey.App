@@ -30,7 +30,7 @@ class BeveragesList extends React.Component<Props> {
     queryOptions: {},
   };
 
-  _swipeableFlatListRef: ?SwipeableFlatList;
+  _swipeableFlatListRef: ?SwipeableFlatList<Beverage>;
 
   _fetchNextData = async (): Promise<void> => {
     await this.props.beverageStore.fetchMany({
@@ -96,7 +96,7 @@ class BeveragesList extends React.Component<Props> {
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: SwipeableFlatList) => {
+            ref={(ref: React.ElementRef<SwipeableFlatList<*>>) => {
               this._swipeableFlatListRef = ref;
             }}
             renderItem={this._renderItem}

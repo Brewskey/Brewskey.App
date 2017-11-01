@@ -14,7 +14,7 @@ const flatNavigationParamsAndScreenProps = <
   class FlatNavigationParamsAndScreenProps extends React.Component<
     TProps & TParams,
   > {
-    render(): React.Element<*> {
+    render(): React.Node {
       return (
         <Component
           {...this.props.navigation.state.params || {}}
