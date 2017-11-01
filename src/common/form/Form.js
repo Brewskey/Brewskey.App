@@ -1,14 +1,15 @@
 // @flow
 
-import type { FormProps, ValidateFunction } from './types';
+import type { FormProps, ValidationFunction } from './types';
 
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import { Provider, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import FormStore from './FormStore';
 
 type FormSetupProps = {|
-  validate?: ValidateFunction,
+  validate?: ValidationFunction,
 |};
 
 const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
@@ -16,10 +17,20 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
 ): React.ComponentType<TProps & FormProps> => {
   @observer
   class Form extends React.Component<Props> {
+    static childContextTypes = {
+      formStore: PropTypes.object,
+    };
+
     _formStore: FormStore;
 
     componentWillMount() {
       this._formStore = new FormStore({ validate });
+    }
+
+    getChildContext(): { formStore: FormStore } {
+      return {
+        formStore: this._formStore,
+      };
     }
 
     _handleSubmit = async (
@@ -48,21 +59,19 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
       }
     };
 
-    render(): ?React.Element<*> {
+    render(): React.Node {
       return (
-        <Provider formStore={this._formStore}>
-          <Component
-            {...this.props}
-            formError={this._formStore.formError}
-            getFieldError={this._formStore.getFieldError}
-            getFieldTouched={this._formStore.getFieldTouched}
-            handleSubmit={this._handleSubmit}
-            invalid={this._formStore.invalid}
-            pristine={this._formStore.pristine}
-            submitting={this._formStore.submitting}
-            values={this._formStore.values}
-          />
-        </Provider>
+        <Component
+          {...this.props}
+          formError={this._formStore.formError}
+          getFieldError={this._formStore.getFieldError}
+          getFieldTouched={this._formStore.getFieldTouched}
+          handleSubmit={this._handleSubmit}
+          invalid={this._formStore.invalid}
+          pristine={this._formStore.pristine}
+          submitting={this._formStore.submitting}
+          values={this._formStore.values}
+        />
       );
     }
   }
