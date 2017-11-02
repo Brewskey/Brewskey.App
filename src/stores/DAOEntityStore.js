@@ -1,5 +1,6 @@
 // @flow
 
+import type { DAO, QueryFilter, QueryOptions } from 'brewskey.js-api';
 import type RootStore from './RootStore';
 
 import {
@@ -13,11 +14,11 @@ import DAOApi from 'brewskey.js-api';
 
 // todo implement optimistic updates for put/delete
 // todo think how to remove some code duplication in actions
-class DAOEntityStore<TEntity, TEntityMutator> {
+class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
   _dao: DAO<TEntity, TEntityMutator>;
   _rootStore: RootStore;
 
-  @observable entityItemsByID: Array<TEntity> = new Map();
+  @observable entityItemsByID: Map<string, TEntity> = new Map();
 
   constructor(rootStore: RootStore, dao: DAO<TEntity, TEntityMutator>) {
     this._dao = dao;
@@ -122,14 +123,13 @@ class DAOEntityStore<TEntity, TEntityMutator> {
     this.entityItemsByID.get(id),
   );
 
-  getByQueryFilters = createTransformer((queryFilters: QueryFilters): Array<
-    TEntity,
-  > =>
-    this.entityItemsByID
-      .values()
-      .filter((entityItem: TEntity): boolean =>
-        DAOApi.doesSatisfyToQueryFilters(entityItem, queryFilters),
-      ),
+  getByQueryFilters = createTransformer(
+    (queryFilters: Array<QueryFilter>): Array<TEntity> =>
+      this.entityItemsByID
+        .values()
+        .filter((entityItem: TEntity): boolean =>
+          DAOApi.doesSatisfyToQueryFilters(entityItem, queryFilters),
+        ),
   );
 
   _doDAORequest = async (
