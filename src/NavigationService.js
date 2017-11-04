@@ -10,7 +10,7 @@ class NavigationService {
 
   static getNavigator = (): Object => nullthrows(NavigationService._navigator);
 
-  static setNavigator = (navigator: Object) => {
+  static setNavigator = (navigator: ?Object) => {
     NavigationService._navigator = navigator;
   };
 

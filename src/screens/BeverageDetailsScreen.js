@@ -1,23 +1,25 @@
 // @flow
 
 import type { Beverage } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { Text, View } from 'react-native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
-type Props = {|
+type InjectedProps = {|
   id: string,
   beverageStore: DAOEntityStore<Beverage, Beverage>,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
 @inject('beverageStore')
 @observer
-class BeverageDetailsScreen extends React.Component<Props> {
+class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
   // todo find types for navigationOptions
   static navigationOptions = ({ navigation }: Object): Object => ({
     title:
@@ -26,12 +28,14 @@ class BeverageDetailsScreen extends React.Component<Props> {
 
   componentDidMount() {
     // todo with this solution title on header appears after some lag :/
-    const { beverageStore, id, navigation } = this.props;
+    const { beverageStore, id, navigation } = this.injectedProps;
     navigation.setParams({ beverage: beverageStore.getByID(id) });
   }
 
   render(): React.Node {
-    const beverage = this.props.beverageStore.getByID(this.props.id);
+    const beverage = this.injectedProps.beverageStore.getByID(
+      this.injectedProps.id,
+    );
     // todo prettify and move content to separate component
     return (
       <View>

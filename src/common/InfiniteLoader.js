@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import { ActivityIndicator, Platform } from 'react-native';
 
 type Props = {|
+  children?: Function,
   fetchNextData: () => Promise<void>,
 |};
 

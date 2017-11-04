@@ -11,6 +11,7 @@ import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
@@ -22,13 +23,16 @@ import PickerField from './PickerField';
 const YEARS_RANGE_LENGTH = 10;
 
 type Props = {|
-  availabilityStore: DAOEntityStore<Availability, Availability>,
   beverage?: Beverage,
-  glassStore: DAOEntityStore<Glass, Glass>,
   onSubmit: (values: Beverage) => Promise<void>,
+  submitButtonLabel: string,
+|};
+
+type InjectedProps = {|
+  availabilityStore: DAOEntityStore<Availability, Availability>,
+  glassStore: DAOEntityStore<Glass, Glass>,
   srmStore: DAOEntityStore<Srm, Srm>,
   styleStore: DAOEntityStore<Style, Style>,
-  submitButtonLabel: string,
   ...FormProps,
 |};
 
@@ -38,38 +42,35 @@ type Props = {|
 @inject('srmStore')
 @inject('styleStore')
 @observer
-class BeverageForm extends React.Component<Props> {
-  static defaultProps = {
-    beverage: {},
-  };
-
+class BeverageForm extends InjectedComponent<InjectedProps, Props> {
   componentWillMount() {
     // todo replace to fetchAll when it will be implemented
-    this.props.availabilityStore.fetchMany();
-    this.props.srmStore.fetchMany({
-      orderBy: [{ column: 'hex', direction: 'desc ' }],
+    this.injectedProps.availabilityStore.fetchMany();
+    this.injectedProps.srmStore.fetchMany({
+      orderBy: [{ column: 'hex', direction: 'desc' }],
     });
-    this.props.glassStore.fetchMany();
-    this.props.styleStore.fetchMany();
+    this.injectedProps.glassStore.fetchMany();
+    this.injectedProps.styleStore.fetchMany();
   }
 
   // todo Implement custom component for srm
   // todo implement autocomplete for style?
   render(): React.Node {
+    const { beverage = {}, submitButtonLabel } = this.props;
+
     const {
-      beverage = {},
       formError,
       handleSubmit,
       invalid,
       pristine,
-      submitButtonLabel,
       submitting,
       values,
-    } = this.props;
+    } = this.injectedProps;
+
     const currentYear = new Date().getFullYear();
     const yearsRange = [...Array(YEARS_RANGE_LENGTH)]
       .map(
-        (value: null, index: string): number =>
+        (value: null, index: number): number =>
           currentYear - YEARS_RANGE_LENGTH + index + 1,
       )
       .reverse();
@@ -138,7 +139,7 @@ class BeverageForm extends React.Component<Props> {
           name="availability"
           label="Availability"
         >
-          {this.props.availabilityStore.all.map(
+          {this.injectedProps.availabilityStore.all.map(
             ({ id, name }: Availability): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
             ),
@@ -151,9 +152,11 @@ class BeverageForm extends React.Component<Props> {
           name="glassware"
           label="Glass"
         >
-          {this.props.glassStore.all.map(({ id, name }: Glass): React.Node => (
-            <PickerField.Item key={id} label={name} value={id} />
-          ))}
+          {this.injectedProps.glassStore.all.map(
+            ({ id, name }: Glass): React.Node => (
+              <PickerField.Item key={id} label={name} value={id} />
+            ),
+          )}
         </FormField>
         <FormField
           component={CheckBoxField}
@@ -171,9 +174,11 @@ class BeverageForm extends React.Component<Props> {
             label="Srm"
             name="srm"
           >
-            {this.props.srmStore.all.map(({ id, name }: Srm): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))}
+            {this.injectedProps.srmStore.all.map(
+              ({ id, name }: Srm): React.Node => (
+                <PickerField.Item key={id} label={name} value={id} />
+              ),
+            )}
           </FormField>,
           <FormField
             component={PickerField}
@@ -183,7 +188,7 @@ class BeverageForm extends React.Component<Props> {
             label="Style"
             name="style"
           >
-            {this.props.styleStore.all.map(
+            {this.injectedProps.styleStore.all.map(
               ({ id, name }: Style): React.Node => (
                 <PickerField.Item key={id} label={name} value={id} />
               ),

@@ -1,6 +1,11 @@
 // @flow
 
+import type RoutesSettingsStore, {
+  RouteSettings,
+} from './stores/RoutesSettingsStore';
+
 import * as React from 'react';
+import InjectedComponent from './common/InjectedComponent';
 import { DrawerNavigator, StackNavigator } from 'react-navigation';
 import { inject } from 'mobx-react';
 
@@ -29,24 +34,31 @@ import TapDetailsScreen from './screens/TapDetailsScreen';
 import TapsScreen from './screens/TapsScreen';
 
 type Props = {|
+  rootRef: React.Ref<StackNavigator>,
+|};
+
+type InjectedProps = {|
   routesSettingsStore: RoutesSettingsStore,
 |};
 
 @inject('routesSettingsStore')
 /* eslint-disable sorting/sort-object-props */
-class AppRouter extends React.Component<Props> {
+class AppRouter extends InjectedComponent<InjectedProps, Props> {
   _addInitialRouteSettings = (
     routeObject: Object,
     settings: $Shape<RouteSettings>,
   ): Object => {
     Object.keys(routeObject).forEach((routeName: string) => {
-      this.props.routesSettingsStore.updateRouteSettings(routeName, settings);
+      this.injectedProps.routesSettingsStore.updateRouteSettings(
+        routeName,
+        settings,
+      );
     });
 
     return routeObject;
   };
 
-  render(): React.Element<*> {
+  render(): React.Node {
     const RootRouter = StackNavigator(
       {
         splash: { screen: SplashScreen },

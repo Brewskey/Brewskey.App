@@ -1,23 +1,25 @@
 // @flow
 
 import type { Device, DeviceMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { Text, View } from 'react-native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
-type Props = {|
+type InjectedProps = {|
   deviceStore: DAOEntityStore<Device, DeviceMutator>,
   id: string,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
 @inject('deviceStore')
 @observer
-class DeviceDetailsScreen extends React.Component<Props> {
+class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
   // todo find types for navigationOptions
   static navigationOptions = ({ navigation }: Object): Object => ({
     title:
@@ -26,12 +28,14 @@ class DeviceDetailsScreen extends React.Component<Props> {
 
   componentDidMount() {
     // todo with this solution title on header appears after some lag :/
-    const { deviceStore, id, navigation } = this.props;
+    const { deviceStore, id, navigation } = this.injectedProps;
     navigation.setParams({ device: deviceStore.getByID(id) });
   }
 
   render(): React.Node {
-    const device = this.props.deviceStore.getByID(this.props.id);
+    const device = this.injectedProps.deviceStore.getByID(
+      this.injectedProps.id,
+    );
     // todo prettify and move content to separate component
     return (
       <View>

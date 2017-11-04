@@ -8,8 +8,8 @@ import SwipeableQuickActions from 'SwipeableQuickActions';
 
 type Props<TItem> = {|
   item: TItem,
-  onDeleteItemPress: (item: TItem) => void,
-  onEditItemPress: (item: TItem) => void,
+  onDeleteItemPress: (item: TItem) => void | Promise<void>,
+  onEditItemPress: (item: TItem) => void | Promise<void>,
 |};
 
 class QuickActions<TItem> extends React.Component<Props<TItem>> {
@@ -18,10 +18,11 @@ class QuickActions<TItem> extends React.Component<Props<TItem>> {
     onEditItemPress: () => {},
   };
 
-  _onDeleteItemPress = (): void =>
+  _onDeleteItemPress = (): void | Promise<void> =>
     this.props.onDeleteItemPress(this.props.item);
 
-  _onEditItemPress = (): void => this.props.onEditItemPress(this.props.item);
+  _onEditItemPress = (): void | Promise<void> =>
+    this.props.onEditItemPress(this.props.item);
 
   render(): React.Node {
     return (

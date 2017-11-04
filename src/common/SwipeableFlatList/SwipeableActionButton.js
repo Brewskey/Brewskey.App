@@ -14,14 +14,11 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onPress: () => void,
+  onPress: () => void | Promise<void>,
   iconName: string,
 |};
 
-const SwipeableActionButton = ({
-  onPress,
-  iconName,
-}: Props): React.Element<*> => (
+const SwipeableActionButton = ({ onPress, iconName }: Props): React.Node => (
   <Icon containerStyle={styles.container} onPress={onPress} name={iconName} />
 );
 

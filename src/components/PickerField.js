@@ -34,6 +34,8 @@ type Props = {
 };
 
 class PickerField extends React.Component<Props> {
+  static Item = Picker.Item;
+
   _onPickerValueChange = (value: any) => {
     // the check handles case when we load options asynchronously
     if (value === this.props.value) {
@@ -44,7 +46,7 @@ class PickerField extends React.Component<Props> {
     this.props.onBlur();
   };
 
-  render(): React.Element<*> {
+  render(): React.Node {
     const {
       children,
       error,
@@ -74,7 +76,5 @@ class PickerField extends React.Component<Props> {
     );
   }
 }
-
-PickerField.Item = Picker.Item;
 
 export default PickerField;

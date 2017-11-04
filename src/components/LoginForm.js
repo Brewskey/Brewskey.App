@@ -2,8 +2,12 @@
 
 import type AuthStore from '../stores/AuthStore';
 import type { FormProps } from '../common/form/types';
+import type { UserCredentials } from '../authApi';
+import type { FormInput } from 'react-native-elements';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
+import nullthrows from 'nullthrows';
 import { inject, observer } from 'mobx-react';
 import { Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -24,33 +28,29 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
   return errors;
 };
 
-type Props = {|
+type InjectedProps = {
   authStore: AuthStore,
   ...FormProps,
-|};
+};
 
 @form({ validate })
 @inject('authStore')
 @observer
-class LoginForm extends React.Component<Props> {
-  passwordFieldRef: ?React.Element<*>;
+class LoginForm extends InjectedComponent<InjectedProps> {
+  _passwordInputRef: ?FormInput;
 
-  _onUserNameSubmit = () => {
-    if (this.passwordFieldRef) {
-      this.passwordFieldRef.focus();
-    }
-  };
+  _onUserNameSubmit = (): void => nullthrows(this._passwordInputRef).focus();
 
   _onSubmit = async (formValues: Object): Promise<void> => {
     Keyboard.dismiss();
-    await this.props.authStore.login(formValues);
+    await this.injectedProps.authStore.login(formValues);
   };
 
   _onSubmitButtonPress = (): Promise<void> =>
-    this.props.handleSubmit(this._onSubmit);
+    this.injectedProps.handleSubmit(this._onSubmit);
 
-  render(): React.Element<*> {
-    const { formError, invalid, pristine, submitting } = this.props;
+  render(): React.Node {
+    const { formError, invalid, pristine, submitting } = this.injectedProps;
     return (
       <KeyboardAwareScrollView>
         <FormField
@@ -64,9 +64,7 @@ class LoginForm extends React.Component<Props> {
           component={TextField}
           disabled={submitting}
           label="Password"
-          inputRef={(ref: React.Element<*>) => {
-            this.passwordFieldRef = ref;
-          }}
+          inputRef={ref => (this._passwordInputRef = ref)}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry

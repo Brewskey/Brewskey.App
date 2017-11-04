@@ -6,7 +6,8 @@ import * as React from 'react';
 import SwipeableRow from 'SwipeableRow';
 
 type Props = {
-  // todo fill the props
+  extraData?: any,
+  isOpen: boolean,
 };
 
 class PureSwipeableRow extends React.Component<Props> {
@@ -17,7 +18,7 @@ class PureSwipeableRow extends React.Component<Props> {
     );
   }
 
-  render(): React.Element<*> {
+  render(): React.Node {
     return <SwipeableRow {...this.props} />;
   }
 }

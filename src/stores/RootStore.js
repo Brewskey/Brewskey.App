@@ -18,6 +18,7 @@ import type {
   Schedule,
   ScheduleMutator,
   Srm,
+  Style,
   Tap,
   TapMutator,
 } from 'brewskey.js-api';
@@ -31,17 +32,16 @@ import DAOApi from 'brewskey.js-api';
 class RootStore {
   appSettingsStore: AppSettingsStore;
   authStore: AuthStore;
-  errorStore: ErrorStore;
   routesSettingsStore: RoutesSettingsStore;
 
   accountStore: DAOEntityStore<Account, AccountMutator>;
   availabilityStore: DAOEntityStore<Availability, Availability>;
   beverageStore: DAOEntityStore<Beverage, Beverage>;
   deviceStore: DAOEntityStore<Device, DeviceMutator>;
-  glassStore: DAOEntitySTore<Glass, Glass>;
+  glassStore: DAOEntityStore<Glass, Glass>;
   locationStore: DAOEntityStore<Location, Location>;
   organizationStore: DAOEntityStore<Organization, Organization>;
-  permissionStore: DAOEntityStore<Permission, PermissionMutator>;
+  permissionStore: DAOEntityStore<Permission, PermissionMutator<*>>;
   pourStore: DAOEntityStore<Pour, Pour>;
   reportStore: DAOEntityStore<Report, ReportMutator>;
   scheduleStore: DAOEntityStore<Schedule, ScheduleMutator>;

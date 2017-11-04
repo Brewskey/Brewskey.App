@@ -1,5 +1,8 @@
 // @flow
 
+import type { DeviceMutator } from 'brewskey.js-api';
+import type { FormProps } from '../../common/form/types';
+
 import * as React from 'react';
 import styled from 'styled-components/native';
 import { StackNavigator } from 'react-navigation';

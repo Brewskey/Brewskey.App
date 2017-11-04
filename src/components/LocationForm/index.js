@@ -1,9 +1,11 @@
 // @flow
 
+import type { Location } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 import type { StateConfig } from './stateList';
 
 import * as React from 'react';
+import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -47,24 +49,25 @@ type Props = {|
   location?: Location,
   onSubmit: (values: Location) => Promise<void>,
   submitButtonLabel: string,
+|};
+
+type InjectedProps = {|
   ...FormProps,
 |};
 
-// todo figure out and implement good pattern for handling
-// fields focus order
 @form({ validate })
 @observer
-class LocationForm extends React.Component<Props> {
+class LocationForm extends InjectedComponent<InjectedProps, Props> {
   render(): React.Node {
+    const { location = {}, submitButtonLabel } = this.props;
     const {
       formError,
       handleSubmit,
       invalid,
-      location = {},
       pristine,
-      submitButtonLabel,
       submitting,
-    } = this.props;
+    } = this.injectedProps;
+
     return (
       <KeyboardAwareScrollView style={styles.container}>
         <FormField

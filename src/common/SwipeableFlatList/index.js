@@ -21,11 +21,10 @@ import type { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
 
 import * as React from 'react';
-import { View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import PureSwipeableRow from './PureSwipeableRow';
-import FlatList from 'FlatList';
 
-type SwipableListProps = {
+type SwipeableListProps = {
   /**
    * To alert the user that swiping is possible, the first row can bounce
    * on component mount.
@@ -38,7 +37,7 @@ type SwipableListProps = {
   preventSwipeRight?: boolean,
 };
 
-type Props<ItemT> = SwipableListProps & FlatListProps<ItemT>;
+type Props<TEntity> = SwipeableListProps & FlatListProps<TEntity>;
 
 type State = {
   openRowKey: ?string,
@@ -61,12 +60,15 @@ type State = {
  * - More to come
  */
 
-class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
+class SwipeableFlatList<TEntity> extends React.Component<
+  Props<TEntity>,
+  State,
+> {
   state = {
     openRowKey: null,
   };
 
-  _flatListRef: ?FlatList<ItemT> = null;
+  _flatListRef: ?FlatList<TEntity> = null;
   _shouldBounceFirstRowOnMount: boolean = false;
 
   static defaultProps = {
@@ -75,7 +77,7 @@ class SwipeableFlatList<ItemT> extends React.Component<Props<ItemT>, State> {
     renderQuickActions: () => null,
   };
 
-  constructor(props: Props<ItemT>, context: any): void {
+  constructor(props: Props<TEntity>, context: any): void {
     super(props, context);
 
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;

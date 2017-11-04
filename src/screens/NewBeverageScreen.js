@@ -1,25 +1,27 @@
 // @flow
 
 import type { Beverage } from 'brewskey.js-api';
-import type { DAOEntityStore } from '../stores/DAOEntityStore';
+import type { Navigation } from '../types';
+import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject } from 'mobx-react';
 import BeverageForm from '../components/BeverageForm';
 
-type Props = {|
+type InjectedProps = {|
   beverageStore: DAOEntityStore<Beverage, Beverage>,
-  navigation: Object,
+  navigation: Navigation,
 |};
 
 @inject('beverageStore')
-class NewBeverageScreen extends React.Component<Props> {
+class NewBeverageScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
     title: 'New beverage',
   };
 
-  _onFormSubmit = async (values: Location): Promise<void> => {
-    const { beverageStore, navigation } = this.props;
+  _onFormSubmit = async (values: Beverage): Promise<void> => {
+    const { beverageStore, navigation } = this.injectedProps;
     const { id } = await beverageStore.post(values);
     // todo figure out how to replace page instead adding to stack history
     // the navigation object injected in the component

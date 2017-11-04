@@ -1,12 +1,14 @@
 // @flow
 
+import type { Navigation } from '../types';
+
 import * as React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
 // todo fix following eslint error
 /* eslint-disable react/display-name */
 const flatNavigationParamsAndScreenProps = <
-  TProps: { navigation: Object },
+  TProps: { navigation: Navigation, screenProps?: Object },
   TParams,
 >(
   Component: React.ComponentType<TProps>,
@@ -14,7 +16,7 @@ const flatNavigationParamsAndScreenProps = <
   class FlatNavigationParamsAndScreenProps extends React.Component<
     TProps & TParams,
   > {
-    render(): React.Element<*> {
+    render(): React.Node {
       return (
         <Component
           {...this.props.navigation.state.params || {}}

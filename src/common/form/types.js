@@ -13,11 +13,13 @@ export type FormProps = {|
   formError: ?string,
   getFieldError: (fieldName: string) => ?Error,
   getFieldTouched: (fieldName: string) => boolean,
-  handleSubmit: (onSubmit: (values: Object) => void | Promise<void>) => void,
+  handleSubmit: (
+    onSubmit: (values: Object) => void | Promise<void>,
+  ) => Promise<void>,
   invalid: boolean,
   pristine: boolean,
   submitting: boolean,
-  values: Array<any>,
+  values: Object,
 |};
 
 export type FormFieldChildProps = {|

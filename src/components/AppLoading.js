@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppLoading = (): React.Element<*> => (
+const AppLoading = (): React.Node => (
   <View style={styles.container}>
     <Image source={splashImage} style={styles.splashImage} />
   </View>
