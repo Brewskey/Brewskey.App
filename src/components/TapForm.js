@@ -1,8 +1,11 @@
 // @flow
 
+import type { Device, DeviceMutator, Tap, TapMutator } from 'brewskey.js-api';
+import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { Button, FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -26,32 +29,34 @@ const validate = (values: TapMutator): { [key: string]: string } => {
 };
 
 type Props = {|
-  deviceStore: DAOEntityStore<Device, DeviceMutator>,
-  onSubmit: (values: DeviceMutator) => Promise<void>,
+  onSubmit: (values: TapMutator) => Promise<void>,
   submitButtonLabel: string,
   tap?: Tap,
+|};
+
+type InjectedProps = {|
   ...FormProps,
+  deviceStore: DAOEntityStore<Device, DeviceMutator>,
 |};
 
 @form({ validate })
 @inject('deviceStore')
 @observer
-class TapForm extends React.Component<Props> {
+class TapForm extends InjectedComponent<InjectedProps, Props> {
   componentWillMount() {
     // todo temporary solution for filling brewskey box picker options
-    this.props.deviceStore.fetchMany();
+    this.injectedProps.deviceStore.fetchMany();
   }
 
   render(): React.Node {
+    const { submitButtonLabel, tap = {} } = this.props;
     const {
       formError,
       handleSubmit,
       invalid,
       pristine,
-      submitButtonLabel,
       submitting,
-      tap = {},
-    } = this.props;
+    } = this.injectedProps;
 
     return (
       <KeyboardAwareScrollView>
@@ -75,13 +80,15 @@ class TapForm extends React.Component<Props> {
           name="device"
           label="Brewskey box"
         >
-          {this.props.deviceStore.all.map((device: Device): React.Node => (
-            <PickerField.Item
-              key={device.id}
-              label={device.name}
-              value={device}
-            />
-          ))}
+          {this.injectedProps.deviceStore.all.map(
+            (device: Device): React.Node => (
+              <PickerField.Item
+                key={device.id}
+                label={device.name}
+                value={device}
+              />
+            ),
+          )}
         </FormField>
         <FormField
           component={CheckBoxField}

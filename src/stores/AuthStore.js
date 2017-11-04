@@ -1,6 +1,7 @@
 // @flow
 
 import type RootStore from './RootStore';
+import type { UserCredentials } from '../authApi';
 
 import { AsyncStorage } from 'react-native';
 import { action, autorun, computed, runInAction, observable } from 'mobx';
@@ -30,23 +31,16 @@ const setDAOHeaders = (token: string) => {
 };
 
 type AuthState = {|
-  id: ?string,
-  roles: ?Array<string>,
-  token: ?string,
-  userName: ?string,
+  id: string,
+  roles: Array<string>,
+  token: string,
+  userName: string,
 |};
-
-const initialState = {
-  id: null,
-  roles: null,
-  token: null,
-  userName: null,
-};
 
 class AuthStore {
   _rootStore: RootStore;
 
-  @observable authState: AuthState = initialState;
+  @observable authState: ?AuthState = null;
   @observable isInitialized: boolean = false;
 
   constructor(rootStore: RootStore) {
@@ -67,7 +61,7 @@ class AuthStore {
 
   @action
   clearAuthState = () => {
-    this.authState = initialState;
+    this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
@@ -111,13 +105,13 @@ class AuthStore {
   };
 
   @computed
-  get userID(): string {
-    return this.authState.id;
+  get userID(): ?string {
+    return this.authState && this.authState.id;
   }
 
   @computed
   get isAuthorized(): boolean {
-    return !!this.authState.token;
+    return !!(this.authState && this.authState.token);
   }
 }
 

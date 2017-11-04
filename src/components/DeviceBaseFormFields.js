@@ -1,31 +1,36 @@
 // @flow
 
-import type { Device } from 'brewskey.js-api';
+import type { Device, Location } from 'brewskey.js-api';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { FormField } from '../common/form';
 import TextField from './TextField';
 import PickerField from './PickerField';
 import DeviceStatusPicker from './DeviceStatusPicker';
 
-type Props = {|
+type Props = {
   device?: Device,
+};
+
+type InjectedProps = {
   locationStore: DAOEntityStore<Location, Location>,
-|};
+};
 
 @inject('locationStore')
 @observer
-class DeviceFormFields extends React.Component<Props> {
+class DeviceFormFields extends InjectedComponent<InjectedProps, Props> {
   componentWillMount() {
     // todo temporary solution to full fill location field
-    this.props.locationStore.fetchMany();
+    this.injectedProps.locationStore.fetchMany();
   }
 
   // todo select only users locations
   render(): React.Node {
-    const { device = {}, locationStore } = this.props;
+    const { device = {} } = this.props;
+    const { locationStore } = this.injectedProps;
     return [
       <FormField
         component={TextField}

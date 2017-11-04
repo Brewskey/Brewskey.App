@@ -1,42 +1,40 @@
 // @flow
 
 import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from './InfiniteLoader';
+import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
+import nullthrows from 'nullthrows';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
-// imported from experimental react-native
-// eslint-disable-next-line
-import SwipeableQuickActions from 'SwipeableQuickActions';
-import InfiniteLoader from './InfiniteLoader';
+import InfiniteLoader from '../common/InfiniteLoader';
 
-type Props = {|
+type InjectedProps = {|
   tapStore: DAOEntityStore<Tap, TapMutator>,
-  // todo add better typing
-  navigation: Object,
+  navigation: Navigation,
 |};
 
-// todo add pullToRefresh
 @withNavigation
 @inject('tapStore')
 @observer
-class TapsList extends React.Component<Props> {
+class TapsList extends InjectedComponent<InjectedProps> {
   _swipeableFlatListRef: ?SwipeableFlatList<Tap>;
 
   _fetchNextData = async (): Promise<void> => {
-    await this.props.tapStore.fetchMany({
+    await this.injectedProps.tapStore.fetchMany({
       orderBy: [
         {
           column: 'id',
           direction: 'desc',
         },
       ],
-      skip: this.props.tapStore.all.length,
+      skip: this.injectedProps.tapStore.all.length,
       take: 20,
     });
   };
@@ -44,15 +42,15 @@ class TapsList extends React.Component<Props> {
   _keyExtractor = (item: Tap): string => item.id;
 
   _onDeleteItemPress = (item: Tap): Promise<void> =>
-    this.props.tapStore.deleteByID(item.id);
+    this.injectedProps.tapStore.deleteByID(item.id);
 
   _onEditItemPress = (item: Tap) => {
-    this.props.navigation.navigate('editTap', { id: item.id });
-    this._swipeableFlatListRef.resetOpenRow();
+    this.injectedProps.navigation.navigate('editTap', { id: item.id });
+    nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
   _onItemPress = (item: Tap): void =>
-    this.props.navigation.navigate('tapDetails', {
+    this.injectedProps.navigation.navigate('tapDetails', {
       id: item.id,
     });
 
@@ -66,7 +64,7 @@ class TapsList extends React.Component<Props> {
     />
   );
 
-  _renderQuickActions = ({ item }: { item: Location }): React.Node => (
+  _renderQuickActions = ({ item }: { item: Tap }): React.Node => (
     <QuickActions
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
@@ -83,16 +81,14 @@ class TapsList extends React.Component<Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps): React.Node => (
           <SwipeableFlatList
-            data={this.props.tapStore.all}
+            data={this.injectedProps.tapStore.all}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: mixed) => {
-              this._swipeableFlatListRef = ref;
-            }}
+            ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
             renderQuickActions={this._renderQuickActions}
           />

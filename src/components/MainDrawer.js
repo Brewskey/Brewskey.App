@@ -4,6 +4,7 @@ import type AppSettingsStore from '../stores/AppSettingsStore';
 import type RoutesSettingsStore from '../stores/RoutesSettingsStore';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { DrawerItems } from 'react-navigation';
@@ -16,6 +17,10 @@ type DrawerItem = {|
 |};
 
 type Props = {|
+  items: Array<DrawerItem>,
+|};
+
+type InjectedProps = {|
   appSettingsStore: AppSettingsStore,
   routesSettingsStore: RoutesSettingsStore,
 |};
@@ -23,12 +28,12 @@ type Props = {|
 @inject('appSettingsStore')
 @inject('routesSettingsStore')
 @observer
-class MainDrawer extends React.Component<Props> {
-  render(): React.Element<*> {
-    const items = this.props.appSettingsStore.manageTapsEnabled
+class MainDrawer extends InjectedComponent<InjectedProps, Props> {
+  render(): React.Node {
+    const items = this.injectedProps.appSettingsStore.manageTapsEnabled
       ? this.props.items
       : this.props.items.filter((item: DrawerItem): boolean => {
-          const routeSettings = this.props.routesSettingsStore.getRouteSettings(
+          const routeSettings = this.injectedProps.routesSettingsStore.getRouteSettings(
             item.routeName,
           );
           return routeSettings ? !routeSettings.requireManageTaps : true;

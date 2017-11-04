@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TItem> = {
+  containerStyle?: Object,
   item: TItem,
   onPress: (item: TItem) => void,
   // other react-native=elements ListItemProps

@@ -1,10 +1,13 @@
 // @flow
 
 import type { Device, DeviceMutator, QueryOptions } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from './InfiniteLoader';
+import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
+import nullthrows from 'nullthrows';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
@@ -12,20 +15,22 @@ import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 // imported from experimental react-native
 // eslint-disable-next-line
-import InfiniteLoader from './InfiniteLoader';
+import InfiniteLoader from '../common/InfiniteLoader';
 
 type Props = {|
-  deviceStore: DAOEntityStore<Device, DeviceMutator>,
-  // todo add better typing
-  navigation: Object,
-  queryOptions: QueryOptions,
+  queryOptions?: QueryOptions,
 |};
+
+type InjectedProps = {
+  deviceStore: DAOEntityStore<Device, DeviceMutator>,
+  navigation: Navigation,
+};
 
 // todo add pullToRefresh
 @withNavigation
 @inject('deviceStore')
 @observer
-class DevicesList extends React.Component<Props> {
+class DevicesList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
     queryOptions: {},
   };
@@ -33,7 +38,7 @@ class DevicesList extends React.Component<Props> {
   _swipeableFlatListRef: ?SwipeableFlatList<Device>;
 
   _fetchNextData = async (): Promise<void> => {
-    await this.props.deviceStore.fetchMany({
+    await this.injectedProps.deviceStore.fetchMany({
       ...this.props.queryOptions,
       orderBy: [
         {
@@ -42,27 +47,27 @@ class DevicesList extends React.Component<Props> {
         },
       ],
       // todo add selector instead all
-      skip: this.props.deviceStore.all.length,
+      skip: this.injectedProps.deviceStore.all.length,
       take: 20,
     });
   };
 
-  _keyExtractor = (item: Beverage): string => item.id;
+  _keyExtractor = (item: Device): string => item.id;
 
-  _onDeleteItemPress = (item: Beverage): Promise<void> =>
-    this.props.deviceStore.deleteByID(item.id);
+  _onDeleteItemPress = (item: Device): Promise<void> =>
+    this.injectedProps.deviceStore.deleteByID(item.id);
 
-  _onEditItemPress = (item: Beverage) => {
-    this.props.navigation.navigate('editDevice', { id: item.id });
-    this._swipeableFlatListRef.resetOpenRow();
+  _onEditItemPress = (item: Device) => {
+    this.injectedProps.navigation.navigate('editDevice', { id: item.id });
+    nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
-  _onItemPress = (item: Beverage): void =>
-    this.props.navigation.navigate('deviceDetails', {
+  _onItemPress = (item: Device): void =>
+    this.injectedProps.navigation.navigate('deviceDetails', {
       id: item.id,
     });
 
-  _renderItem = ({ item }: { item: Beverage }): React.Node => (
+  _renderItem = ({ item }: { item: Device }): React.Node => (
     <ListItem
       hideChevron
       item={item}
@@ -72,7 +77,7 @@ class DevicesList extends React.Component<Props> {
     />
   );
 
-  _renderQuickActions = ({ item }: { item: Beverage }): React.Node => (
+  _renderQuickActions = ({ item }: { item: Device }): React.Node => (
     <QuickActions
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
@@ -89,16 +94,14 @@ class DevicesList extends React.Component<Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps): React.Node => (
           <SwipeableFlatList
-            data={this.props.deviceStore.all}
+            data={this.injectedProps.deviceStore.all}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: mixed) => {
-              this._swipeableFlatListRef = ref;
-            }}
+            ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
             renderQuickActions={this._renderQuickActions}
           />

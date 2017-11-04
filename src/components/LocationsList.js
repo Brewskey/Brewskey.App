@@ -1,41 +1,41 @@
 // @flow
 
 import type { Location } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from './InfiniteLoader';
+import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
 
 import * as React from 'react';
+import nullthrows from 'nullthrows';
+import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
-// imported from experimental react-native
-// eslint-disable-next-line
-import InfiniteLoader from './InfiniteLoader';
+import InfiniteLoader from '../common/InfiniteLoader';
 
-type Props = {|
+type InjectedProps = {
   locationStore: DAOEntityStore<Location, Location>,
-  // todo add better typing
-  navigation: Object,
-|};
+  navigation: Navigation,
+};
 
 // todo add pullToRefresh
 @withNavigation
 @inject('locationStore')
 @observer
-class LocationsList extends React.Component<Props> {
+class LocationsList extends InjectedComponent<InjectedProps> {
   _swipeableFlatListRef: ?SwipeableFlatList<Location>;
 
   _fetchNextData = async (): Promise<void> => {
-    await this.props.locationStore.fetchMany({
+    await this.injectedProps.locationStore.fetchMany({
       orderBy: [
         {
           column: 'id',
           direction: 'desc',
         },
       ],
-      skip: this.props.locationStore.all.length,
+      skip: this.injectedProps.locationStore.all.length,
       take: 20,
     });
   };
@@ -43,19 +43,19 @@ class LocationsList extends React.Component<Props> {
   _keyExtractor = (item: Location): string => item.id;
 
   _onDeleteItemPress = (item: Location): Promise<void> =>
-    this.props.locationStore.deleteByID(item.id);
+    this.injectedProps.locationStore.deleteByID(item.id);
 
   _onEditItemPress = (item: Location) => {
-    this.props.navigation.navigate('editLocation', { id: item.id });
-    this._swipeableFlatListRef.resetOpenRow();
+    this.injectedProps.navigation.navigate('editLocation', { id: item.id });
+    nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
   _onItemPress = (item: Location): void =>
-    this.props.navigation.navigate('locationDetails', {
+    this.injectedProps.navigation.navigate('locationDetails', {
       id: item.id,
     });
 
-  _renderItem = ({ item }: { item: Location }): React.Element<*> => (
+  _renderItem = ({ item }: { item: Location }): React.Node => (
     <ListItem
       hideChevron
       item={item}
@@ -82,16 +82,14 @@ class LocationsList extends React.Component<Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps): React.Node => (
           <SwipeableFlatList
-            data={this.props.locationStore.all}
+            data={this.injectedProps.locationStore.all}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: mixed) => {
-              this._swipeableFlatListRef = ref;
-            }}
+            ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
             renderQuickActions={this._renderQuickActions}
           />

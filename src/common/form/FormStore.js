@@ -1,13 +1,14 @@
 // @flow
 
-import type { Field, ValidateFunction } from './types';
+import type { ObservableMap } from 'mobx';
+import type { Field, ValidationFunction } from './types';
 
 import { action, computed, createTransformer, observable } from 'mobx';
 
 const FORM_ERROR_KEY = '_error';
 
 type FormStoreProps = {|
-  validate: ?ValidateFunction,
+  validate?: ValidationFunction,
 |};
 
 type InitFieldProps = {|
@@ -17,8 +18,8 @@ type InitFieldProps = {|
 
 // todo change touched logic so it takes care about initialValue
 class FormStore {
-  _validate: ValidateFunction;
-  @observable _fields: Map<string, Field> = new Map();
+  _validate: ValidationFunction;
+  @observable _fields: ObservableMap<Field> = new Map();
 
   @observable formError: ?string = null;
   @observable submitting: boolean = false;
@@ -72,7 +73,7 @@ class FormStore {
   };
 
   @action
-  setFormError = (error: string) => {
+  setFormError = (error: ?string) => {
     this.formError = error;
   };
 
@@ -85,12 +86,13 @@ class FormStore {
   validate = () => {
     const errors = this._validate(this.values);
 
-    Object.entries(errors).forEach(([key, value]: [string, string]) => {
+    Object.entries(errors).forEach(([key, value]: [string, mixed]) => {
+      const castedValue = ((value: any): string);
       if (key === FORM_ERROR_KEY) {
-        this.setFormError(value);
+        this.setFormError(castedValue);
         return;
       }
-      this.updateFieldProps(key, { error: value, touched: true });
+      this.updateFieldProps(key, { error: castedValue, touched: true });
     });
   };
 

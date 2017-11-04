@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onPress: () => void,
+  onPress: () => void | Promise<void>,
   iconName: string,
 |};
 

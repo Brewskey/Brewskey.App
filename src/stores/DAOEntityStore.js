@@ -1,6 +1,7 @@
 // @flow
 
 import type { DAO, QueryFilter, QueryOptions } from 'brewskey.js-api';
+import type { ObservableMap } from 'mobx';
 import type RootStore from './RootStore';
 
 import {
@@ -14,11 +15,11 @@ import DAOApi from 'brewskey.js-api';
 
 // todo implement optimistic updates for put/delete
 // todo think how to remove some code duplication in actions
-class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
+class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
   _dao: DAO<TEntity, TEntityMutator>;
   _rootStore: RootStore;
 
-  @observable entityItemsByID: Map<string, TEntity> = new Map();
+  @observable entityItemsByID: ObservableMap<TEntity> = new Map();
 
   constructor(rootStore: RootStore, dao: DAO<TEntity, TEntityMutator>) {
     this._dao = dao;
@@ -26,18 +27,15 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
   }
 
   @action
-  deleteByID = async (id: string): Promise<void> => {
+  async deleteByID(id: string): Promise<void> {
     await this._doDAORequest('deleteByID', id);
     runInAction(() => {
       this.entityItemsByID.delete(id);
     });
-  };
+  }
 
   @action
-  fetchByID = async (
-    id: string,
-    queryOptions?: QueryOptions,
-  ): Promise<?TEntity> => {
+  async fetchByID(id: string, queryOptions?: QueryOptions): Promise<?TEntity> {
     const entity = await this._doDAORequest('fetchByID', id, queryOptions);
     // todo add babel plugin to autobind async stuff to runInAction
     runInAction(() => {
@@ -45,13 +43,13 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     });
 
     return entity;
-  };
+  }
 
   @action
-  fetchByIDs = async (
+  async fetchByIDs(
     ids: Array<string>,
     queryOptions?: QueryOptions,
-  ): Promise<Array<TEntity>> => {
+  ): Promise<Array<TEntity>> {
     const entities = await this._doDAORequest('fetchByIDs', ids, queryOptions);
 
     runInAction(() => {
@@ -64,10 +62,10 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     });
 
     return entities;
-  };
+  }
 
   @action
-  fetchMany = async (queryOptions?: QueryOptions): Promise<Array<TEntity>> => {
+  async fetchMany(queryOptions?: QueryOptions): Promise<Array<TEntity>> {
     const entities = await this._doDAORequest('fetchMany', queryOptions);
 
     runInAction(() => {
@@ -80,20 +78,20 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     });
 
     return entities;
-  };
+  }
 
   @action
-  patch = async (id: string, mutator: TEntityMutator): Promise<TEntity> => {
+  async patch(id: string, mutator: TEntityMutator): Promise<TEntity> {
     const entity = await this._doDAORequest('patch', id, mutator);
     runInAction(() => {
       this.entityItemsByID.set(entity.id, entity);
     });
 
     return entity;
-  };
+  }
 
   @action
-  post = async (mutator: TEntityMutator): Promise<TEntity> => {
+  async post(mutator: TEntityMutator): Promise<TEntity> {
     const entity = await this._doDAORequest('post', mutator);
 
     runInAction(() => {
@@ -101,10 +99,10 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     });
 
     return entity;
-  };
+  }
 
   @action
-  put = async (id: string, mutator: TEntityMutator): Promise<TEntity> => {
+  async put(id: string, mutator: TEntityMutator): Promise<TEntity> {
     const entity = await this._doDAORequest('put', id, mutator);
 
     runInAction(() => {
@@ -112,7 +110,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     });
 
     return entity;
-  };
+  }
 
   @computed
   get all(): Array<TEntity> {
@@ -136,7 +134,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator> {
     methodName: string,
     ...args: Array<any>
   ): Promise<*> => {
-    const result = await this._dao[methodName](...args);
+    const result = await ((this._dao: any)[methodName]: Function)(...args);
     const error = result.getError();
     if (error) {
       if (error.status === 401) {

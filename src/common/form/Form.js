@@ -8,15 +8,21 @@ import hoistNonReactStatic from 'hoist-non-react-statics';
 import { observer } from 'mobx-react';
 import FormStore from './FormStore';
 
-type FormSetupProps = {|
+type FormSetupProps = {
   validate?: ValidationFunction,
-|};
+};
 
-const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
-  Component: React.ComponentType<TProps>,
-): React.ComponentType<TProps & FormProps> => {
+type OnSubmitCallbackFunction = (values: {
+  [key: string]: any,
+}) => void | Promise<void>;
+
+const form = ({ validate }: FormSetupProps = {}): Function => <
+  TProps: { onSubmit?: OnSubmitCallbackFunction },
+>(
+  Component: React.ComponentType<{ ...TProps, ...FormProps }>,
+): React.ComponentType<TProps> => {
   @observer
-  class Form extends React.Component<Props> {
+  class Form extends React.Component<TProps> {
     static childContextTypes = {
       formStore: PropTypes.object,
     };
@@ -34,7 +40,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
     }
 
     _handleSubmit = async (
-      callback: (values: { [key: string]: any }) => void | Promise<void>,
+      callback: OnSubmitCallbackFunction,
     ): Promise<void> => {
       this._formStore.setFormError(null);
       this._formStore.validate();
@@ -43,16 +49,17 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
       }
 
       try {
+        const { onSubmit } = this.props;
         this._formStore.setSubmitting(true);
         const result = callback.call
           ? callback(this._formStore.values)
-          : this.props.onSubmit(this._formStore.values);
+          : onSubmit && onSubmit(this._formStore.values);
 
         if (result && result.then) {
           await result;
         }
       } catch (error) {
-        // todo what if no mesage in error?
+        // todo what if no message in error?
         this._formStore.setFormError(error.message);
       } finally {
         this._formStore.setSubmitting(false);
@@ -62,7 +69,6 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
     render(): React.Node {
       return (
         <Component
-          {...this.props}
           formError={this._formStore.formError}
           getFieldError={this._formStore.getFieldError}
           getFieldTouched={this._formStore.getFieldTouched}
@@ -71,6 +77,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <TProps>(
           pristine={this._formStore.pristine}
           submitting={this._formStore.submitting}
           values={this._formStore.values}
+          {...this.props}
         />
       );
     }

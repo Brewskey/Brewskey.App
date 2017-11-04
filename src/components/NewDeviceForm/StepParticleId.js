@@ -3,6 +3,7 @@
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
+import InjectedComponent from '../../common/InjectedComponent';
 import { View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { observer } from 'mobx-react';
@@ -10,20 +11,22 @@ import flatNavigationParamsAndScreenProps from '../../common/flatNavigationParam
 import { FormField } from '../../common/form';
 import TextField from '../TextField';
 
-type Props = {|
+type InjectedProps = {|
   navigation: Object,
   ...FormProps,
 |};
 
 @flatNavigationParamsAndScreenProps
 @observer
-class StepParticleId extends React.Component<Props> {
+class StepParticleId extends InjectedComponent<InjectedProps> {
   _onContinueButtonPress = (): void =>
-    this.props.navigation.navigate('stepDeviceFields');
+    this.injectedProps.navigation.navigate('stepDeviceFields');
 
   render(): React.Node {
-    const particleIdFieldError = this.props.getFieldError('particleId');
-    const particleIdFieldTouched = this.props.getFieldTouched('particleId');
+    const particleIdFieldError = this.injectedProps.getFieldError('particleId');
+    const particleIdFieldTouched = this.injectedProps.getFieldTouched(
+      'particleId',
+    );
 
     return (
       <View>

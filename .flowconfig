@@ -17,6 +17,7 @@
 .*/Libraries/polyfills/.*
 
 ; custom ignores, trying to fix 600+ node_modules errors
+.*/node_modules/react-native/Libraries/**/.*
 .*/node_modules/react-navigation/src/**/.*
 .*/node_modules/react-navigation/lib/**/.*
 .*/node_modules/react-navigation/lib-rn/**/.*
@@ -56,6 +57,3 @@ unsafe.enable_getters_and_setters=true
 ; custom options
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
-
-[version]
-^0.53.0

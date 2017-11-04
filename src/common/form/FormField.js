@@ -6,12 +6,13 @@ import { observer } from 'mobx-react';
 
 type Props = {
   children?: React.Node,
+  component?: React.ComponentType<any>,
   initialValue?: any,
   name: string,
 };
 
 @observer
-class FormField extends React.Component<Props> {
+class FormField<TProps> extends React.Component<Props & TProps> {
   static contextTypes = {
     formStore: PropTypes.object,
   };
@@ -36,12 +37,12 @@ class FormField extends React.Component<Props> {
 
     return (
       <Component
-        {...this.props}
         error={this.context.formStore.getFieldError(this.props.name)}
         onBlur={this._onBlur}
         onChange={this._onChange}
         touched={this.context.formStore.getFieldTouched(this.props.name)}
         value={this.context.formStore.getFieldValue(this.props.name)}
+        {...this.props}
       />
     );
   }

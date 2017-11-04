@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react';
+import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { Provider } from 'mobx-react';
 import { useStrict as mobxUseStrict } from 'mobx';
@@ -15,9 +15,9 @@ DAOApi.initializeDAOApi({
   endpoint: `${config.HOST}api/v2/`,
 });
 
-export const rootStore = new RootStore();
+export const rootStore: { [key: string]: Object } = new RootStore();
 const stores = {};
-Object.getOwnPropertyNames(rootStore).forEach((storeName: string): Object => {
+Object.getOwnPropertyNames(rootStore).forEach((storeName: string) => {
   stores[storeName] = rootStore[storeName];
 });
 
@@ -25,10 +25,7 @@ class App extends React.Component<{}> {
   render(): React.Node {
     return (
       <Provider rootStore={rootStore} {...stores}>
-        <AppRouter
-          rootRef={(navigator: Object): void =>
-            NavigationService.setNavigator(navigator)}
-        />
+        <AppRouter rootRef={ref => NavigationService.setNavigator(ref)} />
       </Provider>
     );
   }

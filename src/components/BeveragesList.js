@@ -1,10 +1,13 @@
 // @flow
 
 import type { Beverage, QueryOptions } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from './InfiniteLoader';
+import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
 
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
+import nullthrows from 'nullthrows';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
@@ -12,20 +15,22 @@ import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 // imported from experimental react-native
 // eslint-disable-next-line
-import InfiniteLoader from './InfiniteLoader';
+import InfiniteLoader from '../common/InfiniteLoader';
 
 type Props = {|
+  queryOptions?: QueryOptions,
+|};
+
+type InjectedProps = {|
   beverageStore: DAOEntityStore<Beverage, Beverage>,
-  // todo add better typing
-  navigation: Object,
-  queryOptions: QueryOptions,
+  navigation: Navigation,
 |};
 
 // todo add pullToRefresh
 @withNavigation
 @inject('beverageStore')
 @observer
-class BeveragesList extends React.Component<Props> {
+class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
     queryOptions: {},
   };
@@ -33,7 +38,7 @@ class BeveragesList extends React.Component<Props> {
   _swipeableFlatListRef: ?SwipeableFlatList<Beverage>;
 
   _fetchNextData = async (): Promise<void> => {
-    await this.props.beverageStore.fetchMany({
+    await this.injectedProps.beverageStore.fetchMany({
       ...this.props.queryOptions,
       orderBy: [
         {
@@ -42,7 +47,7 @@ class BeveragesList extends React.Component<Props> {
         },
       ],
       // todo add selector instead all
-      skip: this.props.beverageStore.all.length,
+      skip: this.injectedProps.beverageStore.all.length,
       take: 20,
     });
   };
@@ -50,15 +55,15 @@ class BeveragesList extends React.Component<Props> {
   _keyExtractor = (item: Beverage): string => item.id;
 
   _onDeleteItemPress = (item: Beverage): Promise<void> =>
-    this.props.beverageStore.deleteByID(item.id);
+    this.injectedProps.beverageStore.deleteByID(item.id);
 
   _onEditItemPress = (item: Beverage) => {
-    this.props.navigation.navigate('editBeverage', { id: item.id });
-    this._swipeableFlatListRef.resetOpenRow();
+    this.injectedProps.navigation.navigate('editBeverage', { id: item.id });
+    nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
   _onItemPress = (item: Beverage): void =>
-    this.props.navigation.navigate('beverageDetails', {
+    this.injectedProps.navigation.navigate('beverageDetails', {
       id: item.id,
     });
 
@@ -89,16 +94,14 @@ class BeveragesList extends React.Component<Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps): React.Node => (
           <SwipeableFlatList
-            data={this.props.beverageStore.all}
+            data={this.injectedProps.beverageStore.all}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
             preventSwipeRight
-            ref={(ref: React.ElementRef<SwipeableFlatList<*>>) => {
-              this._swipeableFlatListRef = ref;
-            }}
+            ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
             renderQuickActions={this._renderQuickActions}
           />

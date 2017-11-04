@@ -10,7 +10,7 @@ import {
 
 type Props = {
   error?: ?string,
-  inputRef: (ref: HTMLInputElement) => void,
+  inputRef?: React.Ref<typeof FormInput>,
   label?: string,
   onBlur: () => void,
   onChange: (value: any) => void,
@@ -20,13 +20,13 @@ type Props = {
 
 const TextField = ({
   error,
+  inputRef,
   label,
   onBlur,
   onChange,
-  inputRef,
   value,
   ...props
-}: Props): React.Element<*> => (
+}: Props): React.Node => (
   <View>
     <FormLabel>{label}</FormLabel>
     <FormInput
