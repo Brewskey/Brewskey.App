@@ -20,14 +20,14 @@ const Message = styled.Text`
 
 type Props = {|
   isVisible: boolean,
-  message?: string,
+  message: string,
   onCancelButtonPress: () => void,
   onDeleteButtonPress: () => void,
 |};
 
 const DeleteModal = ({
   isVisible,
-  message = 'Are you sure you want to delete this item?',
+  message,
   onCancelButtonPress,
   onDeleteButtonPress,
 }: Props): React.Node => (
@@ -35,6 +35,7 @@ const DeleteModal = ({
     isVisible={isVisible}
     onBackButtonPress={onCancelButtonPress}
     onBackdropPress={onCancelButtonPress}
+    useNativeDriver
   >
     <Container>
       <Message>{message}</Message>

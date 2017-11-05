@@ -83,11 +83,8 @@ class SwipeableFlatList<TEntity> extends React.Component<
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;
   }
 
-  resetOpenRow = () => {
-    this.setState({
-      openRowKey: null,
-    });
-  };
+  resetOpenRow = (): void =>
+    this.setState((): $Shape<State> => ({ openRowKey: null }));
 
   render(): React.Node {
     const { ListFooterComponent, ...rest } = this.props;
@@ -114,22 +111,18 @@ class SwipeableFlatList<TEntity> extends React.Component<
     );
   }
 
-  _onScroll = (e): void => {
-    // Close any opens rows on ListView scroll
+  _onScroll = (event: SyntheticEvent<*>): void => {
     if (this.state.openRowKey) {
-      this.setState({
-        openRowKey: null,
-      });
+      this.setState((): $Shape<State> => ({ openRowKey: null }));
     }
 
-    this.props.onScroll && this.props.onScroll(e);
+    this.props.onScroll && this.props.onScroll(event);
   };
 
   _renderItem = (info: Object): ?React.Element<any> => {
     const slideoutView = this.props.renderQuickActions(info);
     const key = this.props.keyExtractor(info.item, info.index);
 
-    // If renderQuickActions is unspecified or returns falsey, don't allow swipe
     if (!slideoutView) {
       return this.props.renderItem(info);
     }
@@ -184,15 +177,11 @@ class SwipeableFlatList<TEntity> extends React.Component<
   };
 
   _onOpen(key: any): void {
-    this.setState({
-      openRowKey: key,
-    });
+    this.setState((): $Shape<State> => ({ openRowKey: key }));
   }
 
   _onClose(key: any): void {
-    this.setState({
-      openRowKey: null,
-    });
+    this.setState((): $Shape<State> => ({ openRowKey: null }));
   }
 }
 

@@ -79,6 +79,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _renderQuickActions = ({ item }: { item: Beverage }): React.Node => (
     <QuickActions
+      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
