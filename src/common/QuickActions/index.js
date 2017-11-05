@@ -1,10 +1,11 @@
 // @flow
 
 import * as React from 'react';
-import SwipeableActionButton from './SwipeableFlatList/SwipeableActionButton';
+import SwipeableActionButton from '../SwipeableFlatList/SwipeableActionButton';
 // imported from experimental react-native
 // eslint-disable-next-line
 import SwipeableQuickActions from 'SwipeableQuickActions';
+import DeleteModal from './DeleteModal';
 
 type Props<TItem> = {|
   item: TItem,
@@ -12,14 +13,28 @@ type Props<TItem> = {|
   onEditItemPress: (item: TItem) => void | Promise<void>,
 |};
 
-class QuickActions<TItem> extends React.Component<Props<TItem>> {
+type State = {|
+  isDeleteModalVisible: boolean,
+|};
+
+class QuickActions<TItem> extends React.Component<Props<TItem>, State> {
   static defaultProps = {
     onDeleteItemPress: () => {},
     onEditItemPress: () => {},
   };
 
-  _onDeleteItemPress = (): void | Promise<void> =>
+  state = {
+    isDeleteModalVisible: false,
+  };
+
+  _hideDeleteModal = (): void => this.setState({ isDeleteModalVisible: false });
+
+  _showDeleteModal = (): void => this.setState({ isDeleteModalVisible: true });
+
+  _onDeleteModalConform = () => {
+    this._hideDeleteModal();
     this.props.onDeleteItemPress(this.props.item);
+  };
 
   _onEditItemPress = (): void | Promise<void> =>
     this.props.onEditItemPress(this.props.item);
@@ -33,7 +48,12 @@ class QuickActions<TItem> extends React.Component<Props<TItem>> {
         />
         <SwipeableActionButton
           iconName="delete"
-          onPress={this._onDeleteItemPress}
+          onPress={this._showDeleteModal}
+        />
+        <DeleteModal
+          isVisible={this.state.isDeleteModalVisible}
+          onDeleteButtonPress={this._onDeleteModalConform}
+          onCancelButtonPress={this._hideDeleteModal}
         />
       </SwipeableQuickActions>
     );
