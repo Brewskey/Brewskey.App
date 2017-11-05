@@ -66,6 +66,7 @@ class TapsList extends InjectedComponent<InjectedProps> {
 
   _renderQuickActions = ({ item }: { item: Tap }): React.Node => (
     <QuickActions
+      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}

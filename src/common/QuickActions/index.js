@@ -8,6 +8,7 @@ import SwipeableQuickActions from 'SwipeableQuickActions';
 import DeleteModal from './DeleteModal';
 
 type Props<TItem> = {|
+  deleteModalMessage: string,
   item: TItem,
   onDeleteItemPress: (item: TItem) => void | Promise<void>,
   onEditItemPress: (item: TItem) => void | Promise<void>,
@@ -27,9 +28,11 @@ class QuickActions<TItem> extends React.Component<Props<TItem>, State> {
     isDeleteModalVisible: false,
   };
 
-  _hideDeleteModal = (): void => this.setState({ isDeleteModalVisible: false });
+  _hideDeleteModal = (): void =>
+    this.setState((): $Shape<State> => ({ isDeleteModalVisible: false }));
 
-  _showDeleteModal = (): void => this.setState({ isDeleteModalVisible: true });
+  _showDeleteModal = (): void =>
+    this.setState((): $Shape<State> => ({ isDeleteModalVisible: true }));
 
   _onDeleteModalConform = () => {
     this._hideDeleteModal();
@@ -52,8 +55,9 @@ class QuickActions<TItem> extends React.Component<Props<TItem>, State> {
         />
         <DeleteModal
           isVisible={this.state.isDeleteModalVisible}
-          onDeleteButtonPress={this._onDeleteModalConform}
+          message={this.props.deleteModalMessage}
           onCancelButtonPress={this._hideDeleteModal}
+          onDeleteButtonPress={this._onDeleteModalConform}
         />
       </SwipeableQuickActions>
     );
