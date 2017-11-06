@@ -42,7 +42,7 @@ class InfiniteLoader extends React.Component<Props> {
     this._fetchNextData();
   };
 
-  render(): React.Node {
+  render() {
     if (!this.props.children) {
       return null;
     }

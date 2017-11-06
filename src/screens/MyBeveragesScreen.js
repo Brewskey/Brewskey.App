@@ -28,7 +28,7 @@ class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
     title: 'Homebrew',
   });
 
-  render(): React.Node {
+  render() {
     return (
       <BeveragesList
         queryOptions={{

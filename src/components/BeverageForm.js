@@ -55,7 +55,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
 
   // todo Implement custom component for srm
   // todo implement autocomplete for style?
-  render(): React.Node {
+  render() {
     const { beverage = {}, submitButtonLabel } = this.props;
 
     const {

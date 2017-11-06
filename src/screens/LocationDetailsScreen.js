@@ -32,7 +32,7 @@ class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
     navigation.setParams({ location: locationStore.getByID(id) });
   }
 
-  render(): React.Node {
+  render() {
     const location = this.injectedProps.locationStore.getByID(
       this.injectedProps.id,
     );

@@ -32,7 +32,7 @@ class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
     navigation.setParams({ beverage: beverageStore.getByID(id) });
   }
 
-  render(): React.Node {
+  render() {
     const beverage = this.injectedProps.beverageStore.getByID(
       this.injectedProps.id,
     );

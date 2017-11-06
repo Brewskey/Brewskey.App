@@ -58,7 +58,7 @@ type InjectedProps = {|
 @form({ validate })
 @observer
 class LocationForm extends InjectedComponent<InjectedProps, Props> {
-  render(): React.Node {
+  render() {
     const { location = {}, submitButtonLabel } = this.props;
     const {
       formError,

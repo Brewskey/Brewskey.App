@@ -29,7 +29,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  render(): React.Node {
+  render() {
     return (
       <TapForm
         onSubmit={this._onFormSubmit}

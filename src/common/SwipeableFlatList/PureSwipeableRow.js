@@ -11,14 +11,14 @@ type Props = {
 };
 
 class PureSwipeableRow extends React.Component<Props> {
-  shouldComponentUpdate(nextProps: Props): boolean {
+  shouldComponentUpdate(nextProps: Props) {
     return (
       this.props.isOpen !== nextProps.isOpen ||
       this.props.extraData !== nextProps.extraData
     );
   }
 
-  render(): React.Node {
+  render() {
     return <SwipeableRow {...this.props} />;
   }
 }

@@ -10,7 +10,7 @@ type Props = {|
 |};
 
 class LoginScreen extends React.Component<Props> {
-  render(): React.Node {
+  render() {
     return <LoginForm />;
   }
 }

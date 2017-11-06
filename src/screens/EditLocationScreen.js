@@ -28,7 +28,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  render(): React.Node {
+  render() {
     return (
       <LocationForm
         location={this.injectedProps.locationStore.getByID(

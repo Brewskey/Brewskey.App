@@ -31,7 +31,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
     navigation.setParams({ tap: tapStore.getByID(id) });
   }
 
-  render(): React.Node {
+  render() {
     const tap = this.injectedProps.tapStore.getByID(this.injectedProps.id);
     // todo prettify and move content to separate component
     return (

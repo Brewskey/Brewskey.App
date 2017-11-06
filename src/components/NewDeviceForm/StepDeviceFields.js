@@ -18,7 +18,7 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class StepDeviceFields extends InjectedComponent<InjectedProps> {
-  render(): React.Node {
+  render() {
     return (
       <View>
         <DeviceBaseFormFields {...this.injectedProps} />

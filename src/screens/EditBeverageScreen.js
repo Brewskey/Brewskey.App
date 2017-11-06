@@ -28,7 +28,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  render(): React.Element<*> {
+  render() {
     return (
       <BeverageForm
         beverage={this.injectedProps.beverageStore.getByID(

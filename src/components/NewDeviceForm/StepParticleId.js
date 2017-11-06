@@ -22,7 +22,7 @@ class StepParticleId extends InjectedComponent<InjectedProps> {
   _onContinueButtonPress = (): void =>
     this.injectedProps.navigation.navigate('stepDeviceFields');
 
-  render(): React.Node {
+  render() {
     const particleIdFieldError = this.injectedProps.getFieldError('particleId');
     const particleIdFieldTouched = this.injectedProps.getFieldTouched(
       'particleId',

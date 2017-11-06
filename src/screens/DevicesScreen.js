@@ -28,7 +28,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
     title: 'Brewskey boxes',
   });
 
-  render(): React.Node {
+  render() {
     return (
       <DevicesList
         queryOptions={{

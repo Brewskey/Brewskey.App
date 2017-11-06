@@ -29,7 +29,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     navigation.navigate('beverageDetails', { id });
   };
 
-  render(): React.Node {
+  render() {
     return (
       <BeverageForm
         onSubmit={this._onFormSubmit}

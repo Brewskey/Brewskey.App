@@ -74,14 +74,14 @@ class LocationsList extends InjectedComponent<InjectedProps> {
     />
   );
 
-  render(): React.Node {
+  render() {
     return (
       <InfiniteLoader fetchNextData={this._fetchNextData}>
         {({
           loadingIndicator,
           onEndReached,
           onEndReachedThreshold,
-        }: InfiniteLoaderChildProps): React.Node => (
+        }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
             data={this.injectedProps.locationStore.all}
             keyExtractor={this._keyExtractor}

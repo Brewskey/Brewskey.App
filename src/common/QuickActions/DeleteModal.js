@@ -30,7 +30,7 @@ const DeleteModal = ({
   message,
   onCancelButtonPress,
   onDeleteButtonPress,
-}: Props): React.Node => (
+}: Props) => (
   <Modal
     isVisible={isVisible}
     onBackButtonPress={onCancelButtonPress}

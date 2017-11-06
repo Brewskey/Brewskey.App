@@ -29,7 +29,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  render(): React.Node {
+  render() {
     return (
       <EditDeviceForm
         onSubmit={this._onFormSubmit}

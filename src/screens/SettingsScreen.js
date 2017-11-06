@@ -21,7 +21,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     title: 'Settings',
   };
 
-  render(): React.Node {
+  render() {
     return (
       <List>
         <KeyboardAwareScrollView>

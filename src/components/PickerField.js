@@ -46,7 +46,7 @@ class PickerField extends React.Component<Props> {
     this.props.onBlur();
   };
 
-  render(): React.Node {
+  render() {
     const {
       children,
       error,
