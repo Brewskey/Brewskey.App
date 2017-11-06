@@ -22,7 +22,7 @@ Object.getOwnPropertyNames(rootStore).forEach((storeName: string) => {
 });
 
 class App extends React.Component<{}> {
-  render(): React.Node {
+  render() {
     return (
       <Provider rootStore={rootStore} {...stores}>
         <AppRouter rootRef={ref => NavigationService.setNavigator(ref)} />

@@ -30,7 +30,7 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
     navigation.navigate('locationDetails', { id });
   };
 
-  render(): React.Node {
+  render() {
     return (
       <LocationForm
         onSubmit={this._onFormSubmit}

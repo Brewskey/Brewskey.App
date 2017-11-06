@@ -32,7 +32,7 @@ class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
     navigation.setParams({ device: deviceStore.getByID(id) });
   }
 
-  render(): React.Node {
+  render() {
     const device = this.injectedProps.deviceStore.getByID(
       this.injectedProps.id,
     );

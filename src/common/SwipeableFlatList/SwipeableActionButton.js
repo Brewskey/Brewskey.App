@@ -18,7 +18,7 @@ type Props = {|
   iconName: string,
 |};
 
-const SwipeableActionButton = ({ onPress, iconName }: Props): React.Node => (
+const SwipeableActionButton = ({ onPress, iconName }: Props) => (
   <Icon containerStyle={styles.container} onPress={onPress} name={iconName} />
 );
 

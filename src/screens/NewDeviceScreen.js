@@ -30,7 +30,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     navigation.navigate('deviceDetails', { id });
   };
 
-  render(): React.Node {
+  render() {
     return <NewDeviceForm onSubmit={this._onFormSubmit} />;
   }
 }

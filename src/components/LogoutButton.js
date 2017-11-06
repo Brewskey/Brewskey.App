@@ -10,7 +10,7 @@ type Props = {|
   authStore: AuthStore,
 |};
 
-const LogoutButton = inject('authStore')(({ authStore }: Props): React.Node => (
+const LogoutButton = inject('authStore')(({ authStore }: Props) => (
   <Button onPress={authStore.clearAuthState} title="log out" />
 ));
 

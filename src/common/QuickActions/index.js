@@ -29,10 +29,10 @@ class QuickActions<TItem> extends React.Component<Props<TItem>, State> {
   };
 
   _hideDeleteModal = (): void =>
-    this.setState((): $Shape<State> => ({ isDeleteModalVisible: false }));
+    this.setState(() => ({ isDeleteModalVisible: false }));
 
   _showDeleteModal = (): void =>
-    this.setState((): $Shape<State> => ({ isDeleteModalVisible: true }));
+    this.setState(() => ({ isDeleteModalVisible: true }));
 
   _onDeleteModalConform = () => {
     this._hideDeleteModal();
@@ -42,7 +42,7 @@ class QuickActions<TItem> extends React.Component<Props<TItem>, State> {
   _onEditItemPress = (): void | Promise<void> =>
     this.props.onEditItemPress(this.props.item);
 
-  render(): React.Node {
+  render() {
     return (
       <SwipeableQuickActions>
         <SwipeableActionButton

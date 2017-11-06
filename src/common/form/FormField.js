@@ -29,7 +29,7 @@ class FormField<TProps> extends React.Component<Props & TProps> {
   _onChange = (value: any): void =>
     this.context.formStore.changeFieldValue(this.props.name, value);
 
-  render(): React.Node {
+  render() {
     const { component: Component } = this.props;
     if (!Component) {
       return null;

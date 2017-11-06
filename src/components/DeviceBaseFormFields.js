@@ -28,7 +28,7 @@ class DeviceFormFields extends InjectedComponent<InjectedProps, Props> {
   }
 
   // todo select only users locations
-  render(): React.Node {
+  render() {
     const { device = {} } = this.props;
     const { locationStore } = this.injectedProps;
     return [

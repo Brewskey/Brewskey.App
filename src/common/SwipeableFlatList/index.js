@@ -77,16 +77,15 @@ class SwipeableFlatList<TEntity> extends React.Component<
     renderQuickActions: () => null,
   };
 
-  constructor(props: Props<TEntity>, context: any): void {
+  constructor(props: Props<TEntity>, context: any) {
     super(props, context);
 
     this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;
   }
 
-  resetOpenRow = (): void =>
-    this.setState((): $Shape<State> => ({ openRowKey: null }));
+  resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
-  render(): React.Node {
+  render() {
     const { ListFooterComponent, ...rest } = this.props;
     // We handle ListFooter by ourself
     // to prevent onReachEnd callback loop inside InfiniteLoader
@@ -113,13 +112,13 @@ class SwipeableFlatList<TEntity> extends React.Component<
 
   _onScroll = (event: SyntheticEvent<*>): void => {
     if (this.state.openRowKey) {
-      this.setState((): $Shape<State> => ({ openRowKey: null }));
+      this.setState(() => ({ openRowKey: null }));
     }
 
     this.props.onScroll && this.props.onScroll(event);
   };
 
-  _renderItem = (info: Object): ?React.Element<any> => {
+  _renderItem = (info: Object): React.Element<*> => {
     const slideoutView = this.props.renderQuickActions(info);
     const key = this.props.keyExtractor(info.item, info.index);
 
@@ -177,11 +176,11 @@ class SwipeableFlatList<TEntity> extends React.Component<
   };
 
   _onOpen(key: any): void {
-    this.setState((): $Shape<State> => ({ openRowKey: key }));
+    this.setState(() => ({ openRowKey: key }));
   }
 
   _onClose(key: any): void {
-    this.setState((): $Shape<State> => ({ openRowKey: null }));
+    this.setState(() => ({ openRowKey: null }));
   }
 }
 

@@ -73,14 +73,14 @@ class TapsList extends InjectedComponent<InjectedProps> {
     />
   );
 
-  render(): React.Node {
+  render() {
     return (
       <InfiniteLoader fetchNextData={this._fetchNextData}>
         {({
           loadingIndicator,
           onEndReached,
           onEndReachedThreshold,
-        }: InfiniteLoaderChildProps): React.Node => (
+        }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
             data={this.injectedProps.tapStore.all}
             keyExtractor={this._keyExtractor}

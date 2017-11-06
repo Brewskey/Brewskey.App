@@ -86,14 +86,14 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render(): React.Node {
+  render() {
     return (
       <InfiniteLoader fetchNextData={this._fetchNextData}>
         {({
           loadingIndicator,
           onEndReached,
           onEndReachedThreshold,
-        }: InfiniteLoaderChildProps): React.Node => (
+        }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
             data={this.injectedProps.beverageStore.all}
             keyExtractor={this._keyExtractor}

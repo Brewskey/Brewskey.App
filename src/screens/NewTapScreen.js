@@ -29,7 +29,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     navigation.navigate('tapDetails', { id });
   };
 
-  render(): React.Node {
+  render() {
     return (
       <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
     );

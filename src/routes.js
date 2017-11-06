@@ -58,7 +58,7 @@ class AppRouter extends InjectedComponent<InjectedProps, Props> {
     return routeObject;
   };
 
-  render(): React.Node {
+  render() {
     const RootRouter = StackNavigator(
       {
         splash: { screen: SplashScreen },

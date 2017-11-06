@@ -49,7 +49,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
   _onSubmitButtonPress = (): Promise<void> =>
     this.injectedProps.handleSubmit(this._onSubmit);
 
-  render(): React.Node {
+  render() {
     const { formError, invalid, pristine, submitting } = this.injectedProps;
     return (
       <KeyboardAwareScrollView>

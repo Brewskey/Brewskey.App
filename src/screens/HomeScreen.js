@@ -16,7 +16,7 @@ class HomeScreen extends React.Component<Props> {
     title: 'Home',
   };
 
-  render(): React.Node {
+  render() {
     return (
       <View>
         <Text>Home Home</Text>

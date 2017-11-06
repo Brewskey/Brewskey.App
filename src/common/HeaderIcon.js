@@ -22,7 +22,7 @@ type Props = {|
   onPress: () => void,
 |};
 
-const HeaderIcon = ({ name, onPress }: Props): React.Element<*> => (
+const HeaderIcon = ({ name, onPress }: Props) => (
   <Icon
     containerStyle={styles.container}
     iconStyle={styles.icon}

@@ -26,7 +26,7 @@ class CheckBoxField extends React.Component<Props> {
     this.props.onBlur();
   };
 
-  render(): React.Node {
+  render() {
     return (
       <Container>
         <Text>{this.props.label}</Text>

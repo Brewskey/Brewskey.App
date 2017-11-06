@@ -22,7 +22,7 @@ const EditDeviceForm = ({
   invalid,
   pristine,
   submitting,
-}: Props): React.Node => (
+}: Props) => (
   <KeyboardAwareScrollView>
     <DeviceBaseFormFields device={device} />
     <FormField initialValue={device.particleId} name="particleId" />

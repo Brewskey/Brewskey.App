@@ -58,7 +58,7 @@ type Props = {|
   ...FormProps,
 |};
 
-const NewDeviceForm = (props: Props): React.Node => (
+const NewDeviceForm = (props: Props) => (
   <Container>
     <Stepper screenProps={props} />
   </Container>

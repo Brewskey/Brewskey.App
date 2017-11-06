@@ -21,7 +21,7 @@ class TapsScreen extends React.Component<Props> {
     title: 'Taps',
   });
 
-  render(): React.Node {
+  render() {
     return <TapsList />;
   }
 }

@@ -36,7 +36,7 @@ type Props = {|
   value: any,
 |};
 
-const DeviceStatusPicker = (props: Props): React.Node => (
+const DeviceStatusPicker = (props: Props) => (
   <View>
     <PickerField label="Type" {...props}>
       <PickerField.Item label="Active" value="Active" />

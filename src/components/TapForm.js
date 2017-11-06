@@ -48,7 +48,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
     this.injectedProps.deviceStore.fetchMany();
   }
 
-  render(): React.Node {
+  render() {
     const { submitButtonLabel, tap = {} } = this.props;
     const {
       formError,

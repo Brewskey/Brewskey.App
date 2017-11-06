@@ -19,7 +19,7 @@ class SplashScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.rootStore.initialize();
   }
 
-  render(): React.Node {
+  render() {
     return <AppLoading />;
   }
 }

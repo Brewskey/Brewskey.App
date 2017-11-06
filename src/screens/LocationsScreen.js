@@ -21,7 +21,7 @@ class LocationsScreen extends React.Component<Props> {
     title: 'Locations',
   });
 
-  render(): React.Node {
+  render() {
     return <LocationsList />;
   }
 }

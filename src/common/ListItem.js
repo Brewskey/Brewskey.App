@@ -25,7 +25,7 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
 
   _onPress = (): void => this.props.onPress(this.props.item);
 
-  render(): React.Node {
+  render() {
     return (
       <RNEListItem
         {...this.props}

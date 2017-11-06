@@ -66,7 +66,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
       }
     };
 
-    render(): React.Node {
+    render() {
       return (
         <Component
           formError={this._formStore.formError}

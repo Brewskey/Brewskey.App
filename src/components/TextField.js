@@ -26,7 +26,7 @@ const TextField = ({
   onChange,
   value,
   ...props
-}: Props): React.Node => (
+}: Props) => (
   <View>
     <FormLabel>{label}</FormLabel>
     <FormInput
