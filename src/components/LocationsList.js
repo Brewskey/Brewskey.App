@@ -1,6 +1,6 @@
 // @flow
 
-import type { Location } from 'brewskey.js-api';
+import type { QueryOptions, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
@@ -15,30 +15,41 @@ import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 import InfiniteLoader from '../common/InfiniteLoader';
 
+type Props = {|
+  queryOptions?: QueryOptions,
+|};
+
 type InjectedProps = {
   locationStore: DAOEntityStore<Location, Location>,
   navigation: Navigation,
 };
 
-// todo add pullToRefresh
 @withNavigation
 @inject('locationStore')
 @observer
-class LocationsList extends InjectedComponent<InjectedProps> {
+class LocationsList extends InjectedComponent<InjectedProps, Props> {
+  static defaultProps = {
+    queryOptions: {},
+  };
+
+  _getBaseQueryOptions = (): QueryOptions => ({
+    ...this.props.queryOptions,
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
+
   _swipeableFlatListRef: ?SwipeableFlatList<Location>;
 
-  _fetchNextData = async (): Promise<void> => {
-    await this.injectedProps.locationStore.fetchMany({
-      orderBy: [
-        {
-          column: 'id',
-          direction: 'desc',
-        },
-      ],
+  _fetchNextData = (): Promise<*> =>
+    this.injectedProps.locationStore.fetchMany({
+      ...this._getBaseQueryOptions(),
       skip: this.injectedProps.locationStore.all.length,
       take: 20,
     });
-  };
 
   _keyExtractor = (item: Location): string => item.id;
 
@@ -53,6 +64,13 @@ class LocationsList extends InjectedComponent<InjectedProps> {
   _onItemPress = (item: Location): void =>
     this.injectedProps.navigation.navigate('locationDetails', {
       id: item.id,
+    });
+
+  _onRefresh = (): Promise<*> =>
+    this.injectedProps.locationStore.fetchMany({
+      ...this._getBaseQueryOptions(),
+      skip: 0,
+      take: 20,
     });
 
   _renderItem = ({ item }: { item: Location }): React.Node => (
@@ -89,6 +107,7 @@ class LocationsList extends InjectedComponent<InjectedProps> {
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
+            onRefresh={this._onRefresh}
             preventSwipeRight
             ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}

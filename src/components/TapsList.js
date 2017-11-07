@@ -1,6 +1,6 @@
 // @flow
 
-import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { QueryOptions, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
@@ -15,6 +15,10 @@ import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 import InfiniteLoader from '../common/InfiniteLoader';
 
+type Props = {|
+  queryOptions?: QueryOptions,
+|};
+
 type InjectedProps = {|
   tapStore: DAOEntityStore<Tap, TapMutator>,
   navigation: Navigation,
@@ -23,21 +27,29 @@ type InjectedProps = {|
 @withNavigation
 @inject('tapStore')
 @observer
-class TapsList extends InjectedComponent<InjectedProps> {
+class TapsList extends InjectedComponent<InjectedProps, Props> {
+  static defaultProps = {
+    queryOptions: {},
+  };
+
   _swipeableFlatListRef: ?SwipeableFlatList<Tap>;
 
-  _fetchNextData = async (): Promise<void> => {
-    await this.injectedProps.tapStore.fetchMany({
-      orderBy: [
-        {
-          column: 'id',
-          direction: 'desc',
-        },
-      ],
+  _getBaseQueryOptions = (): QueryOptions => ({
+    ...this.props.queryOptions,
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
+
+  _fetchNextData = (): Promise<*> =>
+    this.injectedProps.tapStore.fetchMany({
+      ...this.props.queryOptions,
       skip: this.injectedProps.tapStore.all.length,
       take: 20,
     });
-  };
 
   _keyExtractor = (item: Tap): string => item.id;
 
@@ -52,6 +64,13 @@ class TapsList extends InjectedComponent<InjectedProps> {
   _onItemPress = (item: Tap): void =>
     this.injectedProps.navigation.navigate('tapDetails', {
       id: item.id,
+    });
+
+  _onRefresh = (): Promise<*> =>
+    this.injectedProps.tapStore.fetchMany({
+      ...this._getBaseQueryOptions(),
+      skip: 0,
+      take: 20,
     });
 
   _renderItem = ({ item }: { item: Tap }): React.Node => (
@@ -88,6 +107,7 @@ class TapsList extends InjectedComponent<InjectedProps> {
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
+            onRefresh={this._onRefresh}
             preventSwipeRight
             ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}

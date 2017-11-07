@@ -6,16 +6,7 @@
 // original )
 /* eslint-disable */
 
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- *
- * @flow
- */
+// @flow
 
 import type { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
@@ -25,40 +16,18 @@ import { FlatList, View } from 'react-native';
 import PureSwipeableRow from './PureSwipeableRow';
 
 type SwipeableListProps = {
-  /**
-   * To alert the user that swiping is possible, the first row can bounce
-   * on component mount.
-   */
   bounceFirstRowOnMount: boolean,
-  // Maximum distance to open to after a swipe
   maxSwipeDistance: number | (Object => number),
-  // Callback method to render the view that will be unveiled on swipe
-  renderQuickActions: renderItemType,
   preventSwipeRight?: boolean,
+  renderQuickActions: renderItemType,
 };
 
 type Props<TEntity> = SwipeableListProps & FlatListProps<TEntity>;
 
 type State = {
   openRowKey: ?string,
+  refreshing: boolean,
 };
-
-/**
- * A container component that renders multiple SwipeableRow's in a FlatList
- * implementation. This is designed to be a drop-in replacement for the
- * standard React Native `FlatList`, so use it as if it were a FlatList, but
- * with extra props, i.e.
- *
- * <SwipeableListView renderRow={..} renderQuickActions={..} {..FlatList props} />
- *
- * SwipeableRow can be used independently of this component, but the main
- * benefit of using this component is
- *
- * - It ensures that at most 1 row is swiped open (auto closes others)
- * - It can bounce the 1st row of the list so users know it's swipeable
- * - Increase performance on iOS by locking list swiping when row swiping is occuring
- * - More to come
- */
 
 class SwipeableFlatList<TEntity> extends React.Component<
   Props<TEntity>,
@@ -66,6 +35,7 @@ class SwipeableFlatList<TEntity> extends React.Component<
 > {
   state = {
     openRowKey: null,
+    refreshing: false,
   };
 
   _flatListRef: ?FlatList<TEntity> = null;
@@ -84,31 +54,6 @@ class SwipeableFlatList<TEntity> extends React.Component<
   }
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
-
-  render() {
-    const { ListFooterComponent, ...rest } = this.props;
-    // We handle ListFooter by ourself
-    // to prevent onReachEnd callback loop inside InfiniteLoader
-    const footerElement = React.isValidElement(ListFooterComponent)
-      ? ListFooterComponent
-      : ListFooterComponent && <ListFooterComponent />;
-
-    return (
-      <View>
-        <FlatList
-          {...rest}
-          extraData={this.state}
-          onScroll={this._onScroll}
-          ref={ref => {
-            this._flatListRef = ref;
-          }}
-          removeClippedSubviews
-          renderItem={this._renderItem}
-        />
-        {footerElement}
-      </View>
-    );
-  }
 
   _onScroll = (event: SyntheticEvent<*>): void => {
     if (this.state.openRowKey) {
@@ -181,6 +126,42 @@ class SwipeableFlatList<TEntity> extends React.Component<
 
   _onClose(key: any): void {
     this.setState(() => ({ openRowKey: null }));
+  }
+
+  _onRefresh = async () => {
+    if (!this.props.onRefresh) {
+      return;
+    }
+    this.setState(() => ({ refreshing: true }));
+    await this.props.onRefresh();
+    this.setState(() => ({ refreshing: false }));
+  };
+
+  render() {
+    const { ListFooterComponent, ...rest } = this.props;
+    // We handle ListFooter by ourself
+    // to prevent onReachEnd callback loop inside InfiniteLoader
+    const footerElement = React.isValidElement(ListFooterComponent)
+      ? ListFooterComponent
+      : ListFooterComponent && <ListFooterComponent />;
+
+    return (
+      <View>
+        <FlatList
+          {...rest}
+          refreshing={this.state.refreshing}
+          onRefresh={this.props.onRefresh ? this._onRefresh : null}
+          extraData={this.state}
+          onScroll={this._onScroll}
+          ref={ref => {
+            this._flatListRef = ref;
+          }}
+          removeClippedSubviews
+          renderItem={this._renderItem}
+        />
+        {footerElement}
+      </View>
+    );
   }
 }
 

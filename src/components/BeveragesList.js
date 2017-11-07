@@ -26,7 +26,6 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-// todo add pullToRefresh
 @withNavigation
 @inject('beverageStore')
 @observer
@@ -35,22 +34,25 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     queryOptions: {},
   };
 
+  _getBaseQueryOptions = (): QueryOptions => ({
+    ...this.props.queryOptions,
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
+
   _swipeableFlatListRef: ?SwipeableFlatList<Beverage>;
 
-  _fetchNextData = async (): Promise<void> => {
-    await this.injectedProps.beverageStore.fetchMany({
-      ...this.props.queryOptions,
-      orderBy: [
-        {
-          column: 'id',
-          direction: 'desc',
-        },
-      ],
+  _fetchNextData = (): Promise<*> =>
+    this.injectedProps.beverageStore.fetchMany({
+      ...this._getBaseQueryOptions(),
       // todo add selector instead all
       skip: this.injectedProps.beverageStore.all.length,
       take: 20,
     });
-  };
 
   _keyExtractor = (item: Beverage): string => item.id;
 
@@ -86,6 +88,13 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
+  _onRefresh = (): Promise<Array<Beverage>> =>
+    this.injectedProps.beverageStore.fetchMany({
+      ...this._getBaseQueryOptions(),
+      skip: 0,
+      take: 20,
+    });
+
   render() {
     return (
       <InfiniteLoader fetchNextData={this._fetchNextData}>
@@ -101,6 +110,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
+            onRefresh={this._onRefresh}
             preventSwipeRight
             ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
