@@ -44,13 +44,18 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     ],
   });
 
+  get _items(): Array<Device> {
+    return this.injectedProps.deviceStore.getByQueryOptions(
+      this._getBaseQueryOptions(),
+    );
+  }
+
   _swipeableFlatListRef: ?SwipeableFlatList<Device>;
 
   _fetchNextData = (): Promise<*> =>
     this.injectedProps.deviceStore.fetchMany({
       ...this._getBaseQueryOptions(),
-      // todo add selector instead all
-      skip: this.injectedProps.deviceStore.all.length,
+      skip: this._items.length,
       take: 20,
     });
 
@@ -104,7 +109,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
-            data={this.injectedProps.deviceStore.all}
+            data={this._items}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}

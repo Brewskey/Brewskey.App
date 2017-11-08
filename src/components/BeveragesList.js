@@ -44,13 +44,18 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     ],
   });
 
+  get _items(): Array<Beverage> {
+    return this.injectedProps.beverageStore.getByQueryOptions(
+      this._getBaseQueryOptions(),
+    );
+  }
+
   _swipeableFlatListRef: ?SwipeableFlatList<Beverage>;
 
   _fetchNextData = (): Promise<*> =>
     this.injectedProps.beverageStore.fetchMany({
       ...this._getBaseQueryOptions(),
-      // todo add selector instead all
-      skip: this.injectedProps.beverageStore.all.length,
+      skip: this._items.length,
       take: 20,
     });
 
@@ -104,7 +109,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
-            data={this.injectedProps.beverageStore.all}
+            data={this._items}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}

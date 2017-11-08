@@ -42,12 +42,18 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     ],
   });
 
+  get _items(): Array<Location> {
+    return this.injectedProps.locationStore.getByQueryOptions(
+      this._getBaseQueryOptions(),
+    );
+  }
+
   _swipeableFlatListRef: ?SwipeableFlatList<Location>;
 
   _fetchNextData = (): Promise<*> =>
     this.injectedProps.locationStore.fetchMany({
       ...this._getBaseQueryOptions(),
-      skip: this.injectedProps.locationStore.all.length,
+      skip: this._items.length,
       take: 20,
     });
 
@@ -101,7 +107,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
-            data={this.injectedProps.locationStore.all}
+            data={this._items}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}

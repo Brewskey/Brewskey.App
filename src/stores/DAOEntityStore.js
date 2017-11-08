@@ -1,6 +1,6 @@
 // @flow
 
-import type { DAO, QueryFilter, QueryOptions } from 'brewskey.js-api';
+import type { DAO, QueryOptions } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type RootStore from './RootStore';
 
@@ -121,14 +121,36 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
     this.entityItemsByID.get(id),
   );
 
-  getByQueryFilters = createTransformer(
-    (queryFilters: Array<QueryFilter>): Array<TEntity> =>
-      this.entityItemsByID
-        .values()
-        .filter((entityItem: TEntity): boolean =>
-          DAOApi.doesSatisfyToQueryFilters(entityItem, queryFilters),
-        ),
-  );
+  getByQueryOptions = createTransformer((queryOptions: QueryOptions): Array<
+    TEntity,
+  > => {
+    const { filters, orderBy } = queryOptions;
+    let entities = this.all;
+
+    if (filters) {
+      entities = entities.filter((entityItem: TEntity): boolean =>
+        DAOApi.doesSatisfyToQueryFilters(entityItem, filters),
+      );
+    }
+
+    if (orderBy) {
+      // todo this is absolutely hardcoded for now
+      // it makes assumption that we use exactly id prop for ordering
+      // and id is exactly `kind of number` so we can parse it.
+      const { column, direction } = orderBy[0];
+
+      entities.sort(
+        (item: TEntity, nextItem: TEntity): number =>
+          parseInt(item[column], 10) - parseInt(nextItem[column], 10),
+      );
+
+      if (direction === 'desc') {
+        entities.reverse();
+      }
+    }
+
+    return entities;
+  });
 
   _doDAORequest = async (
     methodName: string,

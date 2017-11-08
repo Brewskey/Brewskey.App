@@ -44,10 +44,16 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
     ],
   });
 
+  get _items(): Array<Tap> {
+    return this.injectedProps.tapStore.getByQueryOptions(
+      this._getBaseQueryOptions(),
+    );
+  }
+
   _fetchNextData = (): Promise<*> =>
     this.injectedProps.tapStore.fetchMany({
       ...this.props.queryOptions,
-      skip: this.injectedProps.tapStore.all.length,
+      skip: this._items.length,
       take: 20,
     });
 
@@ -101,7 +107,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
-            data={this.injectedProps.tapStore.all}
+            data={this._items}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
