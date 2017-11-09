@@ -7,7 +7,7 @@ import { ActivityIndicator, Platform } from 'react-native';
 
 type Props = {|
   children?: Function,
-  fetchNextData: () => Promise<void>,
+  fetchNextData: () => Promise<*>,
 |};
 
 export type InfiniteLoaderChildProps = {

@@ -26,7 +26,6 @@ type InjectedProps = {
   navigation: Navigation,
 };
 
-// todo add pullToRefresh
 @withNavigation
 @inject('deviceStore')
 @observer
@@ -35,22 +34,30 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     queryOptions: {},
   };
 
+  _getBaseQueryOptions = (): QueryOptions => ({
+    ...this.props.queryOptions,
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
+
+  get _items(): Array<Device> {
+    return this.injectedProps.deviceStore.getByQueryOptions(
+      this._getBaseQueryOptions(),
+    );
+  }
+
   _swipeableFlatListRef: ?SwipeableFlatList<Device>;
 
-  _fetchNextData = async (): Promise<void> => {
-    await this.injectedProps.deviceStore.fetchMany({
-      ...this.props.queryOptions,
-      orderBy: [
-        {
-          column: 'id',
-          direction: 'desc',
-        },
-      ],
-      // todo add selector instead all
-      skip: this.injectedProps.deviceStore.all.length,
+  _fetchNextData = (): Promise<*> =>
+    this.injectedProps.deviceStore.fetchMany({
+      ...this._getBaseQueryOptions(),
+      skip: this._items.length,
       take: 20,
     });
-  };
 
   _keyExtractor = (item: Device): string => item.id;
 
@@ -65,6 +72,13 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   _onItemPress = (item: Device): void =>
     this.injectedProps.navigation.navigate('deviceDetails', {
       id: item.id,
+    });
+
+  _onRefresh = (): Promise<*> =>
+    this.injectedProps.deviceStore.fetchMany({
+      ...this._getBaseQueryOptions(),
+      skip: 0,
+      take: 20,
     });
 
   _renderItem = ({ item }: { item: Device }): React.Node => (
@@ -95,12 +109,13 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
           onEndReachedThreshold,
         }: InfiniteLoaderChildProps) => (
           <SwipeableFlatList
-            data={this.injectedProps.deviceStore.all}
+            data={this._items}
             keyExtractor={this._keyExtractor}
             ListFooterComponent={loadingIndicator}
             maxSwipeDistance={150}
             onEndReached={onEndReached}
             onEndReachedThreshold={onEndReachedThreshold}
+            onRefresh={this._onRefresh}
             preventSwipeRight
             ref={ref => (this._swipeableFlatListRef = ref)}
             renderItem={this._renderItem}
