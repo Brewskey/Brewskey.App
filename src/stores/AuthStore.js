@@ -105,8 +105,18 @@ class AuthStore {
   };
 
   @computed
+  get token(): ?string {
+    return this.authState && this.authState.token;
+  }
+
+  @computed
   get userID(): ?string {
     return this.authState && this.authState.id;
+  }
+
+  @computed
+  get userName(): ?string {
+    return this.authState && this.authState.userName;
   }
 
   @computed
