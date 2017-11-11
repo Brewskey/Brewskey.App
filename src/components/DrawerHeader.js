@@ -1,13 +1,12 @@
 // @flow
 
 import type AuthStore from '../stores/AuthStore';
-import type AvatarStore from '../stores/AvatarStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import styled from 'styled-components/native';
 import { inject, observer } from 'mobx-react';
-import { Avatar } from 'react-native-elements';
+import Avatar from '../common/Avatar';
 
 const Container = styled.View`
   background-color: gray;
@@ -24,22 +23,17 @@ const UserNameText = styled.Text`
 
 type InjectedProps = {|
   authStore: AuthStore,
-  avatarStore: AvatarStore,
 |};
 
 @inject('authStore')
-@inject('avatarStore')
 @observer
 class DrawerHeader extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <Container>
         <Avatar
-          large
-          rounded
-          source={{
-            uri: this.injectedProps.avatarStore.sourceUri,
-          }}
+          size={100}
+          userName={this.injectedProps.authStore.userName || ''}
         />
         <UserNameText>{this.injectedProps.authStore.userName}</UserNameText>
       </Container>

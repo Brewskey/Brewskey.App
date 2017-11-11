@@ -25,7 +25,6 @@ import type {
 
 import AppSettingsStore from './AppSettingsStore';
 import AuthStore from './AuthStore';
-import AvatarStore from './AvatarStore';
 import RoutesSettingsStore from './RoutesSettingsStore';
 import DAOEntityStore from './DAOEntityStore';
 import DAOApi from 'brewskey.js-api';
@@ -33,7 +32,6 @@ import DAOApi from 'brewskey.js-api';
 class RootStore {
   appSettingsStore: AppSettingsStore;
   authStore: AuthStore;
-  avatarStore: AvatarStore;
   routesSettingsStore: RoutesSettingsStore;
 
   accountStore: DAOEntityStore<Account, AccountMutator>;
@@ -54,7 +52,6 @@ class RootStore {
   constructor() {
     this.appSettingsStore = new AppSettingsStore(this);
     this.authStore = new AuthStore(this);
-    this.avatarStore = new AvatarStore(this);
     this.routesSettingsStore = new RoutesSettingsStore(this);
 
     this.accountStore = new DAOEntityStore(this, DAOApi.AccountDAO);
