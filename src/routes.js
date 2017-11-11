@@ -29,6 +29,7 @@ import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TapDetailsScreen from './screens/TapDetailsScreen';
 import TapsScreen from './screens/TapsScreen';
@@ -69,6 +70,9 @@ class AppRouter extends InjectedComponent<InjectedProps, Props> {
             {
               home: {
                 screen: StackNavigator({ home: { screen: HomeScreen } }),
+              },
+              profile: {
+                screen: StackNavigator({ profile: { screen: ProfileScreen } }),
               },
               ...this._addInitialRouteSettings(
                 {

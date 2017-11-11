@@ -8,6 +8,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { DrawerItems } from 'react-navigation';
+import DrawerHeader from './DrawerHeader';
 import LogoutButton from './LogoutButton';
 
 type DrawerItem = {|
@@ -41,6 +42,7 @@ class MainDrawer extends InjectedComponent<InjectedProps, Props> {
 
     return (
       <View>
+        <DrawerHeader />
         <DrawerItems {...this.props} items={items} />
         <LogoutButton />
       </View>

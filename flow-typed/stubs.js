@@ -4,7 +4,7 @@ declare module 'RelativeImageStub' {
   declare module.exports: any;
 }
 
-//imports from react-native exprementals
+// imports from react-native exprementals
 declare module 'SwipeableQuickActions' {
   declare module.exports: any;
 }
