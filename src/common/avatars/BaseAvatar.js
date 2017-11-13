@@ -2,9 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components/native';
-import CachedImage from './CachedImage';
-import { TouchableOpacity } from 'react-native';
-import CONFIG from '../config';
+import CachedImage from '../CachedImage';
 
 const StyledCachedImage = styled(CachedImage)`
   border-radius: ${({ size }: Object): number => size / 2};
@@ -12,38 +10,37 @@ const StyledCachedImage = styled(CachedImage)`
   width: ${({ size }: Object): number => size};
 `;
 
-type Props = {
+const StyledTouchableOpacity = styled.TouchableOpacity`
+  background-color: #aaa;
+  border-radius: ${({ size }: Object): number => size / 2};
+  height: ${({ size }: Object): number => size};
+  width: ${({ size }: Object): number => size};
+`;
+
+export type BaseAvatarProps = {
   imageRef?: React.Ref<typeof CachedImage>,
   onPress?: () => void,
   size: number,
-  userName: string,
 };
 
-class Avatar extends React.Component<Props> {
-  static defaultProps = {
-    size: 90,
-  };
+type Props = BaseAvatarProps & { uri: string };
 
-  get _uri(): string {
-    return `${CONFIG.CDN}photos/${this.props.userName}.jpg?w=${
-      this.props.size
-    }&h=${this.props.size}&mode=crop`;
-  }
-
+class BaseAvatar extends React.PureComponent<Props> {
   render() {
     return (
-      <TouchableOpacity
+      <StyledTouchableOpacity
         disabled={!this.props.onPress}
         onPress={this.props.onPress}
+        size={this.props.size}
       >
         <StyledCachedImage
           innerRef={this.props.imageRef}
           size={this.props.size}
-          source={{ uri: this._uri }}
+          source={{ uri: this.props.uri }}
         />
-      </TouchableOpacity>
+      </StyledTouchableOpacity>
     );
   }
 }
 
-export default Avatar;
+export default BaseAvatar;

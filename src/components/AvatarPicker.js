@@ -8,8 +8,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import ImagePicker from 'react-native-image-picker';
 import { inject, observer } from 'mobx-react';
-import Avatar from '../common/Avatar';
-import ProfileApi from '../ProfileApi';
+import UserAvatar from '../common/avatars/UserAvatar';
+import CommonApi from '../CommonApi';
 
 const IMAGE_PICKER_OPTIONS = {
   title: 'SelectAvatar',
@@ -32,7 +32,7 @@ class AvatarPicker extends InjectedComponent<InjectedProps> {
           return;
         }
 
-        await ProfileApi.updateAvatar(data);
+        await CommonApi.updateAvatar(data);
         nullthrows(this._cachedImageRef).flushCache();
       },
     );
@@ -44,7 +44,7 @@ class AvatarPicker extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <Avatar
+      <UserAvatar
         imageRef={this._getAvatarImageRef}
         onPress={this._onAvatarPress}
         size={200}
