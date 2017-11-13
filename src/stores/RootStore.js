@@ -24,6 +24,7 @@ import type {
 } from 'brewskey.js-api';
 
 import AppSettingsStore from './AppSettingsStore';
+import NearbyLocationsStore from './NearbyLocationsStore';
 import AuthStore from './AuthStore';
 import RoutesSettingsStore from './RoutesSettingsStore';
 import DAOEntityStore from './DAOEntityStore';
@@ -33,6 +34,8 @@ class RootStore {
   appSettingsStore: AppSettingsStore;
   authStore: AuthStore;
   routesSettingsStore: RoutesSettingsStore;
+
+  nearbyLocationsStore: NearbyLocationsStore;
 
   accountStore: DAOEntityStore<Account, AccountMutator>;
   availabilityStore: DAOEntityStore<Availability, Availability>;
@@ -53,6 +56,8 @@ class RootStore {
     this.appSettingsStore = new AppSettingsStore(this);
     this.authStore = new AuthStore(this);
     this.routesSettingsStore = new RoutesSettingsStore(this);
+
+    this.nearbyLocationsStore = new NearbyLocationsStore(this);
 
     this.accountStore = new DAOEntityStore(this, DAOApi.AccountDAO);
     this.availabilityStore = new DAOEntityStore(this, DAOApi.AvailabilityDAO);
