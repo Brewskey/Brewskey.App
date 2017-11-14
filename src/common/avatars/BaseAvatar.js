@@ -19,6 +19,7 @@ const StyledTouchableOpacity = styled.TouchableOpacity`
 
 export type BaseAvatarProps = {
   imageRef?: React.Ref<typeof CachedImage>,
+  mutable?: boolean,
   onPress?: () => void,
   size: number,
 };
@@ -35,6 +36,7 @@ class BaseAvatar extends React.PureComponent<Props> {
       >
         <StyledCachedImage
           innerRef={this.props.imageRef}
+          mutable={this.props.mutable}
           size={this.props.size}
           source={{ uri: this.props.uri }}
         />

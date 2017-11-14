@@ -19,6 +19,7 @@ class BeverageAvatar extends React.PureComponent<Props> {
     return (
       <BaseAvatar
         {...this.props}
+        mutable={false}
         uri={`${CONFIG.CDN}beverages/${this.props.beverageId}-icon.jpg?w=${
           this.props.size
         }&h=${this.props.size}&mode=crop`}
