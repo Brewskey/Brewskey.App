@@ -51,14 +51,12 @@ class NearbyLocationsStore {
 
   @computed
   get all(): Array<NearbyLocation> {
-    return this._nearbyLocationsById.values();
-  }
-
-  @computed
-  get allWithFilledTaps(): Array<NearbyLocation> {
-    return this.all.filter(
-      (nearbyLocation: NearbyLocation): boolean => !!nearbyLocation.taps.length,
-    );
+    return this._nearbyLocationsById
+      .values()
+      .filter(
+        (nearbyLocation: NearbyLocation): boolean =>
+          !!nearbyLocation.taps.length,
+      );
   }
 }
 

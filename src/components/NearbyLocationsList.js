@@ -37,13 +37,13 @@ class TapsList extends InjectedComponent<InjectedProps, {}, State> {
   };
 
   componentWillMount() {
-    if (!this.injectedProps.nearbyLocationsStore.allWithFilledTaps.length) {
+    if (!this.injectedProps.nearbyLocationsStore.all.length) {
       this._onRefresh();
     }
   }
 
   get _sections(): Array<Section<NearbyTap>> {
-    return this.injectedProps.nearbyLocationsStore.allWithFilledTaps.map(
+    return this.injectedProps.nearbyLocationsStore.all.map(
       ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
         data: taps.slice(),
         title: name,
