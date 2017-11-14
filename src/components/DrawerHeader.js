@@ -6,7 +6,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import styled from 'styled-components/native';
 import { inject, observer } from 'mobx-react';
-import Avatar from '../common/Avatar';
+import UserAvatar from '../common/avatars/UserAvatar';
 
 const Container = styled.View`
   background-color: gray;
@@ -31,7 +31,7 @@ class DrawerHeader extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <Container>
-        <Avatar
+        <UserAvatar
           size={100}
           userName={this.injectedProps.authStore.userName || ''}
         />

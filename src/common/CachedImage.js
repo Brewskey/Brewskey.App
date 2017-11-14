@@ -7,11 +7,16 @@ import {
 } from 'react-native-img-cache';
 
 type Props = {
+  mutable?: boolean,
   source: { uri: string },
   // other image Props
 };
 
 class CachedImage extends React.Component<Props> {
+  static defaultProps = {
+    mutable: true,
+  };
+
   flushCache = () => {
     const uriWithoutQueryString = this.props.source.uri.split('?')[0];
 
@@ -28,7 +33,7 @@ class CachedImage extends React.Component<Props> {
   };
 
   render() {
-    return <RNCachedImage {...this.props} mutable />;
+    return <RNCachedImage {...this.props} mutable={this.props.mutable} />;
   }
 }
 

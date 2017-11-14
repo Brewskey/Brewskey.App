@@ -3,8 +3,8 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { Text, View } from 'react-native';
 import { observer } from 'mobx-react';
+import NearbyLocationsList from '../components/NearbyLocationsList';
 
 type Props = {|
   navigation: Navigation,
@@ -13,15 +13,12 @@ type Props = {|
 @observer
 class HomeScreen extends React.Component<Props> {
   static navigationOptions = {
-    title: 'Home',
+    drawerLabel: 'Home',
+    title: 'Nearby locations',
   };
 
   render() {
-    return (
-      <View>
-        <Text>Home Home</Text>
-      </View>
-    );
+    return <NearbyLocationsList />;
   }
 }
 
