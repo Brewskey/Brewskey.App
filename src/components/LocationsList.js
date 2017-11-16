@@ -3,7 +3,7 @@
 import type { QueryOptions, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
+import type { Row } from '../stores/DAOEntityListStore';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
@@ -13,7 +13,10 @@ import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
-import InfiniteLoader from '../common/InfiniteLoader';
+import DAOApi from 'brewskey.js-api';
+import DAOEntityListStore from '../stores/DAOEntityListStore';
+import LoadingListItem from '../common/LoadingListItem';
+import ErrorListItem from '../common/ErrorListItem';
 
 type Props = {|
   queryOptions?: QueryOptions,
@@ -32,38 +35,30 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     queryOptions: {},
   };
 
-  _getBaseQueryOptions = (): QueryOptions => ({
-    ...this.props.queryOptions,
-    orderBy: [
-      {
-        column: 'id',
-        direction: 'desc',
-      },
-    ],
-  });
+  _swipeableFlatListRef: ?SwipeableFlatList<Location>;
+  _listStore: DAOEntityListStore<Location>;
 
-  get _items(): Array<Location> {
-    return this.injectedProps.locationStore.getByQueryOptions(
-      this._getBaseQueryOptions(),
-    );
+  constructor(props: Props, context: any) {
+    super(props, context);
+
+    this._listStore = new DAOEntityListStore(DAOApi.LocationDAO, {
+      orderBy: [
+        {
+          column: 'id',
+          direction: 'desc',
+        },
+      ],
+      ...this.props.queryOptions,
+    });
   }
 
-  _swipeableFlatListRef: ?SwipeableFlatList<Location>;
-
-  _fetchNextData = (): Promise<*> =>
-    this.injectedProps.locationStore.fetchMany({
-      ...this._getBaseQueryOptions(),
-      skip: this._items.length,
-      take: 20,
-    });
-
-  _keyExtractor = (item: Location): string => item.id;
+  _keyExtractor = (row: Row<Location>): number => row.key;
 
   _onDeleteItemPress = (item: Location): Promise<void> =>
-    this.injectedProps.locationStore.deleteByID(item.id);
+    DAOApi.LocationDAO.deleteByID(item.id);
 
-  _onEditItemPress = (item: Location) => {
-    this.injectedProps.navigation.navigate('editLocation', { id: item.id });
+  _onEditItemPress = ({ id }: Location) => {
+    this.injectedProps.navigation.navigate('editLocation', { id });
     nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
@@ -72,27 +67,32 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _onRefresh = (): Promise<*> =>
-    this.injectedProps.locationStore.fetchMany({
-      ...this._getBaseQueryOptions(),
-      skip: 0,
-      take: 20,
-    });
+  _renderItem = ({ item }: { item: Row<Location> }): React.Node => {
+    if (item.value.isLoading()) {
+      return <LoadingListItem />;
+    }
 
-  _renderItem = ({ item }: { item: Location }): React.Node => (
-    <ListItem
-      hideChevron
-      item={item}
-      onPress={this._onItemPress}
-      subtitle={item.summary || '-'}
-      title={item.name}
-    />
-  );
+    if (item.value.hasError()) {
+      return <ErrorListItem />;
+    }
 
-  _renderQuickActions = ({ item }: { item: Location }): React.Node => (
+    const location = item.value.getValue();
+
+    return (
+      <ListItem
+        hideChevron
+        item={location}
+        onPress={this._onItemPress}
+        subtitle={location.summary || '-'}
+        title={location.name}
+      />
+    );
+  };
+
+  _renderQuickActions = ({ item }: { item: Row<Location> }): React.Node => (
     <QuickActions
-      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
-      item={item}
+      deleteModalMessage={`Are you sure you want to delete ${item.value.name}?`}
+      item={item.value}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
     />
@@ -100,27 +100,18 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   render() {
     return (
-      <InfiniteLoader fetchNextData={this._fetchNextData}>
-        {({
-          loadingIndicator,
-          onEndReached,
-          onEndReachedThreshold,
-        }: InfiniteLoaderChildProps) => (
-          <SwipeableFlatList
-            data={this._items}
-            keyExtractor={this._keyExtractor}
-            ListFooterComponent={loadingIndicator}
-            maxSwipeDistance={150}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={onEndReachedThreshold}
-            onRefresh={this._onRefresh}
-            preventSwipeRight
-            ref={ref => (this._swipeableFlatListRef = ref)}
-            renderItem={this._renderItem}
-            renderQuickActions={this._renderQuickActions}
-          />
-        )}
-      </InfiniteLoader>
+      <SwipeableFlatList
+        data={this._listStore.rows}
+        keyExtractor={this._keyExtractor}
+        maxSwipeDistance={150}
+        onEndReached={this._listStore.fetchNextPage}
+        refreshing={false}
+        onRefresh={this._listStore.reset}
+        preventSwipeRight
+        ref={ref => (this._swipeableFlatListRef = ref)}
+        renderItem={this._renderItem}
+        renderQuickActions={this._renderQuickActions}
+      />
     );
   }
 }

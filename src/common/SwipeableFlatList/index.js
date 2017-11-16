@@ -12,7 +12,7 @@ import type { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
 
 import * as React from 'react';
-import { FlatList, View } from 'react-native';
+import { FlatList, Platform, View } from 'react-native';
 import PureSwipeableRow from './PureSwipeableRow';
 
 type SwipeableListProps = {
@@ -63,7 +63,7 @@ class SwipeableFlatList<TEntity> extends React.Component<
     this.props.onScroll && this.props.onScroll(event);
   };
 
-  _renderItem = (info: Object): React.Element<*> => {
+  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
     const slideoutView = this.props.renderQuickActions(info);
     const key = this.props.keyExtractor(info.item, info.index);
 
@@ -149,13 +149,14 @@ class SwipeableFlatList<TEntity> extends React.Component<
       <View>
         <FlatList
           {...rest}
-          refreshing={this.state.refreshing}
-          onRefresh={this.props.onRefresh ? this._onRefresh : null}
           extraData={this.state}
+          onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 0.5}
+          onRefresh={this.props.onRefresh ? this._onRefresh : null}
           onScroll={this._onScroll}
           ref={ref => {
             this._flatListRef = ref;
           }}
+          refreshing={this.state.refreshing}
           removeClippedSubviews
           renderItem={this._renderItem}
         />
