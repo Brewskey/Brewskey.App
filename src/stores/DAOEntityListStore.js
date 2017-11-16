@@ -2,9 +2,9 @@
 
 import type { DAO, QueryOptions } from 'brewskey.js-api';
 
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import flattenArray from 'array-flatten';
-import DAOApi, { LoadObject } from 'brewskey.js-api';
+import { LoadObject } from 'brewskey.js-api';
 import { createRange } from '../utils';
 
 export type Row<TEntity> = {|
@@ -19,6 +19,7 @@ class DAOEntityListStore<TEntity> {
   _pageSize: number;
 
   @observable _queryOptionsList: Array<QueryOptions> = [];
+  @observable _remoteCount: LoadObject<number> = LoadObject.loading();
 
   @observable rows: Array<Row<TEntity>> = [];
 
@@ -31,7 +32,10 @@ class DAOEntityListStore<TEntity> {
     this._dao = dao;
     this._pageSize = pageSize;
 
-    this._daoSubscriptionID = this._dao.subscribe(this._computeRows);
+    this._daoSubscriptionID = this._dao.subscribe(() => {
+      this._computeRemoteCount();
+      this._computeRows();
+    });
     this.reset();
   }
 
@@ -39,24 +43,35 @@ class DAOEntityListStore<TEntity> {
     this._dao.unsubscribe(this._daoSubscriptionID);
   };
 
+  @computed
+  get isInitialized(): boolean {
+    return this._remoteCount.hasValue();
+  }
+
+  @computed
+  get _maxRemoteItemIndex(): number {
+    return this._remoteCount.getValueEnforcing() - 1;
+  }
+
   @action
   fetchNextPage = () => {
+    if (!this.isInitialized) {
+      return;
+    }
     const currentQuery = this._queryOptionsList[
       this._queryOptionsList.length - 1
     ];
+    const { skip = 0, take = this._pageSize } = currentQuery;
 
     // prevent fetch when we reached end of the list
-    const currentQueryLoadObject = this._dao.fetchMany(currentQuery);
-    if (
-      currentQueryLoadObject.hasValue() &&
-      currentQueryLoadObject.getValueEnforcing().length < this._pageSize
-    ) {
+    const queryLastItemIndex = take + skip - 1;
+    if (queryLastItemIndex >= this._maxRemoteItemIndex) {
       return;
     }
 
     this._queryOptionsList.push({
       ...currentQuery,
-      skip: currentQuery.skip + this._pageSize,
+      skip: skip + this._pageSize,
     });
     this._computeRows();
   };
@@ -70,11 +85,15 @@ class DAOEntityListStore<TEntity> {
     // but it seems too complex.
     this._dao.flushCache();
     this._queryOptionsList = [];
+    this._remoteCount = LoadObject.loading();
+
     this._queryOptionsList.push({
       ...this._baseQueryOptions,
       skip: 0,
       take: this._pageSize,
     });
+
+    this._computeRemoteCount();
     this._computeRows();
   };
 
@@ -84,15 +103,26 @@ class DAOEntityListStore<TEntity> {
   };
 
   @action
+  _computeRemoteCount = () => {
+    this._remoteCount = this._dao.count();
+  };
+
+  @action
   _computeRows = () => {
+    if (!this.isInitialized || this._remoteCount.getValueEnforcing() === 0) {
+      return;
+    }
+
     this.rows = flattenArray(
       this._queryOptionsList.map((queryOptions: QueryOptions) => {
+        const { skip = 0, take = this._pageSize } = queryOptions;
+        const queryLastItemIndex = take + skip - 1;
         const rowKeys = createRange(
-          queryOptions.skip || 0,
-          queryOptions.take + queryOptions.skip - 1,
+          skip,
+          Math.min(queryLastItemIndex, this._maxRemoteItemIndex),
         );
 
-        const queryLoadObject = DAOApi.LocationDAO.fetchMany(queryOptions);
+        const queryLoadObject = this._dao.fetchMany(queryOptions);
 
         return rowKeys
           .map((key: number): Row<TEntity> => ({
@@ -104,8 +134,7 @@ class DAOEntityListStore<TEntity> {
             value: queryLoadObject.hasValue()
               ? queryLoadObject.getValueEnforcing()[index]
               : queryLoadObject,
-          }))
-          .filter((row: Row<TEntity>): boolean => !!row.value);
+          }));
       }),
     );
   };

@@ -10,12 +10,14 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
+import { NULL_STRING_PLACEHOLDER } from '../constants';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOEntityListStore from '../stores/DAOEntityListStore';
 import LoadingListItem from '../common/LoadingListItem';
+import LoadingListFooter from '../common/LoadingListFooter';
 import ErrorListItem from '../common/ErrorListItem';
 
 type Props = {|
@@ -83,7 +85,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
         hideChevron
         item={location}
         onPress={this._onItemPress}
-        subtitle={location.summary || '-'}
+        subtitle={location.summary || NULL_STRING_PLACEHOLDER}
         title={location.name}
       />
     );
@@ -110,6 +112,9 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
         preventSwipeRight
         ref={ref => (this._swipeableFlatListRef = ref)}
         renderItem={this._renderItem}
+        ListFooterComponent={
+          <LoadingListFooter isLoading={!this._listStore.isInitialized} />
+        }
         renderQuickActions={this._renderQuickActions}
       />
     );

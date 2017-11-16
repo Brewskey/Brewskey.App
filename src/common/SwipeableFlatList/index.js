@@ -29,7 +29,7 @@ type State = {
   refreshing: boolean,
 };
 
-class SwipeableFlatList<TEntity> extends React.Component<
+class SwipeableFlatList<TEntity> extends React.PureComponent<
   Props<TEntity>,
   State,
 > {
@@ -138,30 +138,21 @@ class SwipeableFlatList<TEntity> extends React.Component<
   };
 
   render() {
-    const { ListFooterComponent, ...rest } = this.props;
-    // We handle ListFooter by ourself
-    // to prevent onReachEnd callback loop inside InfiniteLoader
-    const footerElement = React.isValidElement(ListFooterComponent)
-      ? ListFooterComponent
-      : ListFooterComponent && <ListFooterComponent />;
-
+    console.log('render');
     return (
-      <View>
-        <FlatList
-          {...rest}
-          extraData={this.state}
-          onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 0.5}
-          onRefresh={this.props.onRefresh ? this._onRefresh : null}
-          onScroll={this._onScroll}
-          ref={ref => {
-            this._flatListRef = ref;
-          }}
-          refreshing={this.state.refreshing}
-          removeClippedSubviews
-          renderItem={this._renderItem}
-        />
-        {footerElement}
-      </View>
+      <FlatList
+        {...this.props}
+        extraData={this.state}
+        onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 0.5}
+        onRefresh={this.props.onRefresh ? this._onRefresh : null}
+        onScroll={this._onScroll}
+        ref={ref => {
+          this._flatListRef = ref;
+        }}
+        refreshing={this.state.refreshing}
+        removeClippedSubviews
+        renderItem={this._renderItem}
+      />
     );
   }
 }
