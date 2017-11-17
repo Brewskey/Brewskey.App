@@ -18,16 +18,15 @@ const fetchDAOEntityByID = <TEntity, TEntityMutator, TProps>(
 ): React.ComponentType<{ entityLoader: LoadObject<TEntity> } & TProps> => {
   @observer
   class FetchDAOEntityByID extends React.Component<TProps> {
-    _subscriptionID: string;
     @observable _entityLoader: LoadObject<TEntity> = LoadObject.loading();
 
     componentWillMount() {
-      this._subscriptionID = dao.subscribe(this._computeEntityLoader);
+      dao.subscribe(this._computeEntityLoader);
       this._computeEntityLoader();
     }
 
     componentWillUnmount() {
-      dao.unsubscribe(this._subscriptionID);
+      dao.unsubscribe(this._computeEntityLoader);
     }
 
     @action

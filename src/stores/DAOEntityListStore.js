@@ -15,7 +15,6 @@ export type Row<TEntity> = {|
 class DAOEntityListStore<TEntity> {
   _baseQueryOptions: QueryOptions = {};
   _dao: DAO<TEntity, *>;
-  _daoSubscriptionID: string;
   _pageSize: number;
 
   @observable _queryOptionsList: Array<QueryOptions> = [];
@@ -32,16 +31,12 @@ class DAOEntityListStore<TEntity> {
     this._dao = dao;
     this._pageSize = pageSize;
 
-    this._daoSubscriptionID = this._dao.subscribe(() => {
-      this._computeRemoteCount();
-      this._computeRows();
-    });
-
+    this._daoSubscriptionID = this._dao.subscribe(this._onDaoEvent);
     this._fetchFirstPage();
   }
 
   dispose = () => {
-    this._dao.unsubscribe(this._daoSubscriptionID);
+    this._dao.unsubscribe(this._onDaoEvent);
   };
 
   @computed
@@ -143,6 +138,11 @@ class DAOEntityListStore<TEntity> {
           }));
       }),
     );
+  };
+
+  _onDaoEvent = () => {
+    this._computeRemoteCount();
+    this._computeRows();
   };
 }
 
