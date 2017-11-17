@@ -138,7 +138,6 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
   };
 
   render() {
-    console.log('render');
     return (
       <FlatList
         {...this.props}

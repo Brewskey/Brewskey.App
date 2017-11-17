@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "array-flatten": "^2.1.1",
-    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api":
+      "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
     "flow-bin": "^0.58.0",
     "hoist-non-react-statics": "^2.3.1",
     "mobx": "^3.3.0",
     "mobx-react": "^4.3.3",
-    "nanoid": "^1.0.1",
     "nullthrows": "^1.0.0",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
@@ -53,11 +53,7 @@
     "react-test-renderer": "^16.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": [
-      "prettier --write",
-      "lint",
-      "git add"
-    ]
+    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
   },
   "jest": {
     "preset": "react-native"

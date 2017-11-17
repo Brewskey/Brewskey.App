@@ -36,7 +36,8 @@ class DAOEntityListStore<TEntity> {
       this._computeRemoteCount();
       this._computeRows();
     });
-    this.reset();
+
+    this._fetchFirstPage();
   }
 
   dispose = () => {
@@ -52,6 +53,11 @@ class DAOEntityListStore<TEntity> {
   get _maxRemoteItemIndex(): number {
     return this._remoteCount.getValueEnforcing() - 1;
   }
+
+  setQueryOptions = (queryOptions: QueryOptions) => {
+    this._baseQueryOptions = queryOptions;
+    this.reset();
+  };
 
   @action
   fetchNextPage = () => {
@@ -87,6 +93,11 @@ class DAOEntityListStore<TEntity> {
     this._queryOptionsList = [];
     this._remoteCount = LoadObject.loading();
 
+    this._fetchFirstPage();
+  };
+
+  @action
+  _fetchFirstPage = () => {
     this._queryOptionsList.push({
       ...this._baseQueryOptions,
       skip: 0,
@@ -95,11 +106,6 @@ class DAOEntityListStore<TEntity> {
 
     this._computeRemoteCount();
     this._computeRows();
-  };
-
-  setQueryOptions = (queryOptions: QueryOptions) => {
-    this._baseQueryOptions = queryOptions;
-    this.reset();
   };
 
   @action
