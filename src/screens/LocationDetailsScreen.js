@@ -1,23 +1,26 @@
 // @flow
 
-import type { Location } from 'brewskey.js-api';
+import type { LoadingObject, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
+import DAOApi from 'brewskey.js-api';
 import { Text, View } from 'react-native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import loadDAOEntity from '../common/loadDAOEntity';
+import withLoadingActivity from '../common/withLoadingActivity';
 
 type InjectedProps = {|
   id: string,
-  locationStore: DAOEntityStore<Location, Location>,
+  entityLoader: LoadingObject<Location>,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@inject('locationStore')
+@loadDAOEntity(DAOApi.LocationDAO)
+@withLoadingActivity()
 @observer
 class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
   // todo find types for navigationOptions
@@ -28,19 +31,19 @@ class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
 
   componentDidMount() {
     // todo with this solution title on header appears after some lag :/
-    const { locationStore, id, navigation } = this.injectedProps;
-    navigation.setParams({ location: locationStore.getByID(id) });
+    const { entityLoader, navigation } = this.injectedProps;
+    navigation.setParams({ location: entityLoader.getValueEnforcing() });
   }
 
   render() {
-    const location = this.injectedProps.locationStore.getByID(
-      this.injectedProps.id,
-    );
+    const { entityLoader } = this.props;
+    const { description, name } = entityLoader.getValueEnforcing();
+
     // todo prettify and move content to separate component
     return (
       <View>
-        <Text>{location.name}</Text>
-        <Text>{location.description}</Text>
+        <Text>{name}</Text>
+        <Text>{description}</Text>
       </View>
     );
   }
