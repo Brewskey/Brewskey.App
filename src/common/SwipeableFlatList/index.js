@@ -13,7 +13,7 @@ import type { renderItemType } from 'VirtualizedList';
 
 import * as React from 'react';
 import { FlatList, Platform, View } from 'react-native';
-import PureSwipeableRow from './PureSwipeableRow';
+import { observer } from 'mobx-react';
 
 type SwipeableListProps = {
   bounceFirstRowOnMount: boolean,
@@ -55,47 +55,6 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
-  _onScroll = (event: SyntheticEvent<*>): void => {
-    if (this.state.openRowKey) {
-      this.setState(() => ({ openRowKey: null }));
-    }
-
-    this.props.onScroll && this.props.onScroll(event);
-  };
-
-  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
-    const slideoutView = this.props.renderQuickActions(info);
-    const key = this.props.keyExtractor(info.item, info.index);
-
-    if (!slideoutView) {
-      return this.props.renderItem(info);
-    }
-
-    let shouldBounceOnMount = false;
-    if (this._shouldBounceFirstRowOnMount) {
-      this._shouldBounceFirstRowOnMount = false;
-      shouldBounceOnMount = true;
-    }
-
-    return (
-      <PureSwipeableRow
-        extraData={info.item}
-        isOpen={key === this.state.openRowKey}
-        maxSwipeDistance={this._getMaxSwipeDistance(info)}
-        onClose={() => this._onClose(key)}
-        onOpen={() => this._onOpen(key)}
-        onSwipeEnd={this._setListViewScrollable}
-        onSwipeStart={this._setListViewNotScrollable}
-        preventSwipeRight={this.props.preventSwipeRight}
-        shouldBounceOnMount={shouldBounceOnMount}
-        slideoutView={slideoutView}
-      >
-        {this.props.renderItem(info)}
-      </PureSwipeableRow>
-    );
-  };
-
-  // This enables rows having variable width slideoutView.
   _getMaxSwipeDistance(info: Object): number {
     if (typeof this.props.maxSwipeDistance === 'function') {
       return this.props.maxSwipeDistance(info);
@@ -105,28 +64,21 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
   }
 
   _setListViewScrollableTo(value: boolean) {
-    if (this._flatListRef) {
-      this._flatListRef.setNativeProps({
-        scrollEnabled: value,
-      });
+    if (!this._flatListRef) {
+      return;
     }
+    this._flatListRef.setNativeProps({
+      scrollEnabled: value,
+    });
   }
 
-  _setListViewScrollable = () => {
-    this._setListViewScrollableTo(true);
-  };
+  _setListViewScrollable = (): void => this._setListViewScrollableTo(true);
 
-  _setListViewNotScrollable = () => {
-    this._setListViewScrollableTo(false);
-  };
+  _setListViewNotScrollable = (): void => this._setListViewScrollableTo(false);
 
-  _onOpen(key: any): void {
-    this.setState(() => ({ openRowKey: key }));
-  }
+  _onOpen = (key: string): void => this.setState(() => ({ openRowKey: key }));
 
-  _onClose(key: any): void {
-    this.setState(() => ({ openRowKey: null }));
-  }
+  _onClose = (): void => this.resetOpenRow();
 
   _onRefresh = async () => {
     if (!this.props.onRefresh) {
@@ -137,6 +89,32 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
     this.setState(() => ({ refreshing: false }));
   };
 
+  _onScroll = (event: SyntheticEvent<*>): void => {
+    this.resetOpenRow();
+    this.props.onScroll && this.props.onScroll(event);
+  };
+
+  _setFlatListRef = ref => {
+    this._flatListRef = ref;
+  };
+
+  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
+    const key = this.props.keyExtractor(info.item, info.index);
+    return this.props.renderItem({
+      info,
+      isOpen: key === this.state.openRowKey,
+      maxSwipeDistance: this._getMaxSwipeDistance(info),
+      onClose: this._onClose,
+      onOpen: this._onOpen,
+      onSwipeEnd: this._setListViewScrollable,
+      onSwipeStart: this._setListViewNotScrollable,
+      preventSwipeRight: this.props.preventSwipeRight,
+      rowKey: key,
+      shouldBounceOnMount:
+        this._shouldBounceFirstRowOnMount && info.index === 0,
+    });
+  };
+
   render() {
     return (
       <FlatList
@@ -145,9 +123,7 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
         onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 0.5}
         onRefresh={this.props.onRefresh ? this._onRefresh : null}
         onScroll={this._onScroll}
-        ref={ref => {
-          this._flatListRef = ref;
-        }}
+        ref={this._setFlatListRef}
         refreshing={this.state.refreshing}
         removeClippedSubviews
         renderItem={this._renderItem}

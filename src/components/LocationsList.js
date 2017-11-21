@@ -10,15 +10,13 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
 import SwipeableFlatList from '../common/SwipeableFlatList';
-import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOEntityListStore from '../stores/DAOEntityListStore';
-import LoadingListItem from '../common/LoadingListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
-import ErrorListItem from '../common/ErrorListItem';
+import ListItem from '../common/ListItem';
+import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
 
 type Props = {|
   queryOptions?: QueryOptions,
@@ -54,6 +52,10 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
+  _getSwipeableFlatListRef = ref => {
+    this._swipeableFlatListRef = ref;
+  };
+
   _keyExtractor = (row: Row<Location>): number => row.key;
 
   _onDeleteItemPress = (item: Location): Promise<void> =>
@@ -69,32 +71,31 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _renderItem = ({ item }: { item: Row<Location> }): React.Node => {
-    if (item.value.isLoading()) {
-      return <LoadingListItem />;
-    }
+  _renderRow = ({ info, ...swipeableStateProps }): React.Node => (
+    <SwipeableLoaderRow
+      {...swipeableStateProps}
+      loader={info.item.value}
+      maxSwipeDistance={150}
+      preventSwipeRight
+      renderListItem={this._renderListItem}
+      renderSlideoutView={this._renderSlideoutView}
+    />
+  );
 
-    if (item.value.hasError()) {
-      return <ErrorListItem />;
-    }
+  _renderListItem = (item: Location): React.Node => (
+    <ListItem
+      hideChevron
+      item={item}
+      onPress={this._onItemPress}
+      subtitle={item.summary || '-'}
+      title={item.name}
+    />
+  );
 
-    const location = item.value.getValue();
-
-    return (
-      <ListItem
-        hideChevron
-        item={location}
-        onPress={this._onItemPress}
-        subtitle={location.summary || NULL_STRING_PLACEHOLDER}
-        title={location.name}
-      />
-    );
-  };
-
-  _renderQuickActions = ({ item }: { item: Row<Location> }): React.Node => (
+  _renderSlideoutView = (item: Location): React.Node => (
     <QuickActions
-      deleteModalMessage={`Are you sure you want to delete ${item.value.name}?`}
-      item={item.value}
+      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+      item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
     />
@@ -105,13 +106,12 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
       <SwipeableFlatList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        maxSwipeDistance={150}
         onEndReached={this._listStore.fetchNextPage}
-        refreshing={false}
         onRefresh={this._listStore.reset}
-        preventSwipeRight
-        ref={ref => (this._swipeableFlatListRef = ref)}
-        renderItem={this._renderItem}
+        ref={this._getSwipeableFlatListRef}
+        refreshing={false}
+        removeClippedSubviews
+        renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter isLoading={!this._listStore.isInitialized} />
         }
