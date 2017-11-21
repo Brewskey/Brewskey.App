@@ -1,6 +1,6 @@
 // @flow
 
-import type { DAO, QueryOptions } from 'brewskey.js-api';
+import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
 
 import { action, computed, observable } from 'mobx';
 import flattenArray from 'array-flatten';
@@ -9,10 +9,10 @@ import { createRange } from '../utils';
 
 export type Row<TEntity> = {|
   key: number,
-  value: LoadObject<TEntity>,
+  loader: LoadObject<TEntity>,
 |};
 
-class DAOEntityListStore<TEntity> {
+class DAOEntityListStore<TEntity: { id: EntityID }> {
   _baseQueryOptions: QueryOptions = {};
   _dao: DAO<TEntity, *>;
   _pageSize: number;
@@ -31,7 +31,7 @@ class DAOEntityListStore<TEntity> {
     this._dao = dao;
     this._pageSize = pageSize;
 
-    this._daoSubscriptionID = this._dao.subscribe(this._onDaoEvent);
+    this._dao.subscribe(this._onDaoEvent);
     this._fetchFirstPage();
   }
 
@@ -128,14 +128,23 @@ class DAOEntityListStore<TEntity> {
         return rowKeys
           .map((key: number): Row<TEntity> => ({
             key,
-            value: LoadObject.loading(),
+            loader: LoadObject.loading(),
           }))
-          .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => ({
-            key,
-            value: queryLoadObject.hasValue()
+          .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
+            // The ternary for making Flow happy. I can't use queryLoadObject
+            // directly for as error loader, because it has different type
+            // eslint-disable-next-line no-nested-ternary
+            const loader = queryLoadObject.hasValue()
               ? queryLoadObject.getValueEnforcing()[index]
-              : queryLoadObject,
-          }));
+              : queryLoadObject.hasError()
+                ? LoadObject.withError(queryLoadObject.getErrorEnforcing())
+                : LoadObject.loading();
+
+            return {
+              key,
+              loader,
+            };
+          });
       }),
     );
   };

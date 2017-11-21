@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID } from 'brewskey.js-api';
+import type { DAO, EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { action, observable } from 'mobx';
@@ -8,16 +8,18 @@ import { observer } from 'mobx-react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import { LoadObject } from 'brewskey.js-api';
 
-type IdSelector = (props: TProps) => EntityID;
+type IdSelector<TProps> = (props: TProps) => EntityID;
 
-const fetchDAOEntityByID = <TEntity, TEntityMutator, TProps>(
+const loadDAOEntity = <TEntity: { id: EntityID }, TEntityMutator, TProps: {}>(
   dao: DAO<TEntity, TEntityMutator>,
-  idSelector: IdSelector = (props: TProps) => props.id,
+  idSelector: IdSelector<TProps> = ({ id }: Object): EntityID => id,
 ) => (
-  Component: React.ComponentType<TProps>,
-): React.ComponentType<{ entityLoader: LoadObject<TEntity> } & TProps> => {
+  Component: React.ComponentType<
+    { entityLoader: LoadObject<TEntity> } & TProps,
+  >,
+): Class<React.Component<TProps>> => {
   @observer
-  class FetchDAOEntityByID extends React.Component<TProps> {
+  class LoadDAOEntity extends React.Component<TProps> {
     @observable _entityLoader: LoadObject<TEntity> = LoadObject.loading();
 
     componentWillMount() {
@@ -39,8 +41,8 @@ const fetchDAOEntityByID = <TEntity, TEntityMutator, TProps>(
     }
   }
 
-  hoistNonReactStatic(FetchDAOEntityByID, Component);
-  return FetchDAOEntityByID;
+  hoistNonReactStatic(LoadDAOEntity, Component);
+  return LoadDAOEntity;
 };
 
-export default fetchDAOEntityByID;
+export default loadDAOEntity;

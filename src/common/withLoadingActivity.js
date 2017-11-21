@@ -13,12 +13,15 @@ const Container = styled.View`
 
 type IsLoadingSelector<TProps> = (props: TProps) => boolean;
 
-const withLoadingActivity = <TProps>(
-  isLoadingSelector?: IsLoadingSelector<TProps> = ({ entityLoader }) =>
-    entityLoader.isLoading(),
+const withLoadingActivity = <TProps: {}>(
+  isLoadingSelector?: IsLoadingSelector<TProps> = ({
+    entityLoader,
+  }: Object): boolean => entityLoader.isLoading(),
   activitySize?: 'small' | 'large' | number = 'large',
   containerStyle?: Object,
-) => (Component: React.ComponentType<TProps>): React.ComponentType<TProps> => {
+) => (
+  Component: React.ComponentType<TProps>,
+): Class<React.Component<TProps>> => {
   class WithLoadingActivity extends React.Component<TProps> {
     render() {
       const isLoading = isLoadingSelector(this.props);

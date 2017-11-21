@@ -2,13 +2,12 @@
 
 import type { QueryOptions, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { Row } from '../stores/DAOEntityListStore';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import QuickActions from '../common/QuickActions';
@@ -17,18 +16,17 @@ import DAOEntityListStore from '../stores/DAOEntityListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
+import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
   queryOptions?: QueryOptions,
 |};
 
 type InjectedProps = {
-  locationStore: DAOEntityStore<Location, Location>,
   navigation: Navigation,
 };
 
 @withNavigation
-@inject('locationStore')
 @observer
 class LocationsList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
@@ -58,7 +56,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Location>): number => row.key;
 
-  _onDeleteItemPress = (item: Location): Promise<void> =>
+  _onDeleteItemPress = (item: Location): void =>
     DAOApi.LocationDAO.deleteByID(item.id);
 
   _onEditItemPress = ({ id }: Location) => {
@@ -71,12 +69,13 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _renderRow = ({ info, ...swipeableStateProps }): React.Node => (
+  _renderRow = ({
+    info: { item: row },
+    ...swipeableStateProps
+  }): React.Node => (
     <SwipeableLoaderRow
       {...swipeableStateProps}
-      loader={info.item.value}
-      maxSwipeDistance={150}
-      preventSwipeRight
+      loader={row.loader}
       renderListItem={this._renderListItem}
       renderSlideoutView={this._renderSlideoutView}
     />
@@ -87,7 +86,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
       hideChevron
       item={item}
       onPress={this._onItemPress}
-      subtitle={item.summary || '-'}
+      subtitle={item.summary || NULL_STRING_PLACEHOLDER}
       title={item.name}
     />
   );
@@ -115,7 +114,6 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
         ListFooterComponent={
           <LoadingListFooter isLoading={!this._listStore.isInitialized} />
         }
-        renderQuickActions={this._renderQuickActions}
       />
     );
   }

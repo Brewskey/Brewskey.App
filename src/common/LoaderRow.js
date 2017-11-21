@@ -1,16 +1,16 @@
 // @flow
 
-import type { LoadingObject } from 'brewskey.js-api';
+import type { LoadObject } from 'brewskey.js-api';
 
 import * as React from 'react';
 import ErrorListItem from './ErrorListItem';
 import LoadingListItem from './LoadingListItem';
 
 type Props<TEntity> = {|
-  errorListItem: React.ComponentType,
-  listItem: React.ComponentType,
-  loader: LoadingObject<TEntity>,
-  loadingListItem: React.ComponentType,
+  renderErrorListItem: (error: Error) => React.Node,
+  renderListItem: (item: TEntity) => React.Node,
+  loader: LoadObject<TEntity>,
+  renderLoadingListItem: () => React.Node,
 |};
 
 class LoaderRow<TEntity> extends React.PureComponent<Props<TEntity>> {

@@ -1,6 +1,6 @@
 // @flow
 
-import type { LoadingObject, Location } from 'brewskey.js-api';
+import type { LoadObject, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -14,7 +14,7 @@ import withLoadingActivity from '../common/withLoadingActivity';
 
 type InjectedProps = {|
   id: string,
-  entityLoader: LoadingObject<Location>,
+  entityLoader: LoadObject<Location>,
   navigation: Navigation,
 |};
 
@@ -36,7 +36,7 @@ class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
   }
 
   render() {
-    const { entityLoader } = this.props;
+    const { entityLoader } = this.injectedProps;
     const { description, name } = entityLoader.getValueEnforcing();
 
     // todo prettify and move content to separate component

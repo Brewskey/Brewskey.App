@@ -17,9 +17,6 @@ import { observer } from 'mobx-react';
 
 type SwipeableListProps = {
   bounceFirstRowOnMount: boolean,
-  maxSwipeDistance: number | (Object => number),
-  preventSwipeRight?: boolean,
-  renderQuickActions: renderItemType,
 };
 
 type Props<TEntity> = SwipeableListProps & FlatListProps<TEntity>;
@@ -33,35 +30,19 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
   Props<TEntity>,
   State,
 > {
+  static defaultProps = {
+    ...FlatList.defaultProps,
+    bounceFirstRowOnMount: true,
+  };
+
   state = {
     openRowKey: null,
     refreshing: false,
   };
 
   _flatListRef: ?FlatList<TEntity> = null;
-  _shouldBounceFirstRowOnMount: boolean = false;
-
-  static defaultProps = {
-    ...FlatList.defaultProps,
-    bounceFirstRowOnMount: true,
-    renderQuickActions: () => null,
-  };
-
-  constructor(props: Props<TEntity>, context: any) {
-    super(props, context);
-
-    this._shouldBounceFirstRowOnMount = this.props.bounceFirstRowOnMount;
-  }
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
-
-  _getMaxSwipeDistance(info: Object): number {
-    if (typeof this.props.maxSwipeDistance === 'function') {
-      return this.props.maxSwipeDistance(info);
-    }
-
-    return this.props.maxSwipeDistance;
-  }
 
   _setListViewScrollableTo(value: boolean) {
     if (!this._flatListRef) {
@@ -103,15 +84,13 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
     return this.props.renderItem({
       info,
       isOpen: key === this.state.openRowKey,
-      maxSwipeDistance: this._getMaxSwipeDistance(info),
       onClose: this._onClose,
       onOpen: this._onOpen,
       onSwipeEnd: this._setListViewScrollable,
       onSwipeStart: this._setListViewNotScrollable,
       preventSwipeRight: this.props.preventSwipeRight,
       rowKey: key,
-      shouldBounceOnMount:
-        this._shouldBounceFirstRowOnMount && info.index === 0,
+      shouldBounceOnMount: this.props.bounceFirstRowOnMount && info.index === 0,
     });
   };
 
