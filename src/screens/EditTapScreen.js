@@ -1,31 +1,33 @@
 // @flow
 
-import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { LoadObject, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { inject } from 'mobx-react';
+import DAOApi from 'brewskey.js-api';
+import loadDAOEntity from '../common/loadDAOEntity';
+import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
+  entityLoader: LoadObject<Tap>,
   id: string,
   navigation: Navigation,
-  tapStore: DAOEntityStore<Tap, TapMutator>,
 |};
 
 @flatNavigationParamsAndScreenProps
-@inject('tapStore')
+@loadDAOEntity(DAOApi.TapDAO)
+@withLoadingActivity()
 class EditTapScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
     title: 'Edit tap',
   };
 
-  _onFormSubmit = async (values: TapMutator): Promise<void> => {
-    await this.injectedProps.tapStore.put(nullthrows(values.id), values);
+  _onFormSubmit = async (values: TapMutator) => {
+    DAOApi.TapDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
@@ -34,7 +36,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
       <TapForm
         onSubmit={this._onFormSubmit}
         submitButtonLabel="Edit tap"
-        tap={this.injectedProps.tapStore.getByID(this.injectedProps.id)}
+        tap={this.injectedProps.entityLoader.getValueEnforcing()}
       />
     );
   }

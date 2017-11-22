@@ -1,31 +1,32 @@
 // @flow
 
-import type { QueryOptions, Tap, TapMutator } from 'brewskey.js-api';
+import type { QueryOptions, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
+import type { Row } from '../stores/DAOEntityListStore';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { inject, observer } from 'mobx-react';
+import InjectedComponent from '../common/InjectedComponent';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
-import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
-import InfiniteLoader from '../common/InfiniteLoader';
+import DAOApi from 'brewskey.js-api';
+import DAOEntityListStore from '../stores/DAOEntityListStore';
+import LoadingListFooter from '../common/LoadingListFooter';
+import ListItem from '../common/ListItem';
+import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
+import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
   queryOptions?: QueryOptions,
 |};
 
-type InjectedProps = {|
-  tapStore: DAOEntityStore<Tap, TapMutator>,
+type InjectedProps = {
   navigation: Navigation,
-|};
+};
 
 @withNavigation
-@inject('tapStore')
 @observer
 class TapsList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
@@ -33,37 +34,32 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _swipeableFlatListRef: ?SwipeableFlatList<Tap>;
+  _listStore: DAOEntityListStore<Tap>;
 
-  _getBaseQueryOptions = (): QueryOptions => ({
-    ...this.props.queryOptions,
-    orderBy: [
-      {
-        column: 'id',
-        direction: 'desc',
-      },
-    ],
-  });
+  constructor(props: Props, context: any) {
+    super(props, context);
 
-  get _items(): Array<Tap> {
-    return this.injectedProps.tapStore.getByQueryOptions(
-      this._getBaseQueryOptions(),
-    );
+    this._listStore = new DAOEntityListStore(DAOApi.TapDAO, {
+      orderBy: [
+        {
+          column: 'id',
+          direction: 'desc',
+        },
+      ],
+      ...this.props.queryOptions,
+    });
   }
 
-  _fetchNextData = (): Promise<*> =>
-    this.injectedProps.tapStore.fetchMany({
-      ...this.props.queryOptions,
-      skip: this._items.length,
-      take: 20,
-    });
+  _getSwipeableFlatListRef = ref => {
+    this._swipeableFlatListRef = ref;
+  };
 
-  _keyExtractor = (item: Tap): string => item.id.toString();
+  _keyExtractor = (row: Row<Tap>): number => row.key;
 
-  _onDeleteItemPress = (item: Tap): Promise<void> =>
-    this.injectedProps.tapStore.deleteByID(item.id);
+  _onDeleteItemPress = (item: Tap): void => DAOApi.TapDAO.deleteByID(item.id);
 
-  _onEditItemPress = (item: Tap) => {
-    this.injectedProps.navigation.navigate('editTap', { id: item.id });
+  _onEditItemPress = ({ id }: Tap) => {
+    this.injectedProps.navigation.navigate('editTap', { id });
     nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
@@ -72,24 +68,29 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _onRefresh = (): Promise<*> =>
-    this.injectedProps.tapStore.fetchMany({
-      ...this._getBaseQueryOptions(),
-      skip: 0,
-      take: 20,
-    });
+  _renderRow = ({
+    info: { item: row },
+    ...swipeableStateProps
+  }): React.Node => (
+    <SwipeableLoaderRow
+      {...swipeableStateProps}
+      loader={row.loader}
+      renderListItem={this._renderListItem}
+      renderSlideoutView={this._renderSlideoutView}
+    />
+  );
 
-  _renderItem = ({ item }: { item: Tap }): React.Node => (
+  _renderListItem = (item: Tap): React.Node => (
     <ListItem
       hideChevron
       item={item}
       onPress={this._onItemPress}
-      subtitle={item.description || '-'}
+      subtitle={item.description || NULL_STRING_PLACEHOLDER}
       title={item.name}
     />
   );
 
-  _renderQuickActions = ({ item }: { item: Tap }): React.Node => (
+  _renderSlideoutView = (item: Tap): React.Node => (
     <QuickActions
       deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
       item={item}
@@ -100,27 +101,19 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
 
   render() {
     return (
-      <InfiniteLoader fetchNextData={this._fetchNextData}>
-        {({
-          loadingIndicator,
-          onEndReached,
-          onEndReachedThreshold,
-        }: InfiniteLoaderChildProps) => (
-          <SwipeableFlatList
-            data={this._items}
-            keyExtractor={this._keyExtractor}
-            ListFooterComponent={loadingIndicator}
-            maxSwipeDistance={150}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={onEndReachedThreshold}
-            onRefresh={this._onRefresh}
-            preventSwipeRight
-            ref={ref => (this._swipeableFlatListRef = ref)}
-            renderItem={this._renderItem}
-            renderQuickActions={this._renderQuickActions}
-          />
-        )}
-      </InfiniteLoader>
+      <SwipeableFlatList
+        data={this._listStore.rows}
+        keyExtractor={this._keyExtractor}
+        onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._listStore.reset}
+        ref={this._getSwipeableFlatListRef}
+        refreshing={false}
+        removeClippedSubviews
+        renderItem={this._renderRow}
+        ListFooterComponent={
+          <LoadingListFooter isLoading={!this._listStore.isInitialized} />
+        }
+      />
     );
   }
 }
