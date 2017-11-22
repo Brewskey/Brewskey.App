@@ -57,7 +57,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       take: 20,
     });
 
-  _keyExtractor = (item: Tap): string => item.id;
+  _keyExtractor = (item: Tap): string => item.id.toString();
 
   _onDeleteItemPress = (item: Tap): Promise<void> =>
     this.injectedProps.tapStore.deleteByID(item.id);

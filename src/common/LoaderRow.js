@@ -27,7 +27,8 @@ class LoaderRow<TEntity> extends React.PureComponent<Props<TEntity>> {
       renderLoadingListItem,
     } = this.props;
 
-    if (loader.isLoading()) {
+    // todo add different rows visualizations for updating/deleting states
+    if (loader.isLoading() || loader.isUpdating() || loader.isDeleting()) {
       return renderLoadingListItem();
     }
 

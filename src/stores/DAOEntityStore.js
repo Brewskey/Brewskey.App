@@ -1,6 +1,6 @@
 // @flow
 
-import type { DAO, QueryOptions } from 'brewskey.js-api';
+import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type RootStore from './RootStore';
 
@@ -14,8 +14,8 @@ import {
 import DAOApi from 'brewskey.js-api';
 
 // todo implement optimistic updates for put/delete
-// todo think how to remove some code duplication in actions
-class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
+// todo think how to remove some code dupliation in actions
+class DAOEntityStore<TEntity: { id: EntityID }, TEntityMutator: {}> {
   _dao: DAO<TEntity, TEntityMutator>;
   _rootStore: RootStore;
 
@@ -27,7 +27,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
   }
 
   @action
-  async deleteByID(id: string): Promise<void> {
+  async deleteByID(id: EntityID): Promise<void> {
     await this._doDAORequest('deleteByID', id);
     runInAction(() => {
       this.entityItemsByID.delete(id);
@@ -35,7 +35,10 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
   }
 
   @action
-  async fetchByID(id: string, queryOptions?: QueryOptions): Promise<?TEntity> {
+  async fetchByID(
+    id: EntityID,
+    queryOptions?: QueryOptions,
+  ): Promise<?TEntity> {
     const entity = await this._doDAORequest('fetchByID', id, queryOptions);
     // todo add babel plugin to autobind async stuff to runInAction
     runInAction(() => {
@@ -47,14 +50,14 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
 
   @action
   async fetchByIDs(
-    ids: Array<string>,
+    ids: Array<EntityID>,
     queryOptions?: QueryOptions,
   ): Promise<Array<TEntity>> {
     const entities = await this._doDAORequest('fetchByIDs', ids, queryOptions);
 
     runInAction(() => {
       this.entityItemsByID.merge([
-        ...entities.map((entity: TEntity): [string, TEntity] => [
+        ...entities.map((entity: TEntity): [EntityID, TEntity] => [
           entity.id,
           entity,
         ]),
@@ -70,7 +73,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
 
     runInAction(() => {
       this.entityItemsByID.merge([
-        ...entities.map((entity: TEntity): [string, TEntity] => [
+        ...entities.map((entity: TEntity): [EntityID, TEntity] => [
           entity.id,
           entity,
         ]),
@@ -81,7 +84,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
   }
 
   @action
-  async patch(id: string, mutator: TEntityMutator): Promise<TEntity> {
+  async patch(id: EntityID, mutator: TEntityMutator): Promise<TEntity> {
     const entity = await this._doDAORequest('patch', id, mutator);
     runInAction(() => {
       this.entityItemsByID.set(entity.id, entity);
@@ -102,7 +105,7 @@ class DAOEntityStore<TEntity: { id: string }, TEntityMutator: {}> {
   }
 
   @action
-  async put(id: string, mutator: TEntityMutator): Promise<TEntity> {
+  async put(id: EntityID, mutator: TEntityMutator): Promise<TEntity> {
     const entity = await this._doDAORequest('put', id, mutator);
 
     runInAction(() => {
