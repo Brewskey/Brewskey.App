@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import DAOEntityStore from '../stores/DAOEntityStore2';
+import DAOEntityStore from '../stores/DAOEntityStore';
 import { Button, FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PickerField from './PickerField';
@@ -40,10 +40,10 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
-  _devicesStore = new DAOEntityStore(DAOApi.DeviceDAO);
+  _deviceStore: DAOEntityStore<Device> = new DAOEntityStore(DAOApi.DeviceDAO);
 
   componentWillMount() {
-    this._devicesStore.fetchMany();
+    this._deviceStore.fetchMany();
   }
 
   render() {
@@ -78,7 +78,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           name="device"
           label="Brewskey box"
         >
-          {this._devicesStore.allItems.map((device: Device): React.Node => (
+          {this._deviceStore.allItems.map((device: Device): React.Node => (
             <PickerField.Item
               key={device.id}
               label={device.name}

@@ -15,7 +15,7 @@ import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
-import DAOEntityStore from '../stores/DAOEntityStore2';
+import DAOEntityStore from '../stores/DAOEntityStore';
 import { form, FormField } from '../common/form';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
@@ -34,10 +34,12 @@ type InjectedProps = FormProps;
 @form()
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
-  _availabilityStore = new DAOEntityStore(DAOApi.AvailabilityDAO);
-  _srmStore = new DAOEntityStore(DAOApi.SrmDAO);
-  _glassStore = new DAOEntityStore(DAOApi.GlassDAO);
-  _styleStore = new DAOEntityStore(DAOApi.StyleDAO);
+  _availabilityStore: DAOEntityStore<Availability> = new DAOEntityStore(
+    DAOApi.AvailabilityDAO,
+  );
+  _srmStore: DAOEntityStore<Srm> = new DAOEntityStore(DAOApi.SrmDAO);
+  _glassStore: DAOEntityStore<Glass> = new DAOEntityStore(DAOApi.GlassDAO);
+  _styleStore: DAOEntityStore<Style> = new DAOEntityStore(DAOApi.StyleDAO);
 
   componentWillMount() {
     this._availabilityStore.fetchMany();
