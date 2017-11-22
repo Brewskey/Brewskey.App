@@ -59,7 +59,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
       take: 20,
     });
 
-  _keyExtractor = (item: Beverage): string => item.id;
+  _keyExtractor = (item: Beverage): string => item.id.toString();
 
   _onDeleteItemPress = (item: Beverage): Promise<void> =>
     this.injectedProps.beverageStore.deleteByID(item.id);

@@ -59,7 +59,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
       take: 20,
     });
 
-  _keyExtractor = (item: Device): string => item.id;
+  _keyExtractor = (item: Device): string => item.id.toString();
 
   _onDeleteItemPress = (item: Device): Promise<void> =>
     this.injectedProps.deviceStore.deleteByID(item.id);

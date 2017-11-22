@@ -1,29 +1,29 @@
 // @flow
 
 // todo add LocationMutator type to the lib
-import type { Location } from 'brewskey.js-api';
+import type { LoadObject, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
+import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject } from 'mobx-react';
 import LocationForm from '../components/LocationForm';
 
 type InjectedProps = {|
   navigation: Navigation,
-  locationStore: DAOEntityStore<Location, Location>,
 |};
 
-@inject('locationStore')
 class NewLocationScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
     title: 'New location',
   };
 
   _onFormSubmit = async (values: Location): Promise<void> => {
-    const { locationStore, navigation } = this.injectedProps;
-    const { id } = await locationStore.post(values);
+    const { navigation } = this.injectedProps;
+    const clientID = DAOApi.LocationDAO.post(values);
+    const { id } = await DAOApi.LocationDAO.waitForLoaded((): LoadObject<
+      Location,
+    > => DAOApi.LocationDAO.fetchByID(clientID));
     // todo figure out how to replace page instead adding to stack history
     // the navigation object injected in the component
     // doesn't have reset function.

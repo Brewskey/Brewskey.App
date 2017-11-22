@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 
 type Props = {|
   location?: Location,
-  onSubmit: (values: Location) => Promise<void>,
+  onSubmit: (values: Location) => void | Promise<void>,
   submitButtonLabel: string,
 |};
 
