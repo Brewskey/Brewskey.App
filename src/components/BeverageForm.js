@@ -7,14 +7,15 @@ import type {
   Srm,
   Style,
 } from 'brewskey.js-api';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import DAOApi from 'brewskey.js-api';
+import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
+import DAOEntityStore from '../stores/DAOEntityStore2';
 import { form, FormField } from '../common/form';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
@@ -24,33 +25,27 @@ const YEARS_RANGE_LENGTH = 10;
 
 type Props = {|
   beverage?: Beverage,
-  onSubmit: (values: Beverage) => Promise<void>,
+  onSubmit: (values: Beverage) => void | Promise<void>,
   submitButtonLabel: string,
 |};
 
-type InjectedProps = {|
-  availabilityStore: DAOEntityStore<Availability, Availability>,
-  glassStore: DAOEntityStore<Glass, Glass>,
-  srmStore: DAOEntityStore<Srm, Srm>,
-  styleStore: DAOEntityStore<Style, Style>,
-  ...FormProps,
-|};
+type InjectedProps = FormProps;
 
 @form()
-@inject('availabilityStore')
-@inject('glassStore')
-@inject('srmStore')
-@inject('styleStore')
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
+  _availabilityStore = new DAOEntityStore(DAOApi.AvailabilityDAO);
+  _srmStore = new DAOEntityStore(DAOApi.SrmDAO);
+  _glassStore = new DAOEntityStore(DAOApi.GlassDAO);
+  _styleStore = new DAOEntityStore(DAOApi.StyleDAO);
+
   componentWillMount() {
-    // todo replace to fetchAll when it will be implemented
-    this.injectedProps.availabilityStore.fetchMany();
-    this.injectedProps.srmStore.fetchMany({
+    this._availabilityStore.fetchMany();
+    this._srmStore.fetchMany({
       orderBy: [{ column: 'hex', direction: 'desc' }],
     });
-    this.injectedProps.glassStore.fetchMany();
-    this.injectedProps.styleStore.fetchMany();
+    this._glassStore.fetchMany();
+    this._styleStore.fetchMany();
   }
 
   // todo Implement custom component for srm
@@ -139,7 +134,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="availability"
           label="Availability"
         >
-          {this.injectedProps.availabilityStore.all.map(
+          {this._availabilityStore.allItems.map(
             ({ id, name }: Availability): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
             ),
@@ -152,11 +147,9 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="glassware"
           label="Glass"
         >
-          {this.injectedProps.glassStore.all.map(
-            ({ id, name }: Glass): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ),
-          )}
+          {this._glassStore.allItems.map(({ id, name }: Glass): React.Node => (
+            <PickerField.Item key={id} label={name} value={id} />
+          ))}
         </FormField>
         <FormField
           component={CheckBoxField}
@@ -174,11 +167,9 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             label="Srm"
             name="srm"
           >
-            {this.injectedProps.srmStore.all.map(
-              ({ id, name }: Srm): React.Node => (
-                <PickerField.Item key={id} label={name} value={id} />
-              ),
-            )}
+            {this._srmStore.allItems.map(({ id, name }: Srm): React.Node => (
+              <PickerField.Item key={id} label={name} value={id} />
+            ))}
           </FormField>,
           <FormField
             component={PickerField}
@@ -188,7 +179,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             label="Style"
             name="style"
           >
-            {this.injectedProps.styleStore.all.map(
+            {this._styleStore.allItems.map(
               ({ id, name }: Style): React.Node => (
                 <PickerField.Item key={id} label={name} value={id} />
               ),
