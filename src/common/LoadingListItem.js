@@ -28,6 +28,9 @@ type Props = {
 };
 
 class LoadingListItem extends React.PureComponent<Props> {
+  _subtitleContainerWidth = `${getRandomInt(60, 80)}%`;
+  _titleContainerWidth = `${getRandomInt(30, 50)}%`;
+
   render() {
     return (
       <RNEListItem
@@ -36,14 +39,14 @@ class LoadingListItem extends React.PureComponent<Props> {
         subtitle="none"
         subtitleContainerStyle={[
           styles.subtitleContainerStyle,
-          { width: `${getRandomInt(60, 80)}%` },
+          { width: this._subtitleContainerWidth },
         ]}
         subtitleStyle={styles.subtitleStyle}
         title="none"
         titleContainerStyle={[
           styles.titleContainerStyle,
           {
-            width: `${getRandomInt(30, 50)}%`,
+            width: this._titleContainerWidth,
           },
         ]}
         titleStyle={styles.titleStyle}
