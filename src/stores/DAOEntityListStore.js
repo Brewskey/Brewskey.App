@@ -79,12 +79,7 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
 
   @action
   reset = () => {
-    // todo when we use it with onRefresh in FlatList
-    // it works normal but doesn't fit standard mobile refresh behavior.
-    // instead of flushing all the cache we need somehow refetch only
-    // the first query and shift all other cache if there are new entitites,
-    // but it seems too complex.
-    this._dao.flushCache();
+    this._dao.flushQueryCaches();
     this._queryOptionsList = [];
     this._remoteCount = LoadObject.loading();
 
@@ -131,14 +126,18 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
             loader: LoadObject.loading(),
           }))
           .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
-            // The ternary for making Flow happy. I can't use queryLoadObject
-            // directly for as error loader, because it has different type
-            // eslint-disable-next-line no-nested-ternary
-            const loader = queryLoadObject.hasValue()
-              ? queryLoadObject.getValueEnforcing()[index]
-              : queryLoadObject.hasError()
-                ? LoadObject.withError(queryLoadObject.getErrorEnforcing())
-                : LoadObject.loading();
+            let loader = LoadObject.loading();
+
+            if (queryLoadObject.hasValue()) {
+              loader = queryLoadObject.map(
+                (entries: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
+                  entries[index],
+              );
+            } else if (queryLoadObject.hasError()) {
+              loader = LoadObject.withError(
+                queryLoadObject.getErrorEnforcing(),
+              );
+            }
 
             return {
               key,
