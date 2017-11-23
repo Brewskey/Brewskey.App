@@ -1,5 +1,7 @@
 // @flow
 
+import type { EntityID } from 'brewskey.js-api';
+
 // todo make the type annotation
 export type Navigation = Object;
 
@@ -16,7 +18,7 @@ export type NearbyTap = {
     ounces: number,
   },
   deviceID: number, // not translated to string
-  id: string,
+  id: EntityID,
   name: string,
 };
 
@@ -25,7 +27,7 @@ export type NearbyLocation = {
     beverageId: string,
     beverageName: string,
   },
-  id: string,
+  id: EntityID,
   name: string,
   summary: ?string,
   taps: Array<NearbyTap>,

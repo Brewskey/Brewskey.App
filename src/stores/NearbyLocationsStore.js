@@ -2,6 +2,7 @@
 
 import type RootStore from './RootStore';
 import type { ObservableMap } from 'mobx';
+import type { EntityID } from 'brewskey.js-api';
 import type { NearbyLocation } from '../types';
 
 import { action, computed, observable, runInAction } from 'mobx';
@@ -36,7 +37,7 @@ class NearbyLocationsStore {
       runInAction(() => {
         this._nearbyLocationsById.merge([
           ...nearbyLocations.map((nearbyLocation: NearbyLocation): [
-            string,
+            EntityID,
             NearbyLocation,
           ] => [nearbyLocation.id, nearbyLocation]),
         ]);
