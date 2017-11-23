@@ -1,71 +1,65 @@
 // @flow
 
-import type { Device, DeviceMutator, QueryOptions } from 'brewskey.js-api';
+import type { Device, QueryOptions } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
-import type { InfiniteLoaderChildProps } from '../common/InfiniteLoader';
+import type { Row } from '../stores/DAOEntityListStore';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { inject, observer } from 'mobx-react';
+import InjectedComponent from '../common/InjectedComponent';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableFlatList from '../common/SwipeableFlatList';
-import ListItem from '../common/ListItem';
 import QuickActions from '../common/QuickActions';
-// imported from experimental react-native
-// eslint-disable-next-line
-import InfiniteLoader from '../common/InfiniteLoader';
+import DAOApi from 'brewskey.js-api';
+import DAOEntityListStore from '../stores/DAOEntityListStore';
+import LoadingListFooter from '../common/LoadingListFooter';
+import ListItem from '../common/ListItem';
+import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
 
 type Props = {|
   queryOptions?: QueryOptions,
 |};
 
 type InjectedProps = {
-  deviceStore: DAOEntityStore<Device, DeviceMutator>,
   navigation: Navigation,
 };
 
 @withNavigation
-@inject('deviceStore')
 @observer
 class DevicesList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
     queryOptions: {},
   };
 
-  _getBaseQueryOptions = (): QueryOptions => ({
-    ...this.props.queryOptions,
-    orderBy: [
-      {
-        column: 'id',
-        direction: 'desc',
-      },
-    ],
-  });
+  _swipeableFlatListRef: ?SwipeableFlatList<Device>;
+  _listStore: DAOEntityListStore<Device>;
 
-  get _items(): Array<Device> {
-    return this.injectedProps.deviceStore.getByQueryOptions(
-      this._getBaseQueryOptions(),
-    );
+  constructor(props: Props, context: any) {
+    super(props, context);
+
+    this._listStore = new DAOEntityListStore(DAOApi.DeviceDAO, {
+      orderBy: [
+        {
+          column: 'id',
+          direction: 'desc',
+        },
+      ],
+      ...this.props.queryOptions,
+    });
   }
 
-  _swipeableFlatListRef: ?SwipeableFlatList<Device>;
+  _getSwipeableFlatListRef = ref => {
+    this._swipeableFlatListRef = ref;
+  };
 
-  _fetchNextData = (): Promise<*> =>
-    this.injectedProps.deviceStore.fetchMany({
-      ...this._getBaseQueryOptions(),
-      skip: this._items.length,
-      take: 20,
-    });
+  _keyExtractor = (row: Row<Device>): number => row.key;
 
-  _keyExtractor = (item: Device): string => item.id.toString();
+  _onDeleteItemPress = (item: Device): void =>
+    DAOApi.DeviceDAO.deleteByID(item.id);
 
-  _onDeleteItemPress = (item: Device): Promise<void> =>
-    this.injectedProps.deviceStore.deleteByID(item.id);
-
-  _onEditItemPress = (item: Device) => {
-    this.injectedProps.navigation.navigate('editDevice', { id: item.id });
+  _onEditItemPress = ({ id }: Device) => {
+    this.injectedProps.navigation.navigate('editDevice', { id });
     nullthrows(this._swipeableFlatListRef).resetOpenRow();
   };
 
@@ -74,14 +68,19 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _onRefresh = (): Promise<*> =>
-    this.injectedProps.deviceStore.fetchMany({
-      ...this._getBaseQueryOptions(),
-      skip: 0,
-      take: 20,
-    });
+  _renderRow = ({
+    info: { item: row },
+    ...swipeableStateProps
+  }): React.Node => (
+    <SwipeableLoaderRow
+      {...swipeableStateProps}
+      loader={row.loader}
+      renderListItem={this._renderListItem}
+      renderSlideoutView={this._renderSlideoutView}
+    />
+  );
 
-  _renderItem = ({ item }: { item: Device }): React.Node => (
+  _renderListItem = (item: Device): React.Node => (
     <ListItem
       hideChevron
       item={item}
@@ -91,7 +90,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  _renderQuickActions = ({ item }: { item: Device }): React.Node => (
+  _renderSlideoutView = (item: Device): React.Node => (
     <QuickActions
       deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
       item={item}
@@ -102,27 +101,19 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   render() {
     return (
-      <InfiniteLoader fetchNextData={this._fetchNextData}>
-        {({
-          loadingIndicator,
-          onEndReached,
-          onEndReachedThreshold,
-        }: InfiniteLoaderChildProps) => (
-          <SwipeableFlatList
-            data={this._items}
-            keyExtractor={this._keyExtractor}
-            ListFooterComponent={loadingIndicator}
-            maxSwipeDistance={150}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={onEndReachedThreshold}
-            onRefresh={this._onRefresh}
-            preventSwipeRight
-            ref={ref => (this._swipeableFlatListRef = ref)}
-            renderItem={this._renderItem}
-            renderQuickActions={this._renderQuickActions}
-          />
-        )}
-      </InfiniteLoader>
+      <SwipeableFlatList
+        data={this._listStore.rows}
+        keyExtractor={this._keyExtractor}
+        onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._listStore.reset}
+        ref={this._getSwipeableFlatListRef}
+        refreshing={false}
+        removeClippedSubviews
+        renderItem={this._renderRow}
+        ListFooterComponent={
+          <LoadingListFooter isLoading={!this._listStore.isInitialized} />
+        }
+      />
     );
   }
 }

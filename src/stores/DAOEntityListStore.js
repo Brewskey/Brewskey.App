@@ -100,7 +100,7 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
 
   @action
   _computeRemoteCount = () => {
-    this._remoteCount = this._dao.count();
+    this._remoteCount = this._dao.count(this._baseQueryOptions);
   };
 
   @action

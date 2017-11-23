@@ -12,7 +12,7 @@ import { validate } from './NewDeviceForm';
 
 type Props = {|
   device: Device,
-  onSubmit: (values: DeviceMutator) => Promise<void>,
+  onSubmit: (values: DeviceMutator) => void,
   ...FormProps,
 |};
 

@@ -1,23 +1,26 @@
 // @flow
 
-import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { LoadObject, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
-import type DAOEntityStore from '../stores/DAOEntityStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import DAOApi from 'brewskey.js-api';
+import { observer } from 'mobx-react';
 import { Text, View } from 'react-native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import loadDAOEntity from '../common/loadDAOEntity';
+import withLoadingActivity from '../common/withLoadingActivity';
 
 type InjectedProps = {|
   id: string,
   navigation: Navigation,
-  tapStore: DAOEntityStore<Tap, TapMutator>,
+  entityLoader: LoadObject<Tap>,
 |};
 
 @flatNavigationParamsAndScreenProps
-@inject('tapStore')
+@loadDAOEntity(DAOApi.TapDAO)
+@withLoadingActivity()
 @observer
 class TapDetailsScreen extends InjectedComponent<InjectedProps> {
   // todo find types for navigationOptions
@@ -27,17 +30,19 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
 
   componentDidMount() {
     // todo with this solution title on header appears after some lag :/
-    const { tapStore, id, navigation } = this.injectedProps;
-    navigation.setParams({ tap: tapStore.getByID(id) });
+    const { entityLoader, navigation } = this.injectedProps;
+    navigation.setParams({ tap: entityLoader.getValueEnforcing() });
   }
 
   render() {
-    const tap = this.injectedProps.tapStore.getByID(this.injectedProps.id);
+    const { entityLoader } = this.injectedProps;
+    const { description, name } = entityLoader.getValueEnforcing();
+
     // todo prettify and move content to separate component
     return (
       <View>
-        <Text>{tap.name}</Text>
-        <Text>{tap.description}</Text>
+        <Text>{name}</Text>
+        <Text>{description}</Text>
       </View>
     );
   }
