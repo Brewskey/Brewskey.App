@@ -1,6 +1,6 @@
 // @flow
 
-import type { Device, LoadObject } from 'brewskey.js-api';
+import type { Device, EntityID, LoadObject } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -13,7 +13,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 
 type InjectedProps = {|
   entityLoader: LoadObject<Device>,
-  id: string,
+  id: EntityID,
   navigation: Navigation,
 |};
 

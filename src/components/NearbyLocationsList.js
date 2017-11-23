@@ -51,7 +51,7 @@ class TapsList extends InjectedComponent<InjectedProps, {}, State> {
     );
   }
 
-  _keyExtractor = ({ id }: NearbyLocation): string => id;
+  _keyExtractor = ({ id }: NearbyLocation): string => id.toString();
 
   _onRefresh = async (): Promise<void> => {
     this.setState(() => ({ isRefreshing: true }));

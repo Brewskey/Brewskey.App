@@ -1,6 +1,11 @@
 // @flow
 
-import type { Device, DeviceMutator, LoadObject } from 'brewskey.js-api';
+import type {
+  Device,
+  DeviceMutator,
+  EntityID,
+  LoadObject,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -14,7 +19,7 @@ import EditDeviceForm from '../components/EditDeviceForm';
 
 type InjectedProps = {
   entityLoader: LoadObject<Device>,
-  id: string,
+  id: EntityID,
   navigation: Navigation,
 };
 

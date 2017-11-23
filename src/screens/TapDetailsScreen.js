@@ -1,6 +1,6 @@
 // @flow
 
-import type { LoadObject, Tap } from 'brewskey.js-api';
+import type { EntityID, LoadObject, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -13,7 +13,7 @@ import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
 
 type InjectedProps = {|
-  id: string,
+  id: EntityID,
   navigation: Navigation,
   entityLoader: LoadObject<Tap>,
 |};

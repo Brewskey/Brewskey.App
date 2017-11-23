@@ -1,6 +1,6 @@
 // @flow
 
-import type { LoadObject, Location } from 'brewskey.js-api';
+import type { EntityID, LoadObject, Location } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -13,7 +13,7 @@ import LocationForm from '../components/LocationForm';
 
 type InjectedProps = {|
   entityLoader: LoadObject<Location>,
-  id: string,
+  id: EntityID,
   navigation: Navigation,
 |};
 

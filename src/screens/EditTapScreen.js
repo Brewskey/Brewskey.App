@@ -1,6 +1,6 @@
 // @flow
 
-import type { LoadObject, Tap, TapMutator } from 'brewskey.js-api';
+import type { EntityID, LoadObject, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -14,7 +14,7 @@ import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
   entityLoader: LoadObject<Tap>,
-  id: string,
+  id: EntityID,
   navigation: Navigation,
 |};
 
