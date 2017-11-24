@@ -7,7 +7,7 @@ import { AsyncStorage } from 'react-native';
 import { action, computed, observable, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 
-const { OrganizationDAO } = DAOApi;
+const { TapDAO, DeviceDAO, LocationDAO, OrganizationDAO } = DAOApi;
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
@@ -69,6 +69,11 @@ class AppSettingsStore {
 
   onOrganizationChange = (selectedOrganizationID: ?EntityID) => {
     DAOApi.setOrganizationID(selectedOrganizationID);
+    // todo make helper inside api lib for flush cache for organization dependend
+    // entitites?
+    DeviceDAO.flushCache();
+    LocationDAO.flushCache();
+    TapDAO.flushCache();
     this.updateAppSettings({
       selectedOrganizationID: selectedOrganizationID || null,
     });

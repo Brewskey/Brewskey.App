@@ -31,8 +31,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const organizationsLoader = this._organizationStore.allItemsLoader;
-    const organizations = organizationsLoader.getValue() || [];
+    const organizations = this._organizationStore.allItems;
     const {
       isManageTapsEnabled,
       isMultiAccountModeEnabled,

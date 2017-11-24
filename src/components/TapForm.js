@@ -1,13 +1,14 @@
 // @flow
 
 import type { Device, Tap, TapMutator } from 'brewskey.js-api';
+import type DAOEntityStore from '../stores/DAOEntityStore';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import DAOEntityStore from '../stores/DAOEntityStore';
+import withDAOEntityStore from '../common/withDAOEntityStore';
 import { Button, FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PickerField from './PickerField';
@@ -35,18 +36,18 @@ type Props = {|
   tap?: Tap,
 |};
 
-type InjectedProps = FormProps;
+type InjectedProps = { ...FormProps, deviceStore: DAOEntityStore<Device> };
 
 @form({ validate })
+@withDAOEntityStore('deviceStore', DAOApi.DeviceDAO)
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
-  _deviceStore: DAOEntityStore<Device> = new DAOEntityStore(DAOApi.DeviceDAO);
-
   componentWillMount() {
-    this._deviceStore.fetchMany();
+    DAOApi.DeviceDAO.fetchMany();
   }
 
   render() {
+    const { deviceStore } = this.injectedProps;
     const { submitButtonLabel, tap = {} } = this.props;
     const {
       formError,
@@ -78,7 +79,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           name="device"
           label="Brewskey box"
         >
-          {this._deviceStore.allItems.map((device: Device): React.Node => (
+          {deviceStore.allItems.map((device: Device): React.Node => (
             <PickerField.Item
               key={device.id}
               label={device.name}

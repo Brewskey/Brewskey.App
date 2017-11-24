@@ -49,6 +49,10 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
+  componentWillUnmount() {
+    this._listStore.dispose();
+  }
+
   _getSwipeableFlatListRef = ref => {
     this._swipeableFlatListRef = ref;
   };
