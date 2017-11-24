@@ -54,6 +54,9 @@ class LoginForm extends InjectedComponent<InjectedProps> {
     return (
       <KeyboardAwareScrollView>
         <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus
           component={TextField}
           disabled={submitting}
           label="User name"
@@ -61,6 +64,8 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           onSubmitEditing={this._onUserNameSubmit}
         />
         <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
           component={TextField}
           disabled={submitting}
           label="Password"

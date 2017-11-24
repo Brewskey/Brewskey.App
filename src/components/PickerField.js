@@ -26,14 +26,18 @@ type Props = {
   children?: React.Node,
   error?: ?string,
   label?: string,
-  onBlur: () => void,
+  onBlur?: () => void,
   onChange: (value: any) => void,
-  placeholder?: string,
+  placeholder: ?string,
   value: any,
   // other react-native Picker props
 };
 
 class PickerField extends React.Component<Props> {
+  static defaultProps = {
+    placeholder: 'Please select...',
+  };
+
   static Item = Picker.Item;
 
   _onPickerValueChange = (value: any) => {
@@ -42,8 +46,12 @@ class PickerField extends React.Component<Props> {
       return;
     }
 
-    this.props.onChange(value);
-    this.props.onBlur();
+    const { onBlur, onChange } = this.props;
+
+    onChange(value);
+    if (onBlur) {
+      onBlur();
+    }
   };
 
   render() {
@@ -53,10 +61,14 @@ class PickerField extends React.Component<Props> {
       label,
       onBlur,
       onChange,
-      placeholder = 'Please select...',
+      placeholder,
       value,
       ...props
     } = this.props;
+
+    if (!children) {
+      return null;
+    }
 
     return (
       <View>
@@ -67,8 +79,12 @@ class PickerField extends React.Component<Props> {
           onValueChange={this._onPickerValueChange}
           selectedValue={value}
         >
-          <Picker.Item label={placeholder} value={undefined} />
-          {children}
+          {[
+            !placeholder ? null : (
+              <Picker.Item label={placeholder} value={undefined} />
+            ),
+            ...React.Children.toArray(children),
+          ].filter(Boolean)}
         </Picker>
         <View style={styles.underline} />
         <FormValidationMessage>{error}</FormValidationMessage>

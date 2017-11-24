@@ -31,7 +31,8 @@ type InjectedProps = {|
 @observer
 class MainDrawer extends InjectedComponent<InjectedProps, Props> {
   render() {
-    const items = this.injectedProps.appSettingsStore.manageTapsEnabled
+    const { isManageTapsEnabled } = this.injectedProps.appSettingsStore;
+    const items = isManageTapsEnabled
       ? this.props.items
       : this.props.items.filter((item: DrawerItem): boolean => {
           const routeSettings = this.injectedProps.routesSettingsStore.getRouteSettings(
