@@ -7,6 +7,7 @@ import { LoadObject } from 'brewskey.js-api';
 
 class DAOEntityStore<TEntity: { id: EntityID }> {
   _dao: DAO<TEntity, *>;
+  _queryOptions: QueryOptions = {};
 
   @observable _entityLoaders: Array<LoadObject<TEntity>> = [];
 

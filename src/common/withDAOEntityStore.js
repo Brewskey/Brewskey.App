@@ -1,6 +1,6 @@
 // @flow
 
-import type { DAO, EntityID } from 'brewskey.js-api';
+import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -22,7 +22,7 @@ const withDAOEntityStore = <
 ): Class<React.Component<TProps>> => {
   @observer
   class WithDAOEntityStore extends React.Component<TProps> {
-    _daoEntityStore: DAOEntityStore<TEntity, *> = new DAOEntityStore(dao);
+    _daoEntityStore: DAOEntityStore<TEntity> = new DAOEntityStore(dao);
 
     componentWillMount() {
       const providedQueryOptions =
