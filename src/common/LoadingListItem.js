@@ -4,6 +4,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { getRandomInt } from '../utils';
 import { ListItem as RNEListItem } from 'react-native-elements';
+import StubAvatar from '../common/avatars/StubAvatar';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,12 +12,14 @@ const styles = StyleSheet.create({
   },
   subtitleContainerStyle: {
     backgroundColor: '#eee',
+    marginLeft: 15,
   },
   subtitleStyle: {
     color: '#eee',
   },
   titleContainerStyle: {
     backgroundColor: '#eee',
+    marginLeft: 15,
   },
   titleStyle: {
     color: '#eee',
@@ -25,6 +28,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   containerStyle?: Object,
+  showAvatar?: boolean,
 };
 
 class LoadingListItem extends React.PureComponent<Props> {
@@ -35,6 +39,7 @@ class LoadingListItem extends React.PureComponent<Props> {
     return (
       <RNEListItem
         {...this.props}
+        avatar={this.props.showAvatar ? <StubAvatar size={45} rounded /> : null}
         hideChevron
         subtitle="none"
         subtitleContainerStyle={[
