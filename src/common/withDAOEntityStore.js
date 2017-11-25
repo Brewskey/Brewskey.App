@@ -14,6 +14,7 @@ const withDAOEntityStore = <
 >(
   storeName: TStoreName,
   dao: DAO<TEntity, *>,
+  queryOptions: QueryOptions | ((props: TProps) => QueryOptions) = {},
 ) => (
   Component: React.ComponentType<
     { [TStoreName]: DAOEntityStore<TEntity, *> } & TProps,
@@ -22,6 +23,14 @@ const withDAOEntityStore = <
   @observer
   class WithDAOEntityStore extends React.Component<TProps> {
     _daoEntityStore: DAOEntityStore<TEntity, *> = new DAOEntityStore(dao);
+
+    componentWillMount() {
+      const providedQueryOptions =
+        typeof queryOptions === 'function'
+          ? queryOptions(this.props)
+          : queryOptions;
+      this._daoEntityStore.setQueryOptions(providedQueryOptions);
+    }
 
     componentWillUnmount() {
       this._daoEntityStore.dispose();

@@ -1,15 +1,14 @@
 // @flow
 
-import type { DAO, EntityID } from 'brewskey.js-api';
+import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
 
-import { computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 
 class DAOEntityStore<TEntity: { id: EntityID }> {
   _dao: DAO<TEntity, *>;
 
   @observable _entityLoaders: Array<LoadObject<TEntity>> = [];
-  @observable _isFetching: boolean = false;
 
   constructor(dao: DAO<TEntity, *>) {
     this._dao = dao;
@@ -19,6 +18,13 @@ class DAOEntityStore<TEntity: { id: EntityID }> {
   }
 
   dispose = (): void => this._dao.unsubscribe(this._reload);
+
+  @action
+  setQueryOptions = (queryOptions: QueryOptions) => {
+    this._entityLoaders = [];
+    this._queryOptions = queryOptions;
+    this._reload();
+  };
 
   @computed
   get allItemsLoader(): LoadObject<Array<TEntity>> {
@@ -41,7 +47,7 @@ class DAOEntityStore<TEntity: { id: EntityID }> {
   }
 
   _reload = () => {
-    const entityLoaders = this._dao.fetchMany();
+    const entityLoaders = this._dao.fetchMany(this._queryOptions);
     if (entityLoaders.isLoading()) {
       return;
     }

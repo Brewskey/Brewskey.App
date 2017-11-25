@@ -40,20 +40,13 @@ type InjectedProps = {
 
 @form()
 @withDAOEntityStore('availabilityStore', DAOApi.AvailabilityDAO)
-@withDAOEntityStore('srmStore', DAOApi.SrmDAO)
+@withDAOEntityStore('srmStore', DAOApi.SrmDAO, {
+  orderBy: [{ column: 'hex', direction: 'desc' }],
+})
 @withDAOEntityStore('glassStore', DAOApi.GlassDAO)
 @withDAOEntityStore('styleStore', DAOApi.StyleDAO)
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
-  componentWillMount() {
-    DAOApi.AvailabilityDAO.fetchMany();
-    DAOApi.SrmDAO.fetchMany({
-      orderBy: [{ column: 'hex', direction: 'desc' }],
-    });
-    DAOApi.GlassDAO.fetchMany();
-    DAOApi.StyleDAO.fetchMany();
-  }
-
   // todo Implement custom component for srm
   // todo implement autocomplete for style?
   render() {

@@ -42,10 +42,6 @@ type InjectedProps = { ...FormProps, deviceStore: DAOEntityStore<Device> };
 @withDAOEntityStore('deviceStore', DAOApi.DeviceDAO)
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
-  componentWillMount() {
-    DAOApi.DeviceDAO.fetchMany();
-  }
-
   render() {
     const { deviceStore } = this.injectedProps;
     const { submitButtonLabel, tap = {} } = this.props;

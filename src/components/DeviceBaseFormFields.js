@@ -24,10 +24,6 @@ type InjectedProps = {
 @withDAOEntityStore('locationStore', DAOApi.LocationDAO)
 @observer
 class DeviceFormFields extends InjectedComponent<InjectedProps, Props> {
-  componentWillMount() {
-    DAOApi.LocationDAO.fetchMany();
-  }
-
   render() {
     const { locationStore } = this.injectedProps;
     const { device = {} } = this.props;
