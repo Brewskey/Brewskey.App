@@ -20,6 +20,7 @@ type Props<TItem> = {
 
 class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
   static defaultProps = {
+    item: null,
     onPress: () => {},
   };
 

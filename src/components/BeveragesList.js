@@ -14,8 +14,10 @@ import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOEntityListStore from '../stores/DAOEntityListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
+import LoadingListItem from '../common/LoadingListItem';
 import ListItem from '../common/ListItem';
 import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
+import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
 type Props = {|
   queryOptions?: QueryOptions,
@@ -76,12 +78,14 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
       {...swipeableStateProps}
       loader={row.loader}
       renderListItem={this._renderListItem}
+      renderLoadingListItem={this._renderLodingListItem}
       renderSlideoutView={this._renderSlideoutView}
     />
   );
 
   _renderListItem = (item: Beverage): React.Node => (
     <ListItem
+      avatar={<BeverageAvatar beverageId={item.id} />}
       hideChevron
       item={item}
       onPress={this._onItemPress}
@@ -89,6 +93,8 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
       title={item.name}
     />
   );
+
+  _renderLodingListItem = (): React.Node => <LoadingListItem showAvatar />;
 
   _renderSlideoutView = (item: Beverage): React.Node => (
     <QuickActions

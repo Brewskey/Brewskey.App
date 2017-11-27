@@ -12,6 +12,7 @@ type Props = {
 
 class UserAvatar extends React.PureComponent<Props> {
   static defaultProps = {
+    rounded: true,
     size: 45,
   };
 
