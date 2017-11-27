@@ -12,6 +12,7 @@ type Props = {
 
 class UserAvatar extends React.PureComponent<Props> {
   static defaultProps = {
+    rounded: true,
     size: 45,
   };
 
@@ -19,6 +20,7 @@ class UserAvatar extends React.PureComponent<Props> {
     return (
       <BaseAvatar
         {...this.props}
+        rounded={this.props.rounded}
         uri={`${CONFIG.CDN}photos/${this.props.userName}.jpg?w=${
           this.props.size
         }&h=${this.props.size}&mode=crop`}
