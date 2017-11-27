@@ -22,6 +22,7 @@
     "sorting"
   ],
   "rules": {
+    "flowtype/space-after-type-colon": 0,
     "flowtype/generic-spacing": 0,
     "import/first": 0,
     "no-return-assign": 0,

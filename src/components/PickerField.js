@@ -81,7 +81,11 @@ class PickerField extends React.Component<Props> {
         >
           {[
             !placeholder ? null : (
-              <Picker.Item label={placeholder} value={undefined} />
+              <Picker.Item
+                key={placeholder}
+                label={placeholder}
+                value={undefined}
+              />
             ),
             ...React.Children.toArray(children),
           ].filter(Boolean)}

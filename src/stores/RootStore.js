@@ -18,6 +18,7 @@ class RootStore {
     this.routesSettingsStore = new RoutesSettingsStore(this);
 
     this.nearbyLocationsStore = new NearbyLocationsStore(this);
+    this.initialize();
   }
 
   // todo not sure if its correct, since assignements in initialize actions,
