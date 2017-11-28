@@ -5,11 +5,18 @@ import type RoutesSettingsStore from '../stores/RoutesSettingsStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { DrawerItems } from 'react-navigation';
+import { COLORS } from '../theme';
 import DrawerHeader from './DrawerHeader';
 import LogoutButton from './LogoutButton';
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.primary,
+  },
+});
 
 type DrawerItem = {|
   key: string,
@@ -42,7 +49,7 @@ class MainDrawer extends InjectedComponent<InjectedProps, Props> {
         });
 
     return (
-      <View>
+      <View style={styles.container}>
         <DrawerHeader />
         <DrawerItems {...this.props} items={items} />
         <LogoutButton />

@@ -3,23 +3,24 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { getRandomInt } from '../utils';
+import { COLORS } from '../theme';
 import { ListItem as RNEListItem } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.secondary,
   },
   subtitleContainerStyle: {
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.outline2,
   },
   subtitleStyle: {
-    color: '#eee',
+    color: COLORS.outline2,
   },
   titleContainerStyle: {
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.outline2,
   },
   titleStyle: {
-    color: '#eee',
+    color: COLORS.outline2,
   },
 });
 

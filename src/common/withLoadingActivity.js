@@ -1,15 +1,16 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import { ActivityIndicator } from 'react-native';
 
-const Container = styled.View`
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-`;
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+});
 
 type IsLoadingSelector<TProps> = (props: TProps) => boolean;
 
@@ -26,9 +27,9 @@ const withLoadingActivity = <TProps: {}>(
     render() {
       const isLoading = isLoadingSelector(this.props);
       return isLoading ? (
-        <Container style={containerStyle}>
+        <View style={[styles.container, containerStyle]}>
           <ActivityIndicator size={activitySize} />
-        </Container>
+        </View>
       ) : (
         <Component {...this.props} />
       );

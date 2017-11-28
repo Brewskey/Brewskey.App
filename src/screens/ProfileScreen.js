@@ -1,14 +1,15 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import AvatarPicker from '../components/AvatarPicker';
 
-const AvatarContainer = styled.View`
-  align-items: center;
-  padding-vertical: 15;
-`;
+const styles = StyleSheet.create({
+  avatarContainer: {
+    alignItems: 'center',
+    paddingVertical: 15,
+  },
+});
 
 class ProfileScreen extends React.Component<{}> {
   static navigationOptions = {
@@ -18,9 +19,9 @@ class ProfileScreen extends React.Component<{}> {
   render() {
     return (
       <View>
-        <AvatarContainer>
+        <View style={styles.avatarContainer}>
           <AvatarPicker />
-        </AvatarContainer>
+        </View>
       </View>
     );
   }

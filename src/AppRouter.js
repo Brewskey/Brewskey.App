@@ -64,7 +64,6 @@ class AppRouter extends InjectedComponent<InjectedProps, Props> {
       {
         splash: { screen: SplashScreen },
         login: { screen: LoginScreen },
-        // main: { screen: TestScreen },
         main: {
           screen: DrawerNavigator(
             {

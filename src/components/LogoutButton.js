@@ -4,7 +4,7 @@ import type AuthStore from '../stores/AuthStore';
 
 import * as React from 'react';
 import { inject } from 'mobx-react';
-import { Button } from 'react-native-elements';
+import Button from '../common/buttons/Button';
 
 type Props = {|
   authStore: AuthStore,

@@ -1,16 +1,17 @@
 // @flow
 
 import * as React from 'react';
-import { View } from 'react-native';
-import styled from 'styled-components/native';
+import { StyleSheet, Text, View } from 'react-native';
 import PickerField from './PickerField';
 
-const DescriptionContainer = styled.Text`
-  align-items: center;
-  margin-left: 13;
-  margin-right: 13;
-  text-align: center;
-`;
+const styles = StyleSheet.create({
+  descriptionText: {
+    alignItems: 'center',
+    marginLeft: 13,
+    marginRight: 13,
+    textAlign: 'center',
+  },
+});
 
 const DEVICE_STATUS_DESCRIPTION = {
   Active:
@@ -44,9 +45,9 @@ const DeviceStatusPicker = (props: Props) => (
       <PickerField.Item label="Free" value="Free" />
       <PickerField.Item label="Inactive" value="Inactive" />
     </PickerField>
-    <DescriptionContainer>
+    <Text style={styles.descriptionText}>
       {DEVICE_STATUS_DESCRIPTION[props.value]}
-    </DescriptionContainer>
+    </Text>
   </View>
 );
 

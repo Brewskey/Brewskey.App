@@ -1,22 +1,22 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
+import { StyleSheet, Text, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button } from 'react-native-elements';
+import { COLORS } from '../../theme';
 
-const Container = styled.View`
-  background-color: white;
-  justify-content: center;
-  padding-bottom: 25;
-  padding-top: 25;
-`;
-
-const Message = styled.Text`
-  align-items: center;
-  margin-bottom: 20;
-  text-align: center;
-`;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.secondary,
+    justifyContent: 'center',
+    paddingVertical: 25,
+  },
+  message: {
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+});
 
 type Props = {|
   isVisible: boolean,
@@ -37,11 +37,11 @@ const DeleteModal = ({
     onBackdropPress={onCancelButtonPress}
     useNativeDriver
   >
-    <Container>
-      <Message>{message}</Message>
+    <View style={styles.container}>
+      <Text style={styles.message}>{message}</Text>
       <Button onPress={onCancelButtonPress} title="cancel" />
       <Button onPress={onDeleteButtonPress} title="delete" />
-    </Container>
+    </View>
   </Modal>
 );
 

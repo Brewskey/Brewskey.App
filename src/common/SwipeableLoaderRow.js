@@ -31,6 +31,7 @@ class SwipeableLoaderRow<TEntity> extends React.PureComponent<Props<TEntity>> {
     maxSwipeDistance: 150,
     preventSwipeRight: true,
   };
+
   _onOpen = (): void => this.props.onOpen(this.props.rowKey);
 
   render() {

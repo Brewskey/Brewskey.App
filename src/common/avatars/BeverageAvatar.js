@@ -12,6 +12,7 @@ type Props = {
 
 class BeverageAvatar extends React.PureComponent<Props> {
   static defaultProps = {
+    rounded: true,
     size: 45,
   };
 
@@ -20,6 +21,7 @@ class BeverageAvatar extends React.PureComponent<Props> {
       <BaseAvatar
         {...this.props}
         mutable={false}
+        rounded={this.props.rounded}
         uri={`${CONFIG.CDN}beverages/${this.props.beverageId}-icon.jpg?w=${
           this.props.size
         }&h=${this.props.size}&mode=crop`}

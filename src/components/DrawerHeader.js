@@ -3,23 +3,24 @@
 import type AuthStore from '../stores/AuthStore';
 
 import * as React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import styled from 'styled-components/native';
 import { inject, observer } from 'mobx-react';
+import { COLORS, TYPOGRAPHY } from '../theme';
 import UserAvatar from '../common/avatars/UserAvatar';
 
-const Container = styled.View`
-  background-color: gray;
-  padding-horizontal: 13;
-  padding-vertical: 13;
-`;
-
-const UserNameText = styled.Text`
-  color: white;
-  font-size: 20;
-  font-weight: bold;
-  padding-top: 10;
-`;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.primary2,
+    elevation: 2,
+    paddingHorizontal: 13,
+    paddingVertical: 13,
+  },
+  userNameText: {
+    ...TYPOGRAPHY.h3,
+    color: COLORS.textInverse,
+  },
+});
 
 type InjectedProps = {|
   authStore: AuthStore,
@@ -30,13 +31,15 @@ type InjectedProps = {|
 class DrawerHeader extends InjectedComponent<InjectedProps> {
   render() {
     return (
-      <Container>
+      <View style={styles.container}>
         <UserAvatar
           size={100}
           userName={this.injectedProps.authStore.userName || ''}
         />
-        <UserNameText>{this.injectedProps.authStore.userName}</UserNameText>
-      </Container>
+        <Text style={styles.userNameText}>
+          {this.injectedProps.authStore.userName}
+        </Text>
+      </View>
     );
   }
 }
