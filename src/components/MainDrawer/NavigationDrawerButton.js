@@ -20,7 +20,11 @@ type Props = {
 
 @withNavigation
 class NavigationDrawerButton extends InjectedComponent<InjectedProps, Props> {
-  _onPress = () => this.injectedProps.navigation.navigate(this.props.routeKey);
+  _onPress = () => {
+    const { navigation } = this.injectedProps;
+    navigation.navigate('DrawerClose');
+    navigation.navigate(this.props.routeKey);
+  };
 
   render() {
     return <DrawerButton {...this.props} onPress={this._onPress} />;

@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { View } from 'react-native';
-import { Button } from 'react-native-elements';
 import DAOApi from 'brewskey.js-api';
 import { Provider } from 'mobx-react';
 import { useStrict as mobxUseStrict } from 'mobx';
@@ -10,7 +9,7 @@ import config from './config';
 import NavigationService from './NavigationService';
 import RootStore from './stores/RootStore';
 import AppRouter from './AppRouter';
-import NFCStore from './stores/NFCStore';
+import PourButton from './components/PourButton';
 import NFCModal from './components/modals/NFCModal';
 
 mobxUseStrict(true);
@@ -36,7 +35,7 @@ class App extends React.Component<{}> {
       <Provider rootStore={rootStore} {...stores}>
         <View style={STYLE}>
           <AppRouter rootRef={ref => NavigationService.setNavigator(ref)} />
-          <Button large onPress={NFCStore.onShowModal} title="Pour" />
+          <PourButton />
           <NFCModal />
         </View>
       </Provider>
