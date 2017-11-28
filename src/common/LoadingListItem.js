@@ -11,16 +11,18 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
   },
   subtitleContainerStyle: {
-    backgroundColor: COLORS.outline2,
+    backgroundColor: COLORS.secondary2,
   },
   subtitleStyle: {
-    color: COLORS.outline2,
+    // the same as background because we want to hide text content
+    color: COLORS.secondary2,
   },
   titleContainerStyle: {
-    backgroundColor: COLORS.outline2,
+    backgroundColor: COLORS.secondary2,
   },
   titleStyle: {
-    color: COLORS.outline2,
+    // the same as background because we want to hide text content
+    color: COLORS.secondary2,
   },
 });
 

@@ -7,8 +7,7 @@ import PickerField from './PickerField';
 const styles = StyleSheet.create({
   descriptionText: {
     alignItems: 'center',
-    marginLeft: 13,
-    marginRight: 13,
+    marginHorizontal: 13,
     textAlign: 'center',
   },
 });

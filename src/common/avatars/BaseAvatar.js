@@ -7,7 +7,7 @@ import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: COLORS.outline2,
+    backgroundColor: COLORS.secondary3,
   },
 });
 
@@ -15,6 +15,7 @@ export type BaseAvatarProps = {
   imageRef?: React.Ref<typeof CachedImage>,
   mutable?: boolean,
   onPress?: () => void,
+  rounded: boolean,
   size: number,
 };
 

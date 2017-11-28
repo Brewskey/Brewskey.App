@@ -1,13 +1,13 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
+import type AuthStore from '../../stores/AuthStore';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import InjectedComponent from '../common/InjectedComponent';
+import InjectedComponent from '../../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
-import { COLORS, TYPOGRAPHY } from '../theme';
-import UserAvatar from '../common/avatars/UserAvatar';
+import { COLORS, TYPOGRAPHY } from '../../theme';
+import UserAvatar from '../../common/avatars/UserAvatar';
 
 const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
   },
   userNameText: {
-    ...TYPOGRAPHY.h3,
+    ...TYPOGRAPHY.heading,
     color: COLORS.textInverse,
   },
 });
