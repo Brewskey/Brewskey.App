@@ -9,7 +9,7 @@ import { useStrict as mobxUseStrict } from 'mobx';
 import config from './config';
 import NavigationService from './NavigationService';
 import RootStore from './stores/RootStore';
-import AppRouter from './routes';
+import AppRouter from './AppRouter';
 import NFCStore from './stores/NFCStore';
 import NFCModal from './components/modals/NFCModal';
 
@@ -27,6 +27,9 @@ Object.getOwnPropertyNames(rootStore).forEach((storeName: string) => {
   stores[storeName] = rootStore[storeName];
 });
 
+// todo Pour Button should be deepr in the router tree
+// or hidden until login, it may be better use floactin action button
+// like in twitter.
 class App extends React.Component<{}> {
   render() {
     return (

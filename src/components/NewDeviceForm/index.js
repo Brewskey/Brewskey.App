@@ -4,15 +4,17 @@ import type { DeviceMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
-import styled from 'styled-components/native';
+import { StyleSheet, View } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { form } from '../../common/form';
 import StepParticleId from './StepParticleId';
 import StepDeviceFields from './StepDeviceFields';
 
-const Container = styled.View`
-  flex: 1;
-`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 /* eslint-disable sorting/sort-object-props */
 const Stepper = StackNavigator(
@@ -59,9 +61,9 @@ type Props = {|
 |};
 
 const NewDeviceForm = (props: Props) => (
-  <Container>
+  <View styles={styles.container}>
     <Stepper screenProps={props} />
-  </Container>
+  </View>
 );
 
 export default form({ validate })(NewDeviceForm);

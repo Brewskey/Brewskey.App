@@ -3,16 +3,17 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { ListItem as RNEListItem } from 'react-native-elements';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.secondary,
   },
   subtitleStyle: {
-    color: 'white',
+    color: COLORS.secondary,
   },
   titleStyle: {
-    color: 'white',
+    color: COLORS.secondary,
   },
 });
 
@@ -25,12 +26,12 @@ class ErrorListItem extends React.PureComponent<Props> {
     return (
       <RNEListItem
         {...this.props}
+        containerStyle={[styles.container, this.props.containerStyle]}
         rightIcon={{ name: 'error' }}
         subtitle="none"
         subtitleStyle={styles.subtitleStyle}
         title="none"
         titleStyle={styles.titleStyle}
-        containerStyle={[styles.container, this.props.containerStyle]}
       />
     );
   }

@@ -1,13 +1,14 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-const Container = styled.View`
-  align-items: center;
-  padding-vertical: 10;
-`;
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+});
 
 type Props = {|
   isLoading: boolean,
@@ -16,9 +17,9 @@ type Props = {|
 class LoadingListFooter extends React.PureComponent<Props> {
   render() {
     return !this.props.isLoading ? null : (
-      <Container>
+      <View style={styles.container}>
         <ActivityIndicator size="large" />
-      </Container>
+      </View>
     );
   }
 }

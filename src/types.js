@@ -2,6 +2,10 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
+import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+
+export type ViewStyleProp = StyleObj;
+
 // todo make the type annotation
 export type Navigation = Object;
 

@@ -3,10 +3,12 @@
 import * as React from 'react';
 import CachedImage from '../CachedImage';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import theme from '../../theme';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
-  avatar: { backgroundColor: theme.colors.outline },
+  avatar: {
+    backgroundColor: COLORS.outline2,
+  },
 });
 
 export type BaseAvatarProps = {
@@ -34,14 +36,14 @@ class BaseAvatar extends React.PureComponent<Props> {
         disabled={!onPress}
         onPress={onPress}
         size={size}
-        style={containerStyle}
+        style={[containerStyle, styles.avatar]}
       >
         <CachedImage
           innerRef={imageRef}
           mutable={mutable}
           size={size}
           source={{ uri }}
-          style={[containerStyle, styles.avatar]}
+          style={containerStyle}
         />
       </TouchableOpacity>
     );
