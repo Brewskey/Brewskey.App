@@ -9,6 +9,7 @@ import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { inject, observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
+import Header from '../common/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DAOApi from 'brewskey.js-api';
 import DAOEntityStore from '../stores/DAOEntityStore';
@@ -26,10 +27,6 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     DAOApi.OrganizationDAO,
   );
 
-  static navigationOptions = {
-    title: 'Settings',
-  };
-
   render() {
     const organizationsLoader = this._organizationStore.allItemsLoader;
     const organizations = organizationsLoader.getValue() || [];
@@ -43,6 +40,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     } = this.injectedProps.appSettingsStore;
     return (
       <View>
+        <Header title="Settings" />
         {organizations.length < 1 ? null : (
           <PickerField
             key="organization"

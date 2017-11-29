@@ -6,6 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -21,10 +23,6 @@ type InjectedProps = {|
 @loadDAOEntity(DAOApi.LocationDAO)
 @withLoadingActivity()
 class EditLocationScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit location',
-  };
-
   _onFormSubmit = (values: Location) => {
     DAOApi.LocationDAO.put(values.id, values);
     this.injectedProps.navigation.goBack(null);
@@ -32,11 +30,14 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <LocationForm
-        location={this.injectedProps.entityLoader.getValueEnforcing()}
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit location"
-      />
+      <View>
+        <Header showBackButton title="Edit location" />
+        <LocationForm
+          location={this.injectedProps.entityLoader.getValueEnforcing()}
+          onSubmit={this._onFormSubmit}
+          submitButtonLabel="Edit location"
+        />
+      </View>
     );
   }
 }

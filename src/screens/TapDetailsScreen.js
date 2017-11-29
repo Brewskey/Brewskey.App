@@ -8,6 +8,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
 import { Text, View } from 'react-native';
+import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -23,17 +24,6 @@ type InjectedProps = {|
 @withLoadingActivity()
 @observer
 class TapDetailsScreen extends InjectedComponent<InjectedProps> {
-  // todo find types for navigationOptions
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    title: navigation.state.params.tap && navigation.state.params.tap.name,
-  });
-
-  componentDidMount() {
-    // todo with this solution title on header appears after some lag :/
-    const { entityLoader, navigation } = this.injectedProps;
-    navigation.setParams({ tap: entityLoader.getValueEnforcing() });
-  }
-
   render() {
     const { entityLoader } = this.injectedProps;
     const { description, name } = entityLoader.getValueEnforcing();
@@ -41,6 +31,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
     // todo prettify and move content to separate component
     return (
       <View>
+        <Header showBackButton title={name} />
         <Text>{name}</Text>
         <Text>{description}</Text>
       </View>

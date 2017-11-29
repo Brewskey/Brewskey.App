@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 @observer
-class PourButton extends React.Component {
+class PourButton extends React.Component<{}> {
   render() {
     return (
       <View

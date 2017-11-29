@@ -61,7 +61,7 @@ type Props = {|
 |};
 
 const NewDeviceForm = (props: Props) => (
-  <View styles={styles.container}>
+  <View style={styles.container}>
     <Stepper screenProps={props} />
   </View>
 );

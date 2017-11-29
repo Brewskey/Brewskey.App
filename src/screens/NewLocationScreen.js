@@ -7,6 +7,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import LocationForm from '../components/LocationForm';
 
 type InjectedProps = {|
@@ -14,10 +16,6 @@ type InjectedProps = {|
 |};
 
 class NewLocationScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'New location',
-  };
-
   _onFormSubmit = async (values: Location): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.LocationDAO.post(values);
@@ -32,10 +30,13 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <LocationForm
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Create location"
-      />
+      <View>
+        <Header showBackButton title="New location" />
+        <LocationForm
+          onSubmit={this._onFormSubmit}
+          submitButtonLabel="Create location"
+        />
+      </View>
     );
   }
 }
