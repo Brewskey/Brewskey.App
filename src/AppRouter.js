@@ -57,10 +57,16 @@ class AppRouter extends React.Component<Props> {
           screen: DrawerNavigator(
             {
               home: {
-                screen: StackNavigator({ home: { screen: HomeScreen } }),
+                screen: StackNavigator(
+                  { home: { screen: HomeScreen } },
+                  { headerMode: 'none' },
+                ),
               },
               profile: {
-                screen: StackNavigator({ profile: { screen: ProfileScreen } }),
+                screen: StackNavigator(
+                  { profile: { screen: ProfileScreen } },
+                  { headerMode: 'none' },
+                ),
               },
               locations: {
                 screen: StackNavigator(
@@ -74,6 +80,7 @@ class AppRouter extends React.Component<Props> {
                   },
                   {
                     gesturesEnabled: false,
+                    headerMode: 'none',
                     initialRoute: 'locations',
                   },
                 ),
@@ -88,6 +95,7 @@ class AppRouter extends React.Component<Props> {
                   },
                   {
                     gesturesEnabled: false,
+                    headerMode: 'none',
                     initialRoute: 'taps',
                   },
                 ),
@@ -102,6 +110,7 @@ class AppRouter extends React.Component<Props> {
                   },
                   {
                     gesturesEnabled: false,
+                    headerMode: 'none',
                     initialRoute: 'devices',
                   },
                 ),
@@ -116,14 +125,18 @@ class AppRouter extends React.Component<Props> {
                   },
                   {
                     gesturesEnabled: false,
+                    headerMode: 'none',
                     initialRoute: 'myBeverages',
                   },
                 ),
               },
               settings: {
-                screen: StackNavigator({
-                  settings: { screen: SettingsScreen },
-                }),
+                screen: StackNavigator(
+                  {
+                    settings: { screen: SettingsScreen },
+                  },
+                  { headerMode: 'none' },
+                ),
               },
             },
             {

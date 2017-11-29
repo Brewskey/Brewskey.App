@@ -8,6 +8,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { Text, View } from 'react-native';
 import loadDAOEntity from '../common/loadDAOEntity';
+import Header from '../common/Header';
 import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
@@ -21,24 +22,14 @@ type InjectedProps = {|
 @loadDAOEntity(DAOApi.DeviceDAO)
 @withLoadingActivity()
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
-  // todo find types for navigationOptions
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    title:
-      navigation.state.params.device && navigation.state.params.device.name,
-  });
-
-  componentDidMount() {
-    // todo with this solution title on header appears after some lag :/
-    const { entityLoader, navigation } = this.injectedProps;
-    navigation.setParams({ device: entityLoader.getValueEnforcing() });
-  }
-
   render() {
     const { entityLoader } = this.injectedProps;
     const { name, particleId } = entityLoader.getValueEnforcing();
+
     // todo prettify and move content to separate component
     return (
       <View>
+        <Header showBackButton title={name} />
         <Text>{name}</Text>
         <Text>{particleId}</Text>
       </View>

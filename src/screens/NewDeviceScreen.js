@@ -7,6 +7,8 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import NewDeviceForm from '../components/NewDeviceForm';
 
 type InjectedProps = {|
@@ -15,10 +17,6 @@ type InjectedProps = {|
 
 @observer
 class NewDeviceScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'New Brewskey box',
-  };
-
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
@@ -32,7 +30,12 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    return <NewDeviceForm onSubmit={this._onFormSubmit} />;
+    return (
+      <View>
+        <Header showBackButton title="New brewskey box" />
+        <NewDeviceForm onSubmit={this._onFormSubmit} />
+      </View>
+    );
   }
 }
 

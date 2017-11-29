@@ -7,7 +7,9 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { inject, observer } from 'mobx-react';
-import HeaderIcon from '../common/HeaderIcon';
+import { View } from 'react-native';
+import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import DevicesList from '../components/DevicesList';
 
 type InjectedProps = {|
@@ -18,27 +20,23 @@ type InjectedProps = {|
 @inject('authStore')
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    headerRight: (
-      <HeaderIcon
-        name="add"
-        onPress={(): void => navigation.navigate('newDevice')}
-      />
-    ),
-    title: 'Brewskey boxes',
-  });
-
   render() {
     return (
-      <DevicesList
-        queryOptions={{
-          filters: [
-            DAOApi.createFilter('createdBy/id').equals(
-              this.injectedProps.authStore.userID,
-            ),
-          ],
-        }}
-      />
+      <View>
+        <Header
+          rightComponent={<HeaderNavigationButton name="add" to="newDevice" />}
+          title="Devices"
+        />
+        <DevicesList
+          queryOptions={{
+            filters: [
+              DAOApi.createFilter('createdBy/id').equals(
+                this.injectedProps.authStore.userID,
+              ),
+            ],
+          }}
+        />
+      </View>
     );
   }
 }

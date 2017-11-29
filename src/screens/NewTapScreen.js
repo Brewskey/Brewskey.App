@@ -6,6 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
@@ -13,10 +15,6 @@ type InjectedProps = {|
 |};
 
 class NewTapScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'New tap',
-  };
-
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.TapDAO.post(values);
@@ -31,7 +29,10 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
+      <View>
+        <Header showBackButton title="New tap" />
+        <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
+      </View>
     );
   }
 }

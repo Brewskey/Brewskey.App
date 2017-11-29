@@ -17,8 +17,7 @@ export const COLORS = {
 /* eslint-disable sorting/sort-object-props */
 export const TYPOGRAPHY = {
   heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 20,
   },
   secondary: {},
   paragraph: {},

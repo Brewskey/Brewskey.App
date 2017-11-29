@@ -6,6 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
 
 type InjectedProps = {|
@@ -13,10 +15,6 @@ type InjectedProps = {|
 |};
 
 class NewBeverageScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'New beverage',
-  };
-
   _onFormSubmit = async (values: Beverage): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.BeverageDAO.post(values);
@@ -31,10 +29,13 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <BeverageForm
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Create beverage"
-      />
+      <View>
+        <Header showBackButton title="New beverage" />
+        <BeverageForm
+          onSubmit={this._onFormSubmit}
+          submitButtonLabel="Create beverage"
+        />
+      </View>
     );
   }
 }

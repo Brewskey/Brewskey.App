@@ -10,7 +10,9 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
+import Header from '../common/Header';
 import nullthrows from 'nullthrows';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -27,10 +29,6 @@ type InjectedProps = {
 @loadDAOEntity(DAOApi.DeviceDAO)
 @withLoadingActivity()
 class EditDeviceScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit Brewskey box',
-  };
-
   _onFormSubmit = async (values: DeviceMutator) => {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
@@ -38,10 +36,13 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <EditDeviceForm
-        onSubmit={this._onFormSubmit}
-        device={this.injectedProps.entityLoader.getValueEnforcing()}
-      />
+      <View>
+        <Header showBackButton title="Edit Brewskey box" />
+        <EditDeviceForm
+          onSubmit={this._onFormSubmit}
+          device={this.injectedProps.entityLoader.getValueEnforcing()}
+        />
+      </View>
     );
   }
 }

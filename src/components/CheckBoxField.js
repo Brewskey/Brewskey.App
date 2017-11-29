@@ -29,7 +29,7 @@ class CheckBoxField extends React.Component<Props> {
 
   render() {
     return (
-      <View styles={styles.container}>
+      <View style={styles.container}>
         <Text>{this.props.label}</Text>
         <CheckBox {...this.props} onValueChange={this._onCheckBoxValueChange} />
       </View>

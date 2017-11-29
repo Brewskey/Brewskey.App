@@ -7,6 +7,8 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
+import { View } from 'react-native';
+import Header from '../common/Header';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -22,10 +24,6 @@ type InjectedProps = {|
 @loadDAOEntity(DAOApi.TapDAO)
 @withLoadingActivity()
 class EditTapScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit tap',
-  };
-
   _onFormSubmit = async (values: TapMutator) => {
     DAOApi.TapDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
@@ -33,11 +31,14 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <TapForm
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit tap"
-        tap={this.injectedProps.entityLoader.getValueEnforcing()}
-      />
+      <View>
+        <Header showBackButton title="Edit tap" />
+        <TapForm
+          onSubmit={this._onFormSubmit}
+          submitButtonLabel="Edit tap"
+          tap={this.injectedProps.entityLoader.getValueEnforcing()}
+        />
+      </View>
     );
   }
 }

@@ -3,7 +3,9 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import HeaderIcon from '../common/HeaderIcon';
+import { View } from 'react-native';
+import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import TapsList from '../components/TapsList';
 
 type Props = {|
@@ -11,18 +13,16 @@ type Props = {|
 |};
 
 class TapsScreen extends React.Component<Props> {
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    headerRight: (
-      <HeaderIcon
-        name="add"
-        onPress={(): void => navigation.navigate('newTap')}
-      />
-    ),
-    title: 'Taps',
-  });
-
   render() {
-    return <TapsList />;
+    return (
+      <View>
+        <Header
+          rightComponent={<HeaderNavigationButton name="add" to="newTap" />}
+          title="Taps"
+        />
+        <TapsList />
+      </View>
+    );
   }
 }
 
