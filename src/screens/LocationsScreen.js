@@ -18,7 +18,7 @@ class LocationsScreen extends React.Component<Props> {
       <View>
         <Header
           rightComponent={
-            <HeaderNavigationButton name="add" to="newLocation" />
+            <HeaderNavigationButton name="add" toRoute="newLocation" />
           }
           title="Locations"
         />

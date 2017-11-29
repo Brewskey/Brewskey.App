@@ -25,7 +25,7 @@ class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
       <View>
         <Header
           rightComponent={
-            <HeaderNavigationButton name="add" to="newBeverage" />
+            <HeaderNavigationButton name="add" toRoute="newBeverage" />
           }
           title="Homebrew"
         />

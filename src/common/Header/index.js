@@ -24,8 +24,8 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  leftComponent?: React.ComponentType<any> | React.Node,
-  rightComponent?: React.ComponentType<any> | React.Node,
+  leftComponent?: React.Element<any>,
+  rightComponent?: React.Element<any>,
   showBackButton?: boolean,
   title?: string,
 };

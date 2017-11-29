@@ -17,7 +17,9 @@ class TapsScreen extends React.Component<Props> {
     return (
       <View>
         <Header
-          rightComponent={<HeaderNavigationButton name="add" to="newTap" />}
+          rightComponent={
+            <HeaderNavigationButton name="add" toRoute="newTap" />
+          }
           title="Taps"
         />
         <TapsList />

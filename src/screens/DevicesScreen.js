@@ -24,7 +24,9 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
     return (
       <View>
         <Header
-          rightComponent={<HeaderNavigationButton name="add" to="newDevice" />}
+          rightComponent={
+            <HeaderNavigationButton name="add" toRoute="newDevice" />
+          }
           title="Devices"
         />
         <DevicesList
