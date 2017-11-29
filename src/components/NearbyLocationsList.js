@@ -1,12 +1,12 @@
 // @flow
 
 import type { Navigation, NearbyLocation, NearbyTap } from '../types';
-import type NearbyLocationsStore from '../stores/NearbyLocationsStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
+import NearbyLocationsStore from '../stores/NearbyLocationsStore';
 import ListItem from '../common/ListItem';
 import ListSectionHeader from '../common/ListSectionHeader';
 import { SectionList } from 'react-native';
@@ -18,7 +18,6 @@ type Section<TType> = {
 };
 
 type InjectedProps = {|
-  nearbyLocationsStore: NearbyLocationsStore,
   navigation: Navigation,
 |};
 
@@ -29,21 +28,22 @@ type State = {|
 // todo add onItemPress
 // add onPourIconPress
 @withNavigation
-@inject('nearbyLocationsStore')
 @observer
 class TapsList extends InjectedComponent<InjectedProps, {}, State> {
+  _nearbyLocationsStore: NearbyLocationsStore = new NearbyLocationsStore();
+
   state = {
     isRefreshing: false,
   };
 
   componentWillMount() {
-    if (!this.injectedProps.nearbyLocationsStore.all.length) {
+    if (!this._nearbyLocationsStore.all.length) {
       this._onRefresh();
     }
   }
 
   get _sections(): Array<Section<NearbyTap>> {
-    return this.injectedProps.nearbyLocationsStore.all.map(
+    return this._nearbyLocationsStore.all.map(
       ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
         data: taps.slice(),
         title: name,
@@ -55,7 +55,7 @@ class TapsList extends InjectedComponent<InjectedProps, {}, State> {
 
   _onRefresh = async (): Promise<void> => {
     this.setState(() => ({ isRefreshing: true }));
-    await this.injectedProps.nearbyLocationsStore.fetchAll();
+    await this._nearbyLocationsStore.fetchAll();
     this.setState(() => ({ isRefreshing: false }));
   };
 

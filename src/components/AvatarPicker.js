@@ -1,13 +1,12 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
 import type CachedImage from '../common/CachedImage';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import ImagePicker from 'react-native-image-picker';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
+import AuthStore from '../stores/AuthStore';
 import UserAvatar from '../common/avatars/UserAvatar';
 import CommonApi from '../CommonApi';
 
@@ -15,13 +14,8 @@ const IMAGE_PICKER_OPTIONS = {
   title: 'SelectAvatar',
 };
 
-type InjectedProps = {|
-  authStore: AuthStore,
-|};
-
-@inject('authStore')
 @observer
-class AvatarPicker extends InjectedComponent<InjectedProps> {
+class AvatarPicker extends React.Component<{}> {
   _cachedImageRef: ?CachedImage;
 
   _onAvatarPress = () => {
@@ -48,7 +42,7 @@ class AvatarPicker extends InjectedComponent<InjectedProps> {
         imageRef={this._getAvatarImageRef}
         onPress={this._onAvatarPress}
         size={200}
-        userName={this.injectedProps.authStore.userName || ''}
+        userName={AuthStore.userName || ''}
       />
     );
   }

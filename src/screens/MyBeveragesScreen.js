@@ -1,7 +1,6 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type AuthStore from '../stores/AuthStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
@@ -9,15 +8,14 @@ import DAOApi from 'brewskey.js-api';
 import { View } from 'react-native';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
+import AuthStore from '../stores/AuthStore';
 import BeveragesList from '../components/BeveragesList';
 
 type InjectedProps = {|
-  authStore: AuthStore,
   navigation: Navigation,
 |};
 
-@inject('authStore')
 @observer
 class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
   render() {
@@ -32,9 +30,7 @@ class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
         <BeveragesList
           queryOptions={{
             filters: [
-              DAOApi.createFilter('createdBy/id').equals(
-                this.injectedProps.authStore.userID,
-              ),
+              DAOApi.createFilter('createdBy/id').equals(AuthStore.userID),
             ],
           }}
         />

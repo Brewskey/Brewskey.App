@@ -1,6 +1,5 @@
 // @flow
 
-import type RootStore from './RootStore';
 import type { EntityID } from 'brewskey.js-api';
 
 import { AsyncStorage } from 'react-native';
@@ -20,18 +19,12 @@ type AppSettings = {|
 // todo somehow save settings for particular user and restore them after relogin?
 // or save user settings on the server?
 class AppSettingsStore {
-  _rootStore: RootStore;
-
   @observable
   _appSettings = {
     manageTapsEnabled: false,
     multiAccountModeEnabled: false,
     selectedOrganizationID: null,
   };
-
-  constructor(rootStore: RootStore) {
-    this._rootStore = rootStore;
-  }
 
   @action
   initialize = async (): Promise<void> => {
@@ -111,4 +104,4 @@ class AppSettingsStore {
   }
 }
 
-export default AppSettingsStore;
+export default new AppSettingsStore();

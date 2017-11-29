@@ -1,6 +1,5 @@
 // @flow
 
-import type RootStore from './RootStore';
 import type { ObservableMap } from 'mobx';
 import type { EntityID } from 'brewskey.js-api';
 import type { NearbyLocation } from '../types';
@@ -9,12 +8,7 @@ import { action, computed, observable, runInAction } from 'mobx';
 import CommonApi from '../CommonApi';
 
 class NearbyLocationsStore {
-  _rootStore: RootStore;
   @observable _nearbyLocationsById: ObservableMap<NearbyLocation> = new Map();
-
-  constructor(rootStore: RootStore) {
-    this._rootStore = rootStore;
-  }
 
   @action
   fetchAll = async (): Promise<Array<NearbyLocation>> => {
