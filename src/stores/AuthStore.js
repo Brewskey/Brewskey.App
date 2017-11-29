@@ -8,6 +8,7 @@ import { action, autorun, computed, runInAction, observable } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
+import PourButtonStore from './PourButtonStore';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
@@ -63,6 +64,7 @@ class AuthStore {
   clearAuthState = () => {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+    PourButtonStore.hide();
   };
 
   @action
@@ -102,6 +104,7 @@ class AuthStore {
     // todo move json stringify to helpers
     // todo may be move to reaction
     AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
+    PourButtonStore.show();
   };
 
   @computed

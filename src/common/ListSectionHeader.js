@@ -6,7 +6,7 @@ import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   headerContainer: {
-    borderBottomColor: COLORS.outline,
+    borderBottomColor: COLORS.secondary2,
     borderBottomWidth: 1,
     paddingVertical: 6,
     textAlign: 'center',
