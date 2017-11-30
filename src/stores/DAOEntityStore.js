@@ -7,19 +7,29 @@ import { LoadObject } from 'brewskey.js-api';
 
 class DAOEntityStore<TEntity: { id: EntityID }> {
   _dao: DAO<TEntity, *>;
+  _queryOptions: QueryOptions = {};
 
   @observable _entityLoaders: Array<LoadObject<TEntity>> = [];
-  @observable _isFetching: boolean = false;
 
   constructor(dao: DAO<TEntity, *>) {
     this._dao = dao;
-
-    this._dao.subscribe(() => this._reload());
-    this._reload();
   }
+
+  initialize = () => {
+    this._dao.subscribe(this._reload);
+  };
+
+  dispose = (): void => this._dao.unsubscribe(this._reload);
+
+  @action
+  setQueryOptions = (queryOptions: QueryOptions) => {
+    this._entityLoaders = [];
+    this._queryOptions = queryOptions;
+  };
 
   @computed
   get allItemsLoader(): LoadObject<Array<TEntity>> {
+    this._dao.fetchMany(this._queryOptions);
     if (this._entityLoaders.some(loader => loader.isLoading())) {
       return LoadObject.loading();
     }
@@ -30,7 +40,8 @@ class DAOEntityStore<TEntity: { id: EntityID }> {
   }
 
   @computed
-  get allItems(): Array<TEntity> {
+  get allItems(): Array<TEnity> {
+    this._dao.fetchMany(this._queryOptions);
     return this._entityLoaders
       .map((entityLoader: LoadObject<TEntity>): ?TEntity =>
         entityLoader.getValue(),
@@ -38,22 +49,8 @@ class DAOEntityStore<TEntity: { id: EntityID }> {
       .filter(Boolean);
   }
 
-  // TODO - this is a bad pattern and should be removed. We don't want to use
-  // this to fetch items. We need to simply use load objects in components.
-  @action
-  fetchMany = async (queryOptions?: QueryOptions): Promise<void> => {
-    this._isFetching = true;
-    const entityLoaders = await this._dao.waitForLoaded(() =>
-      this._dao.fetchMany(queryOptions),
-    );
-    runInAction(() => {
-      this._entityLoaders = entityLoaders;
-      this._isFetching = false;
-    });
-  };
-
   _reload = () => {
-    const entityLoaders = this._dao.fetchMany();
+    const entityLoaders = this._dao.fetchMany(this._queryOptions);
     if (entityLoaders.isLoading()) {
       return;
     }
