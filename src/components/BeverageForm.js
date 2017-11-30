@@ -11,11 +11,12 @@ import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
-import DAOEntityStore from '../stores/DAOEntityStore';
+
+import withComponentStores from '../common/withComponentStores';
+import BeverageFormStore from '../stores/BeverageFormStore';
 import { form, FormField } from '../common/form';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
@@ -29,33 +30,21 @@ type Props = {|
   submitButtonLabel: string,
 |};
 
-type InjectedProps = FormProps;
+type InjectedProps = FormProps & {|
+  beverageFormStore: BeverageFormStore,
+|};
 
 @form()
+@withComponentStores({ beverageFormStore: new BeverageFormStore() })
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
-  _availabilityStore: DAOEntityStore<Availability> = new DAOEntityStore(
-    DAOApi.AvailabilityDAO,
-  );
-  _srmStore: DAOEntityStore<Srm> = new DAOEntityStore(DAOApi.SrmDAO);
-  _glassStore: DAOEntityStore<Glass> = new DAOEntityStore(DAOApi.GlassDAO);
-  _styleStore: DAOEntityStore<Style> = new DAOEntityStore(DAOApi.StyleDAO);
-
-  componentWillMount() {
-    this._availabilityStore.fetchMany();
-    this._srmStore.fetchMany({
-      orderBy: [{ column: 'hex', direction: 'desc' }],
-    });
-    this._glassStore.fetchMany();
-    this._styleStore.fetchMany();
-  }
-
   // todo Implement custom component for srm
   // todo implement autocomplete for style?
   render() {
     const { beverage = {}, submitButtonLabel } = this.props;
 
     const {
+      beverageFormStore,
       formError,
       handleSubmit,
       invalid,
@@ -136,7 +125,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="availability"
           label="Availability"
         >
-          {this._availabilityStore.allItems.map(
+          {beverageFormStore.availabilities.map(
             ({ id, name }: Availability): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
             ),
@@ -149,7 +138,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="glassware"
           label="Glass"
         >
-          {this._glassStore.allItems.map(({ id, name }: Glass): React.Node => (
+          {beverageFormStore.glasses.map(({ id, name }: Glass): React.Node => (
             <PickerField.Item key={id} label={name} value={id} />
           ))}
         </FormField>
@@ -169,7 +158,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             label="Srm"
             name="srm"
           >
-            {this._srmStore.allItems.map(({ id, name }: Srm): React.Node => (
+            {beverageFormStore.srm.map(({ id, name }: Srm): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
             ))}
           </FormField>,
@@ -181,11 +170,9 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             label="Style"
             name="style"
           >
-            {this._styleStore.allItems.map(
-              ({ id, name }: Style): React.Node => (
-                <PickerField.Item key={id} label={name} value={id} />
-              ),
-            )}
+            {beverageFormStore.styles.map(({ id, name }: Style): React.Node => (
+              <PickerField.Item key={id} label={name} value={id} />
+            ))}
           </FormField>,
           <FormField
             component={TextField}
