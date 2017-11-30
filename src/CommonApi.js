@@ -2,7 +2,7 @@
 
 import type { Coordinates } from './types';
 
-import { rootStore } from './App';
+import AuthStore from './stores/AuthStore';
 import CONFIG from './config';
 
 const deepIdCast = (node: any): any => {
@@ -31,7 +31,7 @@ class CommonApi {
     `,
       {
         headers: {
-          Authorization: `Bearer ${rootStore.authStore.token}`,
+          Authorization: `Bearer ${AuthStore.token || ''}`,
         },
       },
     );
@@ -50,7 +50,7 @@ class CommonApi {
       body: JSON.stringify({ photo: avatarData }),
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${rootStore.authStore.token}`,
+        Authorization: `Bearer ${AuthStore.token || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',

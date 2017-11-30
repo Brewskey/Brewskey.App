@@ -1,6 +1,5 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
 import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from '../authApi';
 import type { FormInput } from 'react-native-elements';
@@ -8,10 +7,11 @@ import type { FormInput } from 'react-native-elements';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Button, FormValidationMessage } from 'react-native-elements';
+import AuthStore from '../stores/AuthStore';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
 
@@ -28,22 +28,18 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
   return errors;
 };
 
-type InjectedProps = {
-  authStore: AuthStore,
-  ...FormProps,
-};
+type InjectedProps = FormProps;
 
 @form({ validate })
-@inject('authStore')
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
   _passwordInputRef: ?FormInput;
 
   _onUserNameSubmit = (): void => nullthrows(this._passwordInputRef).focus();
 
-  _onSubmit = async (formValues: Object): Promise<void> => {
+  _onSubmit = (formValues: Object) => {
     Keyboard.dismiss();
-    await this.injectedProps.authStore.login(formValues);
+    AuthStore.login(formValues);
   };
 
   _onSubmitButtonPress = (): Promise<void> =>

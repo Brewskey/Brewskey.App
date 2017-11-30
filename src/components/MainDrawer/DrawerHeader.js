@@ -1,12 +1,10 @@
 // @flow
 
-import type AuthStore from '../../stores/AuthStore';
-
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import InjectedComponent from '../../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { COLORS, TYPOGRAPHY } from '../../theme';
+import AuthStore from '../../stores/AuthStore';
 import UserAvatar from '../../common/avatars/UserAvatar';
 
 const styles = StyleSheet.create({
@@ -22,23 +20,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {|
-  authStore: AuthStore,
-|};
-
-@inject('authStore')
 @observer
-class DrawerHeader extends InjectedComponent<InjectedProps> {
+class DrawerHeader extends React.Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-        <UserAvatar
-          size={100}
-          userName={this.injectedProps.authStore.userName || ''}
-        />
-        <Text style={styles.userNameText}>
-          {this.injectedProps.authStore.userName}
-        </Text>
+        <UserAvatar size={100} userName={AuthStore.userName || ''} />
+        <Text style={styles.userNameText}>{AuthStore.userName}</Text>
       </View>
     );
   }

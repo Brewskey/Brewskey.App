@@ -1,6 +1,5 @@
 // @flow
 
-import type RootStore from './RootStore';
 import type { UserCredentials } from '../authApi';
 
 import { AsyncStorage } from 'react-native';
@@ -39,13 +38,10 @@ type AuthState = {|
 |};
 
 class AuthStore {
-  _rootStore: RootStore;
-
   @observable authState: ?AuthState = null;
   @observable isInitialized: boolean = false;
 
-  constructor(rootStore: RootStore) {
-    this._rootStore = rootStore;
+  constructor() {
     // todo may be it better to use reaction here
     // it may help to avoid isInitialized prop, but I'm not sure
     autorun(() => {
@@ -128,4 +124,4 @@ class AuthStore {
   }
 }
 
-export default AuthStore;
+export default new AuthStore();

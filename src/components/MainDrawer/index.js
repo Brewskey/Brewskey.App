@@ -1,13 +1,12 @@
 // @flow
 
-import type AppSettingsStore from '../../stores/AppSettingsStore';
 import type { DrawerRoute } from './drawerRoutes';
 
 import * as React from 'react';
-import InjectedComponent from '../../common/InjectedComponent';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { COLORS } from '../../theme';
+import AppSettingsStore from '../../stores/AppSettingsStore';
 import NavigationDrawerButton from './NavigationDrawerButton';
 import DrawerHeader from './DrawerHeader';
 import DrawerSeperator from './DrawerSeparator';
@@ -25,17 +24,10 @@ type Props = {|
   activeItemKey: string,
 |};
 
-type InjectedProps = {|
-  appSettingsStore: AppSettingsStore,
-|};
-
-@inject('appSettingsStore')
 @observer
-class MainDrawer extends InjectedComponent<InjectedProps, Props> {
+class MainDrawer extends React.Component<Props> {
   render() {
-    const { isManageTapsEnabled } = this.injectedProps.appSettingsStore;
-
-    const routes = isManageTapsEnabled
+    const routes = AppSettingsStore.isManageTapsEnabled
       ? DRAWER_ROUTES
       : DRAWER_ROUTES.filter(
           ({ isManageTapsRequired }: DrawerRoute): boolean =>

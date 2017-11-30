@@ -1,26 +1,25 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type AppSettingsStore from '../stores/AppSettingsStore';
 import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
+import { observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
 import Header from '../common/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DAOApi from 'brewskey.js-api';
+import AppSettingsStore from '../stores/AppSettingsStore';
 import DAOEntityStore from '../stores/DAOEntityStore';
+
 import PickerField from '../components/PickerField';
 
 type InjectedProps = {|
   navigation: Navigation,
-  appSettingsStore: AppSettingsStore,
 |};
 
-@inject('appSettingsStore')
 @observer
 class SettingsScreen extends InjectedComponent<InjectedProps> {
   _organizationStore: DAOEntityStore<Organization> = new DAOEntityStore(
@@ -37,7 +36,8 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
       onToggleManageTaps,
       onToggleMultiAccountMode,
       selectedOrganizationID,
-    } = this.injectedProps.appSettingsStore;
+    } = AppSettingsStore;
+
     return (
       <View>
         <Header title="Settings" />
