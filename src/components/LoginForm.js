@@ -10,7 +10,8 @@ import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react';
 import { Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, FormValidationMessage } from 'react-native-elements';
+import { FormValidationMessage } from 'react-native-elements';
+import Button from '../common/buttons/Button';
 import AuthStore from '../stores/AuthStore';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
@@ -37,9 +38,9 @@ class LoginForm extends InjectedComponent<InjectedProps> {
 
   _onUserNameSubmit = (): void => nullthrows(this._passwordInputRef).focus();
 
-  _onSubmit = (formValues: Object) => {
+  _onSubmit = async (formValues: Object): Promise<void> => {
     Keyboard.dismiss();
-    AuthStore.login(formValues);
+    await AuthStore.login(formValues);
   };
 
   _onSubmitButtonPress = (): Promise<void> =>
