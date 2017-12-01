@@ -8,6 +8,7 @@ import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
+import withComponentStores from '../common/withComponentStores';
 import Header from '../common/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DAOApi from 'brewskey.js-api';
@@ -18,17 +19,17 @@ import PickerField from '../components/PickerField';
 
 type InjectedProps = {|
   navigation: Navigation,
+  organizationStore: DAOEntityStore<Organization>,
 |};
 
+@withComponentStores({
+  organizationStore: new DAOEntityStore(DAOApi.OrganizationDAO),
+})
 @observer
 class SettingsScreen extends InjectedComponent<InjectedProps> {
-  _organizationStore: DAOEntityStore<Organization> = new DAOEntityStore(
-    DAOApi.OrganizationDAO,
-  );
-
   render() {
-    const organizationsLoader = this._organizationStore.allItemsLoader;
-    const organizations = organizationsLoader.getValue() || [];
+    const { organizationStore } = this.injectedProps;
+    const organizations = organizationStore.allItems;
     const {
       isManageTapsEnabled,
       isMultiAccountModeEnabled,

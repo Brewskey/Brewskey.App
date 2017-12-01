@@ -4,8 +4,10 @@ import type { Device, Location } from 'brewskey.js-api';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import DAOEntityStore from '../stores/DAOEntityStore';
+import withComponentStores from '../common/withComponentStores';
 import { FormField } from '../common/form';
 import TextField from './TextField';
 import PickerField from './PickerField';
@@ -15,17 +17,13 @@ type Props = {
   device?: Device,
 };
 
+type InjectedProps = {
+  locationStore: DAOEntityStore<Location>,
+};
+
+@withComponentStores({ locationStore: new DAOEntityStore(DAOApi.LocationDAO) })
 @observer
-class DeviceFormFields extends React.Component<Props> {
-  _locationStore: DAOEntityStore<Location> = new DAOEntityStore(
-    DAOApi.LocationDAO,
-  );
-
-  componentWillMount() {
-    this._locationStore.fetchMany();
-  }
-
-  // todo select only users locations
+class DeviceFormFields extends InjectedComponent<InjectedProps, Props> {
   render() {
     const { device = {} } = this.props;
     return [
@@ -53,13 +51,15 @@ class DeviceFormFields extends React.Component<Props> {
         label="Location"
         name="location"
       >
-        {this._locationStore.allItems.map((location: Location): React.Node => (
-          <PickerField.Item
-            key={location.id}
-            label={location.name}
-            value={location}
-          />
-        ))}
+        {this.injectedProps.locationStore.allItems.map(
+          (location: Location): React.Node => (
+            <PickerField.Item
+              key={location.id}
+              label={location.name}
+              value={location}
+            />
+          ),
+        )}
       </FormField>,
       <FormField
         initialValue={device.deviceStatus}

@@ -13,14 +13,7 @@ import { observer } from 'mobx-react';
 
 const emptyFunction = () => {};
 
-type Props = {|
-  children?: Node,
-  header?: Node,
-  isVisible: boolean,
-  onHideModal: () => void,
-|};
-
-const STYLES = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, .5)',
@@ -42,9 +35,15 @@ const STYLES = StyleSheet.create({
   },
 });
 
+type Props = {|
+  children?: Node,
+  header?: Node,
+  isVisible: boolean,
+  onHideModal: () => void,
+|};
+
 @observer
 class CenteredModal extends Component<Props> {
-  static STYLES = STYLES;
   render() {
     const { children, header, isVisible, onHideModal } = this.props;
     return (
@@ -55,11 +54,11 @@ class CenteredModal extends Component<Props> {
         visible={isVisible}
       >
         <TouchableWithoutFeedback onPress={onHideModal}>
-          <View style={STYLES.container}>
+          <View style={styles.container}>
             <TouchableWithoutFeedback onPress={emptyFunction}>
-              <View style={STYLES.modal}>
-                {!header ? null : <View style={STYLES.header}>{header}</View>}
-                <View style={STYLES.content}>{children}</View>
+              <View style={styles.modal}>
+                {!header ? null : <View style={styles.header}>{header}</View>}
+                <View style={styles.content}>{children}</View>
               </View>
             </TouchableWithoutFeedback>
           </View>

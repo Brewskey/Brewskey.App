@@ -9,6 +9,7 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
+import withComponentStores from '../common/withComponentStores';
 import SwipeableFlatList from '../common/SwipeableFlatList';
 import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
@@ -21,11 +22,13 @@ type Props = {|
   queryOptions?: QueryOptions,
 |};
 
-type InjectedProps = {
+type InjectedProps = {|
+  listStore: DAOEntityListStore<Device>,
   navigation: Navigation,
-};
+|};
 
 @withNavigation
+@withComponentStores({ listStore: new DAOEntityListStore(DAOApi.DeviceDAO) })
 @observer
 class DevicesList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
@@ -33,12 +36,10 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _swipeableFlatListRef: ?SwipeableFlatList<Device>;
-  _listStore: DAOEntityListStore<Device>;
 
-  constructor(props: Props, context: any) {
-    super(props, context);
-
-    this._listStore = new DAOEntityListStore(DAOApi.DeviceDAO, {
+  componentWillMount() {
+    const { listStore } = this.injectedProps;
+    listStore.setQueryOptions({
       orderBy: [
         {
           column: 'id',
@@ -47,6 +48,8 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
       ],
       ...this.props.queryOptions,
     });
+
+    listStore.fetchFirstPage();
   }
 
   _getSwipeableFlatListRef = ref => {
@@ -100,18 +103,19 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const { listStore } = this.injectedProps;
     return (
       <SwipeableFlatList
-        data={this._listStore.rows}
+        data={listStore.rows}
         keyExtractor={this._keyExtractor}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reset}
+        onEndReached={listStore.fetchNextPage}
+        onRefresh={listStore.reload}
         ref={this._getSwipeableFlatListRef}
         refreshing={false}
         removeClippedSubviews
         renderItem={this._renderRow}
         ListFooterComponent={
-          <LoadingListFooter isLoading={!this._listStore.isInitialized} />
+          <LoadingListFooter isLoading={!listStore.isFetchingRemoteCount} />
         }
       />
     );
