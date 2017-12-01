@@ -12,6 +12,7 @@ import { Button, FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import PickerField from './PickerField';
 import CheckBoxField from './CheckBoxField';
+import withComponentStores from '../common/withComponentStores';
 import TextField from './TextField';
 import { form, FormField } from '../common/form';
 
@@ -35,17 +36,14 @@ type Props = {|
   tap?: Tap,
 |};
 
-type InjectedProps = FormProps;
+type InjectedProps = {|
+  devicesStore: DAOEntityStore<Device>,
+|} & FormProps;
 
 @form({ validate })
+@withComponentStores({ devicesStore: new DAOEntityStore(DAOApi.DeviceDAO) })
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
-  _deviceStore: DAOEntityStore<Device> = new DAOEntityStore(DAOApi.DeviceDAO);
-
-  componentWillMount() {
-    this._deviceStore.fetchMany();
-  }
-
   render() {
     const { submitButtonLabel, tap = {} } = this.props;
     const {
@@ -78,13 +76,15 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           name="device"
           label="Brewskey box"
         >
-          {this._deviceStore.allItems.map((device: Device): React.Node => (
-            <PickerField.Item
-              key={device.id}
-              label={device.name}
-              value={device}
-            />
-          ))}
+          {this.injectedProps.devicesStore.allItems.map(
+            (device: Device): React.Node => (
+              <PickerField.Item
+                key={device.id}
+                label={device.name}
+                value={device}
+              />
+            ),
+          )}
         </FormField>
         <FormField
           component={CheckBoxField}

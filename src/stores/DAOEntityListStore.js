@@ -1,6 +1,7 @@
 // @flow
 
 import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
+import type { IComponentStore } from './types';
 
 import { action, computed, observable } from 'mobx';
 import flattenArray from 'array-flatten';
@@ -12,7 +13,7 @@ export type Row<TEntity> = {|
   loader: LoadObject<TEntity>,
 |};
 
-class DAOEntityListStore<TEntity: { id: EntityID }> {
+class DAOEntityListStore<TEntity: { id: EntityID }> implements IComponentStore {
   _baseQueryOptions: QueryOptions = {};
   _dao: DAO<TEntity, *>;
   _pageSize: number;
@@ -22,25 +23,21 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
 
   @observable rows: Array<Row<TEntity>> = [];
 
-  constructor(
-    dao: DAO<TEntity, *>,
-    queryOptions?: QueryOptions = {},
-    pageSize?: number = 20,
-  ) {
-    this._baseQueryOptions = queryOptions;
+  constructor(dao: DAO<TEntity, *>, pageSize?: number = 20) {
     this._dao = dao;
     this._pageSize = pageSize;
-
-    this._dao.subscribe(this._onDaoEvent);
-    this._fetchFirstPage();
   }
+
+  initialize = () => {
+    this._dao.subscribe(this._onDaoEvent);
+  };
 
   dispose = () => {
     this._dao.unsubscribe(this._onDaoEvent);
   };
 
   @computed
-  get isInitialized(): boolean {
+  get isFetchingRemoteCount(): boolean {
     return this._remoteCount.hasValue();
   }
 
@@ -51,12 +48,12 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
 
   setQueryOptions = (queryOptions: QueryOptions) => {
     this._baseQueryOptions = queryOptions;
-    this.reset();
+    this._reset();
   };
 
   @action
   fetchNextPage = () => {
-    if (!this.isInitialized) {
+    if (!this.isFetchingRemoteCount) {
       return;
     }
     const currentQuery = this._queryOptionsList[
@@ -78,16 +75,20 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
   };
 
   @action
-  reset = () => {
+  _reset = () => {
     this._dao.flushQueryCaches();
     this._queryOptionsList = [];
     this._remoteCount = LoadObject.loading();
-
-    this._fetchFirstPage();
   };
 
   @action
-  _fetchFirstPage = () => {
+  reload = () => {
+    this._reset();
+    this.fetchFirstPage();
+  };
+
+  @action
+  fetchFirstPage = () => {
     this._queryOptionsList.push({
       ...this._baseQueryOptions,
       skip: 0,
@@ -105,7 +106,10 @@ class DAOEntityListStore<TEntity: { id: EntityID }> {
 
   @action
   _computeRows = () => {
-    if (!this.isInitialized || this._remoteCount.getValueEnforcing() === 0) {
+    if (
+      !this.isFetchingRemoteCount ||
+      this._remoteCount.getValueEnforcing() === 0
+    ) {
       return;
     }
 

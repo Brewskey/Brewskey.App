@@ -1,11 +1,12 @@
 // @flow
 
 import type { DAO, EntityID, QueryOptions } from 'brewskey.js-api';
+import type { IComponentStore } from './types';
 
 import { action, computed, observable, runInAction } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 
-class DAOEntityStore<TEntity: { id: EntityID }> {
+class DAOEntityStore<TEntity: { id: EntityID }> implements IComponentStore {
   _dao: DAO<TEntity, *>;
   _queryOptions: QueryOptions = {};
 
@@ -40,7 +41,7 @@ class DAOEntityStore<TEntity: { id: EntityID }> {
   }
 
   @computed
-  get allItems(): Array<TEnity> {
+  get allItems(): Array<TEntity> {
     this._dao.fetchMany(this._queryOptions);
     return this._entityLoaders
       .map((entityLoader: LoadObject<TEntity>): ?TEntity =>
