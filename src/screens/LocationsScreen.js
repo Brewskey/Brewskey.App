@@ -3,7 +3,7 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LocationsList from '../components/LocationsList';
@@ -15,7 +15,7 @@ type Props = {|
 class LocationsScreen extends React.Component<Props> {
   render() {
     return (
-      <View>
+      <Container>
         <Header
           rightComponent={
             <HeaderNavigationButton name="add" toRoute="newLocation" />
@@ -23,7 +23,7 @@ class LocationsScreen extends React.Component<Props> {
           title="Locations"
         />
         <LocationsList />
-      </View>
+      </Container>
     );
   }
 }

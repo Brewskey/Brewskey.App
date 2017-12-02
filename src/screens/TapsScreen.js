@@ -3,7 +3,7 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import TapsList from '../components/TapsList';
@@ -15,7 +15,7 @@ type Props = {|
 class TapsScreen extends React.Component<Props> {
   render() {
     return (
-      <View>
+      <Container>
         <Header
           rightComponent={
             <HeaderNavigationButton name="add" toRoute="newTap" />
@@ -23,7 +23,7 @@ class TapsScreen extends React.Component<Props> {
           title="Taps"
         />
         <TapsList />
-      </View>
+      </Container>
     );
   }
 }

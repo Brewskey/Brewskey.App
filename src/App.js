@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import DAOApi from 'brewskey.js-api';
 import { useStrict as mobxUseStrict } from 'mobx';
 import config from './config';
@@ -32,11 +32,11 @@ class App extends React.Component<{}> {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <AppRouter rootRef={ref => NavigationService.setNavigator(ref)} />
         <PourButton />
         <NFCModal />
-      </View>
+      </SafeAreaView>
     );
   }
 }

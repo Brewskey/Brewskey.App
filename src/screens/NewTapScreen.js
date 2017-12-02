@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import TapForm from '../components/TapForm';
 
@@ -29,10 +29,10 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="New tap" />
         <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
-      </View>
+      </Container>
     );
   }
 }

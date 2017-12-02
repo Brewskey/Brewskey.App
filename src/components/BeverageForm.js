@@ -3,6 +3,7 @@
 import type {
   Availability,
   Beverage,
+  BeverageMutator,
   Glass,
   Srm,
   Style,
@@ -13,8 +14,8 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, FormValidationMessage } from 'react-native-elements';
-
+import { FormValidationMessage } from 'react-native-elements';
+import Button from '../common/buttons/Button';
 import withComponentStores from '../common/withComponentStores';
 import BeverageFormStore from '../stores/BeverageFormStore';
 import { form, FormField } from '../common/form';
@@ -26,7 +27,7 @@ const YEARS_RANGE_LENGTH = 10;
 
 type Props = {|
   beverage?: Beverage,
-  onSubmit: (values: Beverage) => void | Promise<void>,
+  onSubmit: (values: BeverageMutator) => void | Promise<void>,
   submitButtonLabel: string,
 |};
 
@@ -120,9 +121,9 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={PickerField}
-          initialValue={beverage.availability}
+          initialValue={beverage.availability && beverage.availability.id}
           disabled={submitting}
-          name="availability"
+          name="availableId"
           label="Availability"
         >
           {beverageFormStore.availabilities.map(
@@ -133,9 +134,9 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={PickerField}
-          initialValue={beverage.glassware}
+          initialValue={beverage.glass && beverage.glass.id}
           disabled={submitting}
-          name="glassware"
+          name="glasswareId"
           label="Glass"
         >
           {beverageFormStore.glasses.map(({ id, name }: Glass): React.Node => (
@@ -153,10 +154,10 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           <FormField
             component={PickerField}
             disabled={submitting}
-            initialValue={beverage.srm}
+            initialValue={beverage.srm && beverage.srm.id}
             key="srm"
             label="Srm"
-            name="srm"
+            name="srmId"
           >
             {beverageFormStore.srm.map(({ id, name }: Srm): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
@@ -165,10 +166,10 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           <FormField
             component={PickerField}
             disabled={submitting}
-            initialValue={beverage.style}
+            initialValue={beverage.style && beverage.style.id}
             key="style"
             label="Style"
-            name="style"
+            name="styleId"
           >
             {beverageFormStore.styles.map(({ id, name }: Style): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />

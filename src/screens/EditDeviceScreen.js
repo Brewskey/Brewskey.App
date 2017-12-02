@@ -10,8 +10,8 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
-import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import nullthrows from 'nullthrows';
 import loadDAOEntity from '../common/loadDAOEntity';
@@ -36,13 +36,13 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="Edit Brewskey box" />
         <EditDeviceForm
           onSubmit={this._onFormSubmit}
           device={this.injectedProps.entityLoader.getValueEnforcing()}
         />
-      </View>
+      </Container>
     );
   }
 }

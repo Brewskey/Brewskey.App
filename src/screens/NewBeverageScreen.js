@@ -1,12 +1,12 @@
 // @flow
 
-import type { Beverage, LoadObject } from 'brewskey.js-api';
+import type { Beverage, BeverageMutator, LoadObject } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
 
@@ -15,7 +15,7 @@ type InjectedProps = {|
 |};
 
 class NewBeverageScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = async (values: Beverage): Promise<void> => {
+  _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.BeverageDAO.post(values);
     const { id } = await DAOApi.BeverageDAO.waitForLoaded((): LoadObject<
@@ -29,13 +29,13 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="New beverage" />
         <BeverageForm
           onSubmit={this._onFormSubmit}
           submitButtonLabel="Create beverage"
         />
-      </View>
+      </Container>
     );
   }
 }

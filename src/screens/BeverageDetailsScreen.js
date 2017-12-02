@@ -7,7 +7,8 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -30,11 +31,11 @@ class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
 
     // todo prettify and move content to separate component
     return (
-      <View>
+      <Container>
         <Header showBackButton title={name} />
         <Text>{name}</Text>
         <Text>{description}</Text>
-      </View>
+      </Container>
     );
   }
 }

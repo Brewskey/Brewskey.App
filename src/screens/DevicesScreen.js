@@ -6,7 +6,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import AuthStore from '../stores/AuthStore';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
@@ -20,7 +20,7 @@ type InjectedProps = {|
 class DevicesScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
-      <View>
+      <Container>
         <Header
           rightComponent={
             <HeaderNavigationButton name="add" toRoute="newDevice" />
@@ -34,7 +34,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
             ],
           }}
         />
-      </View>
+      </Container>
     );
   }
 }
