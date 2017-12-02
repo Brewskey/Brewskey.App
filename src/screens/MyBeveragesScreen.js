@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import { observer } from 'mobx-react';
@@ -20,7 +20,7 @@ type InjectedProps = {|
 class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
-      <View>
+      <Container>
         <Header
           rightComponent={
             <HeaderNavigationButton name="add" toRoute="newBeverage" />
@@ -34,7 +34,7 @@ class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
             ],
           }}
         />
-      </View>
+      </Container>
     );
   }
 }

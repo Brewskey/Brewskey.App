@@ -4,11 +4,11 @@ import type { Navigation } from '../types';
 import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
 import withComponentStores from '../common/withComponentStores';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DAOApi from 'brewskey.js-api';
@@ -40,7 +40,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     } = AppSettingsStore;
 
     return (
-      <View>
+      <Container>
         <Header title="Settings" />
         {organizations.length < 1 ? null : (
           <PickerField
@@ -78,7 +78,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
             />
           </KeyboardAwareScrollView>
         </List>
-      </View>
+      </Container>
     );
   }
 }

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Location } from 'brewskey.js-api';
+import type { Location, LocationMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 import type { StateConfig } from './stateList';
 
@@ -27,7 +27,7 @@ const REQUIRED_FIELDS = [
 const isRequiredMessage = (fieldName: string): string =>
   `${fieldName} is required`;
 
-const validate = (values: Location): { [key: string]: string } => {
+const validate = (values: LocationMutator): { [key: string]: string } => {
   const errors = {};
 
   REQUIRED_FIELDS.forEach((fieldName: string) => {
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 
 type Props = {|
   location?: Location,
-  onSubmit: (values: Location) => void | Promise<void>,
+  onSubmit: (values: LocationMutator) => void | Promise<void>,
   submitButtonLabel: string,
 |};
 

@@ -6,7 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Container from '../common/Container';
 import loadDAOEntity from '../common/loadDAOEntity';
 import Header from '../common/Header';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -28,11 +29,11 @@ class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
 
     // todo prettify and move content to separate component
     return (
-      <View>
+      <Container>
         <Header showBackButton title={name} />
         <Text>{name}</Text>
         <Text>{particleId}</Text>
-      </View>
+      </Container>
     );
   }
 }

@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import loadDAOEntity from '../common/loadDAOEntity';
 import withLoadingActivity from '../common/withLoadingActivity';
@@ -31,14 +31,14 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="Edit tap" />
         <TapForm
           onSubmit={this._onFormSubmit}
           submitButtonLabel="Edit tap"
           tap={this.injectedProps.entityLoader.getValueEnforcing()}
         />
-      </View>
+      </Container>
     );
   }
 }

@@ -1,13 +1,19 @@
 // @flow
 
-import type { Beverage, EntityID, LoadObject } from 'brewskey.js-api';
+import type {
+  Beverage,
+  BeverageMutator,
+  EntityID,
+  LoadObject,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { View } from 'react-native';
+import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import loadDAOEntity from '../common/loadDAOEntity';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -23,21 +29,21 @@ type InjectedProps = {|
 @loadDAOEntity(DAOApi.BeverageDAO)
 @withLoadingActivity()
 class EditBeverageScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = (values: Beverage): void => {
-    DAOApi.BeverageDAO.put(values.id, values);
+  _onFormSubmit = (values: BeverageMutator): void => {
+    DAOApi.BeverageDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="Edit beverage" />
         <BeverageForm
           beverage={this.injectedProps.entityLoader.getValueEnforcing()}
           onSubmit={this._onFormSubmit}
           submitButtonLabel="Edit beverage"
         />
-      </View>
+      </Container>
     );
   }
 }

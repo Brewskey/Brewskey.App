@@ -71,18 +71,14 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
         />
         <FormField
           component={PickerField}
-          initialValue={tap.device}
+          initialValue={tap.device && tap.device.id}
           disabled={submitting}
-          name="device"
+          name="deviceId"
           label="Brewskey box"
         >
           {this.injectedProps.devicesStore.allItems.map(
-            (device: Device): React.Node => (
-              <PickerField.Item
-                key={device.id}
-                label={device.name}
-                value={device}
-              />
+            ({ id, name }: Device): React.Node => (
+              <PickerField.Item key={id} label={name} value={id} />
             ),
           )}
         </FormField>

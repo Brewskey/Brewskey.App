@@ -46,18 +46,14 @@ class DeviceFormFields extends InjectedComponent<InjectedProps, Props> {
       </FormField>,
       <FormField
         component={PickerField}
-        initialValue={device.location}
+        initialValue={device.location && device.location.id}
         key="location"
         label="Location"
-        name="location"
+        name="locationId"
       >
         {this.injectedProps.locationStore.allItems.map(
-          (location: Location): React.Node => (
-            <PickerField.Item
-              key={location.id}
-              label={location.name}
-              value={location}
-            />
+          ({ id, name }: Location): React.Node => (
+            <PickerField.Item key={id} label={name} value={id} />
           ),
         )}
       </FormField>,

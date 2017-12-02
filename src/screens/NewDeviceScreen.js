@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import { View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import NewDeviceForm from '../components/NewDeviceForm';
 
@@ -31,10 +31,10 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <View>
+      <Container>
         <Header showBackButton title="New brewskey box" />
         <NewDeviceForm onSubmit={this._onFormSubmit} />
-      </View>
+      </Container>
     );
   }
 }

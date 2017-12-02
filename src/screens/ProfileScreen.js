@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import Container from '../common/Container';
 import Header from '../common/Header';
 import AvatarPicker from '../components/AvatarPicker';
 
@@ -15,12 +16,12 @@ const styles = StyleSheet.create({
 class ProfileScreen extends React.Component<{}> {
   render() {
     return (
-      <View>
+      <Container>
         <Header title="My profile" />
         <View style={styles.avatarContainer}>
           <AvatarPicker />
         </View>
-      </View>
+      </Container>
     );
   }
 }
