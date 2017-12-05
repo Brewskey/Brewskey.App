@@ -6,8 +6,8 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import NearbyLocationsStore from '../stores/NearbyLocationsStore';
 import ListItem from '../common/ListItem';
+import LoadingListFooter from '../common/LoadingListFooter';
 import ListSectionHeader from '../common/ListSectionHeader';
 import { SectionList } from 'react-native';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
@@ -21,29 +21,27 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+type Props = {|
+  nearbyLocations: Array<NearbyLocation>,
+  isLoading: boolean,
+|};
+
 type State = {|
   isRefreshing: boolean,
 |};
 
+// todo pull to refresh for update gps position?
 // todo add onItemPress
 // add onPourIconPress
 @withNavigation
 @observer
-class TapsList extends InjectedComponent<InjectedProps, {}, State> {
-  _nearbyLocationsStore: NearbyLocationsStore = new NearbyLocationsStore();
-
-  state = {
-    isRefreshing: false,
-  };
-
-  componentWillMount() {
-    if (!this._nearbyLocationsStore.all.length) {
-      this._onRefresh();
-    }
-  }
-
+class NearbyLocationList extends InjectedComponent<
+  InjectedProps,
+  Props,
+  State,
+> {
   get _sections(): Array<Section<NearbyTap>> {
-    return this._nearbyLocationsStore.all.map(
+    return this.props.nearbyLocations.map(
       ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
         data: taps.slice(),
         title: name,
@@ -52,12 +50,6 @@ class TapsList extends InjectedComponent<InjectedProps, {}, State> {
   }
 
   _keyExtractor = ({ id }: NearbyLocation): string => id.toString();
-
-  _onRefresh = async (): Promise<void> => {
-    this.setState(() => ({ isRefreshing: true }));
-    await this._nearbyLocationsStore.fetchAll();
-    this.setState(() => ({ isRefreshing: false }));
-  };
 
   _renderItem = ({ item }: { item: NearbyLocation }): React.Node => (
     <ListItem
@@ -81,14 +73,15 @@ class TapsList extends InjectedComponent<InjectedProps, {}, State> {
     return (
       <SectionList
         keyExtractor={this._keyExtractor}
-        onRefresh={this._onRefresh}
-        refreshing={this.state.isRefreshing}
         renderItem={this._renderItem}
         renderSectionHeader={this._renderSectionHeader}
         sections={this._sections}
+        ListFooterComponent={
+          <LoadingListFooter isLoading={this.props.isLoading} />
+        }
       />
     );
   }
 }
 
-export default TapsList;
+export default NearbyLocationList;

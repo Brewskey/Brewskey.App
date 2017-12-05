@@ -1,58 +1,53 @@
 // @flow
 
-import type { ObservableMap } from 'mobx';
-import type { EntityID } from 'brewskey.js-api';
-import type { NearbyLocation } from '../types';
+import type { Coordinates, NearbyLocation } from '../types';
+import type { IComponentStore } from './types';
 
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable } from 'mobx';
+import { LoadObject } from 'brewskey.js-api';
 import CommonApi from '../CommonApi';
 
-class NearbyLocationsStore {
-  @observable _nearbyLocationsById: ObservableMap<NearbyLocation> = new Map();
+class NearbyLocationsStore implements IComponentStore {
+  @observable
+  nearbyLocationLoader: LoadObject<Array<NearbyLocation>> = LoadObject.empty();
+  @observable _coordinates: ?Coordinates = null;
+
+  initialize = () => {
+    CommonApi.subscribe(this._recomputeNearbyLocations);
+  };
+
+  dispose = () => {
+    CommonApi.unsubscribe(this._recomputeNearbyLocations);
+  };
 
   @action
-  fetchAll = async (): Promise<Array<NearbyLocation>> => {
-    try {
-      const coordinates = await new Promise(
-        (resolve, reject: (error: PositionError) => void) =>
-          // eslint-disable-next-line no-undef
-          navigator.geolocation.getCurrentPosition(
-            (position: Position): void =>
-              resolve({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-              }),
-            (error: PositionError) => reject(error),
-          ),
-      );
-
-      const nearbyLocations = await CommonApi.fetchNearbyLocations(coordinates);
-
-      runInAction(() => {
-        this._nearbyLocationsById.merge([
-          ...nearbyLocations.map((nearbyLocation: NearbyLocation): [
-            EntityID,
-            NearbyLocation,
-          ] => [nearbyLocation.id, nearbyLocation]),
-        ]);
-      });
-
-      return nearbyLocations;
-    } catch (error) {
-      // todo add error handling
-      return [];
-    }
+  setCoordinatesAndFetch = (coordinates: Coordinates) => {
+    this._coordinates = coordinates;
+    this._recomputeNearbyLocations();
   };
 
   @computed
   get all(): Array<NearbyLocation> {
-    return this._nearbyLocationsById
-      .values()
-      .filter(
-        (nearbyLocation: NearbyLocation): boolean =>
-          !!nearbyLocation.taps.length,
-      );
+    return !this.nearbyLocationLoader.hasValue()
+      ? []
+      : this.nearbyLocationLoader
+          .getValueEnforcing()
+          .filter(
+            (nearbyLocation: NearbyLocation): boolean =>
+              !!nearbyLocation.taps.length,
+          );
   }
+
+  @action
+  _recomputeNearbyLocations = () => {
+    if (!this._coordinates) {
+      return;
+    }
+
+    this.nearbyLocationLoader = CommonApi.fetchNearbyLocations(
+      this._coordinates,
+    );
+  };
 }
 
 export default NearbyLocationsStore;
