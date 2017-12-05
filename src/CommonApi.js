@@ -1,8 +1,11 @@
 // @flow
 
-import type { Coordinates } from './types';
+import type { Coordinates, NearbyLocation } from './types';
 
+import nullthrows from 'nullthrows';
+import { LoadObject } from 'brewskey.js-api';
 import AuthStore from './stores/AuthStore';
+import BaseApi, { doRequest } from './BaseApi';
 import CONFIG from './config';
 
 const deepIdCast = (node: any): any => {
@@ -18,33 +21,50 @@ const deepIdCast = (node: any): any => {
   return node;
 };
 
-class CommonApi {
-  static fetchNearbyLocations = async (
-    { latitude, longitude }: Coordinates,
+class CommonApi extends BaseApi {
+  fetchNearbyLocations = (
+    coordiantes: Coordinates,
     radius?: number = 15000,
-  ): Promise<Array<Object>> => {
-    // eslint-disable-next-line no-undef
-    const response = await fetch(
-      `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
-        longitude
-      }&latitude=${latitude}&radius=${radius}
-    `,
-      {
-        headers: {
-          Authorization: `Bearer ${AuthStore.token || ''}`,
-        },
-      },
+  ): LoadObject<Array<NearbyLocation>> => {
+    const cacheKey = this.__getCacheKey(
+      'fetchNearbyLocations',
+      coordiantes,
+      radius,
     );
 
-    const responseJson = await response.json();
-    if (!response.ok) {
-      throw new Error(responseJson.error_description);
+    if (!this.__requestLoaderByKey.has(cacheKey)) {
+      this.__requestLoaderByKey.set(cacheKey, LoadObject.loading());
+      this.__emitChanges();
+
+      const { latitude, longitude } = coordiantes;
+      doRequest(
+        `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
+          longitude
+        }&latitude=${latitude}&radius=${radius}
+    `,
+        {
+          headers: {
+            Authorization: `Bearer ${AuthStore.token || ''}`,
+          },
+        },
+      )
+        .then((result: Array<Object>) => {
+          this.__requestLoaderByKey.set(
+            cacheKey,
+            LoadObject.withValue(deepIdCast(result)),
+          );
+          this.__emitChanges();
+        })
+        .catch((error: Error) => {
+          this.__requestLoaderByKey.set(cacheKey, LoadObject.withError(error));
+          this.__emitChanges();
+        });
     }
 
-    return deepIdCast(responseJson);
+    return nullthrows(this.__requestLoaderByKey.get(cacheKey));
   };
 
-  static updateAvatar = (avatarData: string): Promise<void> =>
+  updateAvatar = (avatarData: string): Promise<void> =>
     // eslint-disable-next-line no-undef
     fetch(`${CONFIG.HOST}api/profile/photo`, {
       body: JSON.stringify({ photo: avatarData }),
@@ -57,4 +77,4 @@ class CommonApi {
     });
 }
 
-export default CommonApi;
+export default new CommonApi();
