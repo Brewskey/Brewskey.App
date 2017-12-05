@@ -5,8 +5,7 @@ import type { Navigation } from '../../types';
 import * as React from 'react';
 import InjectedComponent from '../InjectedComponent';
 import { withNavigation } from 'react-navigation';
-import { COLORS } from '../../theme';
-import IconButton from '../buttons/IconButton';
+import HeaderIconButton from './HeaderIconButton';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -23,13 +22,7 @@ class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
     this.injectedProps.navigation.navigate(this.props.toRoute);
 
   render() {
-    return (
-      <IconButton
-        color={COLORS.textInverse}
-        {...this.props}
-        onPress={this._onButtonPress}
-      />
-    );
+    return <HeaderIconButton {...this.props} onPress={this._onButtonPress} />;
   }
 }
 
