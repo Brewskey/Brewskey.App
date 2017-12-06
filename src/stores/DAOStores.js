@@ -23,7 +23,7 @@ import type {
 } from 'brewskey.js-api';
 
 import DAOApi from 'brewskey.js-api';
-import { Atom, createTransformer } from 'mobx';
+import { Atom } from 'mobx';
 
 class DAOStore<TEntity: { id: EntityID }> {
   _atom: Atom;
@@ -40,17 +40,17 @@ class DAOStore<TEntity: { id: EntityID }> {
 
   flushQueryCaches = () => this._dao.flushQueryCaches();
 
-  count = createTransformer((queryOptions?: QueryOptions = {}): LoadObject<
-    number,
-  > => this._callDAOFunction('count', queryOptions));
+  count(queryOptions: ?QueryOptions): LoadObject<number> {
+    return this._callDAOFunction('count', queryOptions);
+  }
 
-  getByID = createTransformer((id: EntityID): LoadObject<TEntity> =>
-    this._callDAOFunction('fetchByID', id),
-  );
+  getByID(id: EntityID): LoadObject<TEntity> {
+    return this._callDAOFunction('fetchByID', id);
+  }
 
-  getMany = createTransformer((queryOptions: ?QueryOptions = {}): LoadObject<
-    Array<LoadObject<TEntity>>,
-  > => this._callDAOFunction('fetchMany', queryOptions));
+  getMany(queryOptions: ?QueryOptions): LoadObject<Array<LoadObject<TEntity>>> {
+    return this._callDAOFunction('fetchMany', queryOptions);
+  }
 
   _callDAOFunction = (functionName: string, ...args) => {
     if (this._atom.reportObserved()) {
