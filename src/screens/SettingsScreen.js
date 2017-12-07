@@ -15,7 +15,7 @@ import DAOApi from 'brewskey.js-api';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import DAOEntityStore from '../stores/DAOEntityStore';
 
-import PickerField from '../components/PickerField';
+import PickerField from '../common/PickerField';
 
 type InjectedProps = {|
   navigation: Navigation,

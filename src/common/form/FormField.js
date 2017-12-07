@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
 type Props = {
-  children?: React.Node,
+  children?: React.Node | Function,
   component?: React.ComponentType<any>,
   initialValue?: any,
   name: string,

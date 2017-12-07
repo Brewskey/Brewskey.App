@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PickerField from './PickerField';
+import PickerField from '../common/PickerField';
 
 const styles = StyleSheet.create({
   descriptionText: {
