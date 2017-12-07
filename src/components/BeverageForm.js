@@ -16,12 +16,17 @@ import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
-import withComponentStores from '../common/withComponentStores';
-import BeverageFormStore from '../stores/BeverageFormStore';
+import {
+  AvailabilityStore,
+  GlassStore,
+  SrmStore,
+  StyleStore,
+} from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
-import PickerField from './PickerField';
+import PickerField from '../common/PickerField';
+import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 
 const YEARS_RANGE_LENGTH = 10;
 
@@ -31,12 +36,9 @@ type Props = {|
   submitButtonLabel: string,
 |};
 
-type InjectedProps = FormProps & {|
-  beverageFormStore: BeverageFormStore,
-|};
+type InjectedProps = FormProps;
 
 @form()
-@withComponentStores({ beverageFormStore: new BeverageFormStore() })
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
   // todo Implement custom component for srm
@@ -45,7 +47,6 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
     const { beverage = {}, submitButtonLabel } = this.props;
 
     const {
-      beverageFormStore,
       formError,
       handleSubmit,
       invalid,
@@ -120,28 +121,32 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           ))}
         </FormField>
         <FormField
-          component={PickerField}
+          component={LoaderPickerField}
+          itemsLoader={AvailabilityStore.getMany()}
           initialValue={beverage.availability && beverage.availability.id}
           disabled={submitting}
           name="availableId"
           label="Availability"
         >
-          {beverageFormStore.availabilities.map(
-            ({ id, name }: Availability): React.Node => (
+          {(items: Array<Availability>): Array<React.Node> =>
+            items.map(({ id, name }: Availability): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
-            ),
-          )}
+            ))
+          }
         </FormField>
         <FormField
-          component={PickerField}
+          component={LoaderPickerField}
           initialValue={beverage.glass && beverage.glass.id}
+          itemsLoader={GlassStore.getMany()}
           disabled={submitting}
           name="glasswareId"
           label="Glass"
         >
-          {beverageFormStore.glasses.map(({ id, name }: Glass): React.Node => (
-            <PickerField.Item key={id} label={name} value={id} />
-          ))}
+          {(items: Array<Glass>): Array<React.Node> =>
+            items.map(({ id, name }: Glass): React.Node => (
+              <PickerField.Item key={id} label={name} value={id} />
+            ))
+          }
         </FormField>
         <FormField
           component={CheckBoxField}
@@ -152,28 +157,34 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         />
         {values.beverageType === 'Beer' && [
           <FormField
-            component={PickerField}
+            component={LoaderPickerField}
             disabled={submitting}
             initialValue={beverage.srm && beverage.srm.id}
+            itemsLoader={SrmStore.getMany()}
             key="srm"
             label="Srm"
             name="srmId"
           >
-            {beverageFormStore.srm.map(({ id, name }: Srm): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))}
+            {(items: Array<Srm>): Array<React.Node> =>
+              items.map(({ id, name }: Srm): React.Node => (
+                <PickerField.Item key={id} label={name} value={id} />
+              ))
+            }
           </FormField>,
           <FormField
-            component={PickerField}
+            component={LoaderPickerField}
             disabled={submitting}
             initialValue={beverage.style && beverage.style.id}
+            itemsLoader={StyleStore.getMany()}
             key="style"
             label="Style"
             name="styleId"
           >
-            {beverageFormStore.styles.map(({ id, name }: Style): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))}
+            {(items: Array<Style>): Array<React.Node> =>
+              items.map(({ id, name }: Style): React.Node => (
+                <PickerField.Item key={id} label={name} value={id} />
+              ))
+            }
           </FormField>,
           <FormField
             component={TextField}

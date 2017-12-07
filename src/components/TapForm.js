@@ -5,15 +5,14 @@ import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import DAOEntityStore from '../stores/DAOEntityStore';
 import { Button, FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PickerField from './PickerField';
+import { DeviceStore } from '../stores/DAOStores';
 import CheckBoxField from './CheckBoxField';
-import withComponentStores from '../common/withComponentStores';
 import TextField from './TextField';
+import PickerField from '../common/PickerField';
+import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 import { form, FormField } from '../common/form';
 
 const validate = (values: TapMutator): { [key: string]: string } => {
@@ -36,12 +35,9 @@ type Props = {|
   tap?: Tap,
 |};
 
-type InjectedProps = {|
-  devicesStore: DAOEntityStore<Device>,
-|} & FormProps;
+type InjectedProps = FormProps;
 
 @form({ validate })
-@withComponentStores({ devicesStore: new DAOEntityStore(DAOApi.DeviceDAO) })
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
   render() {
@@ -70,17 +66,18 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           label="Description"
         />
         <FormField
-          component={PickerField}
+          component={LoaderPickerField}
           initialValue={tap.device && tap.device.id}
+          itemsLoader={DeviceStore.getMany()}
           disabled={submitting}
           name="deviceId"
           label="Brewskey box"
         >
-          {this.injectedProps.devicesStore.allItems.map(
-            ({ id, name }: Device): React.Node => (
+          {(items: Array<Device>): Array<React.Node> =>
+            items.map(({ id, name }: Device): React.Node => (
               <PickerField.Item key={id} label={name} value={id} />
-            ),
-          )}
+            ))
+          }
         </FormField>
         <FormField
           component={CheckBoxField}

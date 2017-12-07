@@ -13,7 +13,7 @@ import { Button, FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';
 import { form, FormField } from '../../common/form';
 import TextField from '../TextField';
-import PickerField from '../PickerField';
+import PickerField from '../../common/PickerField';
 
 const REQUIRED_FIELDS = [
   'city',
