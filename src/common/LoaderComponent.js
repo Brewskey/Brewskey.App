@@ -38,11 +38,11 @@ class LoaderComponent<TValue> extends React.Component<Props<TValue>> {
     }
 
     if (loader.isUpdating()) {
-      renderUpdating();
+      return renderUpdating();
     }
 
     if (loader.isDeleting()) {
-      renderDeleting();
+      return renderDeleting();
     }
 
     if (loader.hasError()) {

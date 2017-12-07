@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  color?: string,
   activitySize?: 'small' | 'large',
+  color?: string,
   style?: Object,
 |};
 
