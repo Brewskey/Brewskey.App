@@ -1,42 +1,53 @@
 // @flow
 
-import type { EntityID, LoadObject, Tap, TapMutator } from 'brewskey.js-api';
+import type { EntityID, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
+import { TapStore } from '../stores/DAOStores';
 import Container from '../common/Container';
+import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
-  entityLoader: LoadObject<Tap>,
   id: EntityID,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.TapDAO)
-@withLoadingActivity()
+@observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator) => {
     DAOApi.TapDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
+  _renderLoading = (): React.Node => <LoadingIndicator />;
+
+  _renderLoaded = (value: Tap): React.node => (
+    <TapForm
+      onSubmit={this._onFormSubmit}
+      submitButtonLabel="Edit tap"
+      tap={value}
+    />
+  );
+
   render() {
+    const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit tap" />
-        <TapForm
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Edit tap"
-          tap={this.injectedProps.entityLoader.getValueEnforcing()}
+        <LoaderComponent
+          loader={TapStore.getByID(id)}
+          renderLoaded={this._renderLoaded}
+          renderLoading={this._renderLoading}
         />
       </Container>
     );

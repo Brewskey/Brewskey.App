@@ -1,39 +1,50 @@
 // @flow
 
-import type { Device, EntityID, LoadObject } from 'brewskey.js-api';
+import type { Device, EntityID } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import DAOApi from 'brewskey.js-api';
+import { observer } from 'mobx-react';
+import { DeviceStore } from '../stores/DAOStores';
 import { Text } from 'react-native';
 import Container from '../common/Container';
-import loadDAOEntity from '../common/loadDAOEntity';
+import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
-import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type InjectedProps = {|
-  entityLoader: LoadObject<Device>,
   id: EntityID,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.DeviceDAO)
-@withLoadingActivity()
+@observer
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
-  render() {
-    const { entityLoader } = this.injectedProps;
-    const { name, particleId } = entityLoader.getValueEnforcing();
+  _renderLoading = (): React.Node => (
+    <Container>
+      <Header showBackButton />
+      <LoadingIndicator />
+    </Container>
+  );
 
-    // todo prettify and move content to separate component
+  _renderLoaded = (value: Device): React.Node => (
+    <Container>
+      <Header showBackButton title={value.name} />
+      <Text>{value.name}</Text>
+      <Text>{value.particleId}</Text>
+    </Container>
+  );
+
+  render() {
+    const { id } = this.injectedProps;
     return (
-      <Container>
-        <Header showBackButton title={name} />
-        <Text>{name}</Text>
-        <Text>{particleId}</Text>
-      </Container>
+      <LoaderComponent
+        loader={DeviceStore.getByID(id)}
+        renderLoading={this._renderLoading}
+        renderLoaded={this._renderLoaded}
+      />
     );
   }
 }
