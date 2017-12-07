@@ -1,17 +1,20 @@
 // @flow
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import { Picker, StyleSheet, View } from 'react-native';
+import LoadingPicker from './LoadingPicker';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';
 
 // todo
 // we cant change fontSize of react-native Picker etc from the styles
 // for android, have to use native theme and code
-// placeholder is also just a stub for now
 const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+  },
   picker: {
-    marginLeft: 11,
-    marginRight: 11,
+    marginHorizontal: 11,
   },
   // eslint-disable-next-line react-native/no-color-literals
   underline: {
@@ -22,9 +25,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+export type Props = {
   children?: React.Node,
   error?: ?string,
+  isLoading?: boolean,
   label?: string,
   onBlur?: () => void,
   onChange: (value: any) => void,
@@ -33,6 +37,7 @@ type Props = {
   // other react-native Picker props
 };
 
+@observer
 class PickerField extends React.Component<Props> {
   static defaultProps = {
     placeholder: 'Please select...',
@@ -58,6 +63,7 @@ class PickerField extends React.Component<Props> {
     const {
       children,
       error,
+      isLoading,
       label,
       onBlur,
       onChange,
@@ -66,30 +72,30 @@ class PickerField extends React.Component<Props> {
       ...props
     } = this.props;
 
-    if (!children) {
-      return null;
-    }
-
     return (
-      <View>
+      <View style={styles.container}>
         <FormLabel>{label}</FormLabel>
-        <Picker
-          style={styles.picker}
-          {...props}
-          onValueChange={this._onPickerValueChange}
-          selectedValue={value}
-        >
-          {[
-            !placeholder ? null : (
-              <Picker.Item
-                key="placeholder"
-                label={placeholder}
-                value={undefined}
-              />
-            ),
-            ...React.Children.toArray(children),
-          ].filter(Boolean)}
-        </Picker>
+        {isLoading ? (
+          <LoadingPicker />
+        ) : (
+          <Picker
+            style={styles.picker}
+            {...props}
+            onValueChange={this._onPickerValueChange}
+            selectedValue={value}
+          >
+            {[
+              !placeholder ? null : (
+                <Picker.Item
+                  key="placeholder"
+                  label={placeholder}
+                  value={undefined}
+                />
+              ),
+              ...React.Children.toArray(children),
+            ].filter(Boolean)}
+          </Picker>
+        )}
         <View style={styles.underline} />
         <FormValidationMessage>{error}</FormValidationMessage>
       </View>
