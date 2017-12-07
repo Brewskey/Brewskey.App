@@ -6,13 +6,13 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import DAOApi from 'brewskey.js-api';
+import { LocationStore } from '../stores/DAOStores';
 import { Text } from 'react-native';
-import Container from '../common/Container';
-import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
+import Container from '../common/Container';
+import LoadingIndicator from '../common/LoadingIndicator';
+import LoaderComponent from '../common/LoaderComponent';
+import Header from '../common/Header';
 
 type InjectedProps = {|
   id: EntityID,
@@ -21,21 +21,30 @@ type InjectedProps = {|
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.LocationDAO)
-@withLoadingActivity()
 @observer
 class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
-  render() {
-    const { entityLoader } = this.injectedProps;
-    const { description, name } = entityLoader.getValueEnforcing();
+  _renderLoading = (): React.Node => (
+    <Container>
+      <Header showBackButton />
+      <LoadingIndicator />
+    </Container>
+  );
 
-    // todo prettify and move content to separate component
+  _renderLoaded = (value: Location): React.Node => (
+    <Container>
+      <Header showBackButton title={value.name} />
+      <Text>{value.name}</Text>
+    </Container>
+  );
+
+  render() {
+    const { id } = this.injectedProps;
     return (
-      <Container>
-        <Header showBackButton title={name} />
-        <Text>{name}</Text>
-        <Text>{description}</Text>
-      </Container>
+      <LoaderComponent
+        loader={LocationStore.getByID(id)}
+        renderLoading={this._renderLoading}
+        renderLoaded={this._renderLoaded}
+      />
     );
   }
 }
