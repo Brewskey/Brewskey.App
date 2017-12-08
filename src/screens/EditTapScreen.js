@@ -31,7 +31,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
 
   _renderLoading = (): React.Node => <LoadingIndicator />;
 
-  _renderLoaded = (value: Tap): React.node => (
+  _renderLoaded = (value: Tap): React.Node => (
     <TapForm
       onSubmit={this._onFormSubmit}
       submitButtonLabel="Edit tap"
