@@ -9,7 +9,6 @@ import type {
   EntityID,
   Glass,
   Keg,
-  LoadObject,
   Location,
   Organization,
   Permission,
@@ -22,8 +21,42 @@ import type {
   Tap,
 } from 'brewskey.js-api';
 
-import DAOApi from 'brewskey.js-api';
-import { Atom } from 'mobx';
+import DAOApi, { LoadObject } from 'brewskey.js-api';
+import { Atom, autorun } from 'mobx';
+
+export const waitForLoaded = <TValue>(
+  getLoader: () => LoadObject<TValue>,
+): Promise<TValue> =>
+  new Promise((resolve: TValue => void, reject: (error: Error) => void) => {
+    autorun(reaction => {
+      const loader = getLoader().map((result: $FlowFixMe): $FlowFixMe => {
+        if (!Array.isArray(result)) {
+          return result;
+        }
+
+        if (
+          result.some(
+            (item: $FlowFixMe): boolean =>
+              item instanceof LoadObject ? item.isLoading() : false,
+          )
+        ) {
+          return LoadObject.loading();
+        }
+
+        return result;
+      });
+
+      if (loader.hasError()) {
+        reject(loader.getErrorEnforcing());
+        reaction.dispose();
+      }
+
+      if (loader.hasValue()) {
+        resolve(loader.getValueEnforcing());
+        reaction.dispose();
+      }
+    });
+  });
 
 class DAOStore<TEntity: { id: EntityID }> {
   _atom: Atom;

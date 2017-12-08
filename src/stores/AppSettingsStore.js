@@ -5,8 +5,7 @@ import type { EntityID } from 'brewskey.js-api';
 import { AsyncStorage } from 'react-native';
 import { action, computed, observable, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
-
-const { OrganizationDAO } = DAOApi;
+import { OrganizationStore, waitForLoaded } from './DAOStores';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
@@ -42,8 +41,8 @@ class AppSettingsStore {
         DAOApi.setOrganizationID(appSettings.selectedOrganizationID);
       } else if (this._appSettings.selectedOrganizationID === undefined) {
         (async () => {
-          const organizations = await OrganizationDAO.waitForLoaded(() =>
-            OrganizationDAO.fetchMany(),
+          const organizations = await waitForLoaded(() =>
+            OrganizationStore.getMany(),
           );
 
           if (organizations.length) {

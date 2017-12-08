@@ -5,31 +5,34 @@ import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { List, ListItem } from 'react-native-elements';
-import withComponentStores from '../common/withComponentStores';
+import { OrganizationStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import DAOApi from 'brewskey.js-api';
 import AppSettingsStore from '../stores/AppSettingsStore';
-import DAOEntityStore from '../stores/DAOEntityStore';
+import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 
 import PickerField from '../common/PickerField';
 
 type InjectedProps = {|
   navigation: Navigation,
-  organizationStore: DAOEntityStore<Organization>,
 |};
 
-@withComponentStores({
-  organizationStore: new DAOEntityStore(DAOApi.OrganizationDAO),
-})
 @observer
 class SettingsScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _hasOrganizations(): boolean {
+    const organizationsLoader = OrganizationStore.getMany();
+    return (
+      organizationsLoader.hasValue() &&
+      organizationsLoader.getValueEnforcing().length > 0
+    );
+  }
+
   render() {
-    const { organizationStore } = this.injectedProps;
-    const organizations = organizationStore.allItems;
     const {
       isManageTapsEnabled,
       isMultiAccountModeEnabled,
@@ -42,24 +45,22 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header title="Settings" />
-        {organizations.length < 1 ? null : (
-          <PickerField
-            key="organization"
-            label="Selected Organization"
-            name="organization"
-            onChange={onOrganizationChange}
-            placeholder="None"
-            value={selectedOrganizationID}
-          >
-            {organizations.map((organization: Organization): React.Node => (
-              <PickerField.Item
-                key={organization.id}
-                label={`${organization.id} - ${organization.name}`}
-                value={organization.id}
-              />
-            ))}
-          </PickerField>
-        )}
+        <LoaderPickerField
+          enabled={this._hasOrganizations}
+          itemsLoader={OrganizationStore.getMany()}
+          key="organization"
+          label="Selected Organization"
+          name="organization"
+          onChange={onOrganizationChange}
+          placeholder="None"
+          value={selectedOrganizationID}
+        >
+          {(items: Array<Organization>): Array<React.Node> =>
+            items.map(({ id, name }: Organization): React.Node => (
+              <PickerField.Item key={id} label={`${id} - ${name}`} value={id} />
+            ))
+          }
+        </LoaderPickerField>
         <List>
           <KeyboardAwareScrollView>
             <ListItem
