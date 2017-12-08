@@ -1,11 +1,12 @@
 // @flow
 
-import type { Beverage, BeverageMutator, LoadObject } from 'brewskey.js-api';
+import type { BeverageMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
@@ -18,9 +19,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.BeverageDAO.post(values);
-    const { id } = await DAOApi.BeverageDAO.waitForLoaded((): LoadObject<
-      Beverage,
-    > => DAOApi.BeverageDAO.fetchByID(clientID));
+    const { id } = await waitForLoaded(() => BeverageStore.getByID(clientID));
     // todo figure out how to replace page instead adding to stack history
     // the navigation object injected in the component
     // doesn't have reset function.
