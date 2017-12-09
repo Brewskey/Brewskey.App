@@ -22,31 +22,37 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
-  _renderLoading = (): React.Node => (
-    <Container>
-      <Header showBackButton />
-      <LoadingIndicator />
-    </Container>
-  );
-
-  _renderLoaded = (value: Device): React.Node => (
-    <Container>
-      <Header showBackButton title={value.name} />
-      <Text>{value.name}</Text>
-      <Text>{value.particleId}</Text>
-    </Container>
-  );
-
   render() {
     const { id } = this.injectedProps;
     return (
       <LoaderComponent
+        loadedComponent={LoadedComponent}
         loader={DeviceStore.getByID(id)}
-        renderLoading={this._renderLoading}
-        renderLoaded={this._renderLoaded}
+        loadingComponent={LoadingComponent}
       />
     );
   }
 }
+
+const LoadingComponent = () => (
+  <Container>
+    <Header showBackButton />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedComponentProps = {
+  value: Device,
+};
+
+const LoadedComponent = ({
+  value: { name, particleId },
+}: LoadedComponentProps) => (
+  <Container>
+    <Header showBackButton title={name} />
+    <Text>{name}</Text>
+    <Text>{particleId}</Text>
+  </Container>
+);
 
 export default DeviceDetailsScreen;

@@ -10,7 +10,6 @@ import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
-import LoadingIndicator from '../common/LoadingIndicator';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -29,29 +28,32 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  _renderLoading = (): React.Node => <LoadingIndicator />;
-
-  _renderLoaded = (value: Beverage): React.Node => (
-    <BeverageForm
-      beverage={value}
-      onSubmit={this._onFormSubmit}
-      submitButtonLabel="Edit beverage"
-    />
-  );
-
   render() {
     const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />
         <LoaderComponent
+          loadedComponent={LoadedComponent}
           loader={BeverageStore.getByID(id)}
-          renderLoaded={this._renderLoaded}
-          renderLoading={this._renderLoading}
+          onFormSubmit={this._onFormSubmit}
         />
       </Container>
     );
   }
 }
+
+type LoadedComponentProps = () => {
+  onFormSubmit: (values: BeverageMutator) => void,
+  value: Beverage,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <BeverageForm
+    beverage={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit beverage"
+  />
+);
 
 export default EditBeverageScreen;

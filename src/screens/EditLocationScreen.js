@@ -12,7 +12,6 @@ import { LocationStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LoaderComponent from '../common/LoaderComponent';
-import LoadingIndicator from '../common/LoadingIndicator';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LocationForm from '../components/LocationForm';
 
@@ -29,29 +28,32 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
-  _renderLoading = (): React.Node => <LoadingIndicator />;
-
-  _renderLoaded = (value: Location): React.Node => (
-    <LocationForm
-      location={value}
-      onSubmit={this._onFormSubmit}
-      submitButtonLabel="Edit location"
-    />
-  );
-
   render() {
     const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit location" />
         <LoaderComponent
+          loadedComponent={LoadedComponent}
           loader={LocationStore.getByID(id)}
-          renderLoaded={this._renderLoaded}
-          renderLoading={this._renderLoading}
+          onFormSubmit={this._onFormSubmit}
         />
       </Container>
     );
   }
 }
+
+type LoadedComponentProps = {
+  onFormSubmit: (values: LocationMutator) => void,
+  value: Location,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <LocationForm
+    location={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit location"
+  />
+);
 
 export default EditLocationScreen;

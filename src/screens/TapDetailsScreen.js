@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID, LoadObject, Tap } from 'brewskey.js-api';
+import type { EntityID, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -17,37 +17,41 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 type InjectedProps = {|
   id: EntityID,
   navigation: Navigation,
-  entityLoader: LoadObject<Tap>,
 |};
 
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsScreen extends InjectedComponent<InjectedProps> {
-  _renderLoading = (): React.Node => (
-    <Container>
-      <Header showBackButton />
-      <LoadingIndicator />
-    </Container>
-  );
-
-  _renderLoaded = (value: Tap): React.Node => (
-    <Container>
-      <Header showBackButton title={value.name} />
-      <Text>{value.name}</Text>
-      <Text>{value.description}</Text>
-    </Container>
-  );
-
   render() {
     const { id } = this.injectedProps;
     return (
       <LoaderComponent
+        loadedComponent={LoadedComponent}
         loader={TapStore.getByID(id)}
-        renderLoading={this._renderLoading}
-        renderLoaded={this._renderLoaded}
+        loadingComponent={LoadingComponent}
       />
     );
   }
 }
 
+const LoadingComponent = () => (
+  <Container>
+    <Header showBackButton />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedComponentProps = {
+  value: Tap,
+};
+
+const LoadedComponent = ({
+  value: { description, name },
+}: LoadedComponentProps) => (
+  <Container>
+    <Header showBackButton title={name} />
+    <Text>{name}</Text>
+    <Text>{description}</Text>
+  </Container>
+);
 export default TapDetailsScreen;
