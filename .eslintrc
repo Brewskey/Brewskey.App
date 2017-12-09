@@ -27,6 +27,7 @@
     "import/first": 0,
     "no-return-assign": 0,
     "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
     "react-native/no-color-literals": 0,
     "react/default-props-match-prop-types": 0,
     "react/display-name": 0,

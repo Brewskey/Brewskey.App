@@ -11,7 +11,6 @@ import DAOApi from 'brewskey.js-api';
 import { TapStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import LoaderComponent from '../common/LoaderComponent';
-import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
@@ -24,20 +23,10 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = async (values: TapMutator) => {
+  _onFormSubmit = async (values: TapMutator): Promise<void> => {
     DAOApi.TapDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
-
-  _renderLoading = (): React.Node => <LoadingIndicator />;
-
-  _renderLoaded = (value: Tap): React.Node => (
-    <TapForm
-      onSubmit={this._onFormSubmit}
-      submitButtonLabel="Edit tap"
-      tap={value}
-    />
-  );
 
   render() {
     const { id } = this.injectedProps;
@@ -45,13 +34,22 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
       <Container>
         <Header showBackButton title="Edit tap" />
         <LoaderComponent
+          loadedComponent={LoadedComponent}
           loader={TapStore.getByID(id)}
-          renderLoaded={this._renderLoaded}
-          renderLoading={this._renderLoading}
+          onFormSubmit={this._onFormSubmit}
         />
       </Container>
     );
   }
 }
+
+type LoadedComponentProps = {
+  onFormSubmit: (values: TapMutator) => Promise<void>,
+  value: Tap,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <TapForm onSubmit={onFormSubmit} submitButtonLabel="Edit tap" tap={value} />
+);
 
 export default EditTapScreen;

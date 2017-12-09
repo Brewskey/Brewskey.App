@@ -5,52 +5,49 @@ import type { LoadObject } from 'brewskey.js-api';
 import * as React from 'react';
 import LoadingIndicator from './LoadingIndicator';
 
-type Props<TValue> = {|
+type Props<TValue, TExtraProps = {}> = {
+  ...TExtraProps,
+  deletingComponent: React.ComponentType<TExtraProps>,
+  errorComponent: React.ComponentType<{ ...TExtraProps, error: Error }>,
+  loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
   loader: LoadObject<TValue>,
-  renderDeleting: () => React.Node,
-  renderError: (error: Error) => React.Node,
-  renderLoaded: (value: TValue) => React.Node,
-  renderLoading: () => React.Node,
-  renderUpdating: () => React.Node,
-|};
+  loadingComponent: React.ComponentType<TExtraProps>,
+  updatingComponent: React.ComponentType<TExtraProps>,
+};
 
-class LoaderComponent<TValue> extends React.Component<Props<TValue>> {
-  static defaultProps = {
-    renderDeleting: () => null,
-    renderError: () => null,
-    renderLoaded: () => null,
-    renderLoading: () => <LoadingIndicator />,
-    renderUpdating: () => null,
-  };
-
-  render() {
-    const {
-      loader,
-      renderDeleting,
-      renderError,
-      renderLoaded,
-      renderLoading,
-      renderUpdating,
-    } = this.props;
-
-    if (loader.isLoading()) {
-      return renderLoading();
-    }
-
-    if (loader.isUpdating()) {
-      return renderUpdating();
-    }
-
-    if (loader.isDeleting()) {
-      return renderDeleting();
-    }
-
-    if (loader.hasError()) {
-      return renderError(loader.getErrorEnforcing());
-    }
-
-    return renderLoaded(loader.getValueEnforcing());
+const LoaderComponent = <TValue, TExtraProps>({
+  deletingComponent: DeletingComponent,
+  errorComponent: ErrorComponent,
+  loadedComponent: LoadedComponent,
+  loader,
+  loadingComponent: LoadingComponent,
+  updatingComponent: UpdatingComponent,
+  ...rest
+}: Props<TValue, TExtraProps>): React.Node => {
+  if (loader.isLoading()) {
+    return <LoadingComponent {...rest} />;
   }
-}
+
+  if (loader.isUpdating()) {
+    return <UpdatingComponent {...rest} />;
+  }
+
+  if (loader.isDeleting()) {
+    return <DeletingComponent {...rest} />;
+  }
+
+  if (loader.hasError()) {
+    return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
+  }
+
+  return <LoadedComponent {...rest} value={loader.getValueEnforcing()} />;
+};
+
+LoaderComponent.defaultProps = {
+  deletingComponent: () => null,
+  errorComponent: () => null,
+  loadingComponent: LoadingIndicator,
+  updatingComponent: () => null,
+};
 
 export default LoaderComponent;

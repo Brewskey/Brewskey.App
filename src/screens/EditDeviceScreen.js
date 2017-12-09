@@ -10,7 +10,6 @@ import { DeviceStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
 import LoaderComponent from '../common/LoaderComponent';
-import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
 import nullthrows from 'nullthrows';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -24,16 +23,10 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 @observer
 class EditDeviceScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = async (values: DeviceMutator) => {
+  _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
-
-  _renderLoading = (): React.Node => <LoadingIndicator />;
-
-  _renderLoaded = (value: Device): React.Node => (
-    <EditDeviceForm device={value} onSubmit={this._onFormSubmit} />
-  );
 
   render() {
     const { id } = this.injectedProps;
@@ -41,13 +34,22 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
         <LoaderComponent
+          loadedComponent={LoadedComponent}
           loader={DeviceStore.getByID(id)}
-          renderLoaded={this._renderLoaded}
-          renderLoading={this._renderLoading}
+          onFormSubmit={this._onFormSubmit}
         />
       </Container>
     );
   }
 }
+
+type LoadedComponentProps = {
+  onFormSubmit: (values: DeviceMutator) => Promise<void>,
+  value: Device,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <EditDeviceForm device={value} onSubmit={onFormSubmit} />
+);
 
 export default EditDeviceScreen;

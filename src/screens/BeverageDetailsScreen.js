@@ -22,31 +22,37 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
-  _renderLoading = (): React.Node => (
-    <Container>
-      <Header showBackButton />
-      <LoadingIndicator />
-    </Container>
-  );
-
-  _renderLoaded = (value: Beverage): React.Node => (
-    <Container>
-      <Header showBackButton title={value.name} />
-      <Text>{value.name}</Text>
-      <Text>{value.description}</Text>
-    </Container>
-  );
-
   render() {
     const { id } = this.injectedProps;
     return (
       <LoaderComponent
+        loadedComponent={LoadedComponent}
         loader={BeverageStore.getByID(id)}
-        renderLoading={this._renderLoading}
-        renderLoaded={this._renderLoaded}
+        loadingComponent={LoadingComponent}
       />
     );
   }
 }
+
+const LoadingComponent = () => (
+  <Container>
+    <Header showBackButton />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedComponentProps = {
+  value: Beverage,
+};
+
+const LoadedComponent = ({
+  value: { description, name },
+}: LoadedComponentProps) => (
+  <Container>
+    <Header showBackButton title={name} />
+    <Text>{name}</Text>
+    <Text>{description}</Text>
+  </Container>
+);
 
 export default BeverageDetailsScreen;
