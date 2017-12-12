@@ -27,7 +27,10 @@ const getCoordinatesFromGeoResponse = ({
 
 class GoogleApi extends BaseApi {
   getCoordinates = (address: string): LoadObject<Coordinates> => {
-    const cacheKey = this.__getCacheKey('getGoogleCoordinates', address);
+    const cacheKey = this.__getCacheKey(
+      'getGoogleCoordinates',
+      address.toLowerCase().trim(),
+    );
     return this.__getRequestLoader(
       { cacheKey, transformResponse: getCoordinatesFromGeoResponse },
       fetchJSON,

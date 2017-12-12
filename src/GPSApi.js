@@ -15,11 +15,8 @@ export const getGPSPosition = (): Promise<Position> =>
   );
 
 class GPSApi extends BaseApi {
-  getCoordinates = (): LoadObject<Coordinates> => {
-    const cacheKey = this.__getCacheKey('getGPSCoordinates');
-    return this.__getRequestLoader(
+  getCoordinates = (): LoadObject<Coordinates> => this.__getRequestLoader(
       {
-        cacheKey,
         transformResponse: (position: Position): Coordinates => ({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -27,7 +24,6 @@ class GPSApi extends BaseApi {
       },
       getGPSPosition,
     );
-  };
 }
 
 export default new GPSApi();

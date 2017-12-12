@@ -4,10 +4,10 @@ import type { ObservableMap } from 'mobx';
 
 import nullthrows from 'nullthrows';
 import { LoadObject } from 'brewskey.js-api';
-import { observable, runInAction } from 'mobx';
+import { Atom, observable, runInAction } from 'mobx';
 
 type RequestOptions<TResult> = {|
-  cacheKey: string,
+  cacheKey?: string,
   transformResponse?: (response: Any) => TResult,
 |};
 
@@ -24,7 +24,9 @@ export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
 };
 
 class BaseApi {
-  @observable __requestLoaderByKey: ObservableMap<LoadObject<any>> = new Map();
+  static _nonCachableRequestID = 0;
+  __requestLoaderByKey: ObservableMap<LoadObject<any>> = new Map();
+  @observable _atomByKey: ObservableMap<Atom> = new Map();
 
   flushCache = () => {
     this.__requestLoaderByKey.clear();
@@ -32,14 +34,32 @@ class BaseApi {
 
   __getRequestLoader = <TResult>(
     {
-      cacheKey,
+      cacheKey: providedCacheKey,
       transformResponse = (result: any): TResult => result,
     }: RequestOptions,
     requestFn: (args: Array<any>) => Promise<any>,
     ...requestArgs
   ): LoadObject<TResult> => {
+    const isRequestCachable = !!providedCacheKey;
+    const cacheKey = isRequestCachable
+      ? providedCacheKey
+      : this._getNextNonCachableKey();
+
     if (!this.__requestLoaderByKey.has(cacheKey)) {
+      const atom = new Atom(
+        cacheKey,
+        () => {},
+        !isRequestCachable
+          ? () => {
+              this.__requestLoaderByKey.delete(cacheKey);
+              this._atomByKey.delete(cacheKey);
+            }
+          : () => {},
+      );
+
+      this._atomByKey.set(cacheKey, atom);
       this.__requestLoaderByKey.set(cacheKey, LoadObject.loading());
+      atom.reportChanged();
 
       requestFn(...requestArgs)
         .then(transformResponse)
@@ -49,6 +69,7 @@ class BaseApi {
               cacheKey,
               LoadObject.withValue(result),
             );
+            atom.reportChanged();
           });
         })
         .catch((error: Error) => {
@@ -57,15 +78,25 @@ class BaseApi {
               cacheKey,
               LoadObject.withError(error),
             );
+            atom.reportChanged();
           });
         });
     }
 
-    return nullthrows(this.__requestLoaderByKey.get(cacheKey));
+    if (nullthrows(this._atomByKey.get(cacheKey)).reportObserved()) {
+      return nullthrows(this.__requestLoaderByKey.get(cacheKey));
+    }
+
+    throw new Error(`Observable computation is called out of observer context`);
   };
 
   __getCacheKey = (requestName: string, ...args: Array<any>): string =>
     requestName + JSON.stringify(args);
+
+  _getNextNonCachableKey = (): string => {
+    this._nonCachableRequestID += 1;
+    return `NON_CACHABLE_KEY_${this._nonCachableRequestID.toString()}`;
+  };
 }
 
 export default BaseApi;
