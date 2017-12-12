@@ -2,10 +2,9 @@
 
 import type { Coordinates, NearbyLocation } from './types';
 
-import nullthrows from 'nullthrows';
 import { LoadObject } from 'brewskey.js-api';
 import AuthStore from './stores/AuthStore';
-import BaseApi, { doRequest } from './BaseApi';
+import BaseApi, { fetchJSON } from './BaseApi';
 import CONFIG from './config';
 
 const deepIdCast = (node: any): any => {
@@ -23,45 +22,30 @@ const deepIdCast = (node: any): any => {
 
 class CommonApi extends BaseApi {
   fetchNearbyLocations = (
-    coordiantes: Coordinates,
+    coordinates: Coordinates,
     radius?: number = 15000,
   ): LoadObject<Array<NearbyLocation>> => {
     const cacheKey = this.__getCacheKey(
       'fetchNearbyLocations',
-      coordiantes,
+      coordinates,
       radius,
     );
 
-    if (!this.__requestLoaderByKey.has(cacheKey)) {
-      this.__requestLoaderByKey.set(cacheKey, LoadObject.loading());
-      this.__emitChanges();
+    const { latitude, longitude } = coordinates;
 
-      const { latitude, longitude } = coordiantes;
-      doRequest(
-        `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
-          longitude
-        }&latitude=${latitude}&radius=${radius}
-    `,
-        {
-          headers: {
-            Authorization: `Bearer ${AuthStore.token || ''}`,
-          },
+    return this.__getRequestLoader(
+      { cacheKey, transformResponse: deepIdCast },
+      fetchJSON,
+      `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
+        longitude
+      }&latitude=${latitude}&radius=${radius}
+      `,
+      {
+        headers: {
+          Authorization: `Bearer ${AuthStore.token || ''}`,
         },
-      )
-        .then((result: Array<Object>) => {
-          this.__requestLoaderByKey.set(
-            cacheKey,
-            LoadObject.withValue(deepIdCast(result)),
-          );
-          this.__emitChanges();
-        })
-        .catch((error: Error) => {
-          this.__requestLoaderByKey.set(cacheKey, LoadObject.withError(error));
-          this.__emitChanges();
-        });
-    }
-
-    return nullthrows(this.__requestLoaderByKey.get(cacheKey));
+      },
+    );
   };
 
   updateAvatar = (avatarData: string): Promise<void> =>
