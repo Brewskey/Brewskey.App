@@ -2,6 +2,7 @@
 
 import type { Coordinates, NearbyLocation } from '../types';
 
+import DAOApi from 'brewskey.js-api';
 import makeApiRequestStore, {
   deepIdCast,
   fetchJSON,
@@ -9,23 +10,31 @@ import makeApiRequestStore, {
 import AuthStore from '../AuthStore';
 import CONFIG from '../../config';
 
-export const NearbyLocationsStore = makeApiRequestStore(
-  (
-    { latitude, longitude }: Coordinates,
-    radius: ?number = 15000,
-  ): Promise<Array<NearbyLocation>> =>
-    fetchJSON(
-      `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
-        longitude
-      }&latitude=${latitude}&radius=${radius}
+const makeNearbyLocationsStore = () => {
+  const store = makeApiRequestStore(
+    (
+      { latitude, longitude }: Coordinates,
+      radius: ?number = 15000,
+    ): Promise<Array<NearbyLocation>> =>
+      fetchJSON(
+        `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
+          longitude
+        }&latitude=${latitude}&radius=${radius}
       `,
-      {
-        headers: {
-          Authorization: `Bearer ${AuthStore.token || ''}`,
+        {
+          headers: {
+            Authorization: `Bearer ${AuthStore.token || ''}`,
+          },
         },
-      },
-    ).then(deepIdCast),
-);
+      ).then(deepIdCast),
+  );
+
+  DAOApi.LocationDAO.subscribe(store.flushCache);
+
+  return store;
+};
+
+export const NearbyLocationsStore = makeNearbyLocationsStore();
 
 export const UpdateAvatarStore = makeApiRequestStore(
   (avatarData: string): Promise<void> =>
