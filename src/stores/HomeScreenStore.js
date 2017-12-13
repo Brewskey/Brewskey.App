@@ -5,9 +5,9 @@ import type { Coordinates } from '../types';
 import { action, computed, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 import debounce from 'lodash.debounce';
-import GoogleApi from '../GoogleApi';
-import GPSApi from '../GPSApi';
-import CommonApi from '../CommonApi';
+import { GPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
+import { GoogleCoordinatesStore } from '../stores/ApiRequestStores/GoogleApiStores';
+import { NearbyLocationsStore } from '../stores/ApiRequestStores/CommonApiStores';
 
 const SEARCH_TEXT_DEBOUNCE_TIMEOUT = 1000;
 
@@ -25,6 +25,7 @@ class HomeScreenStore {
   @action
   toggleSearchBar = () => {
     this.isSearchBarVisible = !this.isSearchBarVisible;
+    GPSCoordinatesStore.flushCache();
   };
 
   @computed
@@ -49,17 +50,17 @@ class HomeScreenStore {
         return LoadObject.empty();
       }
 
-      return GoogleApi.getCoordinates(this._debouncedSearchText);
+      return GoogleCoordinatesStore.get(this._debouncedSearchText);
     }
 
-    return GPSApi.getCoordinates();
+    return GPSCoordinatesStore.get();
   }
 
   @computed
   get _nearbyLocationsLoader(): LoadObject<Array<LoadObject<NearbyLocation>>> {
-    return this._coordinatesLoader.map((coordinates: CommonApi): Array<
+    return this._coordinatesLoader.map((coordinates: Coordinates): Array<
       LoadObject<NearbyLocation>,
-    > => CommonApi.fetchNearbyLocations(coordinates));
+    > => NearbyLocationsStore.get(coordinates));
   }
 
   _setDebouncedSearchText = debounce(
