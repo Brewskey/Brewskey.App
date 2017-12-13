@@ -1,6 +1,6 @@
 // @flow
 
-import type { Coordinates } from '../types';
+import type { Coordinates } from '../../types';
 import makeRequestApiStore from './makeRequestApiStore';
 
 const getGPSPosition = (): Promise<Position> =>

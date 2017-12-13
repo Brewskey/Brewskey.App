@@ -1,6 +1,6 @@
 // @flow
 
-import type { Coordinates, NearbyLocation } from '../types';
+import type { Coordinates, NearbyLocation } from '../../types';
 
 import DAOApi from 'brewskey.js-api';
 import makeApiRequestStore, {
@@ -14,7 +14,7 @@ const makeNearbyLocationsStore = () => {
   const store = makeApiRequestStore(
     (
       { latitude, longitude }: Coordinates,
-      radius: ?number = 15000,
+      radius?: number = 15000,
     ): Promise<Array<NearbyLocation>> =>
       fetchJSON(
         `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
@@ -29,6 +29,8 @@ const makeNearbyLocationsStore = () => {
       ).then(deepIdCast),
   );
 
+  // todo very heavy subscription. fix this after we implement returning
+  // event types for subscribe callbacks.
   DAOApi.LocationDAO.subscribe(store.flushCache);
 
   return store;

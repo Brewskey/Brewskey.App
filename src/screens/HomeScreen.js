@@ -13,7 +13,6 @@ import HomeScreenStore from '../stores/HomeScreenStore';
 import NearbyLocationsList from '../components/NearbyLocationsList';
 
 type InjectedProps = {|
-  homeScreenStore: HomeScreenStore,
   navigation: Navigation,
 |};
 

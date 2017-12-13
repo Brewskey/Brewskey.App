@@ -1,6 +1,6 @@
 // @flow
 
-import type { Coordinates } from '../types';
+import type { Coordinates, NearbyLocation } from '../types';
 
 import { action, computed, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
@@ -29,7 +29,7 @@ class HomeScreenStore {
   };
 
   @computed
-  get isLoading(): Boolean {
+  get isLoading(): boolean {
     return (
       this._coordinatesLoader.isLoading() ||
       this._nearbyLocationsLoader.isLoading()
@@ -37,7 +37,7 @@ class HomeScreenStore {
   }
 
   @computed
-  get nearbyLocations(): Array<LoadObject<NearbyLocation>> {
+  get nearbyLocations(): Array<NearbyLocation> {
     return this._nearbyLocationsLoader.hasValue()
       ? this._nearbyLocationsLoader.getValueEnforcing()
       : [];
@@ -57,9 +57,9 @@ class HomeScreenStore {
   }
 
   @computed
-  get _nearbyLocationsLoader(): LoadObject<Array<LoadObject<NearbyLocation>>> {
-    return this._coordinatesLoader.map((coordinates: Coordinates): Array<
-      LoadObject<NearbyLocation>,
+  get _nearbyLocationsLoader(): LoadObject<Array<NearbyLocation>> {
+    return this._coordinatesLoader.map((coordinates: Coordinates): LoadObject<
+      Array<NearbyLocation>,
     > => NearbyLocationsStore.get(coordinates));
   }
 

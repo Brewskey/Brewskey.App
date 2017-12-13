@@ -1,5 +1,7 @@
 // @flow
 
+import type { Coordinates } from '../../types';
+
 import makeRequestApiStore, { fetchJSON } from './makeRequestApiStore';
 
 // todo move to secure please when it will be real key
