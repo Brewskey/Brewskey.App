@@ -8,7 +8,8 @@ import ImagePicker from 'react-native-image-picker';
 import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore';
 import UserAvatar from '../common/avatars/UserAvatar';
-import CommonApi from '../CommonApi';
+import { UpdateAvatarStore } from '../stores/ApiRequestStores/CommonApiStores';
+import { waitForLoaded } from '../stores/DAOStores';
 
 const IMAGE_PICKER_OPTIONS = {
   title: 'SelectAvatar',
@@ -26,7 +27,7 @@ class AvatarPicker extends React.Component<{}> {
           return;
         }
 
-        await CommonApi.updateAvatar(data);
+        await waitForLoaded(() => UpdateAvatarStore.get(data));
         nullthrows(this._cachedImageRef).flushCache();
       },
     );
