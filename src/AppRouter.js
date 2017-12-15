@@ -14,6 +14,7 @@ import DeviceDetailsScreen from './screens/DeviceDetailsScreen';
 import DevicesScreen from './screens/DevicesScreen';
 import EditBeverageScreen from './screens/EditBeverageScreen';
 import EditDeviceScreen from './screens/EditDeviceScreen';
+import EditFlowSensorScreen from './screens/EditFlowSensorScreen';
 import EditLocationScreen from './screens/EditLocationScreen';
 import EditTapScreen from './screens/EditTapScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -22,6 +23,7 @@ import LocationsScreen from './screens/LocationsScreen';
 import MyBeveragesScreen from './screens/MyBeveragesScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
+import NewFlowSensorScreen from './screens/NewFlowSensorScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -89,9 +91,11 @@ class AppRouter extends React.Component<Props> {
                 screen: StackNavigator(
                   {
                     taps: { screen: TapsScreen },
+                    editFlowSensor: { screen: EditFlowSensorScreen },
                     editTap: { screen: EditTapScreen },
-                    tapDetails: { screen: TapDetailsScreen },
+                    newFlowSensor: { screen: NewFlowSensorScreen },
                     newTap: { screen: NewTapScreen },
+                    tapDetails: { screen: TapDetailsScreen },
                   },
                   {
                     gesturesEnabled: false,
