@@ -7,6 +7,7 @@ import type {
   DAO,
   Device,
   EntityID,
+  FlowSensor,
   Glass,
   Keg,
   Location,
@@ -26,9 +27,18 @@ import { Atom, autorun } from 'mobx';
 
 export const waitForLoaded = <TValue>(
   getLoader: () => LoadObject<TValue>,
+  timeout?: number = 10000,
 ): Promise<TValue> =>
   new Promise((resolve: TValue => void, reject: (error: Error) => void) => {
+    let timeoutId = null;
     autorun(reaction => {
+      if (!timeoutId) {
+        timeoutId = setTimeout(() => {
+          reject(new Error('Response timeout!'));
+          reaction.dispose();
+        }, timeout);
+      }
+
       const loader = getLoader().map((result: $FlowFixMe): $FlowFixMe => {
         if (!Array.isArray(result)) {
           return result;
@@ -37,7 +47,9 @@ export const waitForLoaded = <TValue>(
         if (
           result.some(
             (item: $FlowFixMe): boolean =>
-              item instanceof LoadObject ? item.isLoading() : false,
+              item instanceof LoadObject
+                ? item.isLoading() || item.isUpdating()
+                : false,
           )
         ) {
           return LoadObject.loading();
@@ -46,14 +58,20 @@ export const waitForLoaded = <TValue>(
         return result;
       });
 
+      if (loader.isUpdating()) {
+        return;
+      }
+
       if (loader.hasError()) {
         reject(loader.getErrorEnforcing());
         reaction.dispose();
+        clearTimeout(timeoutId);
       }
 
       if (loader.hasValue()) {
         resolve(loader.getValueEnforcing());
         reaction.dispose();
+        clearTimeout(timeoutId);
       }
     });
   });
@@ -115,6 +133,9 @@ export const BeverageStore: DAOStore<Beverage> = new DAOStore(
 );
 export const DeviceStore: DAOStore<Device> = new DAOStore(DAOApi.DeviceDAO);
 export const GlassStore: DAOStore<Glass> = new DAOStore(DAOApi.GlassDAO);
+export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
+  DAOApi.FlowSensorDAO,
+);
 export const KegStore: DAOStore<Keg> = new DAOStore(DAOApi.KegDAO);
 export const LocationStore: DAOStore<Location> = new DAOStore(
   DAOApi.LocationDAO,
