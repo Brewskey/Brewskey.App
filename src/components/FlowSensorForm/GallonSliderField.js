@@ -42,8 +42,8 @@ const GallonSliderField = ({
     <View style={styles.container}>
       <Text style={styles.textHeading}>Tweak your sensor</Text>
       <Text style={styles.textDescription}>
-        You can calibrate your sensor if it's not measuring correctly. Add more
-        pulses if your sensor is over-reporting the amount of beer poured
+        You can calibrate your sensor if it&apos;s not measuring correctly. Add
+        more pulses if your sensor is over-reporting the amount of beer poured
       </Text>
       <View>
         <SliderField

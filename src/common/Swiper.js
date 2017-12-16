@@ -1,5 +1,5 @@
 // @flow
-// add controlled behavior to react-native-swiper
+// this added controlled behavior to react-native-swiper
 // https://github.com/leecade/react-native-swiper/issues/163
 
 import * as React from 'react';
