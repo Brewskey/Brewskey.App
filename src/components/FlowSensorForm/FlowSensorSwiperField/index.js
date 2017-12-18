@@ -3,7 +3,8 @@
 import type { FlowSensorType } from 'brewskey.js-api';
 
 import * as React from 'react';
-import Swiper from '../../../common/Swiper';
+// import Swiper from '../../../common/Swiper';
+import Swiper from 'react-native-swiper';
 import { View, StyleSheet } from 'react-native';
 import FlowSensorSwiperItem from './FlowSensorSwiperItem';
 import FLOW_SENSOR_ITEMS from '../flowSensorItems';

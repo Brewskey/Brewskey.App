@@ -22,10 +22,8 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const { navigation, tapId } = this.injectedProps;
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    // todo promise never resolves for some reason
-    // but it should like in all other similar cases
     await waitForLoaded(() => FlowSensorStore.getByID(clientID));
-    navigation.goBack(null);
+    // todo fix navigation: should reset to list and goes to tapDetails from there.
     navigation.navigate('tapDetails', { id: tapId });
   };
 

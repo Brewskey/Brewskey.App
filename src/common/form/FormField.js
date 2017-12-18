@@ -4,21 +4,20 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
-// todo add generic types for value
 type Props = {
   children?: React.Node | Function,
   component?: React.ComponentType<any>,
-  format: (value: any) => any,
+  format: <TInput, TOutput>(value: TInput) => TOutput,
   initialValue?: any,
   name: string,
-  parse: (value: any) => any,
+  parse: <TInput, TOutput>(value: TInput) => TOutput,
 };
 
 @observer
 class FormField<TProps> extends React.Component<Props & TProps> {
   static defaultProps = {
-    format: (value: any): any => value,
-    parse: (value: any): any => value,
+    format: <TInput, TOutput>(value: TInput): TOutput => value,
+    parse: <TInput, TOutput>(value: TInput): TOutput => value,
   };
 
   static contextTypes = {
