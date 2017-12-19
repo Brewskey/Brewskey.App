@@ -153,27 +153,19 @@ angular.module('brewskey.services').factory('nfcService', [
         var message = [ndef.textRecord(authKey)];
 
         return $q(function(resolve, reject) {
-          function cleanup() {
-            if (window.cordova && window.cordova.platformId === 'android') {
-              nfc.removeTagDiscoveredListener(write, nfcError);
-            }
+          function nfcError(error) {
+            console.log(error);
+            reject();
           }
           function write() {
-            nfc.write(
-              message,
-              function() {
-                cleanup();
-                resolve();
-              },
-              function() {
-                cleanup();
-                reject();
-              }
-            );
+            nfc.write(message, resolve, reject);
+            if (window.cordova && window.cordova.platformId === 'android') {
+              nfc.removeTagDiscoveredListener(write, null, nfcError);
+            }
           }
 
           if (window.cordova && window.cordova.platformId === 'android') {
-            nfc.addTagDiscoveredListener(write, nfcError);
+            nfc.addTagDiscoveredListener(write, null, nfcError);
           } else {
             write();
           }
