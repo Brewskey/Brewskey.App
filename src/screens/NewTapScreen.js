@@ -20,10 +20,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.TapDAO.post(values);
     const { id } = await waitForLoaded(() => TapStore.getByID(clientID));
-    // todo figure out how to replace page instead adding to stack history
-    // the navigation object injected in the component
-    // doesn't have reset function.
-    navigation.navigate('tapDetails', { id });
+    navigation.navigate('newFlowSensor', { tapId: id });
   };
 
   render() {

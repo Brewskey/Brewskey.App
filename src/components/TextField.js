@@ -8,7 +8,7 @@ import {
   FormValidationMessage,
 } from 'react-native-elements';
 
-type Props = {
+export type Props = {
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
   label?: string,

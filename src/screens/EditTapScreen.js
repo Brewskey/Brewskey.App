@@ -9,7 +9,9 @@ import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { TapStore } from '../stores/DAOStores';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Container from '../common/Container';
+import Button from '../common/buttons/Button';
 import LoaderComponent from '../common/LoaderComponent';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -28,6 +30,11 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.goBack(null);
   };
 
+  _onUpdateFlowSensorButtonPress = () => {
+    const { id, navigation } = this.injectedProps;
+    navigation.navigate('editFlowSensor', { tapId: id });
+  };
+
   render() {
     const { id } = this.injectedProps;
     return (
@@ -37,6 +44,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
           loadedComponent={LoadedComponent}
           loader={TapStore.getByID(id)}
           onFormSubmit={this._onFormSubmit}
+          onUpdateFlowSensorButtonPress={this._onUpdateFlowSensorButtonPress}
         />
       </Container>
     );
@@ -45,11 +53,28 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
 
 type LoadedComponentProps = {
   onFormSubmit: (values: TapMutator) => Promise<void>,
+  onUpdateFlowSensorButtonPress: () => void,
   value: Tap,
 };
 
-const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
-  <TapForm onSubmit={onFormSubmit} submitButtonLabel="Edit tap" tap={value} />
+const LoadedComponent = ({
+  onFormSubmit,
+  onUpdateFlowSensorButtonPress,
+  value,
+}: LoadedComponentProps) => (
+  <Container>
+    <KeyboardAwareScrollView>
+      <TapForm
+        onSubmit={onFormSubmit}
+        submitButtonLabel="Edit tap"
+        tap={value}
+      />
+      <Button
+        onPress={onUpdateFlowSensorButtonPress}
+        title="Update flow sensor"
+      />
+    </KeyboardAwareScrollView>
+  </Container>
 );
 
 export default EditTapScreen;
