@@ -38,31 +38,17 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
           loader={FlowSensorStore.getMany({
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
           })}
-          loadedComponent={LoadedFlowSensorArrayComponent}
+          loadedComponent={LoadedComponent}
+          waitForLoadedDeep
         />
       </Container>
     );
   }
 }
 
-const LoadedFlowSensorArrayComponent = ({
-  value,
-}: {
-  value: Array<LoadObject<FlowSensor>>,
-}) => {
-  if (value.length === 0) {
-    // todo make no FlowSensor renderer
-    // or redirect to newFlowsensorScreen
-    return null;
-  }
-
-  return (
-    <LoaderComponent loader={value[0]} loadedComponent={LoadedComponent} />
-  );
-};
-
 type LoadedComponentProps = {
-  value: FlowSensor,
+  value: Array<LoadObject<FlowSensorForm>>,
+  onFormSubmit: (values: FlowSensorMutator) => Promise<void>,
 };
 
 type InjectedLoadedComponentProps = {
@@ -75,11 +61,17 @@ class LoadedComponent extends InjectedComponent<
   InjectedLoadedComponentProps,
   LoadedComponentProps,
 > {
+  get _flowSensor(): ?FlowSensor {
+    const { value: flowSensorLoaders } = this.props;
+    return flowSensorLoaders.length === 0
+      ? null
+      : flowSensorLoaders[0].getValueEnforcing();
+  }
+
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
-    const { value: initialFlowSensor } = this.props;
     const { navigation } = this.injectedProps;
 
-    if (initialFlowSensor.flowSensorType === values.flowSensorType) {
+    if (nullthrows(this._flowSensor).flowSensorType === values.flowSensorType) {
       const id = nullthrows(values.id);
       DAOApi.FlowSensorDAO.put(id, values);
       await waitForLoaded(() => FlowSensorStore.getByID(id));
@@ -96,13 +88,16 @@ class LoadedComponent extends InjectedComponent<
   };
 
   render() {
-    const { value } = this.props;
+    if (!this._flowSensor) {
+      // todo redirect to newFlowSensorForm or render something reasonable
+      return null;
+    }
 
     return (
       <FlowSensorForm
-        flowSensor={value}
+        flowSensor={this._flowSensor}
         onSubmit={this._onFormSubmit}
-        tapId={value.tap.id}
+        tapId={nullthrows(this._flowSensor).tap.id}
       />
     );
   }

@@ -25,6 +25,28 @@ import type {
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { Atom, autorun } from 'mobx';
 
+export const mapIsLoadingDeep = <TValue>(
+  loader: LoadObject<TValue>,
+): LoadObject<$FlowFixMe> =>
+  loader.map((result: $FlowFixMe): $FlowFixMe => {
+    if (!Array.isArray(result)) {
+      return result;
+    }
+
+    if (
+      result.some(
+        (item: $FlowFixMe): boolean =>
+          item instanceof LoadObject
+            ? item.isLoading() || item.isUpdating()
+            : false,
+      )
+    ) {
+      return LoadObject.loading();
+    }
+
+    return result;
+  });
+
 export const waitForLoaded = <TValue>(
   getLoader: () => LoadObject<TValue>,
   timeout?: number = 10000,
@@ -39,24 +61,7 @@ export const waitForLoaded = <TValue>(
         }, timeout);
       }
 
-      const loader = getLoader().map((result: $FlowFixMe): $FlowFixMe => {
-        if (!Array.isArray(result)) {
-          return result;
-        }
-
-        if (
-          result.some(
-            (item: $FlowFixMe): boolean =>
-              item instanceof LoadObject
-                ? item.isLoading() || item.isUpdating()
-                : false,
-          )
-        ) {
-          return LoadObject.loading();
-        }
-
-        return result;
-      });
+      const loader = mapIsLoadingDeep(getLoader());
 
       if (loader.isUpdating()) {
         return;
