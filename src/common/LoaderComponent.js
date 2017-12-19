@@ -4,6 +4,7 @@ import type { LoadObject } from 'brewskey.js-api';
 
 import * as React from 'react';
 import LoadingIndicator from './LoadingIndicator';
+import { mapIsLoadingDeep } from '../stores/DAOStores';
 
 type Props<TValue, TExtraProps = {}> = {
   ...TExtraProps,
@@ -13,6 +14,7 @@ type Props<TValue, TExtraProps = {}> = {
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
   updatingComponent: React.ComponentType<TExtraProps>,
+  waitForLoadedDeep: boolean,
 };
 
 const LoaderComponent = <TValue, TExtraProps>({
@@ -22,25 +24,30 @@ const LoaderComponent = <TValue, TExtraProps>({
   loader,
   loadingComponent: LoadingComponent,
   updatingComponent: UpdatingComponent,
+  waitForLoadedDeep,
   ...rest
 }: Props<TValue, TExtraProps>): React.Node => {
-  if (loader.isLoading()) {
+  const resultLoader = waitForLoadedDeep ? mapIsLoadingDeep(loader) : loader;
+
+  if (resultLoader.isLoading()) {
     return <LoadingComponent {...rest} />;
   }
 
-  if (loader.isUpdating()) {
+  if (resultLoader.isUpdating()) {
     return <UpdatingComponent {...rest} />;
   }
 
-  if (loader.isDeleting()) {
+  if (resultLoader.isDeleting()) {
     return <DeletingComponent {...rest} />;
   }
 
-  if (loader.hasError()) {
-    return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
+  if (resultLoader.hasError()) {
+    return (
+      <ErrorComponent {...rest} error={resultLoader.getErrorEnforcing()} />
+    );
   }
 
-  return <LoadedComponent {...rest} value={loader.getValueEnforcing()} />;
+  return <LoadedComponent {...rest} value={resultLoader.getValueEnforcing()} />;
 };
 
 LoaderComponent.defaultProps = {
