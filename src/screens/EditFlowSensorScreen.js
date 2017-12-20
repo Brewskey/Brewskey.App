@@ -1,17 +1,12 @@
 // @flow
 
-import type {
-  EntityID,
-  FlowSensor,
-  FlowSensorMutator,
-  LoadObject,
-} from 'brewskey.js-api';
+import type { EntityID, FlowSensor, FlowSensorMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import { withNavigation } from 'react-navigation';
-import DAOApi from 'brewskey.js-api';
+import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
@@ -37,32 +32,20 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
         <LoaderComponent
           loader={FlowSensorStore.getMany({
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-          })}
-          loadedComponent={LoadedFlowSensorArrayComponent}
+            limit: 1,
+          }).map(
+            (loaders: Array<LoadObject<FloSensor>>): LoadObject<FlowSensor> =>
+              loaders[0] || LoadObject.empty(),
+          )}
+          loadedComponent={LoadedComponent}
         />
       </Container>
     );
   }
 }
 
-const LoadedFlowSensorArrayComponent = ({
-  value,
-}: {
-  value: Array<LoadObject<FlowSensor>>,
-}) => {
-  if (value.length === 0) {
-    // todo make no FlowSensor renderer
-    // or redirect to newFlowsensorScreen
-    return null;
-  }
-
-  return (
-    <LoaderComponent loader={value[0]} loadedComponent={LoadedComponent} />
-  );
-};
-
 type LoadedComponentProps = {
-  value: FlowSensor,
+  value: ?FlowSensor,
 };
 
 type InjectedLoadedComponentProps = {
@@ -79,7 +62,9 @@ class LoadedComponent extends InjectedComponent<
     const { value: initialFlowSensor } = this.props;
     const { navigation } = this.injectedProps;
 
-    if (initialFlowSensor.flowSensorType === values.flowSensorType) {
+    if (
+      nullthrows(initialFlowSensor).flowSensorType === values.flowSensorType
+    ) {
       const id = nullthrows(values.id);
       DAOApi.FlowSensorDAO.put(id, values);
       await waitForLoaded(() => FlowSensorStore.getByID(id));
@@ -97,6 +82,10 @@ class LoadedComponent extends InjectedComponent<
 
   render() {
     const { value } = this.props;
+    if (!value) {
+      // todo redirect to newFlowSensorScreen or render something reasonable
+      return null;
+    }
 
     return (
       <FlowSensorForm
