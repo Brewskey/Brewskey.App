@@ -21,6 +21,8 @@ type InjectedProps = {|
   tapId: EntityID,
 |};
 
+// todo redirect to newFlowSensorScreen or render something reasonable
+// if flowSensor doesn't exist
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
@@ -34,7 +36,7 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
             limit: 1,
           }).map(
-            (loaders: Array<LoadObject<FloSensor>>): LoadObject<FlowSensor> =>
+            (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
               loaders[0] || LoadObject.empty(),
           )}
           loadedComponent={LoadedComponent}
@@ -45,7 +47,7 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
 }
 
 type LoadedComponentProps = {
-  value: ?FlowSensor,
+  value: FlowSensor,
 };
 
 type InjectedLoadedComponentProps = {
@@ -62,9 +64,7 @@ class LoadedComponent extends InjectedComponent<
     const { value: initialFlowSensor } = this.props;
     const { navigation } = this.injectedProps;
 
-    if (
-      nullthrows(initialFlowSensor).flowSensorType === values.flowSensorType
-    ) {
+    if (initialFlowSensor.flowSensorType === values.flowSensorType) {
       const id = nullthrows(values.id);
       DAOApi.FlowSensorDAO.put(id, values);
       await waitForLoaded(() => FlowSensorStore.getByID(id));
@@ -82,10 +82,6 @@ class LoadedComponent extends InjectedComponent<
 
   render() {
     const { value } = this.props;
-    if (!value) {
-      // todo redirect to newFlowSensorScreen or render something reasonable
-      return null;
-    }
 
     return (
       <FlowSensorForm

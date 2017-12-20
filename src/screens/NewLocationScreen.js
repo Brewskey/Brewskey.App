@@ -4,6 +4,7 @@ import type { LocationMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { NavigationActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
@@ -20,10 +21,17 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.LocationDAO.post(values);
     const { id } = await waitForLoaded(() => LocationStore.getByID(clientID));
-    // todo figure out how to replace page instead adding to stack history
-    // the navigation object injected in the component
-    // doesn't have reset function.
-    navigation.navigate('locationDetails', { id });
+    const resetRouteAction = NavigationActions.reset({
+      actions: [
+        NavigationActions.navigate({ routeName: 'locations' }),
+        NavigationActions.navigate({
+          params: { id },
+          routeName: 'locationDetails',
+        }),
+      ],
+      index: 1,
+    });
+    navigation.dispatch(resetRouteAction);
   };
 
   render() {

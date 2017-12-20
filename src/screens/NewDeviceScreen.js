@@ -5,6 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { NavigationActions } from 'react-navigation';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
@@ -22,10 +23,18 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
     const { id } = await waitForLoaded(() => DeviceStore.getByID(clientID));
-    // todo better handle reset routes
-    // it should be a bunch of navigationActions;
-    navigation.goBack();
-    navigation.navigate('deviceDetails', { id });
+
+    const resetRouteAction = NavigationActions.reset({
+      actions: [
+        NavigationActions.navigate({ routeName: 'devices' }),
+        NavigationActions.navigate({
+          params: { id },
+          routeName: 'deviceDetails',
+        }),
+      ],
+      index: 1,
+    });
+    navigation.dispatch(resetRouteAction);
   };
 
   render() {

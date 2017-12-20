@@ -4,6 +4,7 @@ import type { BeverageMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { NavigationActions } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
@@ -20,10 +21,17 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.BeverageDAO.post(values);
     const { id } = await waitForLoaded(() => BeverageStore.getByID(clientID));
-    // todo figure out how to replace page instead adding to stack history
-    // the navigation object injected in the component
-    // doesn't have reset function.
-    navigation.navigate('beverageDetails', { id });
+    const resetRouteAction = NavigationActions.reset({
+      actions: [
+        NavigationActions.navigate({ routeName: 'myBeverages' }),
+        NavigationActions.navigate({
+          params: { id },
+          routeName: 'beverageDetails',
+        }),
+      ],
+      index: 1,
+    });
+    navigation.dispatch(resetRouteAction);
   };
 
   render() {
