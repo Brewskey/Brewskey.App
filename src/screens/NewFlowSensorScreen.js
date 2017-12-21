@@ -23,8 +23,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
     const { navigation, tapId } = this.injectedProps;
     const clientID = DAOApi.FlowSensorDAO.post(values);
     await waitForLoaded(() => FlowSensorStore.getByID(clientID));
-    // todo fix navigation: should reset to list and goes to tapDetails from there.
-    navigation.navigate('tapDetails', { id: tapId });
+    navigation.navigate('newKeg', { tapId });
   };
 
   render() {
