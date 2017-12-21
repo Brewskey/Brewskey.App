@@ -13,7 +13,7 @@ type Props<TValue, TExtraProps = {}> = {
   loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
-  updatingComponent: React.ComponentType<TExtraProps>,
+  updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
 };
 
 const LoaderComponent = <TValue, TExtraProps>({
@@ -31,7 +31,7 @@ const LoaderComponent = <TValue, TExtraProps>({
   }
 
   if (loader.isUpdating()) {
-    return <UpdatingComponent {...rest} />;
+    return <UpdatingComponent {...rest} value={loader.getValueEnforcing()} />;
   }
 
   if (loader.isDeleting()) {

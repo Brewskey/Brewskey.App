@@ -24,6 +24,7 @@ import MyBeveragesScreen from './screens/MyBeveragesScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
 import NewFlowSensorScreen from './screens/NewFlowSensorScreen';
+import NewKegScreen from './screens/NewKegScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -94,6 +95,7 @@ class AppRouter extends React.Component<Props> {
                     editFlowSensor: { screen: EditFlowSensorScreen },
                     editTap: { screen: EditTapScreen },
                     newFlowSensor: { screen: NewFlowSensorScreen },
+                    newKeg: { screen: NewKegScreen },
                     newTap: { screen: NewTapScreen },
                     tapDetails: { screen: TapDetailsScreen },
                   },

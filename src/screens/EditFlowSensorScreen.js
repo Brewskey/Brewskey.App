@@ -22,7 +22,7 @@ type InjectedProps = {|
 |};
 
 // todo redirect to newFlowSensorScreen or render something reasonable
-// if flowSensor doesn't exist
+// if there isn't current FLow sensor
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
@@ -82,7 +82,6 @@ class LoadedComponent extends InjectedComponent<
 
   render() {
     const { value } = this.props;
-
     return (
       <FlowSensorForm
         flowSensor={value}
