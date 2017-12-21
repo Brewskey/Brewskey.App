@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     backgroundColor: COLORS.primary2,
+    borderBottomWidth: 0,
     elevation: 2,
     height: 60,
     paddingVertical: 0,

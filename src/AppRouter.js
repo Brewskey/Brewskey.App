@@ -16,6 +16,7 @@ import EditBeverageScreen from './screens/EditBeverageScreen';
 import EditDeviceScreen from './screens/EditDeviceScreen';
 import EditFlowSensorScreen from './screens/EditFlowSensorScreen';
 import EditLocationScreen from './screens/EditLocationScreen';
+import EditTapScreen from './screens/EditTapScreen';
 import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
@@ -30,8 +31,6 @@ import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TapDetailsScreen from './screens/TapDetailsScreen';
 import TapsScreen from './screens/TapsScreen';
-
-import EditTapScreen from './screens/EditTapScreen';
 
 type Props = {|
   rootRef: React.Ref<StackNavigator>,
