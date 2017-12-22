@@ -6,9 +6,10 @@ import type { FormProps } from '../common/form/types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import { Button, FormValidationMessage } from 'react-native-elements';
+import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { DeviceStore } from '../stores/DAOStores';
+import Button from '../common/buttons/Button';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
 import PickerField from '../common/PickerField';
@@ -106,6 +107,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           disabled={submitting || invalid || pristine}
           onPress={handleSubmit}
           title={submitButtonLabel}
+          loading={submitting}
         />
       </KeyboardAwareScrollView>
     );

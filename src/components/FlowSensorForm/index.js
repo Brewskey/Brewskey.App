@@ -81,6 +81,7 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
           disabled={submitting || invalid}
           onPress={this._onSubmit}
           title="Set Sensor"
+          loading={submitting}
         />
       </KeyboardAwareScrollView>
     );
