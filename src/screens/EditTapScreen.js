@@ -16,9 +16,9 @@ import { COLORS } from '../theme';
 /* eslint-disable sorting/sort-object-props */
 const EditTapRouter = TabNavigator(
   {
-    editTap: { screen: EditBasicTapScreen },
-    editFlowSensor: { screen: EditFlowSensorScreen },
     editKegScreen: { screen: EditKegScreen },
+    editFlowSensor: { screen: EditFlowSensorScreen },
+    editTap: { screen: EditBasicTapScreen },
   },
   /* eslint-enable */
   {

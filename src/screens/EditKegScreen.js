@@ -20,7 +20,7 @@ type InjectedProps = {
 @observer
 class EditKegScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
-    tabBarLabel: 'Keg',
+    tabBarLabel: 'On tap',
   };
 
   _onFormSubmit = async (values: KegMutator): Promise<void> => {
