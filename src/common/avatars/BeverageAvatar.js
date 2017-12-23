@@ -1,5 +1,6 @@
 // @flow
 
+import type { EntityID } from 'brewskey.js-api';
 import type { BaseAvatarProps } from './BaseAvatar';
 
 import * as React from 'react';
@@ -7,7 +8,7 @@ import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
 type Props = {
-  beverageId: string,
+  beverageId: EntityID,
 } & BaseAvatarProps;
 
 class BeverageAvatar extends React.PureComponent<Props> {
@@ -22,7 +23,9 @@ class BeverageAvatar extends React.PureComponent<Props> {
         {...this.props}
         mutable={false}
         rounded={this.props.rounded}
-        uri={`${CONFIG.CDN}beverages/${this.props.beverageId}-icon.jpg?w=${
+        uri={`${
+          CONFIG.CDN
+        }beverages/${this.props.beverageId.toString()}-icon.jpg?w=${
           this.props.size
         }&h=${this.props.size}&mode=crop`}
       />
