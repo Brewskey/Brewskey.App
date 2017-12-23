@@ -38,6 +38,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
         loader={KegStore.getMany({
           filters: [DAOApi.createFilter('tap/id').equals(tapId)],
           limit: 1,
+          orderBy: [{ column: 'id', direction: 'desc' }],
         }).map(
           (loaders: Array<LoadObject<Keg>>): LoadObject<Keg> =>
             loaders[0] || LoadObject.empty(),

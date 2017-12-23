@@ -31,13 +31,13 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @computed
   get isFetchingRemoteCount(): boolean {
-    return this._remoteCountLoader.hasValue();
+    return !this._remoteCountLoader.hasValue();
   }
 
   @computed
   get rows(): Array<Row<TEntity>> {
     if (
-      !this.isFetchingRemoteCount ||
+      this.isFetchingRemoteCount ||
       this._remoteCountLoader.getValueEnforcing() === 0
     ) {
       return [];
@@ -94,7 +94,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @action
   fetchNextPage = () => {
-    if (!this.isFetchingRemoteCount) {
+    if (this.isFetchingRemoteCount) {
       return;
     }
     const currentQuery = this._queryOptionsList[

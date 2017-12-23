@@ -34,6 +34,7 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
         loader={FlowSensorStore.getMany({
           filters: [DAOApi.createFilter('tap/id').equals(tapId)],
           limit: 1,
+          orderBy: [{ column: 'id', direction: 'desc' }],
         }).map(
           (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
             loaders[0] || LoadObject.empty(),
