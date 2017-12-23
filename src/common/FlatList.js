@@ -18,7 +18,7 @@ type State = {|
 
 class FlatList<TEntity> extends React.Component<Props<TEntity>, State> {
   static defaultProps = {
-    ...FlatList.defaultProps,
+    ...RNFlatList.defaultProps,
   };
 
   state = {

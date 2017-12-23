@@ -109,8 +109,6 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
         ref={this._getSwipeableFlatListRef}
-        refreshing={false}
-        removeClippedSubviews
         renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter
