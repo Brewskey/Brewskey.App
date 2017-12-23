@@ -5,6 +5,7 @@ import type { FormProps } from '../../common/form/types';
 import type { FlowSensorItem } from './flowSensorItems';
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../../common/InjectedComponent';
@@ -26,6 +27,7 @@ type Props = {
 type InjectedProps = FormProps;
 
 @form()
+@observer
 class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
   _onSubmit = () => this.injectedProps.handleSubmit(this.props.onSubmit);
 
