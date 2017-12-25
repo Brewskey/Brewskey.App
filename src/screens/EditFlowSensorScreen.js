@@ -7,6 +7,7 @@ import * as React from 'react';
 import nullthrows from 'nullthrows';
 import { withNavigation } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
@@ -26,19 +27,24 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'Flow Sensor',
   };
 
-  render() {
+  @computed
+  get _flowSensorLoader(): LoadObject<FlowSensor> {
     const { tapId } = this.injectedProps;
+    return FlowSensorStore.getMany({
+      filters: [DAOApi.createFilter('tap/id').equals(tapId)],
+      limit: 1,
+      orderBy: [{ column: 'id', direction: 'desc' }],
+    }).map(
+      (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
+        loaders[0] || LoadObject.empty(),
+    );
+  }
+
+  render() {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
-        loader={FlowSensorStore.getMany({
-          filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-          limit: 1,
-          orderBy: [{ column: 'id', direction: 'desc' }],
-        }).map(
-          (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
-            loaders[0] || LoadObject.empty(),
-        )}
+        loader={this._flowSensorLoader}
         updatingComponent={LoadedComponent}
       />
     );

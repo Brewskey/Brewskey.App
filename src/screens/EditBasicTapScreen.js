@@ -1,11 +1,12 @@
 // @flow
 
-import type { EntityID, Tap, TapMutator } from 'brewskey.js-api';
+import type { EntityID, LoadObject, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
@@ -25,6 +26,11 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'tap',
   };
 
+  @computed
+  get _tapLoader(): LoadObject<Tap> {
+    return TapStore.getByID(this.injectedProps.tapId);
+  }
+
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
@@ -33,11 +39,10 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { tapId } = this.injectedProps;
     return (
       <LoaderComponent
         loadedComponent={LoadedTapComponent}
-        loader={TapStore.getByID(tapId)}
+        loader={this._tapLoader}
         onTapFormSubmit={this._onFormSubmit}
         updatingComponent={LoadedTapComponent}
       />

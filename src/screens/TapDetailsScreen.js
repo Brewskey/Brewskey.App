@@ -1,11 +1,12 @@
 // @flow
 
-import type { EntityID, Tap } from 'brewskey.js-api';
+import type { EntityID, LoadObject, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { TapStore } from '../stores/DAOStores';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Text } from 'react-native';
 import Container from '../common/Container';
@@ -22,12 +23,16 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _tapLoader(): LoadObject<Tap> {
+    return TapStore.getByID(this.injectedProps.id);
+  }
+
   render() {
-    const { id } = this.injectedProps;
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
-        loader={TapStore.getByID(id)}
+        loader={this._tapLoader}
         loadingComponent={LoadingComponent}
       />
     );
