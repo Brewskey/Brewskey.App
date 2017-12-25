@@ -1,11 +1,17 @@
 // @flow
 
-import type { Beverage, BeverageMutator, EntityID } from 'brewskey.js-api';
+import type {
+  Beverage,
+  BeverageMutator,
+  EntityID,
+  LoadObject,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore } from '../stores/DAOStores';
@@ -23,19 +29,23 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class EditBeverageScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _beverageLoader(): LoadObject<Beverage> {
+    return BeverageStore.getByID(this.injectedProps.id);
+  }
+
   _onFormSubmit = (values: BeverageMutator): void => {
     DAOApi.BeverageDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
-    const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />
         <LoaderComponent
           loadedComponent={LoadedComponent}
-          loader={BeverageStore.getByID(id)}
+          loader={this._beverageLoader}
           onFormSubmit={this._onFormSubmit}
         />
       </Container>

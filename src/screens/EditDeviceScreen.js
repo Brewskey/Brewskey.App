@@ -1,10 +1,16 @@
 // @flow
 
-import type { Device, DeviceMutator, EntityID } from 'brewskey.js-api';
+import type {
+  Device,
+  DeviceMutator,
+  EntityID,
+  LoadObject,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { DeviceStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
@@ -23,19 +29,23 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 @observer
 class EditDeviceScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _deviceLoader(): LoadObject<Device> {
+    return DeviceStore.getByID(this.injectedProps.id);
+  }
+
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
-    const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
         <LoaderComponent
           loadedComponent={LoadedComponent}
-          loader={DeviceStore.getByID(id)}
+          loader={this._deviceLoader}
           onFormSubmit={this._onFormSubmit}
         />
       </Container>

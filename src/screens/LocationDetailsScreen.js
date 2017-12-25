@@ -1,10 +1,11 @@
 // @flow
 
-import type { EntityID, Location } from 'brewskey.js-api';
+import type { EntityID, Location, LoadObject } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { LocationStore } from '../stores/DAOStores';
 import { Text } from 'react-native';
@@ -22,12 +23,16 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _locationLoader(): LoadObject<Location> {
+    return LocationStore.getByID(this.injectedProps.id);
+  }
+
   render() {
-    const { id } = this.injectedProps;
     return (
       <LoaderComponent
         loadedComponent={LoadedLocationDetails}
-        loader={LocationStore.getByID(id)}
+        loader={this._locationLoader}
         loadingComponent={LoadingLocationDetails}
       />
     );

@@ -1,11 +1,17 @@
 // @flow
 
-import type { EntityID, Location, LocationMutator } from 'brewskey.js-api';
+import type {
+  EntityID,
+  LoadObject,
+  Location,
+  LocationMutator,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore } from '../stores/DAOStores';
@@ -23,19 +29,23 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class EditLocationScreen extends InjectedComponent<InjectedProps> {
+  @computed
+  get _locationLoader(): LoadObject<Location> {
+    return LocationStore.getByID(this.injectedProps.id);
+  }
+
   _onFormSubmit = (values: LocationMutator) => {
     DAOApi.LocationDAO.put(nullthrows(values.id), values);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
-    const { id } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="Edit location" />
         <LoaderComponent
           loadedComponent={LoadedComponent}
-          loader={LocationStore.getByID(id)}
+          loader={this._locationLoader}
           onFormSubmit={this._onFormSubmit}
         />
       </Container>

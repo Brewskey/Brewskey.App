@@ -113,7 +113,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
         renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter
-            isLoading={!this._listStore.isFetchingRemoteCount}
+            isLoading={this._listStore.isFetchingRemoteCount}
           />
         }
       />
