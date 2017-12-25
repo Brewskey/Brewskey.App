@@ -8,12 +8,12 @@
 
 // @flow
 
-import type { Props as FlatListProps } from 'FlatList';
+import type RNFlatList, { Props as FlatListProps } from 'FlatList';
 import type { renderItemType } from 'VirtualizedList';
 
 import * as React from 'react';
-import { FlatList, Platform, View } from 'react-native';
-import { observer } from 'mobx-react';
+import { View } from 'react-native';
+import FlatList from '../FlatList';
 
 type SwipeableListProps = {
   bounceFirstRowOnMount: boolean,
@@ -21,10 +21,9 @@ type SwipeableListProps = {
 
 type Props<TEntity> = SwipeableListProps & FlatListProps<TEntity>;
 
-type State = {
+type State = {|
   openRowKey: ?string,
-  refreshing: boolean,
-};
+|};
 
 class SwipeableFlatList<TEntity> extends React.PureComponent<
   Props<TEntity>,
@@ -37,10 +36,9 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
 
   state = {
     openRowKey: null,
-    refreshing: false,
   };
 
-  _flatListRef: ?FlatList<TEntity> = null;
+  _flatListRef: ?RNFlatList<TEntity> = null;
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
@@ -60,15 +58,6 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
   _onOpen = (key: string): void => this.setState(() => ({ openRowKey: key }));
 
   _onClose = (): void => this.resetOpenRow();
-
-  _onRefresh = async () => {
-    if (!this.props.onRefresh) {
-      return;
-    }
-    this.setState(() => ({ refreshing: true }));
-    await this.props.onRefresh();
-    this.setState(() => ({ refreshing: false }));
-  };
 
   _onScroll = (event: SyntheticEvent<*>): void => {
     this.resetOpenRow();
@@ -99,12 +88,8 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
       <FlatList
         {...this.props}
         extraData={this.state}
-        onEndReachedThreshold={Platform.OS === 'ios' ? 0 : 0.5}
-        onRefresh={this.props.onRefresh ? this._onRefresh : null}
+        innerRef={this._setFlatListRef}
         onScroll={this._onScroll}
-        ref={this._setFlatListRef}
-        refreshing={this.state.refreshing}
-        removeClippedSubviews
         renderItem={this._renderItem}
       />
     );
