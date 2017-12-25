@@ -7,10 +7,10 @@ import * as React from 'react';
 import { FlatList as RNFlatList } from 'react-native';
 import { ON_END_REACHED_THRESHOLD } from '../constants';
 
-type Props<TEntity> = {
+type Props<TEntity> = {|
   extraData?: any,
   innerRef: React.Ref<RNFlatList<TEntity>>,
-} & FlatListProps<TEntity>;
+|} & FlatListProps<TEntity>;
 
 type State = {|
   isRefreshing: boolean,
@@ -35,15 +35,16 @@ class FlatList<TEntity> extends React.Component<Props<TEntity>, State> {
   };
 
   render() {
+    const { extraData, innerRef, onRefresh, ...rest } = this.props;
     return (
       <RNFlatList
-        {...this.props}
-        extraData={this.props.extraData}
-        innerRef={this.props.innerRef}
+        extraData={extraData}
+        innerRef={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        onRefresh={this.props.onRefresh ? this._onRefresh : null}
+        onRefresh={onRefresh ? this._onRefresh : null}
         refreshing={this.state.isRefreshing}
         removeClippedSubviews
+        {...rest}
       />
     );
   }

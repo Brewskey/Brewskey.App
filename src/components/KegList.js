@@ -13,9 +13,9 @@ import LoaderRow from '../common/LoaderRow';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 
-type Props = {
+type Props = {|
   queryOptions?: QueryOptions,
-};
+|};
 
 @observer
 class KegList extends React.Component<Props> {
