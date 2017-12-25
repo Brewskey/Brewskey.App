@@ -3,6 +3,7 @@
 import type { LoadObject } from 'brewskey.js-api';
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import LoadingIndicator from './LoadingIndicator';
 
 type Props<TValue, TExtraProps = {}> = {
@@ -16,38 +17,40 @@ type Props<TValue, TExtraProps = {}> = {
   updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
 };
 
-const LoaderComponent = <TValue, TExtraProps>({
-  deletingComponent: DeletingComponent,
-  emptyComponent: EmptyComponent,
-  errorComponent: ErrorComponent,
-  loadedComponent: LoadedComponent,
-  loader,
-  loadingComponent: LoadingComponent,
-  updatingComponent: UpdatingComponent,
-  ...rest
-}: Props<TValue, TExtraProps>): React.Node => {
-  if (loader.isLoading()) {
-    return <LoadingComponent {...rest} />;
-  }
+const LoaderComponent = observer(
+  <TValue, TExtraProps>({
+    deletingComponent: DeletingComponent,
+    emptyComponent: EmptyComponent,
+    errorComponent: ErrorComponent,
+    loadedComponent: LoadedComponent,
+    loader,
+    loadingComponent: LoadingComponent,
+    updatingComponent: UpdatingComponent,
+    ...rest
+  }: Props<TValue, TExtraProps>): React.Node => {
+    if (loader.isLoading()) {
+      return <LoadingComponent {...rest} />;
+    }
 
-  if (loader.isUpdating()) {
-    return <UpdatingComponent {...rest} value={loader.getValueEnforcing()} />;
-  }
+    if (loader.isUpdating()) {
+      return <UpdatingComponent {...rest} value={loader.getValueEnforcing()} />;
+    }
 
-  if (loader.isDeleting()) {
-    return <DeletingComponent {...rest} />;
-  }
+    if (loader.isDeleting()) {
+      return <DeletingComponent {...rest} />;
+    }
 
-  if (loader.hasError()) {
-    return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
-  }
+    if (loader.hasError()) {
+      return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
+    }
 
-  if (loader.isEmpty()) {
-    return <EmptyComponent {...rest} />;
-  }
+    if (loader.isEmpty()) {
+      return <EmptyComponent {...rest} />;
+    }
 
-  return <LoadedComponent {...rest} value={loader.getValueEnforcing()} />;
-};
+    return <LoadedComponent {...rest} value={loader.getValueEnforcing()} />;
+  },
+);
 
 LoaderComponent.defaultProps = {
   deletingComponent: () => null,
