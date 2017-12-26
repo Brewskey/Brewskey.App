@@ -63,7 +63,7 @@ class KegList extends React.Component<Props> {
         renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter
-            isLoading={!this._listStore.isFetchingRemoteCount}
+            isLoading={this._listStore.isFetchingRemoteCount}
           />
         }
       />

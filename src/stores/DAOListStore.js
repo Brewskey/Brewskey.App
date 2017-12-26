@@ -36,10 +36,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @computed
   get rows(): Array<Row<TEntity>> {
-    if (
-      this.isFetchingRemoteCount ||
-      this._remoteCountLoader.getValueEnforcing() === 0
-    ) {
+    if (this.isFetchingRemoteCount || this._remoteCount === 0) {
       return [];
     }
 
@@ -84,12 +81,21 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @computed
   get _remoteCountLoader(): LoadObject<number> {
-    return this._daoStore.count(this._baseQueryOptions);
+    // ODAta inlineCount doesn't pay attention on 'skip'
+    // but instead throws error if its used with 'top' query;
+    const { skip, ...rest } = this._baseQueryOptions;
+    return this._daoStore.count(rest);
+  }
+
+  @computed
+  get _remoteCount(): number {
+    const { skip = 0 } = this._baseQueryOptions;
+    return this._remoteCountLoader.getValueEnforcing() - skip;
   }
 
   @computed
   get _maxRemoteItemIndex(): number {
-    return this._remoteCountLoader.getValueEnforcing() - 1;
+    return this._remoteCount - 1;
   }
 
   @action
@@ -122,9 +128,10 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @action
   fetchFirstPage = () => {
+    const { skip = 0, ...rest } = this._baseQueryOptions;
     this._queryOptionsList.push({
-      ...this._baseQueryOptions,
-      skip: 0,
+      ...rest,
+      skip,
       take: this._pageSize,
     });
   };
