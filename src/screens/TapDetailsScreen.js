@@ -5,15 +5,33 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { TabNavigator } from 'react-navigation';
 import { TapStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Text } from 'react-native';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import TapDetailsKegScreen from './TapDetailsKegScreen';
+import TapDetailsStatsScreen from './TapDetailsStatsScreen';
+import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
+import theme from '../theme';
+
+/* eslint-disable sorting/sort-object-props */
+const TapDetailsRouter = TabNavigator(
+  {
+    tapDetailsKeg: { screen: TapDetailsKegScreen },
+    tapDetailsStats: { screen: TapDetailsStatsScreen },
+    tapDetailsLeaderboard: { screen: TapDetailsLeaderboardScreen },
+  },
+  /* eslint-enable */
+  {
+    ...theme.tabBar,
+    lazy: true,
+  },
+);
 
 type InjectedProps = {|
   id: EntityID,
@@ -50,13 +68,11 @@ type LoadedComponentProps = {
   value: Tap,
 };
 
-const LoadedComponent = ({
-  value: { description, name },
-}: LoadedComponentProps) => (
+const LoadedComponent = ({ value: { id, name } }: LoadedComponentProps) => (
   <Container>
     <Header showBackButton title={name} />
-    <Text>{name}</Text>
-    <Text>{description}</Text>
+    <TapDetailsRouter screenProps={{ tapId: id }} />
   </Container>
 );
+
 export default TapDetailsScreen;
