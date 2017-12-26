@@ -21,7 +21,6 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-// todo loading on tap BeverageDetails
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {

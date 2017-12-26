@@ -12,6 +12,4 @@ class TapDetailsLeaderboardScreen extends React.Component<{}> {
   }
 }
 
-// todo I"M DOING SKIP IN DAOListStore
-
 export default TapDetailsLeaderboardScreen;
