@@ -90,7 +90,8 @@ class DAOListStore<TEntity: { id: EntityID }> {
   @computed
   get _remoteCount(): number {
     const { skip = 0 } = this._baseQueryOptions;
-    return this._remoteCountLoader.getValueEnforcing() - skip;
+    const value = this._remoteCountLoader.getValueEnforcing() - skip;
+    return value > 0 ? value : 0;
   }
 
   @computed
