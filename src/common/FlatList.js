@@ -43,7 +43,6 @@ class FlatList<TEntity> extends React.Component<Props<TEntity>, State> {
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? this._onRefresh : null}
         refreshing={this.state.isRefreshing}
-        removeClippedSubviews
         {...rest}
       />
     );

@@ -35,6 +35,14 @@ const theme = {
       buttonStyle: { width: '100%' },
     },
   },
+  tabBar: {
+    tabBarOptions: {
+      activeBackgroundColor: COLORS.primary3,
+      inactiveBackgroundColor: COLORS.primary2,
+      indicatorStyle: { backgroundColor: COLORS.secondary },
+      style: { backgroundColor: COLORS.primary2 },
+    },
+  },
 };
 
 export default theme;

@@ -11,7 +11,7 @@ import EditBasicTapScreen from './EditBasicTapScreen';
 import EditFlowSensorScreen from './EditFlowSensorScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import EditKegScreen from './EditKegScreen';
-import { COLORS } from '../theme';
+import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
 const EditTapRouter = TabNavigator(
@@ -22,13 +22,8 @@ const EditTapRouter = TabNavigator(
   },
   /* eslint-enable */
   {
+    ...theme.tabBar,
     lazy: true,
-    tabBarOptions: {
-      activeBackgroundColor: COLORS.primary3,
-      inactiveBackgroundColor: COLORS.primary2,
-      indicatorStyle: { backgroundColor: COLORS.secondary },
-      style: { backgroundColor: COLORS.primary2 },
-    },
   },
 );
 
