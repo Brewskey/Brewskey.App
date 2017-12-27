@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 @observer
-class KegList extends React.Component<Props> {
+class KegsList extends React.Component<Props> {
   static defaultProps = {
     queryOptions: {},
   };
@@ -71,4 +71,4 @@ class KegList extends React.Component<Props> {
   }
 }
 
-export default KegList;
+export default KegsList;
