@@ -6,7 +6,7 @@ import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
-import PoursList from '../components/PoursList';
+import OwnerPoursList from '../components/poursLists/OwnerPoursList';
 import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
@@ -25,10 +25,9 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <SectionHeader title="Recent pours" />
-        <PoursList
+        <OwnerPoursList
           queryOptions={{
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-            orderBy: [{ column: 'id', direction: 'desc' }],
           }}
         />
       </Container>
