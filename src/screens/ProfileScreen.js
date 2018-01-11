@@ -1,29 +1,68 @@
 // @flow
 
+import type { Account, EntityID } from 'brewskey.js-api';
+
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { TabNavigator } from 'react-navigation';
+import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
+import theme from '../theme';
+import { observer } from 'mobx-react';
+import { AccountStore } from '../stores/DAOStores';
+import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
-import AvatarPicker from '../components/AvatarPicker';
+import ProfileOverviewScreen from './ProfileOverviewScreen';
+import ProfileStatsScreen from './ProfileStatsScreen';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
-const styles = StyleSheet.create({
-  avatarContainer: {
-    alignItems: 'center',
-    paddingVertical: 15,
+/* eslint-disable sorting/sort-object-props */
+const ProfileRouter = TabNavigator(
+  {
+    profileOverview: { screen: ProfileOverviewScreen },
+    profileStats: { screen: ProfileStatsScreen },
   },
-});
+  /* eslint-enable */
+  {
+    ...theme.tabBar,
+  },
+);
 
-class ProfileScreen extends React.Component<{}> {
+type InjectedProps = {|
+  id: EntityID,
+|};
+
+@flatNavigationParamsAndScreenProps
+@observer
+class ProfileScreen extends InjectedComponent<InjectedProps> {
   render() {
+    const { id } = this.injectedProps;
     return (
-      <Container>
-        <Header title="My profile" />
-        <View style={styles.avatarContainer}>
-          <AvatarPicker />
-        </View>
-      </Container>
+      <LoaderComponent
+        loader={AccountStore.getByID(id)}
+        loadedComponent={LoadedComponent}
+        loadingComponent={LoadingComponent}
+      />
     );
   }
 }
+
+const LoadingComponent = () => (
+  <Container>
+    <Header />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedComponentProps = {|
+  value: Account,
+|};
+
+const LoadedComponent = ({ value }: LoadedComponentProps) => (
+  <Container>
+    <Header title={value.userName} />
+    <ProfileRouter screenProps={{ account: value }} />
+  </Container>
+);
 
 export default ProfileScreen;

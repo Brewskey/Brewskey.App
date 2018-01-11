@@ -17,7 +17,7 @@ const DRAWER_ROUTES: Array<DrawerRoute> = [
   {
     icon: { name: 'account', type: 'material-community' },
     isManageTapsRequired: false,
-    routeKey: 'profile',
+    routeKey: 'myProfile',
     title: 'My profile',
   },
   {
