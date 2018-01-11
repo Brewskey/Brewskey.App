@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 
 type Props = {|
   children?: Node,
+  contentContainerStyle?: Object,
   header?: Node,
   isVisible: boolean,
   onHideModal: () => void,
@@ -45,7 +46,14 @@ type Props = {|
 @observer
 class CenteredModal extends Component<Props> {
   render() {
-    const { children, header, isVisible, onHideModal } = this.props;
+    const {
+      children,
+      contentContainerStyle,
+      header,
+      isVisible,
+      onHideModal,
+    } = this.props;
+
     return (
       <Modal
         animationType="slide"
@@ -58,7 +66,9 @@ class CenteredModal extends Component<Props> {
             <TouchableWithoutFeedback onPress={emptyFunction}>
               <View style={styles.modal}>
                 {!header ? null : <View style={styles.header}>{header}</View>}
-                <View style={styles.content}>{children}</View>
+                <View style={[styles.content, contentContainerStyle]}>
+                  {children}
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>
