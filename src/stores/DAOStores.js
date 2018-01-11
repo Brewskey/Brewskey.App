@@ -2,6 +2,8 @@
 
 import type {
   Account,
+  Achievement,
+  AchievementCounter,
   Availability,
   Beverage,
   DAO,
@@ -92,18 +94,18 @@ class DAOStore<TEntity: { id: EntityID }> {
   flushQueryCaches = () => this._dao.flushQueryCaches();
 
   count(queryOptions: ?QueryOptions): LoadObject<number> {
-    return this._callDAOFunction('count', queryOptions);
+    return this.__callDAOFunction('count', queryOptions);
   }
 
   getByID(id: EntityID): LoadObject<TEntity> {
-    return this._callDAOFunction('fetchByID', id);
+    return this.__callDAOFunction('fetchByID', id);
   }
 
   getMany(queryOptions: ?QueryOptions): LoadObject<Array<LoadObject<TEntity>>> {
-    return this._callDAOFunction('fetchMany', queryOptions);
+    return this.__callDAOFunction('fetchMany', queryOptions);
   }
 
-  _callDAOFunction = (functionName: string, ...args) => {
+  __callDAOFunction = (functionName: string, ...args: Array<any>) => {
     if (this._atom.reportObserved()) {
       return (this._dao: any)[functionName](...args);
     }
@@ -124,7 +126,18 @@ class DAOStore<TEntity: { id: EntityID }> {
   };
 }
 
+class $AchievementStore extends DAOStore<Achievement> {
+  getAchievementCounters(
+    userID: EntityID,
+  ): LoadObject<Array<AchievementCounter>> {
+    return this.__callDAOFunction('fetchAchievementCounters', userID);
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
+export const AchievementStore: $AchievementStore = new $AchievementStore(
+  DAOApi.AchievementDAO,
+);
 export const AvailabilityStore: DAOStore<Availability> = new DAOStore(
   DAOApi.AvailabilityDAO,
 );
