@@ -128,11 +128,6 @@ const RootRouter = StackNavigator(
           },
         },
         {
-          // todo temporary fix for react-navigation beta-22 bug
-          // https://github.com/react-community/react-navigation/issues/3148#issuecomment-352778884
-          drawerOpenRoute: 'DrawerOpen',
-          drawerCloseRoute: 'DrawerClose',
-          drawerToggleRoute: 'DrawerToggle',
           contentComponent: MainDrawer,
         },
       ),

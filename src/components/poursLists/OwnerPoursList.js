@@ -5,13 +5,13 @@ import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import moment from 'moment';
-import { withNavigation } from 'react-navigation';
 import { observer } from 'mobx-react';
 import InjectedComponent from '../../common/InjectedComponent';
 import ListItem from '../../common/ListItem';
 import UserAvatar from '../../common/avatars/UserAvatar';
 import BasePoursList from './BasePoursList';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import NavigationService from '../../NavigationService';
 
 type Props = {|
   queryOptions?: QueryOptions,
@@ -21,7 +21,6 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-@withNavigation
 @observer
 class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
   _onListItemPress = (pour: Pour) => {
@@ -29,8 +28,11 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
       return;
     }
 
-    // todo this doesn't do anything for some reason
-    this.injectedProps.navigation.navigate('profile', {
+    // todo for some reason navigation.navigate() from withNavigation HOC
+    // doesn't do anything in the current component level
+    // with the current react-navigation version lib
+    // https://github.com/react-navigation/react-navigation/issues/3143
+    NavigationService.navigate('profile', {
       id: pour.owner.id,
     });
   };
