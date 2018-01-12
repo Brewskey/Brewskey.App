@@ -8,10 +8,9 @@ import DAOApi, { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, KegStore } from '../stores/DAOStores';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import Container from '../common/Container';
 import LoaderBeverageDetails from '../components/BeverageDetailsLoader';
 import KegsList from '../components/KegsList';
 import SectionHeader from '../common/SectionHeader';
@@ -51,19 +50,19 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
   render() {
     const { tapId } = this.injectedProps;
     return (
-      <Container>
-        <ScrollView>
-          <LoaderBeverageDetails loader={this._currentBeverageLoader} />
-          <SectionHeader title="Past Kegs" />
-          <KegsList
-            queryOptions={{
-              filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-              orderBy: [{ column: 'id', direction: 'desc' }],
-              skip: 1,
-            }}
-          />
-        </ScrollView>
-      </Container>
+      <KegsList
+        ListHeaderComponent={
+          <View>
+            <LoaderBeverageDetails loader={this._currentBeverageLoader} />
+            <SectionHeader title="Past Kegs" />
+          </View>
+        }
+        queryOptions={{
+          filters: [DAOApi.createFilter('tap/id').equals(tapId)],
+          orderBy: [{ column: 'id', direction: 'desc' }],
+          skip: 1,
+        }}
+      />
     );
   }
 }

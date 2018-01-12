@@ -19,6 +19,7 @@ import ListItem from '../common/ListItem';
 import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
 
 type Props = {|
+  ListHeaderComponent?: React.Node,
   queryOptions?: QueryOptions,
 |};
 
@@ -105,15 +106,16 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
       <SwipeableFlatList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        ref={this._getSwipeableFlatListRef}
-        renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter
             isLoading={this._listStore.isFetchingRemoteCount}
           />
         }
+        ListHeaderComponent={this.props.ListHeaderComponent}
+        onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._listStore.reload}
+        ref={this._getSwipeableFlatListRef}
+        renderItem={this._renderRow}
       />
     );
   }

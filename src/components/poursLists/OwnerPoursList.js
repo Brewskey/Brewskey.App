@@ -14,6 +14,7 @@ import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import NavigationService from '../../NavigationService';
 
 type Props = {|
+  ListHeaderComponent?: React.Node,
   queryOptions?: QueryOptions,
 |};
 
@@ -56,9 +57,11 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
   };
 
   render() {
+    const { ListHeaderComponent, queryOptions } = this.props;
     return (
       <BasePoursList
-        queryOptions={this.props.queryOptions}
+        ListHeaderComponent={ListHeaderComponent}
+        queryOptions={queryOptions}
         renderListItem={this._renderListItem}
       />
     );
