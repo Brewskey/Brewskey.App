@@ -11,6 +11,7 @@ import BasePoursList from './BasePoursList';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
+  ListHeaderComponent?: React.Node,
   queryOptions?: QueryOptions,
 |};
 
@@ -32,9 +33,11 @@ class BeveragePoursList extends React.Component<Props> {
   );
 
   render() {
+    const { ListHeaderComponent, queryOptions } = this.props;
     return (
       <BasePoursList
-        queryOptions={this.props.queryOptions}
+        ListHeaderComponent={ListHeaderComponent}
+        queryOptions={queryOptions}
         renderListItem={this._renderListItem}
       />
     );

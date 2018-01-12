@@ -4,7 +4,7 @@ import type { Account } from 'brewskey.js-api';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
-import { StyleSheet, ScrollView, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import UserAvatar from '../common/avatars/UserAvatar';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
@@ -17,9 +17,6 @@ const styles = StyleSheet.create({
   avatarContainer: {
     alignItems: 'center',
     paddingVertical: 15,
-  },
-  container: {
-    flex: 1,
   },
 });
 
@@ -37,20 +34,22 @@ class ProfileOverviewScreen extends InjectedComponent<InjectedProps> {
   render() {
     const { account } = this.injectedProps;
     return (
-      <ScrollView>
-        <View style={styles.avatarContainer}>
-          <UserAvatar userName={account.userName} size={200} />
-        </View>
-        <SectionHeader title="Badges" />
-        <UserBadges userID={account.id} />
-        <SectionHeader title="Recent Pours" />
-        <BeveragePoursList
-          queryOptions={{
-            filters: [DAOApi.createFilter('owner/id').equals(account.id)],
-            orderBy: [{ column: 'id', direction: 'desc' }],
-          }}
-        />
-      </ScrollView>
+      <BeveragePoursList
+        ListHeaderComponent={
+          <View>
+            <View style={styles.avatarContainer}>
+              <UserAvatar userName={account.userName} size={200} />
+            </View>
+            <SectionHeader title="Badges" />
+            <UserBadges userID={account.id} />
+            <SectionHeader title="Recent Pours" />
+          </View>
+        }
+        queryOptions={{
+          filters: [DAOApi.createFilter('owner/id').equals(account.id)],
+          orderBy: [{ column: 'id', direction: 'desc' }],
+        }}
+      />
     );
   }
 }

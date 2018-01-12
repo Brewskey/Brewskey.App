@@ -24,8 +24,8 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
     const { tapId } = this.injectedProps;
     return (
       <Container>
-        <SectionHeader title="Recent pours" />
         <OwnerPoursList
+          ListHeaderComponent={<SectionHeader title="Recent pours" />}
           queryOptions={{
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
           }}

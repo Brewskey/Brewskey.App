@@ -13,6 +13,7 @@ import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
 type Props = {|
+  ListHeaderComponent?: React.Node,
   queryOptions?: QueryOptions,
   renderListItem: (pour: Pour) => React.Node,
 |};
@@ -52,15 +53,16 @@ class BasePoursList extends React.Component<Props> {
   render() {
     return (
       <FlatList
-        onEndReached={this._listStore.fetchNextPage}
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        renderItem={this._renderRow}
         ListFooterComponent={
           <LoadingListFooter
             isLoading={this._listStore.isFetchingRemoteCount}
           />
         }
+        ListHeaderComponent={this.props.ListHeaderComponent}
+        onEndReached={this._listStore.fetchNextPage}
+        renderItem={this._renderRow}
       />
     );
   }
