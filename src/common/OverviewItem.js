@@ -8,7 +8,7 @@ import { TYPOGRAPHY } from '../theme';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
   },
   titleText: {
     ...TYPOGRAPHY.paragraph,
