@@ -39,7 +39,8 @@ type RequestApiStore<TResult> = {|
 const makeRequestApiStore = <TResult>(
   getRequestPromise: (...args: Array<any>) => Promise<TResult>,
 ): RequestApiStore<TResult> => {
-  const requestLoaderByKey: ObservableMap<LoadObject<TResult>> = observable(
+  // todo Flow fix: ? shouldn't be there, but ObservableMap type is weird
+  const requestLoaderByKey: ObservableMap<?LoadObject<TResult>> = observable(
     new Map(),
   );
 
