@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: COLORS.secondary,
     flex: 1,
   },
 });

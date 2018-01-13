@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 import { computed } from 'mobx';
 import { AchievementStore } from '../../stores/DAOStores';
 import LoaderComponent from '../../common/LoaderComponent';
+import LoadingUserBadges from './LoadingUserBadges';
 import BADGES_BY_TYPE from '../../badges';
 import LoadedUserBadges from './LoadedUserBadges';
 
@@ -31,8 +32,9 @@ class UserBadges extends React.Component<Props> {
   render() {
     return (
       <LoaderComponent
-        loader={this._badgesLoader}
         loadedComponent={LoadedUserBadges}
+        loader={this._badgesLoader}
+        loadingComponent={LoadingUserBadges}
       />
     );
   }

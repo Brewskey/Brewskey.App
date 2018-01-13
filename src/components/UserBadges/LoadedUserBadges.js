@@ -3,11 +3,20 @@
 import type { Badge } from '../../badges';
 
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import BadgeIcon from '../BadgeIcon';
 import BadgeModal from '../modals/BadgeModal';
+
+const styles = StyleSheet.create({
+  badgeContainer: {
+    paddingHorizontal: 5,
+  },
+  container: {
+    paddingVertical: 10,
+  },
+});
 
 type Props = {|
   value: Array<Badge>,
@@ -41,13 +50,11 @@ class LoadedUserBadges extends React.Component<Props> {
 
   render() {
     return (
-      <ScrollView horizontal>
+      <ScrollView style={styles.container} horizontal>
         {this.props.value.map((badge: Badge): React.Node => (
-          <BadgeIcon
-            badge={badge}
-            key={badge.name}
-            onPress={this._onBadgeIconPress}
-          />
+          <View key={badge.name} style={styles.badgeContainer}>
+            <BadgeIcon badge={badge} onPress={this._onBadgeIconPress} />
+          </View>
         ))}
         <BadgeModal
           badge={this._selectedBadge}

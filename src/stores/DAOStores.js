@@ -122,7 +122,7 @@ class DAOStore<TEntity: { id: EntityID }> {
   };
 
   _onNewDAOEvent = () => {
-    this._atom.reportChanged();
+    (this._atom: $FlowFixMe).reportChanged();
   };
 }
 

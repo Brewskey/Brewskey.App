@@ -1,6 +1,5 @@
 // @flow
 
-import type { ObservableMap } from 'mobx';
 import type { Field, ValidationFunction } from './types';
 
 import { action, computed, createTransformer, observable } from 'mobx';
@@ -19,7 +18,7 @@ type InitFieldProps = {|
 // todo change touched logic so it takes care about initialValue
 class FormStore {
   _validate: ValidationFunction;
-  @observable _fields: ObservableMap<Field> = new Map();
+  @observable _fields: Map<string, Field> = new Map();
 
   @observable formError: ?string = null;
   @observable submitting: boolean = false;
@@ -59,7 +58,7 @@ class FormStore {
       return;
     }
 
-    this._fields.set(fieldName, { ...field, ...props });
+    this._fields.set(fieldName, ({ ...field, ...props }: $FlowFixMe));
   };
 
   @action
@@ -69,7 +68,7 @@ class FormStore {
       return;
     }
 
-    this._fields.set(fieldName, { ...field, error });
+    this._fields.set(fieldName, ({ ...field, error }: $FlowFixMe));
   };
 
   @action
@@ -107,19 +106,21 @@ class FormStore {
 
   @computed
   get invalid(): boolean {
-    return this._fields.values().some((field: Field): boolean => !!field.error);
+    return Array.from(this._fields.values()).some(
+      (field: Field): boolean => !!field.error,
+    );
   }
 
   @computed
   get pristine(): boolean {
-    return !this._fields
-      .values()
-      .some((field: Field): boolean => field.value !== field.initialValue);
+    return !Array.from(this._fields.values()).some(
+      (field: Field): boolean => field.value !== field.initialValue,
+    );
   }
 
   @computed
   get values(): Object {
-    return this._fields.entries().reduce(
+    return Array.from(this._fields.entries()).reduce(
       (result: Object, [fieldName, field]: [string, Field]): Object => ({
         ...result,
         [fieldName]: field.value,
