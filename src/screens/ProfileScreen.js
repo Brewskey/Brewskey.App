@@ -36,7 +36,7 @@ type InjectedProps = {|
 @observer
 class ProfileScreen extends InjectedComponent<InjectedProps> {
   render() {
-    const { id } = this.injectedProps;
+    const { id = '68ae3ba1-7841-4273-8d4b-0fb4fa6ed3ca' } = this.injectedProps;
     return (
       <LoaderComponent
         loader={AccountStore.getByID(id)}

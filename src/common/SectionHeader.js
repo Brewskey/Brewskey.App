@@ -1,12 +1,21 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TYPOGRAPHY } from '../theme';
+import { StyleSheet, Text } from 'react-native';
+import { COLORS, TYPOGRAPHY } from '../theme';
 
 // todo make better styles, may be add borders etc
 const styles = StyleSheet.create({
-  titleText: { ...TYPOGRAPHY.secondary, textAlign: 'center' },
+  title: {
+    ...TYPOGRAPHY.secondary,
+    backgroundColor: COLORS.secondary,
+    borderBottomWidth: 1,
+    borderColor: COLORS.secondary3,
+    borderTopWidth: 1,
+    fontWeight: 'bold',
+    paddingVertical: 12,
+    textAlign: 'center',
+  },
 });
 
 type Props = {|
@@ -14,9 +23,7 @@ type Props = {|
 |};
 
 const SectionHeader = ({ title }: Props) => (
-  <View>
-    <Text style={styles.titleText}>{title}</Text>
-  </View>
+  <Text style={styles.title}>{title}</Text>
 );
 
 export default SectionHeader;

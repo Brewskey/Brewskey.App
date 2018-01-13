@@ -1,16 +1,17 @@
 // @flow
 
-import type { Navigation, NearbyLocation, NearbyTap } from '../types';
+import type { Navigation, NearbyLocation, NearbyTap } from '../../types';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
+import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import ListSectionHeader from '../common/ListSectionHeader';
+import ListItem from '../../common/ListItem';
+import NearbyLocationListEmpty from './NearbyLocationsListEmtpy';
+import LoadingListFooter from '../../common/LoadingListFooter';
+import ListSectionHeader from '../../common/ListSectionHeader';
 import { SectionList } from 'react-native';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 
 type Section<TType> = {
   data: Array<TType>,
@@ -76,6 +77,7 @@ class NearbyLocationList extends InjectedComponent<
         renderItem={this._renderItem}
         renderSectionHeader={this._renderSectionHeader}
         sections={this._sections}
+        ListEmptyComponent={<NearbyLocationListEmpty />}
         ListFooterComponent={
           <LoadingListFooter isLoading={this.props.isLoading} />
         }
