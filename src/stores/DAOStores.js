@@ -134,6 +134,34 @@ class $AchievementStore extends DAOStore<Achievement> {
   }
 }
 
+class $TapStore extends DAOStore<Tap> {
+  countLeaderboard(
+    tapID: EntityID,
+    duration: string,
+    queryOptions?: QueryOptions = {},
+  ) {
+    return this.__callDAOFunction(
+      'countLeaderboard',
+      tapID,
+      duration,
+      queryOptions,
+    );
+  }
+
+  getLeaderboard(
+    tapID: EntityID,
+    duration: string,
+    queryOptions?: QueryOptions = {},
+  ) {
+    return this.__callDAOFunction(
+      'fetchLeaderboard',
+      tapID,
+      duration,
+      queryOptions,
+    );
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
 export const AchievementStore: $AchievementStore = new $AchievementStore(
   DAOApi.AchievementDAO,
@@ -166,6 +194,6 @@ export const ScheduleStore: DAOStore<Schedule> = new DAOStore(
 );
 export const SrmStore: DAOStore<Srm> = new DAOStore(DAOApi.SrmDAO);
 export const StyleStore: DAOStore<Style> = new DAOStore(DAOApi.StyleDAO);
-export const TapStore: DAOStore<Tap> = new DAOStore(DAOApi.TapDAO);
+export const TapStore: $TapStore = new $TapStore(DAOApi.TapDAO);
 
 export default DAOStore;

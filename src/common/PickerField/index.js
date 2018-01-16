@@ -32,17 +32,13 @@ export type Props = {
   label?: string,
   onBlur?: () => void,
   onChange: (value: any) => void,
-  placeholder: ?string,
+  placeholder?: string,
   value: any,
   // other react-native Picker props
 };
 
 @observer
 class PickerField extends React.Component<Props> {
-  static defaultProps = {
-    placeholder: 'Please select...',
-  };
-
   static Item = Picker.Item;
 
   _onPickerValueChange = (value: any) => {
