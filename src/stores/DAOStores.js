@@ -10,6 +10,7 @@ import type {
   Device,
   EntityID,
   FlowSensor,
+  Friend,
   Glass,
   Keg,
   Location,
@@ -149,6 +150,7 @@ export const GlassStore: DAOStore<Glass> = new DAOStore(DAOApi.GlassDAO);
 export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
   DAOApi.FlowSensorDAO,
 );
+export const FriendStore: DAOStore<Friend> = new DAOStore(DAOApi.FriendDAO);
 export const KegStore: DAOStore<Keg> = new DAOStore(DAOApi.KegDAO);
 export const LocationStore: DAOStore<Location> = new DAOStore(
   DAOApi.LocationDAO,
