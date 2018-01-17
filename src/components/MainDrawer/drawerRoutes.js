@@ -18,7 +18,13 @@ const DRAWER_ROUTES: Array<DrawerRoute> = [
     icon: { name: 'account', type: 'material-community' },
     isManageTapsRequired: false,
     routeKey: 'myProfile',
-    title: 'My profile',
+    title: 'Profile',
+  },
+  {
+    icon: { name: 'people', type: 'material' },
+    isManageTapsRequired: false,
+    routeKey: 'myFriends',
+    title: 'Friends',
   },
   {
     icon: { name: 'map-marker', type: 'material-community' },

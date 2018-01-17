@@ -22,6 +22,7 @@ import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
 import MyBeveragesScreen from './screens/MyBeveragesScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
+import MyFriendsScreen from './screens/MyFriendsScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
 import NewFlowSensorScreen from './screens/NewFlowSensorScreen';
@@ -53,6 +54,7 @@ const RootRouter = StackNavigator(
           },
           profile: { screen: ProfileScreen },
           myProfile: { screen: MyProfileScreen },
+          myFriends: { screen: MyFriendsScreen },
           locations: {
             screen: StackNavigator(
               {
