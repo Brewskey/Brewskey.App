@@ -1,17 +1,18 @@
 // @flow
 
+import type { Navigation } from '../types';
 import type { EntityID, LeaderboardItem } from 'brewskey.js-api';
 
 import * as React from 'react';
-
+import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import FlatList from '../common/FlatList';
+import { withNavigation } from 'react-navigation';
 import LeaderboardListStore from '../stores/LeaderboardListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LeaderboardListEmpty from './LeaderboardListEmpty';
-import NavigationService from '../NavigationService';
 
 type Props = {|
   duration: string,
@@ -19,8 +20,13 @@ type Props = {|
   tapID: EntityID,
 |};
 
+type InjectedProps = {|
+  navigation: Navigation,
+|};
+
+@withNavigation
 @observer
-class LeaderboardList extends React.Component<Props> {
+class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   _listStore: LeaderboardListStore = new LeaderboardListStore();
 
   componentWillMount() {
@@ -39,15 +45,10 @@ class LeaderboardList extends React.Component<Props> {
 
   _keyExtractor = (item: LeaderboardItem): string => item.userName;
 
-  _onListItemPress = ({ userID }: LeaderboardItem) => {
-    // todo for some reason navigation.navigate() from withNavigation HOC
-    // doesn't do anything in the current component level
-    // with the current react-navigation version lib
-    // https://github.com/react-navigation/react-navigation/issues/3143
-    NavigationService.navigate('profile', {
+  _onListItemPress = ({ userID }: LeaderboardItem) =>
+    this.injectedProps.navigation.navigate('profile', {
       id: userID,
     });
-  };
 
   _renderRow = ({
     item,
