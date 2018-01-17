@@ -63,6 +63,7 @@
 		40C135CDF3D54A2099B22A9B /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF63135715174B1F80BB5EB8 /* libRNImagePicker.a */; };
 		BD08B131300544028492F8AC /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BF7EA18AC794F3EAFC73B48 /* libRNFetchBlob.a */; };
 		A4C56DD1292B44A1A62B5225 /* libNfcManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EA5E0C98FCB4347984DC4CB /* libNfcManager.a */; };
+		9110EF84AD924B50812473AF /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D776391C1C9A4B97B0126235 /* libRCTContacts.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -321,6 +322,8 @@
 		1BF7EA18AC794F3EAFC73B48 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		AF8333CC611F426DAA2159D2 /* NfcManager.xcodeproj */ = {isa = PBXFileReference; name = "NfcManager.xcodeproj"; path = "../node_modules/react-native-nfc-manager/ios/NfcManager.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		2EA5E0C98FCB4347984DC4CB /* libNfcManager.a */ = {isa = PBXFileReference; name = "libNfcManager.a"; path = "libNfcManager.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		BEAAE82EFC194434A0E0EE17 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; name = "RCTContacts.xcodeproj"; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D776391C1C9A4B97B0126235 /* libRCTContacts.a */ = {isa = PBXFileReference; name = "libRCTContacts.a"; path = "libRCTContacts.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +356,7 @@
 				40C135CDF3D54A2099B22A9B /* libRNImagePicker.a in Frameworks */,
 				BD08B131300544028492F8AC /* libRNFetchBlob.a in Frameworks */,
 				A4C56DD1292B44A1A62B5225 /* libNfcManager.a in Frameworks */,
+				9110EF84AD924B50812473AF /* libRCTContacts.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +529,7 @@
 				37CC85097FE14D929CAFE596 /* RNImagePicker.xcodeproj */,
 				8CD49F2096674EA99CE26604 /* RNFetchBlob.xcodeproj */,
 				AF8333CC611F426DAA2159D2 /* NfcManager.xcodeproj */,
+				BEAAE82EFC194434A0E0EE17 /* RCTContacts.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1131,6 +1136,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1138,6 +1144,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Debug;
@@ -1162,6 +1169,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1169,6 +1177,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Release;
@@ -1194,6 +1203,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Debug;
@@ -1218,6 +1228,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Release;
@@ -1251,6 +1262,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1258,6 +1270,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Debug;
@@ -1291,6 +1304,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1298,6 +1312,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-fetch-blob\ios/**",
 					"$(SRCROOT)\..\node_modules\react-native-nfc-manager\ios",
+					"$(SRCROOT)\..\node_modules\react-native-contacts\ios\RCTContacts",
 				);
 			};
 			name = Release;
@@ -1326,6 +1341,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1350,6 +1366,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

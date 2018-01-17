@@ -3,6 +3,7 @@ package com.brewskey;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import community.revteltech.nfc.NfcManagerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeContacts(),
           new NfcManagerPackage(),
           new RNFetchBlobPackage(),
           new ImagePickerPackage(),
