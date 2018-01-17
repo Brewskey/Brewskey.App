@@ -19,9 +19,14 @@ export type BaseAvatarProps = {
   size: number,
 };
 
-type Props = BaseAvatarProps & { uri: string };
+type Props = BaseAvatarProps & { uri: ?string };
 
 class BaseAvatar extends React.PureComponent<Props> {
+  static defaultProps = {
+    rounded: true,
+    size: 45,
+  };
+
   render() {
     const { imageRef, mutable, onPress, rounded, size, uri } = this.props;
     const containerStyle = [
@@ -39,13 +44,15 @@ class BaseAvatar extends React.PureComponent<Props> {
         size={size}
         style={[containerStyle, styles.avatar]}
       >
-        <CachedImage
-          ref={imageRef}
-          mutable={mutable}
-          size={size}
-          source={{ uri }}
-          style={containerStyle}
-        />
+        {uri ? (
+          <CachedImage
+            ref={imageRef}
+            mutable={mutable}
+            size={size}
+            source={{ uri }}
+            style={containerStyle}
+          />
+        ) : null}
       </TouchableOpacity>
     );
   }
