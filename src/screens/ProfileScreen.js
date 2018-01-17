@@ -1,6 +1,7 @@
 // @flow
 
 import type { Account, EntityID } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { TabNavigator } from 'react-navigation';
@@ -17,7 +18,7 @@ import ProfileStatsScreen from './ProfileStatsScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 /* eslint-disable sorting/sort-object-props */
-const ProfileRouter = TabNavigator(
+const ProfileNavigator = TabNavigator(
   {
     profileOverview: { screen: ProfileOverviewScreen },
     profileStats: { screen: ProfileStatsScreen },
@@ -30,18 +31,22 @@ const ProfileRouter = TabNavigator(
 
 type InjectedProps = {|
   id: EntityID,
+  navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
 @observer
 class ProfileScreen extends InjectedComponent<InjectedProps> {
+  static router = ProfileNavigator.router;
+
   render() {
     const { id } = this.injectedProps;
     return (
       <LoaderComponent
-        loader={AccountStore.getByID(id)}
         loadedComponent={LoadedComponent}
+        loader={AccountStore.getByID(id)}
         loadingComponent={LoadingComponent}
+        navigation={this.injectedProps.navigation}
       />
     );
   }
@@ -61,7 +66,7 @@ type LoadedComponentProps = {|
 const LoadedComponent = ({ value }: LoadedComponentProps) => (
   <Container>
     <Header showBackButton title={value.userName} />
-    <ProfileRouter screenProps={{ account: value }} />
+    <ProfileNavigator screenProps={{ account: value }} />
   </Container>
 );
 

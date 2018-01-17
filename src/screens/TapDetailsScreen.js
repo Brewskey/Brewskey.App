@@ -20,7 +20,7 @@ import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
 import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
-const TapDetailsRouter = TabNavigator(
+const TapDetailsNavigator = TabNavigator(
   {
     tapDetailsKeg: { screen: TapDetailsKegScreen },
     tapDetailsStats: { screen: TapDetailsStatsScreen },
@@ -41,6 +41,8 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsScreen extends InjectedComponent<InjectedProps> {
+  static router = TapDetailsNavigator.router;
+
   @computed
   get _tapLoader(): LoadObject<Tap> {
     return TapStore.getByID(this.injectedProps.id);
@@ -52,6 +54,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedComponent}
         loader={this._tapLoader}
         loadingComponent={LoadingComponent}
+        navigation={this.injectedProps.navigation}
       />
     );
   }
@@ -65,13 +68,17 @@ const LoadingComponent = () => (
 );
 
 type LoadedComponentProps = {
+  navigation: Navigation,
   value: Tap,
 };
 
-const LoadedComponent = ({ value: { id, name } }: LoadedComponentProps) => (
+const LoadedComponent = ({
+  navigation,
+  value: { id, name },
+}: LoadedComponentProps) => (
   <Container>
     <Header showBackButton title={name} />
-    <TapDetailsRouter screenProps={{ tapId: id }} />
+    <TapDetailsNavigator navigation={navigation} screenProps={{ tapId: id }} />
   </Container>
 );
 

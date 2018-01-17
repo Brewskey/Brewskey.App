@@ -1,6 +1,9 @@
 // @flow
 
+import type { Navigation } from '../types';
+
 import * as React from 'react';
+import InjectedComponent from '../common/InjectedComponent';
 import { TabNavigator } from 'react-navigation';
 import theme from '../theme';
 import Container from '../common/Container';
@@ -9,7 +12,7 @@ import MyFriendsMainScreen from './MyFriendsMainScreen';
 import MyFriendsRequestScreen from './MyFriendsRequestScreen';
 
 /* eslint-disable sorting/sort-object-props */
-const MyFriendsRouter = TabNavigator(
+const MyFriendsNavigator = TabNavigator(
   {
     myFriendsMain: { screen: MyFriendsMainScreen },
     myFriendsRequest: { screen: MyFriendsRequestScreen },
@@ -21,12 +24,18 @@ const MyFriendsRouter = TabNavigator(
   },
 );
 
-class MyFriendsScreen extends React.Component<{}> {
+type InjectedProps = {|
+  navigation: Navigation,
+|};
+
+class MyFriendsScreen extends InjectedComponent<InjectedProps> {
+  static router = MyFriendsNavigator.router;
+
   render() {
     return (
       <Container>
         <Header title="Friends" />
-        <MyFriendsRouter />
+        <MyFriendsNavigator navigation={this.injectedProps.navigation} />
       </Container>
     );
   }
