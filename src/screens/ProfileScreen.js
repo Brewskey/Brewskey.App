@@ -49,7 +49,7 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
 
 const LoadingComponent = () => (
   <Container>
-    <Header />
+    <Header showBackButton />
     <LoadingIndicator />
   </Container>
 );
@@ -60,7 +60,7 @@ type LoadedComponentProps = {|
 
 const LoadedComponent = ({ value }: LoadedComponentProps) => (
   <Container>
-    <Header title={value.userName} />
+    <Header showBackButton title={value.userName} />
     <ProfileRouter screenProps={{ account: value }} />
   </Container>
 );
