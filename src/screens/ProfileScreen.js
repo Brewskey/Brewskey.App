@@ -37,8 +37,6 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class ProfileScreen extends InjectedComponent<InjectedProps> {
-  static router = ProfileNavigator.router;
-
   render() {
     const { id } = this.injectedProps;
     return (
@@ -46,7 +44,6 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedComponent}
         loader={AccountStore.getByID(id)}
         loadingComponent={LoadingComponent}
-        navigation={this.injectedProps.navigation}
       />
     );
   }

@@ -1,12 +1,9 @@
 // @flow
 
 import type { Friend, QueryOptions } from 'brewskey.js-api';
-import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
-import { withNavigation } from 'react-navigation';
 import { observer } from 'mobx-react';
 import DAOListStore from '../stores/DAOListStore';
 import { FriendStore } from '../stores/DAOStores';
@@ -15,6 +12,7 @@ import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
+import NavigationService from '../NavigationService';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -22,13 +20,8 @@ type Props = {|
   showPhoneNumber?: boolean,
 |};
 
-type InjectedProps = {|
-  navigation: Navigation,
-|};
-
-@withNavigation
 @observer
-class FriendsList extends InjectedComponent<InjectedProps, Props> {
+class FriendsList extends React.Component<Props> {
   static defaultProps = {
     queryOptions: {},
   };
@@ -46,7 +39,8 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Friend>): number => row.key;
 
   _onListItemPress = (friend: Friend) =>
-    this.injectedProps.navigation.navigate('profile', {
+    // todo https://github.com/Brewskey/Brewskey.App/issues/111
+    NavigationService.navigate('profile', {
       id: friend.friendAccount.id,
     });
 
