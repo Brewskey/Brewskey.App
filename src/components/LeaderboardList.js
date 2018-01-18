@@ -1,18 +1,16 @@
 // @flow
 
-import type { Navigation } from '../types';
 import type { EntityID, LeaderboardItem } from 'brewskey.js-api';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import FlatList from '../common/FlatList';
-import { withNavigation } from 'react-navigation';
 import LeaderboardListStore from '../stores/LeaderboardListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LeaderboardListEmpty from './LeaderboardListEmpty';
+import NavigationService from '../NavigationService';
 
 type Props = {|
   duration: string,
@@ -20,13 +18,8 @@ type Props = {|
   tapID: EntityID,
 |};
 
-type InjectedProps = {|
-  navigation: Navigation,
-|};
-
-@withNavigation
 @observer
-class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
+class LeaderboardList extends React.Component<Props> {
   _listStore: LeaderboardListStore = new LeaderboardListStore();
 
   componentWillMount() {
@@ -46,7 +39,8 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (item: LeaderboardItem): string => item.userName;
 
   _onListItemPress = ({ userID }: LeaderboardItem) =>
-    this.injectedProps.navigation.navigate('profile', {
+    // todo https://github.com/Brewskey/Brewskey.App/issues/111
+    NavigationService.navigate('profile', {
       id: userID,
     });
 

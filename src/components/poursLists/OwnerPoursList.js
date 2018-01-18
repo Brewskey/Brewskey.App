@@ -1,36 +1,30 @@
 // @flow
 
 import type { QueryOptions, Pour } from 'brewskey.js-api';
-import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
-import InjectedComponent from '../../common/InjectedComponent';
 import ListItem from '../../common/ListItem';
 import UserAvatar from '../../common/avatars/UserAvatar';
 import BasePoursList from './BasePoursList';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import NavigationService from '../../NavigationService';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
   queryOptions?: QueryOptions,
 |};
 
-type InjectedProps = {|
-  navigation: Navigation,
-|};
-
-@withNavigation
 @observer
-class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
+class OwnerPoursList extends React.Component<Props> {
   _onListItemPress = (pour: Pour) => {
     if (!pour.owner) {
       return;
     }
 
-    this.injectedProps.navigation.navigate('profile', {
+    // todo https://github.com/Brewskey/Brewskey.App/issues/111
+    NavigationService.navigate('profile', {
       id: pour.owner.id,
     });
   };
