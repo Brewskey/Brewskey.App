@@ -6,12 +6,13 @@
     "android": "react-native run-android",
     "lint": "eslint ./src --max-warnings 0 --fix",
     "precommit": "lint-staged",
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node react-native-start-with-link.js",
     "test": "node node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
     "array-flatten": "^2.1.1",
-    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api":
+      "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
     "deepmerge": "^2.0.1",
     "flow-bin": "^0.58.0",
     "hoist-non-react-statics": "^2.3.1",
@@ -58,11 +59,7 @@
     "react-test-renderer": "^16.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": [
-      "prettier --write",
-      "lint",
-      "git add"
-    ]
+    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
   },
   "jest": {
     "preset": "react-native"
