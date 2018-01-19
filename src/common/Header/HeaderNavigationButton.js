@@ -13,13 +13,16 @@ type InjectedProps = {|
 
 type Props = {
   toRoute: string,
+  params?: Object,
   // react-native-element icon props
 };
 
 @withNavigation
 class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
-  _onButtonPress = () =>
-    this.injectedProps.navigation.navigate(this.props.toRoute);
+  _onButtonPress = () => {
+    const { params, toRoute } = this.props;
+    this.injectedProps.navigation.navigate(toRoute, params);
+  };
 
   render() {
     return <HeaderIconButton {...this.props} onPress={this._onButtonPress} />;
