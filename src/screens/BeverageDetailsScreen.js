@@ -3,13 +3,15 @@ import type { Beverage, EntityID, LoadObject } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { ScrollView } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { BeverageStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Text } from 'react-native';
+import BeverageDetailsContent from '../components/BeverageDetailsLoader/BeverageDetailsContent';
 import Container from '../common/Container';
 import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -49,13 +51,22 @@ type LoadedComponentProps = {
   value: Beverage,
 };
 
-const LoadedComponent = ({
-  value: { description, name },
-}: LoadedComponentProps) => (
+const LoadedComponent = ({ value: beverage }: LoadedComponentProps) => (
   <Container>
-    <Header showBackButton title={name} />
-    <Text>{name}</Text>
-    <Text>{description}</Text>
+    <Header
+      rightComponent={
+        <HeaderNavigationButton
+          name="edit"
+          params={{ id: beverage.id }}
+          toRoute="editBeverage"
+        />
+      }
+      showBackButton
+      title={beverage.name}
+    />
+    <ScrollView>
+      <BeverageDetailsContent beverage={beverage} />
+    </ScrollView>
   </Container>
 );
 
