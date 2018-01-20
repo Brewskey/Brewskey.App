@@ -3,15 +3,9 @@
 import type { Node } from 'react';
 
 import React, { Component } from 'react';
-import {
-  Modal,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
-
-const emptyFunction = () => {};
+import Modal from './Modal';
 
 const styles = StyleSheet.create({
   container: {
@@ -55,24 +49,15 @@ class CenteredModal extends Component<Props> {
     } = this.props;
 
     return (
-      <Modal
-        animationType="slide"
-        onRequestClose={emptyFunction}
-        transparent
-        visible={isVisible}
-      >
-        <TouchableWithoutFeedback onPress={onHideModal}>
-          <View style={styles.container}>
-            <TouchableWithoutFeedback onPress={emptyFunction}>
-              <View style={styles.modal}>
-                {!header ? null : <View style={styles.header}>{header}</View>}
-                <View style={[styles.content, contentContainerStyle]}>
-                  {children}
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
+      <Modal isVisible={isVisible} onHideModal={onHideModal}>
+        <View style={styles.container}>
+          <View style={styles.modal}>
+            {!header ? null : <View style={styles.header}>{header}</View>}
+            <View style={[styles.content, contentContainerStyle]}>
+              {children}
+            </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </Modal>
     );
   }

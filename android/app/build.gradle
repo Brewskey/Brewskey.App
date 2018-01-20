@@ -140,6 +140,7 @@ dependencies {
     compile project(':react-native-contacts')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-image-picker')
+    compile project(':react-native-maps')
     compile project(':react-native-nfc-manager')
     compile project(':react-native-vector-icons')
     compile fileTree(dir: "libs", include: ["*.jar"])

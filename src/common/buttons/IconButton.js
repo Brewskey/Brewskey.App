@@ -19,6 +19,7 @@ type Props = {
   // react-native-elements icon props
 };
 
+// todo fix ripple out of boundaries on raised buttons
 const IconButton = ({ onPress, ...rest }: Props) => (
   <TouchableItem borderless onPress={onPress}>
     <Icon {...rest} containerStyle={styles.container} />
