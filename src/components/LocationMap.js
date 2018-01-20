@@ -38,8 +38,9 @@ const getRegion = (
 
 const styles = StyleSheet.create({
   map: {
-    height: 300,
-    width: '100%',
+    ...StyleSheet.absoluteFillObject,
+    // height:
+    // width: '100%',
   },
 });
 

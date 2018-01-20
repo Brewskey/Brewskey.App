@@ -46,15 +46,6 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
-          home: {
-            screen: StackNavigator(
-              { home: { screen: HomeScreen } },
-              { headerMode: 'none' },
-            ),
-          },
-          profile: { screen: ProfileScreen },
-          myProfile: { screen: MyProfileScreen },
-          myFriends: { screen: MyFriendsScreen },
           locations: {
             screen: StackNavigator(
               {
@@ -72,6 +63,15 @@ const RootRouter = StackNavigator(
               },
             ),
           },
+          home: {
+            screen: StackNavigator(
+              { home: { screen: HomeScreen } },
+              { headerMode: 'none' },
+            ),
+          },
+          profile: { screen: ProfileScreen },
+          myProfile: { screen: MyProfileScreen },
+          myFriends: { screen: MyFriendsScreen },
           taps: {
             screen: StackNavigator(
               {

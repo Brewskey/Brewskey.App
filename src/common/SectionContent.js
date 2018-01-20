@@ -1,20 +1,27 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-
-const styles = StyleSheet.create({
-  container: {
-    paddingVertical: 12,
-  },
-});
+import { View } from 'react-native';
 
 type Props = {|
   children?: React.Node,
+  paddedHorizontal?: boolean,
+  paddedVertical?: boolean,
 |};
 
-const SectionContent = ({ children }: Props) => (
-  <View style={styles.container}>{children}</View>
+const SectionContent = ({
+  children,
+  paddedVertical = true,
+  paddedHorizontal = false,
+}: Props) => (
+  <View
+    style={[
+      paddedHorizontal && { paddingHorizontal: 12 },
+      paddedVertical && { paddingVertical: 12 },
+    ]}
+  >
+    {children}
+  </View>
 );
 
 export default SectionContent;
