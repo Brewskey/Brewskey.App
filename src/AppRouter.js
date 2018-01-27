@@ -46,32 +46,6 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
-          locations: {
-            screen: StackNavigator(
-              {
-                // todo ordering matter figure out why initialRoute
-                // doesn't work
-                locations: { screen: LocationsScreen },
-                editLocation: { screen: EditLocationScreen },
-                locationDetails: { screen: LocationDetailsScreen },
-                newLocation: { screen: NewLocationScreen },
-              },
-              {
-                gesturesEnabled: false,
-                headerMode: 'none',
-                initialRoute: 'locations',
-              },
-            ),
-          },
-          home: {
-            screen: StackNavigator(
-              { home: { screen: HomeScreen } },
-              { headerMode: 'none' },
-            ),
-          },
-          profile: { screen: ProfileScreen },
-          myProfile: { screen: MyProfileScreen },
-          myFriends: { screen: MyFriendsScreen },
           taps: {
             screen: StackNavigator(
               {
@@ -87,6 +61,32 @@ const RootRouter = StackNavigator(
                 gesturesEnabled: false,
                 headerMode: 'none',
                 initialRoute: 'taps',
+              },
+            ),
+          },
+          home: {
+            screen: StackNavigator(
+              { home: { screen: HomeScreen } },
+              { headerMode: 'none' },
+            ),
+          },
+          profile: { screen: ProfileScreen },
+          myProfile: { screen: MyProfileScreen },
+          myFriends: { screen: MyFriendsScreen },
+          locations: {
+            screen: StackNavigator(
+              {
+                // todo ordering matter figure out why initialRoute
+                // doesn't work
+                locations: { screen: LocationsScreen },
+                editLocation: { screen: EditLocationScreen },
+                locationDetails: { screen: LocationDetailsScreen },
+                newLocation: { screen: NewLocationScreen },
+              },
+              {
+                gesturesEnabled: false,
+                headerMode: 'none',
+                initialRoute: 'locations',
               },
             ),
           },

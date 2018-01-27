@@ -1,35 +1,27 @@
-// The component is temporary stolen from
-// https://github.com/facebook/react-native/blob/master/Libraries/Experimental/SwipeableRow/SwipeableFlatList.js
-// it exists on master branch, but not in release yet.
-// I modified it in some places and made it actually works as expected
-// (open only one row at a time, close rows on scroll, these don't work in
-// original )
-/* eslint-disable */
-
 // @flow
 
-import type RNFlatList, { Props as FlatListProps } from 'FlatList';
-import type { renderItemType } from 'VirtualizedList';
+// eslint-disable-next-line
+import type RNSectionList, { Props as SectionListProps } from 'SectionList';
 
 import * as React from 'react';
-import FlatList from '../FlatList';
+import SectionList from './SectionList';
 
 type SwipeableListProps = {
   bounceFirstRowOnMount: boolean,
 };
 
-type Props<TEntity> = SwipeableListProps & FlatListProps<TEntity>;
+type Props<TEntity> = SwipeableListProps & SectionListProps<TEntity>;
 
 type State = {|
   openRowKey: ?string,
 |};
 
-class SwipeableFlatList<TEntity> extends React.PureComponent<
+class SwipeableSectionList<TEntity> extends React.PureComponent<
   Props<TEntity>,
   State,
 > {
   static defaultProps = {
-    ...FlatList.defaultProps,
+    // ...SectionList.defaultProps,
     bounceFirstRowOnMount: true,
   };
 
@@ -37,15 +29,15 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
     openRowKey: null,
   };
 
-  _flatListRef: ?RNFlatList<TEntity> = null;
+  _listRef: ?RNSectionList<TEntity> = null;
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
   _setListViewScrollableTo(value: boolean) {
-    if (!this._flatListRef) {
+    if (!this._listRef) {
       return;
     }
-    this._flatListRef.setNativeProps({
+    this._listRef.setNativeProps({
       scrollEnabled: value,
     });
   }
@@ -60,11 +52,13 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
 
   _onScroll = (event: SyntheticEvent<*>): void => {
     this.resetOpenRow();
-    this.props.onScroll && this.props.onScroll(event);
+    if (this.props.onScroll) {
+      this.props.onScroll(event);
+    }
   };
 
-  _setFlatListRef = ref => {
-    this._flatListRef = ref;
+  _setListRef = ref => {
+    this._listRef = ref;
   };
 
   _renderItem = (info: { item: TEntity, index: number }): React.Node => {
@@ -84,10 +78,10 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
 
   render() {
     return (
-      <FlatList
+      <SectionList
         {...this.props}
         extraData={this.state}
-        innerRef={this._setFlatListRef}
+        innerRef={this._setListRef}
         onScroll={this._onScroll}
         renderItem={this._renderItem}
       />
@@ -95,4 +89,4 @@ class SwipeableFlatList<TEntity> extends React.PureComponent<
   }
 }
 
-export default SwipeableFlatList;
+export default SwipeableSectionList;

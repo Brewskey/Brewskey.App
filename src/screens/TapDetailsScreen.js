@@ -72,12 +72,13 @@ type LoadedComponentProps = {
   value: Tap,
 };
 
+// todo fix tap Name
 const LoadedComponent = ({
   navigation,
-  value: { id, name },
+  value: { id },
 }: LoadedComponentProps) => (
   <Container>
-    <Header showBackButton title={name} />
+    <Header showBackButton title="Tap" />
     <TapDetailsNavigator navigation={navigation} screenProps={{ tapId: id }} />
   </Container>
 );

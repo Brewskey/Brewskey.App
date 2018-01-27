@@ -55,13 +55,6 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
       <KeyboardAwareScrollView>
         <FormField
           component={TextField}
-          initialValue={tap.name}
-          disabled={submitting}
-          name="name"
-          label="Name"
-        />
-        <FormField
-          component={TextField}
           initialValue={tap.description}
           name="description"
           label="Description"

@@ -6,7 +6,7 @@ import * as React from 'react';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
-import TapsList from '../components/TapsList';
+import SectionTapsList from '../components/SectionTapsList';
 
 type Props = {|
   navigation: Navigation,
@@ -22,7 +22,7 @@ class TapsScreen extends React.Component<Props> {
           }
           title="Taps"
         />
-        <TapsList />
+        <SectionTapsList />
       </Container>
     );
   }
