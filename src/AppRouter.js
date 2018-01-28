@@ -46,24 +46,6 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
-          taps: {
-            screen: StackNavigator(
-              {
-                taps: { screen: TapsScreen },
-                editFlowSensor: { screen: EditFlowSensorScreen },
-                editTap: { screen: EditTapScreen },
-                newFlowSensor: { screen: NewFlowSensorScreen },
-                newKeg: { screen: NewKegScreen },
-                newTap: { screen: NewTapScreen },
-                tapDetails: { screen: TapDetailsScreen },
-              },
-              {
-                gesturesEnabled: false,
-                headerMode: 'none',
-                initialRoute: 'taps',
-              },
-            ),
-          },
           home: {
             screen: StackNavigator(
               { home: { screen: HomeScreen } },
@@ -102,6 +84,24 @@ const RootRouter = StackNavigator(
                 gesturesEnabled: false,
                 headerMode: 'none',
                 initialRoute: 'devices',
+              },
+            ),
+          },
+          taps: {
+            screen: StackNavigator(
+              {
+                taps: { screen: TapsScreen },
+                editFlowSensor: { screen: EditFlowSensorScreen },
+                editTap: { screen: EditTapScreen },
+                newFlowSensor: { screen: NewFlowSensorScreen },
+                newKeg: { screen: NewKegScreen },
+                newTap: { screen: NewTapScreen },
+                tapDetails: { screen: TapDetailsScreen },
+              },
+              {
+                gesturesEnabled: false,
+                headerMode: 'none',
+                initialRoute: 'taps',
               },
             ),
           },
