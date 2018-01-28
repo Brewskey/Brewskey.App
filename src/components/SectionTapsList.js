@@ -110,6 +110,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
         renderItem={this._renderRow}
         renderSectionHeader={this._renderSectionHeader}
         sections={this._listStore.sections}
+        stickySectionHeadersEnabled
       />
     );
   }

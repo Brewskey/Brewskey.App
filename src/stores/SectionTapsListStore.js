@@ -59,39 +59,41 @@ class SectionTapsListStore {
   @computed
   get _pageLoadObjects(): Array<LoadObject<Array<Tap>>> {
     // wait until all items in pageLoadObject are loaded
-    return this._queryOptionsList.map((queryOptions: QueryOptions): LoadObject<
-      Array<Tap>,
-    > => {
-      const pageLoadObject = TapStore.getMany(queryOptions);
+    return this._queryOptionsList
+      .map((queryOptions: QueryOptions): LoadObject<Array<LoadObject<Tap>>> =>
+        TapStore.getMany(queryOptions),
+      )
+      .map((pageLoadObject: LoadObject<Array<LoadObject<Tap>>>): LoadObject<
+        Array<Tap>,
+      > =>
+        pageLoadObject.map(
+          (itemLoadObjects: Array<LoadObject<Tap>>): LoadObject<Array<Tap>> => {
+            if (
+              itemLoadObjects.some((itemLoadObject: LoadObject<Tap>): boolean =>
+                itemLoadObject.isLoading(),
+              )
+            ) {
+              return LoadObject.loading();
+            }
 
-      if (!pageLoadObject.hasValue()) {
-        return pageLoadObject;
-      }
+            if (
+              itemLoadObjects.find((itemLoadObject: LoadObject<Tap>): boolean =>
+                itemLoadObject.hasError(),
+              )
+            ) {
+              return LoadObject.withError(
+                new Error('Error loading tap list page'),
+              );
+            }
 
-      const itemLoadObjects = pageLoadObject.getValueEnforcing();
-
-      if (
-        itemLoadObjects.some((itemLoadObject: LoadObject<Tap>): boolean =>
-          itemLoadObject.isLoading(),
-        )
-      ) {
-        return LoadObject.loading();
-      }
-
-      if (
-        itemLoadObjects.find((itemLoadObject: LoadObject<Tap>): boolean =>
-          itemLoadObject.hasError(),
-        )
-      ) {
-        return LoadObject.withError(new Error('Error loading tap list page'));
-      }
-
-      return LoadObject.withValue(
-        itemLoadObjects.map((itemLoadObject: LoadObject<Tap>): Tap =>
-          itemLoadObject.getValueEnforcing(),
+            return LoadObject.withValue(
+              itemLoadObjects.map((itemLoadObject: LoadObject<Tap>): Tap =>
+                itemLoadObject.getValueEnforcing(),
+              ),
+            );
+          },
         ),
       );
-    });
   }
 
   @computed
