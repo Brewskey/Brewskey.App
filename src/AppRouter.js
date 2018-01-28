@@ -46,6 +46,15 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
+          home: {
+            screen: StackNavigator(
+              { home: { screen: HomeScreen } },
+              { headerMode: 'none' },
+            ),
+          },
+          profile: { screen: ProfileScreen },
+          myProfile: { screen: MyProfileScreen },
+          myFriends: { screen: MyFriendsScreen },
           locations: {
             screen: StackNavigator(
               {
@@ -63,15 +72,21 @@ const RootRouter = StackNavigator(
               },
             ),
           },
-          home: {
+          devices: {
             screen: StackNavigator(
-              { home: { screen: HomeScreen } },
-              { headerMode: 'none' },
+              {
+                devices: { screen: DevicesScreen },
+                deviceDetails: { screen: DeviceDetailsScreen },
+                editDevice: { screen: EditDeviceScreen },
+                newDevice: { screen: NewDeviceScreen },
+              },
+              {
+                gesturesEnabled: false,
+                headerMode: 'none',
+                initialRoute: 'devices',
+              },
             ),
           },
-          profile: { screen: ProfileScreen },
-          myProfile: { screen: MyProfileScreen },
-          myFriends: { screen: MyFriendsScreen },
           taps: {
             screen: StackNavigator(
               {
@@ -87,21 +102,6 @@ const RootRouter = StackNavigator(
                 gesturesEnabled: false,
                 headerMode: 'none',
                 initialRoute: 'taps',
-              },
-            ),
-          },
-          devices: {
-            screen: StackNavigator(
-              {
-                devices: { screen: DevicesScreen },
-                deviceDetails: { screen: DeviceDetailsScreen },
-                editDevice: { screen: EditDeviceScreen },
-                newDevice: { screen: NewDeviceScreen },
-              },
-              {
-                gesturesEnabled: false,
-                headerMode: 'none',
-                initialRoute: 'devices',
               },
             ),
           },

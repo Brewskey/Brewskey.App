@@ -88,13 +88,14 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       item={item}
       onPress={this._onItemPress}
       subtitle={item.description || NULL_STRING_PLACEHOLDER}
-      title={item.name}
+      // todo fix title, there is no item.name for tap
+      title={NULL_STRING_PLACEHOLDER}
     />
   );
 
   _renderSlideoutView = (item: Tap): React.Node => (
     <QuickActions
-      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+      deleteModalMessage="Are you sure you want to delete the Tap?"
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
