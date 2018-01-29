@@ -5,15 +5,7 @@ import * as React from 'react';
 // eslint-disable-next-line
 import RNSwipeableRow from 'SwipeableRow';
 
-type SectionListInfo<TEntity> = {|
-  index: number,
-  item: TEntity,
-  section: Object,
-  separators: Object,
-|};
-
-type Props<TEntity> = {
-  info: SectionListInfo<TEntity>,
+type SwipeableProps = {
   isOpen: boolean,
   maxSwipeDistance: number,
   onClose: () => void,
@@ -21,16 +13,27 @@ type Props<TEntity> = {
   onSwipeEnd?: () => void,
   onSwipeStart?: () => void,
   preventSwipeRight?: boolean,
-  renderErrorListItem: (error: Error) => React.Node,
-  renderListItem: (info: SectionListInfo<TEntity>) => React.Node,
-  renderLoadingListItem: () => React.Node,
-  renderSlideoutView: (SectionListInfo<TEntity>) => React.Node,
   rowKey: string,
   shouldBounceOnMount: boolean,
   swipeThreshold?: number,
 };
 
-class SwipeableRow<TEntity> extends React.Component<Props<TEntity>> {
+export type RowItemProps<TEntity, TExtraProps = {}> = {
+  // section?: Object, add this when resolve object recreation issue in SectionlistStore
+  ...TExtraProps,
+  index: number,
+  item: TEntity,
+  separators: Object,
+};
+
+type Props<TEntity, TExtraProps = {}> = {
+  ...TExtraProps,
+  rowItemComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  slideoutComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+} & SwipeableProps &
+  RowItemProps<TEntity>;
+
+class SwipeableRow<TEntity> extends React.PureComponent<Props<TEntity>> {
   static defaultProps = {
     maxSwipeDistance: 150,
     preventSwipeRight: true,
@@ -40,20 +43,50 @@ class SwipeableRow<TEntity> extends React.Component<Props<TEntity>> {
 
   render() {
     const {
-      info,
-      renderListItem,
-      renderSlideoutView,
-      ...swipeableProps
+      index,
+      isOpen,
+      item,
+      maxSwipeDistance,
+      onClose,
+      onOpen,
+      onSwipeEnd,
+      onSwipeStart,
+      preventSwipeRight,
+      rowItemComponent: RowItemComponent,
+      rowKey,
+      separators,
+      shouldBounceOnMount,
+      slideoutComponent: SlideoutComponent,
+      swipeThreshold,
+      ...extraProps
     } = this.props;
-    const slideoutView = renderSlideoutView(info);
 
     return (
       <RNSwipeableRow
-        {...swipeableProps}
+        isOpen={isOpen}
+        maxSwipeDistance={maxSwipeDistance}
+        onClose={onClose}
         onOpen={this._onOpen}
-        slideoutView={slideoutView}
+        onSwipeEnd={onSwipeEnd}
+        onSwipeStart={onSwipeStart}
+        preventSwipeRight={preventSwipeRight}
+        shouldBounceOnMount={shouldBounceOnMount}
+        slideoutView={
+          <SlideoutComponent
+            index={index}
+            item={item}
+            separators={separators}
+            {...extraProps}
+          />
+        }
+        swipeThreshold={swipeThreshold}
       >
-        {renderListItem(info)}
+        <RowItemComponent
+          index={index}
+          item={item}
+          separators={separators}
+          {...extraProps}
+        />
       </RNSwipeableRow>
     );
   }
