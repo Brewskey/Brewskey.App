@@ -9,6 +9,8 @@
  * On iOS you can pass the props of TouchableOpacity, on Android pass the props
  * of TouchableNativeFeedback.
  */
+
+import type { ViewStyleProp } from '../../types';
 import * as React from 'react';
 import {
   Platform,
@@ -20,13 +22,13 @@ import {
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 type Props = {
-  onPress?: () => void,
-  delayPressIn?: number,
-  borderless?: boolean,
-  pressColor?: string,
   activeOpacity?: number,
+  borderless?: boolean,
   children?: React.Node,
-  style?: Object,
+  delayPressIn?: number,
+  onPress?: () => void,
+  pressColor?: string,
+  style?: ViewStyleProp,
 };
 
 export default class TouchableItem extends React.Component<Props> {

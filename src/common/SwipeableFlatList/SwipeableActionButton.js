@@ -1,8 +1,10 @@
 // @flow
 
+import type { ViewStyleProp } from '../../types';
+
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { Icon } from 'react-native-elements';
+import IconButton from '../buttons/IconButton';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,13 +15,25 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {|
-  onPress: () => void | Promise<void>,
+type Props = {
+  containerStyle?: ViewStyleProp,
   iconName: string,
-|};
+  onPress?: () => void,
+  // other IconProps
+};
 
-const SwipeableActionButton = ({ onPress, iconName }: Props) => (
-  <Icon containerStyle={styles.container} onPress={onPress} name={iconName} />
+const SwipeableActionButton = ({
+  containerStyle,
+  iconName,
+  onPress,
+  ...rest
+}: Props) => (
+  <IconButton
+    {...rest}
+    containerStyle={[styles.container, containerStyle]}
+    name={iconName}
+    onPress={onPress}
+  />
 );
 
 export default SwipeableActionButton;

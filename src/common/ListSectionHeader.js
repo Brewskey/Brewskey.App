@@ -5,10 +5,9 @@ import { StyleSheet, Text } from 'react-native';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    borderBottomColor: COLORS.secondary2,
-    borderBottomWidth: 1,
-    paddingVertical: 6,
+  container: {
+    backgroundColor: COLORS.secondary2,
+    paddingVertical: 8,
     textAlign: 'center',
   },
 });
@@ -19,7 +18,7 @@ type Props = {|
 
 class ListSectionHeader extends React.PureComponent<Props> {
   render() {
-    return <Text style={styles.headerContainer}>{this.props.title}</Text>;
+    return <Text style={styles.container}>{this.props.title}</Text>;
   }
 }
 
