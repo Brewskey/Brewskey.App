@@ -1,16 +1,15 @@
 // @flow
 
-// eslint-disable-next-line
-import type RNSectionList, { Props as SectionListProps } from 'SectionList';
+import type { Props as ListProps } from './List';
+import type { FlatList, SectionList } from 'react-native';
 
 import * as React from 'react';
-import SectionList from './SectionList';
+import List from './List';
 
-type SwipeableListProps = {
+type Props<TEntity> = {
   bounceFirstRowOnMount: boolean,
-};
-
-type Props<TEntity> = SwipeableListProps & SectionListProps<TEntity>;
+  preventSwipeRight?: boolean,
+} & ListProps<TEntity>;
 
 type State = {|
   openRowKey: ?string,
@@ -29,15 +28,15 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     openRowKey: null,
   };
 
-  _listRef: ?RNSectionList<TEntity> = null;
+  _innerListRef: ?FlatList<TEntity> | ?SectionList<TEntity> = null;
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
   _setListViewScrollableTo(value: boolean) {
-    if (!this._listRef) {
+    if (!this._innerListRef) {
       return;
     }
-    this._listRef.setNativeProps({
+    this._innerListRef.setNativeProps({
       scrollEnabled: value,
     });
   }
@@ -57,8 +56,8 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     }
   };
 
-  _setListRef = ref => {
-    this._listRef = ref;
+  _setInnerListRef = ref => {
+    this._innerListRef = ref;
   };
 
   _renderItem = (info: { item: TEntity, index: number }): React.Node => {
@@ -78,10 +77,10 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
 
   render() {
     return (
-      <SectionList
+      <List
         {...this.props}
         extraData={this.state}
-        innerRef={this._setListRef}
+        innerRef={this._setInnerListRef}
         onScroll={this._onScroll}
         renderItem={this._renderItem}
       />

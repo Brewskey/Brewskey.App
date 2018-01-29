@@ -45,6 +45,8 @@ class SectionTapsListStore {
 
   @computed
   get sections(): Array<Section<Tap>> {
+    // todo this recreates new section Object on every run
+    // it causes ListItem rerenders every time if I pass Section prop there.
     return Array.from(
       new Set(this._taps.map((tap: Tap): EntityID => tap.device.id)).values(),
     ).map((deviceID: EntityID): Section<Tap> => {

@@ -1,24 +1,29 @@
 // @flow
 
 // eslint-disable-next-line
-import type { Props as SectionListProps } from 'FlatList';
+import type { Props as FlatListProps } from 'FlatList';
 
 import * as React from 'react';
-import { SectionList as RNSectionList } from 'react-native';
+import { FlatList, SectionList } from 'react-native';
 import { ON_END_REACHED_THRESHOLD } from '../constants';
 
-type Props<TEntity> = {|
+type ListType = 'flatList' | 'sectionList';
+
+export type Props<TEntity> = {
   extraData?: any,
-  innerRef: React.Ref<SectionList<TEntity>>,
-|} & SectionListProps<TEntity>;
+  innerRef?: React.Ref<FlatList<TEntity> | SectionList<TEntity>>,
+  listType: ListType,
+  // todo should be ...SectionList also, but they can't be imported from 'SectionList'
+  ...FlatListProps<TEntity>,
+};
 
 type State = {|
   isRefreshing: boolean,
 |};
 
-class SectionList<TEntity> extends React.Component<Props<TEntity>, State> {
+class List<TEntity> extends React.Component<Props<TEntity>, State> {
   static defaultProps = {
-    ...RNSectionList.defaultProps,
+    listType: 'flatList',
   };
 
   state = {
@@ -35,19 +40,18 @@ class SectionList<TEntity> extends React.Component<Props<TEntity>, State> {
   };
 
   render() {
-    const { extraData, innerRef, onRefresh, ...rest } = this.props;
+    const { onRefresh, listType, ...rest } = this.props;
+    const ListComponent = listType === 'flatList' ? FlatList : SectionList;
 
     return (
-      <RNSectionList
-        extraData={extraData}
-        innerRef={innerRef}
+      <ListComponent
+        {...rest}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? this._onRefresh : null}
         refreshing={this.state.isRefreshing}
-        {...rest}
       />
     );
   }
 }
 
-export default SectionList;
+export default List;

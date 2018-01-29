@@ -2,12 +2,13 @@
 
 import type { Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
+import type { RowItemProps } from '../common/SwipeableRow';
 
 import * as React from 'react';
+import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react';
-import { SectionList } from 'react-native';
 import DAOApi from 'brewskey.js-api';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import ListItem from '../common/ListItem';
@@ -15,7 +16,7 @@ import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
 import SectionTapsListStore from '../stores/SectionTapsListStore';
-import SwipeableSectionList from '../common/SwipeableSectionList';
+import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 
 type Props = {|
@@ -27,17 +28,18 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@withNavigation
 @observer
 class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
   _listStore = new SectionTapsListStore();
-  _swipeableSectionListRef: ?SwipeableSectionList<Tap>;
+  _swipeableListRef: ?SwipeableList<Tap>;
 
   componentWillMount() {
     this._listStore.fetchFirstPage();
   }
 
-  _getSwipeableSectionListRef = ref => {
-    this._swipeableSectionListRef = ref;
+  _getSwipeableListRef = ref => {
+    this._swipeableListRef = ref;
   };
 
   _keyExtractor = ({ id }: Tap): string => id.toString();
@@ -46,67 +48,40 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });
-    nullthrows(this._swipeableSectionListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef).resetOpenRow();
   };
 
   _renderSectionHeader = ({ section }): React.Node => (
     <ListSectionHeader title={section.title} />
   );
 
-  _renderRow = ({ info, ...swipeableStateProps }): React.Node => (
+  _renderRow = ({
+    info: { item, index, separators },
+    ...swipeableStateProps
+  }): React.Node => (
     <SwipeableRow
       {...swipeableStateProps}
-      info={info}
-      renderListItem={this._renderListItem}
-      renderSlideoutView={this._renderSlideoutView}
-    />
-  );
-
-  _renderListItem = ({
-    index,
-    item,
-  }: {
-    index: number,
-    item: Tap,
-  }): React.Node => {
-    const beverage = item.currentKeg ? item.currentKeg.beverage : null;
-    const beverageName = beverage ? beverage.name : 'No Beer on Tap';
-
-    return (
-      <ListItem
-        avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
-        hideChevron
-        item={item}
-        title={`${index + 1} - ${beverageName}`}
-      />
-    );
-  };
-
-  _renderSlideoutView = ({
-    item,
-  }: {
-    index: number,
-    item: Tap,
-  }): React.Node => (
-    <QuickActions
-      deleteModalMessage="Are you sure you want to delete the Tap"
+      index={index}
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
+      rowItemComponent={SwipeableRowItem}
+      separators={separators}
+      slideoutComponent={Slideout}
     />
   );
 
   render() {
     return (
-      <SwipeableSectionList
-        listComponent={SectionList}
+      <SwipeableList
         keyExtractor={this._keyExtractor}
         ListFooterComponent={
           <LoadingListFooter isLoading={this._listStore.isLoading} />
         }
+        listType="sectionList"
         onEndReached={this._listStore.fetchNextPage}
-        ref={this._getSwipeableSectionListRef}
         onRefresh={this._listStore.reload}
+        ref={this._getSwipeableListRef}
         renderItem={this._renderRow}
         renderSectionHeader={this._renderSectionHeader}
         sections={this._listStore.sections}
@@ -115,5 +90,38 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     );
   }
 }
+
+const SwipeableRowItem = ({ index, item }: RowItemProps<Tap>) => {
+  const beverage = item.currentKeg ? item.currentKeg.beverage : null;
+  const beverageName = beverage ? beverage.name : 'No Beer on Tap';
+
+  return (
+    <ListItem
+      avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
+      hideChevron
+      item={item}
+      title={`${index} - ${beverageName}`}
+    />
+  );
+};
+
+const Slideout = ({
+  item,
+  onDeleteItemPress,
+  onEditItemPress,
+}: RowItemProps<
+  Tap,
+  {
+    onDeleteItemPress: () => void,
+    onEditItemPress: () => void,
+  },
+>) => (
+  <QuickActions
+    deleteModalMessage="Are you sure you want to delete the Tap"
+    item={item}
+    onDeleteItemPress={onDeleteItemPress}
+    onEditItemPress={onEditItemPress}
+  />
+);
 
 export default SectionTapsList;
