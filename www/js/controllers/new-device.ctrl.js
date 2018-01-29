@@ -15,17 +15,17 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
     modal,
     $ionicHistory,
     $ionicPopup,
-    utils
+    utils,
   ) {
     $scope.model = {
       id: $stateParams.deviceId || undefined,
-      particleId: $stateParams.particleId || undefined
+      particleId: $stateParams.particleId || undefined,
     };
     $scope.deviceStatusTypes = [
       { value: 1, text: 'Active' },
       { value: 2, text: 'Disabled' },
       { value: 3, text: 'Cleaning' },
-      { value: 4, text: 'Open Valve' }
+      { value: 4, text: 'Open Valve' },
     ];
     $scope.statusModel = $scope.deviceStatusTypes[0];
     if ($scope.model.id) {
@@ -70,16 +70,16 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
             type: 'button-balanced',
             onTap: function(event) {
               getLocations();
-            }
+            },
           },
           {
             text: '<b>Create New Location</b>',
             type: 'button-positive',
             onTap: function(event) {
               $state.go('app.new-location');
-            }
-          }
-        ]
+            },
+          },
+        ],
       });
     }
 
@@ -114,12 +114,14 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
     }
     getLocations();
     $scope.submitForm = function() {
-      if (
-        navigator.connection &&
-        navigator.connection.type === Connection.NONE
-      ) {
-        return;
-      }
+      try {
+        if (
+          navigator.connection &&
+          navigator.connection.type === Connection.NONE
+        ) {
+          return;
+        }
+      } catch (e) {}
 
       if (!$scope.form.$valid) {
         return;
@@ -141,7 +143,7 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
             $state.go(
               'app.device',
               { deviceId: response.id },
-              { location: 'replace' }
+              { location: 'replace' },
             );
           },
           function(error) {
@@ -151,7 +153,7 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
             }
             console.log(error);
             $scope.errors = utils.filterErrors(error);
-          }
+          },
         )
         .finally(function() {
           $scope.disabled = false;
@@ -203,10 +205,10 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
           $ionicHistory.clearCache();
           $ionicHistory.nextViewOptions({
             disableBack: true,
-            historyRoot: true
+            historyRoot: true,
           });
           $state.go('app.devices');
         });
     };
-  }
+  },
 ]);

@@ -31,20 +31,20 @@
                         <span class="input-label">
                             Status
                         </span>
-                        <select ng-model="statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
+                        <select ng-model="$parent.statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
                     </label>
-                    <p ng-if="statusModel.value == 1" class="help-block item item-text-wrap text-center">
+                    <p ng-if="$parent.statusModel.value == 1" class="help-block item item-text-wrap text-center">
                         The Brewskey Box is currently in the standard mode.  If you have a valve it will be closed and the sensors will
                         track pours normally.
                     </p>
-                    <p ng-if="statusModel.value == 2" class="help-block item item-text-wrap text-center">
+                    <p ng-if="$parent.statusModel.value == 2" class="help-block item item-text-wrap text-center">
                         Your Brewskey Box is disabled. The valve will not open and pours will not be tracked.
                     </p>
-                    <p ng-if="statusModel.value == 3" class="help-block item item-text-wrap text-center">
+                    <p ng-if="$parent.statusModel.value == 3" class="help-block item item-text-wrap text-center">
                         Your Brewskey Box is in cleaning mode.<br/>After an hour the box will be put into
                         "disabled" mode.
                     </p>
-                    <p ng-if="statusModel.value == 4" class="help-block item item-text-wrap text-center">
+                    <p ng-if="$parent.statusModel.value == 4" class="help-block item item-text-wrap text-center">
                         Your Brewskey box will open the valve and allow users to pour without authentication.
                     </p>
                     <div class="item">
