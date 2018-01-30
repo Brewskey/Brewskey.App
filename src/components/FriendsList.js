@@ -3,6 +3,7 @@
 import type { Friend, QueryOptions } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
+import type { RowItemProps } from '../common/SwipeableRow';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
@@ -10,7 +11,7 @@ import { withNavigation } from 'react-navigation';
 import { observer } from 'mobx-react';
 import DAOListStore from '../stores/DAOListStore';
 import { FriendStore } from '../stores/DAOStores';
-import FlatList from '../common/FlatList';
+import List from '../common/List';
 import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
@@ -50,26 +51,18 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
       id: friend.friendAccount.id,
     });
 
-  _renderListItem = (friend: Friend): React.Node => (
-    <ListItem
-      avatar={<UserAvatar userName={friend.friendAccount.userName} />}
-      onPress={this._onListItemPress}
-      hideChevron
-      item={friend}
-      title={friend.friendAccount.userName}
-      subtitle={
-        this.props.showPhoneNumber ? friend.friendAccount.phoneNumber : ''
-      }
-    />
-  );
-
   _renderRow = ({ item }: { item: Row<Friend> }): React.Node => (
-    <LoaderRow loader={item.loader} renderListItem={this._renderListItem} />
+    <LoaderRow
+      loadedRow={LoadedRow}
+      loader={item.loader}
+      onListItemPress={this._onListItemPress}
+      showPhoneNumber={this.props.showPhoneNumber}
+    />
   );
 
   render() {
     return (
-      <FlatList
+      <List
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListFooterComponent={
@@ -84,5 +77,20 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
     );
   }
 }
+
+const LoadedRow = ({
+  item: friend,
+  onListItemPress,
+  showPhoneNumber,
+}: RowItemProps<Friend, *>) => (
+  <ListItem
+    avatar={<UserAvatar userName={friend.friendAccount.userName} />}
+    hideChevron
+    item={friend}
+    onPress={onListItemPress}
+    subtitle={showPhoneNumber ? friend.friendAccount.phoneNumber : ''}
+    title={friend.friendAccount.userName}
+  />
+);
 
 export default FriendsList;

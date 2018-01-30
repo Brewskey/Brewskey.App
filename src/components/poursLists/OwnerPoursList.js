@@ -2,6 +2,7 @@
 
 import type { QueryOptions, Pour } from 'brewskey.js-api';
 import type { Navigation } from '../../types';
+import type { RowItemProps } from '../../common/SwipeableRow';
 
 import * as React from 'react';
 import moment from 'moment';
@@ -35,34 +36,34 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
     });
   };
 
-  // todo add pour amount rendering
-  _renderListItem = (pour: Pour): React.Node => {
-    const pourOwnerUserName = pour.owner
-      ? pour.owner.userName
-      : NULL_STRING_PLACEHOLDER;
-
-    return (
-      <ListItem
-        avatar={<UserAvatar userName={pourOwnerUserName} />}
-        onPress={this._onListItemPress}
-        hideChevron
-        item={pour}
-        title={`${pourOwnerUserName} – ${pour.ounces.toFixed(1)} oz`}
-        subtitle={moment(pour.pourDate).fromNow()}
-      />
-    );
-  };
-
   render() {
     const { ListHeaderComponent, queryOptions } = this.props;
     return (
       <BasePoursList
         ListHeaderComponent={ListHeaderComponent}
+        loadedRow={LoadedRow}
         queryOptions={queryOptions}
-        renderListItem={this._renderListItem}
       />
     );
   }
 }
+
+// todo add pour amount rendering
+const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
+  const pourOwnerUserName = pour.owner
+    ? pour.owner.userName
+    : NULL_STRING_PLACEHOLDER;
+
+  return (
+    <ListItem
+      avatar={<UserAvatar userName={pourOwnerUserName} />}
+      onPress={onListItemPress}
+      hideChevron
+      item={pour}
+      title={`${pourOwnerUserName} – ${pour.ounces.toFixed(1)} oz`}
+      subtitle={moment(pour.pourDate).fromNow()}
+    />
+  );
+};
 
 export default OwnerPoursList;

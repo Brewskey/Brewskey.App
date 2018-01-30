@@ -4,7 +4,7 @@ import type { Contact } from '../stores/ContactsStore';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import FlatList from '../common/FlatList';
+import List from '../common/List';
 import BaseAvatar from '../common/avatars/BaseAvatar';
 import ContactsStore from '../stores/ContactsStore';
 import ListItem from '../common/ListItem';
@@ -35,7 +35,7 @@ class ContactsList extends React.Component<Props> {
 
   render() {
     return (
-      <FlatList
+      <List
         data={ContactsStore.contacts}
         keyExtractor={this._keyExtractor}
         ListHeaderComponent={this.props.ListHeaderComponent}

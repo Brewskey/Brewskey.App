@@ -7,7 +7,7 @@ import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   avatar: {
-    backgroundColor: COLORS.secondary3,
+    backgroundColor: COLORS.secondary2,
   },
 });
 
