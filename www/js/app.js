@@ -79,6 +79,10 @@ angular
 
     // Get updates if the app is resumed
     document.addEventListener('resume', function() {
+      // This function is called when using NFC on android and breaks things :/
+      if (window.cordova && window.cordova.platformId === 'android') {
+        return;
+      }
       window.codePush && codePush.sync(null, codePushParams);
     });
 

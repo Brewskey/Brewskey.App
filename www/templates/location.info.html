@@ -21,6 +21,7 @@
           class="list card"
           style="margin-left: 0; margin-right: 0;"
         >
+        
         	<!--<a
             class="item item-button-right"
             ng-if="canEdit"
@@ -46,8 +47,8 @@
             />
             <h2>{{ tap.name }}</h2>
             <p>{{ tap.summary }}</p>
-            <span class="badge badge-positive" ng-if="tap.currentKeg">
-              {{ getPercentLeft(tap.currentKeg) | number : 1 }}%
+            <span class="badge badge-positive" ng-if="tap.maxOunces">
+              {{ getPercentLeft(tap) | number : 1 }}%
             </span>
 				  </a>
         </div>

@@ -80,7 +80,7 @@
                 <div ng-show="!loading">
                     <a ng-repeat="tap in taps | orderBy: 'name'" ui-sref="app.tap.info({tapId: tap.id})" class="item" ng-class="{'item-avatar': tap.currentKeg.beverage.id && tap.loaded}" on-hold="onTapHeld(tap)">
                         <img brewskey-img id="tap.currentKeg.beverage.id" size="s" type="beverage" width="40" loaded="tap.loaded"/>
-                        <h2>{{tap.name}}</h2>
+                        <h2><strong>{{$index+1}}</strong> {{tap.currentKeg ? tap.currentKeg.beverage.name : "Nothing on tap!"}}</h2>
                         <p>{{tap.summary}}</p>
                         <span class="badge badge-positive" ng-if="tap.currentKeg">
                             {{getPercentLeft(tap.currentKeg) | number : 1}}%

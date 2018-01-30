@@ -2,12 +2,21 @@
     <ion-content>
 
         <form ng-submit="writeTags()">
-            <div class="item">
+            <div class="item item-text-wrap text-center">
                 <h1>Write Access to NFC tag</h1>
                 <p>
                     You can use this utility to write to a NFC tag. This allows you to use a tag instead of
                     a phone to pour beers.
                 </p>
+            </div>
+            <div class="item item-text-wrap">
+              <ion-toggle ng-model="model.useAnonymous" toggle-class="toggle-calm">
+                Make anonymous
+              </ion-toggle>
+              <p style="margin-top:8px">
+                Setting this to true will make all pours from this token
+                anonymous. The token will be used only for opening valves.
+              </p>
             </div>
             <label class="item">
                 <button class="button button-block button-positive" type="submit" ng-disabled="writing">
