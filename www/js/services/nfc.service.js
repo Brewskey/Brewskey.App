@@ -307,6 +307,7 @@ angular.module("brewskey.services").factory("nfcService", [
 						}
 
 						requestPour = true;
+						nfc.beginSession();
 						popup = $ionicPopup.show({
 							cssClass: "green-popup",
 							title: "Tap phone to pour beer",
@@ -325,6 +326,7 @@ angular.module("brewskey.services").factory("nfcService", [
 						return popup.then(function() {
 							requestPour = false;
 							popup = null;
+							nfc.invalidateSession();
 							cancelAnimationFrame(animationID);
 						});
 					});

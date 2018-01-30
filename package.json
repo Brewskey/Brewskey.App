@@ -41,7 +41,7 @@
         "ionic-plugin-keyboard": "^2.2.1",
         "moment": "^2.15.1",
         "ng-intl-tel-input": "^2.0.0",
-        "phonegap-nfc": "^0.6.6",
+        "phonegap-nfc": "^0.7.0",
         "phonegap-plugin-push": "^1.10.4"
     },
     "devDependencies": {
@@ -94,7 +94,6 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
-            "phonegap-nfc": {},
             "cordova-plugin-network-information": {},
             "cordova-plugin-contacts": {
                 "CONTACTS_USAGE_DESCRIPTION": "Brewskey uses your contacts to add friends."
@@ -107,7 +106,10 @@
                 "SENDER_ID": "394986866677"
             },
             "cordova-plugin-code-push": {},
-            "cordova-plugin-inappbrowser": {}
+            "cordova-plugin-inappbrowser": {},
+            "phonegap-nfc": {
+                "NFC_USAGE_DESCRIPTION": "Read NFC Tags"
+            }
         }
     }
 }
