@@ -31,10 +31,10 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
     return (
       <RNEListItem
         {...this.props}
-        titleStyle={styles.title}
-        subtitleStyle={styles.subtitle}
         containerStyle={[styles.container, this.props.containerStyle]}
         onPress={this._onPress}
+        subtitleStyle={styles.subtitle}
+        titleStyle={styles.title}
       />
     );
   }

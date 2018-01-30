@@ -1,43 +1,59 @@
 // @flow
 
 import type { LoadObject } from 'brewskey.js-api';
+import type { RowItemProps } from './SwipeableRow';
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import ErrorListItem from './ErrorListItem';
 import LoadingListItem from './LoadingListItem';
+import LoaderComponent from './LoaderComponent';
 
-type Props<TEntity> = {|
-  renderErrorListItem: (error: Error) => React.Node,
-  renderListItem: (item: TEntity) => React.Node,
+// todo fix Flow in the file, it should be something else intestead *
+// for TExtraProps
+type Props<TEntity, TExtraProps = {}> = {
+  ...TExtraProps,
+  errorRow: React.ComponentType<{ ...TExtraProps, error: Error }>,
+  index: number,
+  loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   loader: LoadObject<TEntity>,
-  renderLoadingListItem: () => React.Node,
-|};
+  loadingRow: React.ComponentType<TExtraProps>,
+  separators: Object,
+} & RowItemProps<TEntity, TExtraProps>;
 
-class LoaderRow<TEntity> extends React.PureComponent<Props<TEntity>> {
-  static defaultProps = {
-    renderErrorListItem: () => <ErrorListItem />,
-    renderLoadingListItem: () => <LoadingListItem />,
-  };
+const LoaderRow = observer(
+  <TEntity>({
+    errorRow = ErrorListItem,
+    index,
+    loader,
+    loadingRow = LoadingListItem,
+    separators,
+    ...extraProps
+  }): Props<TEntity, *> => (
+    <LoaderComponent
+      {...extraProps}
+      errorComponent={errorRow}
+      index={index}
+      loadedComponent={LoadedRowComponent}
+      loader={loader}
+      loadingComponent={loadingRow}
+      separators={separators}
+    />
+  ),
+);
 
-  render() {
-    const {
-      loader,
-      renderErrorListItem,
-      renderListItem,
-      renderLoadingListItem,
-    } = this.props;
+type LoadedRowComponentProps<TEntity, TExtraProps = {}> = {
+  ...TExtraProps,
+  loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  value: TEntity,
+  index: number,
+  separators: Object,
+};
 
-    // todo add different rows visualizations for updating/deleting states
-    if (loader.isLoading() || loader.isUpdating() || loader.isDeleting()) {
-      return renderLoadingListItem();
-    }
-
-    if (loader.hasError()) {
-      return renderErrorListItem(loader.getErrorEnforcing());
-    }
-
-    return renderListItem(loader.getValueEnforcing());
-  }
-}
+const LoadedRowComponent = <TEntity>({
+  value,
+  loadedRow: LoadedRow,
+  ...rest
+}: LoadedRowComponentProps<TEntity, *>) => <LoadedRow item={value} {...rest} />;
 
 export default LoaderRow;

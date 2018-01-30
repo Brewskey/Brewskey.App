@@ -6,7 +6,7 @@ import type { EntityID, LeaderboardItem } from 'brewskey.js-api';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import FlatList from '../common/FlatList';
+import List from '../common/List';
 import { withNavigation } from 'react-navigation';
 import LeaderboardListStore from '../stores/LeaderboardListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
@@ -69,7 +69,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
 
   render() {
     return (
-      <FlatList
+      <List
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={!this._listStore.isLoading && LeaderboardListEmpty}

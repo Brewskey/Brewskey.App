@@ -3,20 +3,22 @@
 import type { Beverage, QueryOptions } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
+import type { RowItemProps } from '../common/SwipeableRow';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import SwipeableFlatList from '../common/SwipeableFlatList';
 import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
+import SwipeableList from '../common/SwipeableList';
+import LoaderRow from '../common/LoaderRow';
+import SwipeableRow from '../common/SwipeableRow';
 import { BeverageStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
-import SwipeableLoaderRow from '../common/SwipeableLoaderRow';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -35,7 +37,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Beverage> = new DAOListStore(BeverageStore);
-  _swipeableFlatListRef: ?SwipeableFlatList<Beverage>;
+  _swipeableListRef: ?SwipeableList<Beverage>;
 
   componentWillMount() {
     this._listStore.setQueryOptions({
@@ -51,8 +53,8 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     this._listStore.fetchFirstPage();
   }
 
-  _getSwipeableFlatListRef = ref => {
-    this._swipeableFlatListRef = ref;
+  _getSwipeableListRef = ref => {
+    this._swipeableListRef = ref;
   };
 
   _keyExtractor = (row: Row<Beverage>): number => row.key;
@@ -62,7 +64,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Beverage) => {
     this.injectedProps.navigation.navigate('editBeverage', { id });
-    nullthrows(this._swipeableFlatListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef).resetOpenRow();
   };
 
   _onItemPress = (item: Beverage): void =>
@@ -71,39 +73,26 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     });
 
   _renderRow = ({
-    info: { item: row },
+    info: { item: row, index, separators },
     ...swipeableStateProps
   }): React.Node => (
-    <SwipeableLoaderRow
-      {...swipeableStateProps}
+    <LoaderRow
+      index={index}
+      loadedRow={SwipeableRow}
       loader={row.loader}
-      renderListItem={this._renderListItem}
-      renderSlideoutView={this._renderSlideoutView}
-    />
-  );
-
-  _renderListItem = (item: Beverage): React.Node => (
-    <ListItem
-      hideChevron
-      item={item}
-      onPress={this._onItemPress}
-      subtitle={item.beverageType}
-      title={item.name}
-    />
-  );
-
-  _renderSlideoutView = (item: Beverage): React.Node => (
-    <QuickActions
-      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
-      item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
+      onItemPress={this._onItemPress}
+      rowItemComponent={SwipeableRowItem}
+      separators={separators}
+      slideoutComponent={Slideout}
+      {...swipeableStateProps}
     />
   );
 
   render() {
     return (
-      <SwipeableFlatList
+      <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListFooterComponent={
@@ -114,11 +103,34 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
-        ref={this._getSwipeableFlatListRef}
+        ref={this._getSwipeableListRef}
         renderItem={this._renderRow}
       />
     );
   }
 }
+
+const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Beverage, *>) => (
+  <ListItem
+    hideChevron
+    item={item}
+    onPress={onItemPress}
+    subtitle={item.beverageType}
+    title={item.name}
+  />
+);
+
+const Slideout = ({
+  item,
+  onDeleteItemPress,
+  onEditItemPress,
+}: RowItemProps<Beverage, *>) => (
+  <QuickActions
+    deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+    item={item}
+    onDeleteItemPress={onDeleteItemPress}
+    onEditItemPress={onEditItemPress}
+  />
+);
 
 export default BeveragesList;

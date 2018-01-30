@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import SwipeableActionButton from '../SwipeableFlatList/SwipeableActionButton';
+import SwipeableActionButton from '../SwipeableActionButton';
 import DeleteModal from './DeleteModal';
 import { COLORS } from '../../theme';
 

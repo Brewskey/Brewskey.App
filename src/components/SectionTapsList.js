@@ -44,6 +44,11 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = ({ id }: Tap): string => id.toString();
 
+  _onItemPress = (item: Tap): void =>
+    this.injectedProps.navigation.navigate('tapDetails', {
+      id: item.id,
+    });
+
   _onDeleteItemPress = (item: Tap): void => DAOApi.TapDAO.deleteByID(item.id);
 
   _onEditItemPress = ({ id }: Tap) => {
@@ -65,6 +70,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
       item={item}
       onDeleteItemPress={this._onDeleteItemPress}
       onEditItemPress={this._onEditItemPress}
+      onItemPress={this._onItemPress}
       rowItemComponent={SwipeableRowItem}
       separators={separators}
       slideoutComponent={Slideout}
@@ -91,7 +97,11 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-const SwipeableRowItem = ({ index, item }: RowItemProps<Tap>) => {
+const SwipeableRowItem = ({
+  index,
+  item,
+  onItemPress,
+}: RowItemProps<Tap, *>) => {
   const beverage = item.currentKeg ? item.currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
 
@@ -100,6 +110,7 @@ const SwipeableRowItem = ({ index, item }: RowItemProps<Tap>) => {
       avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
       hideChevron
       item={item}
+      onPress={onItemPress}
       title={`${index} - ${beverageName}`}
     />
   );

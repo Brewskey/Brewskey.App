@@ -1,10 +1,10 @@
 // @flow
 
-import type { ViewStyleProp } from '../../types';
+import type { ViewStyleProp } from '../types';
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import IconButton from '../buttons/IconButton';
+import IconButton from './buttons/IconButton';
 
 const styles = StyleSheet.create({
   container: {
