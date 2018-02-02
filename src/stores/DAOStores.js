@@ -15,6 +15,7 @@ import type {
   Keg,
   Location,
   Organization,
+  ParticleAttributes,
   Permission,
   Pour,
   QueryOptions,
@@ -135,6 +136,12 @@ class $AchievementStore extends DAOStore<Achievement> {
   }
 }
 
+class $DeviceStore extends DAOStore<Device> {
+  getParticleAttributes(deviceID: EntityID): LoadObject<ParticleAttributes> {
+    return this.__callDAOFunction('fetchParticleAttributes', deviceID);
+  }
+}
+
 class $TapStore extends DAOStore<Tap> {
   countLeaderboard(
     tapID: EntityID,
@@ -173,7 +180,7 @@ export const AvailabilityStore: DAOStore<Availability> = new DAOStore(
 export const BeverageStore: DAOStore<Beverage> = new DAOStore(
   DAOApi.BeverageDAO,
 );
-export const DeviceStore: DAOStore<Device> = new DAOStore(DAOApi.DeviceDAO);
+export const DeviceStore: $DeviceStore = new $DeviceStore(DAOApi.DeviceDAO);
 export const GlassStore: DAOStore<Glass> = new DAOStore(DAOApi.GlassDAO);
 export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
   DAOApi.FlowSensorDAO,

@@ -25,7 +25,7 @@ type InjectedProps = {|
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _deviceLoader(): LoadObject<Device> {
-    return DeviceStore.getByID(this.injectedProps.id);
+    return DeviceStore.getByID('25');
   }
 
   render() {
@@ -50,14 +50,15 @@ type LoadedComponentProps = {
   value: Device,
 };
 
-const LoadedComponent = ({
-  value: { name, particleId },
-}: LoadedComponentProps) => (
-  <Container>
-    <Header showBackButton title={name} />
-    <Text>{name}</Text>
-    <Text>{particleId}</Text>
-  </Container>
+const LoadedComponent = observer(
+  ({ value: { name, particleId } }: LoadedComponentProps) => (
+    // console.log(DeviceStore.getParticleAttributes(id));
+    <Container>
+      <Header showBackButton title={name} />
+      <Text>{name}</Text>
+      <Text>{particleId}</Text>
+    </Container>
+  ),
 );
 
 export default DeviceDetailsScreen;
