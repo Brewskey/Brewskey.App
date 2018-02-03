@@ -6,6 +6,7 @@ import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
@@ -19,6 +20,14 @@ import SwipeableRow from '../common/SwipeableRow';
 import { DeviceStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
+import DeviceOnlineIndicator from './DeviceOnlineIndicator';
+
+const styles = StyleSheet.create({
+  onlineIndicatorWrapper: {
+    height: 45,
+    justifyContent: 'center',
+  },
+});
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -90,16 +99,6 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  _renderListItem = (item: Device): React.Node => (
-    <ListItem
-      hideChevron
-      item={item}
-      onPress={this._onItemPress}
-      subtitle={item.particleId}
-      title={item.name}
-    />
-  );
-
   render() {
     return (
       <SwipeableList
@@ -122,9 +121,13 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
 const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Device, *>) => (
   <ListItem
-    hideChevron
     item={item}
     onPress={onItemPress}
+    rightIcon={
+      <View style={styles.onlineIndicatorWrapper}>
+        <DeviceOnlineIndicator deviceID={item.id} />
+      </View>
+    }
     subtitle={item.particleId}
     title={item.name}
   />

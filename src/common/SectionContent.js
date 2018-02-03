@@ -1,23 +1,28 @@
 // @flow
 
+import type { ViewStyleProp } from '../types';
+
 import * as React from 'react';
 import { View } from 'react-native';
 
 type Props = {|
   children?: React.Node,
+  containerStyle?: ViewStyleProp,
   paddedHorizontal?: boolean,
   paddedVertical?: boolean,
 |};
 
 const SectionContent = ({
   children,
-  paddedVertical = true,
+  containerStyle,
   paddedHorizontal = false,
+  paddedVertical = true,
 }: Props) => (
   <View
     style={[
       paddedHorizontal && { paddingHorizontal: 12 },
       paddedVertical && { paddingVertical: 12 },
+      containerStyle,
     ]}
   >
     {children}
