@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PickerField from '../common/PickerField';
+import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
 
 const styles = StyleSheet.create({
   descriptionText: {
@@ -12,22 +13,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const DEVICE_STATUS_DESCRIPTION = {
-  Active:
-    'The Brewskey Box is currently in the standard mode.' +
-    ' If you have a valve it will be closed and the sensors will' +
-    ' track pours normally.',
-  Cleaning:
-    'Your Brewskey Box is in cleaning mode.' +
-    ' After an hour the box will be put into "disabled" mode',
-  Free:
-    'Your Brewskey Box will open the valve' +
-    ' and allow users to pour without authentication.',
-  Inactive:
-    'Your Brewskey Box is disabled.' +
-    ' The valve will not open and pours will not be tracked.',
-};
-
 type Props = {|
   error?: ?string,
   onBlur: () => void,
@@ -36,7 +21,7 @@ type Props = {|
   value: any,
 |};
 
-const DeviceStatusPicker = (props: Props) => (
+const DeviceStatePicker = (props: Props) => (
   <View>
     <PickerField label="Type" {...props}>
       <PickerField.Item label="Active" value="Active" />
@@ -45,9 +30,9 @@ const DeviceStatusPicker = (props: Props) => (
       <PickerField.Item label="Inactive" value="Inactive" />
     </PickerField>
     <Text style={styles.descriptionText}>
-      {DEVICE_STATUS_DESCRIPTION[props.value]}
+      {DESCRIPTION_BY_DEVICE_STATE[props.value]}
     </Text>
   </View>
 );
 
-export default DeviceStatusPicker;
+export default DeviceStatePicker;

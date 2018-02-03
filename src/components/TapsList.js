@@ -10,16 +10,15 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
-import QuickActions from '../common/QuickActions';
+import { TapStore } from '../stores/DAOStores';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
-import SwipeableList from '../common/SwipeableList';
 import LoaderRow from '../common/LoaderRow';
-import SwipeableRow from '../common/SwipeableRow';
-import { TapStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
-import ListItem from '../common/ListItem';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
+import QuickActions from '../common/QuickActions';
+import SwipeableList from '../common/SwipeableList';
+import SwipeableRow from '../common/SwipeableRow';
+import TapListItem from './TapListItem';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -114,20 +113,10 @@ const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>) => {
-  const beverage = item.currentKeg ? item.currentKeg.beverage : null;
-  const beverageName = beverage ? beverage.name : 'No Beer on Tap';
+}: RowItemProps<Tap, *>) => (
+  <TapListItem index={index} onPress={onItemPress} tap={item} />
+);
 
-  return (
-    <ListItem
-      avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
-      hideChevron
-      item={item}
-      onPress={onItemPress}
-      title={`${index + 1} - ${beverageName}`}
-    />
-  );
-};
 const Slideout = ({
   item,
   onDeleteItemPress,

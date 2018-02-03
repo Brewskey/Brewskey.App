@@ -22,8 +22,6 @@ const BASE_QUERY_OPTIONS = {
   ],
 };
 
-// todo add device/id ordering to baseQueryOptions;
-
 class SectionTapsListStore {
   _pageSize: number;
   @observable _queryOptionsList: Array<QueryOptions> = [];
