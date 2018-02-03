@@ -21,16 +21,16 @@ export const KEG_NAME_BY_KEG_TYPE: { [KegType]: string } = {
 
 export const DESCRIPTION_BY_DEVICE_STATE: { [key: DeviceStatus]: string } = {
   Active:
-    'The Brewskey Box is currently in the standard mode.' +
-    ' If you have a valve it will be closed and the sensors will' +
-    ' track pours normally.',
+    'The Brewskey Box is currently in the standard mode. ' +
+    'If you have a valve it will be closed and the sensors will ' +
+    'track pours normally.',
   Cleaning:
-    'Your Brewskey Box is in cleaning mode.' +
-    ' After an hour the box will be put into "disabled" mode',
+    'Your Brewskey Box is in cleaning mode. ' +
+    'After an hour the box will be put into "disabled" mode',
   Free:
-    'Your Brewskey Box will open the valve' +
-    ' and allow users to pour without authentication.',
+    'Your Brewskey Box will open the valve ' +
+    'and allow users to pour without authentication.',
   Inactive:
-    'Your Brewskey Box is disabled.' +
-    ' The valve will not open and pours will not be tracked.',
+    'Your Brewskey Box is disabled. ' +
+    'The valve will not open and pours will not be tracked.',
 };
