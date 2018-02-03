@@ -4,13 +4,7 @@ import type { DeviceStatus } from 'brewskey.js-api';
 
 import * as React from 'react';
 import OverviewItem from '../common/OverviewItem2';
-
-const DESCRIPTION_BY_DEVICE_STATE: { [key: DeviceStatus]: string } = {
-  Active: 'Your device is currently active and can pour beers.',
-  Inactive: 'Your device is currently inactive and cannot pour beers.',
-  Unlocked:
-    'Your device is currently unlocked and may be transferred to another account.',
-};
+import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
 
 type Props = {|
   deviceState: DeviceStatus,

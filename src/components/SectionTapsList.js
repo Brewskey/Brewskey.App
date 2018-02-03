@@ -10,14 +10,13 @@ import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import ListItem from '../common/ListItem';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
 import SectionTapsListStore from '../stores/SectionTapsListStore';
 import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
+import TapListItem from './TapListItem';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -101,20 +100,9 @@ const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>) => {
-  const beverage = item.currentKeg ? item.currentKeg.beverage : null;
-  const beverageName = beverage ? beverage.name : 'No Beer on Tap';
-
-  return (
-    <ListItem
-      avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
-      hideChevron
-      item={item}
-      onPress={onItemPress}
-      title={`${index + 1} - ${beverageName}`}
-    />
-  );
-};
+}: RowItemProps<Tap, *>) => (
+  <TapListItem index={index} onPress={onItemPress} tap={item} />
+);
 
 const Slideout = ({
   item,

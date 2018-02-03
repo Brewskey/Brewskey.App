@@ -9,7 +9,7 @@ import { FormField } from '../common/form';
 import TextField from './TextField';
 import PickerField from '../common/PickerField';
 import LoaderPickerField from '../common/PickerField/LoaderPickerField';
-import DeviceStatusPicker from './DeviceStatusPicker';
+import DeviceStatePicker from './DeviceStatePicker';
 
 type Props = {
   device?: Device,
@@ -53,7 +53,7 @@ class DeviceFormFields extends React.Component<Props> {
       </FormField>,
       <FormField
         initialValue={device.deviceStatus}
-        component={DeviceStatusPicker}
+        component={DeviceStatePicker}
         key="deviceStatus"
         name="deviceStatus"
       />,

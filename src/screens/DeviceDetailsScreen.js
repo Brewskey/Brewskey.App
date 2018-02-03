@@ -58,30 +58,32 @@ type LoadedComponentProps = {
 
 const LoadedComponent = observer(
   ({ value: { deviceStatus, id, name, particleId } }: LoadedComponentProps) => (
-    <TapsList
-      ListHeaderComponent={
-        <Container>
-          <Header
-            rightComponent={
-              <HeaderNavigationButton
-                name="edit"
-                params={{ id }}
-                toRoute="editDevice"
-              />
-            }
-            showBackButton
-            title={name}
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            params={{ id }}
+            toRoute="editDevice"
           />
-          <OverviewItem title="Box ID" value={particleId} />
-          <DeviceStateOverviewItem deviceState={deviceStatus} />
-          <DeviceOnlineOverviewItem deviceID={id} />
-          <SectionHeader title="Taps" />
-        </Container>
-      }
-      queryOptions={{
-        filters: [DAOApi.createFilter('device/id').equals(id)],
-      }}
-    />
+        }
+        showBackButton
+        title={name}
+      />
+      <TapsList
+        ListHeaderComponent={
+          <Container>
+            <OverviewItem title="Box ID" value={particleId} />
+            <DeviceStateOverviewItem deviceState={deviceStatus} />
+            <DeviceOnlineOverviewItem deviceID={id} />
+            <SectionHeader title="Taps" />
+          </Container>
+        }
+        queryOptions={{
+          filters: [DAOApi.createFilter('device/id').equals(id)],
+        }}
+      />
+    </Container>
   ),
 );
 
