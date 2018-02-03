@@ -11,6 +11,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import Container from '../common/Container';
 import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -78,7 +79,13 @@ const LoadedComponent = ({
   value: { id },
 }: LoadedComponentProps) => (
   <Container>
-    <Header showBackButton title="Tap" />
+    <Header
+      rightComponent={
+        <HeaderNavigationButton name="edit" params={{ id }} toRoute="editTap" />
+      }
+      showBackButton
+      title="Tap"
+    />
     <TapDetailsNavigator navigation={navigation} screenProps={{ tapId: id }} />
   </Container>
 );

@@ -19,7 +19,7 @@ import SwipeableRow from '../common/SwipeableRow';
 import { TapStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
+import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
 type Props = {|
   ListHeaderComponent?: React.Node,
@@ -110,17 +110,24 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Tap, *>) => (
-  <ListItem
-    hideChevron
-    item={item}
-    onPress={onItemPress}
-    subtitle={item.description || NULL_STRING_PLACEHOLDER}
-    // todo fix title, there is no item.name for tap
-    title={NULL_STRING_PLACEHOLDER}
-  />
-);
+const SwipeableRowItem = ({
+  index,
+  item,
+  onItemPress,
+}: RowItemProps<Tap, *>) => {
+  const beverage = item.currentKeg ? item.currentKeg.beverage : null;
+  const beverageName = beverage ? beverage.name : 'No Beer on Tap';
 
+  return (
+    <ListItem
+      avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
+      hideChevron
+      item={item}
+      onPress={onItemPress}
+      title={`${index + 1} - ${beverageName}`}
+    />
+  );
+};
 const Slideout = ({
   item,
   onDeleteItemPress,

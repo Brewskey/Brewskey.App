@@ -36,6 +36,10 @@ const theme = {
       buttonStyle: { width: '100%' },
     },
   },
+  deviceOnlineIndicator: {
+    connectedColor: 'green',
+    disconnectedColor: 'red',
+  },
   tabBar: {
     tabBarOptions: {
       activeBackgroundColor: COLORS.primary3,

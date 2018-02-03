@@ -111,7 +111,7 @@ const SwipeableRowItem = ({
       hideChevron
       item={item}
       onPress={onItemPress}
-      title={`${index} - ${beverageName}`}
+      title={`${index + 1} - ${beverageName}`}
     />
   );
 };
