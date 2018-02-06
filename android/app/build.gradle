@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-randombytes')
     compile project(':react-native-contacts')
     compile project(':react-native-fetch-blob')
     compile project(':react-native-image-picker')
