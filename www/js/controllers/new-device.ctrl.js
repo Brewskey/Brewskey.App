@@ -25,7 +25,8 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
       { value: 1, text: 'Active' },
       { value: 2, text: 'Disabled' },
       { value: 3, text: 'Cleaning' },
-      { value: 4, text: 'Open Valve' },
+      { value: 4, text: 'Unlocked' },
+      { value: 5, text: 'Configure Expansion Boxes' },
     ];
     $scope.statusModel = $scope.deviceStatusTypes[0];
     if ($scope.model.id) {

@@ -19,7 +19,7 @@
                     <ion-spinner></ion-spinner>
                 </div>
                 <div ng-show="!loading">
-                    <a ng-repeat="device in devices | orderBy: 'name'" ui-sref="app.device({deviceId: device.id})" on-hold="onDeviceHeld(device)" class="item">
+                    <a ng-repeat="device in devices | orderBy: 'lastEdited' : true" ui-sref="app.device({deviceId: device.id})" on-hold="onDeviceHeld(device)" class="item">
                         {{device.name}}
                     </a>
                     <div ng-if="!devices || !devices.length" class="item text-center item-text-wrap">
