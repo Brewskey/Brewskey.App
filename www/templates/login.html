@@ -21,14 +21,14 @@
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : loginForm.userName.$invalid || errors['model.UserName']}">
                     <span class="input-label">Username</span>
-                    <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false">
+                    <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false" data-dependency="password" tabindex="0">
                 </label>
                 <div class="form-errors" data-ng-repeat="error in errors['model.Username']" data-ng-show="loginForm.$submitted" data-ng-cloak>
                     <div class="form-error" ng-bind="error"></div>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid || errors['model.Password']}">
                     <span class="input-label">Password</span>
-                    <input type="password" ng-model="loginData.password">
+                    <input type="password" ng-model="loginData.password" id="password" tabindex="1">
                 </label>
                 <div class="form-errors" data-ng-repeat="error in errors['model.Password']" data-ng-show="loginForm.$submitted" data-ng-cloak>
                     <div class="form-error" ng-bind="error"></div>

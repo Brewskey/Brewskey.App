@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="553" id="com.brewskey.app" version="0.0.62" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="553" id="com.brewskey.app" version="0.0.63" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Brewskey</name>
     <description>Unock the power of your kegerator</description>
     <author email="support@brewskey.com" href="http://brewskey.com/">
@@ -23,6 +23,8 @@
     <preference name="SplashScreenDelay" value="2000" />
     <preference name="Orientation" value="portrait" />
     <platform name="android">
+        <preference name="CodePushDeploymentKey" value="MSpRU-1FgCr-d5aRnU2hAsv9jrEuVk-QkVzyX" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -42,9 +44,9 @@
         <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
-        <resource-file src="google-services.json" target="app/google-services.json" />
     </platform>
     <platform name="ios">
+        <preference name="CodePushDeploymentKey" value="PZeezosHlliSHlyey8_1NS4mEY2ZVk-QkVzyX" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
