@@ -36,6 +36,9 @@ type RequestApiStore<TResult> = {|
   get: (...requestArgs: Array<any>) => LoadObject<TResult>,
 |};
 
+const getCacheKey = (requestArgs: Array<any>): string =>
+  JSON.stringify(requestArgs).toLowerCase();
+
 const makeRequestApiStore = <TResult>(
   getRequestPromise: (...args: Array<any>) => Promise<TResult>,
 ): RequestApiStore<TResult> => {
@@ -44,8 +47,9 @@ const makeRequestApiStore = <TResult>(
     new Map(),
   );
 
-  const get = (...requestArgs: Array<any>): LoadObject<TResult> => {
-    const cacheKey = JSON.stringify(requestArgs).toLowerCase();
+  const fetch = (...requestArgs: Array<any>): string => {
+    const cacheKey = getCacheKey(requestArgs);
+
     const setLoaderValue = action((value: LoadObject<TResult>) =>
       requestLoaderByKey.set(cacheKey, value),
     );
@@ -61,12 +65,21 @@ const makeRequestApiStore = <TResult>(
         );
     }
 
+    return cacheKey;
+  };
+
+  const get = (...requestArgs: Array<any>): LoadObject<TResult> => {
+    const cacheKey = getCacheKey(requestArgs);
+    fetch(...requestArgs);
     return nullthrows(requestLoaderByKey.get(cacheKey));
   };
 
+  const getFromCache = (cacheKey: string): LoadObject<TResult> =>
+    requestLoaderByKey.get(cacheKey) || LoadObject.empty();
+
   const flushCache = () => requestLoaderByKey.clear();
 
-  return { flushCache, get };
+  return { fetch, flushCache, get, getFromCache };
 };
 
 export default makeRequestApiStore;
