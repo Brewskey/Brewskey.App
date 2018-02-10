@@ -1,6 +1,6 @@
 // @flow
 
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import {
   WifiConfigureStore,
   WifiConnectStore,
@@ -13,6 +13,7 @@ type WifiSetupStep = 1 | 2 | 3 | 4;
 
 class WifiSetupStore {
   @observable wifiSetupStep: WifiSetupStep = 1;
+  @observable particleID: string = '';
   @observable _wifiSetupLoaderID = null;
 
   constructor(navigation) {
@@ -44,6 +45,11 @@ class WifiSetupStore {
   };
 
   @action
+  setParticleID = (particleID: string) => {
+    this.particleID = particleID;
+  };
+
+  @action
   setWifiSetupStep = (step: WifiSetupStep) => {
     this.wifiSetupStep = step;
   };
@@ -59,10 +65,8 @@ class WifiSetupStore {
   _queryParticleID = async () => {
     try {
       const particleID = await SoftApService.getParticleID();
-      runInAction(() => {
-        this._particleID = particleID;
-        this.setWifiSetupStep(3);
-      });
+      this.setParticleID(particleID);
+      this.setWifiSetupStep(3);
     } catch (error) {
       this._queryParticleID();
     }

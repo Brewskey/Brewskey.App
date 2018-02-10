@@ -47,7 +47,6 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
-          wifiSetup: { screen: WifiSetupScreen },
           home: {
             screen: StackNavigator(
               { home: { screen: HomeScreen } },
@@ -81,6 +80,7 @@ const RootRouter = StackNavigator(
                 deviceDetails: { screen: DeviceDetailsScreen },
                 editDevice: { screen: EditDeviceScreen },
                 newDevice: { screen: NewDeviceScreen },
+                wifiSetup: { screen: WifiSetupScreen },
               },
               {
                 gesturesEnabled: false,

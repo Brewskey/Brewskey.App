@@ -28,7 +28,11 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
       <Container>
         <Header
           rightComponent={
-            <HeaderNavigationButton name="add" toRoute="newDevice" />
+            <HeaderNavigationButton
+              name="add"
+              params={{ forNewDevice: true }}
+              toRoute="wifiSetup"
+            />
           }
           title="Devices"
         />

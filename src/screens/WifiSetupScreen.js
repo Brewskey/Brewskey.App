@@ -5,6 +5,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { StackNavigator } from 'react-navigation';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import WifiSetupStore from '../stores/WifiSetupStore';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -15,6 +16,7 @@ import WifiSetupStep4Screen from './WifiSetupStep4Screen';
 
 type InjectedProps = {|
   navigation: Navigation,
+  forNewDevice?: boolean,
 |};
 
 const WifiSetupNavigator = StackNavigator(
@@ -27,6 +29,7 @@ const WifiSetupNavigator = StackNavigator(
   { headerMode: 'none' },
 );
 
+@flatNavigationParamsAndScreenProps
 class WifiSetupScreen extends InjectedComponent<InjectedProps> {
   static router = WifiSetupNavigator.router;
 
@@ -36,7 +39,16 @@ class WifiSetupScreen extends InjectedComponent<InjectedProps> {
     this._wifiSetupStore = new WifiSetupStore(this.injectedProps.navigation);
   }
 
-  _onSetupFinish = () => this.injectedProps.navigation.goBack();
+  _onSetupFinish = () => {
+    const { forNewDevice, navigation } = this.injectedProps;
+    if (forNewDevice) {
+      navigation.navigate('newDevice', {
+        particleID: this._wifiSetupStore.particleID,
+      });
+    } else {
+      navigation.goBack();
+    }
+  };
 
   render() {
     return (
