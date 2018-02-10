@@ -21,8 +21,8 @@ import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
 import MyBeveragesScreen from './screens/MyBeveragesScreen';
-import MyProfileScreen from './screens/MyProfileScreen';
 import MyFriendsScreen from './screens/MyFriendsScreen';
+import MyProfileScreen from './screens/MyProfileScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
 import NewFlowSensorScreen from './screens/NewFlowSensorScreen';
@@ -33,6 +33,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TapDetailsScreen from './screens/TapDetailsScreen';
 import TapsScreen from './screens/TapsScreen';
+import WifiSetupScreen from './screens/WifiSetupScreen';
 
 type Props = {|
   rootRef: React.Ref<StackNavigator>,
@@ -79,6 +80,7 @@ const RootRouter = StackNavigator(
                 deviceDetails: { screen: DeviceDetailsScreen },
                 editDevice: { screen: EditDeviceScreen },
                 newDevice: { screen: NewDeviceScreen },
+                wifiSetup: { screen: WifiSetupScreen },
               },
               {
                 gesturesEnabled: false,

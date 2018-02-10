@@ -17,13 +17,9 @@ const flatNavigationParamsAndScreenProps = <
     TProps & TParams,
   > {
     render() {
-      return (
-        <Component
-          {...this.props.navigation.state.params || {}}
-          {...this.props.screenProps || {}}
-          {...this.props}
-        />
-      );
+      const { navigation, screenProps } = this.props;
+      const params = (navigation && navigation.state.params) || {};
+      return <Component {...params} {...screenProps || {}} {...this.props} />;
     }
   }
 
