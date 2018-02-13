@@ -12,14 +12,14 @@ const DEFAULT_WIFI_CHANNEL = 3;
 
 /* eslint-disable sorting/sort-object-props */
 export const WIFI_SECURITIES = {
-  OPEN: 0, // Unsecured
-  WEP_PSK: 1, // WEP Security with open authentication
-  WEP_SHARED: 32769, // WEP Security with shared authentication
-  WPA_AES_PSK: 2097156, // WPA Security with AES
-  WPA_TKIP_PSK: 2097154, // WPA Security with TKIP
-  WPA2_AES_PSK: 4194308, // WPA2 Security with AES
-  WPA2_MIXED_PSK: 4194310, // WPA2 Security with AES & TKIP
-  WPA2_TKIP_PSK: 4194306, // WPA2 Security with TKIP
+  OPEN: 0,
+  WEP_PSK: 1,
+  WEP_SHARED: 32769,
+  WPA_AES_PSK: 2097156,
+  WPA_TKIP_PSK: 2097154,
+  WPA2_AES_PSK: 4194308,
+  WPA2_MIXED_PSK: 4194310,
+  WPA2_TKIP_PSK: 4194306,
 };
 /* eslint-enable */
 
