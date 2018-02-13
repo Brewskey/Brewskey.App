@@ -64,7 +64,9 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
             secureTextEntry
           />
         )}
-        <FormValidationMessage>{error}</FormValidationMessage>
+        {error && (
+          <FormValidationMessage>{error.message}</FormValidationMessage>
+        )}
         <Button
           disable={invalid || pristine || submitting}
           onPress={handleSubmit}

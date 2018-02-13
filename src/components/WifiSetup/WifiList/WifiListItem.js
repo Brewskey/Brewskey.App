@@ -75,9 +75,11 @@ class WifiListItem extends React.Component<Props> {
             secureTextEntry
             value={this._password}
           />,
-          <FormValidationMessage key="wifiSetupError">
-            {error}
-          </FormValidationMessage>,
+          error && (
+            <FormValidationMessage key="wifiSetupError">
+              {error.message}
+            </FormValidationMessage>
+          ),
           <Button
             disabled={isConnecting}
             key="connectButton"

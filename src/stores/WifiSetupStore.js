@@ -57,10 +57,13 @@ class WifiSetupStore {
   };
 
   @action
-  setupWifi = async (wifiNetwork: WifiNetwork): Promise<void> => {
-    this._wifiSetupLoaderID = WifiConfigureStore.fetch(wifiNetwork);
-    await waitForLoaded(() => this.wifiSetupLoader, 15000);
-    this.setWifiSetupStep(4);
+  setupWifi = async (wifiNetwork: WifiNetwork = {}): Promise<void> => {
+    try {
+      this._wifiSetupLoaderID = WifiConfigureStore.fetch(wifiNetwork);
+      await waitForLoaded(() => this.wifiSetupLoader, 15000);
+      this.setWifiSetupStep(4);
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   };
 
   @action
