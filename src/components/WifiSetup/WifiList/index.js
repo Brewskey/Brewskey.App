@@ -47,6 +47,7 @@ class WifiList extends InjectedComponent<InjectedProps> {
     const isExpanded = rowKey === this._expandedRowKey;
     return (
       <WifiListItem
+        error={this.props.wifiSetupLoader.getError()}
         index={index}
         isConnecting={isExpanded && this.props.wifiSetupLoader.isLoading()}
         isExpanded={isExpanded}
@@ -72,6 +73,7 @@ class WifiList extends InjectedComponent<InjectedProps> {
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+        ListHeaderComponent={this.props.ListHeaderComponent}
         onRefresh={!isLoading ? WifiNetworksStore.flushCache : null}
         renderItem={this._renderItem}
       />

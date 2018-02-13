@@ -6,6 +6,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import WifiList from '../components/WifiSetup/WifiList';
+import HiddenWifiInput from '../components/WifiSetup/WifiList/HiddenWifiInput';
 
 type InjectedProps = {
   wifiSetupStore: WifiSetupStore,
@@ -15,9 +16,14 @@ type InjectedProps = {
 class WifiSetupStep3Screen extends InjectedComponent<InjectedProps> {
   render() {
     const { wifiSetupStore } = this.injectedProps;
-    // todo add Hidden network input
     return (
       <WifiList
+        ListHeaderComponent={
+          <HiddenWifiInput
+            onConnectPress={wifiSetupStore.setupWifi}
+            wifiSetupLoader={wifiSetupStore.wifiSetupLoader}
+          />
+        }
         isConnecting={wifiSetupStore.isConnecting}
         onConnectPress={wifiSetupStore.setupWifi}
         wifiSetupLoader={wifiSetupStore.wifiSetupLoader}
