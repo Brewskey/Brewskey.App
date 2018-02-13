@@ -3,13 +3,14 @@
 import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { FormValidationMessage } from 'react-native-elements';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FormValidationMessage, Icon } from 'react-native-elements';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Button from '../../../common/buttons/Button';
 import TextField from '../../../components/TextField';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
+import { WIFI_SECURITIES } from '../../../SoftApService';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,9 +19,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 15,
   },
+  iconStyle: {
+    marginLeft: 'auto',
+  },
+  labelContainer: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 18,
+  },
   title: {
     ...TYPOGRAPHY.secondary,
-    paddingHorizontal: 18,
   },
 });
 
@@ -56,7 +65,14 @@ class WifiListItem extends React.Component<Props> {
   _onPress = () => this.props.onPress(this.props.rowKey);
 
   render() {
-    const { error, isConnecting, isExpanded, item: { ssid } } = this.props;
+    const {
+      error,
+      isConnecting,
+      isExpanded,
+      item: { ssid, security },
+    } = this.props;
+
+    const isPasswordRequired = security !== WIFI_SECURITIES.OPEN;
 
     return (
       <TouchableOpacity
@@ -64,17 +80,24 @@ class WifiListItem extends React.Component<Props> {
         onPress={this._onPress}
         style={styles.container}
       >
-        <Text style={styles.title}>{ssid}</Text>
+        <View style={styles.labelContainer}>
+          <Text style={styles.title}>{ssid}</Text>
+          {isPasswordRequired && (
+            <Icon containerStyle={styles.iconStyle} name="lock" />
+          )}
+        </View>
         {isExpanded && [
-          <TextField
-            disabled={isConnecting}
-            key="password"
-            label="Password"
-            onChange={this._onPasswordChange}
-            onSubmitEditing={this._onConnectPress}
-            secureTextEntry
-            value={this._password}
-          />,
+          isPasswordRequired && (
+            <TextField
+              disabled={isConnecting}
+              key="password"
+              label="Password"
+              onChange={this._onPasswordChange}
+              onSubmitEditing={this._onConnectPress}
+              secureTextEntry
+              value={this._password}
+            />
+          ),
           error && (
             <FormValidationMessage key="wifiSetupError">
               {error.message}
