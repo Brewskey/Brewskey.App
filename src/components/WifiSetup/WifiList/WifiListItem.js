@@ -72,6 +72,7 @@ class WifiListItem extends React.Component<Props> {
             label="Password"
             onChange={this._onPasswordChange}
             onSubmitEditing={this._onConnectPress}
+            secureTextEntry
             value={this._password}
           />,
           <FormValidationMessage key="wifiSetupError">

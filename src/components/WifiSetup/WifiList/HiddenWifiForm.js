@@ -57,7 +57,12 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
           )}
         </FormField>
         {values.security !== WIFI_SECURITIES.OPEN && (
-          <FormField component={TextField} label="Password" name="password" />
+          <FormField
+            component={TextField}
+            label="Password"
+            name="password"
+            secureTextEntry
+          />
         )}
         <FormValidationMessage>{error}</FormValidationMessage>
         <Button
