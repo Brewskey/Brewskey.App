@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onConnectPress: (wifiNetwork: WifiNetwork) => void,
+  onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
   wifiSetupLoader: LoadObject<void>,
 |};
 

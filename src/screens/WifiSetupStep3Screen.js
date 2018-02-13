@@ -24,7 +24,6 @@ class WifiSetupStep3Screen extends InjectedComponent<InjectedProps> {
             wifiSetupLoader={wifiSetupStore.wifiSetupLoader}
           />
         }
-        isConnecting={wifiSetupStore.isConnecting}
         onConnectPress={wifiSetupStore.setupWifi}
         wifiSetupLoader={wifiSetupStore.wifiSetupLoader}
       />

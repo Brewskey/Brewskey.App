@@ -1,10 +1,9 @@
 // @flow
 
+import type { LoadObject } from 'brewskey.js-api';
 import type { WifiNetwork } from '../../../types';
-import type WifiSetupStore from '../../../stores/WifiSetupStore';
 
 import * as React from 'react';
-import InjectedComponent from '../../../common/InjectedComponent';
 import WifiListItem from './WifiListItem';
 import WifiListEmpty from './WifiListEmpty';
 import WifiListError from './WifiListError';
@@ -14,12 +13,14 @@ import { observer } from 'mobx-react';
 import { WifiNetworksStore } from '../../../stores/ApiRequestStores/SoftApApiStores';
 import LoadingListFooter from '../../../common/LoadingListFooter';
 
-type InjectedProps = {|
-  wifiSetupStore: WifiSetupStore,
+type Props = {|
+  ListHeaderComponent?: React.Node,
+  onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
+  wifiSetupLoader: LoadObject<void>,
 |};
 
 @observer
-class WifiList extends InjectedComponent<InjectedProps> {
+class WifiList extends React.Component<Props> {
   @observable _expandedRowKey = null;
 
   @computed

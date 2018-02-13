@@ -1,6 +1,11 @@
 // @flow
 
-import type { Device, DeviceMutator } from 'brewskey.js-api';
+import type {
+  Device,
+  DeviceMutator,
+  LoadObject,
+  Location,
+} from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
@@ -43,8 +48,8 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
 };
 
 type Props = {|
-  device?: $Shape<Device>,
-  onSubmit: (values: DeviceMutator) => void,
+  device: $Shape<Device>,
+  onSubmit: (values: DeviceMutator) => Promise<void>,
   submitButtonLabel: string,
 |};
 
@@ -52,19 +57,13 @@ type Props = {|
 @observer
 class DeviceForm extends InjectedComponent<FormProps, Props> {
   @computed
-  get _locationsLoader(): LoadObject<Array<Locations>> {
+  get _locationsLoader(): LoadObject<Array<LoadObject<Location>>> {
     return LocationStore.getMany();
   }
 
   render() {
-    const {
-      device,
-      handleSubmit,
-      invalid,
-      pristine,
-      submitButtonLabel,
-      submitting,
-    } = this.injectedProps;
+    const { device, submitButtonLabel } = this.props;
+    const { handleSubmit, invalid, pristine, submitting } = this.injectedProps;
 
     return (
       <KeyboardAwareScrollView>

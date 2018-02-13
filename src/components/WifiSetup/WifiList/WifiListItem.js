@@ -25,13 +25,14 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  error?: Error,
+  error: ?Error,
   index: number,
-  isConnection: boolean,
+  isConnecting: boolean,
   isExpanded: boolean,
   item: WifiNetwork,
-  onConnectPress: (wifiNetwork: WifiNetwork) => void,
+  onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
   onPress: (rowKey: string) => void,
+  rowKey: string,
 |};
 
 @observer

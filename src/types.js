@@ -38,7 +38,7 @@ export type NearbyLocation = {
 };
 
 export type WifiNetwork = {
-  channel?: string,
+  channel?: number,
   index?: number,
   password?: string,
   security: number,

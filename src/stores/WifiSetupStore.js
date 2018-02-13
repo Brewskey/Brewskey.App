@@ -1,5 +1,7 @@
 // @flow
 
+import type { Navigation, WifiNetwork } from '../types';
+
 import { action, computed, observable, reaction } from 'mobx';
 import {
   WifiConfigureStore,
@@ -16,7 +18,7 @@ class WifiSetupStore {
   @observable particleID: string = '';
   @observable _wifiSetupLoaderID = null;
 
-  constructor(navigation) {
+  constructor(navigation: Navigation) {
     reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep, currentReaction: Object) => {
@@ -30,10 +32,10 @@ class WifiSetupStore {
   }
 
   @computed
-  get wifiSetupLoader() {
+  get wifiSetupLoader(): LoadObject<void> {
     return this._wifiSetupLoaderID
-      ? WifiConfigureStore.getFromCache(this._wifiSetupLoaderID).map(() =>
-          WifiConnectStore.get(),
+      ? WifiConfigureStore.getFromCache(this._wifiSetupLoaderID).map(
+          (): LoadObject<void> => WifiConnectStore.get(),
         )
       : LoadObject.empty();
   }

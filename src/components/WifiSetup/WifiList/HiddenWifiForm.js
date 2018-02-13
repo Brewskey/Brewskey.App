@@ -29,16 +29,16 @@ export const validate = (values: WifiNetwork): { [key: string]: string } => {
 };
 
 type Props = {|
-  onSubmit: (values: WifiNetwork) => void,
-  error?: Error,
+  onSubmit: (values: WifiNetwork) => Promise<void>,
+  error: ?Error,
 |};
 
 @form()
 @observer
 class HiddenWifiForm extends injectedComponent<FormProps, Props> {
   render() {
+    const { error } = this.props;
     const {
-      error,
       handleSubmit,
       invalid,
       pristine,
@@ -50,8 +50,8 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
       <KeyboardAwareScrollView>
         <FormField component={TextField} label="SSID" name="ssid" />
         <FormField component={PickerField} label="Security" name="security">
-          {Array.from(Object.entries(WIFI_SECURITIES)).map(
-            ([name, value]): React.Node => (
+          {Object.entries(WIFI_SECURITIES).map(
+            ([name, value]: [any, any]): React.Node => (
               <PickerField.Item key={value} label={name} value={value} />
             ),
           )}

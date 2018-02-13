@@ -14,11 +14,6 @@ import WifiSetupStep2Screen from './WifiSetupStep2Screen';
 import WifiSetupStep3Screen from './WifiSetupStep3Screen';
 import WifiSetupStep4Screen from './WifiSetupStep4Screen';
 
-type InjectedProps = {|
-  navigation: Navigation,
-  forNewDevice?: boolean,
-|};
-
 const WifiSetupNavigator = StackNavigator(
   {
     wifiSetupStep1: { screen: WifiSetupStep1Screen },
@@ -28,6 +23,11 @@ const WifiSetupNavigator = StackNavigator(
   },
   { headerMode: 'none' },
 );
+
+type InjectedProps = {|
+  forNewDevice?: boolean,
+  navigation: Navigation,
+|};
 
 @flatNavigationParamsAndScreenProps
 class WifiSetupScreen extends InjectedComponent<InjectedProps> {
@@ -51,13 +51,14 @@ class WifiSetupScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
+    const { forNewDevice, navigation } = this.injectedProps;
     return (
       <Container>
         <Header showBackButton title="WiFi Setup" />
         <WifiSetupNavigator
-          navigation={this.injectedProps.navigation}
+          navigation={navigation}
           screenProps={{
-            forNewDevice: this.props.forNewDevice,
+            forNewDevice,
             onSetupFinish: this._onSetupFinish,
             wifiSetupStore: this._wifiSetupStore,
           }}

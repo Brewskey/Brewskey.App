@@ -22,9 +22,9 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onChange: (value: ?string) => void,
+  onChange: (value: string) => void,
   onContinuePress: () => void,
-  value: ?string,
+  value: string,
 |};
 
 @observer
