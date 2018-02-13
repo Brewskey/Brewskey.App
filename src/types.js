@@ -38,8 +38,8 @@ export type NearbyLocation = {
 };
 
 export type WifiNetwork = {
-  channel: string,
-  index: number,
+  channel?: string,
+  index?: number,
   password?: string,
   security: number,
   ssid: string,

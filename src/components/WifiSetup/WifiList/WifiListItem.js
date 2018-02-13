@@ -4,6 +4,7 @@ import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FormValidationMessage } from 'react-native-elements';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Button from '../../../common/buttons/Button';
@@ -24,13 +25,13 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
+  error?: Error,
   index: number,
   isConnection: boolean,
   isExpanded: boolean,
   item: WifiNetwork,
   onConnectPress: (wifiNetwork: WifiNetwork) => void,
   onPress: (rowKey: string) => void,
-  wifiSetupLoader: LoadObject<void>,
 |};
 
 @observer
@@ -54,7 +55,7 @@ class WifiListItem extends React.Component<Props> {
   _onPress = () => this.props.onPress(this.props.rowKey);
 
   render() {
-    const { isConnecting, isExpanded, item: { ssid } } = this.props;
+    const { error, isConnecting, isExpanded, item: { ssid } } = this.props;
 
     return (
       <TouchableOpacity
@@ -72,6 +73,9 @@ class WifiListItem extends React.Component<Props> {
             onSubmitEditing={this._onConnectPress}
             value={this._password}
           />,
+          <FormValidationMessage key="wifiSetupError">
+            {error}
+          </FormValidationMessage>,
           <Button
             disabled={isConnecting}
             key="connectButton"

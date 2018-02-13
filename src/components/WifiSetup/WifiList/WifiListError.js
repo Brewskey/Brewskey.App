@@ -1,23 +1,47 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Container from '../../../common/Container';
+import TextBlock from '../../../common/TextBlock';
+import { Icon } from 'react-native-elements';
+import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    flex: 1,
+  textInstructions: {
+    ...TYPOGRAPHY.paragraph,
+    color: COLORS.textFaded,
+    paddingHorizontal: 12,
+  },
+  textTitle: {
+    ...TYPOGRAPHY.secondary,
+    color: COLORS.textFaded,
+    paddingHorizontal: 12,
+    textAlign: 'center',
   },
 });
 
 const WifiListError = () => (
-  <View style={styles.container}>
-    <Text>Couldn&#8217;t receive the brewskey box available WiFi networks</Text>
-    <Text>
+  <Container centered>
+    <Icon
+      reverse
+      reverseColor={COLORS.accent}
+      color={COLORS.secondary2}
+      name="priority-high"
+      size={45}
+    />
+    <TextBlock paddedBottom textStyle={styles.textTitle}>
+      Couldn&#8217;t receive the Brewskey box available WiFi networks
+    </TextBlock>
+    <TextBlock index={1} paddedBottom textStyle={styles.textInstructions}>
       Try unplugging and plugging the Brewskey box back in. Reconnect to
-      Photon-XXX WiFi network. And pull to refresh.
-    </Text>
-  </View>
+      Photon-XXX WiFi network on your phone and pull to refresh.
+    </TextBlock>
+    <TextBlock index={2} textStyle={styles.textInstructions}>
+      If the previous step doesn&#8217;t help, repeat the whole setup from the
+      beginning.
+    </TextBlock>
+  </Container>
 );
 
 export default WifiListError;

@@ -35,7 +35,9 @@ const OrderedText = ({
       containerStyle,
     ]}
   >
-    {index && <Text style={[styles.text, textStyle]}>{index}. </Text>}
+    {index && (
+      <Text style={[styles.text, textStyle]}>{index.toString()}. </Text>
+    )}
     <Text style={[styles.text, textStyle]}>{children}</Text>
   </View>
 );

@@ -7,17 +7,19 @@ import NodeRSA from 'node-rsa';
 
 const BASE_URL = 'http://192.168.0.1:80';
 const SUCCESS_RESPONSE_CODE = 0;
+const DEFAULT_WIFI_INDEX = 0;
+const DEFAULT_WIFI_CHANNEL = 3;
 
 /* eslint-disable sorting/sort-object-props */
-export const WIFI_SECURITY = {
-  SECURITY_OPEN: 0, // Unsecured
-  SECURITY_WEP_PSK: 1, // WEP Security with open authentication
-  SECURITY_WEP_SHARED: 32769, // WEP Security with shared authentication
-  SECURITY_WPA_AES_PSK: 2097156, // WPA Security with AES
-  SECURITY_WPA_TKIP_PSK: 2097154, // WPA Security with TKIP
-  SECURITY_WPA2_AES_PSK: 4194308, // WPA2 Security with AES
-  SECURITY_WPA2_MIXED_PSK: 4194310, // WPA2 Security with AES & TKIP
-  SECURITY_WPA2_TKIP_PSK: 4194306, // WPA2 Security with TKIP
+export const WIFI_SECURITIES = {
+  OPEN: 0, // Unsecured
+  WEP_PSK: 1, // WEP Security with open authentication
+  WEP_SHARED: 32769, // WEP Security with shared authentication
+  WPA_AES_PSK: 2097156, // WPA Security with AES
+  WPA_TKIP_PSK: 2097154, // WPA Security with TKIP
+  WPA2_AES_PSK: 4194308, // WPA2 Security with AES
+  WPA2_MIXED_PSK: 4194310, // WPA2 Security with AES & TKIP
+  WPA2_TKIP_PSK: 4194306, // WPA2 Security with TKIP
 };
 /* eslint-enable */
 
@@ -37,8 +39,8 @@ const translateWifiFromApi = ({
 
 class SoftAPService {
   static configureWifi = async ({
-    channel,
-    index = 0,
+    channel = DEFAULT_WIFI_CHANNEL,
+    index = DEFAULT_WIFI_INDEX,
     password,
     security,
     ssid,
@@ -61,7 +63,7 @@ class SoftAPService {
     });
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('error on configure wifi on brewskey box');
+      throw new Error('error on configure wifi on Brewskey box!');
     }
   };
 
@@ -73,7 +75,7 @@ class SoftAPService {
     });
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('Error on connecting brewskey bo to wifi spot');
+      throw new Error('Error on connecting Brewskey box to wifi network!');
     }
   };
 
@@ -93,7 +95,7 @@ class SoftAPService {
     );
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('Error on getting public brewskey box key!');
+      throw new Error('Error on getting public Brewskey box key!');
     }
 
     const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
