@@ -18,8 +18,7 @@ const PhoneConnectInstructions = () => (
     </TextBlock>
     <TextBlock index={4} paddedBottom>
       If your Brewskey box is blinking blue but still not showing up in you
-      smart phone&#8217;s WiFi list, try turning your WiFi off and then on
-      again.
+      smart phone's WiFi list, try turning your WiFi off and then on again.
     </TextBlock>
     <TextBlock index={5}>
       If you still having trouble, try unplugging and plugging the Brewskey box

@@ -31,14 +31,14 @@ const WifiListError = () => (
       size={45}
     />
     <TextBlock paddedBottom textStyle={styles.textTitle}>
-      Couldn&#8217;t receive the Brewskey box available WiFi networks
+      Couldn't receive the Brewskey box available WiFi networks
     </TextBlock>
     <TextBlock index={1} paddedBottom textStyle={styles.textInstructions}>
       Try unplugging and plugging the Brewskey box back in. Reconnect to
       Photon-XXX WiFi network on your phone and pull to refresh.
     </TextBlock>
     <TextBlock index={2} textStyle={styles.textInstructions}>
-      If the previous step doesn&#8217;t help, repeat the whole setup from the
+      If the previous step doesn't help, repeat the whole setup from the
       beginning.
     </TextBlock>
   </Container>

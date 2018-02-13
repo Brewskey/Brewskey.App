@@ -11,7 +11,7 @@ const DeviceSetupInstructions = () => (
     </TextBlock>
     <TextBlock index={2} paddedBottom>
       The LED on the Brewskey box should be blinking blue. If not, hold the
-      button for 3 seconds.
+      button on the back of the box for 3 seconds.
     </TextBlock>
     <TextBlock index={3}>
       Make sure your phone is connected to the internet

@@ -41,36 +41,36 @@ class ParticleIDInput extends React.Component<Props> {
 
     return (
       <View>
-        {!this._isExpanded && (
+        {!this._isExpanded ? (
           <TouchableOpacity onPress={this._expand}>
             <Text style={styles.expandText}>
               I know my internal Brewskey box ID
             </Text>
           </TouchableOpacity>
+        ) : (
+          [
+            <TextBlock
+              key="descriptionText"
+              textStyle={styles.descriptionText}
+              paddedBottom
+            >
+              Enter the hardware ID of your Brewskey box. We'll skip the WiFi
+              setup for now but you'll still be able to setup your taps.
+            </TextBlock>,
+            <TextField
+              key="particleIDInput"
+              label="Internal ID"
+              onChange={onChange}
+              onSubmitEditing={onContinuePress}
+              value={value}
+            />,
+            <Button
+              key="continueButton"
+              onPress={onContinuePress}
+              title="Continue"
+            />,
+          ]
         )}
-        {this._isExpanded && [
-          <TextBlock
-            key="descriptionText"
-            textStyle={styles.descriptionText}
-            paddedBottom
-          >
-            Enter the hardware ID of your Brewskey box. We&#8217;ll skip the
-            WiFi setup for now but you&#8217;ll still be able to setup your
-            taps.
-          </TextBlock>,
-          <TextField
-            key="particleIDInput"
-            label="Internal ID"
-            onChange={onChange}
-            onSubmitEditing={onContinuePress}
-            value={value}
-          />,
-          <Button
-            key="continueButton"
-            onPress={onContinuePress}
-            title="Continue"
-          />,
-        ]}
       </View>
     );
   }

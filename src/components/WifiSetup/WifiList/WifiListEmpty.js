@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
 const WifiListEmpty = () => (
   <Container centered>
     <Text style={styles.text}>
-      There are not WiFi networks around the Brewskey box. Move your Brewskey
-      box closer to Wifi spot and pull to refresh.
+      We can't detect any nearby WiFi hotspots with your Brewskey box. Please
+      move your Brewskey box and pull to refresh the app.
     </Text>
   </Container>
 );
