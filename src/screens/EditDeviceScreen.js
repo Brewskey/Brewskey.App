@@ -19,7 +19,7 @@ import LoaderComponent from '../common/LoaderComponent';
 import Header from '../common/Header';
 import nullthrows from 'nullthrows';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import EditDeviceForm from '../components/EditDeviceForm';
+import DeviceForm from '../components/DeviceForm';
 
 type InjectedProps = {
   id: EntityID,
@@ -59,7 +59,11 @@ type LoadedComponentProps = {
 };
 
 const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
-  <EditDeviceForm device={value} onSubmit={onFormSubmit} />
+  <DeviceForm
+    device={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit Device"
+  />
 );
 
 export default EditDeviceScreen;

@@ -39,6 +39,10 @@ export type Props = {
 
 @observer
 class PickerField extends React.Component<Props> {
+  static defaultProps = {
+    placeholder: 'Please select...',
+  };
+
   static Item = Picker.Item;
 
   _onPickerValueChange = (value: any) => {

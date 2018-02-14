@@ -36,3 +36,11 @@ export type NearbyLocation = {
   summary: ?string,
   taps: Array<NearbyTap>,
 };
+
+export type WifiNetwork = {
+  channel?: number,
+  index?: number,
+  password?: string,
+  security: number,
+  ssid: string,
+};

@@ -12,7 +12,7 @@ export type Props = {
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
   label?: string,
-  onBlur: () => void,
+  onBlur?: () => void,
   onChange: (value: any) => void,
   value: any,
   // other react-native textInput props
