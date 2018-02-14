@@ -5,6 +5,15 @@ import type { NavigationParams } from 'react-navigation';
 import nullthrows from 'nullthrows';
 import { NavigationActions } from 'react-navigation';
 
+// todo annotate better
+export const getCurrentRoute = (navigationState: Object): Object => {
+  const route = navigationState.routes[navigationState.index];
+  if (route.routes) {
+    return getCurrentRoute(route);
+  }
+  return route;
+};
+
 class NavigationService {
   static _navigator: ?Object;
 

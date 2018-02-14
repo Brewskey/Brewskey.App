@@ -4,11 +4,13 @@ import type { Navigation, WifiNetwork } from '../types';
 import type { LoadObject } from 'brewskey.js-api';
 
 import { action, autorun, computed, observable, reaction, when } from 'mobx';
+import { NavigationActions } from 'react-navigation';
 import {
   WifiConfigureStore,
   WifiConnectStore,
   ParticleIDStore,
 } from './ApiRequestStores/SoftApApiStores';
+import { getCurrentRoute } from '../NavigationService';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
@@ -21,10 +23,13 @@ class WifiSetupStore {
   constructor(navigation: Navigation) {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
-      (wifiSetupStep: WifiSetupStep) => {
-        // todo make replace instead navigate to prevent using hardware back button
-        navigation.navigate(`wifiSetupStep${wifiSetupStep}`);
-      },
+      (wifiSetupStep: WifiSetupStep) =>
+        navigation.dispatch(
+          NavigationActions.replace({
+            key: getCurrentRoute(navigation.state).key,
+            routeName: `wifiSetupStep${wifiSetupStep}`,
+          }),
+        ),
     );
     this._disposers.push(navigationReaction);
 
