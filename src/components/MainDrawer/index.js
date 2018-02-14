@@ -9,7 +9,7 @@ import { COLORS } from '../../theme';
 import AppSettingsStore from '../../stores/AppSettingsStore';
 import NavigationDrawerButton from './NavigationDrawerButton';
 import DrawerHeader from './DrawerHeader';
-import DrawerSeperator from './DrawerSeparator';
+import DrawerSeparator from './DrawerSeparator';
 import LogoutDrawerButton from './LogoutDrawerButton';
 import DRAWER_ROUTES from './drawerRoutes';
 
@@ -46,11 +46,15 @@ class MainDrawer extends React.Component<Props> {
               icon={icon}
               isActive={this.props.activeItemKey === routeKey}
               key={routeKey}
+              onPress={this.props.onItemPress}
+              navigationRoute={this.props.items.find(
+                (navRoute: Object): boolean => navRoute.key === routeKey,
+              )}
               routeKey={routeKey}
               title={title}
             />
           ))}
-          <DrawerSeperator />
+          <DrawerSeparator />
           <LogoutDrawerButton />
         </ScrollView>
       </SafeAreaView>

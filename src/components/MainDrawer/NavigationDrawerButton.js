@@ -1,29 +1,24 @@
 // @flow
 
-import type { Navigation } from '../../types';
-
 import * as React from 'react';
-import InjectedComponent from '../../common/InjectedComponent';
 import DrawerButton from './DrawerButton';
-import { withNavigation } from 'react-navigation';
-
-type InjectedProps = {|
-  navigation: Navigation,
-|};
 
 type Props = {
   icon: { name: string, type?: string },
   isActive: boolean,
+  navigationRoute: ?Object,
+  onPress: ({ focused: boolean, route: Object }) => void,
   routeKey: string,
   // other RNEButton Props
 };
 
-@withNavigation
-class NavigationDrawerButton extends InjectedComponent<InjectedProps, Props> {
+class NavigationDrawerButton extends React.PureComponent<Props> {
+  // delegate navigation logic to react-navigation lib
   _onPress = () => {
-    const { navigation } = this.injectedProps;
-    navigation.navigate('DrawerClose');
-    navigation.navigate(this.props.routeKey);
+    const { navigationRoute, onPress, isActive } = this.props;
+    if (navigationRoute) {
+      onPress({ focused: isActive, route: navigationRoute });
+    }
   };
 
   render() {
