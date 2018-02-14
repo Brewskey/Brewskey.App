@@ -9,6 +9,7 @@ import PhoneConnectInstructions from '../components/WifiSetup/PhoneConnectInstru
 import Container from '../common/Container';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
+import LoadingIndicator from '../common/LoadingIndicator';
 
 type InjectedProps = {
   wifiSetupStore: WifiSetupStore,
@@ -17,12 +18,15 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 class WifiSetupStep2Screen extends InjectedComponent<InjectedProps> {
   render() {
+    const { wifiSetupStore } = this.injectedProps;
+
     return (
       <Container>
         <SectionHeader title="Connect to Brewskey box WiFi" />
         <SectionContent paddedHorizontal paddedVertical>
           <PhoneConnectInstructions />
         </SectionContent>
+        {wifiSetupStore.particleIDLoader.isLoading() && <LoadingIndicator />}
       </Container>
     );
   }

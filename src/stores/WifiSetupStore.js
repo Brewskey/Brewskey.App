@@ -1,80 +1,91 @@
 // @flow
 
 import type { Navigation, WifiNetwork } from '../types';
+import type { LoadObject } from 'brewskey.js-api';
 
-import { action, computed, observable, reaction } from 'mobx';
+import { action, autorun, computed, observable, reaction, when } from 'mobx';
 import {
   WifiConfigureStore,
   WifiConnectStore,
+  ParticleIDStore,
 } from './ApiRequestStores/SoftApApiStores';
-import SoftApService from '../SoftApService';
-import { LoadObject } from 'brewskey.js-api';
-import { waitForLoaded } from './DAOStores';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
 class WifiSetupStore {
   @observable wifiSetupStep: WifiSetupStep = 1;
-  @observable particleID: string = '';
-  @observable _wifiSetupLoaderID = null;
+  @observable _particleIDLoaderCacheKey: string = '';
+  @observable _wifiSetupLoaderCacheKey: string = '';
+  _disposers: Array<Function> = [];
 
   constructor(navigation: Navigation) {
-    reaction(
+    const navigationReaction = reaction(
       () => this.wifiSetupStep,
-      (wifiSetupStep: WifiSetupStep, currentReaction: Object) => {
+      (wifiSetupStep: WifiSetupStep) => {
         // todo make replace instead navigate to prevent using hardware back button
         navigation.navigate(`wifiSetupStep${wifiSetupStep}`);
-        if (wifiSetupStep === 4) {
-          currentReaction.dispose();
-        }
       },
+    );
+    this._disposers.push(navigationReaction);
+
+    const setupFinishReaction = when(
+      () => this.wifiSetupLoader.hasValue(),
+      () => this._setWifiSetupStep(4),
+    );
+
+    this._disposers.push(setupFinishReaction);
+  }
+
+  dispose = () => {
+    ParticleIDStore.flushCache();
+    this._flushWifiConfigurationCache();
+    this._disposers.forEach((disposer: Function) => disposer());
+  };
+
+  @computed
+  get wifiSetupLoader(): LoadObject<void> {
+    return WifiConfigureStore.getFromCache(this._wifiSetupLoaderCacheKey).map(
+      (): LoadObject<void> => WifiConnectStore.get(),
     );
   }
 
   @computed
-  get wifiSetupLoader(): LoadObject<void> {
-    return this._wifiSetupLoaderID
-      ? WifiConfigureStore.getFromCache(this._wifiSetupLoaderID).map(
-          (): LoadObject<void> => WifiConnectStore.get(),
-        )
-      : LoadObject.empty();
+  get particleIDLoader(): LoadObject<string> {
+    return ParticleIDStore.getFromCache(this._particleIDLoaderCacheKey);
   }
 
   @action
   onStep1Ready = () => {
-    this.setWifiSetupStep(2);
-    this._queryParticleID();
+    this._setWifiSetupStep(2);
+    const particleIDReaction = autorun(currentReaction => {
+      if (this.particleIDLoader.hasValue()) {
+        this._setWifiSetupStep(3);
+        currentReaction.dispose();
+      }
+      if (this.particleIDLoader.hasError()) {
+        ParticleIDStore.flushCache();
+        ParticleIDStore.fetch();
+      }
+    });
+
+    this._disposers.push(particleIDReaction);
+    this._particleIDLoaderCacheKey = ParticleIDStore.fetch();
   };
 
   @action
-  setParticleID = (particleID: string) => {
-    this.particleID = particleID;
-  };
-
-  @action
-  setWifiSetupStep = (step: WifiSetupStep) => {
+  _setWifiSetupStep = (step: WifiSetupStep) => {
     this.wifiSetupStep = step;
   };
 
   @action
-  setupWifi = async (wifiNetwork: WifiNetwork = {}): Promise<void> => {
-    try {
-      this._wifiSetupLoaderID = WifiConfigureStore.fetch(wifiNetwork);
-      await waitForLoaded(() => this.wifiSetupLoader, 15000);
-      this.setWifiSetupStep(4);
-      // eslint-disable-next-line no-empty
-    } catch (error) {}
+  setupWifi = async (wifiNetwork: WifiNetwork): Promise<void> => {
+    this._flushWifiConfigurationCache();
+    this._wifiSetupLoaderCacheKey = WifiConfigureStore.fetch(wifiNetwork);
   };
 
-  @action
-  _queryParticleID = async () => {
-    try {
-      const particleID = await SoftApService.getParticleID();
-      this.setParticleID(particleID);
-      this.setWifiSetupStep(3);
-    } catch (error) {
-      this._queryParticleID();
-    }
+  _flushWifiConfigurationCache = () => {
+    WifiConfigureStore.flushCache();
+    WifiConnectStore.flushCache();
   };
 }
 

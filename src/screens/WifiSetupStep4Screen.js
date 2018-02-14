@@ -1,5 +1,7 @@
 // @flow
 
+import type WifiSetupStore from '../stores/WifiSetupStore';
+
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -10,20 +12,25 @@ import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
 
 type InjectedProps = {
-  onSetupFinish: () => void,
+  wifiSetupStore: WifiSetupStore,
+  onSetupFinish: (particleID: string) => void,
 };
 
 @flatNavigationParamsAndScreenProps
 class WifiSetupStep4Screen extends InjectedComponent<InjectedProps> {
+  _onContinuePress = () => {
+    const { onSetupFinish, wifiSetupStore } = this.injectedProps;
+    onSetupFinish(wifiSetupStore.particleIDLoader.getValueEnforcing());
+  };
+
   render() {
-    const { onSetupFinish } = this.injectedProps;
     return (
       <Container>
         <SectionHeader title="Setup Finish!" />
         <SectionContent paddedHorizontal paddedVertical>
-          <FinishInstructions onSetupFinish={onSetupFinish} />
+          <FinishInstructions />
         </SectionContent>
-        <Button onPress={onSetupFinish} title="Continue" />
+        <Button onPress={this._onContinuePress} title="Continue" />
       </Container>
     );
   }

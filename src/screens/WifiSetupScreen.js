@@ -39,11 +39,15 @@ class WifiSetupScreen extends InjectedComponent<InjectedProps> {
     this._wifiSetupStore = new WifiSetupStore(this.injectedProps.navigation);
   }
 
-  _onSetupFinish = () => {
+  componentWillUnmount() {
+    this._wifiSetupStore.dispose();
+  }
+
+  _onSetupFinish = (particleID: string) => {
     const { forNewDevice, navigation } = this.injectedProps;
     if (forNewDevice) {
       navigation.navigate('newDevice', {
-        particleID: this._wifiSetupStore.particleID,
+        particleID,
       });
     } else {
       navigation.goBack();

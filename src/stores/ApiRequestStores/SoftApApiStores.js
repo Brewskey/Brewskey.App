@@ -17,3 +17,7 @@ export const WifiConfigureStore = makeRequestApiStore(
 export const WifiConnectStore = makeRequestApiStore((index?: number): Promise<
   void,
 > => SoftApService.connectWifi(index));
+
+export const ParticleIDStore = makeRequestApiStore((): Promise<string> =>
+  SoftApService.getParticleID(),
+);

@@ -22,23 +22,27 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onChange: (value: string) => void,
-  onContinuePress: () => void,
-  value: string,
+  onContinuePress: (particleID: string) => void,
 |};
 
 @observer
 class ParticleIDInput extends React.Component<Props> {
   @observable _isExpanded: boolean = false;
+  @observable _particleID: string = '';
+
+  @action
+  _setParticleID = (particleID: string) => {
+    this._particleID = particleID;
+  };
 
   @action
   _expand = () => {
     this._isExpanded = true;
   };
 
-  render() {
-    const { onChange, onContinuePress, value } = this.props;
+  _onContinuePress = () => this.props.onContinuePress(this._particleID);
 
+  render() {
     return (
       <View>
         {!this._isExpanded ? (
@@ -60,13 +64,13 @@ class ParticleIDInput extends React.Component<Props> {
             <TextField
               key="particleIDInput"
               label="Internal ID"
-              onChange={onChange}
-              onSubmitEditing={onContinuePress}
-              value={value}
+              onChange={this._setParticleID}
+              onSubmitEditing={this._onContinuePress}
+              value={this._particleID}
             />,
             <Button
               key="continueButton"
-              onPress={onContinuePress}
+              onPress={this._onContinuePress}
               title="Continue"
             />,
           ]

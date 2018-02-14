@@ -15,7 +15,7 @@ import ParticleIDInput from '../components/ParticleIDInput';
 
 type InjectedProps = {
   forNewDevice?: boolean,
-  onSetupFinish: () => void,
+  onSetupFinish: (particleID: string) => void,
   wifiSetupStore: WifiSetupStore,
 };
 
@@ -33,11 +33,7 @@ class WifiSetupStep1Screen extends InjectedComponent<InjectedProps> {
         <Button onPress={wifiSetupStore.onStep1Ready} title="Ready" />
         {forNewDevice && (
           <SectionContent paddedHorizontal paddedVertical>
-            <ParticleIDInput
-              onChange={wifiSetupStore.setParticleID}
-              onContinuePress={onSetupFinish}
-              value={wifiSetupStore.particleID}
-            />
+            <ParticleIDInput onContinuePress={onSetupFinish} />
           </SectionContent>
         )}
       </KeyboardAwareScrollView>
