@@ -84,7 +84,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
     // ODAta inlineCount doesn't pay attention on 'skip'
     // but instead throws error if its used with 'top' query;
     const { skip, ...rest } = this._baseQueryOptions;
-    return this._daoStore.count(rest);
+    return this._daoStore.count((rest: any));
   }
 
   @computed

@@ -21,7 +21,7 @@ import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -57,7 +57,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
     this._swipeableListRef = ref;
   };
 
-  _keyExtractor = (row: Row<Tap>): number => row.key;
+  _keyExtractor = (row: Row<Tap>): string => row.key;
 
   _onDeleteItemPress = (item: Tap): void => DAOApi.TapDAO.deleteByID(item.id);
 
@@ -74,7 +74,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Node => (
+  }): React.Element<any> => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

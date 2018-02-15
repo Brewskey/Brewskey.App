@@ -16,7 +16,7 @@ import LeaderboardListEmpty from './LeaderboardListEmpty';
 
 type Props = {|
   duration: string,
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   tapID: EntityID,
 |};
 
@@ -56,7 +56,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   }: {
     item: LeaderboardItem,
     index: number,
-  }): React.Node => (
+  }): React.Element<any> => (
     <ListItem
       item={item}
       avatar={<UserAvatar userName={item.userName} />}
@@ -72,7 +72,9 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
       <List
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={!this._listStore.isLoading && LeaderboardListEmpty}
+        ListEmptyComponent={
+          !this._listStore.isLoading ? LeaderboardListEmpty : null
+        }
         ListFooterComponent={
           <LoadingListFooter isLoading={this._listStore.isLoading} />
         }

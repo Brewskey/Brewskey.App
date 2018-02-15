@@ -5,7 +5,7 @@ import { action, computed, observable } from 'mobx';
 class NFCStore {
   @observable _currentSeconds: number;
   @observable _isVisible: boolean = false;
-  _timer: ?number = null;
+  _timer: ?IntervalID = null;
 
   @computed
   get currentSeconds(): number {

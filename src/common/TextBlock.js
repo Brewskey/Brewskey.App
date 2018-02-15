@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { TYPOGRAPHY } from '../theme';
@@ -15,10 +17,10 @@ const styles = StyleSheet.create({
 
 type Props = {|
   children?: string,
-  containerStyle?: Object,
+  containerStyle?: Style,
   index?: number,
   paddedBottom?: boolean,
-  textStyle?: Object,
+  textStyle?: Style,
 |};
 
 const OrderedText = ({

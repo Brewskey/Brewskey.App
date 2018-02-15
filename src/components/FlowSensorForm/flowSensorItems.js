@@ -10,7 +10,7 @@ import yf201Image from '../../resources/sensors/yf-201.png';
 export type FlowSensorItem = {
   defaultPulses: number,
   description: string,
-  image: ?Object,
+  image: ?number,
   name: string,
   value: FlowSensorType,
 };

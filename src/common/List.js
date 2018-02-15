@@ -1,7 +1,7 @@
 // @flow
 
-// eslint-disable-next-line
-import type { Props as FlatListProps } from 'FlatList';
+import type { Props as VirtualizedListProps } from 'react-native/Libraries/Lists/VirtualizedList';
+import type { Section } from '../types';
 
 import * as React from 'react';
 import { FlatList, SectionList } from 'react-native';
@@ -9,12 +9,12 @@ import { ON_END_REACHED_THRESHOLD } from '../constants';
 
 type ListType = 'flatList' | 'sectionList';
 
-export type Props<TEntity> = {
+export type Props<TEntity> = VirtualizedListProps & {
+  data?: Array<TEntity>,
   extraData?: any,
-  innerRef?: React.Ref<FlatList<TEntity> | SectionList<TEntity>>,
-  listType: ListType,
-  // todo should be ...SectionList also, but they can't be imported from 'SectionList'
-  ...FlatListProps<TEntity>,
+  innerRef?: $FlowFixMe,
+  listType?: ListType,
+  sections?: Array<Section<TEntity>>,
 };
 
 type State = {|
@@ -31,23 +31,25 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
   };
 
   _onRefresh = async (): Promise<void> => {
-    if (!this.props.onRefresh) {
+    const { onRefresh } = this.props;
+    if (!onRefresh) {
       return;
     }
     this.setState(() => ({ isRefreshing: true }));
-    await this.props.onRefresh();
+    await onRefresh();
     this.setState(() => ({ isRefreshing: false }));
   };
 
   render() {
-    const { onRefresh, listType, ...rest } = this.props;
+    const { onRefresh, listType, sections, ...rest } = this.props;
     const ListComponent = listType === 'flatList' ? FlatList : SectionList;
 
     return (
       <ListComponent
         {...rest}
+        sections={sections}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        onRefresh={onRefresh ? this._onRefresh : null}
+        onRefresh={onRefresh ? (this._onRefresh: any) : null}
         refreshing={this.state.isRefreshing}
       />
     );

@@ -51,7 +51,6 @@ const GallonSliderField = ({
           maximumValue={maxValue}
           minimumValue={minValue}
           onChange={onChange}
-          style={styles.slider}
           value={value}
         />
         <View style={styles.sliderLabelContainer}>

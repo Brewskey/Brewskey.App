@@ -27,10 +27,11 @@ export const DESCRIPTION_BY_DEVICE_STATE: { [key: DeviceStatus]: string } = {
   Cleaning:
     'Your Brewskey Box is in cleaning mode. ' +
     'After an hour the box will be put into "disabled" mode',
-  Free:
-    'Your Brewskey Box will open the valve ' +
-    'and allow users to pour without authentication.',
+  Configure: '', // todo add description
   Inactive:
     'Your Brewskey Box is disabled. ' +
     'The valve will not open and pours will not be tracked.',
+  Unlocked:
+    'Your Brewskey Box will open the valve ' +
+    'and allow users to pour without authentication.',
 };

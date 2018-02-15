@@ -2,7 +2,7 @@
 
 // the component fixes touchable feedback for react-native-elements Icon
 // the current version works only for raised=false icon.
-import type { ViewStyleProp } from '../../types';
+import type { Style } from '../../types';
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  containerStyle?: ViewStyleProp,
+  containerStyle?: Style,
   onPress?: () => void,
   // react-native-elements icon props
 };

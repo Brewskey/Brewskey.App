@@ -670,7 +670,7 @@ declare module 'react-native/Libraries/Components/View/ViewPropTypes' {
   declare module.exports: any;
 }
 
-declare module 'react-native/Libraries/Components/View/ViewStylePropTypes' {
+declare module 'react-native/Libraries/Components/View/StyleTypes' {
   declare module.exports: any;
 }
 
@@ -3213,8 +3213,8 @@ declare module 'react-native/Libraries/Components/View/ViewAccessibility.js' {
 declare module 'react-native/Libraries/Components/View/ViewPropTypes.js' {
   declare module.exports: $Exports<'react-native/Libraries/Components/View/ViewPropTypes'>;
 }
-declare module 'react-native/Libraries/Components/View/ViewStylePropTypes.js' {
-  declare module.exports: $Exports<'react-native/Libraries/Components/View/ViewStylePropTypes'>;
+declare module 'react-native/Libraries/Components/View/StyleTypes.js' {
+  declare module.exports: $Exports<'react-native/Libraries/Components/View/StyleTypes'>;
 }
 declare module 'react-native/Libraries/Components/ViewPager/ViewPagerAndroid.android.js' {
   declare module.exports: $Exports<'react-native/Libraries/Components/ViewPager/ViewPagerAndroid.android'>;

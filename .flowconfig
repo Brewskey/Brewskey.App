@@ -19,6 +19,9 @@
 ; Ignore metro
 .*/node_modules/metro/.*
 
+; Custom ignores
+.*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
+
 [include]
 
 [libs]

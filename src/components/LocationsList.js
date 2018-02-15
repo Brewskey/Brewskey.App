@@ -22,7 +22,7 @@ import ListItem from '../common/ListItem';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -58,7 +58,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     this._swipeableListRef = ref;
   };
 
-  _keyExtractor = (row: Row<Location>): number => row.key;
+  _keyExtractor = (row: Row<Location>): string => row.key;
 
   _onDeleteItemPress = (item: Location): void =>
     DAOApi.LocationDAO.deleteByID(item.id);
@@ -76,7 +76,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Node => (
+  }): React.Element<any> => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

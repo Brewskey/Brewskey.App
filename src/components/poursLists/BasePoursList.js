@@ -14,7 +14,7 @@ import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
   queryOptions?: QueryOptions,
 |};
@@ -42,9 +42,9 @@ class BasePoursList extends React.Component<Props> {
     this._listStore.fetchFirstPage();
   }
 
-  _keyExtractor = (row: Row<Pour>): number => row.key;
+  _keyExtractor = (row: Row<Pour>): string => row.key;
 
-  _renderRow = ({ item }: { item: Row<Pour> }): React.Node => (
+  _renderRow = ({ item }: { item: Row<Pour> }): React.Element<any> => (
     <LoaderRow loadedRow={this.props.loadedRow} loader={item.loader} />
   );
 

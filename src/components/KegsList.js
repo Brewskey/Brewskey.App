@@ -15,7 +15,7 @@ import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -41,9 +41,9 @@ class KegsList extends React.Component<Props> {
     this._listStore.fetchFirstPage();
   }
 
-  _keyExtractor = (row: Row<Keg>): number => row.key;
+  _keyExtractor = (row: Row<Keg>): string => row.key;
 
-  _renderRow = ({ item }: { item: Row<Keg> }): React.Node => (
+  _renderRow = ({ item }: { item: Row<Keg> }): React.Element<any> => (
     <LoaderRow loader={item.loader} loadedRow={LoadedRow} />
   );
 
