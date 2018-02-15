@@ -9,7 +9,7 @@ import { LoadObject } from 'brewskey.js-api';
 import { createRange } from '../utils';
 
 export type Row<TEntity> = {|
-  key: number,
+  key: string,
   loader: LoadObject<TEntity>,
 |};
 
@@ -53,7 +53,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
         return rowKeys
           .map((key: number): Row<TEntity> => ({
-            key,
+            key: key.toString(),
             loader: LoadObject.loading(),
           }))
           .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
