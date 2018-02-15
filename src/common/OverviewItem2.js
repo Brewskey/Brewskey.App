@@ -68,7 +68,7 @@ class OverviewItem<TExtraProps> extends React.PureComponent<
             <LeftComponent {...this.props} />
           </View>
         )}
-        <View style={styles.contentContainer}>
+        <View>
           <Text style={styles.title}>{title}</Text>
           {value && <Text style={styles.value}>{value}</Text>}
           {description && <Text style={styles.description}>{description}</Text>}

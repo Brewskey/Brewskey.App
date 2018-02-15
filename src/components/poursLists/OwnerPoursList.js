@@ -15,7 +15,7 @@ import BasePoursList from './BasePoursList';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 

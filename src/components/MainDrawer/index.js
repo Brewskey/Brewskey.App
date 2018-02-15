@@ -20,9 +20,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {|
+type Props = {
   activeItemKey: string,
-|};
+  items: Array<Object>,
+  onItemPress: ({ focused: boolean, route: Object }) => void,
+};
 
 @observer
 class MainDrawer extends React.Component<Props> {

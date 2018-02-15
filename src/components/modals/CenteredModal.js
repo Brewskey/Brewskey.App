@@ -1,8 +1,8 @@
 // @flow
 
-import type { Node } from 'react';
+import type { Style } from '../../types';
 
-import React, { Component } from 'react';
+import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import Modal from './Modal';
@@ -30,15 +30,15 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  children?: Node,
-  contentContainerStyle?: Object,
-  header?: Node,
+  children?: React.Node,
+  contentContainerStyle?: Style,
+  header?: React.Element<any>,
   isVisible: boolean,
   onHideModal: () => void,
 |};
 
 @observer
-class CenteredModal extends Component<Props> {
+class CenteredModal extends React.Component<Props> {
   render() {
     const {
       children,

@@ -10,7 +10,7 @@
  * of TouchableNativeFeedback.
  */
 
-import type { ViewStyleProp } from '../../types';
+import type { Style } from '../../types';
 import * as React from 'react';
 import {
   Platform,
@@ -28,7 +28,7 @@ type Props = {
   delayPressIn?: number,
   onPress?: () => void,
   pressColor?: string,
-  style?: ViewStyleProp,
+  style?: Style,
 };
 
 export default class TouchableItem extends React.Component<Props> {

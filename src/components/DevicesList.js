@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -66,7 +66,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     this._swipeableListRef = ref;
   };
 
-  _keyExtractor = (row: Row<Device>): number => row.key;
+  _keyExtractor = (row: Row<Device>): string => row.key;
 
   _onDeleteItemPress = (item: Device): void =>
     DAOApi.DeviceDAO.deleteByID(item.id);
@@ -84,7 +84,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Node => (
+  }): React.Element<any> => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

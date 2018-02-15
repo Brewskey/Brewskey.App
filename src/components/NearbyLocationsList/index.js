@@ -1,6 +1,11 @@
 // @flow
 
-import type { Navigation, NearbyLocation, NearbyTap } from '../../types';
+import type {
+  Navigation,
+  NearbyLocation,
+  NearbyTap,
+  Section,
+} from '../../types';
 
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
@@ -12,11 +17,6 @@ import LoadingListFooter from '../../common/LoadingListFooter';
 import ListSectionHeader from '../../common/ListSectionHeader';
 import { SectionList } from 'react-native';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-
-type Section<TType> = {
-  data: Array<TType>,
-  title: string,
-};
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -52,7 +52,7 @@ class NearbyLocationList extends InjectedComponent<
 
   _keyExtractor = ({ id }: NearbyLocation): string => id.toString();
 
-  _renderItem = ({ item }: { item: NearbyLocation }): React.Node => (
+  _renderItem = ({ item }: { item: NearbyLocation }): React.Element<any> => (
     <ListItem
       avatar={
         <BeverageAvatar
@@ -66,7 +66,7 @@ class NearbyLocationList extends InjectedComponent<
     />
   );
 
-  _renderSectionHeader = ({ section }): React.Node => (
+  _renderSectionHeader = ({ section }): React.Element<any> => (
     <ListSectionHeader title={section.title} />
   );
 

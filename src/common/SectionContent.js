@@ -1,13 +1,13 @@
 // @flow
 
-import type { ViewStyleProp } from '../types';
+import type { Style } from '../types';
 
 import * as React from 'react';
 import { View } from 'react-native';
 
 type Props = {|
   children?: React.Node,
-  containerStyle?: ViewStyleProp,
+  containerStyle?: Style,
   paddedHorizontal?: boolean,
   paddedVertical?: boolean,
 |};

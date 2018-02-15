@@ -21,7 +21,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -57,7 +57,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     this._swipeableListRef = ref;
   };
 
-  _keyExtractor = (row: Row<Beverage>): number => row.key;
+  _keyExtractor = (row: Row<Beverage>): string => row.key;
 
   _onDeleteItemPress = (item: Beverage): void =>
     DAOApi.BeverageDAO.deleteByID(item.id);
@@ -75,7 +75,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Node => (
+  }): React.Element<any> => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

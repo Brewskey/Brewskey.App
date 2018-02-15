@@ -44,7 +44,7 @@ import WelcomeLarge from './resources/badges/150x150/Welcome.png';
 
 export type Badge = {|
   description: string,
-  image: { large: Object, small: Object },
+  image: { large: number, small: number },
   name: string,
 |};
 

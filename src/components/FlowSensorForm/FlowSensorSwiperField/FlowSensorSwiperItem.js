@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
 
 type Props = {|
   description: string,
-  image: ?Object,
+  image: ?number,
   title: string,
 |};
 

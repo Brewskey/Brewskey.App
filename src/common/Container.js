@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { COLORS } from '../theme';
@@ -18,7 +20,7 @@ const styles = StyleSheet.create({
 type Props = {
   centered?: boolean,
   children?: React.Node,
-  style?: Object,
+  style?: Style,
 };
 
 const Container = ({ centered, children, style }: Props) => (

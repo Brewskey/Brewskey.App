@@ -18,7 +18,7 @@ import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
-  ListHeaderComponent?: React.Node,
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
   showPhoneNumber?: boolean,
 |};
@@ -44,14 +44,14 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
     this._listStore.fetchFirstPage();
   }
 
-  _keyExtractor = (row: Row<Friend>): number => row.key;
+  _keyExtractor = (row: Row<Friend>): string => row.key;
 
   _onListItemPress = (friend: Friend) =>
     this.injectedProps.navigation.navigate('profile', {
       id: friend.friendAccount.id,
     });
 
-  _renderRow = ({ item }: { item: Row<Friend> }): React.Node => (
+  _renderRow = ({ item }: { item: Row<Friend> }): React.Element<any> => (
     <LoaderRow
       loadedRow={LoadedRow}
       loader={item.loader}

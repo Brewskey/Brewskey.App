@@ -2,9 +2,11 @@
 
 import type { Props as ListProps } from './List';
 import type { FlatList, SectionList } from 'react-native';
+import type { Section } from '../types';
 
 import * as React from 'react';
 import List from './List';
+import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList';
 
 type Props<TEntity> = {
   bounceFirstRowOnMount: boolean,
@@ -20,7 +22,7 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
   State,
 > {
   static defaultProps = {
-    // ...SectionList.defaultProps,
+    ...VirtualizedList.defaultProps,
     bounceFirstRowOnMount: true,
   };
 
@@ -28,7 +30,7 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     openRowKey: null,
   };
 
-  _innerListRef: ?FlatList<TEntity> | ?SectionList<TEntity> = null;
+  _innerListRef: ?FlatList<TEntity> | ?SectionList<Section<TEntity>> = null;
 
   resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
 
@@ -51,8 +53,9 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
 
   _onScroll = (event: SyntheticEvent<*>): void => {
     this.resetOpenRow();
-    if (this.props.onScroll) {
-      this.props.onScroll(event);
+    const { onScroll } = this.props;
+    if (onScroll) {
+      onScroll(event);
     }
   };
 
@@ -60,7 +63,10 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     this._innerListRef = ref;
   };
 
-  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
+  _renderItem = (info: {
+    item: TEntity,
+    index: number,
+  }): React.Element<any> => {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,

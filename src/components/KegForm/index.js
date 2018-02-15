@@ -90,7 +90,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
           name="kegType"
         >
           {Object.entries(KEG_NAME_BY_KEG_TYPE).map(
-            ([type, name]): React.Node => (
+            ([type, name]: [any, any]): React.Node => (
               <PickerField.Item key={type} label={name} value={type} />
             ),
           )}
