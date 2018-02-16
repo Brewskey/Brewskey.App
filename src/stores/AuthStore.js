@@ -8,6 +8,7 @@ import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
 import PourButtonStore from './PourButtonStore';
+import { UNAUTH_ERROR_CODE } from '../constants';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
@@ -52,6 +53,12 @@ class AuthStore {
         NavigationService.reset('main');
       } else {
         NavigationService.reset('login');
+      }
+    });
+
+    DAOApi.onError(({ status }: Error) => {
+      if (status === UNAUTH_ERROR_CODE) {
+        this.clearAuthState();
       }
     });
   }
