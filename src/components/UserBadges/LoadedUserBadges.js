@@ -9,12 +9,14 @@ import { action, observable } from 'mobx';
 import BadgeIcon from '../BadgeIcon';
 import BadgeModal from '../modals/BadgeModal';
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   badgeContainer: {
     paddingHorizontal: 5,
   },
   container: {
-    paddingVertical: 10,
+    alignItems: 'center',
+    height: 80,
+    justifyContent: 'center',
   },
 });
 
@@ -50,7 +52,7 @@ class LoadedUserBadges extends React.Component<Props> {
 
   render() {
     return (
-      <ScrollView style={styles.container} horizontal>
+      <ScrollView contentContainerStyle={styles.container} horizontal>
         {this.props.value.map((badge: Badge): React.Node => (
           <View key={badge.name} style={styles.badgeContainer}>
             <BadgeIcon badge={badge} onPress={this._onBadgeIconPress} />
