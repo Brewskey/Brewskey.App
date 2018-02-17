@@ -1,5 +1,6 @@
 // @flow
 
+import * as React from 'react';
 import type { Field, ValidationFunction } from './types';
 
 import { action, computed, createTransformer, observable } from 'mobx';
@@ -31,11 +32,11 @@ class FormStore {
 
   fieldSubmitEditing = (nextFocusTo: string) => {
     const field = this._fields.get(nextFocusTo);
-    if (!field || !field.ref || !field.ref.focus) {
+    if (!field || !field.refElement || !field.refElement.focus) {
       return;
     }
 
-    field.ref.focus();
+    field.refElement.focus();
   };
 
   @action
@@ -81,13 +82,13 @@ class FormStore {
   };
 
   @action
-  setFieldRef = (fieldName: string, ref) => {
+  setFieldRefElement = (fieldName: string, refElement: React.Element<any>) => {
     const field = this._fields.get(fieldName);
     if (!field) {
       return;
     }
 
-    this._fields.set(fieldName, ({ ...field, ref }: $FlowFixMe));
+    this._fields.set(fieldName, ({ ...field, refElement }: $FlowFixMe));
   };
 
   @action

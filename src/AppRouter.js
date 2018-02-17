@@ -47,7 +47,6 @@ const RootRouter = StackNavigator(
     main: {
       screen: DrawerNavigator(
         {
-          test: { screen: NewBeverageScreen },
           home: {
             screen: StackNavigator(
               { home: { screen: HomeScreen } },

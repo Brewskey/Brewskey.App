@@ -14,8 +14,14 @@ type Props = {
   parse: (value: any) => any,
 };
 
+type BaseTProps = {
+  blurOnSubmit?: boolean,
+  nextFocusTo?: string,
+  onSubmitEditing?: () => void | Promise<void>,
+};
+
 @observer
-class FormField<TProps> extends React.Component<Props & TProps> {
+class FormField<TProps: BaseTProps> extends React.Component<Props & TProps> {
   static defaultProps = {
     format: (value: any): any => value,
     parse: (value: any): any => value,
@@ -49,8 +55,8 @@ class FormField<TProps> extends React.Component<Props & TProps> {
       this.props.parse(value),
     );
 
-  _setRef = ref => {
-    this.context.formStore.setFieldRef(this.props.name, ref);
+  _setRefElement = refElement => {
+    this.context.formStore.setFieldRefElement(this.props.name, refElement);
   };
 
   _onSubmitEditing = (): void => {
@@ -76,7 +82,7 @@ class FormField<TProps> extends React.Component<Props & TProps> {
         onBlur={this._onBlur}
         onChange={this._onChange}
         onSubmitEditing={this._onSubmitEditing}
-        ref={this._setRef}
+        ref={this._setRefElement}
         touched={this.context.formStore.getFieldTouched(this.props.name)}
         value={this.props.format(
           this.context.formStore.getFieldValue(this.props.name),

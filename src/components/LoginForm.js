@@ -58,7 +58,6 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           component={TextField}
           disabled={submitting}
           label="Password"
-          inputRef={ref => (this._passwordInputRef = ref)}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry

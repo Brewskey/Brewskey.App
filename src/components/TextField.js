@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormValidationMessage,
 } from 'react-native-elements';
+import nullthrows from 'nullthrows';
 
 export type Props = {
   error?: ?string,
@@ -18,19 +19,19 @@ export type Props = {
   // other react-native textInput props
 };
 
-class TextField extends React.Component {
-  _inputRef;
+class TextField extends React.Component<Props> {
+  _inputRef: ?FormInput;
 
-  _setRef = ref => {
+  _setRef = (ref: FormInput) => {
     const { inputRef } = this.props;
     this._inputRef = ref;
-    if (inputRef) {
+    if (inputRef && typeof inputRef === 'function') {
       inputRef(ref);
     }
   };
 
   focus = () => {
-    this._inputRef.focus();
+    nullthrows(this._inputRef).focus();
   };
 
   render() {
