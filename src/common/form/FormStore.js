@@ -29,6 +29,15 @@ class FormStore {
     this._validate = validate;
   }
 
+  fieldSubmitEditing = (nextFocusTo: string) => {
+    const field = this._fields.get(nextFocusTo);
+    if (!field || !field.ref || !field.ref.focus) {
+      return;
+    }
+
+    field.ref.focus();
+  };
+
   @action
   initField = ({ name, initialValue }: InitFieldProps) => {
     this._fields.set(name, {
@@ -69,6 +78,16 @@ class FormStore {
     }
 
     this._fields.set(fieldName, ({ ...field, error }: $FlowFixMe));
+  };
+
+  @action
+  setFieldRef = (fieldName: string, ref) => {
+    const field = this._fields.get(fieldName);
+    if (!field) {
+      return;
+    }
+
+    this._fields.set(fieldName, ({ ...field, ref }: $FlowFixMe));
   };
 
   @action

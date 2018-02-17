@@ -49,6 +49,20 @@ class FormField<TProps> extends React.Component<Props & TProps> {
       this.props.parse(value),
     );
 
+  _setRef = ref => {
+    this.context.formStore.setFieldRef(this.props.name, ref);
+  };
+
+  _onSubmitEditing = (): void => {
+    const { nextFocusTo, onSubmitEditing } = this.props;
+    if (onSubmitEditing) {
+      onSubmitEditing();
+    }
+    if (nextFocusTo) {
+      this.context.formStore.fieldSubmitEditing(nextFocusTo);
+    }
+  };
+
   render() {
     const { component: Component } = this.props;
     if (!Component) {
@@ -57,9 +71,12 @@ class FormField<TProps> extends React.Component<Props & TProps> {
 
     return (
       <Component
+        blurOnSubmit={!this.props.nextFocusTo}
         error={this.context.formStore.getFieldError(this.props.name)}
         onBlur={this._onBlur}
         onChange={this._onChange}
+        onSubmitEditing={this._onSubmitEditing}
+        ref={this._setRef}
         touched={this.context.formStore.getFieldTouched(this.props.name)}
         value={this.props.format(
           this.context.formStore.getFieldValue(this.props.name),

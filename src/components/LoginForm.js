@@ -2,13 +2,10 @@
 
 import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from '../authApi';
-import type { FormInput } from 'react-native-elements';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react';
-import { Keyboard } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
@@ -34,12 +31,7 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
-  _passwordInputRef: ?FormInput;
-
-  _onUserNameSubmit = (): void => nullthrows(this._passwordInputRef).focus();
-
   _onSubmit = async (formValues: Object): Promise<void> => {
-    Keyboard.dismiss();
     await AuthStore.login(formValues);
   };
 
@@ -58,7 +50,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           disabled={submitting}
           label="User name"
           name="userName"
-          onSubmitEditing={this._onUserNameSubmit}
+          nextFocusTo="password"
         />
         <FormField
           autoCapitalize="none"
