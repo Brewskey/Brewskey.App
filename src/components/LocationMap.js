@@ -39,8 +39,6 @@ const getRegion = (
 const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
-    // height:
-    // width: '100%',
   },
 });
 
@@ -49,7 +47,7 @@ type Props = {|
   zoomDistance?: number,
 |};
 
-const LocationMap = ({ coordinates, zoomDistance = 1000 }: Props) => (
+const LocationMap = ({ coordinates, zoomDistance = 2000 }: Props) => (
   <MapView
     style={styles.map}
     initialRegion={getRegion(coordinates, zoomDistance)}

@@ -29,7 +29,7 @@ type Props = {|
 |};
 
 const LocationMapModal = ({ coordinates, isVisible, onHideModal }: Props) => (
-  <Modal isVisible={isVisible} onHideModal={onHideModal}>
+  <Modal isVisible={isVisible}>
     <View style={styles.container}>
       <LocationMap coordinates={coordinates} />
       <View style={styles.closeButtonContainer}>
