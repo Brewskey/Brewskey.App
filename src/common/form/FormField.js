@@ -17,7 +17,8 @@ type Props = {
 type BaseTProps = {
   blurOnSubmit?: boolean,
   nextFocusTo?: string,
-  onSubmitEditing?: () => void | Promise<void>,
+  onSubmitEditing?: Function,
+  returnKeyType?: string,
 };
 
 @observer
@@ -83,6 +84,9 @@ class FormField<TProps: BaseTProps> extends React.Component<Props & TProps> {
         onChange={this._onChange}
         onSubmitEditing={this._onSubmitEditing}
         ref={this._setRefElement}
+        returnKeyType={
+          this.props.nextFocusTo ? 'next' : this.props.returnKeyType
+        }
         touched={this.context.formStore.getFieldTouched(this.props.name)}
         value={this.props.format(
           this.context.formStore.getFieldValue(this.props.name),

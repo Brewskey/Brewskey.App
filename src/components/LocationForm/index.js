@@ -9,10 +9,12 @@ import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, FormValidationMessage } from 'react-native-elements';
+import { FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';
 import { form, FormField } from '../../common/form';
 import TextField from '../TextField';
+import Button from '../../common/buttons/Button';
+import SectionContent from '../../common/SectionContent';
 import PickerField from '../../common/PickerField';
 
 const REQUIRED_FIELDS = [
@@ -76,7 +78,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.name}
           label="Name"
           name="name"
-          returnKeyType="next"
+          nextFocusTo="summary"
         />
         <FormField
           component={TextField}
@@ -84,7 +86,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.summary}
           label="Summary"
           name="summary"
-          returnKeyType="next"
+          nextFocusTo="description"
         />
         <FormField
           component={TextField}
@@ -92,7 +94,6 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.description}
           label="Description"
           name="description"
-          returnKeyType="next"
         />
         <FormField
           component={PickerField}
@@ -100,7 +101,6 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.locationType}
           label="Location type"
           name="locationType"
-          returnKeyType="next"
         >
           <PickerField.Item label="Kegerator" value="Kegerator" />
           <PickerField.Item label="Bar" value="Bar" />
@@ -111,7 +111,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.street}
           label="Street"
           name="street"
-          returnKeyType="next"
+          nextFocusTo="suite"
         />
         <FormField
           component={TextField}
@@ -119,7 +119,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.suite}
           label="Apt./Suite"
           name="suite"
-          returnKeyType="next"
+          nextFocusTo="city"
         />
         <FormField
           component={TextField}
@@ -127,7 +127,6 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={location.city}
           label="City"
           name="city"
-          returnKeyType="next"
         />
         <FormField
           component={PickerField}
@@ -144,17 +143,20 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           component={TextField}
           disabled={submitting}
           initialValue={location.zipCode}
+          keyboardType="numeric"
           label="Zip"
           name="zipCode"
-          keyboardType="numeric"
+          onSubmitEditing={handleSubmit}
         />
         <FormField name="id" initialValue={location.id} />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid || pristine}
-          onPress={handleSubmit}
-          title={submitButtonLabel}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid || pristine}
+            onPress={handleSubmit}
+            title={submitButtonLabel}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }
