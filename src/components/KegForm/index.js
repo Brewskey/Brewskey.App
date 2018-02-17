@@ -11,6 +11,7 @@ import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
+import SectionContent from '../../common/SectionContent';
 import PickerField from '../../common/PickerField';
 import LoaderPickerField from '../../common/PickerField/LoaderPickerField';
 import KegLevelSliderField from './KegLevelSliderField';
@@ -104,12 +105,14 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormField initialValue={tapId} name="tapId" />
         <FormField initialValue={keg.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          loading={submitting}
-          disabled={pristine || invalid || submitting}
-          onPress={this._onSubmit}
-          title={submitButtonLabel}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            loading={submitting}
+            disabled={pristine || invalid || submitting}
+            onPress={this._onSubmit}
+            title={submitButtonLabel}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }

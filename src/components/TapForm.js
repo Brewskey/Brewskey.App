@@ -10,6 +10,7 @@ import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { DeviceStore } from '../stores/DAOStores';
 import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
 import PickerField from '../common/PickerField';
@@ -96,12 +97,14 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
         />
         <FormField initialValue={tap.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid || pristine}
-          onPress={handleSubmit}
-          title={submitButtonLabel}
-          loading={submitting}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid || pristine}
+            onPress={handleSubmit}
+            title={submitButtonLabel}
+            loading={submitting}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }
