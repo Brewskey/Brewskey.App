@@ -16,6 +16,7 @@ import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
 import {
   AvailabilityStore,
   GlassStore,
@@ -30,6 +31,19 @@ import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 
 const YEARS_RANGE_LENGTH = 10;
 
+const validate = (values: BeverageMutator): { [key: string]: string } => {
+  const errors = {};
+  if (!values.name) {
+    errors.name = 'Name is required!';
+  }
+
+  if (!values.beverageType) {
+    errors.beverageType = 'Beverage type is required';
+  }
+
+  return errors;
+};
+
 type Props = {|
   beverage?: Beverage,
   onSubmit: (values: BeverageMutator) => void | Promise<void>,
@@ -38,7 +52,7 @@ type Props = {|
 
 type InjectedProps = FormProps;
 
-@form()
+@form({ validate })
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
   // todo Implement custom component for srm
@@ -67,24 +81,25 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
       <KeyboardAwareScrollView>
         <FormField
           component={TextField}
-          initialValue={beverage.name}
           disabled={submitting}
-          name="name"
+          initialValue={beverage.name}
           label="Name"
+          name="name"
+          nextFocusTo="description"
         />
         <FormField
           component={TextField}
-          initialValue={beverage.description}
           disabled={submitting}
-          name="description"
+          initialValue={beverage.description}
           label="Description"
+          name="description"
         />
         <FormField
           component={PickerField}
-          initialValue={beverage.beverageType}
           disabled={submitting}
-          name="beverageType"
+          initialValue={beverage.beverageType}
           label="Type"
+          name="beverageType"
         >
           <PickerField.Item label="Beer" value="Beer" />
           <PickerField.Item label="Cider" value="Cider" />
@@ -93,10 +108,10 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={PickerField}
-          initialValue={beverage.servingTemperature}
           disabled={submitting}
-          name="servingTemperature"
+          initialValue={beverage.servingTemperature}
           label="Serving temperature"
+          name="servingTemperature"
         >
           <PickerField.Item label="Cellar" value="cellar" />
           <PickerField.Item label="Cold" value="cold" />
@@ -107,10 +122,10 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={PickerField}
-          initialValue={beverage.year}
           disabled={submitting}
-          name="year"
+          initialValue={beverage.year}
           label="Year"
+          name="year"
         >
           {yearsRange.map((year: number): React.Node => (
             <PickerField.Item
@@ -122,11 +137,11 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={LoaderPickerField}
-          itemsLoader={AvailabilityStore.getMany()}
-          initialValue={beverage.availability && beverage.availability.id}
           disabled={submitting}
-          name="availableId"
+          initialValue={beverage.availability && beverage.availability.id}
+          itemsLoader={AvailabilityStore.getMany()}
           label="Availability"
+          name="availableId"
         >
           {(items: Array<Availability>): Array<React.Node> =>
             items.map(({ id, name }: Availability): React.Node => (
@@ -136,11 +151,11 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={LoaderPickerField}
+          disabled={submitting}
           initialValue={beverage.glass && beverage.glass.id}
           itemsLoader={GlassStore.getMany()}
-          disabled={submitting}
-          name="glasswareId"
           label="Glass"
+          name="glasswareId"
         >
           {(items: Array<Glass>): Array<React.Node> =>
             items.map(({ id, name }: Glass): React.Node => (
@@ -150,10 +165,10 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         </FormField>
         <FormField
           component={CheckBoxField}
-          initialValue={beverage.isOrganic}
           disabled={submitting}
-          name="isOrganic"
+          initialValue={beverage.isOrganic}
           label="Is Organic?"
+          name="isOrganic"
         />
         {values.beverageType === 'Beer' && [
           <FormField
@@ -194,6 +209,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             keyboardType="numeric"
             label="ABV"
             name="abv"
+            nextFocusTo="originalGravity"
           />,
           <FormField
             component={TextField}
@@ -203,6 +219,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             keyboardType="numeric"
             label="Original Gravity"
             name="originalGravity"
+            nextFocusTo="ibu"
           />,
           <FormField
             component={TextField}
@@ -212,15 +229,18 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             keyboardType="numeric"
             label="IBU"
             name="ibu"
+            onSubmitEditing={handleSubmit}
           />,
         ]}
         <FormField initialValue={beverage.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid || pristine}
-          onPress={handleSubmit}
-          title={submitButtonLabel}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid || pristine}
+            onPress={handleSubmit}
+            title={submitButtonLabel}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }
