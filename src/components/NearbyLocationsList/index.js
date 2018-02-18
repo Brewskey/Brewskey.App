@@ -77,7 +77,9 @@ class NearbyLocationList extends InjectedComponent<
         renderItem={this._renderItem}
         renderSectionHeader={this._renderSectionHeader}
         sections={this._sections}
-        ListEmptyComponent={<NearbyLocationListEmpty />}
+        ListEmptyComponent={
+          !this.props.isLoading ? <NearbyLocationListEmpty /> : null
+        }
         ListFooterComponent={
           <LoadingListFooter isLoading={this.props.isLoading} />
         }

@@ -14,8 +14,15 @@ type Props = {
   parse: (value: any) => any,
 };
 
+type BaseTProps = {
+  blurOnSubmit?: boolean,
+  nextFocusTo?: string,
+  onSubmitEditing?: Function,
+  returnKeyType?: string,
+};
+
 @observer
-class FormField<TProps> extends React.Component<Props & TProps> {
+class FormField<TProps: BaseTProps> extends React.Component<Props & TProps> {
   static defaultProps = {
     format: (value: any): any => value,
     parse: (value: any): any => value,
@@ -49,6 +56,20 @@ class FormField<TProps> extends React.Component<Props & TProps> {
       this.props.parse(value),
     );
 
+  _setRefElement = refElement => {
+    this.context.formStore.setFieldRefElement(this.props.name, refElement);
+  };
+
+  _onSubmitEditing = (): void => {
+    const { nextFocusTo, onSubmitEditing } = this.props;
+    if (onSubmitEditing) {
+      onSubmitEditing();
+    }
+    if (nextFocusTo) {
+      this.context.formStore.fieldSubmitEditing(nextFocusTo);
+    }
+  };
+
   render() {
     const { component: Component } = this.props;
     if (!Component) {
@@ -57,9 +78,15 @@ class FormField<TProps> extends React.Component<Props & TProps> {
 
     return (
       <Component
+        blurOnSubmit={!this.props.nextFocusTo}
         error={this.context.formStore.getFieldError(this.props.name)}
         onBlur={this._onBlur}
         onChange={this._onChange}
+        onSubmitEditing={this._onSubmitEditing}
+        ref={this._setRefElement}
+        returnKeyType={
+          this.props.nextFocusTo ? 'next' : this.props.returnKeyType
+        }
         touched={this.context.formStore.getFieldTouched(this.props.name)}
         value={this.props.format(
           this.context.formStore.getFieldValue(this.props.name),

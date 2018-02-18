@@ -14,6 +14,7 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
 import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
@@ -110,11 +111,13 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           name="deviceStatus"
         />
         <FormField initialValue={device.id} key="id" name="id" />
-        <Button
-          disabled={invalid || pristine || submitting}
-          onPress={handleSubmit}
-          title={submitButtonLabel}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={invalid || pristine || submitting}
+            onPress={handleSubmit}
+            title={submitButtonLabel}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }

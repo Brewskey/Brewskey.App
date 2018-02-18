@@ -10,6 +10,7 @@ import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../../common/InjectedComponent';
 import Button from '../../common/buttons/Button';
+import SectionContent from '../../common/SectionContent';
 import { form, FormField } from '../../common/form';
 import FlowSensorSwiperField from './FlowSensorSwiperField';
 import GallonSliderField from './GallonSliderField';
@@ -79,12 +80,14 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
         <FormField name="tapId" initialValue={tapId} />
         <FormField name="id" initialValue={flowSensor && flowSensor.id} />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid}
-          onPress={this._onSubmit}
-          title="Set Sensor"
-          loading={submitting}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid}
+            onPress={this._onSubmit}
+            title="Set Sensor"
+            loading={submitting}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }

@@ -7,6 +7,7 @@ import {
   FormLabel,
   FormValidationMessage,
 } from 'react-native-elements';
+import nullthrows from 'nullthrows';
 
 export type Props = {
   error?: ?string,
@@ -18,26 +19,45 @@ export type Props = {
   // other react-native textInput props
 };
 
-const TextField = ({
-  error,
-  inputRef,
-  label,
-  onBlur,
-  onChange,
-  value,
-  ...props
-}: Props) => (
-  <View>
-    <FormLabel>{label}</FormLabel>
-    <FormInput
-      ref={inputRef}
-      onBlur={onBlur}
-      onChangeText={onChange}
-      value={value && value.toString()}
-      {...props}
-    />
-    <FormValidationMessage>{error}</FormValidationMessage>
-  </View>
-);
+class TextField extends React.Component<Props> {
+  _inputRef: ?FormInput;
+
+  _setRef = (ref: FormInput) => {
+    const { inputRef } = this.props;
+    this._inputRef = ref;
+    if (inputRef && typeof inputRef === 'function') {
+      inputRef(ref);
+    }
+  };
+
+  focus = () => {
+    nullthrows(this._inputRef).focus();
+  };
+
+  render() {
+    const {
+      error,
+      inputRef,
+      label,
+      onBlur,
+      onChange,
+      value,
+      ...props
+    } = this.props;
+    return (
+      <View>
+        <FormLabel>{label}</FormLabel>
+        <FormInput
+          ref={this._setRef}
+          onBlur={onBlur}
+          onChangeText={onChange}
+          value={value && value.toString()}
+          {...props}
+        />
+        <FormValidationMessage>{error}</FormValidationMessage>
+      </View>
+    );
+  }
+}
 
 export default TextField;
