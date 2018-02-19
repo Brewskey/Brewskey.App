@@ -14,7 +14,7 @@ type Props = {
   parse: (value: any) => any,
 };
 
-type BaseTProps = {
+type BaseProps = {
   blurOnSubmit?: boolean,
   nextFocusTo?: string,
   onSubmitEditing?: Function,
@@ -22,7 +22,7 @@ type BaseTProps = {
 };
 
 @observer
-class FormField<TProps: BaseTProps> extends React.Component<Props & TProps> {
+class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
   static defaultProps = {
     format: (value: any): any => value,
     parse: (value: any): any => value,
