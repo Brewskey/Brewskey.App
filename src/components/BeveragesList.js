@@ -17,6 +17,7 @@ import SwipeableList from '../common/SwipeableList';
 import LoaderRow from '../common/LoaderRow';
 import SwipeableRow from '../common/SwipeableRow';
 import { BeverageStore } from '../stores/DAOStores';
+import ListEmptyComponent from '../common/ListEmptyComponent';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 
@@ -91,15 +92,15 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListFooterComponent={
-          <LoadingListFooter
-            isLoading={this._listStore.isFetchingRemoteCount}
-          />
+        ListEmptyComponent={
+          !isLoading ? <ListEmptyComponent message="No beverages" /> : null
         }
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}

@@ -16,6 +16,7 @@ import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
+import ListEmptyComponent from '../common/ListEmptyComponent';
 import SwipeableRow from '../common/SwipeableRow';
 import { DeviceStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
@@ -100,15 +101,15 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListFooterComponent={
-          <LoadingListFooter
-            isLoading={this._listStore.isFetchingRemoteCount}
-          />
+        ListEmptyComponent={
+          !isLoading ? <ListEmptyComponent message="No Brewskey boxes" /> : null
         }
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}

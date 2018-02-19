@@ -14,6 +14,7 @@ import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
 type Props = {|
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
   queryOptions?: QueryOptions,
@@ -49,16 +50,15 @@ class BasePoursList extends React.Component<Props> {
   );
 
   render() {
+    const { ListEmptyComponent, ListHeaderComponent } = this.props;
+    const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <List
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListFooterComponent={
-          <LoadingListFooter
-            isLoading={this._listStore.isFetchingRemoteCount}
-          />
-        }
-        ListHeaderComponent={this.props.ListHeaderComponent}
+        ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+        ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         renderItem={this._renderRow}
       />

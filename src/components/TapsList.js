@@ -14,6 +14,7 @@ import { TapStore } from '../stores/DAOStores';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
+import ListEmptyComponent from '../common/ListEmptyComponent';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
 import SwipeableList from '../common/SwipeableList';
@@ -90,15 +91,15 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListFooterComponent={
-          <LoadingListFooter
-            isLoading={this._listStore.isFetchingRemoteCount}
-          />
+        ListEmptyComponent={
+          !isLoading ? <ListEmptyComponent message="No taps" /> : null
         }
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
