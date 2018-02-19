@@ -1,5 +1,7 @@
 // @flow
 
+import * as React from 'react';
+
 export const createRange = (start: number, end: number): Array<number> =>
   [...Array(1 + end - start).keys()].map(
     (index: number): number => start + index,
@@ -10,4 +12,4 @@ export const getRandomInt = (min: number, max: number): number =>
 
 export const isClassBasedComponent = (
   component: React.ComponentType<any>,
-): boolean => !!component.prototype.render;
+): boolean => !!(component: any).prototype.render;
