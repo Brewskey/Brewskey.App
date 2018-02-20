@@ -9,11 +9,13 @@ import Container from '../common/Container';
 import OwnerPoursList from '../components/poursLists/OwnerPoursList';
 import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import lazyLoad from '../common/lazyLoad';
 
 type InjectedProps = {|
   tapId: EntityID,
 |};
 
+@lazyLoad
 @flatNavigationParamsAndScreenProps
 class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
