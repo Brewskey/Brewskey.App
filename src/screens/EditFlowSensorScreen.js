@@ -14,12 +14,14 @@ import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import FlowSensorForm from '../components/FlowSensorForm';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import lazyLoad from '../common/lazyLoad';
 
 type InjectedProps = {|
   navigation: Navigation,
   tapId: EntityID,
 |};
 
+@lazyLoad
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {

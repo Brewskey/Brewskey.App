@@ -12,6 +12,7 @@ import DAOApi from 'brewskey.js-api';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import lazyLoad from '../common/lazyLoad';
 import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
@@ -19,6 +20,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@lazyLoad
 @flatNavigationParamsAndScreenProps
 @observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {

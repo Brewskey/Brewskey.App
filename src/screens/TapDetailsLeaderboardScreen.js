@@ -12,11 +12,13 @@ import LeaderboardDurationPicker, {
   LEADERBOARD_DURATION_OPTIONS,
 } from '../components/LeaderboardDurationPicker';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import lazyLoad from '../common/lazyLoad';
 
 type InjectedProps = {|
   tapId: EntityID,
 |};
 
+@lazyLoad
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
