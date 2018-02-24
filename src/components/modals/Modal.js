@@ -8,7 +8,7 @@ type Props = {
   animationType?: string, // todo add enum
   children?: React.Node,
   isVisible: boolean,
-  onHideModal: () => void,
+  onHideModal?: () => void,
   transparent?: boolean,
   // other RN modal props,
 };

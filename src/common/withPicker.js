@@ -24,10 +24,10 @@ type Props<TEntity> = {
 
 const withPicker = <TEntity, TProps: Props<TEntity>>(
   Component: React.ComponentType<TProps>,
-) => {
+): React.ComponentType<TProps & PickerProps<TEntity>> => {
   @observer
   class WithPicker extends React.Component<TProps & PickerProps<TEntity>> {
-    _pickerStore: PickerStore;
+    _pickerStore: PickerStore<TEntity>;
 
     componentWillMount() {
       const { keyExtractor, multiple, onChange, value } = this.props;
@@ -39,8 +39,10 @@ const withPicker = <TEntity, TProps: Props<TEntity>>(
       });
     }
 
-    componentWillReceiveProps({ value }: Props) {
-      this._pickerStore.setValue(value);
+    componentWillReceiveProps(nextProps: Props<TEntity>) {
+      if (nextProps.value !== this.props.value) {
+        this._pickerStore.setValue(nextProps.value);
+      }
     }
 
     render() {

@@ -6,7 +6,7 @@ import { action, computed, observable } from 'mobx';
 
 export type PickerValue<TEntity> = ?TEntity | Array<TEntity>;
 
-export type KeyExtractor<TEntity> = (item: TEntity) => void;
+export type KeyExtractor<TEntity> = (item: TEntity) => string;
 
 type PickerStoreProps<TEntity> = {
   initialValue: PickerValue<TEntity>,
@@ -15,8 +15,15 @@ type PickerStoreProps<TEntity> = {
   onChange?: (value: PickerValue<TEntity>) => void,
 };
 
-const defaultKeyExtractor = <TEntity>(item: TEntity): string =>
-  item.id.toString();
+const defaultKeyExtractor = <TEntity>(item: TEntity): string => {
+  const castedItem = (item: any);
+  if (!castedItem.id) {
+    throw new Error(
+      'PickerStore: keyExtractorError, there is no id prop in item',
+    );
+  }
+  return castedItem.id.toString();
+};
 
 class PickerStore<TEntity> {
   _keyExtractor: KeyExtractor<TEntity>;
@@ -27,12 +34,12 @@ class PickerStore<TEntity> {
   // this also can be done with ObservableArray instead ObservableMap
   // but I need keys for initialParams in forms in cases where initialValue
   // is ShortenedEntity
-  @observable _valueByKey: ObservableMap<TEntity> = new Map();
+  @observable _valueByKey: ObservableMap<TEntity> = observable.map();
 
   constructor({
     initialValue,
     keyExtractor = defaultKeyExtractor,
-    multiple,
+    multiple = false,
     onChange,
   }: PickerStoreProps<TEntity>) {
     this._multiple = multiple;
@@ -57,7 +64,7 @@ class PickerStore<TEntity> {
   @action
   setValue = (value: PickerValue<TEntity>) => {
     let entries;
-    if (this._multiple) {
+    if (Array.isArray(value)) {
       entries = value.map((item: TEntity): [string, TEntity] => [
         this._keyExtractor(item),
         item,
@@ -66,7 +73,7 @@ class PickerStore<TEntity> {
       entries = value ? [[this._keyExtractor(value), value]] : [];
     }
 
-    this._valueByKey.replace(entries);
+    this._valueByKey.replace((entries: any));
   };
 
   @action

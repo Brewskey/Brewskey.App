@@ -10,7 +10,6 @@ import { FormInput, FormLabel } from 'react-native-elements';
 
 type Props<TEntity> = {|
   label: string,
-  multiple?: boolean,
   onPress: () => void,
   placeholder?: string,
   stringValueExtractor: (item: TEntity) => string,
@@ -21,14 +20,14 @@ type Props<TEntity> = {|
 class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   static defaultProps = {
     placeholder: 'Please select...',
-    stringValueExtractor: (item: TEntity): string => item.name,
+    stringValueExtractor: (item: Object): string => item.name,
   };
 
   @computed
   get _stringValue(): string {
-    const { multiple, stringValueExtractor, value } = this.props;
+    const { stringValueExtractor, value } = this.props;
 
-    if (multiple) {
+    if (Array.isArray(value)) {
       return value.map(stringValueExtractor).join(', ');
     }
     return value ? stringValueExtractor(value) : '';

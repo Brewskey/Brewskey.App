@@ -18,7 +18,7 @@ type Props<TEntity> = {
   // other react-native=elements ListItemProps
 };
 
-const SelectableListItem = ({
+const SelectableListItem = <TEntity>({
   isSelected,
   toggleItem,
   ...rest

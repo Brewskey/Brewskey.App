@@ -31,24 +31,26 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {|
+type Props<TEntity> = {|
   multiple: boolean,
   onClearPress: () => void,
   onSelectPress: () => void,
-  value: PickerValue<*>,
+  value: PickerValue<TEntity>,
 |};
 
 @observer
-class PickerControl extends React.Component<Props> {
+class PickerControl<TEntity> extends React.Component<Props<TEntity>> {
   render() {
-    const { multiple, onClearPress, onSelectPress, value } = this.props;
+    const { onClearPress, onSelectPress, value } = this.props;
     const selectButtonTitle =
-      multiple && value && value.length ? `Select(${value.length})` : 'Select';
+      Array.isArray(value) && value.length
+        ? `Select(${value.length})`
+        : 'Select';
 
     return (
       <View style={styles.container}>
         <Button
-          disabled={multiple ? !value.length : !value}
+          disabled={Array.isArray(value) ? !value.length : !value}
           disabledStyle={styles.clearButtonDisabled}
           disabledTextStyle={styles.clearButtonDisabledText}
           onPress={onClearPress}

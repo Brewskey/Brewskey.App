@@ -42,11 +42,8 @@ class BeveragePicker extends React.Component<Props> {
   }
 }
 
-const LoadedRow = ({
-  item: beverage,
-  isSelected,
-  toggleItem,
-}: RowItemProps<Friend, *>) => (
+// todo annotate better
+const LoadedRow = ({ item: beverage, isSelected, toggleItem }: Object) => (
   <SelectableListItem
     avatar={<BeverageAvatar beverageId={beverage.id} />}
     hideChevron

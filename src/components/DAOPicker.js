@@ -1,9 +1,12 @@
 // @flow
 
+import type { EntityID, QueryOptions } from 'brewskey.js-api';
 import type DAOStore from '../stores/DAOStores';
 import type { Row } from '../stores/DAOListStore';
+import type { PickerValue } from '../stores/PickerStore';
+import type { PickerProps } from '../common/withPicker';
 
-import React from 'react';
+import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
@@ -23,28 +26,37 @@ import PickerTextInput from './PickerTextInput';
 import PickerControl from '../components/PickerControl';
 import withPicker from '../common/withPicker';
 
+type RenderRowProps<TEntity> = {|
+  index: number,
+  isSelected: boolean,
+  item: Row<TEntity>,
+  separators: Object,
+  toggleItem: (item: TEntity) => void,
+|};
+
 type Props<TEntity> = {
   daoStore: DAOStore<TEntity>,
   headerTitle: string,
   label: string,
   multiple: boolean,
+  renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   onChange?: (value: PickerValue<TEntity>) => void,
   placeholder?: string,
-  queryOptions?: QueryOptions,
-  searchBy: Array<string>,
+  queryOptions: QueryOptions,
+  searchBy: string,
   stringValueExtractor?: (item: TEntity) => string,
   value?: PickerValue<TEntity>,
 };
 
 @withPicker
 @observer
-class SearchPicker<TEntity> extends InjectedComponent<
+class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   PickerProps<TEntity>,
   Props<TEntity>,
 > {
   static defaultProps = {
     queryOptions: {},
-    searchBy: ['name'],
+    searchBy: 'name',
   };
 
   _listStore: DAOListStore<TEntity>;
@@ -60,7 +72,7 @@ class SearchPicker<TEntity> extends InjectedComponent<
       this._listStore.setQueryOptions({
         ...queryOptions,
         filters: [
-          ...(queryOptions.filters || {}),
+          ...(queryOptions.filters || []),
           DAOApi.createFilter(searchBy).contains(
             this._searchTextStore.debouncedText,
           ),
@@ -73,15 +85,16 @@ class SearchPicker<TEntity> extends InjectedComponent<
 
   _listKeyExtractor = (row: Row<TEntity>): string => row.key;
 
-  _renderRow = (renderRowProps): Rect.Element<any> => {
+  _renderRow = (
+    renderRowProps: RenderRowProps<TEntity>,
+  ): React.Element<any> => {
     const { checkIsSelected, toggleItem } = this.injectedProps;
     const { renderRow } = this.props;
     const { item: { loader } } = renderRowProps;
-    const isSelected = loader.hasValue()
-      ? checkIsSelected(loader.getValue())
-      : false;
+    const isSelected =
+      loader.hasValue() && checkIsSelected(loader.getValueEnforcing());
 
-    return renderRow({ ...renderRowProps, isSelected, toggleItem });
+    return renderRow(({ ...renderRowProps, isSelected, toggleItem }: any));
   };
 
   render() {
@@ -98,7 +111,6 @@ class SearchPicker<TEntity> extends InjectedComponent<
       <View>
         <PickerTextInput
           label={label}
-          multiple={multiple}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={stringValueExtractor}
@@ -125,13 +137,13 @@ class SearchPicker<TEntity> extends InjectedComponent<
               {this._searchToggleStore.isToggled && (
                 <SearchBar
                   onChangeText={this._searchTextStore.setText}
-                  showLoadingIcon={this._listStore.isLoading}
+                  showLoadingIcon={this._listStore.isFetchingRemoteCount}
                   value={this._searchTextStore.text}
                 />
               )}
               <List
                 data={this._listStore.rows}
-                extraData={multiple ? value.length : value}
+                extraData={Array.isArray(value) ? value.length : value}
                 keyExtractor={this._listKeyExtractor}
                 ListFooterComponent={
                   <LoadingListFooter
