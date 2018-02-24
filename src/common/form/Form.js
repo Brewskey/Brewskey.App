@@ -53,9 +53,10 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
       try {
         const { onSubmit } = this.props;
         this._formStore.setSubmitting(true);
+
         const result = callback.call
-          ? callback(this._formStore.values)
-          : onSubmit && onSubmit(this._formStore.values);
+          ? callback(this._formStore.submittingValues)
+          : onSubmit && onSubmit(this._formStore.submittingValues);
 
         if (result && result.then) {
           await result;

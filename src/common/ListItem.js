@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { ListItem as RNEListItem } from 'react-native-elements';
@@ -14,7 +16,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TItem> = {
-  containerStyle?: Object,
+  containerStyle?: Style,
   item: TItem,
   onPress: (item: TItem) => void,
   // other react-native=elements ListItemProps

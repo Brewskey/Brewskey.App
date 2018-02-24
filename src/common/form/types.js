@@ -7,6 +7,7 @@ import type { Element } from 'react';
 export type Field = {|
   error: ?string,
   initialValue: any,
+  parseOnSubmit: (value: any) => any,
   refElement?: Element<any>,
   touched: boolean,
   value: any,
