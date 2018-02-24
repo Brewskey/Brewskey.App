@@ -3,6 +3,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
+import { isClassBasedComponent } from '../../utils';
 
 // todo add generic types for value
 type Props = {
@@ -86,7 +87,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
         onBlur={this._onBlur}
         onChange={this._onChange}
         onSubmitEditing={this._onSubmitEditing}
-        ref={this._setRefElement}
+        ref={isClassBasedComponent(Component) ? this._setRefElement : null}
         returnKeyType={
           this.props.nextFocusTo ? 'next' : this.props.returnKeyType
         }

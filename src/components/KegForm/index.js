@@ -102,8 +102,8 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            loading={submitting}
             disabled={pristine || invalid || submitting}
+            loading={submitting}
             onPress={this._onSubmit}
             title={submitButtonLabel}
           />

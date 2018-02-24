@@ -153,6 +153,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
         <SectionContent paddedVertical>
           <Button
             disabled={submitting || invalid || pristine}
+            loading={submitting}
             onPress={handleSubmit}
             title={submitButtonLabel}
           />

@@ -14,7 +14,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
-import { LocationStore } from '../stores/DAOStores';
+import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LoaderComponent from '../common/LoaderComponent';
@@ -34,8 +34,9 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     return LocationStore.getByID(this.injectedProps.id);
   }
 
-  _onFormSubmit = (values: LocationMutator) => {
+  _onFormSubmit = async (values: LocationMutator): Promise<void> => {
     DAOApi.LocationDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._locationLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
@@ -47,6 +48,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
           loadedComponent={LoadedComponent}
           loader={this._locationLoader}
           onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
         />
       </Container>
     );

@@ -14,7 +14,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
-import { BeverageStore } from '../stores/DAOStores';
+import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -34,8 +34,9 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     return BeverageStore.getByID(this.injectedProps.id);
   }
 
-  _onFormSubmit = (values: BeverageMutator): void => {
+  _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
     DAOApi.BeverageDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._beverageLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
@@ -47,6 +48,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
           loadedComponent={LoadedComponent}
           loader={this._beverageLoader}
           onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
         />
       </Container>
     );

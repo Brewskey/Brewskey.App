@@ -37,6 +37,7 @@ class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <LoaderComponent
+        updatingComponent={LoadingComponent}
         loadedComponent={LoadedComponent}
         loader={this._deviceLoader}
         loadingComponent={LoadingComponent}

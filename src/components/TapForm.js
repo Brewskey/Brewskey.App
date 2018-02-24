@@ -100,9 +100,9 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
         <SectionContent paddedVertical>
           <Button
             disabled={submitting || invalid || pristine}
+            loading={submitting}
             onPress={handleSubmit}
             title={submitButtonLabel}
-            loading={submitting}
           />
         </SectionContent>
       </KeyboardAwareScrollView>

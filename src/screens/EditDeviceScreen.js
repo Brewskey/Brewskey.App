@@ -12,7 +12,7 @@ import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { DeviceStore } from '../stores/DAOStores';
+import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
 import LoaderComponent from '../common/LoaderComponent';
@@ -36,6 +36,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
 
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._deviceLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
@@ -47,6 +48,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
           loadedComponent={LoadedComponent}
           loader={this._deviceLoader}
           onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
         />
       </Container>
     );

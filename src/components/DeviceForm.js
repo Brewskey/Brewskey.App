@@ -13,6 +13,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import { LocationStore } from '../stores/DAOStores';
@@ -64,7 +65,13 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
 
   render() {
     const { device, submitButtonLabel } = this.props;
-    const { handleSubmit, invalid, pristine, submitting } = this.injectedProps;
+    const {
+      formError,
+      handleSubmit,
+      invalid,
+      pristine,
+      submitting,
+    } = this.injectedProps;
 
     return (
       <KeyboardAwareScrollView>
@@ -111,9 +118,11 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           name="deviceStatus"
         />
         <FormField initialValue={device.id} key="id" name="id" />
+        <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
             disabled={invalid || pristine || submitting}
+            loading={submitting}
             onPress={handleSubmit}
             title={submitButtonLabel}
           />
