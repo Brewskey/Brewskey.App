@@ -42,6 +42,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
         <TouchableOpacity onPress={onPress}>
           <FormInput
             editable={false}
+            multiline
             placeholder={placeholder}
             value={this._stringValue}
           />

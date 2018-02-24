@@ -13,7 +13,7 @@ import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
 import PickerField from '../../common/PickerField';
-import LoaderPickerField from '../../common/PickerField/LoaderPickerField';
+import BeveragePicker from '../BeveragePicker';
 import KegLevelSliderField from './KegLevelSliderField';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { form, FormField } from '../../common/form';
@@ -70,19 +70,14 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     return (
       <KeyboardAwareScrollView>
         <FormField
-          component={LoaderPickerField}
+          component={BeveragePicker}
           disabled={submitting}
-          initialValue={keg.beverage && keg.beverage.id}
+          initialValue={keg.beverage}
           itemsLoader={BeverageStore.getMany()}
           label="Beverage"
           name="beverageId"
-        >
-          {(items: Array<Beverage>): Array<React.Node> =>
-            items.map(({ id, name }: Beverage): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))
-          }
-        </FormField>
+          parseOnSubmit={(value: Beverage): EntityID => value.id}
+        />
         <FormField
           component={PickerField}
           disabled={submitting}

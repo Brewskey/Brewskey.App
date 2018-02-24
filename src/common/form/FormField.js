@@ -18,6 +18,7 @@ type BaseProps = {
   blurOnSubmit?: boolean,
   nextFocusTo?: string,
   onSubmitEditing?: Function,
+  parseOnSubmit?: (value: any) => any,
   returnKeyType?: string,
 };
 
@@ -36,6 +37,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
     this.context.formStore.initField({
       initialValue: this.props.initialValue,
       name: this.props.name,
+      parseOnSubmit: this.props.parseOnSubmit,
     });
   }
 
@@ -44,6 +46,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
       this.context.formStore.initField({
         initialValue: nextProps.initialValue,
         name: nextProps.name,
+        parseOnSubmit: this.props.parseOnSubmit,
       });
     }
   }

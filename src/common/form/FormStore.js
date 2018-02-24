@@ -12,8 +12,9 @@ type FormStoreProps = {|
 |};
 
 type InitFieldProps = {|
-  name: string,
   initialValue?: any,
+  name: string,
+  parseOnSubmit?: (value: any) => any,
 |};
 
 // todo change touched logic so it takes care about initialValue
@@ -40,10 +41,15 @@ class FormStore {
   };
 
   @action
-  initField = ({ name, initialValue }: InitFieldProps) => {
+  initField = ({
+    initialValue,
+    name,
+    parseOnSubmit = <TEntity>(value: TEntity): TEntity => value,
+  }: InitFieldProps) => {
     this._fields.set(name, {
       error: null,
       initialValue,
+      parseOnSubmit,
       touched: false,
       value: initialValue,
     });
@@ -144,6 +150,17 @@ class FormStore {
       (result: Object, [fieldName, field]: [string, Field]): Object => ({
         ...result,
         [fieldName]: field.value,
+      }),
+      {},
+    );
+  }
+
+  @computed
+  get submittingValues(): Object {
+    return Array.from(this._fields.entries()).reduce(
+      (result: Object, [fieldName, field]: [string, Field]): Object => ({
+        ...result,
+        [fieldName]: field.parseOnSubmit(field.value),
       }),
       {},
     );

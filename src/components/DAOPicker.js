@@ -98,7 +98,7 @@ class SearchPicker<TEntity> extends InjectedComponent<
       <View>
         <PickerTextInput
           label={label}
-          multiple
+          multiple={multiple}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={stringValueExtractor}
