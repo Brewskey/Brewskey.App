@@ -44,7 +44,10 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
       <KegsList
         ListHeaderComponent={
           <View>
-            <LoaderBeverageDetails loader={this._currentBeverageLoader} />
+            <LoaderBeverageDetails
+              loader={this._currentBeverageLoader}
+              tapId={tapId}
+            />
             <SectionHeader title="Past Kegs" />
           </View>
         }

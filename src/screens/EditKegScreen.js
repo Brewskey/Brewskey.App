@@ -8,7 +8,7 @@ import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
-import { KegStore, waitForLoaded } from '../stores/DAOStores';
+import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderComponent from '../common/LoaderComponent';
 import KegForm from '../components/KegForm';
@@ -37,19 +37,29 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     );
   }
 
-  _onFormSubmit = async (values: KegMutator): Promise<void> => {
+  _onReplaceSubmit = async (values: KegMutator): Promise<void> => {
+    const clientID = DAOApi.KegDAO.post(values);
+    await waitForLoaded(() => KegStore.getByID(clientID));
+    TapStore.flushCache();
+    // todo add snackbar message;
+  };
+
+  _onEditSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.put(id, values);
     await waitForLoaded(() => KegStore.getByID(id));
-    // todo add success snackbar message
+    TapStore.flushCache();
+    // todo add snackbar message;
   };
 
   render() {
     return (
       <LoaderComponent
+        emptyComponent={EmptyComponent}
         loadedComponent={LoadedComponent}
         loader={this._kegLoader}
-        onFormSubmit={this._onFormSubmit}
+        onEditSubmit={this._onEditSubmit}
+        onReplaceSubmit={this._onReplaceSubmit}
         tapId={this.injectedProps.tapId}
         updatingComponent={LoadedComponent}
       />
@@ -57,22 +67,38 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   }
 }
 
-type LoadedComponentProps = {
-  onFormSubmit: (values: KegMutator) => Promise<void>,
+type ExtraProps = {
+  onEditSubmit: (values: KegMutator) => Promise<void>,
+  onReplaceSubmit: (values: KegMutator) => Promise<void>,
   tapId: EntityID,
-  value: Keg,
 };
 
+type LoadedComponentProps = {
+  value: Keg,
+} & ExtraProps;
+
 const LoadedComponent = ({
-  value,
+  onEditSubmit,
+  onReplaceSubmit,
   tapId,
-  onFormSubmit,
+  value,
 }: LoadedComponentProps) => (
   <KegForm
     keg={value}
-    onSubmit={onFormSubmit}
+    onReplaceSubmit={onReplaceSubmit}
+    onSubmit={onEditSubmit}
+    showReplaceButton
     submitButtonLabel="Update current keg"
     tapId={tapId}
   />
 );
+
+const EmptyComponent = ({ onReplaceSubmit, tapId }: ExtraProps) => (
+  <KegForm
+    onSubmit={onReplaceSubmit}
+    submitButtonLabel="Create keg"
+    tapId={tapId}
+  />
+);
+
 export default EditKegScreen;

@@ -45,7 +45,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       orderBy: [
         {
           column: 'id',
-          direction: 'asc',
+          direction: 'desc',
         },
       ],
       ...this.props.queryOptions,

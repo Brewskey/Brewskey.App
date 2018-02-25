@@ -14,7 +14,7 @@ type Props = {|
 |};
 
 const TapListItem = ({ index, onPress, tap }: Props) => {
-  const { currentKeg } = tap;
+  const { currentKeg, description } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
   const beverageLevel = currentKeg
@@ -36,6 +36,7 @@ const TapListItem = ({ index, onPress, tap }: Props) => {
       item={tap}
       onPress={onPress}
       title={`${index + 1} - ${beverageName}`}
+      subtitle={description || ''}
     />
   );
 };

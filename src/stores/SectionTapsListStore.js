@@ -13,7 +13,7 @@ const BASE_QUERY_OPTIONS = {
   orderBy: [
     {
       column: 'device/id',
-      direction: 'asc',
+      direction: 'desc',
     },
   ],
 };

@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
-import { KegStore, waitForLoaded } from '../stores/DAOStores';
+import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import KegForm from '../components/KegForm';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -24,6 +24,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     const { navigation, tapId } = this.injectedProps;
     const clientID = DAOApi.KegDAO.post(values);
     await waitForLoaded(() => KegStore.getByID(clientID));
+    TapStore.flushCache();
     const resetRouteAction = NavigationActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'taps' }),
@@ -41,10 +42,10 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     const { tapId } = this.injectedProps;
     return (
       <Container>
-        <Header showBackButton title="Set beverage" />
+        <Header showBackButton title="Add keg" />
         <KegForm
           onSubmit={this._onFormSubmit}
-          submitButtonLabel="Set keg"
+          submitButtonLabel="Add keg"
           tapId={tapId}
         />
       </Container>

@@ -4,6 +4,7 @@ import type { Beverage, EntityID, Keg, KegMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
+import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import { BeverageStore } from '../../stores/DAOStores';
@@ -17,6 +18,7 @@ import BeveragePicker from '../BeveragePicker';
 import KegLevelSliderField from './KegLevelSliderField';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { form, FormField } from '../../common/form';
+import { COLORS } from '../../theme';
 
 const validate = (values: KegMutator): { [key: string]: string } => {
   const errors = {};
@@ -34,7 +36,9 @@ const validate = (values: KegMutator): { [key: string]: string } => {
 
 type Props = {|
   keg?: Keg,
+  onReplaceSubmit?: (values: KegMutator) => void | Promise<void>,
   onSubmit: (values: KegMutator) => void | Promise<void>,
+  showReplaceButton?: boolean,
   submitButtonLabel: string,
   tapId: EntityID,
 |};
@@ -46,9 +50,16 @@ type InjectedProps = FormProps;
 class KegForm extends InjectedComponent<InjectedProps, Props> {
   _onSubmit = () => this.injectedProps.handleSubmit(this.props.onSubmit);
 
+  _onReplaceSubmit = () =>
+    this.injectedProps.handleSubmit(nullthrows(this.props.onReplaceSubmit));
+
   render() {
-    // todo implement component for picking beverage with searchBox
-    const { keg = {}, submitButtonLabel, tapId } = this.props;
+    const {
+      keg = {},
+      showReplaceButton,
+      submitButtonLabel,
+      tapId,
+    } = this.props;
     const {
       formError,
       invalid,
@@ -100,12 +111,24 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormField initialValue={tapId} name="tapId" />
         <FormField initialValue={keg.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
+        {showReplaceButton && (
+          <SectionContent paddedVertical>
+            <Button
+              disabled={pristine || invalid || submitting}
+              loading={submitting}
+              onPress={this._onReplaceSubmit}
+              title="Replace keg"
+            />
+          </SectionContent>
+        )}
         <SectionContent paddedVertical>
           <Button
+            color={showReplaceButton ? COLORS.primary2 : undefined}
             disabled={pristine || invalid || submitting}
             loading={submitting}
             onPress={this._onSubmit}
             title={submitButtonLabel}
+            transparent={showReplaceButton}
           />
         </SectionContent>
       </KeyboardAwareScrollView>

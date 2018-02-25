@@ -93,6 +93,8 @@ class DAOStore<TEntity: { id: EntityID }> {
     );
   }
 
+  flushCache = () => this._dao.flushCache();
+
   flushQueryCaches = () => this._dao.flushQueryCaches();
 
   count(queryOptions: ?QueryOptions): LoadObject<number> {
