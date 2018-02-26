@@ -24,7 +24,7 @@ export const TYPOGRAPHY = {
   },
   secondary: { fontSize: 18 },
   paragraph: { fontSize: 16 },
-  small: {},
+  small: { fontSize: 14 },
 };
 /* eslint-enable sorting/sort-object-props */
 
