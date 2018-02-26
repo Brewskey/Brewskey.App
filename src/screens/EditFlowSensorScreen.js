@@ -41,19 +41,26 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
   }
 
   render() {
+    const { tapId } = this.injectedProps;
     return (
       <LoaderComponent
+        emptyComponent={EmptyComponent}
         loadedComponent={LoadedComponent}
         loader={this._flowSensorLoader}
+        tapId={tapId}
         updatingComponent={LoadedComponent}
       />
     );
   }
 }
 
+type ExtraProps = {
+  tapId: EntityID,
+};
+
 type LoadedComponentProps = {
   value: FlowSensor,
-};
+} & ExtraProps;
 
 type InjectedLoadedComponentProps = {
   navigation: Navigation,
@@ -87,6 +94,23 @@ class LoadedComponent extends InjectedComponent<
         tapId={value.tap.id}
       />
     );
+  }
+}
+
+@withNavigation
+@observer
+class EmptyComponent extends InjectedComponent<
+  ExtraProps,
+  LoadedComponentProps,
+> {
+  _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
+    const clientID = DAOApi.FlowSensorDAO.post(values);
+    await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+  };
+
+  render() {
+    const { tapId } = this.injectedProps;
+    return <FlowSensorForm onSubmit={this._onFormSubmit} tapId={tapId} />;
   }
 }
 

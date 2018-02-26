@@ -4,6 +4,7 @@ import type { EntityID } from 'brewskey.js-api';
 import type { LeaderboardDurationValue } from '../components/LeaderboardDurationPicker';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
@@ -14,6 +15,7 @@ import LeaderboardDurationPicker, {
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type InjectedProps = {|
+  noFlowSensorWarning: ?React.Element<any>,
   tapId: EntityID,
 |};
 
@@ -34,14 +36,18 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
+    const { noFlowSensorWarning } = this.injectedProps;
     return (
       <LeaderboardList
         duration={this._leaderboardDuration}
         ListHeaderComponent={
-          <LeaderboardDurationPicker
-            onChange={this._onChangeLeaderboardDuration}
-            value={this._leaderboardDuration}
-          />
+          <View>
+            {noFlowSensorWarning}
+            <LeaderboardDurationPicker
+              onChange={this._onChangeLeaderboardDuration}
+              value={this._leaderboardDuration}
+            />
+          </View>
         }
         tapID={this.injectedProps.tapId}
       />
