@@ -5,12 +5,11 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import { SearchBar } from 'react-native-elements';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import HeaderIconButton from '../common/Header/HeaderIconButton';
 import HomeScreenStore from '../stores/HomeScreenStore';
 import NearbyLocationsList from '../components/NearbyLocationsList';
+import HeaderSearchBar from '../common/Header/HeaderSearchBar';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -23,20 +22,15 @@ class HomeScreen extends InjectedComponent<InjectedProps> {
       <Container>
         <Header
           rightComponent={
-            <HeaderIconButton
-              name={HomeScreenStore.isSearchBarVisible ? 'close' : 'search'}
-              onPress={HomeScreenStore.toggleSearchBar}
+            <HeaderSearchBar
+              onChangeText={HomeScreenStore.searchTextStore.setText}
+              onClearPress={HomeScreenStore.onClearSearchBar}
+              onClosePress={HomeScreenStore.onClearSearchBar}
+              value={HomeScreenStore.searchTextStore.text}
             />
           }
           title="Nearby locations"
         />
-        {HomeScreenStore.isSearchBarVisible && (
-          <SearchBar
-            onChangeText={HomeScreenStore.onSearchTextChange}
-            showLoadingIcon={HomeScreenStore.isLoading}
-            value={HomeScreenStore.searchText}
-          />
-        )}
         <NearbyLocationsList
           isLoading={HomeScreenStore.isLoading}
           nearbyLocations={HomeScreenStore.nearbyLocations}
