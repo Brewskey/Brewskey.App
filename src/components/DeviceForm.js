@@ -19,8 +19,8 @@ import SectionContent from '../common/SectionContent';
 import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
+import LocationPicker from './LocationPicker';
 import PickerField from '../common/PickerField';
-import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 import DeviceStatePicker from './DeviceStatePicker';
 
 export const validate = (values: DeviceMutator): { [key: string]: string } => {
@@ -98,26 +98,17 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           <PickerField.Item label="Onsite" value="Onsite" />
         </FormField>
         <FormField
-          component={LoaderPickerField}
-          initialValue={device.location && device.location.id}
-          itemsLoader={this._locationsLoader}
-          key="location"
-          label="Location"
+          component={LocationPicker}
+          initialValue={device.location}
           name="locationId"
-        >
-          {(items: Array<Location>): Array<React.Node> =>
-            items.map(({ id, name }: Location): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))
-          }
-        </FormField>
+          parseOnSubmit={(value: Location): EntityID => value.id}
+        />
         <FormField
           initialValue={device.deviceStatus}
           component={DeviceStatePicker}
-          key="deviceStatus"
           name="deviceStatus"
         />
-        <FormField initialValue={device.id} key="id" name="id" />
+        <FormField initialValue={device.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button

@@ -59,7 +59,11 @@ class PickerStore<TEntity> {
   checkIsSelected = (item: TEntity): boolean =>
     this._valueByKey.has(this._keyExtractor(item));
 
-  @action clear = (): void => this._valueByKey.clear();
+  @action
+  clear = (): void => {
+    this._valueByKey.clear();
+    this._onChange && this._onChange(this.value);
+  };
 
   @action
   setValue = (value: PickerValue<TEntity>) => {
