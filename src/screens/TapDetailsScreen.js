@@ -21,18 +21,22 @@ import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
 import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
-const TapDetailsNavigator = TabNavigator(
-  {
-    tapDetailsKeg: { screen: TapDetailsKegScreen },
-    tapDetailsStats: { screen: TapDetailsStatsScreen },
-    tapDetailsLeaderboard: { screen: TapDetailsLeaderboardScreen },
+const tabScreens = {
+  tapDetailsKeg: { screen: TapDetailsKegScreen },
+  tapDetailsStats: {
+    screen: TapDetailsStatsScreen,
+    hidePropName: 'hideStats',
   },
-  /* eslint-enable */
-  {
-    ...theme.tabBar,
-    lazy: true,
+  tapDetailsLeaderboard: {
+    screen: TapDetailsLeaderboardScreen,
+    hidePropName: 'hideLeaderboard',
   },
-);
+};
+/* eslint-enable */
+
+const TapDetailsNavigator = TabNavigator(tabScreens, {
+  ...theme.tabBar,
+});
 
 type InjectedProps = {|
   id: EntityID,
@@ -73,21 +77,53 @@ type LoadedComponentProps = {
   value: Tap,
 };
 
-// todo fix tap Name
 const LoadedComponent = ({
   navigation,
-  value: { id },
-}: LoadedComponentProps) => (
-  <Container>
-    <Header
-      rightComponent={
-        <HeaderNavigationButton name="edit" params={{ id }} toRoute="editTap" />
-      }
-      showBackButton
-      title="Tap"
-    />
-    <TapDetailsNavigator navigation={navigation} screenProps={{ tapId: id }} />
-  </Container>
-);
+  value: { id, hideLeaderboard, hideStats },
+}: LoadedComponentProps) => {
+  // workaround for dynamically hiding tabs
+  // todo change it when they implement the feature
+  // https://github.com/react-navigation/react-navigation/issues/717
+  // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
+  const navState = navigation.state;
+  const hideProps = { hideLeaderboard, hideStats };
+
+  const filteredTabRoutes = navState.routes.filter((route: Object): boolean => {
+    const { hidePropName } = tabScreens[route.routeName];
+    return !hidePropName || !hideProps[hidePropName];
+  });
+
+  const activeIndex = filteredTabRoutes.findIndex(
+    (route: Object): boolean =>
+      route.routeName === navState.routes[navState.index].routeName,
+  );
+
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            params={{ id }}
+            toRoute="editTap"
+          />
+        }
+        showBackButton
+        title="Tap"
+      />
+      <TapDetailsNavigator
+        navigation={{
+          ...navigation,
+          state: {
+            ...navigation.state,
+            index: activeIndex,
+            routes: filteredTabRoutes,
+          },
+        }}
+        screenProps={{ tapId: id }}
+      />
+    </Container>
+  );
+};
 
 export default TapDetailsScreen;
