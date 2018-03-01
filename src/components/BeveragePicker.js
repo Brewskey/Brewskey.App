@@ -11,6 +11,7 @@ import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import SelectableListItem from '../common/SelectableListItem';
 
 type Props = {|
+  error?: ?string,
   multiple?: boolean,
   onChange: (value: PickerValue<Beverage>) => void,
   queryOptions?: QueryOptions,

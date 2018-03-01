@@ -11,6 +11,7 @@ import SelectableListItem from '../common/SelectableListItem';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
+  error?: ?string,
   multiple?: boolean,
   onChange: (value: PickerValue<Location>) => void,
   queryOptions?: QueryOptions,

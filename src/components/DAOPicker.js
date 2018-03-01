@@ -36,13 +36,14 @@ type RenderRowProps<TEntity> = {|
 
 type Props<TEntity> = {
   daoStore: DAOStore<TEntity>,
+  error?: ?string,
   headerTitle: string,
   label: string,
   multiple: boolean,
-  renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   onChange?: (value: PickerValue<TEntity>) => void,
   placeholder?: string,
   queryOptions: QueryOptions,
+  renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   searchBy: string,
   stringValueExtractor?: (item: TEntity) => string,
   value?: PickerValue<TEntity>,
@@ -99,6 +100,7 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
 
   render() {
     const {
+      error,
       headerTitle,
       label,
       multiple,
@@ -110,6 +112,7 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
     return (
       <View>
         <PickerTextInput
+          error={error}
           label={label}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}

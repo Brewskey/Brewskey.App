@@ -10,6 +10,7 @@ import LoaderRow from '../common/LoaderRow';
 import SelectableListItem from '../common/SelectableListItem';
 
 type Props = {|
+  error?: ?string,
   multiple?: boolean,
   onChange: (value: PickerValue<Device>) => void,
   queryOptions?: QueryOptions,
