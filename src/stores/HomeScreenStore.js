@@ -2,29 +2,18 @@
 
 import type { Coordinates, NearbyLocation } from '../types';
 
-import { action, computed, observable } from 'mobx';
+import { action, computed } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
-import debounce from 'lodash.debounce';
+import DebouncedTextStore from './DebouncedTextStore';
 import { GPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { GoogleCoordinatesStore } from '../stores/ApiRequestStores/GoogleApiStores';
 import { NearbyLocationsStore } from '../stores/ApiRequestStores/CommonApiStores';
 
-const SEARCH_TEXT_DEBOUNCE_TIMEOUT = 1000;
-
 class HomeScreenStore {
-  @observable isSearchBarVisible = false;
-  @observable searchText = '';
-  @observable _debouncedSearchText = '';
+  searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
   @action
-  onSearchTextChange = (text: string) => {
-    this.searchText = text;
-    this._setDebouncedSearchText(text);
-  };
-
-  @action
-  toggleSearchBar = () => {
-    this.isSearchBarVisible = !this.isSearchBarVisible;
+  onClearSearchBar = () => {
     GPSCoordinatesStore.flushCache();
   };
 
@@ -45,15 +34,9 @@ class HomeScreenStore {
 
   @computed
   get _coordinatesLoader(): LoadObject<Coordinates> {
-    if (this.isSearchBarVisible) {
-      if (!this._debouncedSearchText) {
-        return LoadObject.empty();
-      }
-
-      return GoogleCoordinatesStore.get(this._debouncedSearchText);
-    }
-
-    return GPSCoordinatesStore.get();
+    return this.searchTextStore.debouncedText
+      ? GoogleCoordinatesStore.get(this.searchTextStore.debouncedText)
+      : GPSCoordinatesStore.get();
   }
 
   @computed
@@ -62,13 +45,6 @@ class HomeScreenStore {
       Array<NearbyLocation>,
     > => NearbyLocationsStore.get(coordinates));
   }
-
-  _setDebouncedSearchText = debounce(
-    action((text: string) => {
-      this._debouncedSearchText = text;
-    }),
-    SEARCH_TEXT_DEBOUNCE_TIMEOUT,
-  );
 }
 
 export default new HomeScreenStore();

@@ -14,6 +14,7 @@ export const COLORS = {
   text: '#43484d',
   textFaded: '#bdc6cf',
   textInverse: '#fff',
+  textInverseFaded: 'rgba(255,255,255,0.7)',
 };
 
 /* eslint-disable sorting/sort-object-props */

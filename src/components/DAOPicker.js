@@ -11,9 +11,9 @@ import InjectedComponent from '../common/InjectedComponent';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
-import { SearchBar } from 'react-native-elements';
 import Header from '../common/Header';
 import HeaderIconButton from '../common/Header/HeaderIconButton';
+import HeaderSearchBar from '../common/Header/HeaderSearchBar';
 import DebouncedTextStore from '../stores/DebouncedTextStore';
 import ToggleStore from '../stores/ToggleStore';
 import List from '../common/List';
@@ -63,7 +63,6 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   _listStore: DAOListStore<TEntity>;
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
-  _searchToggleStore: ToggleStore = new ToggleStore();
 
   componentWillMount() {
     const { daoStore, queryOptions, searchBy } = this.props;
@@ -130,20 +129,13 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
                   />
                 }
                 rightComponent={
-                  <HeaderIconButton
-                    name="search"
-                    onPress={this._searchToggleStore.toggle}
+                  <HeaderSearchBar
+                    onChangeText={this._searchTextStore.setText}
+                    value={this._searchTextStore.text}
                   />
                 }
                 title={headerTitle}
               />
-              {this._searchToggleStore.isToggled && (
-                <SearchBar
-                  onChangeText={this._searchTextStore.setText}
-                  showLoadingIcon={this._listStore.isFetchingRemoteCount}
-                  value={this._searchTextStore.text}
-                />
-              )}
               <List
                 data={this._listStore.rows}
                 extraData={Array.isArray(value) ? value.length : value}
