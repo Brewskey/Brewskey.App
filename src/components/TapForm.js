@@ -8,13 +8,11 @@ import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { DeviceStore } from '../stores/DAOStores';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
-import PickerField from '../common/PickerField';
-import LoaderPickerField from '../common/PickerField/LoaderPickerField';
+import DevicePicker from './DevicePicker';
 import { form, FormField } from '../common/form';
 
 const validate = (values: TapMutator): { [key: string]: string } => {
@@ -24,8 +22,8 @@ const validate = (values: TapMutator): { [key: string]: string } => {
     errors.name = 'Name is required';
   }
 
-  if (!values.device) {
-    errors.device = 'Brewskey box is required';
+  if (!values.deviceId) {
+    errors.deviceId = 'Brewskey box is required';
   }
 
   return errors;
@@ -61,19 +59,11 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           label="Description"
         />
         <FormField
-          component={LoaderPickerField}
-          initialValue={tap.device && tap.device.id}
-          itemsLoader={DeviceStore.getMany()}
-          disabled={submitting}
+          component={DevicePicker}
+          initialValue={tap.device}
           name="deviceId"
-          label="Brewskey box"
-        >
-          {(items: Array<Device>): Array<React.Node> =>
-            items.map(({ id, name }: Device): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))
-          }
-        </FormField>
+          parseOnSubmit={(value: Device): EntityID => value.id}
+        />
         <FormField
           component={CheckBoxField}
           initialValue={tap.hideLeaderboard}

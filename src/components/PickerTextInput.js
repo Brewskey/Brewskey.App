@@ -6,9 +6,14 @@ import * as React from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { View, TouchableOpacity } from 'react-native';
-import { FormInput, FormLabel } from 'react-native-elements';
+import {
+  FormInput,
+  FormLabel,
+  FormValidationMessage,
+} from 'react-native-elements';
 
 type Props<TEntity> = {|
+  error?: ?string,
   label: string,
   onPress: () => void,
   placeholder?: string,
@@ -34,7 +39,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   }
 
   render() {
-    const { label, onPress, placeholder } = this.props;
+    const { error, label, onPress, placeholder } = this.props;
     return (
       <View>
         <FormLabel>{label}</FormLabel>
@@ -45,6 +50,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
             placeholder={placeholder}
             value={this._stringValue}
           />
+          <FormValidationMessage>{error}</FormValidationMessage>
         </TouchableOpacity>
       </View>
     );
