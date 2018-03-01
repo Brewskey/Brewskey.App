@@ -1,17 +1,19 @@
 // @flow
 
-import type { EntityID, LoadObject, Tap } from 'brewskey.js-api';
+import type { EntityID, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { TabNavigator } from 'react-navigation';
-import { TapStore } from '../stores/DAOStores';
+import DAOApi, { LoadObject } from 'brewskey.js-api';
+import { FlowSensorStore, TapStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import WarningNotification from '../common/WarningNotification';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -77,53 +79,88 @@ type LoadedComponentProps = {
   value: Tap,
 };
 
-const LoadedComponent = ({
-  navigation,
-  value: { id, hideLeaderboard, hideStats },
-}: LoadedComponentProps) => {
-  // workaround for dynamically hiding tabs
-  // todo change it when they implement the feature
-  // https://github.com/react-navigation/react-navigation/issues/717
-  // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
-  const navState = navigation.state;
-  const hideProps = { hideLeaderboard, hideStats };
+@observer
+class LoadedComponent extends React.Component<LoadedComponentProps> {
+  @computed
+  get _flowSensorLoader(): LoadObject<FlowSensor> {
+    const { value: { id } } = this.props;
+    return FlowSensorStore.getMany({
+      filters: [DAOApi.createFilter('tap/id').equals(id)],
+      limit: 1,
+      orderBy: [{ column: 'id', direction: 'desc' }],
+    }).map(
+      (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
+        loaders[0] || LoadObject.empty(),
+    );
+  }
 
-  const filteredTabRoutes = navState.routes.filter((route: Object): boolean => {
-    const { hidePropName } = tabScreens[route.routeName];
-    return !hidePropName || !hideProps[hidePropName];
-  });
+  _onNoFlowSensorWarningPress = () => {
+    const { navigation, value: { id } } = this.props;
+    navigation.navigate('newFlowSensor', { returnOnFinish: true, tapId: id });
+  };
 
-  const activeIndex = filteredTabRoutes.findIndex(
-    (route: Object): boolean =>
-      route.routeName === navState.routes[navState.index].routeName,
-  );
+  render() {
+    const {
+      navigation,
+      value: { id, hideLeaderboard, hideStats },
+    } = this.props;
 
-  return (
-    <Container>
-      <Header
-        rightComponent={
-          <HeaderNavigationButton
-            name="edit"
-            params={{ id }}
-            toRoute="editTap"
-          />
-        }
-        showBackButton
-        title="Tap"
+    // workaround for dynamically hiding tabs
+    // todo change it when they implement the feature
+    // https://github.com/react-navigation/react-navigation/issues/717
+    // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
+    const navState = navigation.state;
+    const hideProps = { hideLeaderboard, hideStats };
+
+    const filteredTabRoutes = navState.routes.filter(
+      (route: Object): boolean => {
+        const { hidePropName } = tabScreens[route.routeName];
+        return !hidePropName || !hideProps[hidePropName];
+      },
+    );
+
+    const activeIndex = filteredTabRoutes.findIndex(
+      (route: Object): boolean =>
+        route.routeName === navState.routes[navState.index].routeName,
+    );
+
+    const noFlowSensorWarning = this._flowSensorLoader.isEmpty() ? (
+      <WarningNotification
+        message="You haven't setup flow sensor on the tap. Click to setup."
+        onPress={this._onNoFlowSensorWarningPress}
       />
-      <TapDetailsNavigator
-        navigation={{
-          ...navigation,
-          state: {
-            ...navigation.state,
-            index: activeIndex,
-            routes: filteredTabRoutes,
-          },
-        }}
-        screenProps={{ tapId: id }}
-      />
-    </Container>
-  );
-};
+    ) : null;
+
+    return (
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderNavigationButton
+              name="edit"
+              params={{ id }}
+              toRoute="editTap"
+            />
+          }
+          showBackButton
+          title="Tap"
+        />
+        <TapDetailsNavigator
+          navigation={{
+            ...navigation,
+            state: {
+              ...navigation.state,
+              index: activeIndex,
+              routes: filteredTabRoutes,
+            },
+          }}
+          screenProps={{
+            noFlowSensorWarning,
+            tapId: id,
+          }}
+        />
+      </Container>
+    );
+  }
+}
 
 export default TapDetailsScreen;

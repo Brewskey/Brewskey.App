@@ -18,6 +18,7 @@ import SectionHeader from '../common/SectionHeader';
 type InjectedProps = {|
   navigation: Navigation,
   tapId: EntityID,
+  noFlowSensorWarning: ?React.Element<any>,
 |};
 
 @flatNavigationParamsAndScreenProps
@@ -39,11 +40,12 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
   }
 
   render() {
-    const { tapId } = this.injectedProps;
+    const { noFlowSensorWarning, tapId } = this.injectedProps;
     return (
       <KegsList
         ListHeaderComponent={
           <View>
+            {noFlowSensorWarning}
             <LoaderBeverageDetails
               loader={this._currentBeverageLoader}
               tapId={tapId}

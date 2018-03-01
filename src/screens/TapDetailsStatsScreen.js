@@ -3,6 +3,7 @@
 import type { EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
@@ -11,6 +12,7 @@ import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type InjectedProps = {|
+  noFlowSensorWarning: ?React.Element<any>,
   tapId: EntityID,
 |};
 
@@ -21,11 +23,16 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { tapId } = this.injectedProps;
+    const { noFlowSensorWarning, tapId } = this.injectedProps;
     return (
       <Container>
         <OwnerPoursList
-          ListHeaderComponent={<SectionHeader title="Recent pours" />}
+          ListHeaderComponent={
+            <View>
+              {noFlowSensorWarning}
+              <SectionHeader title="Recent pours" />
+            </View>
+          }
           queryOptions={{
             filters: [DAOApi.createFilter('tap/id').equals(tapId)],
           }}
