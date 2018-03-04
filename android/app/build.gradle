@@ -137,7 +137,9 @@ android {
 }
 
 dependencies {
-
+    compile (project(':react-native-device-info')){
+        exclude group: "com.google.android.gms" 
+    }
     compile project(':react-native-randombytes')
     compile project(':react-native-contacts')
     compile project(':react-native-fetch-blob')
