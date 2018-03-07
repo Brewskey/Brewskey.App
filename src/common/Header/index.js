@@ -3,7 +3,6 @@ import * as React from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 import HeaderBackButton from './HeaderBackButton';
-import HeaderDrawerButton from './HeaderDrawerButton';
 
 // todo title have slight offset to the left when there are more than one
 // button in the right component. Need to figure better solution to position
@@ -47,7 +46,7 @@ type Props = {|
 
 class Header extends React.PureComponent<Props> {
   static defaultProps = {
-    leftComponent: <HeaderDrawerButton />,
+    leftComponent: <FakeHeaderButton />,
     rightComponent: <FakeHeaderButton />,
   };
 

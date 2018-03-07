@@ -35,7 +35,7 @@ class MyFriendsScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <Container>
-        <Header title="Friends" />
+        <Header showBackButton title="Friends" />
         <MyFriendsNavigator navigation={this.injectedProps.navigation} />
       </Container>
     );

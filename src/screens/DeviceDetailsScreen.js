@@ -15,6 +15,7 @@ import DeviceOnlineOverviewItem from '../components/DeviceOnlineOverviewItem';
 import { DeviceStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
@@ -74,9 +75,11 @@ const LoadedComponent = observer(
       <TapsList
         ListHeaderComponent={
           <Container>
-            <OverviewItem title="Box ID" value={particleId} />
-            <DeviceStateOverviewItem deviceState={deviceStatus} />
-            <DeviceOnlineOverviewItem deviceID={id} />
+            <Section bottomPadded>
+              <OverviewItem title="Box ID" value={particleId} />
+              <DeviceStateOverviewItem deviceState={deviceStatus} />
+              <DeviceOnlineOverviewItem deviceID={id} />
+            </Section>
             <SectionHeader title="Taps" />
           </Container>
         }

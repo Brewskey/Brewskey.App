@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button as RNEButton } from 'react-native-elements';
-import { COLORS } from '../../theme';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   active: {
-    backgroundColor: COLORS.primary3,
+    backgroundColor: COLORS.primary4,
   },
   button: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.secondary,
     justifyContent: 'flex-start',
   },
   container: {
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   textStyle: {
+    color: COLORS.text,
     marginLeft: 20,
   },
 });
@@ -28,12 +29,12 @@ type Props = {
   // other RNEButton Props
 };
 
-class DrawerButton extends React.PureComponent<Props> {
+class MenuButton extends React.PureComponent<Props> {
   render() {
     const { icon, isActive, ...rest } = this.props;
     return (
       <RNEButton
-        icon={{ ...icon, color: COLORS.secondary2, size: 20 }}
+        icon={{ ...icon, color: COLORS.textFaded, size: 20 }}
         containerViewStyle={styles.container}
         buttonStyle={[styles.button, isActive && styles.active]}
         {...rest}
@@ -44,4 +45,4 @@ class DrawerButton extends React.PureComponent<Props> {
   }
 }
 
-export default DrawerButton;
+export default MenuButton;

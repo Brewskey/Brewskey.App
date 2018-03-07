@@ -7,7 +7,6 @@ import { useStrict as mobxUseStrict } from 'mobx';
 import config from './config';
 import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
-import PourButton from './components/PourButton';
 import NFCModal from './components/modals/NFCModal';
 import AuthStore from './stores/AuthStore';
 import AppSettingsStore from './stores/AppSettingsStore';
@@ -33,8 +32,7 @@ class App extends React.Component<{}> {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <AppRouter rootRef={ref => NavigationService.setNavigator(ref)} />
-        <PourButton />
+        <AppRouter ref={ref => NavigationService.setNavigator(ref)} />
         <NFCModal />
       </SafeAreaView>
     );

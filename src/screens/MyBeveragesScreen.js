@@ -25,6 +25,7 @@ class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
           rightComponent={
             <HeaderNavigationButton name="add" toRoute="newBeverage" />
           }
+          showBackButton
           title="Homebrew"
         />
         <BeveragesList
