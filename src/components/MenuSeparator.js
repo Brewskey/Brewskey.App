@@ -2,17 +2,16 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { COLORS } from '../../theme';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
-  seperator: {
+  separator: {
     backgroundColor: COLORS.secondary2,
     height: 1,
-    marginVertical: 10,
     width: '100%',
   },
 });
 
-const DrawerSeparator = () => <View style={styles.seperator} />;
+const DrawerSeparator = () => <View style={styles.separator} />;
 
 export default DrawerSeparator;

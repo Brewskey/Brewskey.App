@@ -44,7 +44,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
 
     return (
       <Container>
-        <Header title="Settings" />
+        <Header showBackButton title="Settings" />
         <LoaderPickerField
           enabled={this._hasOrganizations}
           itemsLoader={OrganizationStore.getMany()}

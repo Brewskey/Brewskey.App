@@ -26,7 +26,7 @@ class MyProfileScreen extends React.Component<{}> {
     const userID = nullthrows(AuthStore.userID);
     return (
       <Container>
-        <Header title="My profile" />
+        <Header showBackButton title="My profile" />
         <BeveragePoursList
           ListHeaderComponent={
             <View>

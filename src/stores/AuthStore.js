@@ -7,8 +7,8 @@ import { action, autorun, computed, runInAction, observable } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
-import PourButtonStore from './PourButtonStore';
 import { UNAUTH_ERROR_CODE } from '../constants';
+import NotificationsStore from './NotificationsStore';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
@@ -45,14 +45,14 @@ class AuthStore {
   constructor() {
     // todo may be it better to use reaction here
     // it may help to avoid isInitialized prop, but I'm not sure
-    autorun(() => {
+    autorun(async () => {
       if (!this.isInitialized) {
         return;
       }
       if (this.isAuthorized) {
-        NavigationService.reset('main');
+        NavigationService.navigate('main');
       } else {
-        NavigationService.reset('login');
+        NavigationService.navigate('login');
       }
     });
 
@@ -67,7 +67,6 @@ class AuthStore {
   clearAuthState = () => {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-    PourButtonStore.hide();
   };
 
   @action
@@ -83,7 +82,6 @@ class AuthStore {
     });
   };
 
-  // todo handle async
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
     const { access_token, id, roles, userName } = await authApi.login(
@@ -98,6 +96,7 @@ class AuthStore {
     };
 
     this.setAuthState(authState);
+    await NotificationsStore.register();
   };
 
   @action
@@ -107,7 +106,6 @@ class AuthStore {
     // todo move json stringify to helpers
     // todo may be move to reaction
     AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authState));
-    PourButtonStore.show();
   };
 
   @computed

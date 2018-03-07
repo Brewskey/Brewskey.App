@@ -1927,9 +1927,9 @@ eslint-module-utils@^2.1.1:
     debug "^2.6.8"
     pkg-dir "^1.0.0"
 
-eslint-plugin-flowtype@^2.37.0:
-  version "2.41.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.41.0.tgz#fd5221c60ba917c059d7ef69686a99cca09fd871"
+eslint-plugin-flowtype@^2.46.1:
+  version "2.46.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-flowtype/-/eslint-plugin-flowtype-2.46.1.tgz#c4f81d580cd89c82bc3a85a1ccf4ae3a915143a4"
   dependencies:
     lodash "^4.15.0"
 
@@ -4844,9 +4844,9 @@ react-native@0.53.0:
     xmldoc "^0.4.0"
     yargs "^9.0.0"
 
-react-navigation@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.2.0.tgz#2c722ba64dd8554941211de926b2443f8e7e828c"
+react-navigation@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/react-navigation/-/react-navigation-1.4.0.tgz#2e1ec70a5d37af78d4b2cab588caf179b2b16859"
   dependencies:
     clamp "^1.0.1"
     hoist-non-react-statics "^2.2.0"

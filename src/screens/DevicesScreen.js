@@ -34,6 +34,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
               toRoute="wifiSetup"
             />
           }
+          showBackButton
           title="Devices"
         />
         <DevicesList

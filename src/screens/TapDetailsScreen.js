@@ -69,7 +69,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
 
 const LoadingComponent = () => (
   <Container>
-    <Header showBackButton />
+    <Header showBackButton title="Tap" />
     <LoadingIndicator />
   </Container>
 );
