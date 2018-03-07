@@ -13,6 +13,7 @@ import { observer } from 'mobx-react';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderBeverageDetails from '../components/BeverageDetailsLoader';
 import KegsList from '../components/KegsList';
+import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 
 type InjectedProps = {|
@@ -46,10 +47,12 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
         ListHeaderComponent={
           <View>
             {noFlowSensorWarning}
-            <LoaderBeverageDetails
-              loader={this._currentBeverageLoader}
-              tapId={tapId}
-            />
+            <Section bottomPadded>
+              <LoaderBeverageDetails
+                loader={this._currentBeverageLoader}
+                tapId={tapId}
+              />
+            </Section>
             <SectionHeader title="Past Kegs" />
           </View>
         }

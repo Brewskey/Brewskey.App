@@ -5,16 +5,16 @@ import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { ScrollView } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { List, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import { OrganizationStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import LoaderPickerField from '../common/PickerField/LoaderPickerField';
-
+import Section from '../common/Section';
 import PickerField from '../common/PickerField';
 
 type InjectedProps = {|
@@ -45,24 +45,30 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Settings" />
-        <LoaderPickerField
-          enabled={this._hasOrganizations}
-          itemsLoader={OrganizationStore.getMany()}
-          key="organization"
-          label="Selected Organization"
-          name="organization"
-          onChange={onOrganizationChange}
-          placeholder="None"
-          value={selectedOrganizationID}
-        >
-          {(items: Array<Organization>): Array<React.Node> =>
-            items.map(({ id, name }: Organization): React.Node => (
-              <PickerField.Item key={id} label={`${id} - ${name}`} value={id} />
-            ))
-          }
-        </LoaderPickerField>
-        <List>
-          <KeyboardAwareScrollView>
+        <ScrollView>
+          <Section bottomPadded>
+            <LoaderPickerField
+              enabled={this._hasOrganizations}
+              itemsLoader={OrganizationStore.getMany()}
+              key="organization"
+              label="Selected Organization"
+              name="organization"
+              onChange={onOrganizationChange}
+              placeholder="None"
+              value={selectedOrganizationID}
+            >
+              {(items: Array<Organization>): Array<React.Node> =>
+                items.map(({ id, name }: Organization): React.Node => (
+                  <PickerField.Item
+                    key={id}
+                    label={`${id} - ${name}`}
+                    value={id}
+                  />
+                ))
+              }
+            </LoaderPickerField>
+          </Section>
+          <Section>
             <ListItem
               title="Multi account mode"
               hideChevron
@@ -77,8 +83,8 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               switched={isManageTapsEnabled}
               title="Manage taps"
             />
-          </KeyboardAwareScrollView>
-        </List>
+          </Section>
+        </ScrollView>
       </Container>
     );
   }

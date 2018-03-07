@@ -39,6 +39,7 @@ import WifiSetupScreen from './screens/WifiSetupScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import MenuScreen from './screens/MenuScreen';
 import StatsScreen from './screens/StatsScreen';
+import HelpScreen from './screens/HelpScreen';
 
 /* eslint-disable sorting/sort-object-props */
 const AppRouter = SwitchNavigator(
@@ -102,6 +103,7 @@ const AppRouter = SwitchNavigator(
                 headerMode: 'none',
               },
             ),
+            help: HelpScreen,
             settings: StackNavigator(
               {
                 settings: SettingsScreen,

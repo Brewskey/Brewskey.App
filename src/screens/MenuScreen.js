@@ -9,7 +9,6 @@ import Container from '../common/Container';
 import Section from '../common/Section';
 import Header from '../common/Header';
 import MenuUserBlock from '../components/MenuUserBlock';
-import MenuButton from '../components/MenuButton';
 import MenuSeparator from '../components/MenuSeparator';
 import MenuLogoutButton from '../components/MenuLogoutButton';
 import MenuNavigationButton from '../components/MenuNavigationButton';
@@ -61,7 +60,11 @@ class MenuScreen extends React.Component<{}> {
                 <MenuSeparator key="separator" />
               </React.Fragment>
             )}
-            <MenuButton icon={{ name: 'help' }} title="Help" />
+            <MenuNavigationButton
+              icon={{ name: 'help' }}
+              routeName="help"
+              title="Help"
+            />
             <MenuSeparator />
             <MenuLogoutButton />
           </Section>

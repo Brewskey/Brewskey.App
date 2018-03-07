@@ -9,9 +9,8 @@ const styles = StyleSheet.create({
   title: {
     ...TYPOGRAPHY.secondary,
     backgroundColor: COLORS.secondary,
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.secondary3,
-    borderTopWidth: 1,
     fontWeight: 'bold',
     paddingVertical: 12,
     textAlign: 'center',

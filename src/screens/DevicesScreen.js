@@ -9,6 +9,7 @@ import SectionContent from '../common/SectionContent';
 import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
 import Container from '../common/Container';
+import Section from '../common/Section';
 import AuthStore from '../stores/AuthStore';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
@@ -44,12 +45,14 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
             ],
           }}
           ListHeaderComponent={
-            <SectionContent paddedHorizontal paddedVertical>
-              <Button
-                onPress={this._onWifiSetupButtonPress}
-                title="Setup WiFi on Brewskey box"
-              />
-            </SectionContent>
+            <Section bottomPadded>
+              <SectionContent paddedHorizontal paddedVertical>
+                <Button
+                  onPress={this._onWifiSetupButtonPress}
+                  title="Setup WiFi on Brewskey box"
+                />
+              </SectionContent>
+            </Section>
           }
         />
       </Container>

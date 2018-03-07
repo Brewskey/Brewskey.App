@@ -9,6 +9,7 @@ import AuthStore from '../stores/AuthStore';
 import AvatarPicker from '../components/AvatarPicker';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
 import Container from '../common/Container';
+import Section from '../common/Section';
 import Header from '../common/Header';
 import SectionHeader from '../common/SectionHeader';
 import UserBadges from '../components/UserBadges';
@@ -30,11 +31,15 @@ class MyProfileScreen extends React.Component<{}> {
         <BeveragePoursList
           ListHeaderComponent={
             <View>
-              <View style={styles.avatarContainer}>
-                <AvatarPicker />
-              </View>
-              <SectionHeader title="Badges" />
-              <UserBadges userID={userID} />
+              <Section bottomPadded>
+                <View style={styles.avatarContainer}>
+                  <AvatarPicker />
+                </View>
+              </Section>
+              <Section bottomPadded>
+                <SectionHeader title="Badges" />
+                <UserBadges userID={userID} />
+              </Section>
               <SectionHeader title="Recent Pours" />
             </View>
           }
