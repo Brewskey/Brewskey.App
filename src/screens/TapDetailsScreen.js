@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID, Tap } from 'brewskey.js-api';
+import type { EntityID, FlowSensor, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
