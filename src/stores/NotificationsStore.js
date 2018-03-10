@@ -128,8 +128,17 @@ class NotificationsStore {
   handleInitialNotification = async () => {
     // handle case when the app is killed and we launch it by clicking
     // on incoming notifications.
-    const initialNotification = await FCM.getInitialNotification();
-    initialNotification && this._onRawNotification(initialNotification);
+    // the timeout is a workaround to avoid the warning:
+    // "Tried to use permissions API while not attached to an Activity"
+    // https://github.com/facebook/react-native/blob/master/ReactAndroid/src/main/java/com/facebook/react/modules/permissions/PermissionsModule.java
+    // https://github.com/facebook/react-native/issues/13439
+    // it appears sometimes because of race conditions between native/js thread probably.
+    // they use timeout even in react-native-fcm example app :(
+    // https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/app/App.js#L44
+    setTimeout(async () => {
+      const initialNotification = await FCM.getInitialNotification();
+      initialNotification && this._onRawNotification(initialNotification);
+    }, 500);
   };
 
   registerToken = async () => {
