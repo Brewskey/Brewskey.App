@@ -8,7 +8,6 @@ import { withNavigation } from 'react-navigation';
 import MenuButton from './MenuButton';
 
 type Props = {
-  onPress: () => void,
   routeName: string,
   // MenuButtonProps
 };

@@ -16,22 +16,31 @@ const styles = StyleSheet.create({
 
 type Props = {|
   icon: { name: string, type: string },
+  iconContainerComponent?: React.Component<any>,
   index: number,
   isFocused: boolean,
   onPress: (index: number) => void,
 |};
 
 class TabBarButton extends React.PureComponent<Props> {
+  static defaultProps = {
+    iconContainerComponent: TouchableItem,
+  };
+
   _onPress = () => this.props.onPress(this.props.index);
 
   render() {
-    const { icon: { name, type }, isFocused } = this.props;
+    const {
+      icon: { name, type },
+      iconContainerComponent,
+      isFocused,
+    } = this.props;
 
     return (
       <Icon
         borderless
         color={isFocused ? COLORS.primary2 : COLORS.secondary3}
-        component={TouchableItem}
+        component={iconContainerComponent}
         containerStyle={styles.container}
         name={name}
         onPress={this._onPress}

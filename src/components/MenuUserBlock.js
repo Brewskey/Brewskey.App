@@ -3,6 +3,7 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import nullthrows from 'nullthrows';
 import { withNavigation } from 'react-navigation';
 import { StyleSheet, Text, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
@@ -44,9 +45,9 @@ class MenuUserBlock extends InjectedComponent<InjectedProps> {
     return (
       <TouchableItem borderless onPress={this._onPress}>
         <View style={styles.container}>
-          <UserAvatar userName={AuthStore.userName} />
+          <UserAvatar userName={nullthrows(AuthStore.userName)} />
           <View style={styles.content}>
-            <Text style={styles.NameText}>{AuthStore.userName}</Text>
+            <Text style={styles.nameText}>{AuthStore.userName}</Text>
             <Text style={styles.goToProfileText}>Go to profile</Text>
           </View>
         </View>
