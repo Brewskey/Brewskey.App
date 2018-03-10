@@ -26,6 +26,6 @@ const ListEmptyComponent = ({ message }: Props) => (
   <View style={styles.container}>
     <Text style={styles.messageText}>{message}</Text>
   </View>
-  );
+);
 
 export default ListEmptyComponent;

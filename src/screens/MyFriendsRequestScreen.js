@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import NotImplementedPlaceholder from '../common/NotImplementedPlaceholder';
 
 class MyFriendsRequestScreen extends React.Component<{}> {
   static navigationOptions = {
@@ -9,11 +9,7 @@ class MyFriendsRequestScreen extends React.Component<{}> {
   };
 
   render() {
-    return (
-      <View>
-        <Text>Request screen</Text>
-      </View>
-    );
+    return <NotImplementedPlaceholder />;
   }
 }
 

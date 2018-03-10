@@ -12,7 +12,6 @@ type Props = {|
   size: 'large' | 'small',
 |};
 
-// todo maybe pass achievement instead of type, it will simplify things a bit
 class BadgeIcon extends React.PureComponent<Props> {
   static defaultProps = {
     size: 'small',

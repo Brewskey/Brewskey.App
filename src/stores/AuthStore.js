@@ -67,6 +67,7 @@ class AuthStore {
   clearAuthState = () => {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+    NotificationsStore.unregisterToken();
   };
 
   @action
@@ -96,7 +97,7 @@ class AuthStore {
     };
 
     this.setAuthState(authState);
-    await NotificationsStore.register();
+    await NotificationsStore.registerToken();
   };
 
   @action

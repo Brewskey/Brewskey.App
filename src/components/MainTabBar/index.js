@@ -8,6 +8,7 @@ import { NavigationActions } from 'react-navigation';
 import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
+import NotificationsIconContainer from './NotificationsIconContainer';
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +79,7 @@ class MainTabBar extends React.Component<Props> {
         <PourButton />
         <TabBarButton
           icon={{ name: 'notifications' }}
+          iconContainerComponent={NotificationsIconContainer}
           index={tabRouteIndexByName.notifications}
           isFocused={currentIndex === tabRouteIndexByName.notifications}
           onPress={this._onTabPress}
