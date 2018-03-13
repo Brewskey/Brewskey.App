@@ -9,6 +9,7 @@ import NavigationService from '../NavigationService';
 import authApi from '../authApi';
 import { UNAUTH_ERROR_CODE } from '../constants';
 import NotificationsStore from './NotificationsStore';
+import Signalr from '../signalr';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
@@ -50,6 +51,7 @@ class AuthStore {
         return;
       }
       if (this.isAuthorized) {
+        await Signalr.startAll({ access_token: this.token });
         NavigationService.navigate('main');
       } else {
         NavigationService.navigate('login');
@@ -67,6 +69,7 @@ class AuthStore {
   clearAuthState = () => {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+    Signalr.stopAll();
     NotificationsStore.unregisterToken();
   };
 
