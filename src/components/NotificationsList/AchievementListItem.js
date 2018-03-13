@@ -1,7 +1,7 @@
 // @flow
 
 import type { NewAchievementNotification } from '../../stores/NotificationsStore';
-import type { props as NotificationListItemProps } from './NotificationListItem';
+import type { Props as NotificationListItemProps } from './NotificationListItem';
 
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
@@ -17,9 +17,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const AchievementListItem = (
-  props: NotificationListItemProps<NewAchievementNotification>,
-) => {
+type Props = {
+  ...NotificationListItemProps,
+  notification: NewAchievementNotification,
+};
+
+const AchievementListItem = (props: Props) => {
   const { notification: { achievementType } } = props;
   const badge = BADGE_BY_TYPE[achievementType];
 

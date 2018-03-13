@@ -1,6 +1,6 @@
 // @flow
 
-import type { Device, Tap, TapMutator } from 'brewskey.js-api';
+import type { Device, EntityID, Tap, TapMutator } from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';

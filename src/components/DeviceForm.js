@@ -3,6 +3,7 @@
 import type {
   Device,
   DeviceMutator,
+  EntityID,
   LoadObject,
   Location,
 } from 'brewskey.js-api';

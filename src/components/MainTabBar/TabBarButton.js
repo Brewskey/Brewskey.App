@@ -15,8 +15,8 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  icon: { name: string, type: string },
-  iconContainerComponent?: React.Component<any>,
+  icon: { name: string, type?: string },
+  iconContainerComponent?: React.ComponentType<any>,
   index: number,
   isFocused: boolean,
   onPress: (index: number) => void,

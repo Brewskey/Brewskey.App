@@ -5,15 +5,15 @@ import * as React from 'react';
 // eslint-disable-next-line
 import RNSwipeableRow from 'SwipeableRow';
 
-type SwipeableProps<TEntity> = {
+type SwipeableProps = {
   isOpen: boolean,
   maxSwipeDistance: number,
   onClose: () => void,
-  onOpen: (rowKey: string, item: TEntity) => void,
+  onOpen: (rowKey: string) => void,
   onSwipeEnd?: () => void,
   onSwipeStart?: () => void,
   preventSwipeRight?: boolean,
-  rowKey?: string,
+  rowKey: string,
   shouldBounceOnMount: boolean,
   swipeThreshold?: number,
 };
@@ -30,7 +30,7 @@ type Props<TEntity, TExtraProps = {}> = {
   ...TExtraProps,
   rowItemComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   slideoutComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
-} & SwipeableProps<TEntity> &
+} & SwipeableProps &
   RowItemProps<TEntity>;
 
 class SwipeableRow<TEntity> extends React.PureComponent<Props<TEntity>> {
@@ -39,7 +39,7 @@ class SwipeableRow<TEntity> extends React.PureComponent<Props<TEntity>> {
     preventSwipeRight: true,
   };
 
-  _onOpen = (): void => this.props.onOpen(this.props.rowKey, this.props.item);
+  _onOpen = (): void => this.props.onOpen(this.props.rowKey);
 
   render() {
     const {

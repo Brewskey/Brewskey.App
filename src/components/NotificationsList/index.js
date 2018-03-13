@@ -7,7 +7,6 @@ import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import List from '../../common/List';
 import ListEmptyComponent from '../../common/ListEmptyComponent';
-import SwipeableRow from '../../common/SwipeableRow';
 import NotificationsStore from '../../stores/NotificationsStore';
 import LowKegLevelListItem from './LowKegLevelListItem';
 import AchievementListItem from './AchievementListItem';
@@ -23,22 +22,26 @@ const LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE = {
 class NotificationsList extends React.Component<{}> {
   _keyExtractor = notification => notification.id;
 
-  _onItemOpen = (_, item) => {
-    NotificationsStore.deleteByID(item.id);
+  _onItemOpen = (notification: Notification) => {
+    NotificationsStore.deleteByID(notification.id);
   };
 
   _onNotificationReadEnd = (notification: Notification) =>
     NotificationsStore.setRead(notification.id);
 
-  _renderItem = ({ item }: { item: Notification }): React.Element<any> => (
-    <SwipeableRow
-      item={item}
-      onNotificationReadEnd={this._onNotificationReadEnd}
-      onOpen={this._onItemOpen}
-      rowItemComponent={SwipeableRowItem}
-      slideoutComponent={() => <View />}
-    />
-  );
+  _renderItem = ({ item }: { item: Notification }): React.Element<any> => {
+    const ListItemComponent =
+      LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE[item.type] || View;
+
+    return (
+      <ListItemComponent
+        notification={(item: any)}
+        onOpen={this._onItemOpen}
+        onPress={NotificationsStore.onNotificationPress}
+        onReadEnd={this._onNotificationReadEnd}
+      />
+    );
+  };
 
   render() {
     return (
@@ -54,24 +57,4 @@ class NotificationsList extends React.Component<{}> {
   }
 }
 
-type SwipeableRowProps<TNotification: Notification> = {
-  item: TNotification,
-  onNotificationReadEnd: (notification: TNotification) => void,
-};
-
-const SwipeableRowItem = <TNotification: Notification>({
-  item: notification,
-  onNotificationReadEnd,
-}: SwipeableRowProps<TNotification>) => {
-  const ListItemComponent =
-    LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE[notification.type] || View;
-
-  return (
-    <ListItemComponent
-      notification={notification}
-      onPress={NotificationsStore.onNotificationPress}
-      onReadEnd={onNotificationReadEnd}
-    />
-  );
-};
 export default NotificationsList;
