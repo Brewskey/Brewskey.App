@@ -1121,6 +1121,7 @@ braces@^1.8.2:
   resolved "git://github.com/Brewskey/brewskey.js-api.git#f2c78c2400412f60c753dd1c30ff015c12b1eadc"
   dependencies:
     babel-preset-react-hmre "^1.1.1"
+    nullthrows "^1.0.0"
     odata "git+https://github.com/Brewskey/o.js.git"
 
 brorand@^1.0.1:
@@ -3357,6 +3358,14 @@ jest@21.2.1:
   dependencies:
     jest-cli "^21.2.1"
 
+jquery-deferred@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/jquery-deferred/-/jquery-deferred-0.3.1.tgz#596eca1caaff54f61b110962b23cafea74c35355"
+
+jquery@^2.2.0:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02"
+
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -3988,6 +3997,12 @@ morgan@~1.6.1:
     depd "~1.0.1"
     on-finished "~2.3.0"
     on-headers "~1.0.0"
+
+ms-signalr-client@^2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/ms-signalr-client/-/ms-signalr-client-2.2.7.tgz#837c93cbb5c99f6312748c97c81f980fdffe07c8"
+  dependencies:
+    jquery "^2.2.0"
 
 ms@0.7.1:
   version "0.7.1"
@@ -4764,6 +4779,13 @@ react-native-safe-area-view@^0.7.0:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.7.0.tgz#38f5ab9368d6ef9e5d18ab64212938af3ec39421"
   dependencies:
     hoist-non-react-statics "^2.3.1"
+
+react-native-signalr@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-native-signalr/-/react-native-signalr-1.0.6.tgz#b1af795f5974f05fbf767870e1ce85f6d6b546f7"
+  dependencies:
+    jquery-deferred "^0.3.1"
+    ms-signalr-client "^2.2.7"
 
 react-native-swiper@^1.5.13:
   version "1.5.13"
