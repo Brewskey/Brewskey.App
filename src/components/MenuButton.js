@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+export type Props = {
   icon: { name: string, type?: string },
   isActive?: boolean,
   // other RNEButton Props

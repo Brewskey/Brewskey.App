@@ -25,8 +25,7 @@ const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
 
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 
-export type BaseNotification<TNotificationExtraProps: {}> = {
-  ...TNotificationExtraProps,
+type BaseNotificationProps = {
   body: string,
   date: Date,
   id: string,
@@ -34,35 +33,23 @@ export type BaseNotification<TNotificationExtraProps: {}> = {
   title: string,
 };
 
-export type LowKegLevelNotificationExtraProps = {
+export type LowKegLevelNotification = BaseNotificationProps & {
   beverageId: EntityID,
   beverageName: string,
   tapId: EntityID,
   type: 'lowKegLevel',
 };
 
-export type NewAchievementNotificationExtraProps = {
+export type NewAchievementNotification = BaseNotificationProps & {
   achievementType: AchievementType,
   type: 'newAchievement',
 };
 
-export type NewFriendRequestNotificationExtraProps = {
+export type NewFriendRequestNotification = BaseNotificationProps & {
   friendId: EntityID,
-  type: 'newFriendRequest',
   friendUserName: string,
+  type: 'newFriendRequest',
 };
-
-export type LowKegLevelNotification = BaseNotification<
-  LowKegLevelNotificationExtraProps,
->;
-
-export type NewAchievementNotification = BaseNotification<
-  NewAchievementNotificationExtraProps,
->;
-
-export type NewFriendRequestNotification = BaseNotification<
-  NewFriendRequestNotificationExtraProps,
->;
 
 export type Notification =
   | LowKegLevelNotification
@@ -72,7 +59,7 @@ export type Notification =
 class NotificationsStore {
   @observable _navigation: ?Navigation = null;
   @observable
-  _notificationsByID: ObservableMap<BaseNotification<any>> = observable.map();
+  _notificationsByID: ObservableMap<Notification> = observable.map();
 
   constructor() {
     AppState.addEventListener('change', nextAppState => {
@@ -88,31 +75,32 @@ class NotificationsStore {
 
       reaction(
         () => this._notificationsByID.values(),
-        notifications => {
+        (notifications: Array<Notification>) => {
           AsyncStorage.setItem(
             NOTIFICATIONS_STORAGE_KEY,
             JSON.stringify(notifications),
           );
         },
-        {
+        ({
           compareStructural: true,
-        },
+        }: any),
       );
     })();
   }
 
   @computed
   get notifications(): Array<Notification> {
-    return this._notificationsByID
-      .values()
-      .sort((a, b): number => new Date(b.date) - new Date(a.date));
+    return Array.from(this._notificationsByID.values()).sort(
+      (a: Notification, b: Notification): number =>
+        new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
   }
 
   @computed
   get unreadCount(): number {
     return this._notificationsByID
       .values()
-      .filter(({ isRead }: Notifications) => !isRead).length;
+      .filter(({ isRead }: Notification) => !isRead).length;
   }
 
   @computed
@@ -187,10 +175,13 @@ class NotificationsStore {
       return;
     }
 
-    this._notificationsByID.set(notificationID, {
-      ...notification,
-      isRead: true,
-    });
+    this._notificationsByID.set(
+      notificationID,
+      ({
+        ...notification,
+        isRead: true,
+      }: any),
+    );
   };
 
   @action
@@ -202,15 +193,15 @@ class NotificationsStore {
       NOTIFICATIONS_STORAGE_KEY,
     );
 
-    const notifications = notificationsString
-      ? JSON.parse(notificationsString).map(notification => [
-          notification.id,
-          notification,
-        ])
+    const notificationEntries = notificationsString
+      ? JSON.parse(notificationsString).map((notification: Notification): [
+          string,
+          Notification,
+        ] => [notification.id, notification])
       : [];
 
     runInAction(() => {
-      this._notificationsByID.merge((notifications: any));
+      this._notificationsByID.merge((notificationEntries: any));
     });
   };
 
@@ -254,10 +245,9 @@ class NotificationsStore {
   _handleNotificationPressByType = (notification: Notification) => {
     switch (notification.type) {
       case 'lowKegLevel': {
-        const { tapId }: LowKegLevelNotification = (notification: any);
         KegStore.flushCache();
         nullthrows(this._navigation).navigate('tapDetails', {
-          id: tapId,
+          id: notification.tapId,
         });
         break;
       }

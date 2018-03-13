@@ -1,6 +1,7 @@
 // @flow
 
 import type { Navigation } from '../types';
+import type { Props as MenuButtonProps } from './MenuButton';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
@@ -9,8 +10,7 @@ import MenuButton from './MenuButton';
 
 type Props = {
   routeName: string,
-  // MenuButtonProps
-};
+} & MenuButtonProps;
 
 type InjectedProps = {|
   navigation: Navigation,
