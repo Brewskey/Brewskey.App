@@ -4,7 +4,7 @@ import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
-import { AppState, AsyncStorage } from 'react-native';
+import { AppState } from 'react-native';
 import {
   action,
   computed,
@@ -17,8 +17,8 @@ import nullthrows from 'nullthrows';
 import FCM, { FCMEvent } from 'react-native-fcm';
 import DeviceInfo from 'react-native-device-info';
 import AuthStore from './AuthStore';
+import Storage from '../Storage';
 import { AchievementStore, KegStore } from './DAOStores';
-import { fetchJSON } from './ApiRequestStores/makeRequestApiStore';
 import CONFIG from '../config';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
@@ -76,10 +76,10 @@ class NotificationsStore {
       reaction(
         () => this._notificationsByID.values(),
         (notifications: Array<Notification>) => {
-          AsyncStorage.setItem(
-            NOTIFICATIONS_STORAGE_KEY,
-            JSON.stringify(notifications),
-          );
+          if (!AuthStore.isAuthorized) {
+            return;
+          }
+          Storage.setForCurrentUser(NOTIFICATIONS_STORAGE_KEY, notifications);
         },
         ({
           compareStructural: true,
@@ -133,7 +133,8 @@ class NotificationsStore {
     const fcmToken = await FCM.getFCMToken();
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
-    await fetchJSON(`${BASE_PUSH_URL}/register`, {
+    // eslint-disable-next-line
+    await fetch(`${BASE_PUSH_URL}/register`, {
       body: JSON.stringify({
         deviceToken: fcmToken,
         installationId: deviceUniqueID,
@@ -149,10 +150,27 @@ class NotificationsStore {
   };
 
   unregisterToken = () =>
-    fetchJSON({
+    // eslint-disable-next-line
+    fetch(`${BASE_PUSH_URL}/unregister`, {
+      body: JSON.stringify({
+        installationId: DeviceInfo.getUniqueID(),
+        platform: 'fcm',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
       method: 'post',
-      url: `${BASE_PUSH_URL}/unregister`,
     });
+
+  onLogin = () => {
+    this.registerToken();
+    this._rehydrateNotifications();
+  };
+
+  onLogout = () => {
+    this.unregisterToken();
+    this.deleteAll();
+  };
 
   onNotificationPress = async (notification: Notification): Promise<void> => {
     await this._waitForInitializationFinish();
@@ -189,12 +207,13 @@ class NotificationsStore {
     this._notificationsByID.set(notification.id, notification);
 
   _rehydrateNotifications = async () => {
-    const notificationsString = await AsyncStorage.getItem(
+    this._waitForInitializationFinish();
+    const notifications = await Storage.getForCurrentUser(
       NOTIFICATIONS_STORAGE_KEY,
     );
 
-    const notificationEntries = notificationsString
-      ? JSON.parse(notificationsString).map((notification: Notification): [
+    const notificationEntries = notifications
+      ? notifications.map((notification: Notification): [
           string,
           Notification,
         ] => [notification.id, notification])
@@ -214,7 +233,7 @@ class NotificationsStore {
       when(() => this._isInitialized, () => resolve());
     });
 
-  _onRawNotification = rawNotification => {
+  _onRawNotification = (rawNotification: Object) => {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
     if (rawNotification.fcm.action === 'android.intent.action.MAIN') {

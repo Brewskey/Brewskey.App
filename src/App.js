@@ -9,7 +9,6 @@ import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
 import NFCModal from './components/modals/NFCModal';
 import AuthStore from './stores/AuthStore';
-import AppSettingsStore from './stores/AppSettingsStore';
 import NotificationsStore from './stores/NotificationsStore';
 
 mobxUseStrict(true);
@@ -27,7 +26,6 @@ const styles = StyleSheet.create({
 class App extends React.Component<{}> {
   async componentWillMount() {
     await AuthStore.initialize();
-    await AppSettingsStore.initialize();
   }
 
   componentDidMount() {

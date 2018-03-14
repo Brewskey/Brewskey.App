@@ -70,7 +70,7 @@ class AuthStore {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
     Signalr.stopAll();
-    NotificationsStore.unregisterToken();
+    NotificationsStore.onLogout();
   };
 
   @action
@@ -100,7 +100,7 @@ class AuthStore {
     };
 
     this.setAuthState(authState);
-    await NotificationsStore.registerToken();
+    NotificationsStore.onLogin();
   };
 
   @action

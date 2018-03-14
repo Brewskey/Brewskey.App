@@ -2,10 +2,11 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
-import { AsyncStorage } from 'react-native';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
+import AuthStore from './AuthStore';
 import { OrganizationStore, waitForLoaded } from './DAOStores';
+import Storage from '../Storage';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
@@ -25,12 +26,22 @@ class AppSettingsStore {
     selectedOrganizationID: null,
   };
 
-  @action
-  initialize = async (): Promise<void> => {
-    const appSettingsString = await AsyncStorage.getItem(
+  constructor() {
+    reaction(
+      () => AuthStore.isAuthorized,
+      (isAuthorized: boolean) => {
+        if (!isAuthorized) {
+          return;
+        }
+        this._rehydrateAppSettings();
+      },
+    );
+  }
+
+  _rehydrateAppSettings = async () => {
+    const appSettings = await Storage.getForCurrentUser(
       APP_SETTINGS_STORAGE_KEY,
     );
-    const appSettings = appSettingsString && JSON.parse(appSettingsString);
 
     runInAction(() => {
       if (appSettings) {
@@ -81,10 +92,7 @@ class AppSettingsStore {
   @action
   updateAppSettings = (appSettings: $Shape<AppSettings>) => {
     this._appSettings = { ...this._appSettings, ...appSettings };
-    AsyncStorage.setItem(
-      APP_SETTINGS_STORAGE_KEY,
-      JSON.stringify(this._appSettings),
-    );
+    Storage.setForCurrentUser(APP_SETTINGS_STORAGE_KEY, this._appSettings);
   };
 
   @computed
