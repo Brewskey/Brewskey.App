@@ -34,32 +34,34 @@ class MenuScreen extends React.Component<{}> {
               routeName="myFriends"
               title="Friends"
             />
-            {AppSettingsStore.isManageTapsEnabled && (
-              <React.Fragment>
-                <MenuSeparator />
-                <MenuNavigationButton
-                  icon={{ name: 'map-marker', type: 'material-community' }}
-                  routeName="locations"
-                  title="Locations"
-                />
-                <MenuNavigationButton
-                  icon={{ name: 'stocking', type: 'material-community' }}
-                  routeName="taps"
-                  title="Taps"
-                />
-                <MenuNavigationButton
-                  icon={{ name: 'cube', type: 'material-community' }}
-                  routeName="devices"
-                  title="Brewskey boxes"
-                />
-                <MenuNavigationButton
-                  icon={{ name: 'beer', type: 'material-community' }}
-                  routeName="myBeverages"
-                  title="Homebrew"
-                />
-                <MenuSeparator key="separator" />
-              </React.Fragment>
-            )}
+            {AppSettingsStore.isManageTapsEnabled && [
+              <MenuSeparator key="separator1" />,
+              <MenuNavigationButton
+                icon={{ name: 'map-marker', type: 'material-community' }}
+                key="locations"
+                routeName="locations"
+                title="Locations"
+              />,
+              <MenuNavigationButton
+                icon={{ name: 'stocking', type: 'material-community' }}
+                key="taps"
+                routeName="taps"
+                title="Taps"
+              />,
+              <MenuNavigationButton
+                icon={{ name: 'cube', type: 'material-community' }}
+                key="devices"
+                routeName="devices"
+                title="Brewskey boxes"
+              />,
+              <MenuNavigationButton
+                icon={{ name: 'beer', type: 'material-community' }}
+                key="myBeverages"
+                routeName="myBeverages"
+                title="Homebrew"
+              />,
+              <MenuSeparator key="separator2" />,
+            ]}
             <MenuNavigationButton
               icon={{ name: 'help' }}
               routeName="help"
