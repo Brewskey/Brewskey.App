@@ -69,6 +69,7 @@ class NotificationsStore {
     });
 
     FCM.on(FCMEvent.Notification, this._onRawNotification);
+    this.registerToken();
 
     (async () => {
       await this._rehydrateNotifications();
@@ -134,7 +135,7 @@ class NotificationsStore {
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     // eslint-disable-next-line
-    await fetch(`${BASE_PUSH_URL}/register`, {
+    await fetch(`${BASE_PUSH_URL}/`, {
       body: JSON.stringify({
         deviceToken: fcmToken,
         installationId: deviceUniqueID,
@@ -145,21 +146,17 @@ class NotificationsStore {
         Authorization: `Bearer ${AuthStore.token || ''}`,
         'Content-Type': 'application/json',
       },
-      method: 'post',
+      method: 'PUT',
     });
   };
 
   unregisterToken = () =>
     // eslint-disable-next-line
-    fetch(`${BASE_PUSH_URL}/unregister`, {
-      body: JSON.stringify({
-        installationId: DeviceInfo.getUniqueID(),
-        platform: 'fcm',
-      }),
+    fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueID()}`, {
       headers: {
         'Content-Type': 'application/json',
       },
-      method: 'post',
+      method: 'DELETE',
     });
 
   onLogin = () => {
