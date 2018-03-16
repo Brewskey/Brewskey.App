@@ -1,13 +1,12 @@
 // @flow
 
-import type RootStore from './RootStore';
 import type { EntityID } from 'brewskey.js-api';
 
-import { AsyncStorage } from 'react-native';
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
-
-const { OrganizationDAO } = DAOApi;
+import AuthStore from './AuthStore';
+import { OrganizationStore, waitForLoaded } from './DAOStores';
+import Storage from '../Storage';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
@@ -20,8 +19,6 @@ type AppSettings = {|
 // todo somehow save settings for particular user and restore them after relogin?
 // or save user settings on the server?
 class AppSettingsStore {
-  _rootStore: RootStore;
-
   @observable
   _appSettings = {
     manageTapsEnabled: false,
@@ -29,16 +26,22 @@ class AppSettingsStore {
     selectedOrganizationID: null,
   };
 
-  constructor(rootStore: RootStore) {
-    this._rootStore = rootStore;
+  constructor() {
+    reaction(
+      () => AuthStore.isAuthorized,
+      (isAuthorized: boolean) => {
+        if (!isAuthorized) {
+          return;
+        }
+        this._rehydrateAppSettings();
+      },
+    );
   }
 
-  @action
-  initialize = async (): Promise<void> => {
-    const appSettingsString = await AsyncStorage.getItem(
+  _rehydrateAppSettings = async () => {
+    const appSettings = await Storage.getForCurrentUser(
       APP_SETTINGS_STORAGE_KEY,
     );
-    const appSettings = appSettingsString && JSON.parse(appSettingsString);
 
     runInAction(() => {
       if (appSettings) {
@@ -49,8 +52,8 @@ class AppSettingsStore {
         DAOApi.setOrganizationID(appSettings.selectedOrganizationID);
       } else if (this._appSettings.selectedOrganizationID === undefined) {
         (async () => {
-          const organizations = await OrganizationDAO.waitForLoaded(() =>
-            OrganizationDAO.fetchMany(),
+          const organizations = await waitForLoaded(() =>
+            OrganizationStore.getMany(),
           );
 
           if (organizations.length) {
@@ -89,10 +92,7 @@ class AppSettingsStore {
   @action
   updateAppSettings = (appSettings: $Shape<AppSettings>) => {
     this._appSettings = { ...this._appSettings, ...appSettings };
-    AsyncStorage.setItem(
-      APP_SETTINGS_STORAGE_KEY,
-      JSON.stringify(this._appSettings),
-    );
+    Storage.setForCurrentUser(APP_SETTINGS_STORAGE_KEY, this._appSettings);
   };
 
   @computed
@@ -111,4 +111,4 @@ class AppSettingsStore {
   }
 }
 
-export default AppSettingsStore;
+export default new AppSettingsStore();

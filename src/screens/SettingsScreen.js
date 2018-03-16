@@ -1,38 +1,38 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type AppSettingsStore from '../stores/AppSettingsStore';
 import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import { inject, observer } from 'mobx-react';
-import { List, ListItem } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import DAOApi from 'brewskey.js-api';
-import DAOEntityStore from '../stores/DAOEntityStore';
-import PickerField from '../components/PickerField';
+import { ScrollView } from 'react-native';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
+import { ListItem } from 'react-native-elements';
+import { OrganizationStore } from '../stores/DAOStores';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import AppSettingsStore from '../stores/AppSettingsStore';
+import LoaderPickerField from '../common/PickerField/LoaderPickerField';
+import Section from '../common/Section';
+import PickerField from '../common/PickerField';
 
 type InjectedProps = {|
   navigation: Navigation,
-  appSettingsStore: AppSettingsStore,
 |};
 
-@inject('appSettingsStore')
 @observer
 class SettingsScreen extends InjectedComponent<InjectedProps> {
-  _organizationStore: DAOEntityStore<Organization> = new DAOEntityStore(
-    DAOApi.OrganizationDAO,
-  );
-
-  static navigationOptions = {
-    title: 'Settings',
-  };
+  @computed
+  get _hasOrganizations(): boolean {
+    const organizationsLoader = OrganizationStore.getMany();
+    return (
+      organizationsLoader.hasValue() &&
+      organizationsLoader.getValueEnforcing().length > 0
+    );
+  }
 
   render() {
-    const organizationsLoader = this._organizationStore.allItemsLoader;
-    const organizations = organizationsLoader.getValue() || [];
     const {
       isManageTapsEnabled,
       isMultiAccountModeEnabled,
@@ -40,29 +40,35 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
       onToggleManageTaps,
       onToggleMultiAccountMode,
       selectedOrganizationID,
-    } = this.injectedProps.appSettingsStore;
+    } = AppSettingsStore;
+
     return (
-      <View>
-        {organizations.length < 1 ? null : (
-          <PickerField
-            key="organization"
-            label="Selected Organization"
-            name="organization"
-            onChange={onOrganizationChange}
-            placeholder="None"
-            value={selectedOrganizationID}
-          >
-            {organizations.map((organization: Organization): React.Node => (
-              <PickerField.Item
-                key={organization.id}
-                label={`${organization.id} - ${organization.name}`}
-                value={organization.id}
-              />
-            ))}
-          </PickerField>
-        )}
-        <List>
-          <KeyboardAwareScrollView>
+      <Container>
+        <Header showBackButton title="Settings" />
+        <ScrollView>
+          <Section bottomPadded>
+            <LoaderPickerField
+              enabled={this._hasOrganizations}
+              itemsLoader={OrganizationStore.getMany()}
+              key="organization"
+              label="Selected Organization"
+              name="organization"
+              onChange={onOrganizationChange}
+              placeholder="None"
+              value={selectedOrganizationID}
+            >
+              {(items: Array<Organization>): Array<React.Node> =>
+                items.map(({ id, name }: Organization): React.Node => (
+                  <PickerField.Item
+                    key={id}
+                    label={`${id} - ${name}`}
+                    value={id}
+                  />
+                ))
+              }
+            </LoaderPickerField>
+          </Section>
+          <Section>
             <ListItem
               title="Multi account mode"
               hideChevron
@@ -77,9 +83,9 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               switched={isManageTapsEnabled}
               title="Manage taps"
             />
-          </KeyboardAwareScrollView>
-        </List>
-      </View>
+          </Section>
+        </ScrollView>
+      </Container>
     );
   }
 }

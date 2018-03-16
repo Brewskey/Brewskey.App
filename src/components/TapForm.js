@@ -1,18 +1,18 @@
 // @flow
 
-import type { Device, Tap, TapMutator } from 'brewskey.js-api';
+import type { Device, EntityID, Tap, TapMutator } from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react';
-import DAOEntityStore from '../stores/DAOEntityStore';
-import { Button, FormValidationMessage } from 'react-native-elements';
+import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import PickerField from './PickerField';
+import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
+import DevicePicker from './DevicePicker';
 import { form, FormField } from '../common/form';
 
 const validate = (values: TapMutator): { [key: string]: string } => {
@@ -22,8 +22,8 @@ const validate = (values: TapMutator): { [key: string]: string } => {
     errors.name = 'Name is required';
   }
 
-  if (!values.device) {
-    errors.device = 'Brewskey box is required';
+  if (!values.deviceId) {
+    errors.deviceId = 'Brewskey box is required';
   }
 
   return errors;
@@ -40,12 +40,6 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
-  _deviceStore: DAOEntityStore<Device> = new DAOEntityStore(DAOApi.DeviceDAO);
-
-  componentWillMount() {
-    this._deviceStore.fetchMany();
-  }
-
   render() {
     const { submitButtonLabel, tap = {} } = this.props;
     const {
@@ -60,32 +54,16 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
       <KeyboardAwareScrollView>
         <FormField
           component={TextField}
-          initialValue={tap.name}
-          disabled={submitting}
-          name="name"
-          label="Name"
-        />
-        <FormField
-          component={TextField}
           initialValue={tap.description}
           name="description"
           label="Description"
         />
         <FormField
-          component={PickerField}
+          component={DevicePicker}
           initialValue={tap.device}
-          disabled={submitting}
-          name="device"
-          label="Brewskey box"
-        >
-          {this._deviceStore.allItems.map((device: Device): React.Node => (
-            <PickerField.Item
-              key={device.id}
-              label={device.name}
-              value={device}
-            />
-          ))}
-        </FormField>
+          name="deviceId"
+          parseOnSubmit={(value: Device): EntityID => value.id}
+        />
         <FormField
           component={CheckBoxField}
           initialValue={tap.hideLeaderboard}
@@ -109,11 +87,14 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
         />
         <FormField initialValue={tap.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid || pristine}
-          onPress={handleSubmit}
-          title={submitButtonLabel}
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid || pristine}
+            loading={submitting}
+            onPress={handleSubmit}
+            title={submitButtonLabel}
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }

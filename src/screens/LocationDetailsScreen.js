@@ -1,52 +1,98 @@
 // @flow
 
-import type { EntityID, LoadObject, Location } from 'brewskey.js-api';
+import type { EntityID, Location, LoadObject } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import DAOApi from 'brewskey.js-api';
-import { Text, View } from 'react-native';
+import { LocationStore } from '../stores/DAOStores';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
+import Container from '../common/Container';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import SectionContent from '../common/SectionContent';
+import SectionHeader from '../common/SectionHeader';
+import LoadingIndicator from '../common/LoadingIndicator';
+import LoaderComponent from '../common/LoaderComponent';
+import Header from '../common/Header';
+import LocationAddress from '../components/LocationAddress';
+import { TYPOGRAPHY } from '../theme';
+
+const styles = StyleSheet.create({
+  description: {
+    ...TYPOGRAPHY.paragraph,
+  },
+});
 
 type InjectedProps = {|
   id: EntityID,
-  entityLoader: LoadObject<Location>,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.LocationDAO)
-@withLoadingActivity()
 @observer
 class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
-  // todo find types for navigationOptions
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    title:
-      navigation.state.params.location && navigation.state.params.location.name,
-  });
-
-  componentDidMount() {
-    // todo with this solution title on header appears after some lag :/
-    const { entityLoader, navigation } = this.injectedProps;
-    navigation.setParams({ location: entityLoader.getValueEnforcing() });
+  @computed
+  get _locationLoader(): LoadObject<Location> {
+    return LocationStore.getByID(this.injectedProps.id);
   }
 
   render() {
-    const { entityLoader } = this.injectedProps;
-    const { description, name } = entityLoader.getValueEnforcing();
-
-    // todo prettify and move content to separate component
     return (
-      <View>
-        <Text>{name}</Text>
-        <Text>{description}</Text>
-      </View>
+      <LoaderComponent
+        loadedComponent={LoadedLocationDetails}
+        loader={this._locationLoader}
+        loadingComponent={LoadingLocationDetails}
+      />
     );
   }
 }
+
+const LoadingLocationDetails = () => (
+  <Container>
+    <Header showBackButton />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedLocationDetailsProps = {
+  value: Location,
+};
+
+const LoadedLocationDetails = ({
+  value: location,
+}: LoadedLocationDetailsProps) => {
+  const { description, id, name } = location;
+
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            params={{ id }}
+            toRoute="editLocation"
+          />
+        }
+        showBackButton
+        title={name}
+      />
+      <ScrollView>
+        <SectionHeader title="Address" />
+        <SectionContent paddedHorizontal>
+          <LocationAddress location={location} />
+        </SectionContent>
+        {description && [
+          <SectionHeader key="header" title="Description" />,
+          <SectionContent key="content" paddedHorizontal>
+            <Text style={styles.description}>{description}</Text>
+          </SectionContent>,
+        ]}
+      </ScrollView>
+    </Container>
+  );
+};
 
 export default LocationDetailsScreen;

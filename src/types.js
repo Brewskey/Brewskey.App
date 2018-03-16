@@ -2,6 +2,13 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
+import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
+
+export type Style = StyleObj;
+
+export type Section<TEntity> = { title: string } & SectionBase<TEntity>;
+
 // todo make the type annotation
 export type Navigation = Object;
 
@@ -31,4 +38,12 @@ export type NearbyLocation = {
   name: string,
   summary: ?string,
   taps: Array<NearbyTap>,
+};
+
+export type WifiNetwork = {
+  channel?: number,
+  index?: number,
+  password?: string,
+  security: number,
+  ssid: string,
 };

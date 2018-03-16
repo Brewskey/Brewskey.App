@@ -3,26 +3,29 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import HeaderIcon from '../common/HeaderIcon';
-import TapsList from '../components/TapsList';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import SectionTapsList from '../components/SectionTapsList';
 
 type Props = {|
   navigation: Navigation,
 |};
 
 class TapsScreen extends React.Component<Props> {
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    headerRight: (
-      <HeaderIcon
-        name="add"
-        onPress={(): void => navigation.navigate('newTap')}
-      />
-    ),
-    title: 'Taps',
-  });
-
   render() {
-    return <TapsList />;
+    return (
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderNavigationButton name="add" toRoute="newTap" />
+          }
+          showBackButton
+          title="Taps"
+        />
+        <SectionTapsList />
+      </Container>
+    );
   }
 }
 

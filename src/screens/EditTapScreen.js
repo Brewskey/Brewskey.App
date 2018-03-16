@@ -1,43 +1,46 @@
 // @flow
 
-import type { EntityID, LoadObject, Tap, TapMutator } from 'brewskey.js-api';
-import type { Navigation } from '../types';
+import type { EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
+import { TabNavigator } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
-import nullthrows from 'nullthrows';
-import DAOApi from 'brewskey.js-api';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import EditBasicTapScreen from './EditBasicTapScreen';
+import EditFlowSensorScreen from './EditFlowSensorScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import TapForm from '../components/TapForm';
+import EditKegScreen from './EditKegScreen';
+import theme from '../theme';
 
-type InjectedProps = {|
-  entityLoader: LoadObject<Tap>,
+/* eslint-disable sorting/sort-object-props */
+const EditTapRouter = TabNavigator(
+  {
+    editKegScreen: { screen: EditKegScreen },
+    editFlowSensor: { screen: EditFlowSensorScreen },
+    editTap: { screen: EditBasicTapScreen },
+  },
+  /* eslint-enable */
+  {
+    ...theme.tabBar,
+    lazy: true,
+  },
+);
+
+type InjectedProps = {
   id: EntityID,
-  navigation: Navigation,
-|};
+};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.TapDAO)
-@withLoadingActivity()
 class EditTapScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit tap',
-  };
-
-  _onFormSubmit = async (values: TapMutator) => {
-    DAOApi.TapDAO.put(nullthrows(values.id), values);
-    this.injectedProps.navigation.goBack(null);
-  };
-
   render() {
+    const { id } = this.injectedProps;
+
     return (
-      <TapForm
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit tap"
-        tap={this.injectedProps.entityLoader.getValueEnforcing()}
-      />
+      <Container>
+        <Header showBackButton title="Edit Tap" />
+        <EditTapRouter screenProps={{ tapId: id }} />
+      </Container>
     );
   }
 }

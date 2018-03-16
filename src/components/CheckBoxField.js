@@ -1,16 +1,17 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
-import { CheckBox, Text } from 'react-native';
+import { CheckBox, StyleSheet, Text, View } from 'react-native';
 
-const Container = styled.View`
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-left: 17;
-  margin-right: 11;
-`;
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginLeft: 17,
+    marginRight: 11,
+  },
+});
 
 type Props = {
   label: string,
@@ -28,10 +29,10 @@ class CheckBoxField extends React.Component<Props> {
 
   render() {
     return (
-      <Container>
+      <View style={styles.container}>
         <Text>{this.props.label}</Text>
         <CheckBox {...this.props} onValueChange={this._onCheckBoxValueChange} />
-      </Container>
+      </View>
     );
   }
 }

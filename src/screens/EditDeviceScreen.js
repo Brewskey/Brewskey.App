@@ -10,40 +10,62 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
+import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
+import Container from '../common/Container';
+import LoaderComponent from '../common/LoaderComponent';
+import Header from '../common/Header';
 import nullthrows from 'nullthrows';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import EditDeviceForm from '../components/EditDeviceForm';
+import DeviceForm from '../components/DeviceForm';
 
 type InjectedProps = {
-  entityLoader: LoadObject<Device>,
   id: EntityID,
   navigation: Navigation,
 };
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.DeviceDAO)
-@withLoadingActivity()
+@observer
 class EditDeviceScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit Brewskey box',
-  };
+  @computed
+  get _deviceLoader(): LoadObject<Device> {
+    return DeviceStore.getByID(this.injectedProps.id);
+  }
 
-  _onFormSubmit = async (values: DeviceMutator) => {
+  _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._deviceLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
     return (
-      <EditDeviceForm
-        onSubmit={this._onFormSubmit}
-        device={this.injectedProps.entityLoader.getValueEnforcing()}
-      />
+      <Container>
+        <Header showBackButton title="Edit Brewskey box" />
+        <LoaderComponent
+          loadedComponent={LoadedComponent}
+          loader={this._deviceLoader}
+          onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
+        />
+      </Container>
     );
   }
 }
+
+type LoadedComponentProps = {
+  onFormSubmit: (values: DeviceMutator) => Promise<void>,
+  value: Device,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <DeviceForm
+    device={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit Device"
+  />
+);
 
 export default EditDeviceScreen;

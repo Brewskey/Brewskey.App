@@ -1,14 +1,16 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
+import { StyleSheet, Text } from 'react-native';
+import { COLORS } from '../theme';
 
-const HeaderTextContainer = styled.Text`
-  border-bottom-color: #bbb;
-  border-bottom-width: 1;
-  padding-vertical: 6;
-  text-align: center;
-`;
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.secondary2,
+    paddingVertical: 8,
+    textAlign: 'center',
+  },
+});
 
 type Props = {|
   title: string,
@@ -16,7 +18,7 @@ type Props = {|
 
 class ListSectionHeader extends React.PureComponent<Props> {
   render() {
-    return <HeaderTextContainer>{this.props.title}</HeaderTextContainer>;
+    return <Text style={styles.container}>{this.props.title}</Text>;
   }
 }
 

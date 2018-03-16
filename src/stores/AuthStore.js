@@ -1,6 +1,5 @@
 // @flow
 
-import type RootStore from './RootStore';
 import type { UserCredentials } from '../authApi';
 
 import { AsyncStorage } from 'react-native';
@@ -8,6 +7,9 @@ import { action, autorun, computed, runInAction, observable } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
+import { UNAUTH_ERROR_CODE } from '../constants';
+import NotificationsStore from './NotificationsStore';
+import Signalr from '../signalr';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
@@ -38,23 +40,27 @@ type AuthState = {|
 |};
 
 class AuthStore {
-  _rootStore: RootStore;
-
   @observable authState: ?AuthState = null;
   @observable isInitialized: boolean = false;
 
-  constructor(rootStore: RootStore) {
-    this._rootStore = rootStore;
+  constructor() {
     // todo may be it better to use reaction here
     // it may help to avoid isInitialized prop, but I'm not sure
-    autorun(() => {
+    autorun(async () => {
       if (!this.isInitialized) {
         return;
       }
       if (this.isAuthorized) {
-        NavigationService.reset('main');
+        await Signalr.startAll({ access_token: this.token });
+        NavigationService.navigate('main');
       } else {
-        NavigationService.reset('login');
+        NavigationService.navigate('login');
+      }
+    });
+
+    DAOApi.onError(({ status }: Error) => {
+      if (status === UNAUTH_ERROR_CODE) {
+        this.clearAuthState();
       }
     });
   }
@@ -63,6 +69,8 @@ class AuthStore {
   clearAuthState = () => {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+    Signalr.stopAll();
+    NotificationsStore.onLogout();
   };
 
   @action
@@ -78,7 +86,6 @@ class AuthStore {
     });
   };
 
-  // todo handle async
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
     const { access_token, id, roles, userName } = await authApi.login(
@@ -93,6 +100,7 @@ class AuthStore {
     };
 
     this.setAuthState(authState);
+    NotificationsStore.onLogin();
   };
 
   @action
@@ -125,4 +133,4 @@ class AuthStore {
   }
 }
 
-export default AuthStore;
+export default new AuthStore();

@@ -1,18 +1,22 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { ListItem as RNEListItem } from 'react-native-elements';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
-  // eslint-disable-next-line react-native/no-color-literals
   container: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.secondary,
   },
+  subtitle: { color: COLORS.textFaded },
+  title: { color: COLORS.text },
 });
 
 type Props<TItem> = {
-  containerStyle?: Object,
+  containerStyle?: Style,
   item: TItem,
   onPress: (item: TItem) => void,
   // other react-native=elements ListItemProps
@@ -31,6 +35,8 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
         {...this.props}
         containerStyle={[styles.container, this.props.containerStyle]}
         onPress={this._onPress}
+        subtitleStyle={styles.subtitle}
+        titleStyle={styles.title}
       />
     );
   }

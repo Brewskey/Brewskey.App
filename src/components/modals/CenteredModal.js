@@ -1,26 +1,13 @@
 // @flow
 
-import type { Node } from 'react';
+import type { Style } from '../../types';
 
-import React, { Component } from 'react';
-import {
-  Modal,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
+import Modal from './Modal';
 
-const emptyFunction = () => {};
-
-type Props = {|
-  children?: Node,
-  header?: Node,
-  isVisible: boolean,
-  onHideModal: () => void,
-|};
-
-const STYLES = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, .5)',
@@ -42,28 +29,35 @@ const STYLES = StyleSheet.create({
   },
 });
 
+type Props = {|
+  children?: React.Node,
+  contentContainerStyle?: Style,
+  header?: React.Element<any>,
+  isVisible: boolean,
+  onHideModal: () => void,
+|};
+
 @observer
-class CenteredModal extends Component<Props> {
-  static STYLES = STYLES;
+class CenteredModal extends React.Component<Props> {
   render() {
-    const { children, header, isVisible, onHideModal } = this.props;
+    const {
+      children,
+      contentContainerStyle,
+      header,
+      isVisible,
+      onHideModal,
+    } = this.props;
+
     return (
-      <Modal
-        animationType="slide"
-        onRequestClose={emptyFunction}
-        transparent
-        visible={isVisible}
-      >
-        <TouchableWithoutFeedback onPress={onHideModal}>
-          <View style={STYLES.container}>
-            <TouchableWithoutFeedback onPress={emptyFunction}>
-              <View style={STYLES.modal}>
-                {!header ? null : <View style={STYLES.header}>{header}</View>}
-                <View style={STYLES.content}>{children}</View>
-              </View>
-            </TouchableWithoutFeedback>
+      <Modal isVisible={isVisible} onHideModal={onHideModal}>
+        <View style={styles.container}>
+          <View style={styles.modal}>
+            {!header ? null : <View style={styles.header}>{header}</View>}
+            <View style={[styles.content, contentContainerStyle]}>
+              {children}
+            </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </Modal>
     );
   }

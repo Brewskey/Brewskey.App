@@ -1,46 +1,59 @@
 // @flow
 
 import * as React from 'react';
-import styled from 'styled-components/native';
 import CachedImage from '../CachedImage';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { COLORS } from '../../theme';
 
-const StyledCachedImage = styled(CachedImage)`
-  border-radius: ${({ size }: Object): number => size / 2};
-  height: ${({ size }: Object): number => size};
-  width: ${({ size }: Object): number => size};
-`;
-
-const StyledTouchableOpacity = styled.TouchableOpacity`
-  background-color: #aaa;
-  border-radius: ${({ size }: Object): number => size / 2};
-  height: ${({ size }: Object): number => size};
-  width: ${({ size }: Object): number => size};
-`;
+const styles = StyleSheet.create({
+  avatar: {
+    backgroundColor: COLORS.secondary2,
+  },
+});
 
 export type BaseAvatarProps = {
   imageRef?: React.Ref<typeof CachedImage>,
   mutable?: boolean,
   onPress?: () => void,
+  rounded: boolean,
   size: number,
 };
 
-type Props = BaseAvatarProps & { uri: string };
+type Props = BaseAvatarProps & { uri: ?string };
 
 class BaseAvatar extends React.PureComponent<Props> {
+  static defaultProps = {
+    rounded: true,
+    size: 45,
+  };
+
   render() {
+    const { imageRef, mutable, onPress, rounded, size, uri } = this.props;
+    const containerStyle = [
+      {
+        height: size,
+        width: size,
+      },
+      rounded && { borderRadius: size / 2 },
+    ];
+
     return (
-      <StyledTouchableOpacity
-        disabled={!this.props.onPress}
-        onPress={this.props.onPress}
-        size={this.props.size}
+      <TouchableOpacity
+        disabled={!onPress}
+        onPress={onPress}
+        size={size}
+        style={[containerStyle, styles.avatar]}
       >
-        <StyledCachedImage
-          innerRef={this.props.imageRef}
-          mutable={this.props.mutable}
-          size={this.props.size}
-          source={{ uri: this.props.uri }}
-        />
-      </StyledTouchableOpacity>
+        {uri ? (
+          <CachedImage
+            ref={imageRef}
+            mutable={mutable}
+            size={size}
+            source={{ uri }}
+            style={containerStyle}
+          />
+        ) : null}
+      </TouchableOpacity>
     );
   }
 }

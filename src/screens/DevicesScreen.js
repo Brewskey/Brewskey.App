@@ -1,44 +1,61 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type AuthStore from '../stores/AuthStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
 import DAOApi from 'brewskey.js-api';
-import { inject, observer } from 'mobx-react';
-import HeaderIcon from '../common/HeaderIcon';
+import { observer } from 'mobx-react';
+import Container from '../common/Container';
+import Section from '../common/Section';
+import AuthStore from '../stores/AuthStore';
+import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import DevicesList from '../components/DevicesList';
 
 type InjectedProps = {|
-  authStore: AuthStore,
   navigation: Navigation,
 |};
 
-@inject('authStore')
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    headerRight: (
-      <HeaderIcon
-        name="add"
-        onPress={(): void => navigation.navigate('newDevice')}
-      />
-    ),
-    title: 'Brewskey boxes',
-  });
+  _onWifiSetupButtonPress = () =>
+    this.injectedProps.navigation.navigate('wifiSetup');
 
   render() {
     return (
-      <DevicesList
-        queryOptions={{
-          filters: [
-            DAOApi.createFilter('createdBy/id').equals(
-              this.injectedProps.authStore.userID,
-            ),
-          ],
-        }}
-      />
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderNavigationButton
+              name="add"
+              params={{ forNewDevice: true }}
+              toRoute="wifiSetup"
+            />
+          }
+          showBackButton
+          title="Devices"
+        />
+        <DevicesList
+          queryOptions={{
+            filters: [
+              DAOApi.createFilter('createdBy/id').equals(AuthStore.userID),
+            ],
+          }}
+          ListHeaderComponent={
+            <Section bottomPadded>
+              <SectionContent paddedHorizontal paddedVertical>
+                <Button
+                  onPress={this._onWifiSetupButtonPress}
+                  title="Setup WiFi on Brewskey box"
+                />
+              </SectionContent>
+            </Section>
+          }
+        />
+      </Container>
     );
   }
 }

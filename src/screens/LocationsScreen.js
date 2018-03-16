@@ -3,7 +3,9 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import HeaderIcon from '../common/HeaderIcon';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LocationsList from '../components/LocationsList';
 
 type Props = {|
@@ -11,18 +13,19 @@ type Props = {|
 |};
 
 class LocationsScreen extends React.Component<Props> {
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    headerRight: (
-      <HeaderIcon
-        name="add"
-        onPress={(): void => navigation.navigate('newLocation')}
-      />
-    ),
-    title: 'Locations',
-  });
-
   render() {
-    return <LocationsList />;
+    return (
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderNavigationButton name="add" toRoute="newLocation" />
+          }
+          showBackButton
+          title="Locations"
+        />
+        <LocationsList />
+      </Container>
+    );
   }
 }
 

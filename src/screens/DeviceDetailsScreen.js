@@ -5,45 +5,90 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
-import { Text, View } from 'react-native';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
+import TapsList from '../components/TapsList';
+import OverviewItem from '../common/OverviewItem2';
+import DeviceStateOverviewItem from '../components/DeviceStateOverviewItem';
+import DeviceOnlineOverviewItem from '../components/DeviceOnlineOverviewItem';
+import { DeviceStore } from '../stores/DAOStores';
+import Container from '../common/Container';
+import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import Section from '../common/Section';
+import SectionHeader from '../common/SectionHeader';
+import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
+import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type InjectedProps = {|
-  entityLoader: LoadObject<Device>,
   id: EntityID,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.DeviceDAO)
-@withLoadingActivity()
+@observer
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
-  // todo find types for navigationOptions
-  static navigationOptions = ({ navigation }: Object): Object => ({
-    title:
-      navigation.state.params.device && navigation.state.params.device.name,
-  });
-
-  componentDidMount() {
-    // todo with this solution title on header appears after some lag :/
-    const { entityLoader, navigation } = this.injectedProps;
-    navigation.setParams({ device: entityLoader.getValueEnforcing() });
+  @computed
+  get _deviceLoader(): LoadObject<Device> {
+    return DeviceStore.getByID(this.injectedProps.id);
   }
 
   render() {
-    const { entityLoader } = this.injectedProps;
-    const { name, particleId } = entityLoader.getValueEnforcing();
-    // todo prettify and move content to separate component
     return (
-      <View>
-        <Text>{name}</Text>
-        <Text>{particleId}</Text>
-      </View>
+      <LoaderComponent
+        updatingComponent={LoadingComponent}
+        loadedComponent={LoadedComponent}
+        loader={this._deviceLoader}
+        loadingComponent={LoadingComponent}
+      />
     );
   }
 }
+
+const LoadingComponent = () => (
+  <Container>
+    <Header showBackButton />
+    <LoadingIndicator />
+  </Container>
+);
+
+type LoadedComponentProps = {
+  value: Device,
+};
+
+const LoadedComponent = observer(
+  ({ value: { deviceStatus, id, name, particleId } }: LoadedComponentProps) => (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            params={{ id }}
+            toRoute="editDevice"
+          />
+        }
+        showBackButton
+        title={name}
+      />
+      <TapsList
+        ListHeaderComponent={
+          <Container>
+            <Section bottomPadded>
+              <OverviewItem title="Box ID" value={particleId} />
+              <DeviceStateOverviewItem deviceState={deviceStatus} />
+              <DeviceOnlineOverviewItem deviceID={id} />
+            </Section>
+            <SectionHeader title="Taps" />
+          </Container>
+        }
+        queryOptions={{
+          filters: [DAOApi.createFilter('device/id').equals(id)],
+        }}
+      />
+    </Container>
+  ),
+);
 
 export default DeviceDetailsScreen;

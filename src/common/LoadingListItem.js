@@ -3,23 +3,26 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { getRandomInt } from '../utils';
+import { COLORS } from '../theme';
 import { ListItem as RNEListItem } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: COLORS.secondary,
   },
   subtitleContainerStyle: {
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.secondary2,
   },
   subtitleStyle: {
-    color: '#eee',
+    // the same as background because we want to hide text content
+    color: COLORS.secondary2,
   },
   titleContainerStyle: {
-    backgroundColor: '#eee',
+    backgroundColor: COLORS.secondary2,
   },
   titleStyle: {
-    color: '#eee',
+    // the same as background because we want to hide text content
+    color: COLORS.secondary2,
   },
 });
 

@@ -1,17 +1,21 @@
 // @flow
 
+import type { Element } from 'react';
+
 // todo figure out how we can use generic TValue for
 // value and initialValue props
 export type Field = {|
   error: ?string,
   initialValue: any,
+  parseOnSubmit: (value: any) => any,
+  refElement?: Element<any>,
   touched: boolean,
   value: any,
 |};
 
 export type FormProps = {|
   formError: ?string,
-  getFieldError: (fieldName: string) => ?Error,
+  getFieldError: (fieldName: string) => ?string,
   getFieldTouched: (fieldName: string) => boolean,
   handleSubmit: (
     onSubmit: (values: Object) => void | Promise<void>,

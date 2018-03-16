@@ -1,44 +1,71 @@
 // @flow
 
-import type { EntityID, LoadObject, Location } from 'brewskey.js-api';
+import type {
+  EntityID,
+  LoadObject,
+  Location,
+  LocationMutator,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
+import { LocationStore, waitForLoaded } from '../stores/DAOStores';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
 import LocationForm from '../components/LocationForm';
 
 type InjectedProps = {|
-  entityLoader: LoadObject<Location>,
   id: EntityID,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.LocationDAO)
-@withLoadingActivity()
+@observer
 class EditLocationScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit location',
-  };
+  @computed
+  get _locationLoader(): LoadObject<Location> {
+    return LocationStore.getByID(this.injectedProps.id);
+  }
 
-  _onFormSubmit = (values: Location) => {
-    DAOApi.LocationDAO.put(values.id, values);
+  _onFormSubmit = async (values: LocationMutator): Promise<void> => {
+    DAOApi.LocationDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._locationLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
     return (
-      <LocationForm
-        location={this.injectedProps.entityLoader.getValueEnforcing()}
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit location"
-      />
+      <Container>
+        <Header showBackButton title="Edit location" />
+        <LoaderComponent
+          loadedComponent={LoadedComponent}
+          loader={this._locationLoader}
+          onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
+        />
+      </Container>
     );
   }
 }
+
+type LoadedComponentProps = {
+  onFormSubmit: (values: LocationMutator) => void,
+  value: Location,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <LocationForm
+    location={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit location"
+  />
+);
 
 export default EditLocationScreen;

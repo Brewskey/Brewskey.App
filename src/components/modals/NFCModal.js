@@ -9,7 +9,7 @@ import NFCStore from '../../stores/NFCStore';
 import CenteredModal from './CenteredModal';
 import theme from '../../theme';
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   buttonContainer: { width: '100%' },
   headerText: {
     color: 'white',
@@ -47,12 +47,12 @@ class NFCModal extends Component<{}> {
     const { currentSeconds, isVisible, onHideModal } = NFCStore;
     return (
       <CenteredModal
-        header={<Text style={style.headerText}>Tap phone to pour</Text>}
+        header={<Text style={styles.headerText}>Tap phone to pour</Text>}
         onHideModal={onHideModal}
         isVisible={isVisible}
       >
-        <View style={style.root}>
-          <View style={style.progressContainer}>
+        <View style={styles.root}>
+          <View style={styles.progressContainer}>
             <Progress.Circle
               borderWidth={0}
               color="#fa0"
@@ -60,22 +60,22 @@ class NFCModal extends Component<{}> {
               progress={currentSeconds / 30}
               showsText
               size={120}
-              textStyle={style.progressText}
+              textStyle={styles.progressText}
               thickness={16}
               unfilledColor="#1d5f68"
               width={120}
             />
           </View>
-          <Text style={style.smallText}>or enter a code</Text>
+          <Text style={styles.smallText}>or enter a code</Text>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
             keyboardType="numeric"
             maxLength={6}
-            style={style.input}
+            style={styles.input}
           />
-          <View style={style.buttonContainer}>
+          <View style={styles.buttonContainer}>
             <Button {...theme.button.white} title="Start Pour" />
           </View>
         </View>

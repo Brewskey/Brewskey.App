@@ -1,44 +1,71 @@
 // @flow
 
-import type { Beverage, EntityID, LoadObject } from 'brewskey.js-api';
+import type {
+  Beverage,
+  BeverageMutator,
+  EntityID,
+  LoadObject,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
-import loadDAOEntity from '../common/loadDAOEntity';
-import withLoadingActivity from '../common/withLoadingActivity';
+import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import LoaderComponent from '../common/LoaderComponent';
+import Container from '../common/Container';
+import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageForm from '../components/BeverageForm';
 
 type InjectedProps = {|
-  entityLoader: LoadObject<Beverage>,
   id: EntityID,
   navigation: Navigation,
 |};
 
 @flatNavigationParamsAndScreenProps
-@loadDAOEntity(DAOApi.BeverageDAO)
-@withLoadingActivity()
+@observer
 class EditBeverageScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'Edit beverage',
-  };
+  @computed
+  get _beverageLoader(): LoadObject<Beverage> {
+    return BeverageStore.getByID(this.injectedProps.id);
+  }
 
-  _onFormSubmit = (values: Beverage): void => {
-    DAOApi.BeverageDAO.put(values.id, values);
+  _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
+    DAOApi.BeverageDAO.put(nullthrows(values.id), values);
+    await waitForLoaded(() => this._beverageLoader);
     this.injectedProps.navigation.goBack(null);
   };
 
   render() {
     return (
-      <BeverageForm
-        beverage={this.injectedProps.entityLoader.getValueEnforcing()}
-        onSubmit={this._onFormSubmit}
-        submitButtonLabel="Edit beverage"
-      />
+      <Container>
+        <Header showBackButton title="Edit beverage" />
+        <LoaderComponent
+          loadedComponent={LoadedComponent}
+          loader={this._beverageLoader}
+          onFormSubmit={this._onFormSubmit}
+          updatingComponent={LoadedComponent}
+        />
+      </Container>
     );
   }
 }
+
+type LoadedComponentProps = () => {
+  onFormSubmit: (values: BeverageMutator) => void,
+  value: Beverage,
+};
+
+const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
+  <BeverageForm
+    beverage={value}
+    onSubmit={onFormSubmit}
+    submitButtonLabel="Edit beverage"
+  />
+);
 
 export default EditBeverageScreen;

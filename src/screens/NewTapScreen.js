@@ -1,11 +1,14 @@
 // @flow
 
-import type { LoadObject, Tap, TapMutator } from 'brewskey.js-api';
+import type { TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import Container from '../common/Container';
+import Header from '../common/Header';
 import TapForm from '../components/TapForm';
 
 type InjectedProps = {|
@@ -13,25 +16,19 @@ type InjectedProps = {|
 |};
 
 class NewTapScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    title: 'New tap',
-  };
-
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const { navigation } = this.injectedProps;
     const clientID = DAOApi.TapDAO.post(values);
-    const { id } = await DAOApi.TapDAO.waitForLoaded((): LoadObject<Tap> =>
-      DAOApi.TapDAO.fetchByID(clientID),
-    );
-    // todo figure out how to replace page instead adding to stack history
-    // the navigation object injected in the component
-    // doesn't have reset function.
-    navigation.navigate('tapDetails', { id });
+    const { id } = await waitForLoaded(() => TapStore.getByID(clientID));
+    navigation.navigate('newFlowSensor', { tapId: id });
   };
 
   render() {
     return (
-      <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
+      <Container>
+        <Header showBackButton title="New tap" />
+        <TapForm onSubmit={this._onFormSubmit} submitButtonLabel="Create tap" />
+      </Container>
     );
   }
 }

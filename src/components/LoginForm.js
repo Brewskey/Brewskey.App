@@ -1,17 +1,16 @@
 // @flow
 
-import type AuthStore from '../stores/AuthStore';
 import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from '../authApi';
-import type { FormInput } from 'react-native-elements';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import nullthrows from 'nullthrows';
-import { inject, observer } from 'mobx-react';
-import { Keyboard } from 'react-native';
+import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { Button, FormValidationMessage } from 'react-native-elements';
+import { FormValidationMessage } from 'react-native-elements';
+import Button from '../common/buttons/Button';
+import SectionContent from '../common/SectionContent';
+import AuthStore from '../stores/AuthStore';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
 
@@ -28,22 +27,13 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
   return errors;
 };
 
-type InjectedProps = {
-  authStore: AuthStore,
-  ...FormProps,
-};
+type InjectedProps = FormProps;
 
 @form({ validate })
-@inject('authStore')
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
-  _passwordInputRef: ?FormInput;
-
-  _onUserNameSubmit = (): void => nullthrows(this._passwordInputRef).focus();
-
   _onSubmit = async (formValues: Object): Promise<void> => {
-    Keyboard.dismiss();
-    await this.injectedProps.authStore.login(formValues);
+    await AuthStore.login(formValues);
   };
 
   _onSubmitButtonPress = (): Promise<void> =>
@@ -61,7 +51,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           disabled={submitting}
           label="User name"
           name="userName"
-          onSubmitEditing={this._onUserNameSubmit}
+          nextFocusTo="password"
         />
         <FormField
           autoCapitalize="none"
@@ -69,17 +59,18 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           component={TextField}
           disabled={submitting}
           label="Password"
-          inputRef={ref => (this._passwordInputRef = ref)}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
         />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        <Button
-          disabled={submitting || invalid || pristine}
-          onPress={this._onSubmitButtonPress}
-          title="Log in"
-        />
+        <SectionContent paddedVertical>
+          <Button
+            disabled={submitting || invalid || pristine}
+            onPress={this._onSubmitButtonPress}
+            title="Log in"
+          />
+        </SectionContent>
       </KeyboardAwareScrollView>
     );
   }
