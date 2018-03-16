@@ -27,7 +27,7 @@ import type {
 } from 'brewskey.js-api';
 
 import DAOApi, { LoadObject } from 'brewskey.js-api';
-import { Atom, autorun } from 'mobx';
+import { autorun, createAtom } from 'mobx';
 
 export const waitForLoaded = <TValue>(
   getLoader: () => LoadObject<TValue>,
@@ -86,7 +86,7 @@ class DAOStore<TEntity: { id: EntityID }> {
 
   constructor(dao: DAO<TEntity, *>) {
     this._dao = dao;
-    this._atom = new Atom(
+    this._atom = createAtom(
       `DAO_ATOM/${dao.getEntityName()}`,
       this._onStartObserved,
       this._onStopObserved,

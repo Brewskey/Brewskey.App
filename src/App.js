@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import DAOApi from 'brewskey.js-api';
-import { useStrict as mobxUseStrict } from 'mobx';
+import { configure as mobxConfigure } from 'mobx';
 import config from './config';
 import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
@@ -11,7 +11,9 @@ import NFCModal from './components/modals/NFCModal';
 import AuthStore from './stores/AuthStore';
 import NotificationsStore from './stores/NotificationsStore';
 
-mobxUseStrict(true);
+mobxConfigure({
+  enforceActions: true,
+});
 
 DAOApi.initializeDAOApi({
   endpoint: `${config.HOST}api/v2/`,
