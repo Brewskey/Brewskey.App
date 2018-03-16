@@ -8,7 +8,6 @@ import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import authApi from '../authApi';
 import { UNAUTH_ERROR_CODE } from '../constants';
-import NotificationsStore from './NotificationsStore';
 import Signalr from '../signalr';
 
 const AUTH_STORAGE_KEY = 'auth_state';
@@ -70,7 +69,6 @@ class AuthStore {
     this.authState = null;
     AsyncStorage.removeItem(AUTH_STORAGE_KEY);
     Signalr.stopAll();
-    NotificationsStore.onLogout();
   };
 
   @action
@@ -100,7 +98,6 @@ class AuthStore {
     };
 
     this.setAuthState(authState);
-    NotificationsStore.onLogin();
   };
 
   @action

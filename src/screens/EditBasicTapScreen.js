@@ -10,6 +10,10 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import NotificationsStore from '../stores/NotificationsStore';
+import Container from '../common/Container';
+import Section from '../common/Section';
+import { ListItem } from 'react-native-elements';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
@@ -44,6 +48,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedTapComponent}
         loader={this._tapLoader}
         onTapFormSubmit={this._onFormSubmit}
+        onToggleNotifications={this._onToggleNotifications}
         updatingComponent={LoadedTapComponent}
       />
     );
@@ -52,18 +57,38 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
 
 type LoadedTapComponentProps = {
   onTapFormSubmit: (values: TapMutator) => Promise<void>,
+  onToggleNotifications: () => void,
   value: Tap,
 };
 
-const LoadedTapComponent = ({
-  onTapFormSubmit,
-  value,
-}: LoadedTapComponentProps) => (
-  <TapForm
-    onSubmit={onTapFormSubmit}
-    submitButtonLabel="Edit tap"
-    tap={value}
-  />
-);
+@observer
+class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
+  _onToggleNotifications = () =>
+    NotificationsStore.toggleNotificationsForTap(this.props.value.id);
+
+  render() {
+    const { onTapFormSubmit, value } = this.props;
+    return (
+      <Container>
+        <Section bottomPadded>
+          <ListItem
+            hideChevron
+            onSwitch={this._onToggleNotifications}
+            switchButton
+            switched={NotificationsStore.getIsNotificationsEnabledForTap(
+              value.id,
+            )}
+            title="Notifications"
+          />
+        </Section>
+        <TapForm
+          onSubmit={onTapFormSubmit}
+          submitButtonLabel="Edit tap"
+          tap={value}
+        />
+      </Container>
+    );
+  }
+}
 
 export default EditTapScreen;

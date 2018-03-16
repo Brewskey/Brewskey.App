@@ -27,7 +27,7 @@ class NotificationsScreen extends InjectedComponent<InjectedProps> {
           rightComponent={
             <HeaderIconButton
               name="delete"
-              onPress={NotificationsStore.deleteAll}
+              onPress={NotificationsStore.deleteAllNotifications}
             />
           }
         />

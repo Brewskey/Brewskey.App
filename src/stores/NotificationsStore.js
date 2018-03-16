@@ -24,6 +24,7 @@ import CONFIG from '../config';
 const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
 
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
+const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
 
 type BaseNotificationProps = {
   body: string,
@@ -57,9 +58,14 @@ export type Notification =
   | NewFriendRequestNotification;
 
 class NotificationsStore {
+  @observable _isReady: boolean = false;
   @observable _navigation: ?Navigation = null;
   @observable
   _notificationsByID: ObservableMap<Notification> = observable.map();
+
+  // its Map but used as Set since mobx doesn't support Set;
+  @observable
+  _notificationsDisabledByTapID: ObservableMap<boolean> = observable.map();
 
   constructor() {
     AppState.addEventListener('change', nextAppState => {
@@ -67,26 +73,54 @@ class NotificationsStore {
         FCM.removeAllDeliveredNotifications();
       }
     });
-
     FCM.on(FCMEvent.Notification, this._onRawNotification);
-    this.registerToken();
 
-    (async () => {
-      await this._rehydrateNotifications();
+    reaction(
+      () => this._disabledTapIDs,
+      (disabledTapIDs: Array<EntityID>) => {
+        if (!this._isReady) {
+          return;
+        }
+        this._registerToken();
+        Storage.setForCurrentUser(
+          DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY,
+          disabledTapIDs,
+        );
+      },
+      ({
+        compareStructural: true,
+      }: any),
+    );
 
-      reaction(
-        () => this._notificationsByID.values(),
-        (notifications: Array<Notification>) => {
-          if (!AuthStore.isAuthorized) {
-            return;
-          }
-          Storage.setForCurrentUser(NOTIFICATIONS_STORAGE_KEY, notifications);
-        },
-        ({
-          compareStructural: true,
-        }: any),
-      );
-    })();
+    reaction(
+      () => this._notificationsByID.values(),
+      (notifications: Array<Notification>) => {
+        if (!this._isReady) {
+          return;
+        }
+        Storage.setForCurrentUser(NOTIFICATIONS_STORAGE_KEY, notifications);
+      },
+      ({
+        compareStructural: true,
+      }: any),
+    );
+
+    reaction(
+      () => AuthStore.isAuthorized,
+      async (isAuthorized: boolean) => {
+        if (!isAuthorized) {
+          // calls only on logout
+          this._unregisterToken();
+          this.setIsReady(false);
+          this._cleanState();
+        } else {
+          // calls on login and on every app start
+          await this._rehydrateState();
+          this._registerToken();
+          this.setIsReady(true);
+        }
+      },
+    );
   }
 
   @computed
@@ -114,64 +148,35 @@ class NotificationsStore {
     return !!this._navigation && AuthStore.isAuthorized;
   }
 
+  @computed
+  get _disabledTapIDs(): Array<EntityID> {
+    return Array.from(this._notificationsDisabledByTapID.keys());
+  }
+
   handleInitialNotification = async () => {
-    // handle case when the app is killed and we launch it by clicking
-    // on incoming notifications.
-    // the timeout is a workaround to avoid the warning:
-    // "Tried to use permissions API while not attached to an Activity"
-    // https://github.com/facebook/react-native/blob/master/ReactAndroid/src/main/java/com/facebook/react/modules/permissions/PermissionsModule.java
-    // https://github.com/facebook/react-native/issues/13439
-    // it appears sometimes because of race conditions between native/js thread probably.
-    // they use timeout even in react-native-fcm example app :(
-    // https://github.com/evollu/react-native-fcm/blob/master/Examples/simple-fcm-client/app/App.js#L44
-    setTimeout(async () => {
-      const initialNotification = await FCM.getInitialNotification();
-      initialNotification && this._onRawNotification(initialNotification);
-    }, 500);
-  };
-
-  registerToken = async () => {
-    const fcmToken = await FCM.getFCMToken();
-    const deviceUniqueID = DeviceInfo.getUniqueID();
-
-    // eslint-disable-next-line
-    await fetch(`${BASE_PUSH_URL}/`, {
-      body: JSON.stringify({
-        deviceToken: fcmToken,
-        installationId: deviceUniqueID,
-        platform: 'fcm',
-      }),
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.token || ''}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT',
-    });
-  };
-
-  unregisterToken = () =>
-    // eslint-disable-next-line
-    fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueID()}`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'DELETE',
-    });
-
-  onLogin = () => {
-    this.registerToken();
-    this._rehydrateNotifications();
-  };
-
-  onLogout = () => {
-    this.unregisterToken();
-    this.deleteAll();
+    await when(() => this._isReady);
+    const initialNotification = await FCM.getInitialNotification();
+    initialNotification && this._onRawNotification(initialNotification);
   };
 
   onNotificationPress = async (notification: Notification): Promise<void> => {
-    await this._waitForInitializationFinish();
+    await when(() => this._isReady);
     this._handleNotificationPressByType(notification);
+  };
+
+  getIsNotificationsEnabledForTap = (tapID: EntityID) =>
+    !this._notificationsDisabledByTapID.has(tapID);
+
+  @action
+  toggleNotificationsForTap = (tapID: EntityID) => {
+    this._notificationsDisabledByTapID.has(tapID)
+      ? this._notificationsDisabledByTapID.delete(tapID)
+      : this._notificationsDisabledByTapID.set(tapID, true);
+  };
+
+  @action
+  setIsReady = (isReady: boolean) => {
+    this._isReady = isReady;
   };
 
   @action
@@ -179,7 +184,7 @@ class NotificationsStore {
     this._navigation = navigation;
   };
 
-  @action deleteAll = () => this._notificationsByID.clear();
+  @action deleteAllNotifications = () => this._notificationsByID.clear();
 
   @action deleteByID = (id: string) => this._notificationsByID.delete(id);
 
@@ -203,8 +208,13 @@ class NotificationsStore {
   _addNotification = (notification: Notification): void =>
     this._notificationsByID.set(notification.id, notification);
 
-  _rehydrateNotifications = async () => {
-    this._waitForInitializationFinish();
+  @action
+  _cleanState = () => {
+    this._notificationsByID.clear();
+    this._notificationsDisabledByTapID.clear();
+  };
+
+  _rehydrateState = async () => {
     const notifications = await Storage.getForCurrentUser(
       NOTIFICATIONS_STORAGE_KEY,
     );
@@ -216,18 +226,48 @@ class NotificationsStore {
         ] => [notification.id, notification])
       : [];
 
+    const disabledTapIDs = await Storage.getForCurrentUser(
+      DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY,
+    );
+
+    const disabledTapsIDsEntries = disabledTapIDs
+      ? disabledTapIDs.map((tapID: EntityID): [EntityID, true] => [tapID, true])
+      : [];
+
     runInAction(() => {
+      this._notificationsDisabledByTapID.merge((disabledTapsIDsEntries: any));
       this._notificationsByID.merge((notificationEntries: any));
     });
   };
 
-  _waitForInitializationFinish = (): Promise<void> =>
-    new Promise((resolve: () => void) => {
-      if (this._isInitialized) {
-        resolve();
-        return;
-      }
-      when(() => this._isInitialized, () => resolve());
+  _registerToken = async () => {
+    const fcmToken = await FCM.getFCMToken();
+    const deviceUniqueID = DeviceInfo.getUniqueID();
+
+    // eslint-disable-next-line
+    await fetch(`${BASE_PUSH_URL}/`, {
+      body: JSON.stringify({
+        deviceToken: fcmToken,
+        installationId: deviceUniqueID,
+        platform: 'fcm',
+        removeTapIDs: this._disabledTapIDs,
+      }),
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${AuthStore.token || ''}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'PUT',
+    });
+  };
+
+  _unregisterToken = () =>
+    // eslint-disable-next-line
+    fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueID()}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
     });
 
   _onRawNotification = (rawNotification: Object) => {
