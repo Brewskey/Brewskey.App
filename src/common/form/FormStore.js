@@ -1,9 +1,9 @@
 // @flow
 
-import * as React from 'react';
 import type { Field, ValidationFunction } from './types';
 
-import { action, computed, createTransformer, observable } from 'mobx';
+import * as React from 'react';
+import { action, computed, observable } from 'mobx';
 
 const FORM_ERROR_KEY = '_error';
 
@@ -166,20 +166,20 @@ class FormStore {
     );
   }
 
-  getFieldError = createTransformer((fieldName: string): ?string => {
+  getFieldError = (fieldName: string): ?string => {
     const field = this._fields.get(fieldName);
     return field && field.touched ? field.error : null;
-  });
+  };
 
-  getFieldTouched = createTransformer((fieldName: string): boolean => {
+  getFieldTouched = (fieldName: string): boolean => {
     const field = this._fields.get(fieldName);
     return field ? field.touched : false;
-  });
+  };
 
-  getFieldValue = createTransformer((fieldName: string): any => {
+  getFieldValue = (fieldName: string): any => {
     const field = this._fields.get(fieldName);
     return field ? field.value : null;
-  });
+  };
 }
 
 export default FormStore;

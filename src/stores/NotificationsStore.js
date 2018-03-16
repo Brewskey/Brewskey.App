@@ -99,9 +99,9 @@ class NotificationsStore {
 
   @computed
   get unreadCount(): number {
-    return this._notificationsByID
-      .values()
-      .filter(({ isRead }: Notification) => !isRead).length;
+    return Array.from(this._notificationsByID.values()).filter(
+      ({ isRead }: Notification) => !isRead,
+    ).length;
   }
 
   @computed
