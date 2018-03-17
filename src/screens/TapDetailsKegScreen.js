@@ -1,6 +1,6 @@
 // @flow
 
-import type { Beverage, EntityID, Tap } from 'brewskey.js-api';
+import type { Beverage, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -8,18 +8,20 @@ import DAOApi, { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, TapStore } from '../stores/DAOStores';
-import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderBeverageDetails from '../components/BeverageDetailsLoader';
+import KegLevelBar from '../components/KegLevelBar';
 import KegsList from '../components/KegsList';
 import Section from '../common/Section';
+import Fragment from '../common/Fragment';
 import SectionHeader from '../common/SectionHeader';
+import SectionContent from '../common/SectionContent';
 
 type InjectedProps = {|
   navigation: Navigation,
-  tapId: EntityID,
   noFlowSensorWarning: ?React.Element<any>,
+  tap: Tap,
 |};
 
 @flatNavigationParamsAndScreenProps
@@ -31,8 +33,8 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _currentBeverageLoader(): LoadObject<Beverage> {
-    const { tapId } = this.injectedProps;
-    return TapStore.getByID(tapId).map(
+    const { tap: { id } } = this.injectedProps;
+    return TapStore.getByID(id).map(
       ({ currentKeg }: Tap): LoadObject<Beverage> =>
         currentKeg
           ? BeverageStore.getByID(currentKeg.beverage.id)
@@ -41,23 +43,36 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
   }
 
   render() {
-    const { noFlowSensorWarning, tapId } = this.injectedProps;
+    const { noFlowSensorWarning, tap: { currentKeg, id } } = this.injectedProps;
+
     return (
       <KegsList
         ListHeaderComponent={
-          <View>
+          <Fragment>
             {noFlowSensorWarning}
+            {currentKeg && (
+              <Section bottomPadded>
+                <SectionHeader title="Keg level" />
+                <SectionContent paddedHorizontal>
+                  <KegLevelBar
+                    maxOunces={currentKeg.maxOunces}
+                    ounces={currentKeg.ounces}
+                  />
+                </SectionContent>
+              </Section>
+            )}
             <Section bottomPadded>
+              <SectionHeader title="Beverage" />
               <LoaderBeverageDetails
                 loader={this._currentBeverageLoader}
-                tapId={tapId}
+                tapId={id}
               />
             </Section>
             <SectionHeader title="Past Kegs" />
-          </View>
+          </Fragment>
         }
         queryOptions={{
-          filters: [DAOApi.createFilter('tap/id').equals(tapId)],
+          filters: [DAOApi.createFilter('tap/id').equals(id)],
           orderBy: [{ column: 'id', direction: 'desc' }],
           skip: 1,
         }}

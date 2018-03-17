@@ -100,10 +100,8 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
   };
 
   render() {
-    const {
-      navigation,
-      value: { id, hideLeaderboard, hideStats },
-    } = this.props;
+    const { navigation, value } = this.props;
+    const { id, hideLeaderboard, hideStats } = value;
 
     // workaround for dynamically hiding tabs
     // todo change it when they implement the feature
@@ -153,9 +151,10 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
               routes: filteredTabRoutes,
             },
           }}
+          // todo pass tap instead tapid!!!!
           screenProps={{
             noFlowSensorWarning,
-            tapId: id,
+            tap: value,
           }}
         />
       </Container>

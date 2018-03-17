@@ -32,7 +32,7 @@ type Props = {|
 |};
 
 const BeverageDetailsContent = ({
-  beverage: { id, beverageType, description, style, glass, isOrganic },
+  beverage: { beverageType, description, glass, id, isOrganic, style },
 }: Props) => {
   const beverageImageSize = screenWidth - BEVERAGE_IMAGE_HORIZONTAL_MARGIN * 2;
 
