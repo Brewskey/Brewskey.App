@@ -5,6 +5,7 @@ import type { Tap } from 'brewskey.js-api';
 import * as React from 'react';
 import ListItem from '../common/ListItem';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
+import { calculateKegLevel } from '../utils';
 import { COLORS } from '../theme';
 
 type Props = {|
@@ -17,17 +18,17 @@ const TapListItem = ({ index, onPress, tap }: Props) => {
   const { currentKeg, description } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
-  const beverageLevel = currentKeg
-    ? (currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces * 100
+  const kegLevel = currentKeg
+    ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces)
     : null;
 
   return (
     <ListItem
       badge={
-        beverageLevel
+        kegLevel !== null
           ? {
               containerStyle: { backgroundColor: COLORS.accent },
-              value: `${beverageLevel.toFixed(0)}%`,
+              value: `${kegLevel}%`,
             }
           : null
       }

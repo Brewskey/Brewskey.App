@@ -13,3 +13,15 @@ export const getRandomInt = (min: number, max: number): number =>
 export const isClassBasedComponent = (
   component: React.ComponentType<any>,
 ): boolean => !!(component: any).prototype.render;
+
+export const calculateKegLevel = (
+  ounces: number,
+  maxOunces: number,
+): number => {
+  if (maxOunces === 0) {
+    return 0;
+  }
+
+  const level = (maxOunces - ounces) / maxOunces * 100;
+  return level <= 0 ? 0 : level.toFixed(0);
+};
