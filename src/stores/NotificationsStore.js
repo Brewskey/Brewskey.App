@@ -309,7 +309,7 @@ class NotificationsStore {
       }
       case 'newAchievement': {
         AchievementStore.flushCache();
-        nullthrows(this._navigation).navigate('myProfile');
+        nullthrows(this._navigation).navigate('stats');
         break;
       }
       case 'newFriendRequest': {
