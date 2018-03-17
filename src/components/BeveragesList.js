@@ -10,6 +10,7 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
+import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
@@ -113,6 +114,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
 const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Beverage, *>) => (
   <ListItem
+    avatar={<BeverageAvatar beverageId={item.id} />}
     hideChevron
     item={item}
     onPress={onItemPress}
