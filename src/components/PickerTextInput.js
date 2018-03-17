@@ -5,7 +5,8 @@ import type { PickerValue } from '../stores/PickerStore';
 import * as React from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { View, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import Fragment from '../common/Fragment';
 import {
   FormInput,
   FormLabel,
@@ -41,7 +42,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   render() {
     const { error, label, onPress, placeholder } = this.props;
     return (
-      <View>
+      <Fragment>
         <FormLabel>{label}</FormLabel>
         <TouchableOpacity onPress={onPress}>
           <FormInput
@@ -52,7 +53,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
           />
           <FormValidationMessage>{error}</FormValidationMessage>
         </TouchableOpacity>
-      </View>
+      </Fragment>
     );
   }
 }
