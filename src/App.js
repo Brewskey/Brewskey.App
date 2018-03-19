@@ -8,7 +8,6 @@ import config from './config';
 import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
 import NFCModal from './components/modals/NFCModal';
-import AuthStore from './stores/AuthStore';
 import NotificationsStore from './stores/NotificationsStore';
 import { COLORS } from './theme';
 
@@ -28,10 +27,6 @@ const styles = StyleSheet.create({
 });
 
 class App extends React.Component<{}> {
-  async componentWillMount() {
-    await AuthStore.initialize();
-  }
-
   componentDidMount() {
     NotificationsStore.handleInitialNotification();
   }
