@@ -51,9 +51,11 @@ class PickerStore<TEntity> {
   @computed
   get value(): PickerValue<TEntity> {
     if (this._multiple) {
-      return this._valueByKey.values();
+      return Array.from(this._valueByKey.values());
     }
-    return this._valueByKey.size ? this._valueByKey.values()[0] : null;
+    return this._valueByKey.size
+      ? Array.from(this._valueByKey.values())[0]
+      : null;
   }
 
   checkIsSelected = (item: TEntity): boolean =>

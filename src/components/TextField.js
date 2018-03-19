@@ -44,14 +44,15 @@ class TextField extends React.Component<Props> {
       value,
       ...props
     } = this.props;
+
     return (
       <View>
         <FormLabel>{label}</FormLabel>
         <FormInput
-          ref={this._setRef}
           onBlur={onBlur}
           onChangeText={onChange}
-          value={value && value.toString()}
+          ref={this._setRef}
+          value={value || value === 0 ? value.toString() : null}
           {...props}
         />
         <FormValidationMessage>{error}</FormValidationMessage>

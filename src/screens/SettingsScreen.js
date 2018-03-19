@@ -35,10 +35,8 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
   render() {
     const {
       isManageTapsEnabled,
-      isMultiAccountModeEnabled,
       onOrganizationChange,
       onToggleManageTaps,
-      onToggleMultiAccountMode,
       selectedOrganizationID,
     } = AppSettingsStore;
 
@@ -69,13 +67,6 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
             </LoaderPickerField>
           </Section>
           <Section>
-            <ListItem
-              title="Multi account mode"
-              hideChevron
-              onSwitch={onToggleMultiAccountMode}
-              switchButton
-              switched={isMultiAccountModeEnabled}
-            />
             <ListItem
               hideChevron
               onSwitch={onToggleManageTaps}

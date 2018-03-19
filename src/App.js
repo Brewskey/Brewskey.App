@@ -10,6 +10,7 @@ import AppRouter from './AppRouter';
 import NFCModal from './components/modals/NFCModal';
 import AuthStore from './stores/AuthStore';
 import NotificationsStore from './stores/NotificationsStore';
+import { COLORS } from './theme';
 
 mobxConfigure({
   enforceActions: true,
@@ -20,7 +21,8 @@ DAOApi.initializeDAOApi({
 });
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
+    backgroundColor: COLORS.primary2,
     flex: 1,
   },
 });
@@ -46,7 +48,7 @@ class App extends React.Component<{}> {
 
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.safeArea}>
         <AppRouter ref={this._setNavigationRef} />
         <NFCModal />
       </SafeAreaView>

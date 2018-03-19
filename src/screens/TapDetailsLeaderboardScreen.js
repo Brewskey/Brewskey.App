@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID } from 'brewskey.js-api';
+import type { Tap } from 'brewskey.js-api';
 import type { LeaderboardDurationValue } from '../components/LeaderboardDurationPicker';
 
 import * as React from 'react';
@@ -16,7 +16,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 
 type InjectedProps = {|
   noFlowSensorWarning: ?React.Element<any>,
-  tapId: EntityID,
+  tap: Tap,
 |};
 
 @flatNavigationParamsAndScreenProps
@@ -36,7 +36,7 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { noFlowSensorWarning } = this.injectedProps;
+    const { noFlowSensorWarning, tap: { id } } = this.injectedProps;
     return (
       <LeaderboardList
         duration={this._leaderboardDuration}
@@ -49,7 +49,7 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
             />
           </View>
         }
-        tapID={this.injectedProps.tapId}
+        tapID={id}
       />
     );
   }
