@@ -93,7 +93,7 @@ class NotificationsStore {
     );
 
     reaction(
-      () => this._notificationsByID.values(),
+      () => this.notifications,
       (notifications: Array<Notification>) => {
         if (!this._isReady) {
           return;
@@ -116,7 +116,6 @@ class NotificationsStore {
         } else {
           // calls on login and on every app start
           await this._rehydrateState();
-          this._registerToken();
           this.setIsReady(true);
         }
       },
@@ -141,11 +140,6 @@ class NotificationsStore {
   @computed
   get hasUnread(): boolean {
     return this.unreadCount > 0;
-  }
-
-  @computed
-  get _isInitialized(): boolean {
-    return !!this._navigation && AuthStore.isAuthorized;
   }
 
   @computed
@@ -202,6 +196,12 @@ class NotificationsStore {
         isRead: true,
       }: any),
     );
+  };
+
+  onLogin = () => {
+    // find a way if its possible avoid this public method and make reaction
+    // which is triggered only on login(not on login and app start).
+    this._registerToken();
   };
 
   @action
