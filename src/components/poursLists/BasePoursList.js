@@ -60,6 +60,7 @@ class BasePoursList extends React.Component<Props> {
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._listStore.reload}
         renderItem={this._renderRow}
       />
     );
