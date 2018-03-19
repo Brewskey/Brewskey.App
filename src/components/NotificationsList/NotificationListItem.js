@@ -7,15 +7,10 @@ import type { Notification } from '../../stores/NotificationsStore';
 import RNSwipeableRow from 'SwipeableRow';
 
 import * as React from 'react';
-import {
-  Animated,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
+import TouchableItem from '../../common/buttons/TouchableItem';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const READ_TIMEOUT = 2000;
@@ -50,7 +45,8 @@ const styles = StyleSheet.create({
     borderColor: COLORS.secondary3,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    paddingRight: 20,
   },
   titleText: {
     ...TYPOGRAPHY.secondary,
@@ -58,10 +54,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-const AnimatedTouchableOpacity = Animated.createAnimatedComponent(
-  TouchableOpacity,
-);
 
 export type Props = {
   contentComponent?: React.Node,
@@ -134,21 +126,22 @@ class NotificationListItem extends React.PureComponent<Props, State> {
       <RNSwipeableRow
         maxSwipeDistance={250}
         onOpen={this._onOpen}
+        preventSwipeRight
         slideoutView={<SlideoutView />}
+        swipeThreshold={250}
       >
-        <AnimatedTouchableOpacity
-          onPress={this._onPress}
-          style={[styles.container, { backgroundColor }]}
-        >
-          {LeftComponent}
-          <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.titleText}>{title}</Text>
-              <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
+        <TouchableItem onPress={this._onPress}>
+          <Animated.View style={[styles.container, { backgroundColor }]}>
+            {LeftComponent}
+            <View style={styles.mainContainer}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.titleText}>{title}</Text>
+                <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
+              </View>
+              <View style={styles.contentContainer}>{contentElement}</View>
             </View>
-            <View style={styles.contentContainer}>{contentElement}</View>
-          </View>
-        </AnimatedTouchableOpacity>
+          </Animated.View>
+        </TouchableItem>
       </RNSwipeableRow>
     );
   }
@@ -156,7 +149,7 @@ class NotificationListItem extends React.PureComponent<Props, State> {
 
 const SlideoutView = () => (
   <View style={styles.slideoutContainer}>
-    <Icon name="delete" color={COLORS.textFaded} />
+    <Icon name="delete" color={COLORS.danger} />
   </View>
 );
 
