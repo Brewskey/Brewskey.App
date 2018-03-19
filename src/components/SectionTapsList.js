@@ -117,6 +117,7 @@ const Slideout = ({
 >) => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete the Tap"
+    deleteModalTitle="Delete tap"
     item={item}
     onDeleteItemPress={onDeleteItemPress}
     onEditItemPress={onEditItemPress}

@@ -141,6 +141,7 @@ const Slideout = ({
 }: RowItemProps<Device, *>) => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+    deleteModalTitle="Delete brewskey box"
     item={item}
     onDeleteItemPress={onDeleteItemPress}
     onEditItemPress={onEditItemPress}
