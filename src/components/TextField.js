@@ -19,6 +19,7 @@ export type Props = {
   labelStyle?: Style,
   onBlur?: () => void,
   onChange: (value: any) => void,
+  validationTextStyle?: Style,
   value: any,
   // other react-native textInput props
 };
@@ -47,6 +48,7 @@ class TextField extends React.Component<Props> {
       labelStyle,
       onBlur,
       onChange,
+      validationTextStyle,
       value,
       ...props
     } = this.props;
@@ -62,7 +64,9 @@ class TextField extends React.Component<Props> {
           value={value || value === 0 ? value.toString() : null}
           {...props}
         />
-        <FormValidationMessage>{error}</FormValidationMessage>
+        <FormValidationMessage labelStyle={validationTextStyle}>
+          {error}
+        </FormValidationMessage>
       </View>
     );
   }

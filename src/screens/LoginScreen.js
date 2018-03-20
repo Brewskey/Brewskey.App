@@ -21,9 +21,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    maxHeight: 200,
-    paddingHorizontal: 35,
-    // paddingVertical: 25,
+    maxHeight: 150,
+    paddingHorizontal: 40,
   },
 });
 

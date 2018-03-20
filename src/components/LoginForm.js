@@ -30,17 +30,20 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
 };
 
 const styles = StyleSheet.create({
-  disabledButtonStyle: {
+  disabledButton: {
     backgroundColor: COLORS.primary,
   },
-  disabledTextStyle: {
-    color: COLORS.textFaded,
-  },
-  inputStyle: {
+  disabledText: {
     color: COLORS.textInverse,
   },
-  labelStyle: {
+  input: {
     color: COLORS.textInverse,
+  },
+  label: {
+    color: COLORS.textInverse,
+  },
+  validationText: {
+    color: COLORS.danger2,
   },
 });
 
@@ -57,7 +60,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
     this.injectedProps.handleSubmit(this._onSubmit);
 
   render() {
-    const { formError, invalid, pristine, submitting } = this.injectedProps;
+    const { formError, invalid, submitting } = this.injectedProps;
     return (
       <KeyboardAwareScrollView>
         <FormField
@@ -65,36 +68,42 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          inputStyle={styles.inputStyle}
+          inputStyle={styles.input}
           label="User name"
-          labelStyle={styles.labelStyle}
+          labelStyle={styles.label}
           name="userName"
           nextFocusTo="password"
+          selectionColor={COLORS.textInverse}
           underlineColorAndroid={COLORS.secondary}
+          validationTextStyle={styles.validationText}
         />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          inputStyle={styles.inputStyle}
+          inputStyle={styles.input}
           label="Password"
-          labelStyle={styles.labelStyle}
+          labelStyle={styles.label}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
+          selectionColor={COLORS.textInverse}
           underlineColorAndroid={COLORS.secondary}
+          validationTextStyle={styles.validationText}
         />
-        <FormValidationMessage>{formError}</FormValidationMessage>
+        <FormValidationMessage labelStyle={styles.validationText}>
+          {formError}
+        </FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            backgroundColor={COLORS.primary}
-            disabled={submitting || invalid || pristine}
-            disabledStyle={styles.disabledButtonStyle}
-            disabledTextStyle={styles.disabledTextStyle}
+            backgroundColor={COLORS.secondary}
+            color={COLORS.text}
+            disabled={submitting || invalid}
+            disabledStyle={styles.disabledButton}
+            disabledTextStyle={styles.disabledText}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
-            raised
             title="Log in"
           />
         </SectionContent>
