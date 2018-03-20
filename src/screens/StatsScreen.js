@@ -3,6 +3,7 @@
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
+import { AchievementStore } from '../stores/DAOStores';
 import AuthStore from '../stores/AuthStore';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -28,6 +29,7 @@ class StatsScreen extends React.Component<{}> {
               <SectionHeader title="Recent Pours" />
             </Fragment>
           }
+          onRefresh={AchievementStore.flushQueryCaches}
           queryOptions={{
             filters: [DAOApi.createFilter('owner/id').equals(userID)],
             orderBy: [{ column: 'id', direction: 'desc' }],

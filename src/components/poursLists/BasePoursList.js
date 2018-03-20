@@ -17,6 +17,7 @@ type Props = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
+  onRefresh?: () => void,
   queryOptions?: QueryOptions,
 |};
 
@@ -45,6 +46,12 @@ class BasePoursList extends React.Component<Props> {
 
   _keyExtractor = (row: Row<Pour>): string => row.key;
 
+  _onRefresh = () => {
+    const { onRefresh } = this.props;
+    onRefresh && onRefresh();
+    this._listStore.reload();
+  };
+
   _renderRow = ({ item }: { item: Row<Pour> }): React.Element<any> => (
     <LoaderRow loadedRow={this.props.loadedRow} loader={item.loader} />
   );
@@ -60,7 +67,7 @@ class BasePoursList extends React.Component<Props> {
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
+        onRefresh={this._onRefresh}
         renderItem={this._renderRow}
       />
     );
