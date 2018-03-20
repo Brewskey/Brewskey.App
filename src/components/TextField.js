@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { View } from 'react-native';
 import {
@@ -12,7 +14,9 @@ import nullthrows from 'nullthrows';
 export type Props = {
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
+  inputStyle?: Style,
   label?: string,
+  labelStyle?: Style,
   onBlur?: () => void,
   onChange: (value: any) => void,
   value: any,
@@ -38,7 +42,9 @@ class TextField extends React.Component<Props> {
     const {
       error,
       inputRef,
+      inputStyle,
       label,
+      labelStyle,
       onBlur,
       onChange,
       value,
@@ -47,8 +53,9 @@ class TextField extends React.Component<Props> {
 
     return (
       <View>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <FormInput
+          inputStyle={inputStyle}
           onBlur={onBlur}
           onChangeText={onChange}
           ref={this._setRef}
