@@ -25,3 +25,16 @@ export const calculateKegLevel = (
   const level = (maxOunces - ounces) / maxOunces * 100;
   return level <= 0 ? 0 : level.toFixed(0);
 };
+
+export const getElementFromComponentProp = <TProps>(
+  ComponentProp?: ?React.Element<TProps> | React.ComponentType<any>,
+): React.Element<TProps> => {
+  if (!ComponentProp) {
+    return null;
+  }
+  return React.isValidElement(ComponentProp) ? (
+    ComponentProp
+  ) : (
+    <ComponentProp />
+  );
+};
