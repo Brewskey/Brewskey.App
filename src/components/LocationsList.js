@@ -129,6 +129,7 @@ const Slideout = ({
 }: RowItemProps<Location, *>) => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+    deleteModalTitle="Delete location"
     item={item}
     onDeleteItemPress={onDeleteItemPress}
     onEditItemPress={onEditItemPress}

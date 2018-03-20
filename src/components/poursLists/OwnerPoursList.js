@@ -17,6 +17,7 @@ import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  onRefresh: () => void,
   queryOptions?: QueryOptions,
 |};
 
@@ -38,12 +39,13 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
   };
 
   render() {
-    const { ListHeaderComponent, queryOptions } = this.props;
+    const { ListHeaderComponent, onRefresh, queryOptions } = this.props;
     return (
       <BasePoursList
         ListEmptyComponent={<ListEmptyComponent message="No pours" />}
         ListHeaderComponent={ListHeaderComponent}
         loadedRow={LoadedRow}
+        onRefresh={onRefresh}
         queryOptions={queryOptions}
       />
     );

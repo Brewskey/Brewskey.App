@@ -14,15 +14,17 @@ import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  onRefresh?: () => void,
   queryOptions?: QueryOptions,
 |};
 
 const BeveragePoursList = observer(
-  ({ ListHeaderComponent, queryOptions }: Props) => (
+  ({ ListHeaderComponent, onRefresh, queryOptions }: Props) => (
     <BasePoursList
       ListEmptyComponent={<ListEmptyComponent message="No recent pours" />}
       ListHeaderComponent={ListHeaderComponent}
       loadedRow={LoadedRow}
+      onRefresh={onRefresh}
       queryOptions={queryOptions}
     />
   ),

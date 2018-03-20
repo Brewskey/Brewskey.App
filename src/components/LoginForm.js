@@ -67,6 +67,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
         <SectionContent paddedVertical>
           <Button
             disabled={submitting || invalid || pristine}
+            loading={submitting}
             onPress={this._onSubmitButtonPress}
             title="Log in"
           />

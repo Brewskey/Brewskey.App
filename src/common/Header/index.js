@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 import HeaderBackButton from './HeaderBackButton';
+import { getElementFromComponentProp } from '../../utils';
 
 // todo title have slight offset to the left when there are more than one
 // button in the right component. Need to figure better solution to position
@@ -52,25 +53,14 @@ class Header extends React.PureComponent<Props> {
 
   render() {
     const { leftComponent, rightComponent, showBackButton, title } = this.props;
-    const LeftComponent = (leftComponent: any);
-    const RightComponent = (rightComponent: any);
 
-    let leftElement;
-    if (showBackButton) {
-      leftElement = <HeaderBackButton />;
-    } else {
-      leftElement = React.isValidElement(LeftComponent) ? (
-        LeftComponent
-      ) : (
-        <LeftComponent />
-      );
-    }
-
-    const rightElement = React.isValidElement(RightComponent) ? (
-      RightComponent
+    const leftElement = showBackButton ? (
+      <HeaderBackButton />
     ) : (
-      <RightComponent />
+      getElementFromComponentProp(leftComponent)
     );
+
+    const rightElement = getElementFromComponentProp(rightComponent);
 
     return (
       <View style={styles.outerContainer}>

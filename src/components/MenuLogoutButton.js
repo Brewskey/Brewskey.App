@@ -1,15 +1,38 @@
 // @flow
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
+import Fragment from '../common/Fragment';
+import LogoutModal from './modals/LogoutModal';
+import ToggleStore from '../stores/ToggleStore';
 import AuthStore from '../stores/AuthStore';
 import MenuButton from './MenuButton';
 
-const LogoutButton = () => (
-  <MenuButton
-    icon={{ name: 'logout', type: 'material-community' }}
-    onPress={AuthStore.clearAuthState}
-    title="log out"
-  />
-);
+@observer
+class MenuLogoutButton extends React.Component {
+  _modalToggleStore = new ToggleStore();
 
-export default LogoutButton;
+  _onLogoutConform = () => {
+    this._modalToggleStore.toggleOff();
+    AuthStore.clearAuthState();
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <MenuButton
+          icon={{ name: 'logout', type: 'material-community' }}
+          onPress={this._modalToggleStore.toggleOn}
+          title="log out"
+        />
+        <LogoutModal
+          isVisible={this._modalToggleStore.isToggled}
+          onCancelButtonPress={this._modalToggleStore.toggleOff}
+          onLogoutButtonPress={this._onLogoutConform}
+        />
+      </Fragment>
+    );
+  }
+}
+
+export default MenuLogoutButton;
