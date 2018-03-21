@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { View } from 'react-native';
 import {
@@ -12,9 +14,12 @@ import nullthrows from 'nullthrows';
 export type Props = {
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
+  inputStyle?: Style,
   label?: string,
+  labelStyle?: Style,
   onBlur?: () => void,
   onChange: (value: any) => void,
+  validationTextStyle?: Style,
   value: any,
   // other react-native textInput props
 };
@@ -38,24 +43,30 @@ class TextField extends React.Component<Props> {
     const {
       error,
       inputRef,
+      inputStyle,
       label,
+      labelStyle,
       onBlur,
       onChange,
+      validationTextStyle,
       value,
       ...props
     } = this.props;
 
     return (
       <View>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <FormInput
+          inputStyle={inputStyle}
           onBlur={onBlur}
           onChangeText={onChange}
           ref={this._setRef}
           value={value || value === 0 ? value.toString() : null}
           {...props}
         />
-        <FormValidationMessage>{error}</FormValidationMessage>
+        <FormValidationMessage labelStyle={validationTextStyle}>
+          {error}
+        </FormValidationMessage>
       </View>
     );
   }

@@ -4,6 +4,7 @@ import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from '../authApi';
 
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,6 +14,7 @@ import SectionContent from '../common/SectionContent';
 import AuthStore from '../stores/AuthStore';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
+import { COLORS } from '../theme';
 
 const validate = (values: UserCredentials): { [key: string]: string } => {
   const errors = {};
@@ -27,6 +29,24 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
   return errors;
 };
 
+const styles = StyleSheet.create({
+  disabledButton: {
+    backgroundColor: COLORS.primary,
+  },
+  disabledText: {
+    color: COLORS.textInverse,
+  },
+  input: {
+    color: COLORS.textInverse,
+  },
+  label: {
+    color: COLORS.textInverse,
+  },
+  validationText: {
+    color: COLORS.danger2,
+  },
+});
+
 type InjectedProps = FormProps;
 
 @form({ validate })
@@ -40,33 +60,48 @@ class LoginForm extends InjectedComponent<InjectedProps> {
     this.injectedProps.handleSubmit(this._onSubmit);
 
   render() {
-    const { formError, invalid, pristine, submitting } = this.injectedProps;
+    const { formError, invalid, submitting } = this.injectedProps;
     return (
       <KeyboardAwareScrollView>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          autoFocus
           component={TextField}
           disabled={submitting}
+          inputStyle={styles.input}
           label="User name"
+          labelStyle={styles.label}
           name="userName"
           nextFocusTo="password"
+          selectionColor={COLORS.textInverse}
+          underlineColorAndroid={COLORS.secondary}
+          validationTextStyle={styles.validationText}
         />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
+          inputStyle={styles.input}
           label="Password"
+          labelStyle={styles.label}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
+          selectionColor={COLORS.textInverse}
+          underlineColorAndroid={COLORS.secondary}
+          validationTextStyle={styles.validationText}
         />
-        <FormValidationMessage>{formError}</FormValidationMessage>
+        <FormValidationMessage labelStyle={styles.validationText}>
+          {formError}
+        </FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid || pristine}
+            backgroundColor={COLORS.secondary}
+            color={COLORS.text}
+            disabled={submitting || invalid}
+            disabledStyle={styles.disabledButton}
+            disabledTextStyle={styles.disabledText}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
             title="Log in"
