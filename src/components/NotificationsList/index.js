@@ -6,6 +6,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
 import List from '../../common/List';
+import ErrorBoundary from '../../common/ErrorBoundary';
+import ErrorListItem from '../../common/ErrorListItem';
 import ListEmptyComponent from '../../common/ListEmptyComponent';
 import NotificationsStore from '../../stores/NotificationsStore';
 import LowKegLevelListItem from './LowKegLevelListItem';
@@ -34,12 +36,14 @@ class NotificationsList extends React.Component<{}> {
       LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE[item.type] || View;
 
     return (
-      <ListItemComponent
-        notification={(item: any)}
-        onOpen={this._onItemOpen}
-        onPress={NotificationsStore.onNotificationPress}
-        onReadEnd={this._onNotificationReadEnd}
-      />
+      <ErrorBoundary fallbackComponent={ErrorListItem}>
+        <ListItemComponent
+          notification={(item: any)}
+          onOpen={this._onItemOpen}
+          onPress={NotificationsStore.onNotificationPress}
+          onReadEnd={this._onNotificationReadEnd}
+        />
+      </ErrorBoundary>
     );
   };
 
