@@ -8,8 +8,9 @@ import InjectedComponent from '../common/InjectedComponent';
 import { BeverageStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import BeverageDetailsContent from '../components/BeverageDetailsLoader/BeverageDetailsContent';
+import BeverageDetailsContent from '../components/BeverageDetailsContent';
 import Container from '../common/Container';
+import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LoaderComponent from '../common/LoaderComponent';
@@ -65,7 +66,9 @@ const LoadedComponent = ({ value: beverage }: LoadedComponentProps) => (
       title={beverage.name}
     />
     <ScrollView>
-      <BeverageDetailsContent beverage={beverage} />
+      <SectionContent>
+        <BeverageDetailsContent beverage={beverage} />
+      </SectionContent>
     </ScrollView>
   </Container>
 );

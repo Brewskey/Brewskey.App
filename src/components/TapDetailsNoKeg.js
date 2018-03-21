@@ -1,18 +1,17 @@
 // @flow
 
 import type { EntityID } from 'brewskey.js-api';
-import type { Navigation } from '../../types';
+import type { Navigation } from '../types';
 
 import * as React from 'react';
-import InjectedComponent from '../../common/InjectedComponent';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import InjectedComponent from '../common/InjectedComponent';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { COLORS, TYPOGRAPHY } from '../theme';
+import Container from '../common/Container';
 import { withNavigation } from 'react-navigation';
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingHorizontal: 10,
     paddingVertical: 200,
   },
@@ -31,7 +30,7 @@ type Props = { tapId: EntityID };
 type InjectedProps = {| navigation: Navigation |};
 
 @withNavigation
-class EmptyBeverageDetails extends InjectedComponent<InjectedProps, Props> {
+class TapDetailsNoKeg extends InjectedComponent<InjectedProps, Props> {
   _onSetupPress = () =>
     this.injectedProps.navigation.navigate('newKeg', {
       tapId: this.props.tapId,
@@ -39,16 +38,16 @@ class EmptyBeverageDetails extends InjectedComponent<InjectedProps, Props> {
 
   render() {
     return (
-      <View style={styles.container}>
+      <Container centered style={styles.container}>
         <Text style={styles.text}>You don't have keg on the tap.</Text>
         <TouchableOpacity onPress={this._onSetupPress}>
           <Text style={[styles.text, styles.textLink]}>
             Click to setup one.
           </Text>
         </TouchableOpacity>
-      </View>
+      </Container>
     );
   }
 }
 
-export default EmptyBeverageDetails;
+export default TapDetailsNoKeg;
