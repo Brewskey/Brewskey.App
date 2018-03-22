@@ -3,6 +3,7 @@
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import { observer } from 'mobx-react';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
@@ -45,6 +46,7 @@ const validate = ({
 };
 
 @form({ validate })
+@observer
 class RegisterForm extends InjectedComponent<FormProps> {
   _onSubmitButtonPress = (): Promise<void> =>
     this.injectedProps.handleSubmit(AuthStore.register);

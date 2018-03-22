@@ -5,11 +5,11 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import RegisterForm from '../components/RegisterForm';
 
-class RegisterScreen extends React.Component {
+class RegisterScreen extends React.Component<{}> {
   render() {
     return (
       <Container>
-        <Header showBackButton title="register" />
+        <Header showBackButton title="Register account" />
         <RegisterForm />
       </Container>
     );

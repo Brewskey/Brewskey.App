@@ -58,7 +58,7 @@ class AuthStore {
           NavigationService.navigate('main');
           await Signalr.startAll({ access_token: this.token });
         } else {
-          NavigationService.navigate('register');
+          NavigationService.navigate('login');
         }
       });
     })();

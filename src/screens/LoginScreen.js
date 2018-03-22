@@ -34,6 +34,9 @@ type Props = {|
 class LoginScreen extends React.Component<Props> {
   _onRegisterPress = () => this.props.navigation.navigate('register');
 
+  _onForgotPasswordPress = () =>
+    this.props.navigation.navigate('resetPassword');
+
   render() {
     return (
       <KeyboardAwareScrollView style={styles.container}>
@@ -47,7 +50,11 @@ class LoginScreen extends React.Component<Props> {
         </View>
         <LoginForm />
         <Button onPress={this._onRegisterPress} title="Register" transparent />
-        <Button title="Forgot password" transparent />
+        <Button
+          onPress={this._onForgotPasswordPress}
+          title="Forgot password"
+          transparent
+        />
       </KeyboardAwareScrollView>
     );
   }

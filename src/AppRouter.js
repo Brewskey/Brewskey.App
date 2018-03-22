@@ -10,6 +10,7 @@ import MainTabBar from './components/MainTabBar';
 
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen';
 import SplashScreen from './screens/SplashScreen';
 
 import BeverageDetailsScreen from './screens/BeverageDetailsScreen';
@@ -50,6 +51,7 @@ const AppRouter = SwitchNavigator(
       {
         login: LoginScreen,
         register: RegisterScreen,
+        resetPassword: ResetPasswordScreen,
       },
       {
         headerMode: 'none',
