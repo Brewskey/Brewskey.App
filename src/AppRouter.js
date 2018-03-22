@@ -9,6 +9,7 @@ import {
 import MainTabBar from './components/MainTabBar';
 
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import SplashScreen from './screens/SplashScreen';
 
 import BeverageDetailsScreen from './screens/BeverageDetailsScreen';
@@ -44,8 +45,16 @@ import HelpScreen from './screens/HelpScreen';
 /* eslint-disable sorting/sort-object-props */
 const AppRouter = SwitchNavigator(
   {
-    splash: { screen: SplashScreen },
-    login: { screen: LoginScreen },
+    splash: SplashScreen,
+    auth: StackNavigator(
+      {
+        login: LoginScreen,
+        register: RegisterScreen,
+      },
+      {
+        headerMode: 'none',
+      },
+    ),
     main: TabNavigator(
       {
         home: HomeScreen,

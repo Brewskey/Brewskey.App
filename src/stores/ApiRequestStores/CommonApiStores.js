@@ -3,10 +3,8 @@
 import type { Coordinates, NearbyLocation } from '../../types';
 
 import DAOApi from 'brewskey.js-api';
-import makeApiRequestStore, {
-  deepIdCast,
-  fetchJSON,
-} from './makeRequestApiStore';
+import makeApiRequestStore, { deepIdCast } from './makeRequestApiStore';
+import { fetchJSON } from '../../utils';
 import AuthStore from '../AuthStore';
 import CONFIG from '../../config';
 
@@ -17,9 +15,9 @@ const makeNearbyLocationsStore = () => {
       radius?: number = 15000,
     ): Promise<Array<NearbyLocation>> =>
       fetchJSON(
-        `${CONFIG.HOST}/api/v2/Locations/Nearby/?longitude=${
-          longitude
-        }&latitude=${latitude}&radius=${radius}
+        `${
+          CONFIG.HOST
+        }/api/v2/Locations/Nearby/?longitude=${longitude}&latitude=${latitude}&radius=${radius}
       `,
         {
           headers: {

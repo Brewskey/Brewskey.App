@@ -1,7 +1,7 @@
 // @flow
 
 import type { FormProps } from '../common/form/types';
-import type { UserCredentials } from '../authApi';
+import type { UserCredentials } from '../AuthApi';
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
@@ -52,12 +52,8 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
-  _onSubmit = async (formValues: Object): Promise<void> => {
-    await AuthStore.login(formValues);
-  };
-
   _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(this._onSubmit);
+    this.injectedProps.handleSubmit(AuthStore.login);
 
   render() {
     const { formError, invalid, submitting } = this.injectedProps;

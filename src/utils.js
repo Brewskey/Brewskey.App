@@ -2,6 +2,9 @@
 
 import * as React from 'react';
 
+// eslint-disable-next-line
+const EMAIL_REGEXP = /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
+
 export const createRange = (start: number, end: number): Array<number> =>
   [...Array(1 + end - start).keys()].map(
     (index: number): number => start + index,
@@ -9,6 +12,9 @@ export const createRange = (start: number, end: number): Array<number> =>
 
 export const getRandomInt = (min: number, max: number): number =>
   Math.floor(Math.random() * (max - min + 1)) + min;
+
+export const validateEmail = (email: string): boolean =>
+  EMAIL_REGEXP.test(email);
 
 export const isClassBasedComponent = (
   component: React.ComponentType<any>,
@@ -37,4 +43,16 @@ export const getElementFromComponentProp = <TProps>(
   ) : (
     <ComponentProp />
   );
+};
+
+export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
+  // eslint-disable-next-line no-undef
+  const response = await fetch(...fetchArgs);
+
+  const responseJson = await response.json();
+  if (!response.ok) {
+    throw new Error(responseJson.error_description);
+  }
+
+  return responseJson;
 };
