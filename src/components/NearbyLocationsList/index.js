@@ -8,6 +8,7 @@ import type {
 } from '../../types';
 
 import * as React from 'react';
+import { SectionList } from 'react-native';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
@@ -15,8 +16,9 @@ import ListItem from '../../common/ListItem';
 import NearbyLocationListEmpty from './NearbyLocationsListEmtpy';
 import LoadingListFooter from '../../common/LoadingListFooter';
 import ListSectionHeader from '../../common/ListSectionHeader';
-import { SectionList } from 'react-native';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { calculateKegLevel } from '../../utils';
+import { COLORS } from '../../theme';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -32,8 +34,6 @@ type State = {|
 |};
 
 // todo pull to refresh for update gps position?
-// todo add onItemPress
-// add onPourIconPress
 @withNavigation
 @observer
 class NearbyLocationList extends InjectedComponent<
@@ -50,21 +50,43 @@ class NearbyLocationList extends InjectedComponent<
     );
   }
 
-  _keyExtractor = ({ id }: NearbyLocation): string => id.toString();
+  _keyExtractor = ({ id }: NearbyTap): string => id.toString();
 
-  _renderItem = ({ item }: { item: NearbyLocation }): React.Element<any> => (
-    <ListItem
-      avatar={
-        <BeverageAvatar
-          beverageId={item.CurrentKeg ? item.CurrentKeg.beverageId : ''}
-        />
-      }
-      item={item}
-      rightIcon={{ name: 'md-beer', type: 'ionicon' }}
-      subtitle={(item.CurrentKeg && item.CurrentKeg.beverageName) || '-'}
-      title={item.name}
-    />
-  );
+  _onItemPress = ({ id }: NearbyTap) =>
+    this.injectedProps.navigation.navigate('tapDetails', { id });
+
+  _renderItem = ({ index, item }: { item: NearbyTap }): React.Element<any> => {
+    const { CurrentKeg: currentKeg } = item;
+    const kegLevel = currentKeg
+      ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces)
+      : null;
+
+    const beverageName = currentKeg
+      ? currentKeg.beverageName
+      : 'No Beer on Tap';
+
+    return (
+      <ListItem
+        avatar={
+          <BeverageAvatar
+            beverageId={currentKeg ? currentKeg.beverageId : ''}
+          />
+        }
+        badge={
+          kegLevel !== null
+            ? {
+                containerStyle: { backgroundColor: COLORS.accent },
+                value: `${kegLevel}%`,
+              }
+            : null
+        }
+        hideChevron
+        item={item}
+        onPress={this._onItemPress}
+        title={`${index + 1} - ${beverageName}`}
+      />
+    );
+  };
 
   _renderSectionHeader = ({ section }): React.Element<any> => (
     <ListSectionHeader title={section.title} />
