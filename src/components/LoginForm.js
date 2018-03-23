@@ -1,20 +1,20 @@
 // @flow
 
 import type { FormProps } from '../common/form/types';
-import type { UserCredentials } from '../authApi';
+import type { UserCredentials } from '../AuthApi';
 
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
-import Button from '../common/buttons/Button';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import InjectedComponent from '../common/InjectedComponent';
 import SectionContent from '../common/SectionContent';
+import Button from '../common/buttons/Button';
+import { FormField, form } from '../common/form';
 import AuthStore from '../stores/AuthStore';
-import { form, FormField } from '../common/form';
-import TextField from './TextField';
 import { COLORS } from '../theme';
+import TextField from './TextField';
 
 const validate = (values: UserCredentials): { [key: string]: string } => {
   const errors = {};
@@ -30,12 +30,6 @@ const validate = (values: UserCredentials): { [key: string]: string } => {
 };
 
 const styles = StyleSheet.create({
-  disabledButton: {
-    backgroundColor: COLORS.primary,
-  },
-  disabledText: {
-    color: COLORS.textInverse,
-  },
   input: {
     color: COLORS.textInverse,
   },
@@ -52,12 +46,8 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
-  _onSubmit = async (formValues: Object): Promise<void> => {
-    await AuthStore.login(formValues);
-  };
-
   _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(this._onSubmit);
+    this.injectedProps.handleSubmit(AuthStore.login);
 
   render() {
     const { formError, invalid, submitting } = this.injectedProps;
@@ -97,14 +87,11 @@ class LoginForm extends InjectedComponent<InjectedProps> {
         </FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            backgroundColor={COLORS.secondary}
-            color={COLORS.text}
             disabled={submitting || invalid}
-            disabledStyle={styles.disabledButton}
-            disabledTextStyle={styles.disabledText}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
             title="Log in"
+            secondary
           />
         </SectionContent>
       </KeyboardAwareScrollView>

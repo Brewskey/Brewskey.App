@@ -19,18 +19,6 @@ export const deepIdCast = (node: any): any => {
   return node;
 };
 
-export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
-  // eslint-disable-next-line no-undef
-  const response = await fetch(...fetchArgs);
-
-  const responseJson = await response.json();
-  if (!response.ok) {
-    throw new Error(responseJson.error_description);
-  }
-
-  return responseJson;
-};
-
 type RequestApiStore<TResult> = {|
   fetch: (...requestArgs: Array<any>) => string,
   flushCache: () => void,

@@ -5,22 +5,22 @@ import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
 
-import * as React from 'react';
-import nullthrows from 'nullthrows';
-import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
-import { withNavigation } from 'react-navigation';
-import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
+import { observer } from 'mobx-react';
+import nullthrows from 'nullthrows';
+import * as React from 'react';
+import { withNavigation } from 'react-navigation';
+import InjectedComponent from '../common/InjectedComponent';
+import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListItem from '../common/ListItem';
+import LoaderRow from '../common/LoaderRow';
+import LoadingListFooter from '../common/LoadingListFooter';
+import QuickActions from '../common/QuickActions';
+import SwipeableList from '../common/SwipeableList';
+import SwipeableRow from '../common/SwipeableRow';
+import { NULL_STRING_PLACEHOLDER } from '../constants';
 import DAOListStore from '../stores/DAOListStore';
 import { LocationStore } from '../stores/DAOStores';
-import LoadingListFooter from '../common/LoadingListFooter';
-import ListEmptyComponent from '../common/ListEmptyComponent';
-import SwipeableList from '../common/SwipeableList';
-import LoaderRow from '../common/LoaderRow';
-import SwipeableRow from '../common/SwipeableRow';
-import ListItem from '../common/ListItem';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),

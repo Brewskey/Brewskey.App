@@ -4,6 +4,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { Image, StatusBar, StyleSheet, View } from 'react-native';
+import Button from '../common/buttons/Button';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BrewskeyLogo from '../resources/brewskey-large.png';
 import LoginForm from '../components/LoginForm';
@@ -31,6 +32,11 @@ type Props = {|
 |};
 
 class LoginScreen extends React.Component<Props> {
+  _onRegisterPress = () => this.props.navigation.navigate('register');
+
+  _onForgotPasswordPress = () =>
+    this.props.navigation.navigate('resetPassword');
+
   render() {
     return (
       <KeyboardAwareScrollView style={styles.container}>
@@ -43,6 +49,12 @@ class LoginScreen extends React.Component<Props> {
           />
         </View>
         <LoginForm />
+        <Button onPress={this._onRegisterPress} title="Register" transparent />
+        <Button
+          onPress={this._onForgotPasswordPress}
+          title="Forgot password"
+          transparent
+        />
       </KeyboardAwareScrollView>
     );
   }

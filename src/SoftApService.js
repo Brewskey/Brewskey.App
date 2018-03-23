@@ -2,7 +2,7 @@
 
 import type { WifiNetwork } from './types';
 
-import { fetchJSON } from './stores/ApiRequestStores/makeRequestApiStore';
+import { fetchJSON } from './utils';
 import NodeRSA from 'node-rsa';
 
 const BASE_URL = 'http://192.168.0.1:80';

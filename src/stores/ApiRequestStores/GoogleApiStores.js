@@ -2,7 +2,8 @@
 
 import type { Coordinates } from '../../types';
 
-import makeRequestApiStore, { fetchJSON } from './makeRequestApiStore';
+import makeRequestApiStore from './makeRequestApiStore';
+import { fetchJSON } from '../../utils';
 
 // todo move to secure please when it will be real key
 const API_KEY = 'AIzaSyD_ZzDpXh6LAuoK7XaSecZqhnF0si6Eak0';

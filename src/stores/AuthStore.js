@@ -1,13 +1,13 @@
 // @flow
 
-import type { UserCredentials } from '../authApi';
+import type { UserCredentials } from '../AuthApi';
 
 import { AsyncStorage } from 'react-native';
 import { action, autorun, computed, runInAction, observable } from 'mobx';
 import DAOApi from 'brewskey.js-api';
 import NavigationService from '../NavigationService';
 import NotificationsStore from './NotificationsStore';
-import authApi from '../authApi';
+import AuthApi from '../AuthApi';
 import { UNAUTH_ERROR_CODE } from '../constants';
 import Storage from '../Storage';
 import Signalr from '../signalr';
@@ -88,7 +88,7 @@ class AuthStore {
 
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
-    const { access_token, id, roles, userName } = await authApi.login(
+    const { access_token, id, roles, userName } = await AuthApi.login(
       userCredentials,
     );
 
@@ -101,6 +101,12 @@ class AuthStore {
 
     this._setAuthState(authState);
     NotificationsStore.onLogin();
+  };
+
+  // todo waiting for server implementation
+  @action
+  register = async (): Promise<void> => {
+    await AuthStore.register();
   };
 
   @action
