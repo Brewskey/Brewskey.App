@@ -6,9 +6,9 @@ import * as React from 'react';
 const EMAIL_REGEXP = /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
 export const createRange = (start: number, end: number): Array<number> =>
-  [...Array(1 + end - start).keys()].map(
-    (index: number): number => start + index,
-  );
+  Array(end - start + 1)
+    .fill(start)
+    .map((x: number, y: number): number => x + y);
 
 export const getRandomInt = (min: number, max: number): number =>
   Math.floor(Math.random() * (max - min + 1)) + min;
