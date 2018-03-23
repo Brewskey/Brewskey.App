@@ -4,6 +4,7 @@ import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
+import AuthApi from '../AuthApi';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
@@ -14,12 +15,19 @@ import TextField from '../components/TextField';
 import Button from '../common/buttons/Button';
 import { validateEmail } from '../utils';
 
+export type RegisterFormFields = {|
+  email: string,
+  password: string,
+  passwordConfirm: string,
+  userName: string,
+|};
+
 const validate = ({
   email,
   password,
   passwordConfirm,
   userName,
-}: Object): { [key: string]: string } => {
+}: RegisterFormFields): { [key: string]: string } => {
   const errors = {};
 
   if (!userName) {
@@ -48,8 +56,14 @@ const validate = ({
 @form({ validate })
 @observer
 class RegisterForm extends InjectedComponent<FormProps> {
+  _onSubmit = async (values: RegisterFormFields): Promise<void> => {
+    await AuthApi.register(values);
+    const { password, userName } = values;
+    await AuthStore.login({ password, userName });
+  };
+
   _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(AuthStore.register);
+    this.injectedProps.handleSubmit(this._onSubmit);
 
   render() {
     const { formError, invalid, submitting } = this.injectedProps;

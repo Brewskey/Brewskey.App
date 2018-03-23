@@ -103,12 +103,6 @@ class AuthStore {
     NotificationsStore.onLogin();
   };
 
-  // todo waiting for server implementation
-  @action
-  register = async (): Promise<void> => {
-    await AuthStore.register();
-  };
-
   @action
   _setAuthState = (authState: AuthState) => {
     setDAOHeaders(authState.token);

@@ -1,5 +1,7 @@
 // @flow
 
+import type { RegisterFormFields } from './components/RegisterForm';
+
 import CONFIG from './config';
 import { fetchJSON } from './utils';
 
@@ -16,10 +18,17 @@ class AuthApi {
       method: 'POST',
     });
 
-  // todo waiting for server implementation
-  static register = (): Promise<Object> => Promise.resolve();
+  static register = (registerFields: RegisterFormFields): Promise<Object> =>
+    // eslint-disable-next-line
+    fetch(`${CONFIG.HOST}api/account/register`, {
+      body: JSON.stringify(registerFields),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
 
-  // todo waiting for server implementation
   static resetPassword = (email: string): Promise<void> =>
     // eslint-disable-next-line
     fetch(`${CONFIG.HOST}api/account/reset-password`, {
