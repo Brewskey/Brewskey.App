@@ -36,7 +36,6 @@ const DeleteModal = ({
   onLogoutButtonPress,
 }: Props) => (
   <CenteredModal
-    contentContainerStyle={styles.container}
     isVisible={isVisible}
     header={<Text style={styles.titleText}>Logout</Text>}
     onHideModal={onCancelButtonPress}

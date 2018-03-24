@@ -61,11 +61,11 @@ class NotificationsStore {
   @observable _isReady: boolean = false;
   @observable _navigation: ?Navigation = null;
   @observable
-  _notificationsByID: ObservableMap<Notification> = observable.map();
+  _notificationsByID: ObservableMap<string, Notification> = new Map();
 
   // its Map but used as Set since mobx doesn't support Set;
   @observable
-  _notificationsDisabledByTapID: ObservableMap<boolean> = observable.map();
+  _notificationsDisabledByTapID: ObservableMap<EntityID, boolean> = new Map();
 
   constructor() {
     AppState.addEventListener('change', nextAppState => {

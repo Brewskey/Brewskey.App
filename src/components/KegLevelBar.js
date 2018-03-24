@@ -54,8 +54,8 @@ class KegLevelBar extends React.PureComponent<Props> {
     const kegLevel = calculateKegLevel(ounces, maxOunces);
     const isLowLevel = kegLevel <= LOW_KEG_LEVEL;
     const levelText = isLowLevel
-      ? `Low keg level: ${kegLevel}%`
-      : `${kegLevel}%`;
+      ? `Low keg level: ${kegLevel.toFixed(0)}%`
+      : `${kegLevel.toFixed(0)}%`;
 
     return (
       <View style={styles.container}>

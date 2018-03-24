@@ -32,10 +32,10 @@ const getCacheKey = (requestArgs: Array<any>): string =>
 const makeRequestApiStore = <TResult>(
   getRequestPromise: (...args: Array<any>) => Promise<TResult>,
 ): RequestApiStore<TResult> => {
-  // todo Flow fix: ? shouldn't be there, but ObservableMap type is weird
-  const requestLoaderByKey: ObservableMap<?LoadObject<TResult>> = observable(
-    new Map(),
-  );
+  const requestLoaderByKey: ObservableMap<
+    string,
+    ?LoadObject<TResult>,
+  > = observable.map();
 
   const fetch = (...requestArgs: Array<any>): string => {
     const cacheKey = getCacheKey(requestArgs);

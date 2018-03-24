@@ -35,7 +35,7 @@ class Storage {
     return `${userID}/${key}`;
   };
 
-  static _getUserID = (): Promise<void> =>
+  static _getUserID = (): Promise<string> =>
     new Promise((resolve: () => void) => {
       if (AuthStore.isAuthorized) {
         resolve(AuthStore.userID);
