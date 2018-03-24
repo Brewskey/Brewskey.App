@@ -41,7 +41,7 @@ class ContactsList extends React.Component<Props> {
   render() {
     return (
       <List
-        data={ContactsStore.contacts}
+        data={ContactsStore.contacts.slice()}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={<ListEmptyComponent message="No contacts" />}
         ListHeaderComponent={this.props.ListHeaderComponent}
