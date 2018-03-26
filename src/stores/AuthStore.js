@@ -111,7 +111,7 @@ class AuthStore {
 
   @action
   _setAuthState = (authState: AuthState) => {
-    setDAOHeaders(authState.token);
+    authState.token && setDAOHeaders(authState.token);
     this.authState = authState;
     Storage.set(AUTH_STORAGE_KEY, authState);
   };

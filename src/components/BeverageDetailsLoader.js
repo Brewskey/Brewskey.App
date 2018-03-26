@@ -11,14 +11,12 @@ import BeverageDetailsContent from './BeverageDetailsContent';
 
 type Props = {|
   beverageID: EntityID,
-  loader: LoadObject<Beverage>,
-  tapId: EntityID,
 |};
 
 @observer
 class BeverageDetailsLoader extends React.Component<Props> {
   @computed
-  get _beverageLoader() {
+  get _beverageLoader(): LoadObject<Beverage> {
     return BeverageStore.getByID(this.props.beverageID);
   }
 
@@ -32,7 +30,11 @@ class BeverageDetailsLoader extends React.Component<Props> {
   }
 }
 
-const LoadedBeverageDetails = ({ value: beverage }: Props) => (
+type LoadedProps = {|
+  value: Beverage,
+|};
+
+const LoadedBeverageDetails = ({ value: beverage }: LoadedProps) => (
   <BeverageDetailsContent beverage={beverage} />
 );
 

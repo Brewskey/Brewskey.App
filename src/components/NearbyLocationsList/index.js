@@ -58,7 +58,7 @@ class NearbyLocationList extends InjectedComponent<
   _renderItem = ({ index, item }: { item: NearbyTap }): React.Element<any> => {
     const { CurrentKeg: currentKeg } = item;
     const kegLevel = currentKeg
-      ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces)
+      ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces).toFixed(0)
       : null;
 
     const beverageName = currentKeg

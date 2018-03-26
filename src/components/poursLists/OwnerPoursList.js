@@ -17,7 +17,7 @@ import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
-  onRefresh: () => void,
+  onRefresh?: () => void,
   queryOptions?: QueryOptions,
 |};
 
