@@ -18,15 +18,13 @@ type Props = {|
   userID: EntityID,
 |};
 
-const johnID = '68ae3ba1-7841-4273-8d4b-0fb4fa6ed3ca';
-
 @observer
 class UserBadges extends React.Component<Props> {
   @observable _loadedComponent: ?LoadedUserBadges = null;
 
   @computed
   get _achievementCountersLoader(): LoadObject<AchievementCounter> {
-    return AchievementStore.getAchievementCounters(johnID);
+    return AchievementStore.getAchievementCounters(this.props.userID);
   }
 
   openBadgeModal = async (achievementType: AchievementType): Promise<void> => {
