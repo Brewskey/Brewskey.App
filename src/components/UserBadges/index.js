@@ -1,16 +1,15 @@
 // @flow
 
 import type { AchievementCounter, EntityID } from 'brewskey.js-api';
-import type { Badge } from '../../badges';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { computed } from 'mobx';
+import nullthrows from 'nullthrows';
+import { action, computed, observable, when } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 import { AchievementStore } from '../../stores/DAOStores';
 import LoaderComponent from '../../common/LoaderComponent';
 import LoadingUserBadges from './LoadingUserBadges';
-import BADGES_BY_TYPE from '../../badges';
 import LoadedUserBadges from './LoadedUserBadges';
 import EmptyUserBadges from './EmptyUserBadges';
 import ErrorUserBadges from './ErrorUserBadges';
@@ -19,22 +18,29 @@ type Props = {|
   userID: EntityID,
 |};
 
+const johnID = '68ae3ba1-7841-4273-8d4b-0fb4fa6ed3ca';
+
 @observer
 class UserBadges extends React.Component<Props> {
+  @observable _loadedComponent: ?LoadedUserBadges = null;
+
   @computed
-  get _badgesLoader(): LoadObject<Array<Badge>> {
-    return AchievementStore.getAchievementCounters(this.props.userID)
-      .map((achievementCounters: Array<AchievementCounter>): Array<Badge> =>
-        achievementCounters.map(
-          (achievementCounter: AchievementCounter): Badge =>
-            BADGES_BY_TYPE[achievementCounter.achievementType],
-        ),
-      )
-      .map(
-        (badges: Array<Badge>): Array<Badge> | LoadObject<Array<Badge>> =>
-          badges.length ? badges : LoadObject.empty(),
-      );
+  get _achievementCountersLoader(): LoadObject<AchievementCounter> {
+    return AchievementStore.getAchievementCounters(johnID);
   }
+
+  openBadgeModal = async (achievementType: AchievementType): Promise<void> => {
+    await when(
+      () =>
+        !this._achievementCountersLoader.isLoading() && this._loadedComponent,
+    );
+
+    nullthrows(this._loadedComponent).selectAchievementCounterByType(
+      achievementType,
+    );
+  };
+
+  @action _setLoadedComponentRef = ref => (this._loadedComponent = ref);
 
   render() {
     return (
@@ -42,7 +48,8 @@ class UserBadges extends React.Component<Props> {
         emptyComponent={EmptyUserBadges}
         errorComponent={ErrorUserBadges}
         loadedComponent={LoadedUserBadges}
-        loader={this._badgesLoader}
+        loadedComponentRef={this._setLoadedComponentRef}
+        loader={this._achievementCountersLoader}
         loadingComponent={LoadingUserBadges}
       />
     );

@@ -1,11 +1,12 @@
 // @flow
 
-import type { Badge } from '../../badges';
+import type { AchievementCounter } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
+import ToggleStore from '../../stores/ToggleStore';
 import BadgeIcon from '../BadgeIcon';
 import BadgeModal from '../modals/BadgeModal';
 
@@ -21,47 +22,49 @@ export const styles = StyleSheet.create({
 });
 
 type Props = {|
-  value: Array<Badge>,
+  value: Array<AchievementCounter>,
 |};
 
 @observer
 class LoadedUserBadges extends React.Component<Props> {
-  @observable _isModalVisible: boolean = false;
-  @observable _selectedBadge: ?Badge = null;
+  _modalToggleStore = new ToggleStore();
+  @observable _selectedAchievementCounter: ?AchievementCounter = null;
 
-  @action
-  _selectBadge = (badge: ?Badge) => {
-    this._selectedBadge = badge;
+  selectAchievementCounterByType = (
+    achievementType: AchievementType,
+  ): ?AchievementCounter => {
+    const counter = this.props.value.find(
+      (achievementCounter: AchievementCounter): boolean =>
+        achievementCounter.achievementType === achievementType,
+    );
+
+    counter && this._selectAchievementCounter(counter);
   };
 
   @action
-  _showModal = () => {
-    this._isModalVisible = true;
-  };
-
-  @action
-  _hideModal = () => {
-    this._selectBadge(null);
-    this._isModalVisible = false;
-  };
-
-  _onBadgeIconPress = (badge: Badge) => {
-    this._selectBadge(badge);
-    this._showModal();
+  _selectAchievementCounter = (achievementCounter: achievementCounter) => {
+    this._selectedAchievementCounter = achievementCounter;
+    this._modalToggleStore.toggleOn();
   };
 
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container} horizontal>
-        {this.props.value.map((badge: Badge): React.Node => (
-          <View key={badge.name} style={styles.badgeContainer}>
-            <BadgeIcon badge={badge} onPress={this._onBadgeIconPress} />
-          </View>
-        ))}
+        {this.props.value.map(
+          ({ achievementType, total }: AchievementCounter): React.Node => (
+            <View key={achievementType} style={styles.badgeContainer}>
+              <BadgeIcon
+                achievementType={achievementType}
+                count={total}
+                onPress={this.selectAchievementCounterByType}
+              />
+            </View>
+          ),
+        )}
         <BadgeModal
-          badge={this._selectedBadge}
-          isVisible={this._isModalVisible}
-          onHideModal={this._hideModal}
+          achievementCounter={this._selectedAchievementCounter}
+          isVisible={this._modalToggleStore.isToggled}
+          onHideModal={this._modalToggleStore.toggleOff}
         />
       </ScrollView>
     );

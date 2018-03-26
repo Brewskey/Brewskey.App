@@ -5,6 +5,8 @@ import DAOApi from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
 import { AchievementStore } from '../stores/DAOStores';
 import AuthStore from '../stores/AuthStore';
+import InjectedComponent from '../common/InjectedComponent';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import Fragment from '../common/Fragment';
@@ -13,7 +15,25 @@ import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
 
-class StatsScreen extends React.Component<{}> {
+type InjectedProps = {
+  initialPopUpAchievementType?: AchievementType,
+};
+
+@flatNavigationParamsAndScreenProps
+class StatsScreen extends InjectedComponent<InjectedProps> {
+  _userBadges: ?UserBadges;
+
+  componentDidMount() {
+    const { initialPopUpAchievementType } = this.props;
+    initialPopUpAchievementType &&
+      nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
+  }
+  componentWillReceiveProps(props: InjectedProps) {
+    const { initialPopUpAchievementType } = props;
+    initialPopUpAchievementType &&
+      nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
+  }
+
   render() {
     const userID = nullthrows(AuthStore.userID);
     return (
@@ -24,7 +44,10 @@ class StatsScreen extends React.Component<{}> {
             <Fragment>
               <Section bottomPadded>
                 <SectionHeader title="Badges" />
-                <UserBadges userID={userID} />
+                <UserBadges
+                  ref={ref => (this._userBadges = ref)}
+                  userID={userID}
+                />
               </Section>
               <SectionHeader title="Recent Pours" />
             </Fragment>

@@ -35,7 +35,7 @@ const AchievementListItem = (props: Props) => {
           <Text>{badge.description}</Text>
         </View>
       }
-      leftComponent={<BadgeIcon badge={badge} />}
+      leftComponent={<BadgeIcon achievementType={achievementType} />}
     />
   );
 };
