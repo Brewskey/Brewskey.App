@@ -1,9 +1,11 @@
 // @flow
 
-import type { Badge } from '../../badges';
+import type { AchievementCounter } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
+import { observer } from 'mobx-react';
+import BADGE_BY_ACHIEVEMENT_TYPE from '../../badges';
 import BadgeIcon from '../BadgeIcon';
 import Button from '../../common/buttons/Button';
 import CenteredModal from './CenteredModal';
@@ -27,30 +29,38 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  badge: ?Badge,
+  achievementCounter: ?AchievementCounter,
   isVisible: boolean,
   onHideModal: () => void,
 |};
 
 // todo add swiper
-const BadgeModal = ({ badge, isVisible, onHideModal }: Props) => {
-  if (!badge) {
-    return null;
-  }
+const BadgeModal = observer(
+  ({ achievementCounter, isVisible, onHideModal }: Props) => {
+    if (!achievementCounter) {
+      return null;
+    }
 
-  const { description, name } = badge;
-  return (
-    <CenteredModal
-      contentContainerStyle={styles.modalContentContainer}
-      header={<Text style={styles.headerText}>{name}</Text>}
-      isVisible={isVisible}
-      onHideModal={onHideModal}
-    >
-      <BadgeIcon badge={badge} size="large" />
-      <Text style={styles.descriptionText}>{description}</Text>
-      <Button title="okay" onPress={onHideModal} />
-    </CenteredModal>
-  );
-};
+    const { achievementType, total } = achievementCounter;
+    const { description, name } = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
+
+    return (
+      <CenteredModal
+        contentContainerStyle={styles.modalContentContainer}
+        header={<Text style={styles.headerText}>{name}</Text>}
+        isVisible={isVisible}
+        onHideModal={onHideModal}
+      >
+        <BadgeIcon
+          achievementType={achievementType}
+          count={total}
+          size="large"
+        />
+        <Text style={styles.descriptionText}>{description}</Text>
+        <Button secondary title="okay" onPress={onHideModal} />
+      </CenteredModal>
+    );
+  },
+);
 
 export default BadgeModal;

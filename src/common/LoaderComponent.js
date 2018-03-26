@@ -12,6 +12,9 @@ type Props<TValue, TExtraProps = {}> = {
   emptyComponent: React.ComponentType<TExtraProps>,
   errorComponent: React.ComponentType<{ ...TExtraProps, error: Error }>,
   loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
+  loadedComponentRef?: React.Ref<
+    React.ComponentType<{ ...TExtraProps, value: TValue }>,
+  >,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
   updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
@@ -23,6 +26,7 @@ const LoaderComponent = observer(
     emptyComponent: EmptyComponent,
     errorComponent: ErrorComponent,
     loadedComponent: LoadedComponent,
+    loadedComponentRef,
     loader,
     loadingComponent: LoadingComponent,
     updatingComponent: UpdatingComponent,
@@ -48,7 +52,13 @@ const LoaderComponent = observer(
       return <EmptyComponent {...rest} />;
     }
 
-    return <LoadedComponent {...rest} value={loader.getValueEnforcing()} />;
+    return (
+      <LoadedComponent
+        {...rest}
+        ref={loadedComponentRef}
+        value={loader.getValueEnforcing()}
+      />
+    );
   },
 );
 

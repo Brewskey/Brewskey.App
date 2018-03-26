@@ -309,7 +309,9 @@ class NotificationsStore {
       }
       case 'newAchievement': {
         AchievementStore.flushCache();
-        nullthrows(this._navigation).navigate('stats');
+        nullthrows(this._navigation).navigate('stats', {
+          initialPopUpAchievementType: notification.achievementType,
+        });
         break;
       }
       case 'newFriendRequest': {
