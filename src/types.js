@@ -24,6 +24,7 @@ export type NearbyTap = {
     maxOunces: number,
     ounces: number,
   },
+  tapIndex: number,
   deviceID: number, // not translated to string
   id: EntityID,
   name: string,
