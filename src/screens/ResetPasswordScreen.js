@@ -1,6 +1,7 @@
 // @flow
 
 import type { Navigation } from '../types';
+import type { ResetPasswordFormValues } from '../components/ResetPasswordForm';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -31,9 +32,14 @@ type Props = {|
 class ResetPasswordScreen extends React.Component<Props> {
   _modalToggleStore: ToggleStore = new ToggleStore();
 
-  _onFormSubmit = async (): Promise<void> => {
-    await AuthApi.resetPassword();
+  _onFormSubmit = async ({ email }: ResetPasswordFormValues): Promise<void> => {
+    await AuthApi.resetPassword(email);
     this._modalToggleStore.toggleOn();
+  };
+
+  _onSuccessModalHide = () => {
+    this._modalToggleStore.toggleOff();
+    this.props.navigation.goBack(null);
   };
 
   render() {
@@ -50,7 +56,7 @@ class ResetPasswordScreen extends React.Component<Props> {
           <ResetPasswordForm onSubmit={this._onFormSubmit} />
           <ResetPasswordModal
             isVisible={this._modalToggleStore.isToggled}
-            onHideModal={this._modalToggleStore.toggleOff}
+            onHideModal={this._onSuccessModalHide}
           />
         </KeyboardAwareScrollView>
       </Container>

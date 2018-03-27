@@ -1,11 +1,9 @@
 // @flow
 
-import type { FormProps } from '../common/form/types';
-
 import * as React from 'react';
+
 import { observer } from 'mobx-react';
 import AuthApi from '../AuthApi';
-import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,35 +11,27 @@ import { form, FormField } from '../common/form';
 import SectionContent from '../common/SectionContent';
 import TextField from '../components/TextField';
 import Button from '../common/buttons/Button';
-import { validateEmail } from '../utils';
 
-export type RegisterFormFields = {|
-  email: string,
-  password: string,
-  userName: string,
+export type ChangePasswordFormFields = {|
+  oldPassword: string,
 |};
 
 const validate = ({
-  email,
-  password,
-  userName,
-}: RegisterFormFields): { [key: string]: string } => {
+  newPassword,
+  oldPassword,
+}: ChangePasswordFormFields): { [key: string]: string } => {
   const errors = {};
 
-  if (!userName) {
-    errors.userName = 'User name is required';
+  if (!oldPassword) {
+    errors.oldPassword = 'Old password is required';
   }
 
-  if (!email) {
-    errors.email = 'Email name is required';
+  if (!newPassword) {
+    errors.newPassword = 'New password is required';
   }
 
-  if (email && !validateEmail(email)) {
-    errors.email = 'Email is not valid';
-  }
-
-  if (!password) {
-    errors.password = 'password is required';
+  if (newPassword && newPassword === oldPassword) {
+    errors.newPassword = 'New password the same as old';
   }
 
   return errors;
@@ -49,19 +39,12 @@ const validate = ({
 
 @form({ validate })
 @observer
-class RegisterForm extends InjectedComponent<FormProps> {
-  _onSubmit = async (values: RegisterFormFields): Promise<void> => {
-    await AuthApi.register(values);
-    const { password, userName } = values;
-    await AuthStore.login({ password, userName });
-  };
-
+class ChangePasswordForm extends InjectedComponent<FormProps> {
   _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(this._onSubmit);
+    this.injectedProps.handleSubmit(AuthApi.changePassword);
 
   render() {
     const { formError, invalid, submitting } = this.injectedProps;
-
     return (
       <KeyboardAwareScrollView>
         <FormField
@@ -69,26 +52,18 @@ class RegisterForm extends InjectedComponent<FormProps> {
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          label="User name"
-          name="userName"
-          nextFocusTo="email"
+          label="Old password"
+          name="oldPassword"
+          nextFocusTo="newPassword"
+          secureTextEntry
         />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          label="Email"
-          name="email"
-          nextFocusTo="password"
-        />
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          component={TextField}
-          disabled={submitting}
-          label="Password"
-          name="password"
+          label="New password"
+          name="newPassword"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
         />
@@ -98,7 +73,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
             disabled={submitting || invalid}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
-            title="Register"
+            title="Change password"
           />
         </SectionContent>
       </KeyboardAwareScrollView>
@@ -106,4 +81,4 @@ class RegisterForm extends InjectedComponent<FormProps> {
   }
 }
 
-export default RegisterForm;
+export default ChangePasswordForm;

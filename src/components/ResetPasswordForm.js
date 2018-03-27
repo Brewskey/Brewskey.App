@@ -13,7 +13,13 @@ import { FormField, form } from '../common/form';
 import TextField from './TextField';
 import { validateEmail } from '../utils';
 
-const validate = ({ email }: Object): { [key: string]: string } => {
+export type ResetPasswordFormValues = {|
+  email: string,
+|};
+
+const validate = ({
+  email,
+}: ResetPasswordFormValues): { [key: string]: string } => {
   const errors = {};
 
   if (!email) {
