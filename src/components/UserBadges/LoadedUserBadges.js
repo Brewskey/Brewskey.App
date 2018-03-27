@@ -8,6 +8,7 @@ import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import ToggleStore from '../../stores/ToggleStore';
 import BadgeIcon from '../BadgeIcon';
+import EmptyUserBadges from './EmptyUserBadges';
 import BadgeModal from '../modals/BadgeModal';
 
 export const styles = StyleSheet.create({
@@ -48,6 +49,9 @@ class LoadedUserBadges extends React.Component<Props> {
   };
 
   render() {
+    if (this.props.value.length === 0) {
+      return <EmptyUserBadges />;
+    }
     return (
       <ScrollView contentContainerStyle={styles.container} horizontal>
         {this.props.value.map(
