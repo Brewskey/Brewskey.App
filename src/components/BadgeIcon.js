@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     top: 8,
   },
   counterContainerSmall: {
-    minWidth: 15,
+    minWidth: 20,
     padding: 3,
     right: 0,
     top: 0,
