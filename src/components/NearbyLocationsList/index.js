@@ -8,13 +8,13 @@ import type {
 } from '../../types';
 
 import * as React from 'react';
-import { SectionList } from 'react-native';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import Fragment from '../../common/Fragment';
 import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
 import { computed } from 'mobx';
 import { withNavigation } from 'react-navigation';
+import List from '../../common/List';
 import ListItem from '../../common/ListItem';
 import NearbyLocationListEmpty from './NearbyLocationsListEmpty';
 import LoadingListFooter from '../../common/LoadingListFooter';
@@ -30,20 +30,12 @@ type InjectedProps = {|
 type Props = {|
   isLoading: boolean,
   nearbyLocations: Array<NearbyLocation>,
+  onRefresh: () => void,
 |};
 
-type State = {|
-  isRefreshing: boolean,
-|};
-
-// todo pull to refresh for update gps position?
 @withNavigation
 @observer
-class NearbyLocationList extends InjectedComponent<
-  InjectedProps,
-  Props,
-  State,
-> {
+class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
   @computed
   get _sections(): Array<Section<NearbyTap>> {
     return this.props.nearbyLocations.map(
@@ -128,17 +120,19 @@ class NearbyLocationList extends InjectedComponent<
 
   render() {
     return (
-      <SectionList
+      <List
         keyExtractor={this._keyExtractor}
-        renderItem={this._renderItem}
-        renderSectionHeader={this._renderSectionHeader}
-        sections={this._sections}
         ListEmptyComponent={
           !this.props.isLoading ? <NearbyLocationListEmpty /> : null
         }
         ListFooterComponent={
           <LoadingListFooter isLoading={this.props.isLoading} />
         }
+        listType="sectionList"
+        onRefresh={this.props.onRefresh}
+        renderItem={this._renderItem}
+        renderSectionHeader={this._renderSectionHeader}
+        sections={this._sections}
       />
     );
   }

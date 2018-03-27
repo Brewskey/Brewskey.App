@@ -17,6 +17,15 @@ class HomeScreenStore {
     GPSCoordinatesStore.flushCache();
   };
 
+  @action
+  refresh = () => {
+    if (this.searchTextStore.debouncedText) {
+      NearbyLocationsStore.flushCache();
+    } else {
+      GPSCoordinatesStore.flushCache();
+    }
+  };
+
   @computed
   get isLoading(): boolean {
     return (
