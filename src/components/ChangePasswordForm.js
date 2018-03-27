@@ -13,13 +13,10 @@ import TextField from '../components/TextField';
 import Button from '../common/buttons/Button';
 
 export type ChangePasswordFormFields = {|
-  confirmPassword: string,
-  newPassword: string,
   oldPassword: string,
 |};
 
 const validate = ({
-  confirmPassword,
   newPassword,
   oldPassword,
 }: ChangePasswordFormFields): { [key: string]: string } => {
@@ -35,10 +32,6 @@ const validate = ({
 
   if (newPassword && newPassword === oldPassword) {
     errors.newPassword = 'New password the same as old';
-  }
-
-  if (newPassword !== confirmPassword) {
-    errors.passwordConfirm = "password doesn't match";
   }
 
   return errors;
@@ -71,16 +64,6 @@ class ChangePasswordForm extends InjectedComponent<FormProps> {
           disabled={submitting}
           label="New password"
           name="newPassword"
-          nextFocusTo="confirmPassword"
-          secureTextEntry
-        />
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          component={TextField}
-          disabled={submitting}
-          label="Confirm password"
-          name="confirmPassword"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
         />

@@ -18,14 +18,12 @@ import { validateEmail } from '../utils';
 export type RegisterFormFields = {|
   email: string,
   password: string,
-  passwordConfirm: string,
   userName: string,
 |};
 
 const validate = ({
   email,
   password,
-  passwordConfirm,
   userName,
 }: RegisterFormFields): { [key: string]: string } => {
   const errors = {};
@@ -44,10 +42,6 @@ const validate = ({
 
   if (!password) {
     errors.password = 'password is required';
-  }
-
-  if (password !== passwordConfirm) {
-    errors.passwordConfirm = "password doesn't match";
   }
 
   return errors;
@@ -95,16 +89,6 @@ class RegisterForm extends InjectedComponent<FormProps> {
           disabled={submitting}
           label="Password"
           name="password"
-          nextFocusTo="passwordConfirm"
-          secureTextEntry
-        />
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          component={TextField}
-          disabled={submitting}
-          label="Confirm password"
-          name="passwordConfirm"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
         />

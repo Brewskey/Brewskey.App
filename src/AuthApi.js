@@ -24,8 +24,11 @@ class AuthApi {
     changePasswordFields: ChangePasswordFormFields,
   ): Promise<Object> =>
     // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/change-password`, {
-      body: JSON.stringify(changePasswordFields),
+    fetch(`${CONFIG.HOST}api/account/change-password/`, {
+      body: JSON.stringify({
+        ...changePasswordFields,
+        confirmPassword: changePasswordFields.newPassword,
+      }),
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${AuthStore.token || ''}`,
@@ -36,7 +39,7 @@ class AuthApi {
 
   static register = (registerFields: RegisterFormFields): Promise<Object> =>
     // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/register`, {
+    fetch(`${CONFIG.HOST}api/account/register/`, {
       body: JSON.stringify(registerFields),
       headers: {
         Accept: 'application/json',
@@ -47,7 +50,7 @@ class AuthApi {
 
   static resetPassword = (email: string): Promise<void> =>
     // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/reset-password`, {
+    fetch(`${CONFIG.HOST}api/account/reset-password/`, {
       body: JSON.stringify({ email }),
       headers: {
         Accept: 'application/json',
