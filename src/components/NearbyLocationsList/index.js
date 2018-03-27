@@ -11,9 +11,12 @@ import * as React from 'react';
 import { SectionList } from 'react-native';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
+import Fragment from '../../common/Fragment';
+import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
+import { computed } from 'mobx';
 import { withNavigation } from 'react-navigation';
 import ListItem from '../../common/ListItem';
-import NearbyLocationListEmpty from './NearbyLocationsListEmtpy';
+import NearbyLocationListEmpty from './NearbyLocationsListEmpty';
 import LoadingListFooter from '../../common/LoadingListFooter';
 import ListSectionHeader from '../../common/ListSectionHeader';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
@@ -25,8 +28,8 @@ type InjectedProps = {|
 |};
 
 type Props = {|
-  nearbyLocations: Array<NearbyLocation>,
   isLoading: boolean,
+  nearbyLocations: Array<NearbyLocation>,
 |};
 
 type State = {|
@@ -41,10 +44,29 @@ class NearbyLocationList extends InjectedComponent<
   Props,
   State,
 > {
+  @computed
   get _sections(): Array<Section<NearbyTap>> {
     return this.props.nearbyLocations.map(
       ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
-        data: taps.slice(),
+        data: taps
+          .slice()
+          .sort((a: NearbyTap, b: NearbyTap): number => a.deviceID - b.deviceID)
+          .reduce((resultArr: Array<NearbyTap>, currentTap: NearbyTap): Array<
+            NearbyTap,
+          > => {
+            const lastTap = resultArr[resultArr.length - 1];
+
+            return [
+              ...resultArr,
+              {
+                ...currentTap,
+                tapIndex:
+                  currentTap.deviceID === (lastTap && lastTap.deviceID)
+                    ? lastTap.tapIndex + 1
+                    : 1,
+              },
+            ];
+          }, []),
         title: name,
       }),
     );
@@ -55,8 +77,14 @@ class NearbyLocationList extends InjectedComponent<
   _onItemPress = ({ id }: NearbyTap) =>
     this.injectedProps.navigation.navigate('tapDetails', { id });
 
-  _renderItem = ({ index, item }: { item: NearbyTap }): React.Element<any> => {
-    const { CurrentKeg: currentKeg } = item;
+  _renderItem = ({
+    index,
+    item,
+  }: {
+    index: number,
+    item: NearbyTap,
+  }): React.Element<any> => {
+    const { CurrentKeg: currentKeg, deviceName } = item;
     const kegLevel = currentKeg
       ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces).toFixed(0)
       : null;
@@ -65,26 +93,32 @@ class NearbyLocationList extends InjectedComponent<
       ? currentKeg.beverageName
       : 'No Beer on Tap';
 
+    const showTopSeparator = index !== 0 && item.tapIndex === 1;
+
     return (
-      <ListItem
-        avatar={
-          <BeverageAvatar
-            beverageId={currentKeg ? currentKeg.beverageId : ''}
-          />
-        }
-        badge={
-          kegLevel !== null
-            ? {
-                containerStyle: { backgroundColor: COLORS.accent },
-                value: `${kegLevel}%`,
-              }
-            : null
-        }
-        hideChevron
-        item={item}
-        onPress={this._onItemPress}
-        title={`${index + 1} - ${beverageName}`}
-      />
+      <Fragment>
+        {showTopSeparator && <ListSubSectionSeparator />}
+        <ListItem
+          avatar={
+            <BeverageAvatar
+              beverageId={currentKeg ? currentKeg.beverageId : ''}
+            />
+          }
+          badge={
+            kegLevel !== null
+              ? {
+                  containerStyle: { backgroundColor: COLORS.accent },
+                  value: `${kegLevel}%`,
+                }
+              : null
+          }
+          hideChevron
+          item={item}
+          onPress={this._onItemPress}
+          title={`${item.tapIndex} - ${beverageName}`}
+          subtitle={deviceName}
+        />
+      </Fragment>
     );
   };
 
