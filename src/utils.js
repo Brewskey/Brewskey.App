@@ -49,10 +49,36 @@ export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
   // eslint-disable-next-line no-undef
   const response = await fetch(...fetchArgs);
 
-  const responseJson = await response.json();
+  let responseJson;
+  try {
+    responseJson = await response.json();
+  } catch (error) {
+    responseJson = null;
+  }
+
   if (!response.ok) {
-    throw new Error(responseJson.error_description);
+    throw new Error(parseError(responseJson));
   }
 
   return responseJson;
+};
+
+export const parseError = (error: Object): string => {
+  if (error.ModelState) {
+    let resultErrorMessage = '';
+    Array.from(Object.values(error.ModelState)).map(fieldErrorArray =>
+      new Set(fieldErrorArray).forEach(
+        (fieldError: string): string =>
+          (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
+      ),
+    );
+
+    return resultErrorMessage;
+  }
+
+  if (error.error_description) {
+    return error.error_description;
+  }
+
+  return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };

@@ -23,8 +23,7 @@ class AuthApi {
   static changePassword = (
     changePasswordFields: ChangePasswordFormFields,
   ): Promise<Object> =>
-    // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/change-password/`, {
+    fetchJSON(`${CONFIG.HOST}api/account/change-password/`, {
       body: JSON.stringify({
         ...changePasswordFields,
         confirmPassword: changePasswordFields.newPassword,
@@ -38,8 +37,7 @@ class AuthApi {
     });
 
   static register = (registerFields: RegisterFormFields): Promise<Object> =>
-    // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/register/`, {
+    fetchJSON(`${CONFIG.HOST}api/account/register/`, {
       body: JSON.stringify(registerFields),
       headers: {
         Accept: 'application/json',
@@ -49,8 +47,7 @@ class AuthApi {
     });
 
   static resetPassword = (email: string): Promise<void> =>
-    // eslint-disable-next-line
-    fetch(`${CONFIG.HOST}api/account/reset-password/`, {
+    fetchJSON(`${CONFIG.HOST}api/account/reset-password/`, {
       body: JSON.stringify({ email }),
       headers: {
         Accept: 'application/json',
