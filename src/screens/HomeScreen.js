@@ -34,6 +34,7 @@ class HomeScreen extends InjectedComponent<InjectedProps> {
         <NearbyLocationsList
           isLoading={HomeScreenStore.isLoading}
           nearbyLocations={HomeScreenStore.nearbyLocations}
+          onRefresh={HomeScreenStore.refresh}
         />
       </Container>
     );
