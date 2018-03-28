@@ -30,7 +30,7 @@ class LeaderboardListStore {
   @computed
   get isLoading(): boolean {
     return (
-      !this._remoteCountLoader.isLoading() ||
+      this._remoteCountLoader.isLoading() ||
       this._pageLoadObjects.some(
         (pageLoadObject: LoadObject<Array<LeaderboardItem>>): boolean =>
           pageLoadObject.isLoading(),
@@ -67,7 +67,7 @@ class LeaderboardListStore {
   @computed
   get _remoteCountLoader(): LoadObject<number> {
     if (!this._isInitialized) {
-      return LoadObject.isLoading();
+      return LoadObject.loading();
     }
     return TapStore.countLeaderboard(this._tapID, this._duration);
   }
