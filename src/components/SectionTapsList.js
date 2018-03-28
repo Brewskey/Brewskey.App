@@ -33,8 +33,8 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
   _listStore = new SectionTapsListStore();
   _swipeableListRef: ?SwipeableList<Tap>;
 
-  componentWillMount() {
-    this._listStore.fetchFirstPage();
+  componentDidMount() {
+    this._listStore.initialize();
   }
 
   _getSwipeableListRef = ref => {

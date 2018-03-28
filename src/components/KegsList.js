@@ -28,8 +28,8 @@ class KegsList extends React.Component<Props> {
 
   _listStore: DAOListStore<Keg> = new DAOListStore(KegStore);
 
-  componentWillMount() {
-    this._listStore.setQueryOptions({
+  componentDidMount() {
+    this._listStore.initialize({
       orderBy: [
         {
           column: 'id',
@@ -38,8 +38,6 @@ class KegsList extends React.Component<Props> {
       ],
       ...this.props.queryOptions,
     });
-
-    this._listStore.fetchFirstPage();
   }
 
   _keyExtractor = (row: Row<Keg>): string => row.key;

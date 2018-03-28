@@ -33,10 +33,10 @@ type InjectedProps = {|
 class WifiSetupScreen extends InjectedComponent<InjectedProps> {
   static router = WifiSetupNavigator.router;
 
-  _wifiSetupStore: WifiSetupStore;
+  _wifiSetupStore: WifiSetupStore = new WifiSetupStore();
 
-  componentWillMount() {
-    this._wifiSetupStore = new WifiSetupStore(this.injectedProps.navigation);
+  componentDidMount() {
+    this._wifiSetupStore.initialize(this.injectedProps.navigation);
   }
 
   componentWillUnmount() {

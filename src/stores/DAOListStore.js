@@ -14,24 +14,33 @@ export type Row<TEntity> = {|
 |};
 
 class DAOListStore<TEntity: { id: EntityID }> {
-  _baseQueryOptions: QueryOptions = {};
   _daoStore: DAOStore<TEntity>;
   _pageSize: number;
 
+  @observable _baseQueryOptions: QueryOptions = {};
   @observable _queryOptionsList: Array<QueryOptions> = [];
+  @observable _isInitialized;
 
   constructor(daoStore: DAOStore<TEntity>, pageSize?: number = 20) {
     this._daoStore = daoStore;
     this._pageSize = pageSize;
   }
 
+  @action
+  initialize = (queryOptions: QueryOptions) => {
+    this.setQueryOptions(queryOptions);
+    this._fetchFirstPage();
+    this._isInitialized = true;
+  };
+
+  @action
   setQueryOptions = (queryOptions: QueryOptions) => {
     this._baseQueryOptions = queryOptions;
   };
 
   @computed
   get isFetchingRemoteCount(): boolean {
-    return !this._remoteCountLoader.hasValue();
+    return this._remoteCountLoader.isLoading();
   }
 
   @computed
@@ -81,6 +90,9 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @computed
   get _remoteCountLoader(): LoadObject<number> {
+    if (!this._isInitialized) {
+      return LoadObject.loading();
+    }
     // ODAta inlineCount doesn't pay attention on 'skip'
     // but instead throws error if its used with 'top' query;
     const { skip, ...rest } = this._baseQueryOptions;
@@ -124,11 +136,11 @@ class DAOListStore<TEntity: { id: EntityID }> {
   @action
   reload = () => {
     this._reset();
-    this.fetchFirstPage();
+    this._fetchFirstPage();
   };
 
   @action
-  fetchFirstPage = () => {
+  _fetchFirstPage = () => {
     const { skip = 0, ...rest } = this._baseQueryOptions;
     this._queryOptionsList.push({
       ...rest,

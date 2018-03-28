@@ -1,31 +1,36 @@
 // @flow
 
-import type {
-  EntityID,
-  LeaderboardItem,
-  LoadObject,
-  QueryOptions,
-} from 'brewskey.js-api';
+import type { EntityID, LeaderboardItem, QueryOptions } from 'brewskey.js-api';
 
 import flattenArray from 'array-flatten';
 import { action, computed, observable } from 'mobx';
+import { LoadObject } from 'brewskey.js-api';
 import { TapStore } from './DAOStores';
 
 class LeaderboardListStore {
-  _duration: string;
-  _tapID: EntityID;
   _pageSize: number;
 
+  @observable _isInitialized: boolean = false;
+  @observable _duration: string;
+  @observable _tapID: EntityID;
   @observable _queryOptionsList: Array<QueryOptions> = [];
 
   constructor(pageSize?: number = 20) {
     this._pageSize = pageSize;
   }
 
+  @action
+  initialize = ({ duration, tapID }: { duration: string, tapID: EntityID }) => {
+    this.setDuration(duration);
+    this.setTapID(tapID);
+    this._isInitialized = true;
+    this._fetchFirstPage();
+  };
+
   @computed
   get isLoading(): boolean {
     return (
-      this._remoteCountLoader.isLoading() ||
+      !this._remoteCountLoader.isLoading() ||
       this._pageLoadObjects.some(
         (pageLoadObject: LoadObject<Array<LeaderboardItem>>): boolean =>
           pageLoadObject.isLoading(),
@@ -61,6 +66,9 @@ class LeaderboardListStore {
 
   @computed
   get _remoteCountLoader(): LoadObject<number> {
+    if (!this._isInitialized) {
+      return LoadObject.isLoading();
+    }
     return TapStore.countLeaderboard(this._tapID, this._duration);
   }
 
@@ -88,10 +96,12 @@ class LeaderboardListStore {
     });
   };
 
+  @action
   setDuration = (duration: string) => {
     this._duration = duration;
   };
 
+  @action
   setTapID = (tapID: EntityID) => {
     this._tapID = tapID;
   };
@@ -99,11 +109,11 @@ class LeaderboardListStore {
   @action
   reload = () => {
     this._reset();
-    this.fetchFirstPage();
+    this._fetchFirstPage();
   };
 
   @action
-  fetchFirstPage = () => {
+  _fetchFirstPage = () => {
     this._queryOptionsList.push({
       skip: 0,
       take: this._pageSize,

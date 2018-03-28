@@ -29,16 +29,14 @@ type InjectedProps = {|
 class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   _listStore: LeaderboardListStore = new LeaderboardListStore();
 
-  componentWillMount() {
+  componentDidMount() {
     const { duration, tapID } = this.props;
-    this._listStore.setTapID(tapID);
-    this._listStore.setDuration(duration);
-    this._listStore.fetchFirstPage();
+    this._listStore.initialize({ duration, tapID });
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (this.props.duration !== nextProps.duration) {
-      this._listStore.setDuration(nextProps.duration);
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.duration !== prevProps.duration) {
+      this._listStore.setDuration(this.props.duration);
       this._listStore.reload();
     }
   }

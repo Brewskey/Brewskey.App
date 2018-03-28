@@ -30,8 +30,8 @@ class BasePoursList extends React.Component<Props> {
 
   _listStore: DAOListStore<Pour> = new DAOListStore(PourStore);
 
-  componentWillMount() {
-    this._listStore.setQueryOptions({
+  componentDidMount() {
+    this._listStore.initialize({
       orderBy: [
         {
           column: 'id',
@@ -40,8 +40,6 @@ class BasePoursList extends React.Component<Props> {
       ],
       ...this.props.queryOptions,
     });
-
-    this._listStore.fetchFirstPage();
   }
 
   _keyExtractor = (row: Row<Pour>): string => row.key;

@@ -22,9 +22,17 @@ class SectionTapsListStore {
   _pageSize: number;
   @observable _queryOptionsList: Array<QueryOptions> = [];
 
+  @observable _isInitialized: boolean = false;
+
   constructor(pageSize?: number = 20) {
     this._pageSize = pageSize;
   }
+
+  @action
+  initialize = () => {
+    this._isInitialized = true;
+    this._fetchFirstPage();
+  };
 
   @computed
   get isLoading(): boolean {
@@ -94,6 +102,10 @@ class SectionTapsListStore {
 
   @computed
   get _remoteCountLoader(): LoadObject<number> {
+    if (!this._isInitialized) {
+      return LoadObject.loading();
+    }
+
     return TapStore.count(BASE_QUERY_OPTIONS);
   }
 
@@ -108,7 +120,7 @@ class SectionTapsListStore {
   }
 
   @action
-  fetchFirstPage = () => {
+  _fetchFirstPage = () => {
     this._queryOptionsList.push({
       ...BASE_QUERY_OPTIONS,
       skip: 0,

@@ -49,8 +49,8 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   _listStore: DAOListStore<Device> = new DAOListStore(DeviceStore);
   _swipeableListRef: ?SwipeableList<Device>;
 
-  componentWillMount() {
-    this._listStore.setQueryOptions({
+  componentDidMount() {
+    this._listStore.initialize({
       orderBy: [
         {
           column: 'id',
@@ -59,8 +59,6 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
       ],
       ...this.props.queryOptions,
     });
-
-    this._listStore.fetchFirstPage();
   }
 
   _getSwipeableListRef = ref => {

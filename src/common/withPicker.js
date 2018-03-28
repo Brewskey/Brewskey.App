@@ -27,21 +27,16 @@ const withPicker = <TEntity, TProps: Props<TEntity>>(
 ): React.ComponentType<TProps & PickerProps<TEntity>> => {
   @observer
   class WithPicker extends React.Component<TProps & PickerProps<TEntity>> {
-    _pickerStore: PickerStore<TEntity>;
+    _pickerStore: PickerStore<TEntity> = new PickerStore({
+      initialValue: this.props.value,
+      keyExtractor: this.props.keyExtractor,
+      multiple: this.props.multiple,
+      onChange: this.props.onChange,
+    });
 
-    componentWillMount() {
-      const { keyExtractor, multiple, onChange, value } = this.props;
-      this._pickerStore = new PickerStore({
-        initialValue: value,
-        keyExtractor,
-        multiple,
-        onChange,
-      });
-    }
-
-    componentWillReceiveProps(nextProps: Props<TEntity>) {
-      if (nextProps.value !== this.props.value) {
-        this._pickerStore.setValue(nextProps.value);
+    componentDidUpdate(prevProps: Props<TEntity>) {
+      if (prevProps.value !== this.props.value) {
+        this._pickerStore.setValue(this.props.value);
       }
     }
 

@@ -40,8 +40,8 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _listStore: DAOListStore<Tap> = new DAOListStore(TapStore);
   _swipeableListRef: ?SwipeableList<Tap>;
 
-  componentWillMount() {
-    this._listStore.setQueryOptions({
+  componentDidMount() {
+    this._listStore.initialize({
       orderBy: [
         {
           column: 'id',
@@ -50,8 +50,6 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       ],
       ...this.props.queryOptions,
     });
-
-    this._listStore.fetchFirstPage();
   }
 
   _getSwipeableListRef = ref => {
