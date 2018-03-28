@@ -37,12 +37,10 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 
   _listStore: DAOListStore<Friend> = new DAOListStore(FriendStore);
 
-  componentWillMount() {
-    this._listStore.setQueryOptions({
+  componentDidMount() {
+    this._listStore.initialize({
       ...this.props.queryOptions,
     });
-
-    this._listStore.fetchFirstPage();
   }
 
   _keyExtractor = (row: Row<Friend>): string => row.key;

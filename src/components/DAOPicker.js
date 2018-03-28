@@ -60,13 +60,13 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
     searchBy: 'name',
   };
 
-  _listStore: DAOListStore<TEntity>;
+  _listStore: DAOListStore<TEntity> = new DAOListStore(this.props.daoStore);
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
-  componentWillMount() {
-    const { daoStore, queryOptions, searchBy } = this.props;
-    this._listStore = new DAOListStore(daoStore);
+  componentDidMount() {
+    const { queryOptions, searchBy } = this.props;
+    this._listStore.initialize(queryOptions);
 
     autorun(() => {
       this._listStore.setQueryOptions({

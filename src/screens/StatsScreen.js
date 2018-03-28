@@ -28,8 +28,9 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
     initialPopUpAchievementType &&
       nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
   }
-  componentWillReceiveProps(props: InjectedProps) {
-    const { initialPopUpAchievementType } = props;
+
+  componentDidUpdate() {
+    const { initialPopUpAchievementType } = this.props;
     initialPopUpAchievementType &&
       nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
   }

@@ -34,19 +34,21 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
     formStore: PropTypes.object,
   };
 
-  componentWillMount() {
-    this.context.formStore.initField({
+  constructor(props: Props, context: Object) {
+    super(props, context);
+
+    context.formStore.initField({
       initialValue: this.props.initialValue,
       name: this.props.name,
       parseOnSubmit: this.props.parseOnSubmit,
     });
   }
 
-  componentWillReceiveProps(nextProps: Props & TProps) {
-    if (nextProps.initialValue !== this.props.initialValue) {
+  componentDidUpdate(prevProps: Props & TProps) {
+    if (prevProps.initialValue !== this.props.initialValue) {
       this.context.formStore.initField({
-        initialValue: nextProps.initialValue,
-        name: nextProps.name,
+        initialValue: this.props.initialValue,
+        name: this.props.name,
         parseOnSubmit: this.props.parseOnSubmit,
       });
     }

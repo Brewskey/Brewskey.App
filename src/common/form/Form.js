@@ -28,11 +28,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
       formStore: PropTypes.object,
     };
 
-    _formStore: FormStore;
-
-    componentWillMount() {
-      this._formStore = new FormStore({ validate });
-    }
+    _formStore: FormStore = new FormStore({ validate });
 
     getChildContext(): { formStore: FormStore } {
       return {

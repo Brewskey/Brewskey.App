@@ -20,7 +20,7 @@ class WifiSetupStore {
   @observable _wifiSetupLoaderCacheKey: string = '';
   _disposers: Array<Function> = [];
 
-  constructor(navigation: Navigation) {
+  initialize = (navigation: Navigation) => {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep) =>
@@ -39,7 +39,7 @@ class WifiSetupStore {
     );
 
     this._disposers.push(setupFinishReaction);
-  }
+  };
 
   dispose = () => {
     ParticleIDStore.flushCache();
