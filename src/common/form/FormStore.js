@@ -132,21 +132,21 @@ class FormStore {
 
   @computed
   get invalid(): boolean {
-    return Array.from(this._fields.values()).some(
+    return Array.from(this._fields.toJS().values()).some(
       (field: Field): boolean => !!field.error,
     );
   }
 
   @computed
   get pristine(): boolean {
-    return !Array.from(this._fields.values()).some(
+    return Array.from(this._fields.toJS().values()).some(
       (field: Field): boolean => field.value !== field.initialValue,
     );
   }
 
   @computed
   get values(): Object {
-    return Array.from(this._fields.entries()).reduce(
+    return Array.from(this._fields.toJS().entries()).reduce(
       (result: Object, [fieldName, field]: [string, Field]): Object => ({
         ...result,
         [fieldName]: field.value,
@@ -157,7 +157,7 @@ class FormStore {
 
   @computed
   get submittingValues(): Object {
-    return Array.from(this._fields.entries()).reduce(
+    return Array.from(this._fields.toJS().entries()).reduce(
       (result: Object, [fieldName, field]: [string, Field]): Object => ({
         ...result,
         [fieldName]: field.parseOnSubmit(field.value),

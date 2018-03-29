@@ -124,7 +124,7 @@ class NotificationsStore {
 
   @computed
   get notifications(): Array<Notification> {
-    return Array.from(this._notificationsByID.values()).sort(
+    return Array.from(this._notificationsByID.toJS().values()).sort(
       (a: Notification, b: Notification): number =>
         new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
@@ -132,7 +132,7 @@ class NotificationsStore {
 
   @computed
   get unreadCount(): number {
-    return Array.from(this._notificationsByID.values()).filter(
+    return Array.from(this._notificationsByID.toJS().values()).filter(
       ({ isRead }: Notification) => !isRead,
     ).length;
   }
@@ -144,7 +144,7 @@ class NotificationsStore {
 
   @computed
   get _disabledTapIDs(): Array<EntityID> {
-    return Array.from(this._notificationsDisabledByTapID.keys());
+    return Array.from(this._notificationsDisabledByTapID.toJS().keys());
   }
 
   handleInitialNotification = async () => {
