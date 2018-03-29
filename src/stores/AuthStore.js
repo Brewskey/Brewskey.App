@@ -55,7 +55,7 @@ class AuthStore {
       await this._rehydrateState();
       autorun(async () => {
         if (this.isAuthorized) {
-          NavigationService.navigate('taps');
+          NavigationService.navigate('main');
           await Signalr.startAll({ access_token: this.token });
         } else {
           NavigationService.navigate('login');

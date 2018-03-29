@@ -51,10 +51,10 @@ class PickerStore<TEntity> {
   @computed
   get value(): PickerValue<TEntity> {
     if (this._multiple) {
-      return Array.from(this._valueByKey.values());
+      return Array.from(this._valueByKey.toJS().values());
     }
     return this._valueByKey.size
-      ? Array.from(this._valueByKey.values())[0]
+      ? Array.from(this._valueByKey.toJS().values())[0]
       : null;
   }
 
