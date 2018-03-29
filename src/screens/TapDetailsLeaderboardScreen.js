@@ -6,7 +6,7 @@ import type { LeaderboardDurationValue } from '../components/LeaderboardDuration
 import * as React from 'react';
 import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { action, observable } from 'mobx';
 import LeaderboardList from '../components/LeaderboardList';
 import LeaderboardDurationPicker, {

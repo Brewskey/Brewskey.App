@@ -6,7 +6,7 @@ import type { WifiNetwork } from '../../../types';
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { action, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import Container from '../../../common/Container';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 import HiddenWifiForm from './HiddenWifiForm';

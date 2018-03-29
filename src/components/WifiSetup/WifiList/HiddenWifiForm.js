@@ -7,7 +7,7 @@ import * as React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import injectedComponent from '../../../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { form, FormField } from '../../../common/form';
 import PickerField from '../../../common/PickerField';
 import Button from '../../../common/buttons/Button';

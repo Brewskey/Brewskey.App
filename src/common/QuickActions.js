@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import SwipeableActionButton from './SwipeableActionButton';
 import DeleteModal from '../components/modals/DeleteModal';
 import ToggleStore from '../stores/ToggleStore';

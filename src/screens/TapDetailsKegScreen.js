@@ -8,7 +8,7 @@ import DAOApi, { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, TapStore } from '../stores/DAOStores';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageDetailsLoader from '../components/BeverageDetailsLoader';
 import KegLevelBar from '../components/KegLevelBar';

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ScrollView } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import Container from '../common/Container';

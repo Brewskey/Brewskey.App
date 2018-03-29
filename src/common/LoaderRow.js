@@ -4,7 +4,7 @@ import type { LoadObject } from 'brewskey.js-api';
 import type { RowItemProps } from './SwipeableRow';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import ErrorListItem from './ErrorListItem';
 import LoadingListItem from './LoadingListItem';
 import LoaderComponent from './LoaderComponent';

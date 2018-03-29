@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { ScrollView } from 'react-native';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { ListItem } from 'react-native-elements';
 import { OrganizationStore } from '../stores/DAOStores';
 import Container from '../common/Container';

@@ -11,7 +11,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';

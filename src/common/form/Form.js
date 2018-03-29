@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import FormStore from './FormStore';
 
 type FormSetupProps = {

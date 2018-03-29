@@ -5,7 +5,7 @@ import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { FormValidationMessage } from 'react-native-elements';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from '../common/buttons/Button';

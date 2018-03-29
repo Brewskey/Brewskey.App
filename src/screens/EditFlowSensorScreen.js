@@ -8,7 +8,7 @@ import nullthrows from 'nullthrows';
 import { withNavigation } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import InjectedComponent from '../common/InjectedComponent';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import FlowSensorForm from '../components/FlowSensorForm';

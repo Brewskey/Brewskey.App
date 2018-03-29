@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import TapsList from '../components/TapsList';
 import OverviewItem from '../common/OverviewItem2';

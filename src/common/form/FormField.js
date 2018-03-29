@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { isClassBasedComponent } from '../../utils';
 
 // todo add generic types for value

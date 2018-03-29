@@ -6,7 +6,7 @@ import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 import DAOApi from 'brewskey.js-api';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import nullthrows from 'nullthrows';
 import * as React from 'react';
 import { withNavigation } from 'react-navigation';

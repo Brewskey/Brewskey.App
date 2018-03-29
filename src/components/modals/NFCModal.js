@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import * as Progress from 'react-native-progress';
 import NFCStore from '../../stores/NFCStore';
 import CenteredModal from './CenteredModal';

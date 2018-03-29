@@ -9,7 +9,7 @@ import type { PickerProps } from '../common/withPicker';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { View } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { autorun } from 'mobx';
 import Header from '../common/Header';
 import HeaderIconButton from '../common/Header/HeaderIconButton';

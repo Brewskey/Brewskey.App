@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import FriendsList from '../components/FriendsList';
 import AuthStore from '../stores/AuthStore';
 

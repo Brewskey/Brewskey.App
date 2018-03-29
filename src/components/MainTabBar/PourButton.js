@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { COLORS } from '../../theme';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import NFCStore from '../../stores/NFCStore';
 import TouchableItem from '../../common/buttons/TouchableItem';
 

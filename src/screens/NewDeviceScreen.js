@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions } from 'react-navigation';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';

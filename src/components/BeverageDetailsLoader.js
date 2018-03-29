@@ -5,7 +5,7 @@ import type { Beverage, EntityID, LoadObject } from 'brewskey.js-api';
 import * as React from 'react';
 import { computed } from 'mobx';
 import { BeverageStore } from '../stores/DAOStores';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import LoaderComponent from '../common/LoaderComponent';
 import BeverageDetailsContent from './BeverageDetailsContent';
 

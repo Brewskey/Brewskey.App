@@ -6,7 +6,7 @@ import type { Props as PickerFieldProps } from './index';
 import * as React from 'react';
 import PickerField from './index';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 
 type Props<TItem> = {
   ...PickerFieldProps,

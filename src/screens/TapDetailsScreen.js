@@ -9,7 +9,7 @@ import { TabNavigator } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { FlowSensorStore, TapStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';

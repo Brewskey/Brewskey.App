@@ -4,7 +4,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { withNavigationFocus } from 'react-navigation';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
 import Header from '../common/Header';

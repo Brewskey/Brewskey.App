@@ -5,7 +5,7 @@ import type { ResetPasswordFormValues } from '../components/ResetPasswordForm';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import AuthApi from '../AuthApi';
 import Header from '../common/Header';
 import ToggleStore from '../stores/ToggleStore';

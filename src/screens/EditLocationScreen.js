@@ -12,7 +12,7 @@ import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';

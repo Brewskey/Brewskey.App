@@ -6,7 +6,7 @@ import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FormValidationMessage, Icon } from 'react-native-elements';
 import { action, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import Button from '../../../common/buttons/Button';
 import TextField from '../../../components/TextField';
 import { COLORS, TYPOGRAPHY } from '../../../theme';

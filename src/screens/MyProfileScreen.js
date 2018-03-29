@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import AvatarPicker from '../components/AvatarPicker';
 import Container from '../common/Container';
 import Header from '../common/Header';

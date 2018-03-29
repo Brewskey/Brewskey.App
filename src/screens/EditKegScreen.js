@@ -6,7 +6,7 @@ import * as React from 'react';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import InjectedComponent from '../common/InjectedComponent';
 import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';

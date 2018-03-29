@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { BeverageStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import BeverageDetailsContent from '../components/BeverageDetailsContent';
 import Container from '../common/Container';
 import SectionContent from '../common/SectionContent';

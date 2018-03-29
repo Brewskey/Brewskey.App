@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { Picker, StyleSheet, View } from 'react-native';
 import LoadingPicker from './LoadingPicker';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';

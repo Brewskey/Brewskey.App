@@ -7,7 +7,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import DAOApi from 'brewskey.js-api';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import Container from '../common/Container';
 import Section from '../common/Section';
 import AuthStore from '../stores/AuthStore';

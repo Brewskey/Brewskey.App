@@ -8,7 +8,7 @@ import type { RowItemProps } from '../common/SwipeableRow';
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { withNavigation } from 'react-navigation';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import QuickActions from '../common/QuickActions';

@@ -3,7 +3,7 @@
 import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from '../AuthApi';
 
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';

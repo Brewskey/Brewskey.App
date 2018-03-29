@@ -4,7 +4,7 @@ import type { AchievementCounter } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import BADGE_BY_ACHIEVEMENT_TYPE from '../../badges';
 import BadgeIcon from '../BadgeIcon';
 import Button from '../../common/buttons/Button';

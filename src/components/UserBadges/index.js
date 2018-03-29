@@ -3,7 +3,7 @@
 import type { AchievementCounter, EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import nullthrows from 'nullthrows';
 import { action, computed, observable, when } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';

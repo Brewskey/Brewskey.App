@@ -5,7 +5,7 @@ import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOListStore from '../stores/DAOListStore';
 import { KegStore } from '../stores/DAOStores';
 import List from '../common/List';

@@ -9,7 +9,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { withNavigation } from 'react-navigation';
 import SwipeableList from '../common/SwipeableList';
 import QuickActions from '../common/QuickActions';

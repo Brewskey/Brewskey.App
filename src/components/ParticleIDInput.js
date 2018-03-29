@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { action, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TextBlock from '../common/TextBlock';
 import Button from '../common/buttons/Button';

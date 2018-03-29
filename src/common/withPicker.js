@@ -4,7 +4,7 @@ import type { KeyExtractor, PickerValue } from '../stores/PickerStore';
 
 import * as React from 'react';
 import PickerStore from '../stores/PickerStore';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
 export type PickerProps<TEntity> = {

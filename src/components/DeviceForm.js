@@ -12,7 +12,7 @@ import type { FormProps } from '../common/form/types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';

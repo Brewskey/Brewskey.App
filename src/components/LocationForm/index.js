@@ -6,7 +6,7 @@ import type { StateConfig } from './stateList';
 
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';

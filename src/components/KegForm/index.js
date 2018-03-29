@@ -8,7 +8,7 @@ import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import { BeverageStore } from '../../stores/DAOStores';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';

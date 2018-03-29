@@ -8,7 +8,7 @@ import { TabNavigator } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
 import theme from '../theme';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { AccountStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';

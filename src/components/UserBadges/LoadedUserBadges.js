@@ -4,7 +4,7 @@ import type { AchievementCounter } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { action, observable } from 'mobx';
 import ToggleStore from '../../stores/ToggleStore';
 import BadgeIcon from '../BadgeIcon';

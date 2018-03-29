@@ -5,7 +5,7 @@ import nullthrows from 'nullthrows';
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 import HeaderIconButton from '../../common/Header/HeaderIconButton';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { action, observable, when } from 'mobx';
 import ToggleStore from '../../stores/ToggleStore';
 

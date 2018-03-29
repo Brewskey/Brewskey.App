@@ -3,7 +3,7 @@
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import AuthApi from '../AuthApi';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';

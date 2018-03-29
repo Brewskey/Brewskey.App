@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
 import NotificationsStore from '../stores/NotificationsStore';

@@ -3,7 +3,7 @@
 import type { PickerValue } from '../stores/PickerStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { COLORS } from '../theme';

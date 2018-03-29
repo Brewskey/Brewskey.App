@@ -8,7 +8,7 @@ import DAOApi from 'brewskey.js-api';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import AuthStore from '../stores/AuthStore';
 import BeveragesList from '../components/BeveragesList';
 

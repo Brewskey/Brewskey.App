@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import Fragment from '../common/Fragment';
 import LogoutModal from './modals/LogoutModal';
 import ToggleStore from '../stores/ToggleStore';

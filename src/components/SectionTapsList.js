@@ -8,7 +8,7 @@ import * as React from 'react';
 import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';

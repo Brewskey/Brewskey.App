@@ -4,7 +4,7 @@ import type { Notification } from '../../stores/NotificationsStore';
 
 import * as React from 'react';
 import { View } from 'react-native';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react/native';
 import List from '../../common/List';
 import ErrorBoundary from '../../common/ErrorBoundary';
 import ErrorListItem from '../../common/ErrorListItem';
