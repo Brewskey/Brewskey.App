@@ -38,6 +38,8 @@ class UserBadges extends React.Component<Props> {
     );
   };
 
+  refresh = () => AchievementStore.flushCustomCache();
+
   @action _setLoadedComponentRef = ref => (this._loadedComponent = ref);
 
   render() {

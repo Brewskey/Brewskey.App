@@ -1,7 +1,14 @@
 // @flow
 
+import type { EntityID, LoadObject, Keg } from 'brewskey.js-api';
+
 import * as React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react/native';
+import { KegStore } from '../stores/DAOStores';
+import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 import { calculateKegLevel } from '../utils';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
@@ -44,13 +51,42 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  maxOunces: number,
-  ounces: number,
+  kegID: EntityID,
 |};
 
-class KegLevelBar extends React.PureComponent<Props> {
+@observer
+class KegLevelBar extends React.Component<Props> {
+  @computed
+  get _kegLoader(): LoadObject<Keg> {
+    return KegStore.getByID(this.props.kegID);
+  }
+
+  refresh = () => KegStore.flushCacheForEntity(this.props.kegID);
+
   render() {
-    const { maxOunces, ounces } = this.props;
+    return (
+      <LoaderComponent
+        loadedComponent={LoadedKegLevelBar}
+        loader={this._kegLoader}
+        loadingComponent={LoadingKegLevelBar}
+      />
+    );
+  }
+}
+
+const LoadingKegLevelBar = () => (
+  <View style={styles.container}>
+    <LoadingIndicator />
+  </View>
+);
+
+type LoadedProps = {|
+  value: Keg,
+|};
+
+class LoadedKegLevelBar extends React.PureComponent<LoadedProps> {
+  render() {
+    const { value: { maxOunces, ounces } } = this.props;
     const kegLevel = calculateKegLevel(ounces, maxOunces);
     const isLowLevel = kegLevel <= LOW_KEG_LEVEL;
     const levelText = isLowLevel

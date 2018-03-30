@@ -32,6 +32,8 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'On Tap',
   };
 
+  _kegLevelBar: ?KegLevelBar;
+
   @computed
   get _currentBeverageLoader(): LoadObject<Beverage> {
     const { tap: { id } } = this.injectedProps;
@@ -42,6 +44,12 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
           : LoadObject.empty(),
     );
   }
+
+  _onRefresh = () => {
+    this._kegLevelBar && this._kegLevelBar.refresh();
+  };
+
+  _setKegLevelBarRef = ref => (this._kegLevelBar = ref);
 
   render() {
     const { noFlowSensorWarning, tap: { currentKeg, id } } = this.injectedProps;
@@ -57,8 +65,8 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                   <SectionHeader title="Keg level" />
                   <SectionContent paddedHorizontal>
                     <KegLevelBar
-                      maxOunces={currentKeg.maxOunces}
-                      ounces={currentKeg.ounces}
+                      kegID={currentKeg.id}
+                      ref={this._setKegLevelBarRef}
                     />
                   </SectionContent>
                 </Section>
@@ -81,6 +89,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
             <SectionHeader title="Past Kegs" />
           </Fragment>
         }
+        onRefresh={this._onRefresh}
         queryOptions={{
           filters: [DAOApi.createFilter('tap/id').equals(id)],
           orderBy: [{ column: 'id', direction: 'desc' }],
