@@ -1,7 +1,6 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { observer } from 'mobx-react/native';
 import AvatarPicker from '../components/AvatarPicker';
@@ -9,14 +8,8 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import ChangePasswordForm from '../components/ChangePasswordForm';
 import Section from '../common/Section';
+import SectionContent from '../common/SectionContent';
 import SectionHeader from '../common/SectionHeader';
-
-const styles = StyleSheet.create({
-  avatarContainer: {
-    alignItems: 'center',
-    paddingVertical: 15,
-  },
-});
 
 @observer
 class MyProfileScreen extends React.Component<{}> {
@@ -26,9 +19,9 @@ class MyProfileScreen extends React.Component<{}> {
         <Header showBackButton title="My profile" />
         <KeyboardAwareScrollView>
           <Section bottomPadded>
-            <View style={styles.avatarContainer}>
+            <SectionContent centered>
               <AvatarPicker />
-            </View>
+            </SectionContent>
           </Section>
           <Section>
             <SectionHeader title="Change password" />
