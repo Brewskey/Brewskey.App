@@ -155,7 +155,7 @@ class SectionTapsListStore {
   @action
   reload = () => {
     this._reset();
-    this.fetchFirstPage();
+    this._fetchFirstPage();
   };
 
   @action
