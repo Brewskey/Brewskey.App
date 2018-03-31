@@ -27,7 +27,7 @@ type Props = {|
 |};
 
 const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
-  <PickerField onChange={onChange} value={value}>
+  <PickerField onChange={onChange} placeholder={null} value={value}>
     {Array.from((Object.values(LEADERBOARD_DURATION_OPTIONS): any)).map(
       ({
         label,
