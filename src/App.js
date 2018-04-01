@@ -10,6 +10,7 @@ import AppRouter from './AppRouter';
 import NFCModal from './components/modals/NFCModal';
 import NotificationsStore from './stores/NotificationsStore';
 import { COLORS } from './theme';
+import SnackBar from './common/SnackBar';
 
 mobxConfigure({
   enforceActions: true,
@@ -46,6 +47,7 @@ class App extends React.Component<{}> {
       <SafeAreaView style={styles.safeArea}>
         <AppRouter ref={this._setNavigationRef} />
         <NFCModal />
+        <SnackBar />
       </SafeAreaView>
     );
   }
