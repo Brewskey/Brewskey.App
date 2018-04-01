@@ -18,6 +18,7 @@ import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LoaderComponent from '../common/LoaderComponent';
+import SnackBarStore from '../stores/SnackBarStore';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LocationForm from '../components/LocationForm';
 
@@ -38,6 +39,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     DAOApi.LocationDAO.put(nullthrows(values.id), values);
     await waitForLoaded(() => this._locationLoader);
     this.injectedProps.navigation.goBack(null);
+    SnackBarStore.showMessage({ text: 'Location edited.' });
   };
 
   render() {

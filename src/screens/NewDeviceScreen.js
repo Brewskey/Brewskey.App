@@ -13,6 +13,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import Container from '../common/Container';
 import Header from '../common/Header';
 import DeviceForm from '../components/DeviceForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -38,6 +39,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
       index: 1,
     });
     navigation.dispatch(resetRouteAction);
+    SnackBarStore.showMessage({ text: 'New brewskey box created.' });
   };
 
   render() {

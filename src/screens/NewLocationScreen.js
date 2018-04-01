@@ -11,6 +11,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LocationForm from '../components/LocationForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -32,6 +33,7 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
       index: 1,
     });
     navigation.dispatch(resetRouteAction);
+    SnackBarStore.showMessage({ text: 'New location created' });
   };
 
   render() {

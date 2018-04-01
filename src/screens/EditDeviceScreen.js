@@ -20,6 +20,7 @@ import Header from '../common/Header';
 import nullthrows from 'nullthrows';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import DeviceForm from '../components/DeviceForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {
   id: EntityID,
@@ -38,6 +39,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
     await waitForLoaded(() => this._deviceLoader);
     this.injectedProps.navigation.goBack(null);
+    SnackBarStore.showMessage({ text: 'The brewskey box edited' });
   };
 
   render() {
