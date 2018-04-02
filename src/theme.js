@@ -12,6 +12,7 @@ export const COLORS = {
   secondary: '#fff',
   secondary2: '#eee',
   secondary3: '#bbb',
+  success: '#71F197',
   text: '#43484d',
   textFaded: '#bdc6cf',
   textInverse: '#fff',

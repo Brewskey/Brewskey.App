@@ -39,8 +39,16 @@ const styles = StyleSheet.create({
     width: 300,
   },
   text: {
-    color: COLORS.textInverse,
     textAlign: 'center',
+  },
+  textDanger: {
+    color: COLORS.danger,
+  },
+  textDefault: {
+    color: COLORS.textInverse,
+  },
+  textSuccess: {
+    color: COLORS.success,
   },
 });
 
@@ -86,6 +94,22 @@ class SnackMessage extends React.Component<{}> {
   };
 
   render() {
+    let dynamicTextStyle;
+    switch (SnackBarStore.currentMessage &&
+      SnackBarStore.currentMessage.style) {
+      case 'danger': {
+        dynamicTextStyle = styles.textDanger;
+        break;
+      }
+      case 'success': {
+        dynamicTextStyle = styles.textSuccess;
+        break;
+      }
+      default: {
+        dynamicTextStyle = styles.textDefault;
+      }
+    }
+
     return (
       <View pointerEvents="box-none" style={styles.container}>
         <TouchableWithoutFeedback onPress={this._onMessagePress}>
@@ -96,7 +120,7 @@ class SnackMessage extends React.Component<{}> {
             ]}
           >
             {SnackBarStore.currentMessage && (
-              <Text numberOfLines={1} style={styles.text}>
+              <Text numberOfLines={2} style={[styles.text, dynamicTextStyle]}>
                 {SnackBarStore.currentMessage.text}
               </Text>
             )}

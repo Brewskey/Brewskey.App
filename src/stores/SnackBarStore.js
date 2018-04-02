@@ -4,6 +4,7 @@ import { action, computed, observable } from 'mobx';
 
 export type SnackBarMessage = {
   duration?: number,
+  style?: 'danger' | 'default' | 'success',
   text: string,
 };
 
@@ -21,8 +22,12 @@ class SnackBarStore {
   };
 
   @action
-  showMessage = ({ duration = 2000, ...rest }: SnackBarMessage) => {
-    this._messages.push({ duration, ...rest });
+  showMessage = ({
+    duration = 2000,
+    style = 'default',
+    ...rest
+  }: SnackBarMessage) => {
+    this._messages.push({ duration, style, ...rest });
   };
 }
 
