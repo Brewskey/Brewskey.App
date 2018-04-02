@@ -17,6 +17,7 @@ import SectionTapsListStore from '../stores/SectionTapsListStore';
 import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
@@ -48,7 +49,10 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
-  _onDeleteItemPress = (item: Tap): void => DAOApi.TapDAO.deleteByID(item.id);
+  _onDeleteItemPress = async (item: Tap): Promise<void> => {
+    await DAOApi.TapDAO.deleteByID(item.id);
+    SnackBarStore.showMessage({ text: 'The tap was deleted' });
+  };
 
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });

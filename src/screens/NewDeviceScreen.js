@@ -39,7 +39,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
       index: 1,
     });
     navigation.dispatch(resetRouteAction);
-    SnackBarStore.showMessage({ text: 'New brewskey box created.' });
+    SnackBarStore.showMessage({ text: 'New brewskey box created' });
   };
 
   render() {

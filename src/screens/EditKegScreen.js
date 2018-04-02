@@ -42,7 +42,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     const clientID = DAOApi.KegDAO.post(values);
     await waitForLoaded(() => KegStore.getByID(clientID));
     TapStore.flushCache();
-    SnackBarStore.showMessage({ text: 'Keg replaced.' });
+    SnackBarStore.showMessage({ text: 'Keg replaced' });
   };
 
   _onEditSubmit = async (values: KegMutator): Promise<void> => {
@@ -50,7 +50,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     DAOApi.KegDAO.put(id, values);
     await waitForLoaded(() => KegStore.getByID(id));
     TapStore.flushCache();
-    SnackBarStore.showMessage({ text: 'Current keg updated.' });
+    SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
 
   render() {
