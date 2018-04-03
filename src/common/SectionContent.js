@@ -6,6 +6,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 
 type Props = {|
+  centered?: boolean,
   children?: React.Node,
   containerStyle?: Style,
   paddedHorizontal?: boolean,
@@ -13,13 +14,15 @@ type Props = {|
 |};
 
 const SectionContent = ({
+  centered,
   children,
   containerStyle,
-  paddedHorizontal = false,
+  paddedHorizontal,
   paddedVertical = true,
 }: Props) => (
   <View
     style={[
+      centered && { alignItems: 'center', justifyContent: 'center' },
       paddedHorizontal && { paddingHorizontal: 12 },
       paddedVertical && { paddingVertical: 12 },
       containerStyle,

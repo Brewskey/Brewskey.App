@@ -29,13 +29,7 @@ class MenuScreen extends React.Component<{}> {
             <MenuUserBlock />
           </Section>
           <Section>
-            <MenuNavigationButton
-              icon={{ name: 'people' }}
-              routeName="myFriends"
-              title="Friends"
-            />
             {AppSettingsStore.isManageTapsEnabled && [
-              <MenuSeparator key="separator1" />,
               <MenuNavigationButton
                 icon={{ name: 'map-marker', type: 'material-community' }}
                 key="locations"

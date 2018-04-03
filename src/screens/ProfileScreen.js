@@ -4,31 +4,22 @@ import type { Account, EntityID } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { TabNavigator } from 'react-navigation';
+import { ScrollView } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
+import UserAvatar from '../common/avatars/UserAvatar';
+import Section from '../common/Section';
+import SectionHeader from '../common/SectionHeader';
+import UserBadges from '../components/UserBadges';
 import Container from '../common/Container';
-import theme from '../theme';
 import { observer } from 'mobx-react/native';
 import { AccountStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
+import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
-import ProfileOverviewScreen from './ProfileOverviewScreen';
-import ProfileStatsScreen from './ProfileStatsScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 /* eslint-disable sorting/sort-object-props */
-const ProfileNavigator = TabNavigator(
-  {
-    profileOverview: { screen: ProfileOverviewScreen },
-    profileStats: { screen: ProfileStatsScreen },
-  },
-  /* eslint-enable */
-  {
-    ...theme.tabBar,
-  },
-);
-
 type InjectedProps = {|
   id: EntityID,
   navigation: Navigation,
@@ -60,13 +51,21 @@ type LoadedComponentProps = {|
   value: Account,
 |};
 
-const LoadedComponent = ({ value }: LoadedComponentProps) => (
+const LoadedComponent = ({ value: account }: LoadedComponentProps) => (
   <Container>
-    <Header showBackButton title={value.userName} />
-    <ProfileNavigator screenProps={{ account: value }} />
+    <Header showBackButton title={account.userName} />
+    <ScrollView>
+      <Section bottomPadded>
+        <SectionContent centered paddedVertical>
+          <UserAvatar userName={account.userName} size={200} />
+        </SectionContent>
+      </Section>
+      <Section bottomPadded>
+        <SectionHeader title="Badges" />
+        <UserBadges userID={account.id} />
+      </Section>
+    </ScrollView>
   </Container>
 );
-
-LoadedComponent.router = ProfileNavigator.router;
 
 export default ProfileScreen;

@@ -25,7 +25,6 @@ import HomeScreen from './screens/HomeScreen';
 import LocationDetailsScreen from './screens/LocationDetailsScreen';
 import LocationsScreen from './screens/LocationsScreen';
 import MyBeveragesScreen from './screens/MyBeveragesScreen';
-import MyFriendsScreen from './screens/MyFriendsScreen';
 import MyProfileScreen from './screens/MyProfileScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
@@ -67,7 +66,6 @@ const AppRouter = SwitchNavigator(
             mainMenu: MenuScreen,
             profile: ProfileScreen,
             myProfile: MyProfileScreen,
-            myFriends: MyFriendsScreen,
             locations: StackNavigator(
               {
                 locations: LocationsScreen,
