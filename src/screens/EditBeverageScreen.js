@@ -20,6 +20,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageForm from '../components/BeverageForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   id: EntityID,
@@ -38,6 +39,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     DAOApi.BeverageDAO.put(nullthrows(values.id), values);
     await waitForLoaded(() => this._beverageLoader);
     this.injectedProps.navigation.goBack(null);
+    SnackBarStore.showMessage({ text: 'The beverage edited.' });
   };
 
   render() {

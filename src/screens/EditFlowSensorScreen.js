@@ -14,6 +14,7 @@ import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import FlowSensorForm from '../components/FlowSensorForm';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -83,6 +84,7 @@ class LoadedComponent extends InjectedComponent<
       const clientID = DAOApi.FlowSensorDAO.post(values);
       await waitForLoaded(() => FlowSensorStore.getByID(clientID));
     }
+    SnackBarStore.showMessage({ text: 'The flow sensor set' });
   };
 
   render() {

@@ -11,6 +11,7 @@ import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -32,6 +33,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
       index: 1,
     });
     navigation.dispatch(resetRouteAction);
+    SnackBarStore.showMessage({ text: 'New beverage created.' });
   };
 
   render() {

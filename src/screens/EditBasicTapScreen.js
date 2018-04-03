@@ -17,6 +17,7 @@ import { ListItem } from 'react-native-elements';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import TapForm from '../components/TapForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   tapId: EntityID,
@@ -39,7 +40,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
     await waitForLoaded(() => TapStore.getByID(id));
-    // todo add message to snackbar
+    SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 
   render() {

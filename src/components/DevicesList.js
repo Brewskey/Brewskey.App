@@ -18,6 +18,7 @@ import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
 import ListEmptyComponent from '../common/ListEmptyComponent';
 import SwipeableRow from '../common/SwipeableRow';
+import SnackBarStore from '../stores/SnackBarStore';
 import { DeviceStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
@@ -67,8 +68,10 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Device>): string => row.key;
 
-  _onDeleteItemPress = (item: Device): void =>
-    DAOApi.DeviceDAO.deleteByID(item.id);
+  _onDeleteItemPress = async (item: Device): Promise<void> => {
+    await DAOApi.DeviceDAO.deleteByID(item.id);
+    SnackBarStore.showMessage({ text: 'The brewskey box was deleted' });
+  };
 
   _onEditItemPress = ({ id }: Device) => {
     this.injectedProps.navigation.navigate('editDevice', { id });

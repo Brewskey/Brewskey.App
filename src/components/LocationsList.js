@@ -20,6 +20,7 @@ import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 import DAOListStore from '../stores/DAOListStore';
+import SnackBarStore from '../stores/SnackBarStore';
 import { LocationStore } from '../stores/DAOStores';
 
 type Props = {|
@@ -59,8 +60,10 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Location>): string => row.key;
 
-  _onDeleteItemPress = (item: Location): void =>
-    DAOApi.LocationDAO.deleteByID(item.id);
+  _onDeleteItemPress = async (item: Location): Promise<void> => {
+    await DAOApi.LocationDAO.deleteByID(item.id);
+    SnackBarStore.showMessage({ text: 'The location was deleted' });
+  };
 
   _onEditItemPress = ({ id }: Location) => {
     this.injectedProps.navigation.navigate('editLocation', { id });

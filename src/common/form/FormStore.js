@@ -139,7 +139,7 @@ class FormStore {
 
   @computed
   get pristine(): boolean {
-    return Array.from(this._fields.toJS().values()).some(
+    return !Array.from(this._fields.toJS().values()).some(
       (field: Field): boolean => field.value !== field.initialValue,
     );
   }

@@ -12,6 +12,7 @@ import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderComponent from '../common/LoaderComponent';
 import KegForm from '../components/KegForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {
   tapId: EntityID,
@@ -41,7 +42,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     const clientID = DAOApi.KegDAO.post(values);
     await waitForLoaded(() => KegStore.getByID(clientID));
     TapStore.flushCache();
-    // todo add snackbar message;
+    SnackBarStore.showMessage({ text: 'Keg replaced' });
   };
 
   _onEditSubmit = async (values: KegMutator): Promise<void> => {
@@ -49,7 +50,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     DAOApi.KegDAO.put(id, values);
     await waitForLoaded(() => KegStore.getByID(id));
     TapStore.flushCache();
-    // todo add snackbar message;
+    SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
 
   render() {

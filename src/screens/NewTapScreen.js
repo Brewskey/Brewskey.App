@@ -10,6 +10,7 @@ import { TapStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import TapForm from '../components/TapForm';
+import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -21,6 +22,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     const clientID = DAOApi.TapDAO.post(values);
     const { id } = await waitForLoaded(() => TapStore.getByID(clientID));
     navigation.navigate('newFlowSensor', { tapId: id });
+    SnackBarStore.showMessage({ text: 'New tap created' });
   };
 
   render() {

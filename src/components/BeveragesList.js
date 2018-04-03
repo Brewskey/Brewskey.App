@@ -17,6 +17,7 @@ import DAOListStore from '../stores/DAOListStore';
 import SwipeableList from '../common/SwipeableList';
 import LoaderRow from '../common/LoaderRow';
 import SwipeableRow from '../common/SwipeableRow';
+import SnackBarStore from '../stores/SnackBarStore';
 import { BeverageStore } from '../stores/DAOStores';
 import ListEmptyComponent from '../common/ListEmptyComponent';
 import LoadingListFooter from '../common/LoadingListFooter';
@@ -59,8 +60,10 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Beverage>): string => row.key;
 
-  _onDeleteItemPress = (item: Beverage): void =>
-    DAOApi.BeverageDAO.deleteByID(item.id);
+  _onDeleteItemPress = async (item: Beverage): Promise<void> => {
+    await DAOApi.BeverageDAO.deleteByID(item.id);
+    SnackBarStore.showMessage({ text: 'The beverage was deleted' });
+  };
 
   _onEditItemPress = ({ id }: Beverage) => {
     this.injectedProps.navigation.navigate('editBeverage', { id });
