@@ -37,6 +37,7 @@ type BaseNotificationProps = {
 export type LowKegLevelNotification = BaseNotificationProps & {
   beverageId: EntityID,
   beverageName: string,
+  kegId: EntityID,
   tapId: EntityID,
   type: 'lowKegLevel',
 };
@@ -301,14 +302,15 @@ class NotificationsStore {
   _handleNotificationPressByType = (notification: Notification) => {
     switch (notification.type) {
       case 'lowKegLevel': {
-        KegStore.flushCache();
+        const { kegId, tapId } = notification;
+        KegStore.flushCacheForEntity(kegId);
         nullthrows(this._navigation).navigate('tapDetails', {
-          id: notification.tapId,
+          id: tapId,
         });
         break;
       }
       case 'newAchievement': {
-        AchievementStore.flushCache();
+        AchievementStore.flushCustomCache();
         nullthrows(this._navigation).navigate('stats', {
           initialPopUpAchievementType: notification.achievementType,
         });

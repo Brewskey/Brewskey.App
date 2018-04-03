@@ -17,6 +17,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  onRefresh?: () => void | Promise<void>,
   queryOptions?: QueryOptions,
 |};
 
@@ -42,6 +43,12 @@ class KegsList extends React.Component<Props> {
 
   _keyExtractor = (row: Row<Keg>): string => row.key;
 
+  _onRefresh = () => {
+    const { onRefresh } = this.props;
+    onRefresh && onRefresh();
+    this._listStore.reload();
+  };
+
   _renderRow = ({ item }: { item: Row<Keg> }): React.Element<any> => (
     <LoaderRow loader={item.loader} loadedRow={LoadedRow} />
   );
@@ -58,6 +65,7 @@ class KegsList extends React.Component<Props> {
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._onRefresh}
         renderItem={this._renderRow}
       />
     );

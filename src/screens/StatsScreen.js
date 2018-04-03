@@ -3,7 +3,6 @@
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
-import { AchievementStore } from '../stores/DAOStores';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -35,6 +34,10 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
       nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
   }
 
+  _onRefresh = () => {
+    nullthrows(this._userBadges).refresh();
+  };
+
   render() {
     const userID = nullthrows(AuthStore.userID);
     return (
@@ -53,7 +56,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
               <SectionHeader title="Recent Pours" />
             </Fragment>
           }
-          onRefresh={AchievementStore.flushQueryCaches}
+          onRefresh={this._onRefresh}
           queryOptions={{
             filters: [DAOApi.createFilter('owner/id').equals(userID)],
             orderBy: [{ column: 'id', direction: 'desc' }],

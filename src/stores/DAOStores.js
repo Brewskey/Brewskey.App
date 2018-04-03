@@ -95,6 +95,11 @@ class DAOStore<TEntity: { id: EntityID }> {
 
   flushCache = () => this._dao.flushCache();
 
+  flushCustomCache = () => this._dao.flushCustomCache();
+
+  flushCacheForEntity = (entityID: EntityID) =>
+    this._dao.flushCacheForEntity(entityID);
+
   flushQueryCaches = () => this._dao.flushQueryCaches();
 
   count(queryOptions: ?QueryOptions): LoadObject<number> {
