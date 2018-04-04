@@ -3,8 +3,10 @@
 import type { Field, ValidationFunction } from './types';
 
 import * as React from 'react';
+import debounce from 'lodash.debounce';
 import { action, computed, observable } from 'mobx';
 
+const FIELD_VALIDATION_DEBOUNCE_TIMEOUT = 700;
 const FORM_ERROR_KEY = '_error';
 
 type FormStoreProps = {|
@@ -64,7 +66,7 @@ class FormStore {
   @action
   changeFieldValue = (fieldName: string, value: any) => {
     this.updateFieldProps(fieldName, { error: null, touched: true, value });
-    this.validateField(fieldName);
+    this.validateFieldDebounced(fieldName);
   };
 
   @action
@@ -129,6 +131,12 @@ class FormStore {
       this.updateFieldProps(fieldName, { error: fieldError, touched: true });
     }
   };
+
+  @action
+  validateFieldDebounced = debounce(
+    this.validateField,
+    FIELD_VALIDATION_DEBOUNCE_TIMEOUT,
+  );
 
   @computed
   get invalid(): boolean {
