@@ -151,7 +151,6 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
               routes: filteredTabRoutes,
             },
           }}
-          // todo pass tap instead tapid!!!!
           screenProps={{
             noFlowSensorWarning,
             tap: value,
