@@ -8,6 +8,8 @@ import { NavigationActions } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
@@ -17,6 +19,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 class NewBeverageScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
     const { navigation } = this.injectedProps;

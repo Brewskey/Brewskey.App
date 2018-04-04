@@ -14,6 +14,8 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import LoaderComponent from '../common/LoaderComponent';
 import Header from '../common/Header';
@@ -27,6 +29,7 @@ type InjectedProps = {
   navigation: Navigation,
 };
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditDeviceScreen extends InjectedComponent<InjectedProps> {

@@ -9,12 +9,15 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import HomeScreenStore from '../stores/HomeScreenStore';
 import NearbyLocationsList from '../components/NearbyLocationsList';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import HeaderSearchBar from '../common/Header/HeaderSearchBar';
 
 type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(ErrorScreen)
 @observer
 class HomeScreen extends InjectedComponent<InjectedProps> {
   render() {

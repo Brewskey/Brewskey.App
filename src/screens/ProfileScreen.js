@@ -6,6 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import { ScrollView } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import UserAvatar from '../common/avatars/UserAvatar';
 import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
@@ -25,6 +27,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class ProfileScreen extends InjectedComponent<InjectedProps> {

@@ -4,6 +4,8 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { Image, StatusBar, StyleSheet, View } from 'react-native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BrewskeyLogo from '../resources/brewskey-large.png';
@@ -31,6 +33,7 @@ type Props = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(ErrorScreen)
 class LoginScreen extends React.Component<Props> {
   _onRegisterPress = () => this.props.navigation.navigate('register');
 

@@ -8,6 +8,8 @@ import { NavigationActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LocationForm from '../components/LocationForm';
@@ -17,6 +19,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 class NewLocationScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: LocationMutator): Promise<void> => {
     const { navigation } = this.injectedProps;

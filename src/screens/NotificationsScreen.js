@@ -6,6 +6,8 @@ import * as React from 'react';
 import { withNavigationFocus } from 'react-navigation';
 import { observer } from 'mobx-react/native';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderIconButton from '../common/Header/HeaderIconButton';
@@ -19,6 +21,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(ErrorScreen)
 @withNavigationFocus
 @observer
 class NotificationsScreen extends InjectedComponent<InjectedProps> {

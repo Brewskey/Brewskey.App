@@ -3,6 +3,8 @@
 import type { Account } from 'brewskey.js-api';
 
 import * as React from 'react';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { Text, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 
@@ -12,6 +14,7 @@ type InjectedProps = {|
   account: Account,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class ProfileStatsScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {

@@ -6,6 +6,8 @@ import nullthrows from 'nullthrows';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import Fragment from '../common/Fragment';
@@ -18,6 +20,7 @@ type InjectedProps = {
   initialPopUpAchievementType?: AchievementType,
 };
 
+@errorBoundary(ErrorScreen)
 @flatNavigationParamsAndScreenProps
 class StatsScreen extends InjectedComponent<InjectedProps> {
   _userBadges: ?UserBadges;

@@ -8,6 +8,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import KegForm from '../components/KegForm';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -18,6 +20,7 @@ type InjectedComponentProps = {
   tapId: EntityID,
 };
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
   _onFormSubmit = async (values: KegMutator): Promise<void> => {

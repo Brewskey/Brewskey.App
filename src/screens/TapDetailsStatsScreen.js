@@ -6,6 +6,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import OwnerPoursList from '../components/poursLists/OwnerPoursList';
 import SectionHeader from '../common/SectionHeader';
@@ -16,6 +18,7 @@ type InjectedProps = {|
   tap: Tap,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {

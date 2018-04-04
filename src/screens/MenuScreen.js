@@ -4,6 +4,8 @@ import * as React from 'react';
 import { ScrollView } from 'react-native';
 import { observer } from 'mobx-react/native';
 import AppSettingsStore from '../stores/AppSettingsStore';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import Container from '../common/Container';
 import Section from '../common/Section';
@@ -13,6 +15,7 @@ import MenuSeparator from '../components/MenuSeparator';
 import MenuLogoutButton from '../components/MenuLogoutButton';
 import MenuNavigationButton from '../components/MenuNavigationButton';
 
+errorBoundary(ErrorScreen);
 @observer
 class MenuScreen extends React.Component<{}> {
   render() {

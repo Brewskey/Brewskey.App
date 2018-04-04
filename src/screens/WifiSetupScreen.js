@@ -3,6 +3,8 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
 import { StackNavigator } from 'react-navigation';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -29,6 +31,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class WifiSetupScreen extends InjectedComponent<InjectedProps> {
   static router = WifiSetupNavigator.router;
