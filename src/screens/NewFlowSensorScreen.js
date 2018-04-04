@@ -16,6 +16,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 type InjectedProps = {|
   navigation: Navigation,
   returnOnFinish?: boolean,
+  showBackButton?: boolean,
   tapId: EntityID,
 |};
 
@@ -44,10 +45,10 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { tapId } = this.injectedProps;
+    const { tapId, showBackButton } = this.injectedProps;
     return (
       <Container>
-        <Header title="Set tap sensor" />
+        <Header showBackButton={showBackButton} title="Set tap sensor" />
         <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
       </Container>
     );
