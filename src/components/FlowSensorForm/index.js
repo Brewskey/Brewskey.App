@@ -59,7 +59,7 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
         : selectedFlowSensorItem.defaultPulses;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           component={FlowSensorSwiperField}
           name="flowSensorType"

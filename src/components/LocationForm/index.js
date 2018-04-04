@@ -71,7 +71,10 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView style={styles.container}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={styles.container}
+      >
         <FormField
           component={TextField}
           disabled={submitting}

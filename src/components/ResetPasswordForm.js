@@ -40,7 +40,7 @@ class ForgotPasswordForm extends InjectedComponent<FormProps> {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}

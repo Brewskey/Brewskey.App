@@ -78,7 +78,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
       .reverse();
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           component={TextField}
           disabled={submitting}

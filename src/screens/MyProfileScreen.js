@@ -17,7 +17,7 @@ class MyProfileScreen extends React.Component<{}> {
     return (
       <Container>
         <Header showBackButton title="My profile" />
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
           <Section bottomPadded>
             <SectionContent centered>
               <AvatarPicker />

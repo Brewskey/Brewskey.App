@@ -47,7 +47,7 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField component={TextField} label="SSID" name="ssid" />
         <FormField component={PickerField} label="Security" name="security">
           {Object.entries(WIFI_SECURITIES).map(

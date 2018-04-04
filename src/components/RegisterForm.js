@@ -63,7 +63,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
     const { formError, invalid, submitting } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}

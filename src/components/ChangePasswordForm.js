@@ -46,7 +46,7 @@ class ChangePasswordForm extends InjectedComponent<FormProps> {
   render() {
     const { formError, invalid, submitting } = this.injectedProps;
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
