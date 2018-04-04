@@ -36,7 +36,7 @@ export const errorBoundary = <TProps: {}>(
   fallbackComponent: ?React.Element<any> | React.ComponentType<any>,
 ) => (
   Component: React.ComponentType<TProps>,
-): Class<React.PureComponent<Props>> => {
+): Class<React.PureComponent<TProps>> => {
   class WithErrorBoundary extends React.PureComponent {
     render() {
       return (
