@@ -14,7 +14,7 @@ class MenuLogoutButton extends React.Component {
 
   _onLogoutConform = () => {
     this._modalToggleStore.toggleOff();
-    AuthStore.clearAuthState();
+    AuthStore.logout();
   };
 
   render() {
