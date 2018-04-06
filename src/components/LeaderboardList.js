@@ -10,6 +10,7 @@ import List from '../common/List';
 import { withNavigation } from 'react-navigation';
 import LeaderboardListStore from '../stores/LeaderboardListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
+import PintCounter from '../components/PintCounter';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LeaderboardListEmpty from './LeaderboardListEmpty';
@@ -56,10 +57,10 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     index: number,
   }): React.Element<any> => (
     <ListItem
-      item={item}
       avatar={<UserAvatar userName={item.userName} />}
-      hideChevron
+      item={item}
       onPress={this._onListItemPress}
+      rightIcon={<PintCounter ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
       title={`${index + 1}. ${item.userName}`}
     />

@@ -10,6 +10,7 @@ import ListItem from '../../common/ListItem';
 import ListEmptyComponent from '../../common/ListEmptyComponent';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import BasePoursList from './BasePoursList';
+import PintCounter from '../PintCounter';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
@@ -35,13 +36,12 @@ const LoadedRow = ({ item: pour }: RowItemProps<Pour, *>) => (
     avatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />
     }
-    hideChevron
     item={pour}
+    rightIcon={<PintCounter ounces={pour.ounces} />}
     title={`${
       pour.beverage ? pour.beverage.name : NULL_STRING_PLACEHOLDER
     } – ${pour.ounces.toFixed(1)} oz`}
     subtitle={moment(pour.pourDate).fromNow()}
   />
 );
-
 export default BeveragePoursList;
