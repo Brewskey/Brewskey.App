@@ -34,6 +34,10 @@ const validate = ({
     errors.newPassword = 'New password the same as old';
   }
 
+  if (newPassword && newPassword.length < 6) {
+    errors.newPassword = 'password should be at least 6 characters long';
+  }
+
   return errors;
 };
 
