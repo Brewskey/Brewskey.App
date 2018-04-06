@@ -96,7 +96,11 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
 
   _onNoFlowSensorWarningPress = () => {
     const { navigation, value: { id } } = this.props;
-    navigation.navigate('newFlowSensor', { returnOnFinish: true, tapId: id });
+    navigation.navigate('newFlowSensor', {
+      returnOnFinish: true,
+      showBackButton: true,
+      tapId: id,
+    });
   };
 
   render() {
