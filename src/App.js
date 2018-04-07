@@ -10,8 +10,8 @@ import AppRouter from './AppRouter';
 import Signalr from './signalr';
 import AuthStore from './stores/AuthStore';
 import NotificationsStore from './stores/NotificationsStore';
-import NFCModal from './components/modals/NFCModal';
 import { UNAUTH_ERROR_CODE } from './constants';
+import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
 
@@ -97,7 +97,7 @@ class App extends React.Component<{}> {
     return (
       <SafeAreaView style={styles.safeArea}>
         <AppRouter ref={this._setNavigationRef} />
-        <NFCModal />
+        <PourProcessModal />
         <SnackBar />
       </SafeAreaView>
     );
