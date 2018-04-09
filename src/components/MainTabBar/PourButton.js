@@ -5,8 +5,9 @@ import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { COLORS } from '../../theme';
 import { observer } from 'mobx-react/native';
-import NFCStore from '../../stores/NFCStore';
+import PourProcessStore from '../../stores/PourProcessStore';
 import TouchableItem from '../../common/buttons/TouchableItem';
+import LoadingIndicator from '../../common/LoadingIndicator';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,17 +24,19 @@ const styles = StyleSheet.create({
 @observer
 class PourButton extends React.Component<{}> {
   render() {
-    return (
+    return !PourProcessStore.isLoading ? (
       <Icon
         borderless
         color={COLORS.secondary}
         component={TouchableItem}
         containerStyle={styles.container}
         name="md-beer"
-        onPress={NFCStore.onShowModal}
+        onPress={PourProcessStore.onShowModal}
         size={26}
         type="ionicon"
       />
+    ) : (
+      <LoadingIndicator color="white" size={26} style={styles.container} />
     );
   }
 }

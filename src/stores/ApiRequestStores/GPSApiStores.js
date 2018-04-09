@@ -12,11 +12,12 @@ const getGPSPosition = (): Promise<Position> =>
     ),
   );
 
-export const GPSCoordinatesStore = makeRequestApiStore((): Promise<
-  Coordinates,
-> =>
-  getGPSPosition().then((position: Position): Coordinates => ({
-    latitude: position.coords.latitude,
-    longitude: position.coords.longitude,
-  })),
-);
+export const createGPSCoordinatesStore = () =>
+  makeRequestApiStore((): Promise<Coordinates> =>
+    getGPSPosition().then((position: Position): Coordinates => ({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    })),
+  );
+
+export const GPSCoordinatesStore = createGPSCoordinatesStore();

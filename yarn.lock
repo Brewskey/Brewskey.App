@@ -4757,9 +4757,9 @@ react-native-modal@^4.1.1:
     prop-types "15.5.10"
     react-native-animatable "^1.2.3"
 
-react-native-nfc-manager@0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-0.0.6.tgz#2e3a7ccaa0231893c98859ab2080fe0d6a4ebdee"
+react-native-nfc-manager@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-0.3.1.tgz#4ce5bfa1a338a06bb8a5a71fffedfebca55d0ec5"
 
 react-native-progress@^3.4.0:
   version "3.4.0"

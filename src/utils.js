@@ -80,5 +80,9 @@ export const parseError = (error: Object): string => {
     return error.error_description;
   }
 
+  if (error.Message) {
+    return error.Message;
+  }
+
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };

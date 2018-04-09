@@ -18,7 +18,7 @@ type Props = {|
 |};
 
 const LoadingContainer = ({ activitySize = 'large', color, style }: Props) => (
-  <View style={[styles.container, style]}>
+  <View style={style || styles.container}>
     <ActivityIndicator color={color} size={activitySize} />
   </View>
 );
