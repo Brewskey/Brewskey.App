@@ -51,7 +51,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           component={TextField}
           initialValue={tap.description}

@@ -75,7 +75,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           component={TextField}
           editable={false}

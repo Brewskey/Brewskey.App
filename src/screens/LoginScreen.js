@@ -42,7 +42,10 @@ class LoginScreen extends React.Component<Props> {
 
   render() {
     return (
-      <KeyboardAwareScrollView style={styles.container}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={styles.container}
+      >
         <StatusBar backgroundColor={COLORS.primary3} />
         <View style={styles.imageContainer}>
           <Image

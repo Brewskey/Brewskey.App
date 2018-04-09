@@ -79,7 +79,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         : 100;
 
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           component={BeveragePicker}
           disabled={submitting}

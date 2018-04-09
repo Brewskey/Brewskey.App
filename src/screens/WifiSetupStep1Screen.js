@@ -25,7 +25,7 @@ class WifiSetupStep1Screen extends InjectedComponent<InjectedProps> {
   render() {
     const { forNewDevice, onSetupFinish, wifiSetupStore } = this.injectedProps;
     return (
-      <KeyboardAwareScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <SectionHeader title="Time to set up WiFi on your Brewskey box!" />
         <SectionContent paddedHorizontal paddedVertical>
           <DeviceSetupInstructions />
