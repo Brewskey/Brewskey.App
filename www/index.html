@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="img-src * android-webview-video-poster: cdvphotolibrary:  'self' data:; default-src * https://codepush.azurewebsites.net blob: 'self' gap: wss: ws: ; font-src 'self' data: fonts.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' brewskey.com localhost:35729;">
+    <meta http-equiv="Content-Security-Policy" content="img-src * android-webview-video-poster: cdvphotolibrary:  'self' data:; default-src * https://codepush.azurewebsites.net blob: 'self' gap: wss: ws: ; font-src 'self' data: https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' brewskey.com localhost:35729;">
 
     <title></title>
 
@@ -33,8 +33,8 @@
     <script src="lib/ngstorage/ngStorage.js"></script>
     <script src="lib/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript">
-        _.contains = _.includes;
-    </script>
+    _.contains = _.includes;
+</script>
     <script src="lib/restangular/dist/restangular.min.js"></script>
     <script src="lib/softap-browser.js"></script>
     <script src="lib/Chart.js/Chart.min.js"></script>

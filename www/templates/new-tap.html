@@ -18,9 +18,6 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div> -->
-                    <label class="item item-input" ng-class="{ 'has-error' : form.name.$invalid || errors['model.Description']}">
-                        <textarea ng-model="model.description" placeholder="Description"></textarea>
-                    </label>
                     <!--
                     <div class="form-errors" data-ng-repeat="error in errors['model.Summary']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
@@ -38,9 +35,12 @@
                         </span>
                         <select ng-model="model.deviceId"
                                 required
+                                ng-disabled="isDeviceSelectorReadOnly"
                                 ng-options="obj.id as obj.name for obj in devices"></select>
                     </label>
-
+                    <label class="item item-input" ng-class="{ 'has-error' : form.name.$invalid || errors['model.Description']}">
+                        <textarea ng-model="model.description" placeholder="Description"></textarea>
+                    </label>
                     <div class="item item-toggle">
                         Hide Stats from Users
                         <label class="toggle">
@@ -71,7 +71,7 @@
                         </label>
                     </div>
                     <div class="item">
-                        <button class="button button-block button-positive" type="submit" ng-disabled="!form.$dirty || form.$invalid || editing">
+                        <button class="button button-block button-positive" type="submit" ng-disabled="(!form.$dirty && !isDeviceSelectorReadOnly) || form.$invalid || editing">
                             <span ng-if="!model.id">Create Tap</span>
                             <span ng-if="model.id">Update Tap</span>
                         </button>

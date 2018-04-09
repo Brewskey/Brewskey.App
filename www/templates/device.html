@@ -14,21 +14,32 @@
                 </a>-->
 
                 <dl class="dl-horizontal">
-                    <dt>Location:</dt>
-                    <dd>{{location.name}}</dd>
                     <dt>Status:</dt>
                     <dd>
-                        <div ng-if="device.deviceStatus === 0">
-                            Unlocked
-                            <small class="help-block"><em>Your device is currently unlocked and may be transferred to another account.</em></small>
-                        </div>
                         <div ng-if="device.deviceStatus === 1">
                             Active
-                            <small class="help-block"><em>Your device is currently active and can pour beers.</em></small>
+                            <small class="help-block"><em>
+                              The Brewskey Box is currently in the standard
+                              mode.  If you have a valve it will be closed and
+                              the sensors will track pours normally.</em>
+                            </small>
                         </div>
                         <div ng-if="device.deviceStatus === 2">
                             Disabled
-                            <small class="help-block"><em>Your device is currently inactive and cannot pour beers.</em></small>
+                            <small class="help-block"><em>Your Brewskey Box is disabled. The valve will not open and pours will not be tracked.</em></small>
+                        </div>
+                        <div ng-if="device.deviceStatus === 3">
+                            Cleaning
+                            <small class="help-block"><em>Your Brewskey Box is in cleaning mode.<br/>After an hour the box will be put into
+                            "disabled" mode.</em></small>
+                        </div>
+                        <div ng-if="device.deviceStatus === 4">
+                            Unlocked
+                            <small class="help-block"><em>Your Brewskey box will open the valve and allow users to pour without authentication.</em></small>
+                        </div>
+                        <div ng-if="device.deviceStatus === 5">
+                            Configure Expansion Boxes
+                            <small class="help-block"><em>Set up your expansion boxes. Follow the instructions on your Brewskey box to complete the configuration. When finished, the device will reset in "Active" mode.</em></small>
                         </div>
                     </dd>
                     <dt>Box Id:</dt>
@@ -66,7 +77,7 @@
         </div>
         <div class="list card">
             <div class="item no-color no-padding">
-                <a ui-sref="app.new-tap({deviceId: device.id})" class="item item-button-right" ng-if="taps.length < 4">
+                <a ui-sref="app.new-tap({deviceId: device.id})" class="item item-button-right" ng-if="taps.length < 32">
                     New Tap
                     <span class="button button-positive">
                         <i class="icon ion-plus"></i>

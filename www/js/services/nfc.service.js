@@ -4,7 +4,7 @@ angular.injector(['ng']).invoke([
   '$q',
   function($q) {
     deferred = $q.defer();
-  }
+  },
 ]);
 if (window.WinJS !== undefined) {
   WinJS.Application.addEventListener(
@@ -19,7 +19,7 @@ if (window.WinJS !== undefined) {
         });
       }
     },
-    false
+    false,
   );
 }
 
@@ -46,7 +46,7 @@ angular.module('brewskey.services').factory('nfcService', [
     $ionicLoading,
     $ionicHistory,
     $interval,
-    gps
+    gps,
   ) {
     var requestPour = false;
     var authenticating = false;
@@ -91,7 +91,7 @@ angular.module('brewskey.services').factory('nfcService', [
             type: 'button-positive',
             onTap: function(e) {
               nfc.showSettings();
-            }
+            },
           },
           {
             text: 'Maybe Later',
@@ -131,7 +131,7 @@ angular.module('brewskey.services').factory('nfcService', [
 
               var tagValue = String.fromCharCode.apply(
                 null,
-                payload[0] === 0 ? payload.slice(1) : payload
+                payload[0] === 0 ? payload.slice(1) : payload,
               );
 
               if (tagValue.indexOf('https://brewskey.com/') < 0) {
@@ -143,7 +143,7 @@ angular.module('brewskey.services').factory('nfcService', [
             function() {
               console.log('Listening for NDEF tags.');
             },
-            nfcError
+            nfcError,
           );
         }, 20);
       }
@@ -192,7 +192,7 @@ angular.module('brewskey.services').factory('nfcService', [
             deviceId: deviceId || undefined,
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,
-            totp: totp
+            totp: totp,
           })
           .then(
             function() {
@@ -211,10 +211,10 @@ angular.module('brewskey.services').factory('nfcService', [
                   cssClass: 'green-popup',
                   title: 'Invalid passcode',
                   template:
-                    'The passcode you entered was incorrect or expired.  Please try a new code.'
+                    'The passcode you entered was incorrect or expired.  Please try a new code.',
                 });
               }
-            }
+            },
           );
       },
       processUri: function(rawUri) {
@@ -243,7 +243,7 @@ angular.module('brewskey.services').factory('nfcService', [
               $state.go(
                 'app.tap.leaderboard',
                 { tapId: response[0].id },
-                { location: 'replace' }
+                { location: 'replace' },
               );
             });
         }
@@ -325,9 +325,9 @@ angular.module('brewskey.services').factory('nfcService', [
                   text: 'Cancel',
                   onTap: function() {
                     requestPour = false;
-                  }
-                }
-              ]
+                  },
+                },
+              ],
             });
             return popup.then(function() {
               requestPour = false;
@@ -335,9 +335,9 @@ angular.module('brewskey.services').factory('nfcService', [
               cancelAnimationFrame(animationID);
             });
           });
-      }
+      },
     };
 
     return output;
-  }
+  },
 ]);

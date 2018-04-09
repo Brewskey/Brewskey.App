@@ -1,64 +1,54 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.brewskey.app" version="0.0.61" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="553" id="com.brewskey.app" version="0.0.63" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Brewskey</name>
-    <description>
-    Unlock the power of you kegerator
-  </description>
-    <author email="support@brewskey.io" href="http://brewskey.com/">
+    <description>Unock the power of your kegerator</description>
+    <author email="support@brewskey.com" href="http://brewskey.com/">
       Brewskey
     </author>
     <content src="index.html" />
     <access origin="*" />
-    <preference name="Orientation" value="portrait" />
-    <preference name="webviewbounce" value="false" />
-    <preference name="UIWebViewBounce" value="false" />
-    <preference name="DisallowOverscroll" value="true" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <preference name="ScrollEnabled" value="false" />
+    <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="FadeSplashScreen" value="false" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="FadeSplashScreenDuration" value="300" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
     <preference name="SplashScreenDelay" value="2000" />
-    <preference name="AutoHideSplashScreen" value="true" />
-    <preference name="ShowSplashScreenSpinner" value="false" />
-    <feature name="StatusBar">
-        <param name="ios-package" onload="true" value="CDVStatusBar" />
-    </feature>
+    <preference name="Orientation" value="portrait" />
     <platform name="android">
-        <allow-navigation href="https://brewskey.com/*" />
         <preference name="CodePushDeploymentKey" value="MSpRU-1FgCr-d5aRnU2hAsv9jrEuVk-QkVzyX" />
-        <splash density="port-ldpi" src="resources\android\splash\drawable-port-ldpi-screen.png" />
-        <splash density="port-mdpi" src="resources\android\splash\drawable-port-mdpi-screen.png" />
-        <splash density="port-hdpi" src="resources\android\splash\drawable-port-hdpi-screen.png" />
-        <splash density="port-xhdpi" src="resources\android\splash\drawable-port-xhdpi-screen.png" />
-        <splash density="port-xxhdpi" src="resources\android\splash\drawable-port-xxhdpi-screen.png" />
-        <splash density="port-xxxhdpi" src="resources\android\splash\drawable-port-xxxhdpi-screen.png" />
-        <icon density="ldpi" src="resources\android\icon\drawable-ldpi-icon.png" />
-        <icon density="mdpi" src="resources\android\icon\drawable-mdpi-icon.png" />
-        <icon density="hdpi" src="resources\android\icon\drawable-hdpi-icon.png" />
-        <icon density="xhdpi" src="resources\android\icon\drawable-xhdpi-icon.png" />
-        <icon density="xxhdpi" src="resources\android\icon\drawable-xxhdpi-icon.png" />
-        <icon density="xxxhdpi" src="resources\android\icon\drawable-xxxhdpi-icon.png" />
-    </platform>
-    <platform name="windows">
-        <icon height="30" src="resources\windows\icon\Square30x30Logo.scale-100.png" width="30" />
-        <icon height="106" src="resources\windows\icon\Square44x44Logo.scale-240.png" width="106" />
-        <icon height="44" src="resources\windows\icon\Square44x44Logo.scale-100.png" width="44" />
-        <icon height="70" src="resources\windows\icon\Square70x70Logo.scale-100.png" width="70" />
-        <icon height="170" src="resources\windows\icon\Square71x71Logo.scale-240.png" width="170" />
-        <icon height="71" src="resources\windows\icon\Square71x71Logo.scale-100.png" width="71" />
-        <icon height="360" src="resources\windows\icon\Square150x150Logo.scale-240.png" width="360" />
-        <icon height="150" src="resources\windows\icon\Square150x150Logo.scale-100.png" width="150" />
-        <icon height="310" src="resources\windows\icon\Square310x310Logo.scale-100.png" width="310" />
-        <icon height="120" src="resources\windows\icon\StoreLogo.scale-240.png" width="120" />
-        <icon height="50" src="resources\windows\icon\StoreLogo.scale-100.png" width="50" />
-        <splash height="1920" scale="240" src="resources\windows\splash\SplashScreen.scale-240.png" width="1152" />
-    </platform>
-    <platform name="wp8">
-        <icon height="99" src="resources\wp8\icon\ApplicationIcon.png" width="99" />
-        <icon height="159" src="resources\wp8\icon\Background.png" width="159" />
-        <splash height="1280" src="resources\wp8\splash\SplashScreenImage.png" width="768" />
+        <resource-file src="google-services.json" target="app/google-services.json" />
+        <allow-intent href="market:*" />
+        <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
+        <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
+        <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
+        <icon density="xhdpi" src="resources/android/icon/drawable-xhdpi-icon.png" />
+        <icon density="xxhdpi" src="resources/android/icon/drawable-xxhdpi-icon.png" />
+        <icon density="xxxhdpi" src="resources/android/icon/drawable-xxxhdpi-icon.png" />
+        <splash density="land-ldpi" src="resources/android/splash/drawable-land-ldpi-screen.png" />
+        <splash density="land-mdpi" src="resources/android/splash/drawable-land-mdpi-screen.png" />
+        <splash density="land-hdpi" src="resources/android/splash/drawable-land-hdpi-screen.png" />
+        <splash density="land-xhdpi" src="resources/android/splash/drawable-land-xhdpi-screen.png" />
+        <splash density="land-xxhdpi" src="resources/android/splash/drawable-land-xxhdpi-screen.png" />
+        <splash density="land-xxxhdpi" src="resources/android/splash/drawable-land-xxxhdpi-screen.png" />
+        <splash density="port-ldpi" src="resources/android/splash/drawable-port-ldpi-screen.png" />
+        <splash density="port-mdpi" src="resources/android/splash/drawable-port-mdpi-screen.png" />
+        <splash density="port-hdpi" src="resources/android/splash/drawable-port-hdpi-screen.png" />
+        <splash density="port-xhdpi" src="resources/android/splash/drawable-port-xhdpi-screen.png" />
+        <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
+        <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
     <platform name="ios">
         <preference name="CodePushDeploymentKey" value="PZeezosHlliSHlyey8_1NS4mEY2ZVk-QkVzyX" />
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
         <icon height="57" src="resources/ios/icon/icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/icon@2x.png" width="114" />
         <icon height="40" src="resources/ios/icon/icon-40.png" width="40" />
@@ -81,37 +71,52 @@
         <splash height="1136" src="resources/ios/splash/Default-568h@2x~iphone.png" width="640" />
         <splash height="1334" src="resources/ios/splash/Default-667h.png" width="750" />
         <splash height="2208" src="resources/ios/splash/Default-736h.png" width="1242" />
+        <splash height="1242" src="resources/ios/splash/Default-Landscape-736h.png" width="2208" />
+        <splash height="1536" src="resources/ios/splash/Default-Landscape@2x~ipad.png" width="2048" />
+        <splash height="2048" src="resources/ios/splash/Default-Landscape@~ipadpro.png" width="2732" />
+        <splash height="768" src="resources/ios/splash/Default-Landscape~ipad.png" width="1024" />
         <splash height="2048" src="resources/ios/splash/Default-Portrait@2x~ipad.png" width="1536" />
+        <splash height="2732" src="resources/ios/splash/Default-Portrait@~ipadpro.png" width="2048" />
         <splash height="1024" src="resources/ios/splash/Default-Portrait~ipad.png" width="768" />
         <splash height="960" src="resources/ios/splash/Default@2x~iphone.png" width="640" />
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
+        <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
     </platform>
     <icon src="resources\android\icon\drawable-xhdpi-icon.png" />
-    <plugin name="cordova-plugin-code-push" spec="^1.9.4-beta" />
-    <plugin name="cordova-plugin-inappbrowser" spec="^1.7.1" />
-    <plugin name="cordova-plugin-camera" spec="^2.4.1">
+    <plugin name="cordova-plugin-camera" spec="^4.0.2" />
         <variable name="CAMERA_USAGE_DESCRIPTION" value="Brewskey uses your camera for profile photos." />
         <variable name="PHOTOLIBRARY_USAGE_DESCRIPTION" value="Brewskey uses your photo library for profile photos." />
     </plugin>
     <plugin name="cordova-plugin-vibration" spec="^2.1.5" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
+
     <plugin name="cordova-plugin-device" spec="^1.1.6" />
-    <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
-    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
-    <plugin name="phonegap-nfc" spec="^0.7.0">
-        <variable name="NFC_USAGE_DESCRIPTION" value="Read NFC Tags" />
-    </plugin>
-    <plugin name="cordova-plugin-network-information" spec="^1.3.3" />
-    <plugin name="cordova-plugin-contacts" spec="^2.3.1">
+    <plugin name="cordova-plugin-camera" spec="^4.0.2" />
+    <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
+    <plugin name="cordova-plugin-zip" spec="^3.1.0" />
+    <plugin name="cordova-plugin-code-push" spec="^1.11.3" />
+    <plugin name="cordova-plugin-contacts" spec="^3.0.1">
         <variable name="CONTACTS_USAGE_DESCRIPTION" value="Brewskey uses your contacts to add friends." />
     </plugin>
-    <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Brewskey uses your location to find nearby taps." />
     </plugin>
+    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
+    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
+    <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
+    <plugin name="cordova-plugin-vibration" spec="^3.0.1" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-sms-plugin" spec="^0.1.11" />
-    <plugin name="phonegap-plugin-push" spec="^2.1.2">
-        <variable name="SENDER_ID" value="394986866677" />
+    <plugin name="phonegap-nfc" spec="^0.7.1">
+        <variable name="NFC_USAGE_DESCRIPTION" value="Read NFC Tags" />
     </plugin>
-    <engine name="android" spec="^6.2.3" />
+    <plugin name="phonegap-plugin-push" spec="^2.1.3">
+        <variable name="FCM_VERSION" value="11.6.2" />
+    </plugin>
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
+    <engine name="android" spec="~7.0.0" />
+    <engine name="ios" spec="^4.5.4" />
 </widget>
