@@ -3,6 +3,8 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
@@ -12,6 +14,7 @@ type Props = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 class LocationsScreen extends React.Component<Props> {
   render() {
     return (

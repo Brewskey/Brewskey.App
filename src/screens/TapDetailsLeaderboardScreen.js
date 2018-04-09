@@ -8,6 +8,8 @@ import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { action, observable } from 'mobx';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import LeaderboardList from '../components/LeaderboardList';
 import LeaderboardDurationPicker, {
   LEADERBOARD_DURATION_OPTIONS,
@@ -19,6 +21,7 @@ type InjectedProps = {|
   tap: Tap,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {

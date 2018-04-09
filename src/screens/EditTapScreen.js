@@ -5,6 +5,8 @@ import type { EntityID } from 'brewskey.js-api';
 import * as React from 'react';
 import { TabNavigator } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import EditBasicTapScreen from './EditBasicTapScreen';
@@ -31,6 +33,7 @@ type InjectedProps = {
   id: EntityID,
 };
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class EditTapScreen extends InjectedComponent<InjectedProps> {
   render() {

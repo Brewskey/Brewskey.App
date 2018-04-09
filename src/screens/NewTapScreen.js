@@ -6,6 +6,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -16,6 +18,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 class NewTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const { navigation } = this.injectedProps;

@@ -8,6 +8,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import { BeverageStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import BeverageDetailsContent from '../components/BeverageDetailsContent';
 import Container from '../common/Container';
 import SectionContent from '../common/SectionContent';
@@ -22,6 +24,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {

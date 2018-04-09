@@ -4,6 +4,8 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import DAOApi from 'brewskey.js-api';
@@ -19,6 +21,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
   _onWifiSetupButtonPress = () =>

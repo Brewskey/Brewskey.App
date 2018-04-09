@@ -9,6 +9,8 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { LocationStore } from '../stores/DAOStores';
 import { ScrollView, StyleSheet, Text } from 'react-native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Container from '../common/Container';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
@@ -31,6 +33,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class LocationDetailsScreen extends InjectedComponent<InjectedProps> {

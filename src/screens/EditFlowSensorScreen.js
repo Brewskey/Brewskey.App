@@ -9,6 +9,8 @@ import { withNavigation } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import FlowSensorForm from '../components/FlowSensorForm';
@@ -21,6 +23,7 @@ type InjectedProps = {|
   tapId: EntityID,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {

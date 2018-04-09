@@ -8,6 +8,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions } from 'react-navigation';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Container from '../common/Container';
@@ -20,6 +22,7 @@ type InjectedProps = {|
   particleID: string,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class NewDeviceScreen extends InjectedComponent<InjectedProps> {

@@ -15,6 +15,8 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import LoaderComponent from '../common/LoaderComponent';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -27,6 +29,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditBeverageScreen extends InjectedComponent<InjectedProps> {

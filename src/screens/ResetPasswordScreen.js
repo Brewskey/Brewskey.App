@@ -6,6 +6,8 @@ import type { ResetPasswordFormValues } from '../components/ResetPasswordForm';
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { observer } from 'mobx-react/native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import AuthApi from '../AuthApi';
 import Header from '../common/Header';
 import ToggleStore from '../stores/ToggleStore';
@@ -28,6 +30,7 @@ type Props = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class ResetPasswordScreen extends React.Component<Props> {
   _modalToggleStore: ToggleStore = new ToggleStore();

@@ -7,6 +7,8 @@ import DAOApi, { LoadObject } from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
 import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -18,6 +20,7 @@ type InjectedProps = {
   tapId: EntityID,
 };
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditKegScreen extends InjectedComponent<InjectedProps> {

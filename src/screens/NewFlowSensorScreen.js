@@ -8,6 +8,8 @@ import DAOApi from 'brewskey.js-api';
 import { NavigationActions } from 'react-navigation';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import FlowSensorForm from '../components/FlowSensorForm';
@@ -20,6 +22,7 @@ type InjectedProps = {|
   tapId: EntityID,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {

@@ -5,12 +5,14 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { TabNavigator } from 'react-navigation';
-import theme from '../theme';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import MyFriendsMainScreen from './MyFriendsMainScreen';
 import MyFriendsRequestScreen from './MyFriendsRequestScreen';
 import MyFriendsContactScreen from './MyFriendsContactScreen';
+import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
 const MyFriendsNavigator = TabNavigator(
@@ -29,6 +31,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 class MyFriendsScreen extends InjectedComponent<InjectedProps> {
   static router = MyFriendsNavigator.router;
 

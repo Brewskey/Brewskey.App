@@ -9,6 +9,8 @@ import { ScrollView } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { ListItem } from 'react-native-elements';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { OrganizationStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -21,6 +23,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class SettingsScreen extends InjectedComponent<InjectedProps> {
   @computed

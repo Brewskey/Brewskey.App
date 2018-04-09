@@ -10,6 +10,8 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import NotificationsStore from '../stores/NotificationsStore';
 import Container from '../common/Container';
 import Section from '../common/Section';
@@ -24,6 +26,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {

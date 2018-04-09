@@ -8,6 +8,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import TapsList from '../components/TapsList';
 import OverviewItem from '../common/OverviewItem2';
 import DeviceStateOverviewItem from '../components/DeviceStateOverviewItem';
@@ -27,6 +29,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {

@@ -9,6 +9,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, TapStore } from '../stores/DAOStores';
 import { observer } from 'mobx-react/native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageDetailsLoader from '../components/BeverageDetailsLoader';
 import KegLevelBar from '../components/KegLevelBar';
@@ -25,6 +27,7 @@ type InjectedProps = {|
   tap: Tap,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {

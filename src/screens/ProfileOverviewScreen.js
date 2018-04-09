@@ -5,6 +5,8 @@ import type { Account } from 'brewskey.js-api';
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { StyleSheet, View } from 'react-native';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
 import UserAvatar from '../common/avatars/UserAvatar';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
@@ -24,7 +26,7 @@ type InjectedProps = {|
   account: Account,
 |};
 
-// todo figure out how to use FlatLists nested in ScrollView
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class ProfileOverviewScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
