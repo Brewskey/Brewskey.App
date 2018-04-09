@@ -3,35 +3,11 @@
 import type { UserCredentials } from '../AuthApi';
 
 import { AsyncStorage } from 'react-native';
-import { action, autorun, computed, runInAction, observable } from 'mobx';
-import DAOApi from 'brewskey.js-api';
-import NavigationService from '../NavigationService';
-import NotificationsStore from './NotificationsStore';
+import { action, computed, observable, reaction, runInAction } from 'mobx';
 import AuthApi from '../AuthApi';
-import { UNAUTH_ERROR_CODE } from '../constants';
 import Storage from '../Storage';
-import Signalr from '../signalr';
 
 const AUTH_STORAGE_KEY = 'auth_state';
-
-const setDAOHeaders = (token: string) => {
-  const daoHeaders = DAOApi.getHeaders().filter(
-    (header: { name: string, value: string }): boolean =>
-      header.name !== 'Authorization' && header.name !== 'timezoneOffset',
-  );
-
-  DAOApi.setHeaders([
-    ...daoHeaders,
-    {
-      name: 'timezoneOffset',
-      value: new Date().getTimezoneOffset().toString(),
-    },
-    {
-      name: 'Authorization',
-      value: `Bearer ${token}`,
-    },
-  ]);
-};
 
 type AuthState = {|
   id: ?string,
@@ -48,43 +24,25 @@ const initialAuthState = {
 };
 
 class AuthStore {
-  @observable authState: AuthState = initialAuthState;
+  @observable _authState: AuthState = initialAuthState;
+  @observable isReady: boolean = false;
 
   constructor() {
     (async () => {
       await this._rehydrateState();
-      autorun(async () => {
-        if (this.isAuthorized) {
-          NavigationService.navigate('main');
-          await Signalr.startAll({ access_token: this.token });
-        } else {
-          NavigationService.navigate('login');
-        }
-      });
+
+      reaction(
+        (): AuthState => this._authState,
+        (authState: AuthState) => {
+          if (authState.token) {
+            Storage.set(AUTH_STORAGE_KEY, authState);
+          } else {
+            AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+          }
+        },
+      );
     })();
-
-    DAOApi.onError(({ status }: Error) => {
-      if (status === UNAUTH_ERROR_CODE) {
-        this.clearAuthState();
-      }
-    });
   }
-
-  @action
-  clearAuthState = () => {
-    this.authState = initialAuthState;
-    AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-    Signalr.stopAll();
-  };
-
-  _rehydrateState = async (): Promise<void> => {
-    const authState = await Storage.get(AUTH_STORAGE_KEY);
-    runInAction(() => {
-      if (authState && authState.token) {
-        this._setAuthState(authState);
-      }
-    });
-  };
 
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
@@ -99,36 +57,45 @@ class AuthStore {
       userName,
     };
 
-    this._setAuthState(authState);
-    NotificationsStore.onLogin();
+    runInAction('loginSuccess', () => {
+      this._authState = authState;
+    });
   };
 
   @action
-  _setAuthState = (authState: AuthState) => {
-    authState.token && setDAOHeaders(authState.token);
-    this.authState = authState;
-    Storage.set(AUTH_STORAGE_KEY, authState);
+  logout = () => {
+    this._authState = initialAuthState;
   };
 
   @computed
   get token(): ?string {
-    return this.authState.token;
+    return this._authState.token;
   }
 
   @computed
   get userID(): ?string {
-    return this.authState.id;
+    return this._authState.id;
   }
 
   @computed
   get userName(): ?string {
-    return this.authState.userName;
+    return this._authState.userName;
   }
 
   @computed
   get isAuthorized(): boolean {
-    return !!this.authState.token;
+    return !!this._authState.token;
   }
+
+  _rehydrateState = async (): Promise<void> => {
+    const authState = await Storage.get(AUTH_STORAGE_KEY);
+    runInAction(() => {
+      if (authState && authState.token) {
+        this._authState = authState;
+      }
+      this.isReady = true;
+    });
+  };
 }
 
 export default new AuthStore();

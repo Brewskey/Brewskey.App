@@ -11,6 +11,7 @@ import {
   observable,
   reaction,
   runInAction,
+  spy,
   when,
 } from 'mobx';
 import nullthrows from 'nullthrows';
@@ -121,6 +122,13 @@ class NotificationsStore {
         }
       },
     );
+
+    // calls only login
+    spy(event => {
+      if (event.type === 'action' && event.name === 'loginSuccess') {
+        this._registerToken();
+      }
+    });
   }
 
   @computed
@@ -197,12 +205,6 @@ class NotificationsStore {
         isRead: true,
       }: any),
     );
-  };
-
-  onLogin = () => {
-    // find a way if its possible avoid this public method and make reaction
-    // which is triggered only on login(not on login and app start).
-    this._registerToken();
   };
 
   @action
