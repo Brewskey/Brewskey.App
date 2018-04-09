@@ -52,6 +52,7 @@ angular.module('brewskey.services').factory('nfcService', [
     var authenticating = false;
     var popup;
     var currentDeviceId;
+		var ignoreNFC = 0;
 
     $rootScope.$on('device-id', function(event, value) {
       currentDeviceId = value;
@@ -66,7 +67,7 @@ angular.module('brewskey.services').factory('nfcService', [
 
     function checkNfc() {
       return $q(function(resolve) {
-        if (typeof nfc === 'undefined') {
+        if (typeof nfc === 'undefined' || ignoreNFC >= 1) {
           resolve();
           return;
         }
@@ -94,7 +95,9 @@ angular.module('brewskey.services').factory('nfcService', [
           },
           {
             text: 'Maybe Later',
-            onTap: function(e) {}
+            onTap: function(e) {
+							ignoreNFC += 1;
+						}
           }
         ]
       });
