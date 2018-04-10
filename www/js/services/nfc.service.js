@@ -67,7 +67,10 @@ angular.module('brewskey.services').factory('nfcService', [
 
     function checkNfc() {
       return $q(function(resolve) {
-        if (typeof nfc === 'undefined' || ignoreNFC >= 1) {
+        if (
+          typeof nfc === 'undefined' ||
+          ionic.Platform.isIOS() || ignoreNFC >= 1
+        ) {
           resolve();
           return;
         }
