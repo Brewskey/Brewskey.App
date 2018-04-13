@@ -41,6 +41,7 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import MenuScreen from './screens/MenuScreen';
 import StatsScreen from './screens/StatsScreen';
 import HelpScreen from './screens/HelpScreen';
+import HardwareSetupScreen from './screens/HardwareSetupScreen';
 
 /* eslint-disable sorting/sort-object-props */
 const AppRouter = SwitchNavigator(
@@ -56,6 +57,7 @@ const AppRouter = SwitchNavigator(
         headerMode: 'none',
       },
     ),
+    hardwareSetup: HardwareSetupScreen,
     main: TabNavigator(
       {
         home: HomeScreen,
