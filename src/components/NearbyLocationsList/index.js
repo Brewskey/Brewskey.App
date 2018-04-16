@@ -42,23 +42,9 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
       ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
         data: taps
           .slice()
-          .sort((a: NearbyTap, b: NearbyTap): number => a.deviceID - b.deviceID)
-          .reduce((resultArr: Array<NearbyTap>, currentTap: NearbyTap): Array<
-            NearbyTap,
-          > => {
-            const lastTap = resultArr[resultArr.length - 1];
-
-            return [
-              ...resultArr,
-              {
-                ...currentTap,
-                tapIndex:
-                  currentTap.deviceID === (lastTap && lastTap.deviceID)
-                    ? lastTap.tapIndex + 1
-                    : 1,
-              },
-            ];
-          }, []),
+          .sort(
+            (a: NearbyTap, b: NearbyTap): number => a.device.id - b.device.id,
+          ),
         title: name,
       }),
     );
@@ -76,7 +62,12 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     index: number,
     item: NearbyTap,
   }): React.Element<any> => {
-    const { CurrentKeg: currentKeg, deviceName } = item;
+    const {
+      CurrentKeg: currentKeg,
+      device: { name: deviceName },
+      tapNumber,
+    } = item;
+
     const kegLevel = currentKeg
       ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces).toFixed(0)
       : null;
@@ -85,7 +76,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
       ? currentKeg.beverageName
       : 'No Beer on Tap';
 
-    const showTopSeparator = index !== 0 && item.tapIndex === 1;
+    const showTopSeparator = index !== 0 && tapNumber === 1;
 
     return (
       <Fragment>
@@ -107,7 +98,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
           hideChevron
           item={item}
           onPress={this._onItemPress}
-          title={`${item.tapIndex} - ${beverageName}`}
+          title={`${tapNumber} - ${beverageName}`}
           subtitle={deviceName}
         />
       </Fragment>
