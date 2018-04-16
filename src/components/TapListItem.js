@@ -14,8 +14,8 @@ type Props = {|
   tap: Tap,
 |};
 
-const TapListItem = ({ index, onPress, tap }: Props) => {
-  const { currentKeg, description } = tap;
+const TapListItem = ({ onPress, tap }: Props) => {
+  const { currentKeg, description, tapNumber } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
   const kegLevel = currentKeg
@@ -36,7 +36,7 @@ const TapListItem = ({ index, onPress, tap }: Props) => {
       hideChevron
       item={tap}
       onPress={onPress}
-      title={`${index + 1} - ${beverageName}`}
+      title={`${tapNumber} - ${beverageName}`}
       subtitle={description || ''}
     />
   );

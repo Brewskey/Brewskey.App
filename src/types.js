@@ -18,23 +18,22 @@ export type Coordinates = {|
 |};
 
 export type NearbyTap = {
-  CurrentKeg: {
+  currentKeg: {
     beverageId: number, // not translated to string
     beverageName: string,
     maxOunces: number,
     ounces: number,
   },
-  tapIndex: number,
-  deviceID: number, // not translated to string
+  device: {
+    id: number, // not translated to string
+    name: string,
+  },
   id: EntityID,
   name: string,
+  tapNumber: number,
 };
 
 export type NearbyLocation = {
-  CurrentKeg?: {
-    beverageId: string,
-    beverageName: string,
-  },
   id: EntityID,
   name: string,
   summary: ?string,

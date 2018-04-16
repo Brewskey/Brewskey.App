@@ -41,15 +41,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _swipeableListRef: ?SwipeableList<Tap>;
 
   componentDidMount() {
-    this._listStore.initialize({
-      orderBy: [
-        {
-          column: 'id',
-          direction: 'desc',
-        },
-      ],
-      ...this.props.queryOptions,
-    });
+    this._listStore.initialize(this.props.queryOptions);
   }
 
   _getSwipeableListRef = ref => {
