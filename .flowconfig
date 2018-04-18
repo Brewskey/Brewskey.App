@@ -59,4 +59,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
 [version]
-^0.63.0
+^0.67.0
