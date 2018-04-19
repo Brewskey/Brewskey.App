@@ -1,5 +1,7 @@
 // @flow
 
+import type { EntityID } from 'brewskey.js-api';
+
 import { action, observable, runInAction } from 'mobx';
 import NfcManager from 'react-native-nfc-manager';
 import AuthStore from './AuthStore';

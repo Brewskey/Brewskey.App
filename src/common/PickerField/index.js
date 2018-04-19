@@ -32,7 +32,7 @@ export type Props = {
   label?: string,
   onBlur?: () => void,
   onChange: (value: any) => void,
-  placeholder?: string,
+  placeholder?: ?string,
   value: any,
   // other react-native Picker props
 };

@@ -63,7 +63,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     item: NearbyTap,
   }): React.Element<any> => {
     const {
-      CurrentKeg: currentKeg,
+      currentKeg,
       device: { name: deviceName },
       tapNumber,
     } = item;

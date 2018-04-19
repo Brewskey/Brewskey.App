@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
@@ -14,7 +16,7 @@ const styles = StyleSheet.create({
 type Props = {|
   activitySize?: 'small' | 'large',
   color?: string,
-  style?: Object,
+  style?: Style,
 |};
 
 const LoadingContainer = ({ activitySize = 'large', color, style }: Props) => (

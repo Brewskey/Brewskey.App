@@ -1,6 +1,10 @@
 // @flow
 
-import type { AchievementCounter, EntityID } from 'brewskey.js-api';
+import type {
+  AchievementCounter,
+  AchievementType,
+  EntityID,
+} from 'brewskey.js-api';
 
 import * as React from 'react';
 import { observer } from 'mobx-react/native';
@@ -23,14 +27,14 @@ class UserBadges extends React.Component<Props> {
   @observable _loadedComponent: ?LoadedUserBadges = null;
 
   @computed
-  get _achievementCountersLoader(): LoadObject<AchievementCounter> {
+  get _achievementCountersLoader(): LoadObject<Array<AchievementCounter>> {
     return AchievementStore.getAchievementCounters(this.props.userID);
   }
 
   openBadgeModal = async (achievementType: AchievementType): Promise<void> => {
     await when(
       () =>
-        !this._achievementCountersLoader.isLoading() && this._loadedComponent,
+        !this._achievementCountersLoader.isLoading() && !!this._loadedComponent,
     );
 
     nullthrows(this._loadedComponent).selectAchievementCounterByType(

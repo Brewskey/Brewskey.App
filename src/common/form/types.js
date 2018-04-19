@@ -18,7 +18,7 @@ export type FormProps = {|
   getFieldError: (fieldName: string) => ?string,
   getFieldTouched: (fieldName: string) => boolean,
   handleSubmit: (
-    onSubmit: (values: Object) => void | Promise<void>,
+    onSubmit: (values: Object) => void | Promise<any>,
   ) => Promise<void>,
   invalid: boolean,
   pristine: boolean,

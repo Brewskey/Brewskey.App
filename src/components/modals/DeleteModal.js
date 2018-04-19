@@ -42,7 +42,6 @@ const DeleteModal = ({
   title,
 }: Props) => (
   <CenteredModal
-    contentContainerStyle={styles.container}
     isVisible={isVisible}
     header={<Text style={styles.titleText}>{title}</Text>}
     onHideModal={onCancelButtonPress}

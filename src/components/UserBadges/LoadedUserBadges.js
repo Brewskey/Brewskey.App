@@ -1,6 +1,6 @@
 // @flow
 
-import type { AchievementCounter } from 'brewskey.js-api';
+import type { AchievementCounter, AchievementType } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -31,9 +31,7 @@ class LoadedUserBadges extends React.Component<Props> {
   _modalToggleStore = new ToggleStore();
   @observable _selectedAchievementCounter: ?AchievementCounter = null;
 
-  selectAchievementCounterByType = (
-    achievementType: AchievementType,
-  ): ?AchievementCounter => {
+  selectAchievementCounterByType = (achievementType: AchievementType): void => {
     const counter = this.props.value.find(
       (achievementCounter: AchievementCounter): boolean =>
         achievementCounter.achievementType === achievementType,
@@ -43,7 +41,7 @@ class LoadedUserBadges extends React.Component<Props> {
   };
 
   @action
-  _selectAchievementCounter = (achievementCounter: achievementCounter) => {
+  _selectAchievementCounter = (achievementCounter: AchievementCounter) => {
     this._selectedAchievementCounter = achievementCounter;
     this._modalToggleStore.toggleOn();
   };

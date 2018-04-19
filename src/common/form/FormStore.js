@@ -1,5 +1,6 @@
 // @flow
 
+import type { ObservableMap } from 'mobx';
 import type { Field, ValidationFunction } from './types';
 
 import * as React from 'react';
@@ -22,7 +23,7 @@ type InitFieldProps = {|
 // todo change touched logic so it takes care about initialValue
 class FormStore {
   _validate: ValidationFunction;
-  @observable _fields: Map<string, Field> = new Map();
+  @observable _fields: ObservableMap<string, Field> = observable.map();
 
   @observable formError: ?string = null;
   @observable submitting: boolean = false;

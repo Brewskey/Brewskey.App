@@ -52,7 +52,6 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedTapComponent}
         loader={this._tapLoader}
         onTapFormSubmit={this._onFormSubmit}
-        onToggleNotifications={this._onToggleNotifications}
         updatingComponent={LoadedTapComponent}
       />
     );

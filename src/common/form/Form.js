@@ -15,7 +15,7 @@ type FormSetupProps = {
 
 type OnSubmitCallbackFunction = (values: {
   [key: string]: any,
-}) => void | Promise<void>;
+}) => void | Promise<any>;
 
 const form = ({ validate }: FormSetupProps = {}): Function => <
   TProps: { onSubmit?: OnSubmitCallbackFunction },

@@ -21,7 +21,7 @@ const DEFAULT_FLOW_SENSOR_ITEM = FLOW_SENSOR_ITEMS[0];
 
 type Props = {
   flowSensor?: FlowSensor,
-  onSubmit: (values: FlowSensorMutator) => void | Promise<void>,
+  onSubmit: (values: FlowSensorMutator) => void | Promise<any>,
   tapId: EntityID,
 };
 

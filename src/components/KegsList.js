@@ -17,7 +17,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
-  onRefresh?: () => void | Promise<void>,
+  onRefresh?: () => void | Promise<any>,
   queryOptions?: QueryOptions,
 |};
 

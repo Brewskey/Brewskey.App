@@ -30,7 +30,7 @@ const validate = (values: TapMutator): { [key: string]: string } => {
 };
 
 type Props = {|
-  onSubmit: (values: TapMutator) => void | Promise<void>,
+  onSubmit: (values: TapMutator) => void | Promise<any>,
   submitButtonLabel: string,
   tap?: Tap,
 |};

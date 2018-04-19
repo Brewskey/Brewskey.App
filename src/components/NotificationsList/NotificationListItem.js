@@ -60,7 +60,7 @@ export type Props = {
   leftComponent?: React.Node,
   notification: Notification,
   onOpen: (notification: Notification) => void,
-  onPress: (notification: Notification) => void | Promise<void>,
+  onPress: (notification: Notification) => void | Promise<any>,
   onReadEnd: (notification: Notification) => void,
 };
 
@@ -77,7 +77,9 @@ class NotificationListItem extends React.PureComponent<Props, State> {
 
   componentDidMount() {
     const { readAnimationValue } = this.state;
-    const { notification: { isRead } } = this.props;
+    const {
+      notification: { isRead },
+    } = this.props;
 
     this._readAnimation = Animated.timing(readAnimationValue, {
       duration: READ_TIMEOUT,

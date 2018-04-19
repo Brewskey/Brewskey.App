@@ -50,7 +50,8 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Tap>): string => row.key;
 
-  _onDeleteItemPress = (item: Tap): void => DAOApi.TapDAO.deleteByID(item.id);
+  _onDeleteItemPress = (item: Tap): Promise<void> =>
+    DAOApi.TapDAO.deleteByID(item.id);
 
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });
