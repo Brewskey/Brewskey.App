@@ -73,7 +73,7 @@
     "react-test-renderer": "^16.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": ["prettier --write", "lint", "git add"]
+    "src/**/*.{js,json}": ["prettier --write", "npm run lint", "git add"]
   },
   "jest": {
     "preset": "react-native"
