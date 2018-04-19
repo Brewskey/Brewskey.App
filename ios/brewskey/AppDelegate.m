@@ -10,7 +10,6 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
-#import "Firebase.h"
 #import "RNFIRMessaging.h"
 
 @implementation AppDelegate
@@ -61,7 +60,6 @@
  -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
      [RNFIRMessaging didReceiveLocalNotification:notification];
    }
-
  - (void)application:(UIApplication *)application didReceiveRemoteNotification:(nonnull NSDictionary *)userInfo fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHandler{
      [RNFIRMessaging didReceiveRemoteNotification:userInfo fetchCompletionHandler:completionHandler];
    }
