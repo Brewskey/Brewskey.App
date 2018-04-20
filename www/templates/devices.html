@@ -1,9 +1,14 @@
 <ion-view view-title="Brewskey Boxes">
     <ion-content>
-
         <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
         </ion-refresher>
-        <div class="list">
+        <div class="item text-center" ng-show="loading">
+            <ion-spinner></ion-spinner>
+        </div>
+        <div ng-show="!loading && !devices.length" style="height:100%">
+          <ng-include src="'templates/section/nux-no-devices.html'" />
+        </div>
+        <div class="list" ng-show="!loading && devices.length">
             <div class="item no-color">
                 <a ui-sref="app.setup-wifi" class="item item-icon-left">
                     <i class="icon ion-wifi"></i>
@@ -15,16 +20,10 @@
                 </a>
                 <!-- Location ngRepeat goes here -->
                 <div class="item item-divider"></div>
-                <div class="item text-center" ng-show="loading">
-                    <ion-spinner></ion-spinner>
-                </div>
-                <div ng-show="!loading">
+                <div>
                     <a ng-repeat="device in devices | orderBy: 'lastEdited' : true" ui-sref="app.device({deviceId: device.id})" on-hold="onDeviceHeld(device)" class="item">
                         {{device.name}}
                     </a>
-                    <div ng-if="!devices || !devices.length" class="item text-center item-text-wrap">
-                        You haven't added any Brewskey boxes yet.<br/>Click the "+" to add one.
-                    </div>
                 </div>
             </div>
         </div>

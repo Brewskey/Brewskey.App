@@ -1,4 +1,4 @@
-<ion-view view-title="Brewskey">
+d<ion-view view-title="Brewskey">
     <ion-nav-title>{{!model.id ? "New Brewskey Box" : "Edit Brewskey Box"}}</ion-nav-title>
     <ion-content>
 
@@ -19,7 +19,7 @@
                     <div class="form-errors" data-ng-repeat="error in errors['model.Name']" data-ng-cloak>
                         <div class="form-error" ng-bind="error"></div>
                     </div>
-                    <label class="item item-input item-select">
+                    <label class="item item-input item-select" ng-show="locations.length > 1">
                         <span class="input-label">
                             Location
                         </span>
@@ -27,13 +27,13 @@
                                 required
                                 ng-options="obj.id as obj.name for obj in locations"></select>
                     </label>
-                    <label class="item item-input item-select">
+                    <label class="item item-input item-select" ng-show="model.id">
                         <span class="input-label">
                             Status
                         </span>
                         <select ng-model="$parent.statusModel" required ng-options="obj.text for obj in deviceStatusTypes track by obj.value"></select>
                     </label>
-                    <p ng-if="$parent.statusModel.value == 1" class="help-block item item-text-wrap text-center">
+                    <p ng-if="$parent.statusModel.value == 1" class="help-block item item-text-wrap text-center" ng-show="model.id">
                         The Brewskey Box is currently in the standard mode.  If you have a valve it will be closed and the sensors will
                         track pours normally.
                     </p>

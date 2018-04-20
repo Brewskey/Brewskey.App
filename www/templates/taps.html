@@ -1,44 +1,48 @@
 <ion-view view-title="Taps">
-    <ion-content>
-
-        <div class="list">
-            <div class="item no-color">
-                <a ui-sref="app.new-tap" class="item item-button-right">
-                    New Tap
-                    <span class="button button-positive">
-                        <i class="icon ion-plus"></i>
-                    </span>
-                </a>
-                <!-- Location ngRepeat goes here -->
-                <div class="item item-divider"></div>
-                <div class="item text-center" ng-show="loading">
-                    <ion-spinner></ion-spinner>
-                </div>
-                <div ng-show="!loading">
-                    <a
-                      ng-repeat="tap in taps | orderBy: 'name'"
-                      ui-sref="app.tap.info({tapId: tap.id})"
-                      class="item"
-                      ng-class="{'item-avatar': tap.loaded}"
-                      on-hold="deleteTap(tap)">
-                        <img
-                          brewskey-img
-                          id="tap.currentKeg.beverageId"
-                          size="s"
-                          type="beverage"
-                          width="40"
-                          loaded="tap.loaded" />
-                        <h2>{{tap.name}}</h2>
-                        <p>{{tap.summary}}</p>
-                        <span class="badge badge-positive" ng-if="tap.currentKeg">
-                            {{getPercentLeft(tap.currentKeg) | number : 1}}%
-                        </span>
-                    </a>
-                    <div ng-if="!taps || !taps.length" class="item text-center item-text-wrap">
-                        You haven't added any taps yet.<br />Click the "+" to add one.
-                    </div>
-                </div>
-            </div>
+  <ion-content>
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+    </ion-refresher>
+    <div class="item text-center" ng-show="loading">
+        <ion-spinner></ion-spinner>
+    </div>
+    <div ng-show="!loading && !taps.length" style="height:100%">
+      <ng-include src="'templates/section/nux-no-devices.html'" />
+    </div>
+    <div class="list" ng-show="!loading && taps.length">
+      <div class="item no-color">
+        <a ui-sref="app.new-tap" class="item item-button-right">
+          New Tap
+          <span class="button button-positive">
+            <i class="icon ion-plus"></i>
+          </span>
+        </a>
+        <!-- Location ngRepeat goes here -->
+        <div class="item item-divider"></div>
+        <div class="item text-center" ng-show="loading">
+          <ion-spinner></ion-spinner>
         </div>
-    </ion-content>
+        <div>
+          <a
+            ng-repeat="tap in taps | orderBy: 'name'"
+            ui-sref="app.tap.info({tapId: tap.id})"
+            class="item"
+            ng-class="{'item-avatar': tap.loaded}"
+            on-hold="deleteTap(tap)">
+            <img
+              brewskey-img
+              id="tap.currentKeg.beverageId"
+              size="s"
+              type="beverage"
+              width="40"
+              loaded="tap.loaded" />
+            <h2>{{tap.name}}</h2>
+            <p>{{tap.summary}}</p>
+            <span class="badge badge-positive" ng-if="tap.currentKeg">
+                {{getPercentLeft(tap.currentKeg) | number : 1}}%
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>

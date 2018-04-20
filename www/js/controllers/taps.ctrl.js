@@ -2,17 +2,24 @@ angular.module('brewskey.controllers').controller('TapsCtrl', [
   '$scope',
   'Restangular',
   'modal',
-  function($scope, rest, modal) {
-    $scope.loading = true;
-    rest
-      .all('api/taps')
-      .getList()
-      .then(function(taps) {
-        $scope.taps = taps;
-      })
-      .finally(function() {
-        $scope.loading = false;
-      });
+  'utils',
+  function($scope, rest, modal, utils) {
+    utils.shouldShowStartPour = false;
+
+    $scope.refresh = function() {
+      $scope.loading = true;
+      rest
+        .all('api/taps')
+        .getList()
+        .then(function(taps) {
+          $scope.taps = taps;
+        })
+        .finally(function() {
+          $scope.loading = false;
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+    };
+    $scope.refresh();
 
     $scope.getPercentLeft = function(keg) {
       return Math.max(0, (keg.maxOunces - keg.ounces) / keg.maxOunces * 100);

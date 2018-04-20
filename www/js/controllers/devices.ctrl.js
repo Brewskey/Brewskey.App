@@ -2,8 +2,10 @@ angular.module('brewskey.controllers').controller('DevicesCtrl', [
   '$scope',
   'Restangular',
   'modal',
-  function($scope, rest, modal) {
+  'utils',
+  function($scope, rest, modal, utils) {
     $scope.loading = true;
+    utils.shouldShowStartPour = false;
 
     var counter = 0;
     $scope.refresh = function() {

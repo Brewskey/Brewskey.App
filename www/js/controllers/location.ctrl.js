@@ -2,7 +2,9 @@ angular.module('brewskey.controllers').controller('LocationCtrl', [
   '$scope',
   '$stateParams',
   'Restangular',
-  function($scope, $stateParams, rest) {
+  'utils',
+  function($scope, $stateParams, rest, utils) {
+    utils.shouldShowStartPour = false;
     rest
       .one('api/locations', $stateParams.locationId)
       .get()
