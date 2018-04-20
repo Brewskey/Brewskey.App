@@ -52,15 +52,15 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     };
 
     if (true) {
-      $ionicModal
-        .fromTemplateUrl('templates/modals/nux.html', {
-          scope: $scope,
-          animation: 'slide-in-up',
-        })
-        .then(function(modal) {
-          $scope.modal = modal;
-          //  modal.show();
-        });
+      // $ionicModal
+      //   .fromTemplateUrl('templates/modals/nux.html', {
+      //     scope: $scope,
+      //     animation: 'slide-in-up',
+      //   })
+      //   .then(function(modal) {
+      //     $scope.modal = modal;
+      //     //  modal.show();
+      //   });
 
       $scope.closeModal = function() {
         $scope.modal.hide();
