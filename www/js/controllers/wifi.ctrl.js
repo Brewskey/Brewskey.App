@@ -47,7 +47,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
                 text: '<b>Go Now</b>',
                 type: 'button-positive',
                 onTap: function() {
-                  $state.go('app.new-location');
+                  $state.go('app.new-location', { isCreatingNewDevice: true });
                 },
               },
               {

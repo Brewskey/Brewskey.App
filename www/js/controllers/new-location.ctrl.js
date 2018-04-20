@@ -42,11 +42,15 @@ angular.module('brewskey.controllers').controller('NewLocationCtrl', [
         function(response) {
           $scope.editing = true;
           $ionicHistory.currentView($ionicHistory.backView());
-          $state.go(
-            'app.location.info',
-            { locationId: response.id },
-            { location: 'replace' },
-          );
+          if ($stateParams.isCreatingNewDevice) {
+            $state.go('app.setup-wifi', { isCreatingNewDevice: true });
+          } else {
+            $state.go(
+              'app.location.info',
+              { locationId: response.id },
+              { location: 'replace' },
+            );
+          }
         },
         function(error) {
           $scope.editing = true;

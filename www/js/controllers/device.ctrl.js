@@ -5,7 +5,9 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
   '$state',
   '$ionicPopup',
   'modal',
-  function($scope, rest, $stateParams, $state, $ionicPopup, modal) {
+  'utils',
+  function($scope, rest, $stateParams, $state, $ionicPopup, modal, utils) {
+    utils.shouldShowStartPour = false;
     $scope.loading = true;
     rest
       .one('api/devices', $stateParams.deviceId)

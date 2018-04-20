@@ -394,6 +394,9 @@ angular
           authenticate: true,
           cache: false,
           url: '/location/new',
+          params: {
+            isCreatingNewDevice: false,
+          },
           views: {
             menuContent: {
               templateUrl: 'templates/new-location.html',

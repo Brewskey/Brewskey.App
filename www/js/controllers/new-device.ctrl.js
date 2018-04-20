@@ -77,7 +77,7 @@ angular.module('brewskey').controller('NewDeviceCtrl', [
             text: '<b>Create New Location</b>',
             type: 'button-positive',
             onTap: function(event) {
-              $state.go('app.new-location');
+              $state.go('app.new-location', { isCreatingNewDevice: true });
             },
           },
         ],
