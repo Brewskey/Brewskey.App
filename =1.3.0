@@ -1,0 +1,4 @@
+Plugin "cordova-plugin-file-transfer" already installed on ios. Making it top-level.
+Plugin "cordova-plugin-file-transfer" already installed on windows. Making it top-level.
+Adding cordova-plugin-file-transfer to package.json
+Saved plugin info for "cordova-plugin-file-transfer" to config.xml

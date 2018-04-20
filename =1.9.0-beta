@@ -1,0 +1,4 @@
+Plugin "code-push" already installed on ios. Making it top-level.
+Plugin "code-push" already installed on windows. Making it top-level.
+Adding code-push to package.json
+Saved plugin info for "code-push" to config.xml
