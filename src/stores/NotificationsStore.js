@@ -112,7 +112,7 @@ class NotificationsStore {
 
     reaction(
       () => AuthStore.isAuthorized,
-      async (isAuthorized: boolean) => {
+      (async (isAuthorized: boolean) => {
         if (!isAuthorized) {
           // calls only on logout
           this._unregisterToken();
@@ -123,7 +123,8 @@ class NotificationsStore {
           await this._rehydrateState();
           this.setIsReady(true);
         }
-      },
+        // casting because Mobx reaction type expect returns undefined, not Promise
+      }: any),
     );
 
     // calls only login

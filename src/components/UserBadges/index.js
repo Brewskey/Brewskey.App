@@ -52,9 +52,9 @@ class UserBadges extends React.Component<Props> {
         emptyComponent={EmptyUserBadges}
         errorComponent={ErrorUserBadges}
         loadedComponent={LoadedUserBadges}
-        loadedComponentRef={this._setLoadedComponentRef}
         loader={this._achievementCountersLoader}
         loadingComponent={LoadingUserBadges}
+        ref={this._setLoadedComponentRef}
       />
     );
   }

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
+import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
 import { autorun, configure as mobxConfigure, reaction } from 'mobx';
 import config from './config';
@@ -15,9 +16,12 @@ import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
 
-mobxConfigure({
-  enforceActions: true,
-});
+mobxConfigure(
+  ({
+    enforceActions: true,
+    // cast because of wrong mobx typings
+  }: any),
+);
 
 const setDAOHeaders = (token: string) => {
   const daoHeaders = DAOApi.getHeaders().filter(
@@ -52,7 +56,7 @@ reaction(
   (): boolean => AuthStore.isAuthorized,
   (isAuthorized: boolean) => {
     if (isAuthorized) {
-      setDAOHeaders(AuthStore.token);
+      setDAOHeaders(nullthrows(AuthStore.token));
       Signalr.startAll();
     } else {
       Signalr.stopAll();

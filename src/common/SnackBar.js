@@ -62,7 +62,7 @@ class SnackMessage extends React.Component<{}, State> {
     bottomAnimValue: new Animated.Value(-60),
   };
 
-  constructor(props) {
+  constructor(props: {}) {
     super(props);
 
     reaction(

@@ -2,10 +2,13 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
-import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
 
-export type Style = StyleObj;
+// no longer works(they made the style internal with ___ prefix):
+// import type { StyleObj } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
+// fix when there will be some new solution there:
+// https://github.com/flowtype/flow-typed/issues/631
+export type Style = any;
 
 export type Section<TEntity> = { title: string } & SectionBase<TEntity>;
 
