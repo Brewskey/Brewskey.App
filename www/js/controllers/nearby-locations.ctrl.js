@@ -4,7 +4,17 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
   'nfcService',
   '$ionicPlatform',
   'gps',
-  function($scope, rest, nfcService, $ionicPlatform, gps) {
+  '$stateParams',
+  '$ionicModal',
+  function(
+    $scope,
+    rest,
+    nfcService,
+    $ionicPlatform,
+    gps,
+    $stateParams,
+    $ionicModal,
+  ) {
     $scope.loading = true;
 
     $scope.getPercentLeft = function(keg) {
@@ -40,5 +50,29 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
       });
       return false;
     };
+
+    if (true) {
+      $ionicModal
+        .fromTemplateUrl('templates/modals/nux.html', {
+          scope: $scope,
+          animation: 'slide-in-up',
+        })
+        .then(function(modal) {
+          $scope.modal = modal;
+          //  modal.show();
+        });
+
+      $scope.closeModal = function() {
+        $scope.modal.hide();
+      };
+      // Cleanup the modal when we're done with it!
+      $scope.$on('$destroy', function() {
+        $scope.modal.remove();
+      });
+      // Execute action on hide modal
+      $scope.$on('modal.hidden', function() {
+        // Execute action
+      });
+    }
   },
 ]);

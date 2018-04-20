@@ -1,33 +1,34 @@
 <ion-view view-title="Locations">
-    <ion-content>
-
-        <div class="list">
-            <div class="item no-color">
-                <a href="#/app/location/new" class="item item-button-right">
-                    New Location
-                    <span class="button button-positive">
-                        <i class="icon ion-plus"></i>
-                    </span>
-                </a>
-                <!-- Location ngRepeat goes here -->
-                <div class="item item-divider"></div>
-                <div class="item text-center" ng-show="loading">
-                    <ion-spinner></ion-spinner>
-                </div>
-                <div ng-show="!loading">
-                    <a
-                      ng-repeat="location in locations | orderBy: 'name'"
-                      on-hold="onLocationHeld(location)"
-                      ui-sref="app.location.info({locationId: location.id})"
-                      class="item">
-                        {{location.name}}
-                        <p ng-bind="location.summary"></p>
-                    </a>
-                    <div ng-if="!locations || !locations.length" class="item text-center item-text-wrap">
-                        You haven't added any locations yet.<br />Click the "+" to add one.
-                    </div>
-                </div>
-            </div>
+  <ion-content>
+    <ion-refresher pulling-text="Pull to refresh..." on-refresh="refresh()">
+    </ion-refresher>
+    <div class="item text-center" ng-show="loading">
+        <ion-spinner></ion-spinner>
+    </div>
+    <div ng-show="!loading && !locations.length" style="height:100%">
+      <ng-include src="'templates/section/nux-no-devices.html'" />
+    </div>
+    <div class="list" ng-show="!loading && locations.length">
+      <div class="item no-color">
+        <a href="#/app/location/new" class="item item-button-right">
+          New Location
+          <span class="button button-positive">
+            <i class="icon ion-plus"></i>
+          </span>
+        </a>
+        <!-- Location ngRepeat goes here -->
+        <div class="item item-divider"></div>
+        <div ng-show="!loading">
+          <a
+            ng-repeat="location in locations | orderBy: 'name'"
+            on-hold="onLocationHeld(location)"
+            ui-sref="app.location.info({locationId: location.id})"
+            class="item">
+            {{location.name}}
+            <p ng-bind="location.summary"></p>
+          </a>
         </div>
-    </ion-content>
+      </div>
+    </div>
+  </ion-content>
 </ion-view>

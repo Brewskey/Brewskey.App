@@ -4,7 +4,29 @@
         <div class="padding text-center" style="margin-top: 20px" ng-if="loading">
             <ion-spinner></ion-spinner>
         </div>
-        <form name="form" ng-submit="submitForm(form)" novalidate ng-if="!loading">
+        <div class="list" ng-hide="showForm">
+          <div class="item item-text-wrap text-center">
+            <h1 style="margin-bottom: 50px">
+              Now we need to set up your flow sensor
+            </h2>
+            <button
+              class="button button-block button-positive"
+              ng-click="setDefaultSensor()"
+              style="margin-bottom:20px;"
+              type="button">
+              I got my sensor from Brewskey
+            </button>
+            <hr/>
+            <button
+              class="button button-block button-stable"
+              ng-click="showForm = true"
+              style="margin-top:20px;"
+              type="button">
+              I'd like to set up a different sensor
+            </button>
+          </div>
+        </div>
+        <form name="form" ng-submit="submitForm(form)" novalidate ng-if="!loading && showForm">
             <div class="list">
                 <div class="item item-text-wrap text-center">
                     <strong>

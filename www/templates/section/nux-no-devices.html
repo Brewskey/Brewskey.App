@@ -1,0 +1,25 @@
+<div class="nux padding text-center" style="height:100%" ng-controller="DeviceNUXCtrl as deviceNUX">
+  <h2>
+    In order to use Brewseky you need to install the Brewskey hardware
+  </h2>
+  <div style="margin-bottom: 40px">
+    <button class="button button-block button-stable" ng-click="onShowInstallNUX()" type="button">See Instructions</button>
+  </div>
+  <h2>
+    and set up the Brewskey box by:
+    <div style="margin: 40px 0 20px">
+      <ol class="text-left">
+        <li>Create a location and set up the address</li>
+        <li>Connecting the box to your local Wifi</li>
+        <li>Set up your taps</li>
+        <li>Assign a beverage to your tap</li>
+      </ol>
+    </div>
+  </h2>
+  <button
+    class="button button-block button-positive"
+    type="button"
+    ui-sref="app.setup-wifi({isCreatingNewDevice: true})">
+    Get Started
+  </button>
+</div>

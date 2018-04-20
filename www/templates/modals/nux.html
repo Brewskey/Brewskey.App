@@ -1,0 +1,34 @@
+<ion-modal-view class="nux">
+  <ion-content scroll="false">
+    <ion-slides  options="{initialSlide: 1}" slider="data.slider">
+      <ion-slide-page class="text-center padding">
+        <h1 style="margin-top: 30%">Welcome to Brewskey</h1>
+        <p style="margin-top: 20%">
+          Brewskey keeps track of every pour on your keg. View graphs or
+          leaderboards to see who poured, when they poured, and how much.
+          Every pour offers a chance to unlock a new drinking.
+        </p>
+      </ion-slide-page>
+      <ion-slide-page class="padding">
+        <h1 class="text-center">How to pour</h1>
+        <div style="margin-top: 5%">
+          <ol>
+            <li>Click the pour button in the app</li>
+            <li>You'll see a popup</li>
+            <li>Enter the 6-digit code. The code is displayed on the Brewskey box</li>
+            <li>The Brewkey box should turn green</li>
+            <li>You can now pour from your keg!</li>
+          </ol>
+        </div>
+        <div class="text-center" style="height: 55%">
+          <video style="height: 100%" controls="controls" loop preload="metadata" autoplay="autoplay" webkit-playsinline="webkit-playsinline" class="videoPlayer">
+            <source src="./video/pour.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </ion-slide-page>
+      <ion-slide-page class="padding">
+        <div class="box pink"><h1>PINK</h1></div>
+      </ion-slide-page>
+    </ion-slides>
+  </ion-content>
+</ion-modal-view>

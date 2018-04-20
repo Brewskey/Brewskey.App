@@ -29,7 +29,7 @@
                         <div class="form-error" ng-bind="error"></div>
                     </div>
                     -->
-                    <label class="item item-input item-select">
+                    <label class="item item-input item-select" ng-show="devices.length > 1">
                         <span class="input-label">
                             Brewskey Box
                         </span>
@@ -71,7 +71,7 @@
                         </label>
                     </div>
                     <div class="item">
-                        <button class="button button-block button-positive" type="submit" ng-disabled="(!form.$dirty && !isDeviceSelectorReadOnly) || form.$invalid || editing">
+                        <button class="button button-block button-positive" type="submit" ng-disabled="form.$invalid || editing">
                             <span ng-if="!model.id">Create Tap</span>
                             <span ng-if="model.id">Update Tap</span>
                         </button>
@@ -79,7 +79,7 @@
                 </div>
             </div>
         </form>
-        <keg-modify tap-id="model.id" keg="model.currentKeg" ng-show="model.id"></keg-modify>
+        <keg-modify device-id="model.deviceId" tap-id="model.id" keg="model.currentKeg" ng-show="model.id"></keg-modify>
         <div class="list" ng-if="model && model.id">
             <div class="list list-inset">
                 <div class="item item-text-wrap text-center">

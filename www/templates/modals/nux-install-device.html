@@ -1,0 +1,70 @@
+<div class="modal nux" ng-init="deviceNUX = $parent.$parent">
+  <button
+      class="button button-clear button-light ion-close"
+      ng-click="deviceNUX.closeModal()"
+      style="position: absolute; top: 0; right: 0; z-index: 99999"
+      type="button">
+  </button>
+  <ion-content scroll="false">
+    <ion-slides  options="{initialSlide: 0}" slider="data.slider">
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/1_cut-beer-line.png" style="width: 80%" />
+        <h2>Cut Your Beer Line</h2>
+        <hr/>
+        <h3>To attach the flow sensor, cut your beer line near its midpoint.</h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/2_install-sensor.png" style="width: 80%" />
+        <h2>Install Sensors</h2>
+        <hr/>
+        <h3>
+          Taking the two ends of the line you just cut, soak them in hot water
+          for about a minute. Then, slide the pointed ends of the flow sensor
+          on to the beer line.
+        </h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/3_detach-tower.png" style="width: 80%" />
+        <h2>Detach Kegerator Tower</h2>
+        <hr/>
+        <h3>Remove the screws holding up the kegerator tower and pick up the rubber ring underneath.</h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/4_sensor-cable-to-box.png" style="width: 80%" />
+        <h2>Run Cable From Your Brewskey Box to Sensor</h2>
+        <hr/>
+        <h3>Plug the flat cable into your Brewskey box and connect the other end into the flow sensor.</h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/5_attach-tower.png" style="width: 80%" />
+        <h2>Re-Attach Kegerator Tower</h2>
+        <hr/>
+        <h3>Make sure the Brewskey box is in a good place because you won't be able to move it much. Also, make sure the flat cable isn’t pinched or twisted.</h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/6_plug-in.png" style="width: 80%" />
+        <h2>Plug In the Brewskey Box</h2>
+        <hr/>
+        <h3>
+          You're almost finished. Plug in the power cable and the LED light
+          should start blinking blue. This means it's ready for you to set up
+          the WiFi.
+        </h3>
+      </ion-slide-page>
+      <ion-slide-page class="text-center padding">
+        <img src="./img/install/7_finish-in-app.png" style="width: 80%" />
+        <h2>Finish Installation with the Mobile App</h2>
+        <hr/>
+        <h3>
+          Create a location, connect to your box, and name your tap.
+          After that, you’re ready to pour some beer!
+        </h3>
+        <button
+          class="button button-block button-stable"
+          ng-click="deviceNUX.closeModal()" type="button">
+          Finish
+        </button>
+      </ion-slide-page>
+    </ion-slides>
+  </ion-content>
+</div>

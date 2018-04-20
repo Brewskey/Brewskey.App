@@ -9,10 +9,10 @@
                   <button class="button button-icon button-clear ion-navicon" menu-toggle="left" ng-if="isLoggedIn()"></button>
               </ion-nav-buttons>
           </ion-nav-bar>
-          <div class="content-container" ng-class="{'has-footer': isLoggedIn()}">
+          <div class="content-container" ng-class="{'has-footer': isLoggedIn() && shouldShowStartPour()}">
             <ion-nav-view name="menuContent"></ion-nav-view>
           </div>
-          <div class="bar bar-footer bar-brewskey-yellow" ng-if="isLoggedIn()" >
+          <div class="bar bar-footer bar-brewskey-yellow" ng-if="isLoggedIn() && shouldShowStartPour()" >
             <button class="start-pour-button btn-green"ng-click="showPopup()" type="button">
               Start Pour
             </button>

@@ -1,11 +1,13 @@
-html, body {
-    font-family: 'Roboto', sans-serif;
+html,
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
 /* Empty. Add your own CSS if you like */
-.pane, .view {
-    background: rgba(146,153,191,1);
-    /*
+.pane,
+.view {
+  background: rgba(146, 153, 191, 1);
+  /*
     background: -moz-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
     background: -webkit-gradient(left top, right bottom, color-stop(0%, rgba(146,153,191,1)), color-stop(100%, rgba(1,33,96,1)));
     background: -webkit-linear-gradient(-45deg, rgba(146,153,191,1) 0%, rgba(1,33,96,1) 100%);
@@ -16,8 +18,8 @@ html, body {
         */
 }
 .beer-background {
-    background: url(../img/beer-background.jpg) no-repeat center;
-    background-size: cover;
+  background: url(../img/beer-background.jpg) no-repeat center;
+  background-size: cover;
 }
 .content-container {
   position: absolute;
@@ -35,56 +37,71 @@ html, body {
 .has-footer {
   bottom: 44px;
 }
+.nux {
+  background: rgba(35, 131, 147);
+  color: #fff;
+}
+.nux h1,
+.nux h2,
+.nux h3,
+.nux h4 {
+  color: #fff;
+}
+.nux p,
+.nux ol li {
+  font-size: 20px;
+  line-height: 26px;
+}
 
 img.responsive {
-    width: 100%;
+  width: 100%;
 }
-a, a:visited {
-    color: #000;
+a,
+a:visited {
+  color: #000;
 }
 ol {
-    list-style-type: decimal;
-    margin-left: 10px;
-    padding-left: 10px;
+  list-style-type: decimal;
+  margin-left: 10px;
+  padding-left: 10px;
 }
-    ol li {
-        padding-bottom: 5px;
-    }
+ol li {
+  padding-bottom: 5px;
+}
 .dl-horizontal dt {
-    clear: left;
-    float: left;
-    overflow: hidden;
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 28%;
+  clear: left;
+  float: left;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 28%;
 }
 .dl-horizontal dd {
-    margin-left: 28%;
-    padding: 0 0 5px 10px;
+  margin-left: 28%;
+  padding: 0 0 5px 10px;
 }
 
 .sub-header {
-    margin: 8px 16px 0;
-    padding: 0 8px;
+  margin: 8px 16px 0;
+  padding: 0 8px;
 }
 
-
 .sub-header h2 {
-    font-size: 24px;
-    padding-bottom: 5px;
+  font-size: 24px;
+  padding-bottom: 5px;
 }
 
 .list-colored {
-    background: #ffffff;
+  background: #ffffff;
 }
 .item a,
 .item a:visited {
-    color: #444;
+  color: #444;
 }
 
 .item-selected {
-    background: #eee;
+  background: #eee;
 }
 
 .item .badge {
@@ -95,30 +112,30 @@ ol {
 }
 
 .no-color {
-    background: transparent;
-    border-color: transparent;
+  background: transparent;
+  border-color: transparent;
 }
 .no-margin,
 .button.button-block.no-margin,
 .button.button-full.no-margin {
-    margin: 0;
+  margin: 0;
 }
 .no-padding {
-    padding: 0;
+  padding: 0;
 }
 .center-text {
   text-align: center;
 }
 .menu-bar {
-    background: #1d5f68;
+  background: #1d5f68;
 }
 .menu-bar-logo {
   margin-left: auto;
   margin-right: auto;
 }
 .bar-brewskey {
-    background: #1d5f68;
-    color: #ffffff;
+  background: #1d5f68;
+  color: #ffffff;
 }
 .bar-brewskey-yellow {
   background: #ffc247;
@@ -127,28 +144,34 @@ ol {
   background-color: #238393;
 }
 .bar-brewskey .button-clear.button-clear {
-    color: #ffffff;
+  color: #ffffff;
 }
-.tabs-background-brewskey.tabs, .tabs-background-brewskey .tabs, .tabs-background-brewskey > .tabs {
+.tabs-background-brewskey.tabs,
+.tabs-background-brewskey .tabs,
+.tabs-background-brewskey > .tabs {
   background-color: #238393;
-  background-image: linear-gradient(0deg, #c3c3c3, #c3c3c3 50%, transparent 50%);
+  background-image: linear-gradient(
+    0deg,
+    #c3c3c3,
+    #c3c3c3 50%,
+    transparent 50%
+  );
   border-color: #c3c3c3;
-
 }
 
 .alert-error {
-    color: #ef473a;
-    text-align: center;
+  color: #ef473a;
+  text-align: center;
 }
-    .alert-error h3 {
-        color: #ef473a;
-        font-weight: bold;
-    }
-    .btn-green {
-      background-color: #238393;
-      border-color: #238393;
-      color: #fff;
-    }
+.alert-error h3 {
+  color: #ef473a;
+  font-weight: bold;
+}
+.btn-green {
+  background-color: #238393;
+  border-color: #238393;
+  color: #fff;
+}
 .btn-green:hover,
 .btn-green:focus,
 .btn-green:active,
@@ -182,14 +205,14 @@ button.start-pour-button {
 }
 .start-pour-button::before,
 .start-pour-button::after {
-    background: url(../img/pour-icon.png) no-repeat;
-    background-size: cover;
-    content: ' ';
-    display: block;
-    height: 34px;
-    left: 10px;
-    position: absolute;
-    width: 30px;
+  background: url(../img/pour-icon.png) no-repeat;
+  background-size: cover;
+  content: ' ';
+  display: block;
+  height: 34px;
+  left: 10px;
+  position: absolute;
+  width: 30px;
 }
 .start-pour-button::before {
   transform: scaleX(-1);
@@ -197,12 +220,12 @@ button.start-pour-button {
 .start-pour-button::after {
   left: auto;
   right: 10px;
-  top:0;
+  top: 0;
 }
 
 /* login */
 .fb-button {
-  background: url('../img/FB-f-Logo__white_29.png') 8px 50% no-repeat #3B5998;
+  background: url('../img/FB-f-Logo__white_29.png') 8px 50% no-repeat #3b5998;
   color: #fff;
   font-weight: bold;
 }
@@ -214,7 +237,8 @@ button.start-pour-button {
   font-weight: bold;
 }
 
-.fb-button:hover, .brewskey-button:hover {
+.fb-button:hover,
+.brewskey-button:hover {
   color: #fff;
 }
 
@@ -222,7 +246,7 @@ button.start-pour-button {
   height: 80px;
   margin: -10px auto 10px;
   position: relative;
-  width:80px;
+  width: 80px;
 }
 
 .totp-timer__container {
@@ -234,7 +258,7 @@ button.start-pour-button {
   height: 100%;
   line-height: 80px;
   position: absolute;
-  text-align: center;;
+  text-align: center;
   vertical-align: middle;
   width: 100%;
 }
@@ -254,8 +278,12 @@ button.start-pour-button {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .leaderboard-item {
@@ -263,282 +291,282 @@ button.start-pour-button {
   padding: 16px 5px;
 }
 .leaderboard-info {
-    margin-right: 20px;
+  margin-right: 20px;
 }
 .leaderboard-pint-list {
-    padding-left: 30px;
+  padding-left: 30px;
 }
 .pint-list {
-    display: block;
+  display: block;
 }
 .pint-glass {
-    display: inline-block;
-    height: 40px;
-    float: left;
-    margin: 5px 5px 0 0;
-    position: relative;
-    width: 23px;
+  display: inline-block;
+  height: 40px;
+  float: left;
+  margin: 5px 5px 0 0;
+  position: relative;
+  width: 23px;
 }
-    .pint-glass .beer {
-        background: url('../img/beer.png') 0 100% no-repeat;
-        bottom: 0;
-        height: 100%;
-        position: absolute;
-        width: 100%;
-    }
+.pint-glass .beer {
+  background: url('../img/beer.png') 0 100% no-repeat;
+  bottom: 0;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
 
-    .pint-glass .pint {
-        background: url('../img/empty-glass.png') no-repeat;
-        height: 100%;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-    }
+.pint-glass .pint {
+  background: url('../img/empty-glass.png') no-repeat;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
 
-    .too-many-pints {
-        font-size: 18px;
-        padding-top: 15px;
-        position: relative;
-    }
-        .too-many-pints .pint-glass {
-            bottom: -10px;
-            position: absolute;
-        }
-    .too-many-pints-count {
-        padding: 0 16px 0 26px;
-    }
+.too-many-pints {
+  font-size: 18px;
+  padding-top: 15px;
+  position: relative;
+}
+.too-many-pints .pint-glass {
+  bottom: -10px;
+  position: absolute;
+}
+.too-many-pints-count {
+  padding: 0 16px 0 26px;
+}
 
 .profile-link,
 h2.profile-link {
-    font-size: 20px;
+  font-size: 20px;
 }
 .profile-photo-container {
-    background: #e7e6e4;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    position: relative;
+  background: #e7e6e4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  position: relative;
 }
 .profile-edit-button {
-    background: #ddd;
-    border: solid 2px #7B7B7B;
-    border-radius: 4px;
-    color: #7B7B7B !important;
-    font-size: 36px;
-    padding: 3px 7px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
+  background: #ddd;
+  border: solid 2px #7b7b7b;
+  border-radius: 4px;
+  color: #7b7b7b !important;
+  font-size: 36px;
+  padding: 3px 7px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
 .profile-photo {
-    width: 100%;
+  width: 100%;
 }
 .profile-photo-loading {
-    background: rgba(255, 255, 255, .6);
-    height: 100%;
-    position: absolute;
-    top: 0;
-    width: 100%;
+  background: rgba(255, 255, 255, 0.6);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
-    .profile-photo-loading .spinner {
-        left: 50%;
-        margin: -14px 0 0 -14px;
-        position: absolute;
-        top: 50%;
-    }
+.profile-photo-loading .spinner {
+  left: 50%;
+  margin: -14px 0 0 -14px;
+  position: absolute;
+  top: 50%;
+}
 .selected-photo {
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .default-profile-small {
-    background: url('../img/blank-profile-40.png') center no-repeat;
-    background-size: cover;
-    border-radius: 4px;
-    height: 50px;
-    width: 50px;
+  background: url('../img/blank-profile-40.png') center no-repeat;
+  background-size: cover;
+  border-radius: 4px;
+  height: 50px;
+  width: 50px;
 }
 
 .achievement-popup .popup-head {
-    display: none;
+  display: none;
 }
 
 .popup-vertical-buttons .popup-buttons button {
-    margin-bottom: 5px;
-    min-width: 100%;
+  margin-bottom: 5px;
+  min-width: 100%;
 }
 .popup-vertical-buttons button.button-small {
-    padding: 2px 4px 1px;
-    min-height: 30px;
-    font-size: 12px;
-    line-height: 26px;
+  padding: 2px 4px 1px;
+  min-height: 30px;
+  font-size: 12px;
+  line-height: 26px;
 }
 
 .popup-vertical-buttons .popup-buttons {
-    display: block;
+  display: block;
 }
 
 .popup-body {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .green-popup h2,
 .green-popup h3,
 .green-popup h4 {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .green-popup .popup {
-    border: solid 1px #ffffff;
+  border: solid 1px #ffffff;
 }
 .green-popup.popup-container .popup {
-    background-color: rgba(35,131,147,.9);
+  background-color: rgba(35, 131, 147, 0.9);
 }
 .green-popup .popup-head {
-    border: 0;
+  border: 0;
 }
 .green-popup .popup-title {
-    border-bottom: solid 1px #fff;
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-    padding-bottom: 10px;
+  border-bottom: solid 1px #fff;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 10px;
 }
 .green-popup .popup-sub-title {
-    color: #fff;
-    font-size: 15px;
-    padding-top: 8px;
+  color: #fff;
+  font-size: 15px;
+  padding-top: 8px;
 }
 .green-popup .popup-body {
-    color: #fff;
-    text-align: center;
+  color: #fff;
+  text-align: center;
 }
 
 .achievement {
-    border-radius: 50%;
+  border-radius: 50%;
 }
 .achievement-icon-container {
-    position: relative;
+  position: relative;
 }
 .achievement-icon-container > img {
-    position: relative;
-    vertical-align: middle;
+  position: relative;
+  vertical-align: middle;
 }
 .achievement-button {
-    border: 0;
-    font-size: 35px;
-    margin: -61px 0 0;
-    max-height: initial;
-    min-height: initial;
-    min-width: initial;
-    padding: 40px 0;
-    position: absolute;
-    top: 50%;
-    vertical-align: middle;
+  border: 0;
+  font-size: 35px;
+  margin: -61px 0 0;
+  max-height: initial;
+  min-height: initial;
+  min-width: initial;
+  padding: 40px 0;
+  position: absolute;
+  top: 50%;
+  vertical-align: middle;
 }
-    .achievement-button.achievement-button-left {
-        left: 0;
-        padding-right: 18px;
-    }
-    .achievement-button.achievement-button-right {
-        padding-left: 18px;
-        right: 0;
-    }
+.achievement-button.achievement-button-left {
+  left: 0;
+  padding-right: 18px;
+}
+.achievement-button.achievement-button-right {
+  padding-left: 18px;
+  right: 0;
+}
 .achievement-small {
-    width: 70px;
-    height: 70px;
-    margin-right: 5px;
+  width: 70px;
+  height: 70px;
+  margin-right: 5px;
 }
 .achievement-large {
-    width: 150px;
-    height: 150px;
+  width: 150px;
+  height: 150px;
 }
 
 .square {
-	position: relative;
+  position: relative;
 }
 .square:before {
-	content: "";
-	display: block;
-	padding-top: 100%;
+  content: '';
+  display: block;
+  padding-top: 100%;
 }
 .square-content {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .home-story-info {
-    padding-left: 65px;
+  padding-left: 65px;
 }
 
 .home-card {
-    padding-bottom: 20px
+  padding-bottom: 20px;
 }
 
 .home-card .card {
-    margin: 0 10px 0;
+  margin: 0 10px 0;
 }
 
 /* device */
 .connectionStatus {
-    padding-left: 18px;
-    position: relative;
+  padding-left: 18px;
+  position: relative;
 }
-    .connectionStatus::before {
-        background: #ff0000;
-        border: #555;
-        border-radius: 50%;
-        content: ' ';
-        display: block;
-        height: 14px;
-        left: 0;
-        position: absolute;
-        top: 3px;
-        width: 14px;
-    }
+.connectionStatus::before {
+  background: #ff0000;
+  border: #555;
+  border-radius: 50%;
+  content: ' ';
+  display: block;
+  height: 14px;
+  left: 0;
+  position: absolute;
+  top: 3px;
+  width: 14px;
+}
 
-    .connectionStatus.deviceConnected::before {
-        -webkit-animation: pulseOpacity 3.5s ease-in-out infinite;
-        -moz-animation: pulseOpacity 3.5s ease-in-out infinite;
-        animation: pulseOpacity 3.5s ease-in-out infinite;
-        background: #00ff21;
-    }
+.connectionStatus.deviceConnected::before {
+  -webkit-animation: pulseOpacity 3.5s ease-in-out infinite;
+  -moz-animation: pulseOpacity 3.5s ease-in-out infinite;
+  animation: pulseOpacity 3.5s ease-in-out infinite;
+  background: #00ff21;
+}
 .help-block {
-    color: #959595;
-    display: block;
-    font-style: italic;
+  color: #959595;
+  display: block;
+  font-style: italic;
 }
 small.help-text {
-    font-size: 9px;
+  font-size: 9px;
 }
 
 /* leaderboard */
 .leaderboard-rank {
-    width: 25px;
-    text-align: right;
+  width: 25px;
+  text-align: right;
 }
 .leaderboard-profile-pic {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 .leaderboard-content {
-    padding-left: 88px;
+  padding-left: 88px;
 }
 
 /* stats */
 .recent-pour-info {
-    padding-left: 65px;
+  padding-left: 65px;
 }
 
 /* Friends */
 .friend-item-info {
-    padding-left: 65px;
+  padding-left: 65px;
 }
 
 /* ios */
@@ -547,195 +575,193 @@ small.help-text {
 }
 
 .pull-left {
-    float: left;
+  float: left;
 }
 .pull-right {
-    float: right;
+  float: right;
 }
 
 /* android */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .qr-row {
-
 }
 
 .qr-cell {
-    float: left;
-    width: 2px;
-    height: 2px;
+  float: left;
+  width: 2px;
+  height: 2px;
 }
 .qr-dark {
-    background: #000;
+  background: #000;
 }
 
 .form-error {
-    color: #e42012;
-    font-size: 12px;
-    padding: 4px 20px;
+  color: #e42012;
+  font-size: 12px;
+  padding: 4px 20px;
 }
 
 /* */
 .progress-bar {
-    background: #ffaa00;
-    height: 30px;
-    transition: width 1s;
-    width: 0;
+  background: #ffaa00;
+  height: 30px;
+  transition: width 1s;
+  width: 0;
 }
-
 
 /* Button borders :( */
 .button.button-light {
-    border-color: #ddd;
+  border-color: #ddd;
 }
 .button.button-light.active,
 .button.button-light.activated {
-    border-color: #ccc;
+  border-color: #ccc;
 }
 .button.button-light.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-light.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-light.button-outline {
-    border-color: #ddd;
+  border-color: #ddd;
 }
 .button.button-stable {
-    border-color: #b2b2b2;
+  border-color: #b2b2b2;
 }
 .button.button-stable.active,
 .button.button-stable.activated {
-    border-color: #a2a2a2;
+  border-color: #a2a2a2;
 }
 .button.button-stable.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-stable.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-stable.button-outline {
-    border-color: #b2b2b2;
+  border-color: #b2b2b2;
 }
 .button.button-positive {
-    border-color: #0c63ee;
+  border-color: #0c63ee;
 }
 .button.button-positive.active,
 .button.button-positive.activated {
-    border-color: #0c63ee;
+  border-color: #0c63ee;
 }
 .button.button-positive.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-positive.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-positive.button-outline {
-    border-color: #387ef5;
+  border-color: #387ef5;
 }
 .button.button-positive.button-outline.active,
 .button.button-positive.button-outline.activated {
-    background-color: #387ef5;
+  background-color: #387ef5;
 }
 .button.button-calm {
-    border-color: #0a9ec7;
+  border-color: #0a9ec7;
 }
 .button.button-calm.active,
 .button.button-calm.activated {
-    border-color: #0a9ec7;
+  border-color: #0a9ec7;
 }
 .button.button-calm.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-calm.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-calm.button-outline {
-    border-color: #11c1f3;
+  border-color: #11c1f3;
 }
 .button.button-assertive {
-    border-color: #e42012;
+  border-color: #e42012;
 }
 .button.button-assertive.active,
 .button.button-assertive.activated {
-    border-color: #e42012;
+  border-color: #e42012;
 }
 .button.button-assertive.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-assertive.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-assertive.button-outline {
-    border-color: #ef473a;
+  border-color: #ef473a;
 }
 .button.button-balanced {
-    border-color: #28a54c;
+  border-color: #28a54c;
 }
 .button.button-balanced.active,
 .button.button-balanced.activated {
-    border-color: #28a54c;
+  border-color: #28a54c;
 }
 .button.button-balanced.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-balanced.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-balanced.button-outline {
-    border-color: #33cd5f;
+  border-color: #33cd5f;
 }
 .button.button-energized {
-    border-color: #e6b400;
+  border-color: #e6b400;
 }
 .button.button-energized.active,
 .button.button-energized.activated {
-    border-color: #e6b400;
+  border-color: #e6b400;
 }
 .button.button-energized.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-energized.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-energized.button-outline {
-    border-color: #ffc900;
+  border-color: #ffc900;
 }
 .button.button-royal {
-    border-color: #6b46e5;
+  border-color: #6b46e5;
 }
 .button.button-royal.active,
 .button.button-royal.activated {
-    border-color: #6b46e5;
+  border-color: #6b46e5;
 }
 .button.button-royal.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-royal.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-royal.button-outline {
-    border-color: #886aea;
+  border-color: #886aea;
 }
 .button.button-dark {
-    border-color: #111;
+  border-color: #111;
 }
 .button.button-dark.active,
 .button.button-dark.activated {
-    border-color: #000;
+  border-color: #000;
 }
 .button.button-dark.button-clear {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-dark.button-icon {
-    border-color: transparent;
+  border-color: transparent;
 }
 .button.button-dark.button-outline {
-    border-color: #444;
+  border-color: #444;
 }
 
 .time-picker .popup-head {
