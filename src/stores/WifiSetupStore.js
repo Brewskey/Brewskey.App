@@ -34,8 +34,8 @@ class WifiSetupStore {
     this._disposers.push(navigationReaction);
 
     const setupFinishReaction = when(
-      () => this.wifiSetupLoader.hasValue(),
-      () => this._setWifiSetupStep(4),
+      (): boolean => this.wifiSetupLoader.hasValue(),
+      (): void => this._setWifiSetupStep(4),
     );
 
     this._disposers.push(setupFinishReaction);

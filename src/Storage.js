@@ -2,6 +2,7 @@
 
 import { AsyncStorage } from 'react-native';
 import { when } from 'mobx';
+import nullthrows from 'nullthrows';
 import AuthStore from './stores/AuthStore';
 
 class Storage {
@@ -35,17 +36,10 @@ class Storage {
     return `${userID}/${key}`;
   };
 
-  static _getUserID = (): Promise<string> =>
-    new Promise((resolve: () => void) => {
-      if (AuthStore.isAuthorized) {
-        resolve(AuthStore.userID);
-        return;
-      }
-      when(
-        (): boolean => AuthStore.isAuthorized,
-        () => resolve(AuthStore.userID),
-      );
-    });
+  static _getUserID = async (): Promise<string> => {
+    await when((): boolean => AuthStore.isAuthorized);
+    return nullthrows(AuthStore.userID);
+  };
 }
 
 export default Storage;

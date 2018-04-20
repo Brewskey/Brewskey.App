@@ -18,7 +18,7 @@ class ErrorBoundary extends React.PureComponent<Props, State> {
     error: null,
   };
 
-  componentDidCatch(error) {
+  componentDidCatch(error: Error) {
     this.setState(() => ({ error }));
   }
 
@@ -37,7 +37,7 @@ export const errorBoundary = <TProps: {}>(
 ) => (
   Component: React.ComponentType<TProps>,
 ): Class<React.PureComponent<TProps>> => {
-  class WithErrorBoundary extends React.PureComponent {
+  class WithErrorBoundary extends React.PureComponent<TProps> {
     render() {
       return (
         <ErrorBoundary fallbackComponent={fallbackComponent}>

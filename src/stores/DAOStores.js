@@ -25,7 +25,7 @@ import type {
   Style,
   Tap,
 } from 'brewskey.js-api';
-import type { Atom } from 'mobx';
+import type { IAtom } from 'mobx';
 
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { autorun, createAtom } from 'mobx';
@@ -82,7 +82,7 @@ export const waitForLoaded = <TValue>(
   });
 
 class DAOStore<TEntity: { id: EntityID }> {
-  _atom: Atom;
+  _atom: IAtom;
   _dao: DAO<TEntity, *>;
 
   constructor(dao: DAO<TEntity, *>) {

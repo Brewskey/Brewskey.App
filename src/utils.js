@@ -32,17 +32,21 @@ export const calculateKegLevel = (
   return level <= 0 ? 0 : level;
 };
 
+// todo this probably annotated wrong. It doesn't propogate props type to
+// returned element
 export const getElementFromComponentProp = <TProps>(
-  ComponentProp?: ?React.Element<TProps> | React.ComponentType<any>,
-): React.Element<TProps> => {
+  ComponentProp?: ?React.Element<any> | React.ComponentType<TProps>,
+): ?React.Element<any> => {
   if (!ComponentProp) {
     return null;
   }
-  return React.isValidElement(ComponentProp) ? (
-    ((ComponentProp: any): React.Element<TProps>)
-  ) : (
-    <ComponentProp />
-  );
+
+  if (React.isValidElement(ComponentProp)) {
+    return ((ComponentProp: any): React.Element<any>);
+  }
+
+  const CastedComponent = ((ComponentProp: any): React.ComponentType<any>);
+  return <CastedComponent />;
 };
 
 export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
@@ -66,11 +70,15 @@ export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
 export const parseError = (error: Object): string => {
   if (error.ModelState) {
     let resultErrorMessage = '';
-    Array.from(Object.values(error.ModelState)).map(fieldErrorArray =>
-      new Set(fieldErrorArray).forEach(
-        (fieldError: string): string =>
-          (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
-      ),
+    Array.from(Object.values(error.ModelState)).forEach(
+      (fieldErrorArray: any) => {
+        const castedFieldErrorArray = (fieldErrorArray: Array<string>);
+
+        new Set(castedFieldErrorArray).forEach(
+          (fieldError: string): string =>
+            (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
+        );
+      },
     );
 
     return resultErrorMessage;

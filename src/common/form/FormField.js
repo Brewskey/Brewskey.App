@@ -34,7 +34,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
     formStore: PropTypes.object,
   };
 
-  constructor(props: Props, context: Object) {
+  constructor(props: Props & TProps, context: Object) {
     super(props, context);
 
     context.formStore.initField({
