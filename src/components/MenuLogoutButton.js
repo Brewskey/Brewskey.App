@@ -9,7 +9,7 @@ import AuthStore from '../stores/AuthStore';
 import MenuButton from './MenuButton';
 
 @observer
-class MenuLogoutButton extends React.Component {
+class MenuLogoutButton extends React.Component<{}> {
   _modalToggleStore = new ToggleStore();
 
   _onLogoutConform = () => {

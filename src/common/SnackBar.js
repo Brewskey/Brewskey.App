@@ -52,8 +52,12 @@ const styles = StyleSheet.create({
   },
 });
 
+type State = {|
+  bottomAnimValue: Object,
+|};
+
 @observer
-class SnackMessage extends React.Component<{}> {
+class SnackMessage extends React.Component<{}, State> {
   state = {
     bottomAnimValue: new Animated.Value(-60),
   };
@@ -95,8 +99,9 @@ class SnackMessage extends React.Component<{}> {
 
   render() {
     let dynamicTextStyle;
-    switch (SnackBarStore.currentMessage &&
-      SnackBarStore.currentMessage.style) {
+    switch (
+      SnackBarStore.currentMessage && SnackBarStore.currentMessage.style
+    ) {
       case 'danger': {
         dynamicTextStyle = styles.textDanger;
         break;

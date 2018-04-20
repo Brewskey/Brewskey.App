@@ -27,7 +27,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
   }
 
   @action
-  initialize = (queryOptions: QueryOptions) => {
+  initialize = (queryOptions?: QueryOptions = {}) => {
     this.setQueryOptions(queryOptions);
     this._fetchFirstPage();
     this._isInitialized = true;

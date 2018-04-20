@@ -57,7 +57,7 @@ export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
   }
 
   if (!response.ok) {
-    throw new Error(parseError(responseJson));
+    throw new Error(responseJson ? parseError(responseJson) : 'Whoops! Error!');
   }
 
   return responseJson;

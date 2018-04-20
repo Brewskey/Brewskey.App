@@ -34,7 +34,7 @@ class PickerStore<TEntity> {
   // this also can be done with ObservableArray instead ObservableMap
   // but I need keys for initialParams in forms in cases where initialValue
   // is ShortenedEntity
-  @observable _valueByKey: ObservableMap<string, TEntity> = new Map();
+  @observable _valueByKey: ObservableMap<string, TEntity> = observable.map();
 
   constructor({
     initialValue,

@@ -36,7 +36,7 @@ class PourButton extends React.Component<{}> {
         type="ionicon"
       />
     ) : (
-      <LoadingIndicator color="white" size={26} style={styles.container} />
+      <LoadingIndicator color="white" style={styles.container} />
     );
   }
 }

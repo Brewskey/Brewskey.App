@@ -1,5 +1,7 @@
 // @flow
 
+import type { AchievementType } from 'brewskey.js-api';
+
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
@@ -26,13 +28,13 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
   _userBadges: ?UserBadges;
 
   componentDidMount() {
-    const { initialPopUpAchievementType } = this.props;
+    const { initialPopUpAchievementType } = this.injectedProps;
     initialPopUpAchievementType &&
       nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
   }
 
   componentDidUpdate() {
-    const { initialPopUpAchievementType } = this.props;
+    const { initialPopUpAchievementType } = this.injectedProps;
     initialPopUpAchievementType &&
       nullthrows(this._userBadges).openBadgeModal(initialPopUpAchievementType);
   }

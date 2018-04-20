@@ -1,7 +1,8 @@
 // @flow
 
-import * as React from 'react';
+import type { FormProps } from '../common/form/types';
 
+import * as React from 'react';
 import { observer } from 'mobx-react/native';
 import AuthApi from '../AuthApi';
 import InjectedComponent from '../common/InjectedComponent';
@@ -13,6 +14,7 @@ import TextField from '../components/TextField';
 import Button from '../common/buttons/Button';
 
 export type ChangePasswordFormFields = {|
+  newPassword: string,
   oldPassword: string,
 |};
 

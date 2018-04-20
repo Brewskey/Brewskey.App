@@ -36,8 +36,8 @@ const validate = (values: KegMutator): { [key: string]: string } => {
 
 type Props = {|
   keg?: Keg,
-  onReplaceSubmit?: (values: KegMutator) => void | Promise<void>,
-  onSubmit: (values: KegMutator) => void | Promise<void>,
+  onReplaceSubmit?: (values: KegMutator) => void | Promise<any>,
+  onSubmit: (values: KegMutator) => void | Promise<any>,
   showReplaceButton?: boolean,
   submitButtonLabel: string,
   tapId: EntityID,

@@ -38,9 +38,9 @@ class AvatarPicker extends React.Component<{}> {
 
   @computed
   get _isLoading(): boolean {
-    return UpdateAvatarStore.getFromCache(
-      this._updateAvatarCacheKey,
-    ).isLoading();
+    return this._updateAvatarCacheKey
+      ? UpdateAvatarStore.getFromCache(this._updateAvatarCacheKey).isLoading()
+      : false;
   }
 
   _onAvatarPress = () => {

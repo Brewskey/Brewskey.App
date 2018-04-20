@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
   },
 });
 
+type Props = {|
+  isVisible: boolean,
+  onHideModal: () => void,
+|};
+
 class ResetPasswordModal extends React.PureComponent<Props> {
   render() {
     const { isVisible, onHideModal } = this.props;

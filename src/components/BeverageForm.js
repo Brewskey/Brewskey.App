@@ -46,7 +46,7 @@ const validate = (values: BeverageMutator): { [key: string]: string } => {
 
 type Props = {|
   beverage?: Beverage,
-  onSubmit: (values: BeverageMutator) => void | Promise<void>,
+  onSubmit: (values: BeverageMutator) => void | Promise<any>,
   submitButtonLabel: string,
 |};
 

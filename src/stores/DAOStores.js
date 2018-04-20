@@ -25,6 +25,7 @@ import type {
   Style,
   Tap,
 } from 'brewskey.js-api';
+import type { Atom } from 'mobx';
 
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { autorun, createAtom } from 'mobx';
