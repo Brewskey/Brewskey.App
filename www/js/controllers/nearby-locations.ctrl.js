@@ -61,18 +61,17 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
       //     $scope.modal = modal;
       //     //  modal.show();
       //   });
-
-      $scope.closeModal = function() {
-        $scope.modal.hide();
-      };
-      // Cleanup the modal when we're done with it!
-      $scope.$on('$destroy', function() {
-        $scope.modal.remove();
-      });
-      // Execute action on hide modal
-      $scope.$on('modal.hidden', function() {
-        // Execute action
-      });
+      // $scope.closeModal = function() {
+      //   $scope.modal.hide();
+      // };
+      // // Cleanup the modal when we're done with it!
+      // $scope.$on('$destroy', function() {
+      //   $scope.modal.remove();
+      // });
+      // // Execute action on hide modal
+      // $scope.$on('modal.hidden', function() {
+      //   // Execute action
+      // });
     }
   },
 ]);
