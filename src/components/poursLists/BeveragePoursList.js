@@ -7,7 +7,7 @@ import * as React from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import ListItem from '../../common/ListItem';
-import ListEmptyComponent from '../../common/ListEmptyComponent';
+import ListEmpty from '../../common/ListEmpty';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import BasePoursList from './BasePoursList';
 import PintCounter from '../PintCounter';
@@ -22,7 +22,7 @@ type Props = {|
 const BeveragePoursList = observer(
   ({ ListHeaderComponent, onRefresh, queryOptions }: Props) => (
     <BasePoursList
-      ListEmptyComponent={<ListEmptyComponent message="No recent pours" />}
+      ListEmptyComponent={<ListEmpty message="No recent pours" />}
       ListHeaderComponent={ListHeaderComponent}
       loadedRow={LoadedRow}
       onRefresh={onRefresh}

@@ -9,7 +9,7 @@ import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../../common/InjectedComponent';
-import ListEmptyComponent from '../../common/ListEmptyComponent';
+import ListEmpty from '../../common/ListEmpty';
 import ListItem from '../../common/ListItem';
 import UserAvatar from '../../common/avatars/UserAvatar';
 import BasePoursList from './BasePoursList';
@@ -42,7 +42,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
     const { ListHeaderComponent, onRefresh, queryOptions } = this.props;
     return (
       <BasePoursList
-        ListEmptyComponent={<ListEmptyComponent message="No pours" />}
+        ListEmptyComponent={<ListEmpty message="No pours" />}
         ListHeaderComponent={ListHeaderComponent}
         loadedRow={LoadedRow}
         onRefresh={onRefresh}

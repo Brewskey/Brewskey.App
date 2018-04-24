@@ -14,7 +14,7 @@ export const COLORS = {
   secondary3: '#bbb',
   success: '#71F197',
   text: '#43484d',
-  textFaded: '#bdc6cf',
+  textFaded: 'rgba(0, 0, 0, 0.6)',
   textInverse: '#fff',
   textInverseFaded: 'rgba(255,255,255,0.7)',
 };

@@ -19,7 +19,7 @@ import LoaderRow from '../common/LoaderRow';
 import SwipeableRow from '../common/SwipeableRow';
 import SnackBarStore from '../stores/SnackBarStore';
 import { BeverageStore } from '../stores/DAOStores';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 
@@ -100,7 +100,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={
-          !isLoading ? <ListEmptyComponent message="No beverages" /> : null
+          !isLoading ? <ListEmpty message="No beverages" /> : null
         }
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}

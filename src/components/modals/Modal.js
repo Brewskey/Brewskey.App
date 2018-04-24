@@ -7,6 +7,7 @@ const emptyFunction = () => {};
 type Props = {
   animationType?: string, // todo add enum
   children?: React.Node,
+  isTouchable?: boolean,
   isVisible: boolean,
   onHideModal?: () => void,
   transparent?: boolean,
@@ -16,6 +17,7 @@ type Props = {
 const Modal = ({
   animationType = 'slide',
   children,
+  isTouchable = true,
   isVisible,
   onHideModal,
   transparent = true,
@@ -28,9 +30,13 @@ const Modal = ({
     transparent={transparent}
     visible={isVisible}
   >
-    <TouchableWithoutFeedback onPress={onHideModal}>
-      {children}
-    </TouchableWithoutFeedback>
+    {isTouchable ? (
+      <TouchableWithoutFeedback onPress={onHideModal}>
+        {children}
+      </TouchableWithoutFeedback>
+    ) : (
+      children
+    )}
   </RNModal>
 );
 

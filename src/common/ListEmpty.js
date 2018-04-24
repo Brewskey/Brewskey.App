@@ -22,10 +22,10 @@ type Props = {|
   message: string,
 |};
 
-const ListEmptyComponent = ({ message }: Props) => (
+const ListEmpty = ({ message }: Props) => (
   <View style={styles.container}>
     <Text style={styles.messageText}>{message}</Text>
   </View>
 );
 
-export default ListEmptyComponent;
+export default ListEmpty;

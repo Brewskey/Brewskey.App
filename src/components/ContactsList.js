@@ -7,7 +7,7 @@ import { observer } from 'mobx-react/native';
 import List from '../common/List';
 import BaseAvatar from '../common/avatars/BaseAvatar';
 import ContactsStore from '../stores/ContactsStore';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import ListItem from '../common/ListItem';
 
 type Props = {|
@@ -43,7 +43,7 @@ class ContactsList extends React.Component<Props> {
       <List
         data={ContactsStore.contacts}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={<ListEmptyComponent message="No contacts" />}
+        ListEmptyComponent={<ListEmpty message="No contacts" />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         renderItem={this._renderListItem}
       />
