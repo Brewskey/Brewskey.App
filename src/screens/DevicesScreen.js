@@ -15,6 +15,7 @@ import Section from '../common/Section';
 import AuthStore from '../stores/AuthStore';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import NuxNoEntity from '../components/NuxNoEntity';
 import DevicesList from '../components/DevicesList';
 
 type InjectedProps = {|
@@ -26,6 +27,24 @@ type InjectedProps = {|
 class DevicesScreen extends InjectedComponent<InjectedProps> {
   _onWifiSetupButtonPress = () =>
     this.injectedProps.navigation.navigate('wifiSetup');
+
+  _renderListHeader = ({
+    isEmpty,
+    isLoading,
+  }: {
+    isEmpty: boolean,
+    isLoading: boolean,
+  }): ?React.Element<any> =>
+    isEmpty || isLoading ? null : (
+      <Section bottomPadded>
+        <SectionContent paddedHorizontal paddedVertical>
+          <Button
+            onPress={this._onWifiSetupButtonPress}
+            title="Setup WiFi on Brewskey box"
+          />
+        </SectionContent>
+      </Section>
+    );
 
   render() {
     return (
@@ -47,16 +66,8 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
               DAOApi.createFilter('createdBy/id').equals(AuthStore.userID),
             ],
           }}
-          ListHeaderComponent={
-            <Section bottomPadded>
-              <SectionContent paddedHorizontal paddedVertical>
-                <Button
-                  onPress={this._onWifiSetupButtonPress}
-                  title="Setup WiFi on Brewskey box"
-                />
-              </SectionContent>
-            </Section>
-          }
+          ListEmptyComponent={NuxNoEntity}
+          renderListHeader={this._renderListHeader}
         />
       </Container>
     );

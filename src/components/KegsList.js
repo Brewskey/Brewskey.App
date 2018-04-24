@@ -12,7 +12,7 @@ import List from '../common/List';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import LoaderRow from '../common/LoaderRow';
 import ListItem from '../common/ListItem';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
@@ -59,9 +59,7 @@ class KegsList extends React.Component<Props> {
       <List
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmptyComponent message="No kegs" /> : null
-        }
+        ListEmptyComponent={!isLoading ? <ListEmpty message="No kegs" /> : null}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}

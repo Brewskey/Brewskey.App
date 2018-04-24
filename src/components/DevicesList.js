@@ -16,7 +16,7 @@ import QuickActions from '../common/QuickActions';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import SwipeableRow from '../common/SwipeableRow';
 import SnackBarStore from '../stores/SnackBarStore';
 import { DeviceStore } from '../stores/DAOStores';
@@ -32,6 +32,10 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
+  renderListHeader?: ({
+    isEmpty: boolean,
+    isLoading: boolean,
+  }) => ?React.Element<any>,
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
@@ -44,6 +48,7 @@ type InjectedProps = {|
 @observer
 class DevicesList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
+    ListEmptyComponent: <ListEmpty message="No Brewskey boxes" />,
     queryOptions: {},
   };
 
@@ -102,16 +107,19 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const { ListEmptyComponent, renderListHeader } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
+
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmptyComponent message="No Brewskey boxes" /> : null
-        }
+        ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={this.props.ListHeaderComponent}
+        ListHeaderComponent={renderListHeader({
+          isEmpty: this._listStore.rows.length === 0,
+          isLoading,
+        })}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
         ref={this._getSwipeableListRef}

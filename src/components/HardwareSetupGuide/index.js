@@ -22,6 +22,11 @@ const styles = StyleSheet.create({
     height: 10,
     width: 10,
   },
+  closeButtonContainer: {
+    bottom: 15,
+    left: 10,
+    position: 'absolute',
+  },
   container: {
     alignItems: 'center',
     backgroundColor: COLORS.primary3,
@@ -39,18 +44,12 @@ const styles = StyleSheet.create({
   paginationStyle: {
     bottom: 30,
   },
-  skipButtonContainer: {
-    bottom: 15,
-    left: 10,
-    position: 'absolute',
-  },
 });
 
 const MAX_STEP_INDEX = 5;
 
 type Props = {|
-  onSkipPress: () => void,
-  onFinishPress: () => void,
+  onClosePress: () => void,
 |};
 
 @observer
@@ -73,7 +72,7 @@ class HardwareSetupGuide extends React.Component<Props> {
     if (!this._isLastStep) {
       nullthrows(this._swiper).scrollBy(1);
     } else {
-      this.props.onFinishPress();
+      this.props.onClosePress();
     }
   };
 
@@ -153,9 +152,9 @@ class HardwareSetupGuide extends React.Component<Props> {
         </Swiper>
         {!this._isLastStep && (
           <Button
-            containerViewStyle={styles.skipButtonContainer}
-            onPress={this.props.onSkipPress}
-            title="SKIP"
+            containerViewStyle={styles.closeButtonContainer}
+            onPress={this.props.onClosePress}
+            title="CLOSE"
             transparent
           />
         )}

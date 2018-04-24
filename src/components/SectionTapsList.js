@@ -20,6 +20,7 @@ import TapListItem from './TapListItem';
 import SnackBarStore from '../stores/SnackBarStore';
 
 type Props = {|
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   // todo add queryOptions?
 |};
@@ -84,6 +85,9 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     return (
       <SwipeableList
         keyExtractor={this._keyExtractor}
+        ListEmptyComponent={
+          this._listStore.isLoading ? null : this.props.ListEmptyComponent
+        }
         ListFooterComponent={
           <LoadingListFooter isLoading={this._listStore.isLoading} />
         }

@@ -8,7 +8,7 @@ import { observer } from 'mobx-react/native';
 import List from '../../common/List';
 import ErrorBoundary from '../../common/ErrorBoundary';
 import ErrorListItem from '../../common/ErrorListItem';
-import ListEmptyComponent from '../../common/ListEmptyComponent';
+import ListEmpty from '../../common/ListEmpty';
 import NotificationsStore from '../../stores/NotificationsStore';
 import LowKegLevelListItem from './LowKegLevelListItem';
 import AchievementListItem from './AchievementListItem';
@@ -50,12 +50,10 @@ class NotificationsList extends React.Component<{}> {
   render() {
     return (
       <List
-        ListEmptyComponent={
-          <ListEmptyComponent message="No new notifications!" />
-        }
         data={NotificationsStore.notifications}
-        renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
+        ListEmptyComponent={<ListEmpty message="No new notifications!" />}
+        renderItem={this._renderItem}
       />
     );
   }

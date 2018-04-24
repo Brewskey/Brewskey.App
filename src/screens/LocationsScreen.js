@@ -9,6 +9,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import LocationsList from '../components/LocationsList';
+import NuxNoEntity from '../components/NuxNoEntity';
 
 type Props = {|
   navigation: Navigation,
@@ -26,7 +27,7 @@ class LocationsScreen extends React.Component<Props> {
           showBackButton
           title="Locations"
         />
-        <LocationsList />
+        <LocationsList ListEmptyComponent={NuxNoEntity} />
       </Container>
     );
   }

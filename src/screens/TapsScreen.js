@@ -8,6 +8,7 @@ import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import NuxNoEntity from '../components/NuxNoEntity';
 import SectionTapsList from '../components/SectionTapsList';
 
 type Props = {|
@@ -26,7 +27,7 @@ class TapsScreen extends React.Component<Props> {
           showBackButton
           title="Taps"
         />
-        <SectionTapsList />
+        <SectionTapsList ListEmptyComponent={NuxNoEntity} />
       </Container>
     );
   }

@@ -23,13 +23,6 @@ class MenuScreen extends React.Component<{}> {
       <Container>
         <Header
           title="Brewskey"
-          leftComponent={
-            <HeaderNavigationButton
-              name="information-variant"
-              toRoute="hardwareSetup"
-              type="material-community"
-            />
-          }
           rightComponent={
             <HeaderNavigationButton name="settings" toRoute="settings" />
           }

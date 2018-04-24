@@ -12,7 +12,7 @@ import { observer } from 'mobx-react/native';
 import DAOListStore from '../stores/DAOListStore';
 import { FriendStore } from '../stores/DAOStores';
 import List from '../common/List';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
@@ -66,7 +66,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={
-          !isLoading ? <ListEmptyComponent message="No friends" /> : null
+          !isLoading ? <ListEmpty message="No friends" /> : null
         }
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}

@@ -11,7 +11,7 @@ import nullthrows from 'nullthrows';
 import * as React from 'react';
 import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
-import ListEmptyComponent from '../common/ListEmptyComponent';
+import ListEmpty from '../common/ListEmpty';
 import ListItem from '../common/ListItem';
 import LoaderRow from '../common/LoaderRow';
 import LoadingListFooter from '../common/LoadingListFooter';
@@ -24,6 +24,7 @@ import SnackBarStore from '../stores/SnackBarStore';
 import { LocationStore } from '../stores/DAOStores';
 
 type Props = {|
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
@@ -36,6 +37,7 @@ type InjectedProps = {|
 @observer
 class LocationsList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps = {
+    ListEmptyComponent: <ListEmpty message="No locations" />,
     queryOptions: {},
   };
 
@@ -94,16 +96,16 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const { ListEmptyComponent, ListHeaderComponent } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
+
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmptyComponent message="No locations" /> : null
-        }
+        ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={this.props.ListHeaderComponent}
+        ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
         ref={this._getSwipeableListRef}
