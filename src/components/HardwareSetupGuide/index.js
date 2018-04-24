@@ -12,6 +12,7 @@ import DetachTowerImage from '../../resources/installation/3_detach-tower.png';
 import SensorCableToBoxImage from '../../resources/installation/4_sensor-cable-to-box.png';
 import AttachTowerImage from '../../resources/installation/5_attach-tower.png';
 import PlugInImage from '../../resources/installation/6_plug-in.png';
+import FinishImage from '../../resources/installation/7_finish-in-app.png';
 import { COLORS } from '../../theme';
 import Button from '../../common/buttons/Button';
 import SetupStep from './SetupStep';
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const MAX_STEP_INDEX = 5;
+const MAX_STEP_INDEX = 6;
 
 type Props = {|
   onClosePress: () => void,
@@ -147,6 +148,16 @@ class HardwareSetupGuide extends React.Component<Props> {
               }
               image={PlugInImage}
               title="6. Plug in the Brewskey box"
+            />
+          </View>
+          <View style={styles.container}>
+            <SetupStep
+              description={
+                'Create a location, connect to your box, and name your tap. ' +
+                "After that, you're ready to pour some beer!"
+              }
+              image={FinishImage}
+              title="7. Finish installation with the mobile app"
             />
           </View>
         </Swiper>
