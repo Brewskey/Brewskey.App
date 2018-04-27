@@ -16,9 +16,10 @@ type Props = {|
   onChange: (value: PickerValue<Location>) => void,
   queryOptions?: QueryOptions,
   value: PickerValue<Location>,
+  // react-native textInput props
 |};
 
-class LocationPicker extends React.Component<Props> {
+class LocationPicker extends React.PureComponent<Props> {
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

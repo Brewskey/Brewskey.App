@@ -23,7 +23,7 @@ type Props = {|
 
 const DeviceStatePicker = (props: Props) => (
   <View>
-    <PickerField label="Type" {...props}>
+    <PickerField label="State" {...props}>
       <PickerField.Item label="Active" value="Active" />
       <PickerField.Item label="Cleaning" value="Cleaning" />
       <PickerField.Item label="Unlocked" value="Unlocked" />

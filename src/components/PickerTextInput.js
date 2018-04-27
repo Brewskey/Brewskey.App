@@ -1,5 +1,6 @@
 // @flow
 
+import type { Style } from '../types';
 import type { PickerValue } from '../stores/PickerStore';
 
 import * as React from 'react';
@@ -16,10 +17,13 @@ import {
 type Props<TEntity> = {|
   error?: ?string,
   label: string,
+  labelStyle?: Style,
   onPress: () => void,
   placeholder?: string,
   stringValueExtractor: (item: TEntity) => string,
   value: PickerValue<TEntity>,
+  inputStyle?: Style,
+  // other react-native textInput props
 |};
 
 @observer
@@ -40,12 +44,21 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   }
 
   render() {
-    const { error, label, onPress, placeholder } = this.props;
+    const {
+      error,
+      label,
+      labelStyle,
+      onPress,
+      placeholder,
+      ...rest
+    } = this.props;
+
     return (
       <Fragment>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <TouchableOpacity onPress={onPress}>
           <FormInput
+            {...rest}
             editable={false}
             multiline
             placeholder={placeholder}

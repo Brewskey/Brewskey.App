@@ -12,8 +12,8 @@ type InjectedProps = {|
 |};
 
 type Props = {
-  toRoute: string,
   params?: Object,
+  toRoute: string,
   // react-native-element icon props
 };
 

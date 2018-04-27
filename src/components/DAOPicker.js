@@ -39,6 +39,7 @@ type Props<TEntity> = {
   error?: ?string,
   headerTitle: string,
   label: string,
+  labelStyle?: Style,
   multiple: boolean,
   onChange?: (value: PickerValue<TEntity>) => void,
   placeholder?: string,
@@ -47,6 +48,7 @@ type Props<TEntity> = {
   searchBy: string,
   stringValueExtractor?: (item: TEntity) => string,
   value?: PickerValue<TEntity>,
+  // other react-native textInput props
 };
 
 @withPicker
@@ -90,7 +92,9 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   ): React.Element<any> => {
     const { checkIsSelected, toggleItem } = this.injectedProps;
     const { renderRow } = this.props;
-    const { item: { loader } } = renderRowProps;
+    const {
+      item: { loader },
+    } = renderRowProps;
     const isSelected =
       loader.hasValue() && checkIsSelected(loader.getValueEnforcing());
 
@@ -105,12 +109,14 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
       multiple,
       placeholder,
       stringValueExtractor,
+      ...rest
     } = this.props;
     const { clear, value } = this.injectedProps;
 
     return (
       <View>
         <PickerTextInput
+          {...rest}
           error={error}
           label={label}
           onPress={this._modalToggleStore.toggleOn}
