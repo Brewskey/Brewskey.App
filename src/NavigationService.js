@@ -23,6 +23,9 @@ class NavigationService {
     NavigationService._navigator = navigator;
   };
 
+  static dispatch = (navigationAction: Object) =>
+    NavigationService.getNavigator().dispatch(navigationAction);
+
   static goBack = (): void =>
     NavigationService.getNavigator().dispatch(NavigationActions.back());
 

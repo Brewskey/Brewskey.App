@@ -1,6 +1,6 @@
 // @flow
 
-import type { DeviceMutator } from 'brewskey.js-api';
+import type { Device, DeviceMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -18,40 +18,61 @@ import DeviceForm from '../components/DeviceForm';
 import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
+  initialValues?: $Shape<Device>,
   navigation: Navigation,
-  particleID: string,
+  onDeviceCreated?: (device: Device) => void | Promise<any>,
+  showBakButton?: boolean,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 @observer
 class NewDeviceScreen extends InjectedComponent<InjectedProps> {
+  static defaultProps = {
+    showBackButton: true,
+  };
+
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
-    const { navigation } = this.injectedProps;
+    const { navigation, onDeviceCreated } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
-    const { id } = await waitForLoaded(() => DeviceStore.getByID(clientID));
+    const device = await waitForLoaded(() => DeviceStore.getByID(clientID));
+    SnackBarStore.showMessage({ text: 'New brewskey box created' });
+
+    if (onDeviceCreated) {
+      onDeviceCreated(device);
+      return;
+    }
 
     const resetRouteAction = NavigationActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'devices' }),
         NavigationActions.navigate({
-          params: { id },
+          params: { id: device.id },
           routeName: 'deviceDetails',
         }),
       ],
       index: 1,
     });
     navigation.dispatch(resetRouteAction);
-    SnackBarStore.showMessage({ text: 'New brewskey box created' });
   };
 
   render() {
-    const { particleID } = this.injectedProps;
+    const {
+      hideLocation,
+      hideStatus,
+      hideType,
+      initialValues,
+      showBackButton,
+    } = this.injectedProps;
+
     return (
       <Container>
-        <Header showBackButton title="New brewskey box" />
+        <Header showBackButton={showBackButton} title="New brewskey box" />
         <DeviceForm
-          device={{ particleId: particleID }}
+          device={initialValues}
+          hideLocation={hideLocation}
+          hideStatus={hideStatus}
+          hideType={hideType}
           onSubmit={this._onFormSubmit}
           submitButtonLabel="Create Device"
         />

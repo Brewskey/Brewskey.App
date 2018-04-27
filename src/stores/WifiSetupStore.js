@@ -6,9 +6,9 @@ import type { LoadObject } from 'brewskey.js-api';
 import { action, autorun, computed, observable, reaction, when } from 'mobx';
 import { NavigationActions } from 'react-navigation';
 import {
+  ParticleIDStore,
   WifiConfigureStore,
   WifiConnectStore,
-  ParticleIDStore,
 } from './ApiRequestStores/SoftApApiStores';
 import { getCurrentRoute } from '../NavigationService';
 

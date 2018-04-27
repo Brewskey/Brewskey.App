@@ -52,6 +52,9 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
 
 type Props = {|
   device: $Shape<Device>,
+  hideLocation?: boolean,
+  hideStatus?: boolean,
+  hideType?: boolean,
   onSubmit: (values: DeviceMutator) => Promise<void>,
   submitButtonLabel: string,
 |};
@@ -65,7 +68,13 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
   }
 
   render() {
-    const { device, submitButtonLabel } = this.props;
+    const {
+      device,
+      hideLocation,
+      hideStatus,
+      hideType,
+      submitButtonLabel,
+    } = this.props;
     const {
       formError,
       handleSubmit,
@@ -76,13 +85,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
 
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        <FormField
-          component={TextField}
-          editable={false}
-          initialValue={device.particleId}
-          label="Hardware ID"
-          name="particleId"
-        />
+        <FormField initialValue={device.particleId} name="particleId" />
         <FormField
           component={TextField}
           initialValue={device.name}
@@ -90,7 +93,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           name="name"
         />
         <FormField
-          component={PickerField}
+          component={hideType ? null : PickerField}
           initialValue={device.deviceType}
           label="Type"
           name="deviceType"
@@ -99,14 +102,14 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           <PickerField.Item label="Onsite" value="Onsite" />
         </FormField>
         <FormField
-          component={LocationPicker}
+          component={hideLocation ? null : LocationPicker}
           initialValue={device.location}
           name="locationId"
           parseOnSubmit={(value: Location): EntityID => value.id}
         />
         <FormField
           initialValue={device.deviceStatus}
-          component={DeviceStatePicker}
+          component={hideStatus ? null : DeviceStatePicker}
           name="deviceStatus"
         />
         <FormField initialValue={device.id} name="id" />
