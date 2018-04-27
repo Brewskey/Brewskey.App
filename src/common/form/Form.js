@@ -37,7 +37,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
     }
 
     _handleSubmit = async (
-      callback: OnSubmitCallbackFunction,
+      callback?: OnSubmitCallbackFunction,
     ): Promise<void> => {
       this._formStore.setFormError(null);
       this._formStore.validate();
@@ -50,9 +50,10 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
         const { onSubmit } = this.props;
         this._formStore.setSubmitting(true);
 
-        const result = callback.call
-          ? callback(this._formStore.submittingValues)
-          : onSubmit && onSubmit(this._formStore.submittingValues);
+        const result =
+          callback && callback.call
+            ? callback(this._formStore.submittingValues)
+            : onSubmit && onSubmit(this._formStore.submittingValues);
 
         if (result && result.then) {
           await result;
