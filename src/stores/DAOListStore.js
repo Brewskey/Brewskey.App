@@ -135,7 +135,13 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
   @action
   reload = () => {
-    this._reset();
+    this._daoStore.flushQueryCaches();
+    this.reset();
+  };
+
+  @action
+  reset = () => {
+    this._queryOptionsList = [];
     this._fetchFirstPage();
   };
 
@@ -147,12 +153,6 @@ class DAOListStore<TEntity: { id: EntityID }> {
       skip,
       take: this._pageSize,
     });
-  };
-
-  @action
-  _reset = () => {
-    this._daoStore.flushQueryCaches();
-    this._queryOptionsList = [];
   };
 }
 

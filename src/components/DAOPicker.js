@@ -81,7 +81,7 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
         ],
       });
 
-      this._listStore.reload();
+      this._listStore.reset();
     });
   }
 
@@ -152,7 +152,6 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
                   />
                 }
                 onEndReached={this._listStore.fetchNextPage}
-                onRefresh={this._listStore.reload}
                 renderItem={this._renderRow}
               />
               <PickerControl
