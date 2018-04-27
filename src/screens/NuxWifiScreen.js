@@ -7,6 +7,8 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import Button from '../common/buttons/Button';
 import InjectedComponent from '../common/InjectedComponent';
 import Header from '../common/Header';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
@@ -33,6 +35,7 @@ type InjectedProps = {|
   onContinuePress: () => void | Promise<any>,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxWifiScreen extends InjectedComponent<InjectedProps> {
   render() {
@@ -52,7 +55,7 @@ class NuxWifiScreen extends InjectedComponent<InjectedProps> {
           <Button
             onPress={this.injectedProps.onContinuePress}
             secondary
-            title="Go to wifi setup"
+            title="Next"
           />
         </View>
       </Container>

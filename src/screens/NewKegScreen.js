@@ -31,7 +31,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     await waitForLoaded(() => KegStore.getByID(clientID));
     TapStore.flushCache();
 
-    SnackBarStore.showMessage({ text: 'New keg installed' });
+    SnackBarStore.showMessage({ text: 'New keg added' });
 
     if (onTapSetupFinish) {
       onTapSetupFinish(tapId);

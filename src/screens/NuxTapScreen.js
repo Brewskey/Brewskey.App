@@ -7,6 +7,8 @@ import Button from '../common/buttons/Button';
 import InjectedComponent from '../common/InjectedComponent';
 import Header from '../common/Header';
 import Container from '../common/Container';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -32,6 +34,7 @@ type InjectedProps = {|
   onContinuePress: () => void | Promise<any>,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxTapScreen extends InjectedComponent<InjectedProps> {
   render() {
@@ -40,13 +43,13 @@ class NuxTapScreen extends InjectedComponent<InjectedProps> {
         <Header title="3. Give a name to your device" />
         <View style={styles.container}>
           <Text style={styles.descriptionText}>
-            Almost done. Now you need to created at least one tap for your
-            Brewskey box.
+            Almost done. You'll need to set up at least on tap on your Brewskey
+            box.
           </Text>
           <Button
             onPress={this.injectedProps.onContinuePress}
             secondary
-            title="Go to tap form"
+            title="Next"
           />
         </View>
       </Container>

@@ -3,32 +3,44 @@
 import type { Device, Location } from 'brewskey.js-api';
 
 import { action, observable } from 'mobx';
+import { LocationStore, waitForLoaded } from './DAOStores';
 import NavigationService from '../NavigationService';
 
-type IntermediateData = {
-  location?: Location,
-};
-
 class NuxSoftwareSetupStore {
-  @observable _intermediateData: IntermediateData = {};
+  @observable selectedLocation: ?Location = null;
+
+  @action
+  selectLocation = (location: ?Location) => {
+    this.selectedLocation = location;
+  };
 
   onGetStartedPress = async () => {
+    const locationsCount = await waitForLoaded(() => LocationStore.count());
+
+    if (locationsCount === 1) {
+      const location = (await waitForLoaded(() =>
+        LocationStore.getMany({ take: 1 }),
+      ))[0].getValueEnforcing();
+
+      this.selectLocation(location);
+    }
+
     NavigationService.navigate('nuxLocation', {
-      onContinuePress: (location?: Location) => {
-        if (location) {
-          this._onGetLocation(location);
-        } else {
+      locationsCount,
+      onContinuePress: () => {
+        if (locationsCount === 0) {
           NavigationService.navigate('newLocation', {
             onLocationCreated: this._onGetLocation,
             showBackButton: false,
           });
+        } else {
+          this._onGetLocation();
         }
       },
     });
   };
 
-  _onGetLocation = (location: Location) => {
-    this._updateIntermediateData({ location });
+  _onGetLocation = () => {
     NavigationService.navigate('nuxWifi', {
       onContinuePress: () => {
         NavigationService.navigate('wifiSetup', {
@@ -42,16 +54,11 @@ class NuxSoftwareSetupStore {
   _onWifiSetupFinish = (particleID: string) => {
     NavigationService.navigate('nuxDevice', {
       onContinuePress: () => {
-        const { location } = this._intermediateData;
-
         NavigationService.navigate('newDevice', {
           hideLocation: true,
           hideStatus: true,
-          hideType: true,
           initialValues: {
-            deviceStatus: 'Active',
-            deviceType: 'BrewskeyBox',
-            location,
+            location: this.selectedLocation,
             particleId: particleID,
           },
           onDeviceCreated: this._onDeviceCreated,
@@ -76,21 +83,11 @@ class NuxSoftwareSetupStore {
   _onTapSetupFinish = (tapID: EntityID) => {
     NavigationService.navigate('nuxFinish', {
       onContinuePress: () => {
-        this._resetIntermediateData();
+        this.selectLocation(null);
         // todo fix to reset on react-navigation@2.0.0
         NavigationService.navigate('tapDetails', { id: tapID });
       },
     });
-  };
-
-  @action
-  _updateIntermediateData = (data: $Shape<IntermediateData>) => {
-    this._intermediateData = { ...this._intermediateData, ...data };
-  };
-
-  @action
-  _resetIntermediateData = () => {
-    this._intermediateData = {};
   };
 }
 

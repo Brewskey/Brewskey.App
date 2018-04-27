@@ -2,11 +2,13 @@
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import Button from '../common/buttons/Button';
 import InjectedComponent from '../common/InjectedComponent';
+import Button from '../common/buttons/Button';
 import Header from '../common/Header';
 import Container from '../common/Container';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -32,6 +34,7 @@ type InjectedProps = {|
   onContinuePress: () => void | Promise<void>,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxDeviceScreen extends InjectedComponent<InjectedProps> {
   render() {
@@ -40,13 +43,13 @@ class NuxDeviceScreen extends InjectedComponent<InjectedProps> {
         <Header title="3. Give a name to your device" />
         <View style={styles.container}>
           <Text style={styles.descriptionText}>
-            Cool! At this stage you brewskey box should be connected to your
-            Wifi network. Now you have to give a name to you brewskey box.
+            Great! Your Brewskey box is now connected to WiFi and have white
+            lights. Next, finish setting up your box.
           </Text>
           <Button
             onPress={this.injectedProps.onContinuePress}
             secondary
-            title="Okay"
+            title="Next"
           />
         </View>
       </Container>

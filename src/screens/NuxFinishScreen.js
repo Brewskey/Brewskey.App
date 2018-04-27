@@ -7,6 +7,8 @@ import Button from '../common/buttons/Button';
 import InjectedComponent from '../common/InjectedComponent';
 import Header from '../common/Header';
 import Container from '../common/Container';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -32,6 +34,7 @@ type InjectedProps = {|
   onContinuePress: () => void | Promise<void>,
 |};
 
+@errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxFinishPress extends InjectedComponent<InjectedProps> {
   render() {
@@ -40,8 +43,7 @@ class NuxFinishPress extends InjectedComponent<InjectedProps> {
         <Header title="Setup completed" />
         <View style={styles.container}>
           <Text style={styles.descriptionText}>
-            Whooray! You successfully made all the necessary preparation and can
-            start pouring from you tap!
+            You've completed setting up Brewskey. Have fun!
           </Text>
           <Button
             onPress={this.injectedProps.onContinuePress}
