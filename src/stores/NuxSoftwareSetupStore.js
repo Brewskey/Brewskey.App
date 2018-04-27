@@ -1,6 +1,6 @@
 // @flow
 
-import type { Device, Location } from 'brewskey.js-api';
+import type { Device, EntityID, Location } from 'brewskey.js-api';
 
 import { action, observable } from 'mobx';
 import { LocationStore, waitForLoaded } from './DAOStores';

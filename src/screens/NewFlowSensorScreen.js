@@ -18,7 +18,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import SnackBarStore from '../stores/SnackBarStore';
 
 const DEFAULT_FLOW_SENSOR = {
-  flowSensorType: 4,
+  flowSensorType: 'Titan',
   pulsesPerGallon: 5375,
 };
 

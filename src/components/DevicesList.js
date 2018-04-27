@@ -36,6 +36,7 @@ type Props = {|
     isEmpty: boolean,
     isLoading: boolean,
   }) => ?React.Element<any>,
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};

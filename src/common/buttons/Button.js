@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 type Props = {
   backgroundColor?: string,
   color?: string,
-  onPress?: () => void | Promise<any>,
+  onPress?: () => any,
   secondary?: boolean,
   // react-native-elemenets button porps
 };

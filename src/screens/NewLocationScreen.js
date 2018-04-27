@@ -18,7 +18,7 @@ import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
-  onLocationCreated?: (location: Location) => void | Promise<any>,
+  onLocationCreated?: (location: Location) => any,
   showBackButton?: boolean,
 |};
 

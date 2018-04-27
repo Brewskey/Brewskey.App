@@ -1,6 +1,6 @@
 // @flow
 
-import type { Tap, TapMutator } from 'brewskey.js-api';
+import type { EntityID, Tap, TapMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -16,7 +16,7 @@ import TapForm from '../components/TapForm';
 import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
-  initialValues?: Shape$<Tap>,
+  initialValues?: $Shape<Tap>,
   navigation: Navigation,
   onTapSetupFinish?: (tapID: EntityID) => void | Promise<any>,
   showBackButton?: boolean,

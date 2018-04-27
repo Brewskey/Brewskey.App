@@ -18,10 +18,11 @@ import DeviceForm from '../components/DeviceForm';
 import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
+  hideLocation?: boolean,
   initialValues?: $Shape<Device>,
   navigation: Navigation,
   onDeviceCreated?: (device: Device) => void | Promise<any>,
-  showBakButton?: boolean,
+  showBackButton?: boolean,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
@@ -57,13 +58,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const {
-      hideLocation,
-      hideStatus,
-      hideType,
-      initialValues,
-      showBackButton,
-    } = this.injectedProps;
+    const { hideLocation, initialValues, showBackButton } = this.injectedProps;
 
     return (
       <Container>
@@ -71,8 +66,6 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
         <DeviceForm
           device={initialValues}
           hideLocation={hideLocation}
-          hideStatus={hideStatus}
-          hideType={hideType}
           onSubmit={this._onFormSubmit}
           submitButtonLabel="Create Device"
         />
