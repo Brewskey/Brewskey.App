@@ -51,7 +51,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
         this._formStore.setSubmitting(true);
 
         const result =
-          callback && callback.call
+          callback && typeof callback === 'function'
             ? callback(this._formStore.submittingValues)
             : onSubmit && onSubmit(this._formStore.submittingValues);
 
