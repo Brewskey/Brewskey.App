@@ -8,7 +8,7 @@ import { isClassBasedComponent } from '../../utils';
 // todo add generic types for value
 type Props = {
   children?: React.Node | Function,
-  component?: React.ComponentType<any>,
+  component?: ?React.ComponentType<any>,
   format: (value: any) => any,
   initialValue?: any,
   name: string,

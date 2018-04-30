@@ -1,5 +1,6 @@
 // @flow
 
+import type { EntityID } from 'brewskey.js-api';
 import type { Style } from '../types';
 import type { PickerValue } from '../stores/PickerStore';
 
@@ -14,20 +15,22 @@ import {
   FormValidationMessage,
 } from 'react-native-elements';
 
-type Props<TEntity> = {|
+type Props<TEntity> = {
   error?: ?string,
+  inputStyle?: Style,
   label: string,
   labelStyle?: Style,
   onPress: () => void,
   placeholder?: string,
   stringValueExtractor: (item: TEntity) => string,
-  value: PickerValue<TEntity>,
-  inputStyle?: Style,
+  value?: PickerValue<TEntity>,
   // other react-native textInput props
-|};
+};
 
 @observer
-class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
+class PickerTextInput<TEntity: { id: EntityID }> extends React.Component<
+  Props<TEntity>,
+> {
   static defaultProps = {
     placeholder: 'Please select...',
     stringValueExtractor: (item: Object): string => item.name,

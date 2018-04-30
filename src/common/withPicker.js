@@ -26,7 +26,7 @@ const withPicker = <TEntity, TProps: Props<TEntity>>(
   Component: React.ComponentType<TProps>,
 ): React.ComponentType<TProps & PickerProps<TEntity>> => {
   @observer
-  class WithPicker extends React.Component<TProps & PickerProps<TEntity>> {
+  class WithPicker extends React.Component<PickerProps<TEntity> & TProps> {
     _pickerStore: PickerStore<TEntity> = new PickerStore({
       initialValue: this.props.value,
       keyExtractor: this.props.keyExtractor,
