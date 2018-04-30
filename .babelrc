@@ -1,4 +1,4 @@
 {
   "presets": ["react-native"],
-  "plugins": ["transform-decorators-legacy"]
+  "plugins": ["autobind-class-methods", "transform-decorators-legacy"]
 }
