@@ -21,7 +21,6 @@ import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
 import LocationPicker from './LocationPicker';
-import PickerField from '../common/PickerField';
 import DeviceStatePicker from './DeviceStatePicker';
 
 export const validate = (values: DeviceMutator): { [key: string]: string } => {
@@ -29,10 +28,6 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
 
   if (!values.deviceStatus) {
     errors.deviceStatus = 'Status is required!';
-  }
-
-  if (!values.deviceType) {
-    errors.deviceType = 'Device type is required!';
   }
 
   if (!values.location) {
@@ -52,6 +47,7 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
 
 type Props = {|
   device: $Shape<Device>,
+  hideLocation?: boolean,
   onSubmit: (values: DeviceMutator) => Promise<void>,
   submitButtonLabel: string,
 |};
@@ -65,7 +61,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
   }
 
   render() {
-    const { device, submitButtonLabel } = this.props;
+    const { device, hideLocation, submitButtonLabel } = this.props;
     const {
       formError,
       handleSubmit,
@@ -76,37 +72,23 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
 
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
-        <FormField
-          component={TextField}
-          editable={false}
-          initialValue={device.particleId}
-          label="Hardware ID"
-          name="particleId"
-        />
+        <FormField initialValue={device.particleId} name="particleId" />
         <FormField
           component={TextField}
           initialValue={device.name}
           label="name"
           name="name"
         />
+        <FormField initialValue="BrewskeyBox" name="deviceType" />
         <FormField
-          component={PickerField}
-          initialValue={device.deviceType}
-          label="Type"
-          name="deviceType"
-        >
-          <PickerField.Item label="Brewskey box" value="BrewskeyBox" />
-          <PickerField.Item label="Onsite" value="Onsite" />
-        </FormField>
-        <FormField
-          component={LocationPicker}
+          component={hideLocation ? null : LocationPicker}
           initialValue={device.location}
           name="locationId"
           parseOnSubmit={(value: Location): EntityID => value.id}
         />
         <FormField
-          initialValue={device.deviceStatus}
-          component={DeviceStatePicker}
+          component={device.id ? DeviceStatePicker : null}
+          initialValue={device.id ? device.deviceStatus : 'Active'}
           name="deviceStatus"
         />
         <FormField initialValue={device.id} name="id" />

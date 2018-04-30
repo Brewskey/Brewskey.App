@@ -29,6 +29,7 @@ const WifiSetupNavigator = StackNavigator(
 type InjectedProps = {|
   forNewDevice?: boolean,
   navigation: Navigation,
+  onSetupFinish?: (particleID: string) => void | Promise<any>,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
@@ -47,10 +48,18 @@ class WifiSetupScreen extends InjectedComponent<InjectedProps> {
   }
 
   _onSetupFinish = (particleID: string) => {
-    const { forNewDevice, navigation } = this.injectedProps;
+    const { forNewDevice, navigation, onSetupFinish } = this.injectedProps;
+
+    if (onSetupFinish) {
+      onSetupFinish(particleID);
+      return;
+    }
+
     if (forNewDevice) {
       navigation.navigate('newDevice', {
-        particleID,
+        initialValues: {
+          particleId: particleID,
+        },
       });
     } else {
       navigation.goBack();

@@ -1,6 +1,7 @@
 // @flow
 
 import type { Location, QueryOptions } from 'brewskey.js-api';
+import type { Style } from '../types';
 import type { PickerValue } from '../stores/PickerStore';
 
 import * as React from 'react';
@@ -12,13 +13,18 @@ import { NULL_STRING_PLACEHOLDER } from '../constants';
 
 type Props = {|
   error?: ?string,
+  inputStyle?: Style,
+  labelStyle?: Style,
   multiple?: boolean,
   onChange: (value: PickerValue<Location>) => void,
   queryOptions?: QueryOptions,
+  selectionColor?: string,
+  validationTextStyle?: Style,
   value: PickerValue<Location>,
+  // react-native textInput props
 |};
 
-class LocationPicker extends React.Component<Props> {
+class LocationPicker extends React.PureComponent<Props> {
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

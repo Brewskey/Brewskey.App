@@ -38,15 +38,20 @@ type Props<TEntity> = {
   daoStore: DAOStore<TEntity>,
   error?: ?string,
   headerTitle: string,
+  inputStyle?: Style,
   label: string,
-  multiple: boolean,
+  labelStyle?: Style,
+  multiple?: boolean,
   onChange?: (value: PickerValue<TEntity>) => void,
   placeholder?: string,
-  queryOptions: QueryOptions,
+  queryOptions?: QueryOptions,
   renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   searchBy: string,
+  selectionColor?: string,
   stringValueExtractor?: (item: TEntity) => string,
+  validationTextStyle?: Style,
   value?: PickerValue<TEntity>,
+  // other react-native textInput props
 };
 
 @withPicker
@@ -79,7 +84,7 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
         ],
       });
 
-      this._listStore.reload();
+      this._listStore.reset();
     });
   }
 
@@ -90,7 +95,9 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   ): React.Element<any> => {
     const { checkIsSelected, toggleItem } = this.injectedProps;
     const { renderRow } = this.props;
-    const { item: { loader } } = renderRowProps;
+    const {
+      item: { loader },
+    } = renderRowProps;
     const isSelected =
       loader.hasValue() && checkIsSelected(loader.getValueEnforcing());
 
@@ -105,12 +112,14 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
       multiple,
       placeholder,
       stringValueExtractor,
+      ...rest
     } = this.props;
     const { clear, value } = this.injectedProps;
 
     return (
       <View>
         <PickerTextInput
+          {...rest}
           error={error}
           label={label}
           onPress={this._modalToggleStore.toggleOn}
@@ -146,7 +155,6 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
                   />
                 }
                 onEndReached={this._listStore.fetchNextPage}
-                onRefresh={this._listStore.reload}
                 renderItem={this._renderRow}
               />
               <PickerControl

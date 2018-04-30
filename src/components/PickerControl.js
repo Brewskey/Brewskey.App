@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.secondary3,
     borderTopWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
+    height: 49,
     justifyContent: 'flex-end',
     paddingHorizontal: 12,
   },

@@ -12,6 +12,7 @@ export const COLORS = {
   secondary: '#fff',
   secondary2: '#eee',
   secondary3: '#bbb',
+  secondaryDisabled: 'rgba(255,255,255,0.2)',
   success: '#71F197',
   text: '#43484d',
   textFaded: 'rgba(0, 0, 0, 0.6)',

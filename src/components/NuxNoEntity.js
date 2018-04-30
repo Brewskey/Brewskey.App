@@ -10,6 +10,7 @@ import { observer } from 'mobx-react/native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import HardwareSetupModal from './modals/HardwareSetupModal';
 import ToggleStore from '../stores/ToggleStore';
+import NuxSoftwareSetupStore from '../stores/NuxSoftwareSetupStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,7 +45,7 @@ class NuxNoEntity extends InjectedComponent<InjectedProps> {
   _hardwareSetupToggleStore = new ToggleStore();
 
   _onGetStartedButtonPress = () => {
-    this.injectedProps.navigation.navigate('wifiSetup', { forNewDevice: true });
+    this.injectedProps.navigation.navigate('nuxSoftwareSetup');
   };
 
   render() {
@@ -77,7 +78,7 @@ class NuxNoEntity extends InjectedComponent<InjectedProps> {
           backgroundColor={COLORS.accent}
           color={COLORS.textFaded}
           containerViewStyle={styles.getStartedButtonContainer}
-          onPress={this._onGetStartedButtonPress}
+          onPress={NuxSoftwareSetupStore.onGetStartedPress}
           title="Get started"
         />
         <HardwareSetupModal

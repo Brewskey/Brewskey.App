@@ -29,6 +29,7 @@ import MyProfileScreen from './screens/MyProfileScreen';
 import NewBeverageScreen from './screens/NewBeverageScreen';
 import NewDeviceScreen from './screens/NewDeviceScreen';
 import NewFlowSensorScreen from './screens/NewFlowSensorScreen';
+import NewFlowSensorCustomScreen from './screens/NewFlowSensorCustomScreen';
 import NewKegScreen from './screens/NewKegScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
@@ -41,6 +42,12 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import MenuScreen from './screens/MenuScreen';
 import StatsScreen from './screens/StatsScreen';
 import HelpScreen from './screens/HelpScreen';
+
+import NuxLocationScreen from './screens/NuxLocationScreen';
+import NuxWifiSetupScreen from './screens/NuxWifiScreen';
+import NuxDeviceScreen from './screens/NuxDeviceScreen';
+import NuxTapScreen from './screens/NuxTapScreen';
+import NuxFinishScreen from './screens/NuxFinishScreen';
 
 /* eslint-disable sorting/sort-object-props */
 const AppRouter = SwitchNavigator(
@@ -64,6 +71,11 @@ const AppRouter = SwitchNavigator(
         menu: StackNavigator(
           {
             mainMenu: MenuScreen,
+            nuxLocation: NuxLocationScreen,
+            nuxWifi: NuxWifiSetupScreen,
+            nuxDevice: NuxDeviceScreen,
+            nuxTap: NuxTapScreen,
+            nuxFinish: NuxFinishScreen,
             profile: ProfileScreen,
             myProfile: MyProfileScreen,
             locations: StackNavigator(
@@ -78,17 +90,18 @@ const AppRouter = SwitchNavigator(
             taps: StackNavigator(
               {
                 taps: TapsScreen,
-                editFlowSensor: EditFlowSensorScreen,
                 editTap: EditTapScreen,
-                newFlowSensor: NewFlowSensorScreen,
                 newKeg: NewKegScreen,
                 newTap: NewTapScreen,
                 tapDetails: TapDetailsScreen,
+                editFlowSensor: EditFlowSensorScreen,
               },
               {
                 headerMode: 'none',
               },
             ),
+            newFlowSensor: NewFlowSensorScreen,
+            newFlowSensorCustom: NewFlowSensorCustomScreen,
             devices: StackNavigator(
               {
                 devices: DevicesScreen,
