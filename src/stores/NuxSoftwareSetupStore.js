@@ -30,7 +30,10 @@ class NuxSoftwareSetupStore {
       onContinuePress: () => {
         if (locationsCount === 0) {
           NavigationService.navigate('newLocation', {
-            onLocationCreated: this._onGetLocation,
+            onLocationCreated: (location: Location) => {
+              this.selectLocation(location);
+              this._onGetLocation();
+            },
             showBackButton: false,
           });
         } else {

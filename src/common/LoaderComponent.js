@@ -18,7 +18,8 @@ type Props<TValue, TExtraProps = {}> = {
 };
 
 const LoaderComponent = observer(
-  React.forwardRef(
+  // todo fix when they will add forwardRef to React types
+  (React: any).forwardRef(
     <TValue, TExtraProps>(
       {
         deletingComponent: DeletingComponent,

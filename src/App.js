@@ -46,7 +46,9 @@ DAOApi.initializeDAOApi({
   endpoint: `${config.HOST}api/v2/`,
 });
 
-DAOApi.onError(({ status }: Error) => {
+DAOApi.onError((error: Error) => {
+  // todo fix the type in dao-api to remove the casting
+  const { status } = (error: any);
   if (status === UNAUTH_ERROR_CODE) {
     AuthStore.logout();
   }

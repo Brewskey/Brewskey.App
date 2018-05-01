@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TEntity> = {|
-  multiple: boolean,
+  multiple: ?boolean,
   onClearPress: () => void,
   onSelectPress: () => void,
   value: PickerValue<TEntity>,

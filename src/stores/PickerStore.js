@@ -58,17 +58,18 @@ class PickerStore<TEntity> {
       : null;
   }
 
-  checkIsSelected = (item: TEntity): boolean =>
-    this._valueByKey.has(this._keyExtractor(item));
+  checkIsSelected(item: TEntity): boolean {
+    return this._valueByKey.has(this._keyExtractor(item));
+  }
 
   @action
-  clear = (): void => {
+  clear() {
     this._valueByKey.clear();
     this._onChange && this._onChange(this.value);
-  };
+  }
 
   @action
-  setValue = (value: PickerValue<TEntity>) => {
+  setValue(value: PickerValue<TEntity>) {
     let entries;
     if (Array.isArray(value)) {
       entries = value.map((item: TEntity): [string, TEntity] => [
@@ -80,10 +81,10 @@ class PickerStore<TEntity> {
     }
 
     this._valueByKey.replace((entries: any));
-  };
+  }
 
   @action
-  toggleItem = (item: TEntity) => {
+  toggleItem(item: TEntity) {
     const itemKey = this._keyExtractor(item);
 
     if (this._valueByKey.has(itemKey)) {
@@ -94,7 +95,7 @@ class PickerStore<TEntity> {
     }
 
     this._onChange && this._onChange(this.value);
-  };
+  }
 }
 
 export default PickerStore;

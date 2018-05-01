@@ -117,10 +117,13 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={renderListHeader({
-          isEmpty: this._listStore.rows.length === 0,
-          isLoading,
-        })}
+        ListHeaderComponent={
+          renderListHeader &&
+          renderListHeader({
+            isEmpty: this._listStore.rows.length === 0,
+            isLoading,
+          })
+        }
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
         ref={this._getSwipeableListRef}

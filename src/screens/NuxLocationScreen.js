@@ -1,5 +1,8 @@
 // @flow
 
+import type { Location } from 'brewskey.js-api';
+import type { PickerValue } from '../stores/PickerStore';
+
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react/native';
@@ -52,6 +55,14 @@ type Props = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class NuxLocationScreen extends InjectedComponent<Props> {
+  _onLocationChange = (location: PickerValue<Location>) => {
+    // todo
+    // PickerValue: ?TEntity | Array<TEntity>
+    // depends on multiple prop, try to find a way to do conditional
+    // type on Flow
+    NuxSoftwareSetupStore.selectLocation(((location: any): ?Location));
+  };
+
   render() {
     const { locationsCount } = this.injectedProps;
     const hasNoLocation = locationsCount === 0;
@@ -87,7 +98,7 @@ class NuxLocationScreen extends InjectedComponent<Props> {
             <LocationPicker
               inputStyle={styles.input}
               labelStyle={styles.label}
-              onChange={NuxSoftwareSetupStore.selectLocation}
+              onChange={this._onLocationChange}
               placeholderTextColor={COLORS.textInverse}
               selectionColor={COLORS.textInverse}
               underlineColorAndroid={COLORS.secondary}

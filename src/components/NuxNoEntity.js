@@ -1,5 +1,7 @@
 // @flow
 
+import type { Navigation } from '../types';
+
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import Button from '../common/buttons/Button';
@@ -38,6 +40,10 @@ const styles = StyleSheet.create({
     color: COLORS.textInverse,
   },
 });
+
+type InjectedProps = {|
+  navigation: Navigation,
+|};
 
 @withNavigation
 @observer

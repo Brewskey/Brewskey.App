@@ -17,8 +17,10 @@ type Props = {|
   labelStyle?: Style,
   multiple?: boolean,
   onChange: (value: PickerValue<Location>) => void,
+  placeholderTextColor?: string,
   queryOptions?: QueryOptions,
   selectionColor?: string,
+  underlineColorAndroid?: string,
   validationTextStyle?: Style,
   value: PickerValue<Location>,
   // react-native textInput props

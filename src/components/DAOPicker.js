@@ -1,6 +1,7 @@
 // @flow
 
 import type { EntityID, QueryOptions } from 'brewskey.js-api';
+import type { Style } from '../types';
 import type DAOStore from '../stores/DAOStores';
 import type { Row } from '../stores/DAOListStore';
 import type { PickerValue } from '../stores/PickerStore';
@@ -44,11 +45,13 @@ type Props<TEntity> = {
   multiple?: boolean,
   onChange?: (value: PickerValue<TEntity>) => void,
   placeholder?: string,
-  queryOptions?: QueryOptions,
+  placeholderTextColor?: string,
+  queryOptions: QueryOptions,
   renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   searchBy: string,
   selectionColor?: string,
   stringValueExtractor?: (item: TEntity) => string,
+  underlineColorAndroid?: string,
   validationTextStyle?: Style,
   value?: PickerValue<TEntity>,
   // other react-native textInput props
@@ -56,7 +59,7 @@ type Props<TEntity> = {
 
 @withPicker
 @observer
-class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
+class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   PickerProps<TEntity>,
   Props<TEntity>,
 > {
@@ -171,4 +174,4 @@ class SearchPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   }
 }
 
-export default SearchPicker;
+export default DAOPicker;

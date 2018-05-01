@@ -1,6 +1,6 @@
 // @flow
 
-import type { LocationMutator } from 'brewskey.js-api';
+import type { Location, LocationMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -18,7 +18,7 @@ import SnackBarStore from '../stores/SnackBarStore';
 
 type InjectedProps = {|
   navigation: Navigation,
-  onLocationCreated?: (location: Location) => any,
+  onLocationCreated?: (location: Location) => void | Promise<any>,
   showBackButton?: boolean,
 |};
 

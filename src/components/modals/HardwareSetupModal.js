@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  coordinates: Coordinates,
   isVisible: boolean,
   onHideModal: () => void,
 |};
