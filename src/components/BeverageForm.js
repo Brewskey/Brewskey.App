@@ -11,6 +11,7 @@ import type {
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -28,6 +29,14 @@ import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
 import PickerField from '../common/PickerField';
 import LoaderPickerField from '../common/PickerField/LoaderPickerField';
+import BeverageImagePicker from '../components/BeverageImagePicker';
+
+const styles = StyleSheet.create({
+  imagePickerContainer: {
+    alignSelf: 'center',
+    marginVertical: 30,
+  },
+});
 
 const YEARS_RANGE_LENGTH = 10;
 
@@ -46,7 +55,9 @@ const validate = (values: BeverageMutator): { [key: string]: string } => {
 
 type Props = {|
   beverage?: Beverage,
-  onSubmit: (values: BeverageMutator) => void | Promise<any>,
+  onSubmit: (
+    values: BeverageMutator & { beverageImage?: string },
+  ) => void | Promise<any>,
   submitButtonLabel: string,
 |};
 
@@ -79,6 +90,12 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
 
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <FormField
+          beverageId={beverage.id}
+          containerStyle={styles.imagePickerContainer}
+          component={BeverageImagePicker}
+          name="beverageImage"
+        />
         <FormField
           component={TextField}
           disabled={submitting}

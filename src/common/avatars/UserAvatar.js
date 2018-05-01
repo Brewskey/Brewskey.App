@@ -20,9 +20,11 @@ class UserAvatar extends React.PureComponent<Props> {
     return (
       <BaseAvatar
         {...this.props}
-        uri={`${CONFIG.CDN}photos/${this.props.userName}.jpg?w=${
-          this.props.size
-        }&h=${this.props.size}&mode=crop`}
+        source={{
+          uri: `${CONFIG.CDN}photos/${this.props.userName}.jpg?w=${
+            this.props.size
+          }&h=${this.props.size}&mode=crop`,
+        }}
       />
     );
   }

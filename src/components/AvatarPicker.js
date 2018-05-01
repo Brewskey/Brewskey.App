@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 });
 
 const IMAGE_PICKER_OPTIONS = {
-  title: 'SelectAvatar',
+  title: 'Select Avatar',
 };
 
 @observer

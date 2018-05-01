@@ -12,25 +12,28 @@ type Props = {
   // other image Props
 };
 
+export const flushImageCache = (uri: string) => {
+  // todo make it more robust
+  const uriWithoutBrewskeyApiParams = uri.split(/icon.jpg?|large.jpg?/)[0];
+
+  Object.keys(ImageCache.get().cache)
+    .filter((cacheKey: string): boolean =>
+      cacheKey.includes(uriWithoutBrewskeyApiParams),
+    )
+    .forEach((cacheKey: string) => {
+      // todo this deletes only cached link(not file!) from cache.
+      // in the ImageCache api there is only method for delete all
+      // cached files at once (clear()).
+      ImageCache.get().bust(cacheKey);
+    });
+};
+
 class CachedImage extends React.Component<Props> {
   static defaultProps = {
     mutable: true,
   };
 
-  flushCache = () => {
-    const uriWithoutQueryString = this.props.source.uri.split('?')[0];
-
-    Object.keys(ImageCache.get().cache)
-      .filter((cacheKey: string): boolean =>
-        cacheKey.includes(uriWithoutQueryString),
-      )
-      .forEach((cacheKey: string) => {
-        // todo this deletes only cached link(not file!) from cache.
-        // in the ImageCache api there is only method for delete all
-        // cached files at once (clear()).
-        ImageCache.get().bust(cacheKey);
-      });
-  };
+  flushCache = () => flushImageCache(this.props.source.uri);
 
   render() {
     return <RNCachedImage {...this.props} mutable={this.props.mutable} />;
