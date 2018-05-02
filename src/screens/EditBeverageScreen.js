@@ -15,6 +15,8 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
+import { flushImageCache } from '../common/CachedImage';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import LoaderComponent from '../common/LoaderComponent';
@@ -23,6 +25,7 @@ import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageForm from '../components/BeverageForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import CONFIG from '../config';
 
 type InjectedProps = {|
   id: EntityID,
@@ -38,9 +41,22 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     return BeverageStore.getByID(this.injectedProps.id);
   }
 
-  _onFormSubmit = async (values: BeverageMutator): Promise<void> => {
-    DAOApi.BeverageDAO.put(nullthrows(values.id), values);
+  _onFormSubmit = async (
+    values: BeverageMutator & { beverageImage?: string },
+  ): Promise<void> => {
+    const { beverageImage, ...beverageMutator } = values;
+    const id = nullthrows(values.id);
+
+    DAOApi.BeverageDAO.put(id, beverageMutator);
     await waitForLoaded(() => this._beverageLoader);
+    if (beverageImage) {
+      await waitForLoaded(() =>
+        UpdateBeverageImageStore.get(id, beverageImage),
+      );
+      UpdateBeverageImageStore.flushCache();
+      flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
+    }
+
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'The beverage edited.' });
   };

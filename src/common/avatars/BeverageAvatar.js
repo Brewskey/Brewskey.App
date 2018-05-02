@@ -8,26 +8,34 @@ import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
 type Props = {
-  beverageId: EntityID,
+  beverageId: ?EntityID,
+  cached?: boolean,
+  uri?: ?string,
 } & BaseAvatarProps;
 
 class BeverageAvatar extends React.PureComponent<Props> {
   static defaultProps = {
+    cached: true,
     rounded: true,
     size: 45,
   };
 
   render() {
+    const { beverageId, cached, rounded, size, uri } = this.props;
+    const beverageIdString = beverageId ? beverageId.toString() : '';
+
     return (
       <BaseAvatar
         {...this.props}
-        mutable={false}
-        rounded={this.props.rounded}
-        uri={`${
-          CONFIG.CDN
-        }beverages/${this.props.beverageId.toString()}-icon.jpg?w=${
-          this.props.size
-        }&h=${this.props.size}&mode=crop`}
+        rounded={rounded}
+        uri={
+          uri ||
+          `${
+            CONFIG.CDN
+          }beverages/${beverageIdString}-icon.jpg?w=${size}&h=${size}&mode=crop${
+            cached ? '' : new Date().toString()
+          }`
+        }
       />
     );
   }

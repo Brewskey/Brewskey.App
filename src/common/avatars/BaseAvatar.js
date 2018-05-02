@@ -1,8 +1,10 @@
 // @flow
 
+import type { Style } from '../../types';
+
 import * as React from 'react';
 import CachedImage from '../CachedImage';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -12,6 +14,8 @@ const styles = StyleSheet.create({
 });
 
 export type BaseAvatarProps = {
+  cached?: boolean,
+  containerStyle?: Style,
   imageRef?: React.Ref<typeof CachedImage>,
   mutable?: boolean,
   onPress?: () => void,
@@ -19,17 +23,28 @@ export type BaseAvatarProps = {
   size: number,
 };
 
-type Props = BaseAvatarProps & { uri: ?string };
+type Props = BaseAvatarProps & { uri?: ?string };
 
 class BaseAvatar extends React.PureComponent<Props> {
   static defaultProps = {
+    cached: true,
     rounded: true,
     size: 45,
   };
 
   render() {
-    const { imageRef, mutable, onPress, rounded, size, uri } = this.props;
-    const containerStyle = [
+    const {
+      cached,
+      containerStyle,
+      imageRef,
+      mutable,
+      onPress,
+      rounded,
+      size,
+      uri,
+    } = this.props;
+
+    const baseContainerStyle = [
       {
         height: size,
         width: size,
@@ -37,22 +52,26 @@ class BaseAvatar extends React.PureComponent<Props> {
       rounded && { borderRadius: size / 2 },
     ];
 
+    const imageElement = cached ? (
+      <CachedImage
+        mutable={mutable}
+        ref={cached ? imageRef : null}
+        size={size}
+        source={{ uri: uri || '' }}
+        style={baseContainerStyle}
+      />
+    ) : (
+      <Image source={{ uri }} style={baseContainerStyle} />
+    );
+
     return (
       <TouchableOpacity
         disabled={!onPress}
         onPress={onPress}
         size={size}
-        style={[containerStyle, styles.avatar]}
+        style={[baseContainerStyle, styles.avatar, containerStyle]}
       >
-        {uri ? (
-          <CachedImage
-            ref={imageRef}
-            mutable={mutable}
-            size={size}
-            source={{ uri }}
-            style={containerStyle}
-          />
-        ) : null}
+        {uri ? imageElement : null}
       </TouchableOpacity>
     );
   }
