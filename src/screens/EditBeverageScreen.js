@@ -25,6 +25,7 @@ import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import BeverageForm from '../components/BeverageForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import CONFIG from '../config';
 
 type InjectedProps = {|
   id: EntityID,
@@ -53,7 +54,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
         UpdateBeverageImageStore.get(id, beverageImage),
       );
       UpdateBeverageImageStore.flushCache();
-      flushImageCache(`https://brewskey.com/cdn/beverages/${id.toString()}`);
+      flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
     }
 
     this.injectedProps.navigation.goBack(null);

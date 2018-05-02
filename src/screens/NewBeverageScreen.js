@@ -16,6 +16,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import CONFIG from '../config';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -36,7 +37,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
         UpdateBeverageImageStore.get(id, beverageImage),
       );
       UpdateBeverageImageStore.flushCache();
-      flushImageCache(`https://brewskey.com/cdn/beverages/${id.toString()}`);
+      flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
     }
 
     const resetRouteAction = NavigationActions.reset({

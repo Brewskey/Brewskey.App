@@ -9,7 +9,7 @@ import { observer } from 'mobx-react/native';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
 const IMAGE_PICKER_OPTIONS = {
-  title: 'Select beverage sticker',
+  title: 'Select beverage photo',
 };
 
 type Props = {

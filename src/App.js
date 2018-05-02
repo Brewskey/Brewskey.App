@@ -81,9 +81,7 @@ class App extends React.Component<{}> {
       }
 
       if (AuthStore.isAuthorized) {
-        NavigationService.navigate('editBeverage', {
-          id: '76419',
-        });
+        NavigationService.navigate('main');
       } else {
         NavigationService.navigate('login');
       }
