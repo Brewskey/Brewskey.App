@@ -1,9 +1,9 @@
 // @flow
 
 import {
-  StackNavigator,
-  SwitchNavigator,
-  TabNavigator,
+  createStackNavigator,
+  createSwitchNavigator,
+  createBottomTabNavigator,
 } from 'react-navigation';
 
 import MainTabBar from './components/MainTabBar';
@@ -50,10 +50,10 @@ import NuxTapScreen from './screens/NuxTapScreen';
 import NuxFinishScreen from './screens/NuxFinishScreen';
 
 /* eslint-disable sorting/sort-object-props */
-const AppRouter = SwitchNavigator(
+const AppRouter = createSwitchNavigator(
   {
     splash: SplashScreen,
-    auth: StackNavigator(
+    auth: createStackNavigator(
       {
         login: LoginScreen,
         register: RegisterScreen,
@@ -63,12 +63,12 @@ const AppRouter = SwitchNavigator(
         headerMode: 'none',
       },
     ),
-    main: TabNavigator(
+    main: createBottomTabNavigator(
       {
         home: HomeScreen,
         stats: StatsScreen,
         notifications: NotificationsScreen,
-        menu: StackNavigator(
+        menu: createStackNavigator(
           {
             mainMenu: MenuScreen,
             nuxLocation: NuxLocationScreen,
@@ -78,7 +78,7 @@ const AppRouter = SwitchNavigator(
             nuxFinish: NuxFinishScreen,
             profile: ProfileScreen,
             myProfile: MyProfileScreen,
-            locations: StackNavigator(
+            locations: createStackNavigator(
               {
                 locations: LocationsScreen,
                 editLocation: EditLocationScreen,
@@ -87,7 +87,7 @@ const AppRouter = SwitchNavigator(
               },
               { headerMode: 'none' },
             ),
-            taps: StackNavigator(
+            taps: createStackNavigator(
               {
                 taps: TapsScreen,
                 editTap: EditTapScreen,
@@ -102,7 +102,7 @@ const AppRouter = SwitchNavigator(
             ),
             newFlowSensor: NewFlowSensorScreen,
             newFlowSensorCustom: NewFlowSensorCustomScreen,
-            devices: StackNavigator(
+            devices: createStackNavigator(
               {
                 devices: DevicesScreen,
                 deviceDetails: DeviceDetailsScreen,
@@ -114,7 +114,7 @@ const AppRouter = SwitchNavigator(
                 headerMode: 'none',
               },
             ),
-            myBeverages: StackNavigator(
+            myBeverages: createStackNavigator(
               {
                 myBeverages: MyBeveragesScreen,
                 beverageDetails: BeverageDetailsScreen,
@@ -126,7 +126,7 @@ const AppRouter = SwitchNavigator(
               },
             ),
             help: HelpScreen,
-            settings: StackNavigator(
+            settings: createStackNavigator(
               {
                 settings: SettingsScreen,
               },

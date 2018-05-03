@@ -4,13 +4,11 @@ import type { Navigation, WifiNetwork } from '../types';
 import type { LoadObject } from 'brewskey.js-api';
 
 import { action, autorun, computed, observable, reaction, when } from 'mobx';
-import { NavigationActions } from 'react-navigation';
 import {
   ParticleIDStore,
   WifiConfigureStore,
   WifiConnectStore,
 } from './ApiRequestStores/SoftApApiStores';
-import { getCurrentRoute } from '../NavigationService';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
@@ -24,12 +22,9 @@ class WifiSetupStore {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep) =>
-        navigation.dispatch(
-          NavigationActions.replace({
-            key: getCurrentRoute(navigation.state).key,
-            routeName: `wifiSetupStep${wifiSetupStep}`,
-          }),
-        ),
+        // todo need to reset store state on navigation back
+        // or make navigation back behaviour our ot stack somehow.
+        navigation.navigate(`wifiSetupStep${wifiSetupStep}`),
     );
     this._disposers.push(navigationReaction);
 

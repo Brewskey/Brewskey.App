@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { TabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { FlowSensorStore, TapStore } from '../stores/DAOStores';
 import { computed } from 'mobx';
@@ -38,7 +38,7 @@ const tabScreens = {
 };
 /* eslint-enable */
 
-const TapDetailsNavigator = TabNavigator(tabScreens, {
+const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
   ...theme.tabBar,
 });
 
@@ -86,7 +86,9 @@ type LoadedComponentProps = {
 class LoadedComponent extends React.Component<LoadedComponentProps> {
   @computed
   get _flowSensorLoader(): LoadObject<FlowSensor> {
-    const { value: { id } } = this.props;
+    const {
+      value: { id },
+    } = this.props;
     return FlowSensorStore.getMany({
       filters: [DAOApi.createFilter('tap/id').equals(id)],
       limit: 1,
@@ -98,7 +100,10 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
   }
 
   _onNoFlowSensorWarningPress = () => {
-    const { navigation, value: { id } } = this.props;
+    const {
+      navigation,
+      value: { id },
+    } = this.props;
     navigation.navigate('newFlowSensor', {
       returnOnFinish: true,
       showBackButton: true,

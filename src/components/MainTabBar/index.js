@@ -4,7 +4,6 @@ import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NavigationActions } from 'react-navigation';
 import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
@@ -22,73 +21,71 @@ const styles = StyleSheet.create({
   },
 });
 
-const getTabRouteIndex = (routeName: string, routes: Array<Object>): number =>
-  routes.findIndex((route: Object): boolean => route.routeName === routeName);
+const getRouteByRouteName = (
+  routeName: string,
+  routes: Array<Object>,
+): Object =>
+  routes.find((route: Object): boolean => route.routeName === routeName);
+
+const getIndexByRouteName = (
+  routeName: string,
+  routes: Array<Object>,
+): Object =>
+  routes.findIndex((route: Object): number => route.routeName === routeName);
 
 type Props = {
-  jumpToIndex: (index: number) => void,
+  jumpTo: (key: string) => void,
   navigation: Navigation,
-  // other props from TabNavigator
+  onTabPres: ({ route: Object }) => void,
+  // other props from createMaterialTopTabNavigator
 };
 
 class MainTabBar extends React.Component<Props> {
   // the logic is stolen from there:
-  // https://github.com/react-navigation/react-navigation/blob/master/src/views/TabView/TabBarBottom.js#L180
-  _onTabPress = (index: number) => {
-    const { jumpToIndex, navigation } = this.props;
-    const currentIndex = navigation.state.index;
-
-    if (currentIndex === index) {
-      const childRoute = navigation.state.routes[index];
-      // eslint-disable-next-line
-      if (childRoute.hasOwnProperty('index') && childRoute.index > 0) {
-        navigation.dispatch(
-          NavigationActions.popToTop({ key: childRoute.key }),
-        );
-      }
-    } else {
-      jumpToIndex(index);
-    }
+  // https://github.com/react-navigation/react-navigation-tabs/blob/master/src/views/BottomTabBar.js#L203-L205
+  _onTabPress = route => {
+    const { jumpTo, onTabPress } = this.props;
+    jumpTo(route.key);
+    onTabPress({ route });
   };
 
   render() {
-    const { navigation: { state } } = this.props;
+    const {
+      navigation: { state },
+    } = this.props;
     const currentIndex = state.index;
-
-    const tabRouteIndexByName = {
-      home: getTabRouteIndex('home', state.routes),
-      menu: getTabRouteIndex('menu', state.routes),
-      notifications: getTabRouteIndex('notifications', state.routes),
-      stats: getTabRouteIndex('stats', state.routes),
-    };
 
     return (
       <View style={styles.container}>
         <TabBarButton
           icon={{ name: 'home' }}
-          index={tabRouteIndexByName.home}
-          isFocused={currentIndex === tabRouteIndexByName.home}
+          isFocused={currentIndex === getIndexByRouteName('home', state.routes)}
           onPress={this._onTabPress}
+          route={getRouteByRouteName('home', state.routes)}
         />
         <TabBarButton
           icon={{ name: 'chart-pie', type: 'material-community' }}
-          index={tabRouteIndexByName.stats}
-          isFocused={currentIndex === tabRouteIndexByName.stats}
+          isFocused={
+            currentIndex === getIndexByRouteName('stats', state.routes)
+          }
           onPress={this._onTabPress}
+          route={getRouteByRouteName('stats', state.routes)}
         />
         <PourButton />
         <TabBarButton
           icon={{ name: 'notifications' }}
           iconContainerComponent={NotificationsIconContainer}
-          index={tabRouteIndexByName.notifications}
-          isFocused={currentIndex === tabRouteIndexByName.notifications}
+          isFocused={
+            currentIndex === getIndexByRouteName('notifications', state.routes)
+          }
           onPress={this._onTabPress}
+          route={getRouteByRouteName('notifications', state.routes)}
         />
         <TabBarButton
           icon={{ name: 'menu' }}
-          index={tabRouteIndexByName.menu}
-          isFocused={currentIndex === tabRouteIndexByName.menu}
+          isFocused={currentIndex === getIndexByRouteName('menu', state.routes)}
           onPress={this._onTabPress}
+          route={getRouteByRouteName('menu', state.routes)}
         />
       </View>
     );
