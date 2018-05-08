@@ -10,6 +10,9 @@ import {
   WifiConnectStore,
 } from './ApiRequestStores/SoftApApiStores';
 
+import { StackActions } from 'react-navigation';
+import { getCurrentRoute } from '../NavigationService';
+
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
 class WifiSetupStore {
@@ -22,9 +25,14 @@ class WifiSetupStore {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep) =>
-        // todo need to reset store state on navigation back
-        // or make navigation back behaviour our ot stack somehow.
-        navigation.navigate(`wifiSetupStep${wifiSetupStep}`),
+        // todo need to reset store state instead of pushing out of stack
+        // for that we need to implement custom back route behaviour
+        navigation.dispatch(
+          StackActions.replace({
+            key: getCurrentRoute(navigation.state).key,
+            routeName: `wifiSetupStep${wifiSetupStep}`,
+          }),
+        ),
     );
     this._disposers.push(navigationReaction);
 

@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
@@ -44,7 +44,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
       return;
     }
 
-    const resetRouteAction = NavigationActions.reset({
+    const resetRouteAction = StackActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'devices' }),
         NavigationActions.navigate({

@@ -4,7 +4,7 @@ import type { BeverageMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
@@ -40,7 +40,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
       flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
     }
 
-    const resetRouteAction = NavigationActions.reset({
+    const resetRouteAction = StackActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'myBeverages' }),
         NavigationActions.navigate({

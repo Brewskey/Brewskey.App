@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
 import SnackBarStore from '../stores/SnackBarStore';
@@ -38,7 +38,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
       return;
     }
 
-    const resetRouteAction = NavigationActions.reset({
+    const resetRouteAction = StackActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'taps' }),
         NavigationActions.navigate({
