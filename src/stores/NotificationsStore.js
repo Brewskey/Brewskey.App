@@ -14,13 +14,13 @@ import {
   spy,
   when,
 } from 'mobx';
-import nullthrows from 'nullthrows';
 import FCM, { FCMEvent } from 'react-native-fcm';
 import DeviceInfo from 'react-native-device-info';
 import AuthStore from './AuthStore';
 import Storage from '../Storage';
 import { AchievementStore, KegStore } from './DAOStores';
 import CONFIG from '../config';
+import NavigationService from '../NavigationService';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
 
@@ -310,20 +310,21 @@ class NotificationsStore {
       case 'lowKegLevel': {
         const { kegId, tapId } = notification;
         KegStore.flushCacheForEntity(kegId);
-        nullthrows(this._navigation).navigate('tapDetails', {
+        NavigationService.navigate('tapDetails', {
+          backToRouteName: 'notifications',
           id: tapId,
         });
         break;
       }
       case 'newAchievement': {
         AchievementStore.flushCustomCache();
-        nullthrows(this._navigation).navigate('stats', {
+        NavigationService.navigate('stats', {
           initialPopUpAchievementType: notification.achievementType,
         });
         break;
       }
       case 'newFriendRequest': {
-        nullthrows(this._navigation).navigate('myFriendsRequest');
+        NavigationService.navigate('myFriendsRequest');
         break;
       }
       default: {

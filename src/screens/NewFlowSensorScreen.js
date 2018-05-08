@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
@@ -72,7 +72,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'Flow sensor set' });
 
     if (returnOnFinish) {
-      const resetRouteAction = NavigationActions.reset({
+      const resetRouteAction = StackActions.reset({
         actions: [
           NavigationActions.navigate({ routeName: 'taps' }),
           NavigationActions.navigate({

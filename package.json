@@ -12,8 +12,7 @@
   "dependencies": {
     "array-flatten": "^2.1.1",
     "assert": "^1.4.1",
-    "brewskey.js-api":
-      "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
     "buffer": "^5.0.8",
     "constants-browserify": "^1.0.0",
     "deepmerge": "^2.0.1",
@@ -46,7 +45,7 @@
     "react-native-signalr": "^1.0.6",
     "react-native-swiper": "^1.5.13",
     "react-native-vector-icons": "^4.4.2",
-    "react-navigation": "^1.4.0",
+    "react-navigation": "2.0.0",
     "readable-stream": "^2.3.3",
     "vm-browserify": "^1.0.1"
   },
@@ -74,7 +73,11 @@
     "react-test-renderer": "^16.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": ["prettier --write", "npm run lint", "git add"]
+    "src/**/*.{js,json}": [
+      "prettier --write",
+      "npm run lint",
+      "git add"
+    ]
   },
   "jest": {
     "preset": "react-native"

@@ -4,12 +4,13 @@ import type { Navigation, WifiNetwork } from '../types';
 import type { LoadObject } from 'brewskey.js-api';
 
 import { action, autorun, computed, observable, reaction, when } from 'mobx';
-import { NavigationActions } from 'react-navigation';
 import {
   ParticleIDStore,
   WifiConfigureStore,
   WifiConnectStore,
 } from './ApiRequestStores/SoftApApiStores';
+
+import { StackActions } from 'react-navigation';
 import { getCurrentRoute } from '../NavigationService';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
@@ -24,8 +25,10 @@ class WifiSetupStore {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep) =>
+        // todo need to reset store state instead of pushing out of stack
+        // for that we need to implement custom back route behaviour
         navigation.dispatch(
-          NavigationActions.replace({
+          StackActions.replace({
             key: getCurrentRoute(navigation.state).key,
             routeName: `wifiSetupStep${wifiSetupStep}`,
           }),

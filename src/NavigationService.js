@@ -3,7 +3,7 @@
 import type { NavigationParams } from 'react-navigation';
 
 import nullthrows from 'nullthrows';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 
 // todo annotate better
 export const getCurrentRoute = (navigationState: Object): Object => {
@@ -38,7 +38,7 @@ class NavigationService {
   // need to implement something like navigateDeep with good api
   static reset = (routeName: string, params?: NavigationParams): void =>
     NavigationService.getNavigator().dispatch(
-      NavigationActions.reset({
+      StackActions.reset({
         actions: [NavigationActions.navigate({ params, routeName })],
         index: 0,
         key: null,

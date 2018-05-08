@@ -4,7 +4,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { TabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
@@ -15,7 +15,7 @@ import MyFriendsContactScreen from './MyFriendsContactScreen';
 import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
-const MyFriendsNavigator = TabNavigator(
+const MyFriendsNavigator = createMaterialTopTabNavigator(
   {
     myFriendsMain: { screen: MyFriendsMainScreen },
     myFriendsRequest: { screen: MyFriendsRequestScreen },

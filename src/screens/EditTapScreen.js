@@ -3,7 +3,7 @@
 import type { EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { TabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -16,7 +16,7 @@ import EditKegScreen from './EditKegScreen';
 import theme from '../theme';
 
 /* eslint-disable sorting/sort-object-props */
-const EditTapRouter = TabNavigator(
+const EditTapRouter = createMaterialTopTabNavigator(
   {
     editKegScreen: { screen: EditKegScreen },
     editFlowSensor: { screen: EditFlowSensorScreen },

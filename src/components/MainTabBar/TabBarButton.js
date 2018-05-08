@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
 type Props = {|
   icon: { name: string, type?: string },
   iconContainerComponent?: React.ComponentType<any>,
-  index: number,
   isFocused: boolean,
-  onPress: (index: number) => void,
+  onPress: (route: Object) => void,
+  route: Object,
 |};
 
 class TabBarButton extends React.PureComponent<Props> {
@@ -27,7 +27,7 @@ class TabBarButton extends React.PureComponent<Props> {
     iconContainerComponent: TouchableItem,
   };
 
-  _onPress = () => this.props.onPress(this.props.index);
+  _onPress = () => this.props.onPress(this.props.route);
 
   render() {
     const {

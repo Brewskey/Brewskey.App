@@ -4,7 +4,7 @@ import type { Location, LocationMutator } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
@@ -40,7 +40,7 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
       return;
     }
 
-    const resetRouteAction = NavigationActions.reset({
+    const resetRouteAction = StackActions.reset({
       actions: [
         NavigationActions.navigate({ routeName: 'locations' }),
         NavigationActions.navigate({

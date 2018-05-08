@@ -6,7 +6,7 @@ import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
-import { StackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import WifiSetupStore from '../stores/WifiSetupStore';
 import Container from '../common/Container';
@@ -16,7 +16,7 @@ import WifiSetupStep2Screen from './WifiSetupStep2Screen';
 import WifiSetupStep3Screen from './WifiSetupStep3Screen';
 import WifiSetupStep4Screen from './WifiSetupStep4Screen';
 
-const WifiSetupNavigator = StackNavigator(
+const WifiSetupNavigator = createStackNavigator(
   {
     wifiSetupStep1: { screen: WifiSetupStep1Screen },
     wifiSetupStep2: { screen: WifiSetupStep2Screen },
