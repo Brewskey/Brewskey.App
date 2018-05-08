@@ -4,6 +4,7 @@ import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import nullthrows from 'nullthrows';
 import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
@@ -25,18 +26,20 @@ const getRouteByRouteName = (
   routeName: string,
   routes: Array<Object>,
 ): Object =>
-  routes.find((route: Object): boolean => route.routeName === routeName);
+  nullthrows(
+    routes.find((route: Object): boolean => route.routeName === routeName),
+  );
 
 const getIndexByRouteName = (
   routeName: string,
   routes: Array<Object>,
-): Object =>
-  routes.findIndex((route: Object): number => route.routeName === routeName);
+): number =>
+  routes.findIndex((route: Object): boolean => route.routeName === routeName);
 
 type Props = {
   jumpTo: (key: string) => void,
   navigation: Navigation,
-  onTabPres: ({ route: Object }) => void,
+  onTabPress: ({ route: Object }) => void,
   // other props from createMaterialTopTabNavigator
 };
 
