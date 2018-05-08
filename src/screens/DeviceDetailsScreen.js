@@ -41,10 +41,11 @@ class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <LoaderComponent
-        updatingComponent={LoadingComponent}
         loadedComponent={LoadedComponent}
         loader={this._deviceLoader}
         loadingComponent={LoadingComponent}
+        navigation={this.injectedProps.navigation}
+        updatingComponent={LoadingComponent}
       />
     );
   }
@@ -58,40 +59,54 @@ const LoadingComponent = () => (
 );
 
 type LoadedComponentProps = {
+  navigation: Navigation,
   value: Device,
 };
 
-const LoadedComponent = observer(
-  ({ value: { deviceStatus, id, name, particleId } }: LoadedComponentProps) => (
-    <Container>
-      <Header
-        rightComponent={
-          <HeaderNavigationButton
-            name="edit"
-            params={{ id }}
-            toRoute="editDevice"
-          />
-        }
-        showBackButton
-        title={name}
-      />
-      <TapsList
-        ListHeaderComponent={
-          <Container>
-            <Section bottomPadded>
-              <OverviewItem title="Box ID" value={particleId} />
-              <DeviceStateOverviewItem deviceState={deviceStatus} />
-              <DeviceOnlineOverviewItem deviceID={id} />
-            </Section>
-            <SectionHeader title="Taps" />
-          </Container>
-        }
-        queryOptions={{
-          filters: [DAOApi.createFilter('device/id').equals(id)],
-        }}
-      />
-    </Container>
-  ),
-);
+@observer
+class LoadedComponent extends React.Component<LoadedComponentProps> {
+  _onAddTapPress = () => {
+    const { navigation, value } = this.props;
+    navigation.navigate('newTap', { initialValues: { device: value } });
+  };
+
+  render() {
+    const {
+      value: { deviceStatus, id, name, particleId },
+    } = this.props;
+
+    return (
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderNavigationButton
+              name="edit"
+              params={{ id }}
+              toRoute="editDevice"
+            />
+          }
+          showBackButton
+          title={name}
+        />
+        <TapsList
+          ListHeaderComponent={
+            <Container>
+              <Section bottomPadded>
+                <OverviewItem title="Box ID" value={particleId} />
+                <DeviceStateOverviewItem deviceState={deviceStatus} />
+                <DeviceOnlineOverviewItem deviceID={id} />
+              </Section>
+              <SectionHeader title="Taps" />
+            </Container>
+          }
+          onAddTapPress={this._onAddTapPress}
+          queryOptions={{
+            filters: [DAOApi.createFilter('device/id').equals(id)],
+          }}
+        />
+      </Container>
+    );
+  }
+}
 
 export default DeviceDetailsScreen;

@@ -14,15 +14,16 @@ import { TapStore } from '../stores/DAOStores';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
-import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
 import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
+import DeviceTapListEmpty from './DeviceTapListEmpty';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  onAddTapPress: () => void,
   queryOptions?: QueryOptions,
 |};
 
@@ -82,14 +83,20 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   );
 
   render() {
+    const { ListHeaderComponent, onAddTapPress } = this.props;
+
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
-        ListEmptyComponent={!isLoading ? <ListEmpty message="No taps" /> : null}
+        ListEmptyComponent={
+          !isLoading ? (
+            <DeviceTapListEmpty onAddTapPress={onAddTapPress} />
+          ) : null
+        }
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={this.props.ListHeaderComponent}
+        ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
         ref={this._getSwipeableListRef}
