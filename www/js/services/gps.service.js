@@ -20,7 +20,11 @@ angular.module('brewskey.services').factory('gps', [
       }
 
       $ionicPlatform.ready(function() {
-        navigator.geolocation.watchPosition(onSuccess, onError);
+        navigator.geolocation.watchPosition(onSuccess, onError, {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 0,
+        });
       });
     }
 

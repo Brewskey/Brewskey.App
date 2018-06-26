@@ -3,7 +3,7 @@
 
         <form name="profileForm" ng-submit="submit()" style="background: #fff;" ng-hide="enterToken">
             <div class="list">
-                <p class="help-text item item-text-wrap text-center">Your phone number is used to allow friends to find you through their contacts. No SMS spam from Brewskey</p>
+                <!--<p class="help-text item item-text-wrap text-center">Your phone number is used to allow friends to find you through their contacts. No SMS spam from Brewskey</p>
                 <div class="item no-padding item-text-wrap text-center" ng-if="errors.generic" ng-cloak>
                     <div class="form-errors" data-ng-show="profileForm.$submitted">
                         <div class="form-error" ng-bind="errors.generic"></div>
@@ -11,7 +11,7 @@
                 </div>
                 <div class="item-input" style="overflow: visible" ng-class="{ 'has-error' : profileForm.phoneNumber.$invalid || errors['model.PhoneNumber']}">
                   <input type="tel" ng-model="model.phoneNumber" ng-intl-tel-input data-initial-country="us" inputmode="numeric">
-                </div>
+                </div>-->
                 <div ng-if="!isSetup">
                     <div class="item item-divider"></div>
                     <label class="item item-input" ng-class="{ 'has-error' : profileForm.email.$invalid || errors['model.Email']}">
