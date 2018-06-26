@@ -23,7 +23,7 @@ angular.module('brewskey.services', []).factory('auth', [
     achievements,
     $http,
     $ionicPopup,
-    $rootScope,
+    $rootScope
   ) {
     if (storage.authDetails && !storage.authList) {
       storage.authList = [storage.authDetails];
@@ -39,7 +39,7 @@ angular.module('brewskey.services', []).factory('auth', [
       storage.authDetails = response;
       storage.authList = _.uniqBy(
         (storage.authList || []).concat(response),
-        'userName',
+        'userName'
       );
 
       achievements.subscribe(storage.authDetails.userName);
@@ -81,8 +81,8 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
           )
           .then(handleLogin);
       },
@@ -98,7 +98,7 @@ angular.module('brewskey.services', []).factory('auth', [
           'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' +
             redirectUri,
           'Authenticate Account',
-          'location=0,status=0,width=600,height=750',
+          'location=0,status=0,width=600,height=750'
         );
 
         return new Promise(function(resolve) {
@@ -116,7 +116,7 @@ angular.module('brewskey.services', []).factory('auth', [
             var hasLocalAccount = getParameterByName('hasLocalAccount', url);
             var externalAuthToken = getParameterByName(
               'external_auth_token',
-              url,
+              url
             );
 
             if (!externalAuthToken) {
@@ -126,7 +126,7 @@ angular.module('brewskey.services', []).factory('auth', [
             resolve({
               externalAuthToken: externalAuthToken,
               hasLocalAccount: hasLocalAccount,
-              provider: provider,
+              provider: provider
             });
 
             ref.removeEventListener('message', receiveMessage);
@@ -149,8 +149,8 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
           )
           .then(handleLogin);
       },
@@ -158,7 +158,7 @@ angular.module('brewskey.services', []).factory('auth', [
         return rest
           .one('api/account')
           .post('AddExternalLogin', {
-            externalAccessToken: externalAuthToken,
+            externalAccessToken: externalAuthToken
           })
           .then(function(response) {
             return output.refreshToken();
@@ -169,7 +169,7 @@ angular.module('brewskey.services', []).factory('auth', [
           .one('api/account')
           .post('RemoveLogin', {
             providerName: providerName,
-            providerKey: providerKey,
+            providerKey: providerKey
           })
           .then(function(response) {
             return output.refreshToken();
@@ -200,8 +200,8 @@ angular.module('brewskey.services', []).factory('auth', [
             '',
             {},
             {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
           )
           .then(handleLogin)
           .then(
@@ -211,7 +211,7 @@ angular.module('brewskey.services', []).factory('auth', [
             },
             function() {
               refreshTokenPromise = null;
-            },
+            }
           ));
       },
       logout: function() {
@@ -222,7 +222,7 @@ angular.module('brewskey.services', []).factory('auth', [
         storage.authList = null;
 
         $ionicHistory.nextViewOptions({
-          historyRoot: true,
+          historyRoot: true
         });
 
         $state.go('app.login');
@@ -234,8 +234,8 @@ angular.module('brewskey.services', []).factory('auth', [
             rest.one('api/account').post('change-password', {
               confirmPassword: model.newPassword,
               newPassword: model.newPassword,
-              oldPassword: model.oldPassword,
-            }),
+              oldPassword: model.oldPassword
+            })
           );
         }
 
@@ -269,9 +269,9 @@ angular.module('brewskey.services', []).factory('auth', [
                       } else {
                         return $scope.data.password;
                       }
-                    },
-                  },
-                ],
+                    }
+                  }
+                ]
               })
               .then(function(password) {
                 if (!password) {
@@ -283,7 +283,7 @@ angular.module('brewskey.services', []).factory('auth', [
               })
               .then(function() {
                 return output.refreshToken();
-              }),
+              })
           );
         }
 
@@ -309,7 +309,7 @@ angular.module('brewskey.services', []).factory('auth', [
         return rest
           .one('api/account')
           .post('reset-password', { email: model.email });
-      },
+      }
     };
 
     var timeToAdd = 60 * 1000 * 60 * 24; // 1 day
@@ -321,7 +321,7 @@ angular.module('brewskey.services', []).factory('auth', [
       url,
       headers,
       params,
-      httpConfig,
+      httpConfig
     ) {
       if (output.isLoggedIn()) {
         var issuedDate = new Date(storage.authDetails['.issued']);
@@ -336,7 +336,7 @@ angular.module('brewskey.services', []).factory('auth', [
         element: element,
         headers: headers,
         params: params,
-        httpConfig: httpConfig,
+        httpConfig: httpConfig
       };
     });
 
@@ -360,17 +360,17 @@ angular.module('brewskey.services', []).factory('auth', [
             function(error) {
               deferred.reject(error);
               output.logout();
-            },
+            }
           );
         },
         function() {
           output.logout();
-        },
+        }
       );
 
       return false; // error handled
     });
 
     return output;
-  },
+  }
 ]);

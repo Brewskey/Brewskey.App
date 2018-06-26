@@ -23,9 +23,9 @@ angular.module('brewskey.controllers').controller('BeverageCtrl', [
               srm.name === 'Over 40' || parseInt(srm.name, 10) > 9
                 ? '#fff'
                 : '',
-            'background-color': '#' + $scope.beverage.srm.hex,
+            'background-color': '#' + $scope.beverage.srm.hex
           };
         }
       });
-  },
+  }
 ]);

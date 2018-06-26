@@ -4,7 +4,7 @@ angular.injector(['ng']).invoke([
   '$q',
   function($q) {
     deferred = $q.defer();
-  },
+  }
 ]);
 if (window.WinJS !== undefined) {
   WinJS.Application.addEventListener(
@@ -19,7 +19,7 @@ if (window.WinJS !== undefined) {
         });
       }
     },
-    false,
+    false
   );
 }
 
@@ -46,13 +46,13 @@ angular.module('brewskey.services').factory('nfcService', [
     $ionicLoading,
     $ionicHistory,
     $interval,
-    gps,
+    gps
   ) {
     var requestPour = false;
     var authenticating = false;
     var popup;
     var currentDeviceId;
-		var ignoreNFC = 0;
+    var ignoreNFC = 0;
 
     $rootScope.$on('device-id', function(event, value) {
       currentDeviceId = value;
@@ -69,7 +69,8 @@ angular.module('brewskey.services').factory('nfcService', [
       return $q(function(resolve) {
         if (
           typeof nfc === 'undefined' ||
-          ionic.Platform.isIOS() || ignoreNFC >= 1
+          ionic.Platform.isIOS() ||
+          ignoreNFC >= 1
         ) {
           resolve();
           return;
@@ -94,13 +95,13 @@ angular.module('brewskey.services').factory('nfcService', [
             type: 'button-positive',
             onTap: function(e) {
               nfc.showSettings();
-            },
+            }
           },
           {
             text: 'Maybe Later',
             onTap: function(e) {
-							ignoreNFC += 1;
-						}
+              ignoreNFC += 1;
+            }
           }
         ]
       });
@@ -134,7 +135,7 @@ angular.module('brewskey.services').factory('nfcService', [
 
               var tagValue = String.fromCharCode.apply(
                 null,
-                payload[0] === 0 ? payload.slice(1) : payload,
+                payload[0] === 0 ? payload.slice(1) : payload
               );
 
               if (tagValue.indexOf('https://brewskey.com/') < 0) {
@@ -146,7 +147,7 @@ angular.module('brewskey.services').factory('nfcService', [
             function() {
               console.log('Listening for NDEF tags.');
             },
-            nfcError,
+            nfcError
           );
         }, 20);
       }
@@ -195,7 +196,7 @@ angular.module('brewskey.services').factory('nfcService', [
             deviceId: deviceId || undefined,
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,
-            totp: totp,
+            totp: totp
           })
           .then(
             function() {
@@ -214,10 +215,10 @@ angular.module('brewskey.services').factory('nfcService', [
                   cssClass: 'green-popup',
                   title: 'Invalid passcode',
                   template:
-                    'The passcode you entered was incorrect or expired.  Please try a new code.',
+                    'The passcode you entered was incorrect or expired.  Please try a new code.'
                 });
               }
-            },
+            }
           );
       },
       processUri: function(rawUri) {
@@ -246,7 +247,7 @@ angular.module('brewskey.services').factory('nfcService', [
               $state.go(
                 'app.tap.leaderboard',
                 { tapId: response[0].id },
-                { location: 'replace' },
+                { location: 'replace' }
               );
             });
         }
@@ -284,7 +285,7 @@ angular.module('brewskey.services').factory('nfcService', [
             };
 
             function setSeconds() {
-              scope.currentSeconds = 30 - new Date().getSeconds() % 30;
+              scope.currentSeconds = 30 - (new Date().getSeconds() % 30);
             }
             setSeconds();
             $interval(setSeconds, 1000);
@@ -328,9 +329,9 @@ angular.module('brewskey.services').factory('nfcService', [
                   text: 'Cancel',
                   onTap: function() {
                     requestPour = false;
-                  },
-                },
-              ],
+                  }
+                }
+              ]
             });
             return popup.then(function() {
               requestPour = false;
@@ -338,9 +339,9 @@ angular.module('brewskey.services').factory('nfcService', [
               cancelAnimationFrame(animationID);
             });
           });
-      },
+      }
     };
 
     return output;
-  },
+  }
 ]);

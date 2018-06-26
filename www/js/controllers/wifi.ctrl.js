@@ -15,7 +15,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
     $stateParams,
     $state,
     $ionicHistory,
-    utils,
+    utils
   ) {
     utils.shouldShowStartPour = false;
     $scope.state = 0;
@@ -48,15 +48,15 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
                 type: 'button-positive',
                 onTap: function() {
                   $state.go('app.new-location', { isCreatingNewDevice: true });
-                },
+                }
               },
               {
                 text: 'No Thanks',
                 onTap: function() {
                   $ionicHistory.goBack();
-                },
-              },
-            ],
+                }
+              }
+            ]
           });
         });
     }
@@ -69,7 +69,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
       { key: 'WPA with AES', value: 'wpa_aes' },
       { key: 'WPA2 with TKIP', value: 'wpa2_tkip' },
       { key: 'WPA2 with AES', value: 'wpa2_aes' },
-      { key: 'WPA2 AES & TKIP', value: 'wpa2_mixed' },
+      { key: 'WPA2 AES & TKIP', value: 'wpa2_mixed' }
     ];
 
     $scope.reset = function() {
@@ -106,7 +106,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
           password: $scope.model.password,
           security: usingForm
             ? $scope.model.security
-            : softAP.securityLookup(network.sec),
+            : softAP.securityLookup(network.sec)
         })
         .then(function() {
           return softAP.connect();
@@ -131,7 +131,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
       $state.go(
         'app.new-device',
         { particleId: internalId },
-        { location: 'replace' },
+        { location: 'replace' }
       );
     };
 
@@ -142,7 +142,7 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
           title: 'Wifi Setup Error',
           template:
             'There was an error when attempting to setup the wifi on your device.  Please ' +
-            'try resetting the device and if that fails, restart the Brewskey app.',
+            'try resetting the device and if that fails, restart the Brewskey app.'
         })
         .then(function() {
           $scope.state = 0;
@@ -172,10 +172,10 @@ angular.module('brewskey.controllers').controller('WifiCtrl', [
           $state.go(
             'app.new-device',
             { particleId: $scope.device.id },
-            { location: 'replace' },
+            { location: 'replace' }
           );
         }
       }
     }
-  },
+  }
 ]);

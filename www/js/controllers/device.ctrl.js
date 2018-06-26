@@ -29,17 +29,17 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
                 type: 'button-positive',
                 onTap: function(e) {
                   $state.go('app.new-tap', { deviceId: $scope.device.id });
-                },
+                }
               },
               {
                 text: 'Not Now',
-                type: 'button-neutral button-small',
-              },
+                type: 'button-neutral button-small'
+              }
             ],
             cssClass: 'text-center green-popup popup-vertical-buttons',
             title: 'Add Some Taps!',
             template:
-              "In order to finish setting up your Brewskey box you'll need to add some taps. ",
+              "In order to finish setting up your Brewskey box you'll need to add some taps. "
           });
         }
 
@@ -69,7 +69,7 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
         });
     };
     $scope.getPercentLeft = function(keg) {
-      return Math.max(0, (keg.maxOunces - keg.ounces) / keg.maxOunces * 100);
+      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
     };
     $scope.timeAgo = function(time) {
       return moment.utc(time).fromNow();
@@ -84,5 +84,5 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
         });
       });
     };
-  },
+  }
 ]);

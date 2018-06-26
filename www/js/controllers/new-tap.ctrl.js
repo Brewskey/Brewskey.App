@@ -10,7 +10,7 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
     $scope.model = {
       deviceId: $stateParams.deviceId || undefined,
       locationId: $stateParams.locationId || undefined,
-      id: $stateParams.tapId || undefined,
+      id: $stateParams.tapId || undefined
     };
     $scope.isDeviceSelectorReadOnly = false;
 
@@ -23,14 +23,14 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
             $state.go(
               'app.tap.set-sensor',
               { tapId: response.id },
-              { location: 'replace' },
+              { location: 'replace' }
             );
             return;
           } else if (!response.currentKeg) {
             $state.go(
               'app.tap.set-beverage',
               { tapId: response.id },
-              { location: 'replace' },
+              { location: 'replace' }
             );
             return;
           }
@@ -57,7 +57,7 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
         }
 
         $scope.isDeviceSelectorReadOnly = (devices || []).some(function(
-          device,
+          device
         ) {
           return device.id === $stateParams.deviceId;
         });
@@ -89,7 +89,7 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
             $state.go(
               'app.tap.set-sensor',
               { tapId: response.id },
-              { location: 'replace' },
+              { location: 'replace' }
             );
           }
         },
@@ -97,7 +97,7 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
           $scope.editing = false;
 
           $scope.errors = utils.filterErrors(error);
-        },
+        }
       );
     };
 
@@ -111,7 +111,7 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
         $ionicHistory.clearCache();
         $ionicHistory.nextViewOptions({
           disableBack: true,
-          historyRoot: true,
+          historyRoot: true
         });
         $state.go('app.taps');
       });
@@ -121,8 +121,8 @@ angular.module('brewskey.controllers').controller('NewTapCtrl', [
       $state.go(
         'app.tap.set-sensor',
         { tapId: $scope.model.id },
-        { location: 'replace' },
+        { location: 'replace' }
       );
     };
-  },
+  }
 ]);

@@ -37,5 +37,5 @@ angular.module('brewskey.controllers').controller('DevicesCtrl', [
           });
         });
     };
-  },
+  }
 ]);

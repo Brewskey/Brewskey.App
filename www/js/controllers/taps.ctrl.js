@@ -22,7 +22,7 @@ angular.module('brewskey.controllers').controller('TapsCtrl', [
     $scope.refresh();
 
     $scope.getPercentLeft = function(keg) {
-      return Math.max(0, (keg.maxOunces - keg.ounces) / keg.maxOunces * 100);
+      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
     };
 
     $scope.deleteTap = function(tap) {
@@ -36,5 +36,5 @@ angular.module('brewskey.controllers').controller('TapsCtrl', [
         });
       });
     };
-  },
+  }
 ]);

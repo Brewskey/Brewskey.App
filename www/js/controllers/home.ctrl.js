@@ -70,5 +70,5 @@ angular.module('brewskey.controllers').controller('HomeCtrl', [
     };
 
     $scope.cacheBuster = cache.value;
-  },
+  }
 ]);

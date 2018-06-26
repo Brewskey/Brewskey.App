@@ -32,7 +32,7 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
           },
           function(error) {
             $scope.errors = utils.filterErrors(error);
-          },
+          }
         )
         .finally(function() {
           $scope.sending = false;
@@ -51,7 +51,7 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
           },
           function(error) {
             $scope.errors = utils.filterErrors(error);
-          },
+          }
         )
         .finally(function() {
           $scope.model.token = null;
@@ -64,5 +64,5 @@ angular.module('brewskey.controllers').controller('ProfileEditCtrl', [
       $scope.errors = null;
       $scope.enterToken = !$scope.enterToken;
     };
-  },
+  }
 ]);

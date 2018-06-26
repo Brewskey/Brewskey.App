@@ -15,12 +15,12 @@ angular.module('brewskey.services').factory('utils', [
         } else {
           return {
             generic:
-              "Whoa! Brewskey had an error.  We'll try to get it fixed soon.",
+              "Whoa! Brewskey had an error.  We'll try to get it fixed soon."
           };
         }
       },
 
-      shouldShowStartPour: true,
+      shouldShowStartPour: true
     };
-  },
+  }
 ]);

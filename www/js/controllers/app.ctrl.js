@@ -10,7 +10,7 @@ angular
     nfcService,
     $ionicSideMenuDelegate,
     friends,
-    utils,
+    utils
   ) {
     $scope.isLoggedIn = auth.isLoggedIn;
 
@@ -40,14 +40,14 @@ angular
         friends.getRequests().then(function(requests) {
           $scope.friendRequestCount = requests.length;
         });
-      },
+      }
     );
 
     $scope.logout = function() {
       auth.logout();
 
       $ionicHistory.nextViewOptions({
-        historyRoot: true,
+        historyRoot: true
       });
 
       $state.go('app.login');

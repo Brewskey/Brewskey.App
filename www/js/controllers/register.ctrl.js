@@ -13,7 +13,7 @@ angular.module('brewskey.controllers').controller('RegisterCtrl', [
     $ionicHistory,
     $state,
     utils,
-    $ionicPopup,
+    $ionicPopup
   ) {
     // Form data for the login modal
     $scope.registering = false;
@@ -39,7 +39,7 @@ angular.module('brewskey.controllers').controller('RegisterCtrl', [
             .then(function() {
               // go to
               $ionicHistory.nextViewOptions({
-                historyRoot: true,
+                historyRoot: true
               });
 
               // $ionicPopup.show({
@@ -73,8 +73,8 @@ angular.module('brewskey.controllers').controller('RegisterCtrl', [
           $scope.registering = false;
 
           $scope.errors = utils.filterErrors(error);
-        },
+        }
       );
     };
-  },
+  }
 ]);

@@ -10,7 +10,7 @@ angular.module('brewskey.controllers').controller('NewLocationCtrl', [
     utils.shouldShowStartPour = false;
     $scope.model = {
       id: $stateParams.locationId,
-      locationType: null,
+      locationType: null
     };
 
     if ($scope.model.id) {
@@ -48,15 +48,15 @@ angular.module('brewskey.controllers').controller('NewLocationCtrl', [
             $state.go(
               'app.location.info',
               { locationId: response.id },
-              { location: 'replace' },
+              { location: 'replace' }
             );
           }
         },
         function(error) {
           $scope.editing = true;
           utils.filterErrors(error);
-        },
+        }
       );
     };
-  },
+  }
 ]);

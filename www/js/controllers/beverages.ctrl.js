@@ -22,7 +22,7 @@ angular.module('brewskey.controllers').controller('BeveragesCtrl', [
         .delete(
           beverage.name,
           'api/v2/beverages(' + beverage.id + ')',
-          beverage,
+          beverage
         )
         .then(function(result) {
           if (!result) {
@@ -33,5 +33,5 @@ angular.module('brewskey.controllers').controller('BeveragesCtrl', [
           });
         });
     };
-  },
+  }
 ]);

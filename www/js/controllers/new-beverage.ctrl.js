@@ -13,7 +13,7 @@ angular.module('brewskey.controllers').controller('NewBeverageCtrl', [
       { name: 'Beer', value: 0 },
       { name: 'Coffee', value: 1 },
       { name: 'Soda', value: 2 },
-      { name: 'Cider', value: 3 },
+      { name: 'Cider', value: 3 }
     ];
 
     $scope.servingTemperatures = [
@@ -22,7 +22,7 @@ angular.module('brewskey.controllers').controller('NewBeverageCtrl', [
       { name: 'Cool - (8-12C/45-54F)', value: 'cool' },
       { name: 'Cellar - (12-14C/54-57F)', value: 'cellar' },
       { name: 'Warm - (14-16C/57-61F)', value: 'warm' },
-      { name: 'Hot - (70C/158F)', value: 'hot' },
+      { name: 'Hot - (70C/158F)', value: 'hot' }
     ];
 
     var currentYear = new Date().getFullYear() + 1,
@@ -35,7 +35,7 @@ angular.module('brewskey.controllers').controller('NewBeverageCtrl', [
     $scope.years = years;
 
     $scope.model = {
-      srmId: 1,
+      srmId: 1
     };
 
     if (beverageId) {
@@ -104,7 +104,7 @@ angular.module('brewskey.controllers').controller('NewBeverageCtrl', [
         function(error) {
           $scope.editing = false;
           utils.filterErrors(error);
-        },
+        }
       );
     };
 
@@ -116,8 +116,8 @@ angular.module('brewskey.controllers').controller('NewBeverageCtrl', [
       }) || { hex: 'FFE699' };
       return {
         color: srmId > 9 ? '#fff' : '',
-        'background-color': '#' + srm.hex,
+        'background-color': '#' + srm.hex
       };
     };
-  },
+  }
 ]);

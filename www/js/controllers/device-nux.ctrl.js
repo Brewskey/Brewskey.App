@@ -11,12 +11,12 @@ angular.module('brewskey.controllers').controller('DeviceNUXCtrl', [
       $ionicModal
         .fromTemplateUrl('templates/modals/nux-install-device.html', {
           scope: $scope,
-          animation: 'slide-in-up',
+          animation: 'slide-in-up'
         })
         .then(function(modal) {
           $scope.modal = modal;
           $scope.modal.show();
         });
     };
-  },
+  }
 ]);

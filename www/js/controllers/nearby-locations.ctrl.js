@@ -13,12 +13,12 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     $ionicPlatform,
     gps,
     $stateParams,
-    $ionicModal,
+    $ionicModal
   ) {
     $scope.loading = true;
 
     $scope.getPercentLeft = function(keg) {
-      return Math.max(0, (keg.maxOunces - keg.ounces) / keg.maxOunces * 100);
+      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
     };
 
     $scope.getNearbyLocations = function() {
@@ -29,7 +29,7 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
           .get({
             longitude: coords.longitude,
             latitude: coords.latitude,
-            radius: 1500,
+            radius: 1500
           })
           .then(function(response) {
             $scope.locations = response;
@@ -73,5 +73,5 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     //   // Execute action
     // });
     //}
-  },
+  }
 ]);

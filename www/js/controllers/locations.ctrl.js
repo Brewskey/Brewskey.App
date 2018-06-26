@@ -33,5 +33,5 @@ angular.module('brewskey.controllers').controller('LocationsCtrl', [
           });
         });
     };
-  },
+  }
 ]);

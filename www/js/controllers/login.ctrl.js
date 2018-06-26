@@ -16,7 +16,7 @@ angular.module('brewskey.controllers').controller('LoginCtrl', [
         if (hasLocalAccount === 'True') {
           auth.loginWithToken(externalAuthToken).then(function() {
             $ionicHistory.nextViewOptions({
-              historyRoot: true,
+              historyRoot: true
             });
             $state.go('app.home');
           });
@@ -48,7 +48,7 @@ angular.module('brewskey.controllers').controller('LoginCtrl', [
             $scope.loginData = {};
 
             $ionicHistory.nextViewOptions({
-              historyRoot: true,
+              historyRoot: true
             });
 
             if (modal) {
@@ -60,8 +60,8 @@ angular.module('brewskey.controllers').controller('LoginCtrl', [
           function(error) {
             $scope.loggingIn = false;
             $scope.errors = utils.filterErrors(error);
-          },
+          }
         );
     };
-  },
+  }
 ]);

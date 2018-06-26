@@ -49,5 +49,5 @@ angular.module('brewskey.controllers').controller('SettingsCtrl', [
       codePush.getCurrentPackage(function(package) {
         $scope.package = package;
       });
-  },
+  }
 ]);

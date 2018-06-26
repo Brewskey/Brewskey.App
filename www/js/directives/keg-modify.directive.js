@@ -13,7 +13,7 @@ angular.module('brewskey.directives').directive('kegModify', [
     kegSize,
     $state,
     $ionicHistory,
-    storage,
+    storage
   ) {
     return {
       link: function(scope, element) {
@@ -24,7 +24,7 @@ angular.module('brewskey.directives').directive('kegModify', [
           }
 
           model.startingPercentage = model.id
-            ? model.maxOunces / kegSize[model.kegType] * 100
+            ? (model.maxOunces / kegSize[model.kegType]) * 100
             : 100;
         });
 
@@ -73,7 +73,7 @@ angular.module('brewskey.directives').directive('kegModify', [
         $ionicModal
           .fromTemplateUrl('templates/modals/beer-selector.html', {
             scope: scope,
-            animation: 'slide-in-up',
+            animation: 'slide-in-up'
           })
           .then(function(modal) {
             scope.modal = modal;
@@ -93,9 +93,7 @@ angular.module('brewskey.directives').directive('kegModify', [
           }
 
           return Math.round(
-            scope.model.startingPercentage *
-              0.01 *
-              kegSize[scope.model.kegType],
+            scope.model.startingPercentage * 0.01 * kegSize[scope.model.kegType]
           );
         };
 
@@ -132,14 +130,14 @@ angular.module('brewskey.directives').directive('kegModify', [
                 $state.go(
                   'app.tap.set-sensor',
                   { tapId: scope.tapId },
-                  { location: 'replace' },
+                  { location: 'replace' }
                 );
               } else if (!model.id) {
                 $ionicHistory.goBack();
                 $state.go(
                   'app.device',
                   { deviceId: scope.deviceId },
-                  { location: 'replace' },
+                  { location: 'replace' }
                 );
               }
             },
@@ -157,7 +155,7 @@ angular.module('brewskey.directives').directive('kegModify', [
               if (error.data.Message) {
                 scope.errorDescription = error.data.Message;
               }
-            },
+            }
           );
         };
       },
@@ -167,9 +165,9 @@ angular.module('brewskey.directives').directive('kegModify', [
         model: '=keg',
         onCancel: '=onCancel',
         onOkay: '=onOkay',
-        tapId: '=tapId',
+        tapId: '=tapId'
       },
-      templateUrl: 'templates/modify-keg.html',
+      templateUrl: 'templates/modify-keg.html'
     };
-  },
+  }
 ]);

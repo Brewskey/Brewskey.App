@@ -13,7 +13,7 @@ angular.module('brewskey.services').factory('gps', [
 
       function onError(error) {
         console.log(
-          'code: ' + error.code + '\n' + 'message: ' + error.message + '\n',
+          'code: ' + error.code + '\n' + 'message: ' + error.message + '\n'
         );
         defer.reject();
         defer = $q.defer();
@@ -23,7 +23,7 @@ angular.module('brewskey.services').factory('gps', [
         navigator.geolocation.watchPosition(onSuccess, onError, {
           enableHighAccuracy: true,
           timeout: 5000,
-          maximumAge: 0,
+          maximumAge: 0
         });
       });
     }
@@ -35,7 +35,7 @@ angular.module('brewskey.services').factory('gps', [
               resolve(coords);
             })
           : defer.promise;
-      },
+      }
     };
-  },
+  }
 ]);

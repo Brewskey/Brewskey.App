@@ -11,7 +11,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
     $stateParams,
     $state,
     $ionicHistory,
-    $ionicScrollDelegate,
+    $ionicScrollDelegate
   ) {
     $scope.sensors = [
       {
@@ -20,7 +20,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
         value: 4,
         defaultPulses: 5375,
         image: 'titan.png',
-        serverEnum: 'Titan',
+        serverEnum: 'Titan'
       },
       {
         name: 'FT330',
@@ -28,7 +28,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
         value: 1,
         defaultPulses: 10313,
         image: 'ft330.png',
-        serverEnum: 'FT330',
+        serverEnum: 'FT330'
       },
       {
         name: 'SF800',
@@ -36,7 +36,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
         value: 2,
         defaultPulses: 20820,
         image: 'sf800.png',
-        serverEnum: 'SwissFlowSF800',
+        serverEnum: 'SwissFlowSF800'
       },
       {
         name: 'YF-201',
@@ -44,7 +44,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
         value: 3,
         defaultPulses: 3785,
         image: 'yf-201.png',
-        serverEnum: 'Sea',
+        serverEnum: 'Sea'
       },
       {
         name: 'Custom',
@@ -52,13 +52,13 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
         value: 0,
         defaultPulses: 0,
         image: null,
-        serverEnum: 'Custom',
-      },
+        serverEnum: 'Custom'
+      }
     ];
 
     $scope.model = {
       currentSensor: null, //$scope.sensors[0],
-      percentage: 0,
+      percentage: 0
     };
 
     $scope.setDefaultSensor = function() {
@@ -87,7 +87,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
 
       var defaultPulses = $scope.model.currentSensor.defaultPulses;
       return Math.round(
-        defaultPulses + defaultPulses * $scope.calculatePercentage() * 0.01,
+        defaultPulses + defaultPulses * $scope.calculatePercentage() * 0.01
       );
     };
     $scope.loading = true;
@@ -139,7 +139,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
             currentSensor.serverEnum !== 'Custom'
               ? $scope.calculatePulses()
               : $scope.model.customPulses,
-          tapId: $stateParams.tapId,
+          tapId: $stateParams.tapId
         })
         .then(function(response) {
           if ($scope.tap.currentKeg) {
@@ -149,7 +149,7 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
             $state.go(
               'app.tap.set-beverage',
               { tapId: $stateParams.tapId },
-              { location: 'replace' },
+              { location: 'replace' }
             );
           }
         });
@@ -160,8 +160,8 @@ angular.module('brewskey.controllers').controller('TapSetSensorCtrl', [
       $state.go(
         'app.tap.edit',
         { tapId: $stateParams.tapId },
-        { location: 'replace' },
+        { location: 'replace' }
       );
     };
-  },
+  }
 ]);

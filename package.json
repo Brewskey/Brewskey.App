@@ -6,10 +6,8 @@
     "ls:android": "code-push deployment ls Brewskey.Android",
     "ls:ios": "code-push deployment ls Brewskey.iOS",
     "release": "npm run release:android && npm run release:ios",
-    "release:android":
-      "code-push release-cordova Brewskey.Android android -d Production && npm run ls:android",
-    "release:ios":
-      "code-push release-cordova Brewskey.iOS ios -d Production && npm run ls:ios"
+    "release:android": "code-push release-cordova Brewskey.Android android -d Production && npm run ls:android",
+    "release:ios": "code-push release-cordova Brewskey.iOS ios -d Production && npm run ls:ios"
   },
   "dependencies": {
     "angular-moment": "^1.0.0-beta.6",
@@ -80,24 +78,23 @@
     "ios"
   ],
   "cordova": {
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "plugins": {
       "cordova-plugin-device": {},
       "cordova-plugin-camera": {
-        "CAMERA_USAGE_DESCRIPTION":
-          "Brewskey uses your camera for profile photos.",
-        "PHOTOLIBRARY_USAGE_DESCRIPTION":
-          "Brewskey uses your photo library for profile photos."
+        "CAMERA_USAGE_DESCRIPTION": "Brewskey uses your camera for profile photos.",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Brewskey uses your photo library for profile photos."
       },
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-zip": {},
       "cordova-plugin-contacts": {
-        "CONTACTS_USAGE_DESCRIPTION":
-          "Brewskey uses your contacts to add friends."
+        "CONTACTS_USAGE_DESCRIPTION": "Brewskey uses your contacts to add friends."
       },
       "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION":
-          "Brewskey uses your location to find nearby taps."
+        "GEOLOCATION_USAGE_DESCRIPTION": "Brewskey uses your location to find nearby taps."
       },
       "cordova-plugin-inappbrowser": {},
       "cordova-sms-plugin": {},
