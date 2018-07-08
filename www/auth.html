@@ -15,10 +15,8 @@
   <body>
     <img src="img/login-splash.png">
     <script type="text/javascript">
-      window.postMessage(window.location.href, '*');
-      setTimeout(function () {
-        window.close();
-      }, 6000)
+      window.opener.setOAuthToken(window.location.href);
+      window.close();
     </script>
   </body>
 </html>

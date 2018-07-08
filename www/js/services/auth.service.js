@@ -87,29 +87,21 @@ angular.module('brewskey.services', []).factory('auth', [
           .then(handleLogin);
       },
       getExternalLoginPermission: function(provider) {
-        var host = location.protocol + '//' + location.host;
-        if (host.indexOf('file') !== -1) {
-          host = 'http://localhost';
-        }
-
-        var redirectUri = host + '/auth.html';
-
-        var ref = window.open(
-          'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' +
-            redirectUri,
-          'Authenticate Account',
-          'location=0,status=0,width=600,height=750'
-        );
-
         return new Promise(function(resolve) {
-          ref.addEventListener('message', receiveMessage, false);
+          var host = location.protocol + '//' + location.host;
+          if (host.indexOf('file') !== -1) {
+            host = 'http://localhost';
+          }
 
-          function receiveMessage(event) {
-            if (event.origin !== host) {
-              return;
-            }
+          var redirectUri = host + '/auth.html';
+          var ref = window.open(
+            'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' +
+              redirectUri,
+            'Authenticate Account',
+            'location=0,status=0,width=600,height=750'
+          );
 
-            var url = event.data;
+          window.setOAuthToken = function(url) {
             if (!url.startsWith(redirectUri)) {
               return;
             }
@@ -129,9 +121,9 @@ angular.module('brewskey.services', []).factory('auth', [
               provider: provider
             });
 
-            ref.removeEventListener('message', receiveMessage);
             ref.close();
-          }
+            window.setOAuthToken = null;
+          };
         });
       },
       loginWithToken: function(externalAuthToken) {

@@ -5,8 +5,8 @@
             <img src="img/login-splash.png" class="img-responsive" style="width: 100%;" />
         </div>
         <div class="item no-color" ng-show="!showLoginForm">
-          <!-- <button class="button button-block fb-button" type="button" ng-click="oauthLogin('Facebook')">Login with Facebook</button>
-          <hr style="margin: 20px 0"/> -->
+          <button class="button button-block fb-button" type="button" ng-click="oauthLogin('Facebook')">Login with Facebook</button>
+          <hr style="margin: 20px 0"/>
           <button class="button button-block brewskey-button" type="button" ng-click="showLoginForm = true">Username + Password</button>
         </div>
         <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate" style="background: #fff;" ng-show="showLoginForm">
@@ -21,14 +21,14 @@
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : loginForm.userName.$invalid || errors['model.UserName']}">
                     <span class="input-label">Username</span>
-                    <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false" data-dependency="password" tabindex="0">
+                    <input type="text" ng-model="loginData.userName" autocorrect="off" autocapitalize="off" spellcheck="false" data-dependency="password" tabindex="1">
                 </label>
                 <div class="form-errors" data-ng-repeat="error in errors['model.Username']" data-ng-show="loginForm.$submitted" data-ng-cloak>
                     <div class="form-error" ng-bind="error"></div>
                 </div>
                 <label class="item item-input" ng-class="{ 'has-error' : loginForm.password.$invalid || errors['model.Password']}">
                     <span class="input-label">Password</span>
-                    <input type="password" ng-model="loginData.password" id="password" tabindex="1">
+                    <input type="password" ng-model="loginData.password" id="password" tabindex="2">
                 </label>
                 <div class="form-errors" data-ng-repeat="error in errors['model.Password']" data-ng-show="loginForm.$submitted" data-ng-cloak>
                     <div class="form-error" ng-bind="error"></div>
