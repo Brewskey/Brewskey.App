@@ -1,6 +1,11 @@
 <ion-view view-title="Friends">
-    <ion-content class="has-header">
+  <div class="bar bar-subheader bar-brewskey">
+    <button class="button icon-left ion-plus pull-right" ng-click="onAddFriend()">Add Friend</button>
+  </div>
+
+    <ion-content class="has-header" style="margin-top: 40px;">
         <div class="list">
+
             <div class="item no-color" ng-if="friends.length">
                 <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
                    <img

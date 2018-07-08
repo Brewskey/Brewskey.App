@@ -2,8 +2,43 @@ angular.module('brewskey.controllers').controller('FriendsCtrl', [
   '$scope',
   '$localStorage',
   'friends',
-  function($scope, storage, friends) {
+  'utils',
+  '$ionicPopup',
+  'friends',
+  function($scope, storage, friends, utils, $ionicPopup, friends) {
+    utils.shouldShowStartPour = false;
     $scope.loading = true;
+
+    $scope.onAddFriend = function() {
+      $scope.data = {};
+      $ionicPopup.show({
+        cssClass: 'green-popup',
+        template: '<input type="string" ng-model="data.userName">',
+        title: "Enter a friend's username",
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Add</b>',
+            onTap: function(e) {
+              if (!$scope.data.userName) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                friends
+                  .addFriendByUsername($scope.data.userName)
+                  .catch(function(error) {
+                    $ionicPopup.alert({
+                      cssClass: 'green-popup',
+                      title: error.data.Message
+                    });
+                  });
+              }
+            }
+          }
+        ]
+      });
+    };
 
     function getFriends() {
       friends.getFriends().then(function(friends) {

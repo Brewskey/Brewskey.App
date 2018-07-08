@@ -11,6 +11,13 @@ angular.module('brewskey.services').factory('friends', [
       addFriend: function(contact) {
         return rest.one('api/friends/request-by-md5/' + toMD5(contact)).post();
       },
+      addFriendByUsername: function(userName) {
+        return rest
+          .one(
+            'api/friends/request-by-username/' + encodeURIComponent(userName)
+          )
+          .post();
+      },
       checkContacts: function(contacts) {
         var md5PhoneNumbers = contacts.map(function(contact, index) {
           return toMD5(contact);
