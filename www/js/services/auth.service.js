@@ -94,10 +94,11 @@ angular.module('brewskey.services', []).factory('auth', [
           }
 
           var redirectUri = host + '/auth.html';
-          var ref = window.open(
+          var hasCordova = !!window.cordova;
+          var ref = (hasCordova ? cordova.InAppBrowser : window).open(
             'https://brewskey.com/api/Account/ExternalLogin/?provider=Facebook&redirectUri=' +
               redirectUri,
-            'Authenticate Account',
+            '_blank',
             'location=0,status=0,width=600,height=750'
           );
 

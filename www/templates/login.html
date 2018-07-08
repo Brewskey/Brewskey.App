@@ -5,8 +5,8 @@
             <img src="img/login-splash.png" class="img-responsive" style="width: 100%;" />
         </div>
         <div class="item no-color" ng-show="!showLoginForm">
-          <button class="button button-block fb-button" type="button" ng-click="oauthLogin('Facebook')">Login with Facebook</button>
-          <hr style="margin: 20px 0"/>
+          <!-- <button class="button button-block fb-button" type="button" ng-click="oauthLogin('Facebook')">Login with Facebook</button>
+          <hr style="margin: 20px 0"/> -->
           <button class="button button-block brewskey-button" type="button" ng-click="showLoginForm = true">Username + Password</button>
         </div>
         <form name="loginForm" ng-submit="doLogin()" novalidate="novalidate" style="background: #fff;" ng-show="showLoginForm">

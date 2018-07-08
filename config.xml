@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="561" id="com.brewskey.app" version="0.0.71" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="561" id="com.brewskey.app" version="0.0.80" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Brewskey</name>
     <description>Unock the power of your kegerator</description>
     <author email="support@brewskey.com" href="http://brewskey.com/">
       Brewskey
     </author>
     <content src="index.html" />
-    <access origin="*" />
+    <access allows-arbitrary-loads-for-media="true" allows-arbitrary-loads-in-web-content="true" allows-local-networking="true" origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />
@@ -91,7 +91,6 @@
     </plugin>
     <plugin name="cordova-plugin-whitelist" spec="^1.3.2" />
     <plugin name="cordova-plugin-statusbar" spec="^2.2.3" />
-    <plugin name="cordova-plugin-device" spec="^1.1.6" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
     <plugin name="cordova-plugin-file-transfer" spec="^1.7.1" />
     <plugin name="cordova-plugin-zip" spec="^3.1.0" />
@@ -101,7 +100,6 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="Brewskey uses your location to find nearby taps." />
     </plugin>
-    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.1" />
@@ -109,16 +107,18 @@
     <plugin name="cordova-sms-plugin" spec="^0.1.11" />
     <plugin name="cordova-plugin-appcenter-analytics" spec="^0.1.5" />
     <plugin name="cordova-plugin-appcenter-crashes" spec="^0.1.5" />
-    <plugin name="cordova-plugin-code-push" spec="^1.11.10" />
-    <plugin name="phonegap-nfc" spec="^0.7.1">
+    <plugin name="cordova-plugin-code-push" spec="^1.11.11" />
+    <plugin name="phonegap-nfc" spec="^0.7.3">
         <variable name="NFC_USAGE_DESCRIPTION" value="Read NFC Tags" />
     </plugin>
-    <plugin name="phonegap-plugin-push" spec="^2.2.2">
+    <plugin name="phonegap-plugin-push" spec="^2.2.3">
         <variable name="SENDER_ID" value="394986866677" />
-        <variable name="FCM_VERSION" value="11.6.2" />
     </plugin>
-    <plugin name="cordova-plugin-ionic-webview" spec="^1.2.0" />
-    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-plugin-ionic-webview" spec="^1.2.1" />
+    <plugin name="cordova-plugin-ionic-keyboard" spec="^2.1.2" />
+    <plugin name="cordova-plugin-device" spec="^1.1.7" />
+    <plugin name="cordova-plugin-compat" spec="^1.2.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^2.0.2" />
     <engine name="ios" spec="^4.5.4" />
     <engine name="android" spec="7.0.0" />
 </widget>
