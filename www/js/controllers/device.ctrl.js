@@ -68,9 +68,7 @@ angular.module('brewskey.controllers').controller('DeviceCtrl', [
           $scope.device.clientSecret = response.clientSecret;
         });
     };
-    $scope.getPercentLeft = function(keg) {
-      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
-    };
+    $scope.getPercentLeft = utils.getPercentLeft;
     $scope.timeAgo = function(time) {
       return moment.utc(time).fromNow();
     };

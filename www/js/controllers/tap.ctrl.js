@@ -7,6 +7,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
   'cache',
   'kegTypes',
   '$ionicHistory',
+  'utils',
   function(
     $scope,
     $stateParams,
@@ -15,7 +16,8 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
     converter,
     cache,
     kegTypes,
-    $ionicHistory
+    $ionicHistory,
+    utils
   ) {
     $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
       viewData.enableBack = false;
@@ -40,9 +42,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
 
       response.currentKeg.beverageId = response.currentKeg.beverage.id;
 
-      $scope.percentLeft =
-        ((currentKeg.maxOunces - currentKeg.ounces) / currentKeg.maxOunces) *
-        100;
+      $scope.percentLeft = utils.getPercentLeft(response.currentKeg);
 
       $scope.tap.kegs = _.filter($scope.tap.kegs, function(keg) {
         return keg.id !== $scope.tap.currentKeg.id;

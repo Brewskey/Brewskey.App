@@ -6,6 +6,7 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
   'gps',
   '$stateParams',
   '$ionicModal',
+  'utils',
   function(
     $scope,
     rest,
@@ -13,13 +14,12 @@ angular.module('brewskey.controllers').controller('NearyLocationsCtrl', [
     $ionicPlatform,
     gps,
     $stateParams,
-    $ionicModal
+    $ionicModal,
+    utils
   ) {
     $scope.loading = true;
 
-    $scope.getPercentLeft = function(keg) {
-      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
-    };
+    $scope.getPercentLeft = utils.getPercentLeft;
 
     $scope.getNearbyLocations = function() {
       gps.getCoords().then(function(coordinates) {

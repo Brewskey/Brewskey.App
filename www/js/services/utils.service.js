@@ -1,7 +1,8 @@
 // Ionic Starter App
 
 angular.module('brewskey.services').factory('utils', [
-  function() {
+  'kegSize',
+  function(kegSize) {
     return {
       filterErrors: function(error) {
         if (error && error.data && error.data.ModelState) {
@@ -18,6 +19,15 @@ angular.module('brewskey.services').factory('utils', [
               "Whoa! Brewskey had an error.  We'll try to get it fixed soon."
           };
         }
+      },
+
+      getPercentLeft: function(keg) {
+        var startingOunces = kegSize[keg.kegType];
+
+        return Math.max(
+          0,
+          ((startingOunces - keg.maxOunces - keg.ounces) / startingOunces) * 100
+        );
       },
 
       shouldShowStartPour: true

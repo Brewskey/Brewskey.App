@@ -19,8 +19,6 @@ angular.module('brewskey.controllers').controller('LocationCtrl', [
           }).length;
       });
 
-    $scope.getPercentLeft = function(tap) {
-      return Math.max(0, ((tap.maxOunces - tap.ounces) / tap.maxOunces) * 100);
-    };
+    $scope.getPercentLeft = utils.getPercentLeft;
   }
 ]);

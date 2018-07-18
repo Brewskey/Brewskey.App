@@ -21,9 +21,7 @@ angular.module('brewskey.controllers').controller('TapsCtrl', [
     };
     $scope.refresh();
 
-    $scope.getPercentLeft = function(keg) {
-      return Math.max(0, ((keg.maxOunces - keg.ounces) / keg.maxOunces) * 100);
-    };
+    $scope.getPercentLeft = utils.getPercentLeft;
 
     $scope.deleteTap = function(tap) {
       modal.delete('Tap', 'api/taps', tap).then(function(res) {
