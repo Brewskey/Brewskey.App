@@ -26,7 +26,9 @@ angular.module('brewskey.services').factory('utils', [
 
         return Math.max(
           0,
-          ((startingOunces - keg.maxOunces - keg.ounces) / startingOunces) * 100
+          ((startingOunces - (startingOunces - keg.maxOunces) - keg.ounces) /
+            startingOunces) *
+            100
         );
       },
 

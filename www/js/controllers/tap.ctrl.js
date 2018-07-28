@@ -8,6 +8,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
   'kegTypes',
   '$ionicHistory',
   'utils',
+  'modal',
   function(
     $scope,
     $stateParams,
@@ -17,7 +18,8 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
     cache,
     kegTypes,
     $ionicHistory,
-    utils
+    utils,
+    modal
   ) {
     $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
       viewData.enableBack = false;
@@ -138,6 +140,14 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
 
     $scope.tabClicked = function() {
       $ionicHistory.currentView($ionicHistory.backView());
+    };
+
+    $scope.onPourHeld = function(pour) {
+      modal
+        .delete('Pour', 'api/pour/' + pour.id + '/', { name: 'this pour' })
+        .then(function() {
+          $scope.refresh();
+        });
     };
   }
 ]);

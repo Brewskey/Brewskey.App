@@ -19,9 +19,9 @@
                     <strong>Recent Pours</strong>
                 </div>
                 <div ng-repeat="pour in getPours">
-                    <a ng-include src="'templates/section/stats-pour.html'"  ui-sref="app.profile({userName: pour.pouredBy})" class="item clearfix" ng-if="pour.pouredBy">
+                    <a ng-include src="'templates/section/stats-pour.html'"  ui-sref="app.profile({userName: pour.pouredBy})" on-hold="onPourHeld(pour)" class="item clearfix" ng-if="pour.pouredBy">
                     </a>
-                    <div ng-include src="'templates/section/stats-pour.html'" class="item clearfix" ng-if="!pour.pouredBy">
+                    <div ng-include src="'templates/section/stats-pour.html'" on-hold="onPourHeld(pour)" class="item clearfix" ng-if="!pour.pouredBy">
                     </div>
                 </div>
             </div>
