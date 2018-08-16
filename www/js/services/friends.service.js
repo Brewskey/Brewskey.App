@@ -30,6 +30,9 @@ angular.module('brewskey.services').factory('friends', [
       },
       getRequests: function() {
         return rest.all('api/friends/requests').getList();
+      },
+      removeFriend: function(id) {
+        return rest.one('api/friends/requests/' + id + '/').remove();
       }
     };
   }

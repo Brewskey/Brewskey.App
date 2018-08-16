@@ -42,16 +42,17 @@ angular.module('brewskey.controllers').controller('FriendsCtrl', [
 
     function getFriends() {
       friends.getFriends().then(function(friends) {
-        $scope.loading = false;
         $scope.friends = friends;
+        $scope.loading = false;
+      });
+
+      friends.getRequests().then(function(requests) {
+        $scope.requests = requests;
+        $scope.loading = false;
       });
     }
 
     getFriends();
-
-    friends.getRequests().then(function(requests) {
-      $scope.requests = requests;
-    });
 
     function onSuccess(contacts) {
       $scope.contactsLoaded = true;
@@ -106,25 +107,30 @@ angular.module('brewskey.controllers').controller('FriendsCtrl', [
       });
     }
 
-    if (typeof ContactFindOptions !== 'undefined') {
-      var options = new ContactFindOptions();
-      options.filter = '';
-      options.multiple = true;
-      options.hasPhoneNumber = true;
-      var fields = [
-        navigator.contacts.fieldType.displayName,
-        navigator.contacts.fieldType.name
-      ];
-
-      setTimeout(function() {
-        navigator.contacts.find(fields, onSuccess, onError, options);
-      }, 10);
-    } else {
-      $scope.contacts = JSON.parse(
-        '[{"id":"{5.70002.22d}","rawId":null,"displayName":"Aaron","name":{"formatted":"Aaron","familyName":null,"givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"4064805936","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null},{"id":"{5.70002.280}","rawId":null,"displayName":"Aaron Bronow","name":{"formatted":"Aaron Bronow","familyName":"Bronow","givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"2063954495","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null}]'
-      );
-      getRegisteredUsers();
-    }
+    // if (typeof ContactFindOptions !== 'undefined') {
+    //   var options = new ContactFindOptions();
+    //   options.filter = '';
+    //   options.multiple = true;
+    //   options.hasPhoneNumber = true;
+    //   var fields = [
+    //     navigator.contacts.fieldType.displayName,
+    //     navigator.contacts.fieldType.name
+    //   ];
+    //
+    //   setTimeout(function() {
+    //     navigator.contacts.find(fields, onSuccess, onError, options);
+    //   }, 10);
+    // } else {
+    //   $scope.contacts = JSON.parse(
+    //     '[{"id":"{5.70002.22d}","rawId":null,"displayName":"Aaron","name":{"formatted":"Aaron","familyName":null,"givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"4064805936","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null},{"id":"{5.70002.280}","rawId":null,"displayName":"Aaron Bronow","name":{"formatted":"Aaron Bronow","familyName":"Bronow","givenName":"Aaron","middleName":null,"honorificPrefix":null,"honorificSuffix":null},"nickname":"Aaron","phoneNumbers":[{"id":null,"type":"1","value":"2063954495","pref":false}],"emails":[],"addresses":[],"ims":[],"organizations":[],"birthday":null,"note":null,"photos":null,"categories":null,"urls":null}]'
+    //   );
+    //   getRegisteredUsers();
+    // }
+    $scope.getRequests = function(isUserRequest) {
+      return _.filter($scope.requests, function(r) {
+        return r.isUserRequest === isUserRequest;
+      });
+    };
     $scope.acceptFriend = function(request) {
       request.status = 1;
       request.put().then(function() {

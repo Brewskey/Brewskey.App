@@ -38,7 +38,9 @@ angular
         }
 
         friends.getRequests().then(function(requests) {
-          $scope.friendRequestCount = requests.length;
+          $scope.friendRequestCount = _.filter(requests, function(r) {
+            return !r.isUserRequest;
+          }).length;
         });
       }
     );

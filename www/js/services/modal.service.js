@@ -3,7 +3,7 @@ angular.module('brewskey.services').factory('modal', [
   'Restangular',
   function($ionicPopup, rest) {
     return {
-      delete: function(entityType, apiUrl, entity) {
+      delete: function(entityType, apiUrl, entity, onOpen) {
         return $ionicPopup
           .confirm({
             cssClass: 'text-center green-popup',
@@ -14,6 +14,8 @@ angular.module('brewskey.services').factory('modal', [
             if (!result) {
               return;
             }
+
+            onOpen && onOpen();
 
             rest
               .one(apiUrl, apiUrl.indexOf(entity.id) >= 0 ? '' : entity.id)

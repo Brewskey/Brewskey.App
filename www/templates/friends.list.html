@@ -5,7 +5,9 @@
 
     <ion-content class="has-header" style="margin-top: 40px;">
         <div class="list">
-
+          <div class="item text-center" ng-show="loading">
+              <ion-spinner></ion-spinner>
+          </div>
             <div class="item no-color" ng-if="friends.length">
                 <a ng-repeat="friend in friends | orderBy: 'name'" class="item" ui-sref="app.profile({userName: friend.userName})">
                    <img

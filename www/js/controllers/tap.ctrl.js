@@ -9,6 +9,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
   '$ionicHistory',
   'utils',
   'modal',
+  '$ionicLoading',
   function(
     $scope,
     $stateParams,
@@ -19,7 +20,8 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
     kegTypes,
     $ionicHistory,
     utils,
-    modal
+    modal,
+    $ionicLoading
   ) {
     $scope.$on('$ionicView.beforeEnter', function(event, viewData) {
       viewData.enableBack = false;
@@ -83,7 +85,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
 
     function getInfo() {
       if ($stateParams.deviceId) {
-        rest
+        return rest
           .one('api/devices', $stateParams.deviceId)
           .getList('taps')
           .then(
@@ -97,7 +99,7 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
             }
           );
       } else {
-        rest
+        var promise = rest
           .one('api/taps', $stateParams.tapId)
           .get()
           .then(setupTap, function(error) {
@@ -108,6 +110,8 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
         if ($stateParams.tapId) {
           setupPours($stateParams.tapId);
         }
+
+        return promise;
       }
     }
 
@@ -129,9 +133,9 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
         tapId,
         kegId
       );
-      getInfo();
-
-      $scope.$broadcast('scroll.refreshComplete');
+      return getInfo().then(function() {
+        $scope.$broadcast('scroll.refreshComplete');
+      });
     };
 
     $scope.timeAgo = function(time) {
@@ -144,9 +148,19 @@ angular.module('brewskey.controllers').controller('TapCtrl', [
 
     $scope.onPourHeld = function(pour) {
       modal
-        .delete('Pour', 'api/pour/' + pour.id + '/', { name: 'this pour' })
+        .delete(
+          'Pour',
+          'api/pour/' + pour.id + '/',
+          { name: 'this pour' },
+          function() {
+            $ionicLoading.show();
+          }
+        )
         .then(function() {
-          $scope.refresh();
+          return $scope.refresh();
+        })
+        .then(function() {
+          $ionicLoading.hide();
         });
     };
   }
