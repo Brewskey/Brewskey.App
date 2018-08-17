@@ -27,7 +27,7 @@ type RequestApiStore<TResult> = {|
 |};
 
 const getCacheKey = (requestArgs: Array<any>): string =>
-  JSON.stringify(requestArgs).toLowerCase();
+  `_${JSON.stringify(requestArgs).toLowerCase()}`;
 
 const makeRequestApiStore = <TResult>(
   getRequestPromise: (...args: Array<any>) => Promise<TResult>,
