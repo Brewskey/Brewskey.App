@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { KEG_SIZES_BY_KEG_TYPE } from './constants';
+
 // eslint-disable-next-line
 const EMAIL_REGEXP = /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
@@ -20,16 +22,12 @@ export const isClassBasedComponent = (
   component: React.ComponentType<any>,
 ): boolean => !!(component: any).prototype.render;
 
-export const calculateKegLevel = (
-  ounces: number,
-  maxOunces: number,
-): number => {
-  if (maxOunces === 0) {
-    return 0;
-  }
+export const calculateKegLevel = (keg: Keg): number => {
+  const KEG_OUNCES = KEG_SIZES_BY_KEG_TYPE[keg.kegType];
 
-  const level = (maxOunces - ounces) / maxOunces * 100;
-  return level <= 0 ? 0 : level;
+  const level =
+    (KEG_OUNCES - (KEG_OUNCES - keg.maxOunces) - keg.ounces) / KEG_OUNCES * 100;
+  return Math.min(Math.max(0, level), 100);
 };
 
 // todo this probably annotated wrong. It doesn't propogate props type to
