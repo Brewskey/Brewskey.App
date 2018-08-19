@@ -18,9 +18,7 @@ const TapListItem = ({ onPress, tap }: Props) => {
   const { currentKeg, description, tapNumber } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
-  const kegLevel = currentKeg
-    ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces).toFixed(0)
-    : null;
+  const kegLevel = currentKeg ? calculateKegLevel(currentKeg).toFixed(0) : null;
 
   return (
     <ListItem

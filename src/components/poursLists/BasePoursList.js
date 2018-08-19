@@ -9,7 +9,7 @@ import { withNavigation } from 'react-navigation';
 import { observer } from 'mobx-react/native';
 import DAOListStore from '../../stores/DAOListStore';
 import { PourStore } from '../../stores/DAOStores';
-import List from '../../common/List';
+import SwipeableList from '../../common/SwipeableList';
 import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
@@ -17,8 +17,11 @@ type Props = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
+  onDeleteItemPress?: (item: Pour) => void,
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
+  slideoutComponent?: React.ComponentType<RowItemProps<Pour, *>>,
+  rowItemComponent?: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
 |};
 
 @withNavigation
@@ -50,15 +53,38 @@ class BasePoursList extends React.Component<Props> {
     this._listStore.reload();
   };
 
-  _renderRow = ({ item }: { item: Row<Pour> }): React.Element<any> => (
-    <LoaderRow loadedRow={this.props.loadedRow} loader={item.loader} />
+  _renderRow = (
+    { item }: { item: Row<Pour> },
+    ...swipeableStateProps
+  ): React.Element<any> => (
+    <LoaderRow
+      loadedRow={this.props.loadedRow}
+      loader={item.loader}
+      {...swipeableStateProps}
+    />
+  );
+
+  _renderRow = ({
+    info: { item: row, index, separators },
+    ...swipeableStateProps
+  }): React.Element<any> => (
+    <LoaderRow
+      index={index}
+      loadedRow={this.props.loadedRow}
+      loader={row.loader}
+      onDeleteItemPress={this.props.onDeleteItemPress}
+      rowItemComponent={this.props.rowItemComponent}
+      separators={separators}
+      slideoutComponent={this.props.slideoutComponent}
+      {...swipeableStateProps}
+    />
   );
 
   render() {
     const { ListEmptyComponent, ListHeaderComponent } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
-      <List
+      <SwipeableList
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={!isLoading ? ListEmptyComponent : null}

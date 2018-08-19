@@ -86,8 +86,8 @@ type LoadedProps = {|
 
 class LoadedKegLevelBar extends React.PureComponent<LoadedProps> {
   render() {
-    const { value: { maxOunces, ounces } } = this.props;
-    const kegLevel = calculateKegLevel(ounces, maxOunces);
+    const { value } = this.props;
+    const kegLevel = calculateKegLevel(value);
     const isLowLevel = kegLevel <= LOW_KEG_LEVEL;
     const levelText = isLowLevel
       ? `Low keg level: ${kegLevel.toFixed(0)}%`

@@ -69,7 +69,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     } = item;
 
     const kegLevel = currentKeg
-      ? calculateKegLevel(currentKeg.ounces, currentKeg.maxOunces).toFixed(0)
+      ? calculateKegLevel(currentKeg).toFixed(0)
       : null;
 
     const beverageName = currentKeg

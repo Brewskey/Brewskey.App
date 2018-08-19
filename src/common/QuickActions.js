@@ -34,21 +34,21 @@ const styles = StyleSheet.create({
 type Props<TItem> = {|
   deleteModalMessage: string,
   item: TItem,
-  onDeleteItemPress: (item: TItem) => void,
-  onEditItemPress: (item: TItem) => void,
+  onDeleteItemPress?: (item: TItem) => void,
+  onEditItemPress?: (item: TItem) => void,
   deleteModalTitle: string,
 |};
 
 @observer
 class QuickActions<TItem> extends React.Component<Props<TItem>> {
   static defaultProps = {
-    onDeleteItemPress: () => {},
-    onEditItemPress: () => {},
+    onDeleteItemPress: null,
+    onEditItemPress: null,
   };
 
   _modalToggleStore = new ToggleStore();
 
-  _onDeleteModalConform = () => {
+  _onDeleteModalConfirm = () => {
     this._modalToggleStore.toggleOff();
     this.props.onDeleteItemPress(this.props.item);
   };
@@ -56,28 +56,32 @@ class QuickActions<TItem> extends React.Component<Props<TItem>> {
   _onEditItemPress = (): void => this.props.onEditItemPress(this.props.item);
 
   render() {
-    const { deleteModalTitle } = this.props;
+    const { deleteModalTitle, onDeleteItemPress, onEditItemPress } = this.props;
 
     return (
       <View style={styles.container}>
-        <SwipeableActionButton
-          containerStyle={styles.editButtonContainer}
-          iconName="create"
-          iconStyle={styles.editIcon}
-          onPress={this._onEditItemPress}
-        />
-        <SwipeableActionButton
-          containerStyle={styles.deleteButtonContainer}
-          iconName="delete"
-          iconStyle={styles.deleteIcon}
-          onPress={this._modalToggleStore.toggleOn}
-        />
+        {!onEditItemPress ? null : (
+          <SwipeableActionButton
+            containerStyle={styles.editButtonContainer}
+            iconName="create"
+            iconStyle={styles.editIcon}
+            onPress={this._onEditItemPress}
+          />
+        )}
+        {!onDeleteItemPress ? null : (
+          <SwipeableActionButton
+            containerStyle={styles.deleteButtonContainer}
+            iconName="delete"
+            iconStyle={styles.deleteIcon}
+            onPress={this._modalToggleStore.toggleOn}
+          />
+        )}
         <DeleteModal
           title={deleteModalTitle}
           isVisible={this._modalToggleStore.isToggled}
           message={this.props.deleteModalMessage}
           onCancelButtonPress={this._modalToggleStore.toggleOff}
-          onDeleteButtonPress={this._onDeleteModalConform}
+          onDeleteButtonPress={this._onDeleteModalConfirm}
         />
       </View>
     );

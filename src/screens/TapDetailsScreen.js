@@ -40,6 +40,7 @@ const tabScreens = {
 
 const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
   ...theme.tabBar,
+  swipeEnabled: false,
 });
 
 type InjectedProps = {|

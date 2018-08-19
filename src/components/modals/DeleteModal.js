@@ -51,11 +51,11 @@ const DeleteModal = ({
     </View>
     <View style={styles.buttonsContainer}>
       <Button
+        backgroundColor={COLORS.secondary}
         color={COLORS.danger}
         icon={{ color: COLORS.danger, name: 'delete' }}
         onPress={onDeleteButtonPress}
         title={deleteButtonTitle}
-        transparent
       />
       <Button
         backgroundColor={COLORS.secondary}

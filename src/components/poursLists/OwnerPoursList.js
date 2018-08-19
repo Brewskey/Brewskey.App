@@ -8,11 +8,15 @@ import * as React from 'react';
 import moment from 'moment';
 import { observer } from 'mobx-react/native';
 import { withNavigation } from 'react-navigation';
+import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import ListEmpty from '../../common/ListEmpty';
 import ListItem from '../../common/ListItem';
+import QuickActions from '../../common/QuickActions';
+import SwipeableRow from '../../common/SwipeableRow';
 import UserAvatar from '../../common/avatars/UserAvatar';
 import BasePoursList from './BasePoursList';
+import SnackBarStore from '../../stores/SnackBarStore';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
@@ -38,15 +42,23 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
     });
   };
 
+  _onDeleteItemPress = async (item: Pour): Promise<void> => {
+    await DAOApi.PourDAO.deleteByID(item.id);
+    SnackBarStore.showMessage({ text: 'The pour was deleted' });
+  };
+
   render() {
     const { ListHeaderComponent, onRefresh, queryOptions } = this.props;
     return (
       <BasePoursList
         ListEmptyComponent={<ListEmpty message="No pours" />}
         ListHeaderComponent={ListHeaderComponent}
-        loadedRow={LoadedRow}
+        loadedRow={SwipeableRow}
+        onDeleteItemPress={this._onDeleteItemPress}
         onRefresh={onRefresh}
         queryOptions={queryOptions}
+        rowItemComponent={LoadedRow}
+        slideoutComponent={Slideout}
       />
     );
   }
@@ -57,6 +69,9 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
+  const title = pour.owner
+    ? `${pourOwnerUserName} – ${pour.ounces.toFixed(1)} oz`
+    : `${pour.ounces.toFixed(1)} oz`;
 
   return (
     <ListItem
@@ -64,10 +79,19 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
       onPress={onListItemPress}
       hideChevron
       item={pour}
-      title={`${pourOwnerUserName} – ${pour.ounces.toFixed(1)} oz`}
+      title={title}
       subtitle={moment(pour.pourDate).fromNow()}
     />
   );
 };
+
+const Slideout = ({ item, onDeleteItemPress }: RowItemProps<Pour, *>) => (
+  <QuickActions
+    deleteModalMessage="Are you sure you want to delete this pour?"
+    deleteModalTitle="Delete Pour"
+    item={item}
+    onDeleteItemPress={onDeleteItemPress}
+  />
+);
 
 export default OwnerPoursList;
