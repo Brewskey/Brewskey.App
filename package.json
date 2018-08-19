@@ -12,8 +12,7 @@
   "dependencies": {
     "array-flatten": "^2.1.1",
     "assert": "^1.4.1",
-    "brewskey.js-api":
-      "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
     "buffer": "^5.0.8",
     "constants-browserify": "^1.0.0",
     "deepmerge": "^2.0.1",
@@ -30,6 +29,7 @@
     "prop-types": "^15.6.0",
     "react": "16.3.1",
     "react-native": "0.55.3",
+    "react-native-app-settings": "^2.0.0",
     "react-native-contacts": "^2.0.0",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "^0.21.5",
@@ -41,6 +41,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-maps": "^0.21.0",
     "react-native-nfc-manager": "^0.4.1",
+    "react-native-permissions": "^1.1.1",
     "react-native-progress": "^3.4.0",
     "react-native-randombytes": "^3.0.0",
     "react-native-signalr": "^1.0.6",
@@ -74,7 +75,11 @@
     "react-test-renderer": "^16.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": ["prettier --write", "npm run lint", "git add"]
+    "src/**/*.{js,json}": [
+      "prettier --write",
+      "npm run lint",
+      "git add"
+    ]
   },
   "jest": {
     "preset": "react-native"
