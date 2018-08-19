@@ -5505,6 +5505,10 @@ react-lifecycles-compat@^3, react-lifecycles-compat@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.2.tgz#7279047275bd727a912e25f734c0559527e84eff"
 
+react-native-app-settings@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
+
 react-native-contacts@^2.0.0:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.1.5.tgz#45d6149e055660c88fec96cdd5e5c51df0e04f6e"
@@ -5594,6 +5598,10 @@ react-native-maps@^0.21.0:
 react-native-nfc-manager@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-0.4.2.tgz#f48d3fee56fc5ea8757ee52a2adf269e7d06e357"
+
+react-native-permissions@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-1.1.1.tgz#4876004681ff8556454613d85249b01baff9b35b"
 
 react-native-progress@^3.4.0:
   version "3.4.0"

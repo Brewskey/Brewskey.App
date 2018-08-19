@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-app-settings')
     compile (project(':react-native-device-info')){
         exclude group: "com.google.android.gms" 
     }
