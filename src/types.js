@@ -24,6 +24,7 @@ export type NearbyTap = {
   currentKeg: {
     beverageId: number, // not translated to string
     beverageName: string,
+    kegType: string,
     maxOunces: number,
     ounces: number,
   },

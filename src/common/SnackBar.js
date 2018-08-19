@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'absolute',
     width: '100%',
-    zIndex: 1,
+    zIndex: 99999,
   },
   messageContainer: {
     alignItems: 'center',

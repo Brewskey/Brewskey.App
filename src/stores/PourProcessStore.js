@@ -32,7 +32,16 @@ class PourProcessStore {
 
   @action
   setTotp = (totp: string) => {
-    this.totp = totp.replace(/\D/g, '');
+    const newTotp = totp.replace(/\D/g, '');
+
+    if (newTotp === this.totp) {
+      return;
+    }
+
+    this.totp = newTotp;
+    if (this.totp.length === 6) {
+      this.onPourPress();
+    }
   };
 
   @action
@@ -82,8 +91,6 @@ class PourProcessStore {
   };
 
   _processPour = async (deviceID?: EntityID) => {
-    this.onHideModal();
-
     try {
       this._setIsLoading(true);
       const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
@@ -101,6 +108,8 @@ class PourProcessStore {
         },
         method: 'POST',
       });
+      this.setTotp('');
+      this.onHideModal();
 
       SnackBarStore.showMessage({
         duration: 3000,
@@ -123,7 +132,6 @@ class PourProcessStore {
         });
       }
     } finally {
-      this.setTotp('');
       this._setIsLoading(false);
     }
   };
