@@ -20,6 +20,7 @@ import SnackBarStore from '../../stores/SnackBarStore';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
+  canDeletePours: boolean,
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
@@ -48,7 +49,25 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
   };
 
   render() {
-    const { ListHeaderComponent, onRefresh, queryOptions } = this.props;
+    const {
+      canDeletePours,
+      ListHeaderComponent,
+      onRefresh,
+      queryOptions,
+    } = this.props;
+
+    if (!canDeletePours) {
+      return (
+        <BasePoursList
+          ListEmptyComponent={<ListEmpty message="No pours" />}
+          ListHeaderComponent={ListHeaderComponent}
+          loadedRow={LoadedRow}
+          onRefresh={onRefresh}
+          queryOptions={queryOptions}
+        />
+      );
+    }
+
     return (
       <BasePoursList
         ListEmptyComponent={<ListEmpty message="No pours" />}

@@ -14,6 +14,7 @@ import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 type InjectedProps = {|
+  isTapAdmin: boolean,
   noFlowSensorWarning: ?React.Element<any>,
   tap: Tap,
 |};
@@ -26,10 +27,15 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { noFlowSensorWarning, tap: { id } } = this.injectedProps;
+    const {
+      isTapAdmin,
+      noFlowSensorWarning,
+      tap: { id },
+    } = this.injectedProps;
     return (
       <Container>
         <OwnerPoursList
+          canDeletePours={isTapAdmin}
           ListHeaderComponent={
             <View>
               {noFlowSensorWarning}

@@ -1,13 +1,17 @@
 // @flow
 
-import type { EntityID, FlowSensor, Tap } from 'brewskey.js-api';
+import type { EntityID, FlowSensor, Permission, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
-import { FlowSensorStore, TapStore } from '../stores/DAOStores';
+import {
+  FlowSensorStore,
+  PermissionStore,
+  TapStore,
+} from '../stores/DAOStores';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import ErrorScreen from '../common/ErrorScreen';
@@ -100,6 +104,38 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     );
   }
 
+  @computed
+  get _getPermissionLoader(): LoadObject<Permission> {
+    const tap = this.props.value;
+    return PermissionStore.getMany({
+      filters: [DAOApi.createFilter('tap/id').equals(tap.id)],
+      limit: 1,
+    });
+  }
+
+  @computed
+  get _canEdit(): boolean {
+    return (
+      this._getPermissionLoader.map(
+        (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> =>
+          loaders[0].getValue() !== null,
+      ) || false
+    );
+  }
+
+  @computed
+  get _isTapAdmin(): boolean {
+    return (
+      this._getPermissionLoader.map(
+        (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> => {
+          const value = loaders[0].getValue() || null;
+
+          return value !== null && value.permissionType === 'Administrator';
+        },
+      ) || false
+    );
+  }
+
   _onNoFlowSensorWarningPress = () => {
     const {
       navigation,
@@ -146,11 +182,13 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
       <Container>
         <Header
           rightComponent={
-            <HeaderNavigationButton
-              name="edit"
-              params={{ id }}
-              toRoute="editTap"
-            />
+            !this._canEdit ? null : (
+              <HeaderNavigationButton
+                name="edit"
+                params={{ id }}
+                toRoute="editTap"
+              />
+            )
           }
           showBackButton
           title="Tap"
@@ -165,6 +203,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
             },
           }}
           screenProps={{
+            isTapAdmin: this._isTapAdmin,
             noFlowSensorWarning,
             tap: value,
           }}
