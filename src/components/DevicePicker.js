@@ -33,7 +33,7 @@ class DevicePicker extends React.Component<Props> {
       <DAOPicker
         {...this.props}
         daoStore={DeviceStore}
-        headerTitle={`Select Brewskey box${multiple ? 'es' : ''}`}
+        headerTitle={`Select Brewskey Box${multiple ? 'es' : ''}`}
         label={`Brewskey box${multiple ? 'es' : ''}`}
         renderRow={this._renderRow}
         stringValueExtractor={(device: Device): string => device.name}
@@ -48,7 +48,6 @@ const LoadedRow = ({ item: device, isSelected, toggleItem }: Object) => (
     hideChevron
     isSelected={isSelected}
     item={device}
-    subtitle={device.particleId}
     title={device.name}
     toggleItem={toggleItem}
   />

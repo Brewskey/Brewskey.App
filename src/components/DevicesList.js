@@ -142,7 +142,6 @@ const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Device, *>) => (
         <DeviceOnlineIndicator deviceID={item.id} />
       </View>
     }
-    subtitle={item.particleId}
     title={item.name}
   />
 );

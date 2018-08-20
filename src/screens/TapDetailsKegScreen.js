@@ -39,7 +39,9 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _currentBeverageLoader(): LoadObject<Beverage> {
-    const { tap: { id } } = this.injectedProps;
+    const {
+      tap: { id },
+    } = this.injectedProps;
     return TapStore.getByID(id).map(
       ({ currentKeg }: Tap): LoadObject<Beverage> =>
         currentKeg
@@ -55,7 +57,10 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
   _setKegLevelBarRef = ref => (this._kegLevelBar = ref);
 
   render() {
-    const { noFlowSensorWarning, tap: { currentKeg, id } } = this.injectedProps;
+    const {
+      noFlowSensorWarning,
+      tap: { currentKeg, id },
+    } = this.injectedProps;
 
     return (
       <KegsList
@@ -74,9 +79,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                   </SectionContent>
                 </Section>
                 <Section bottomPadded>
-                  <SectionHeader
-                    title={`Beverage: ${currentKeg.beverage.name}`}
-                  />
+                  <SectionHeader title={currentKeg.beverage.name} />
                   <SectionContent>
                     <BeverageDetailsLoader
                       beverageID={currentKeg.beverage.id}
