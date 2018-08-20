@@ -7,6 +7,7 @@ import TouchableItem from '../../common/buttons/TouchableItem';
 import { observer } from 'mobx-react/native';
 import * as Progress from 'react-native-progress';
 import PourProcessStore from '../../stores/PourProcessStore';
+import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
 
@@ -21,6 +22,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textDecorationLine: 'underline',
   },
+  errorText: {
+    color: COLORS.danger2,
+    fontSize: 12,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
   headerText: {
     color: COLORS.textInverse,
     fontSize: 18,
@@ -31,6 +38,9 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     textAlign: 'center',
     width: '85%',
+  },
+  loadingIndicator: {
+    height: 120,
   },
   progressContainer: {
     alignItems: 'center',
@@ -55,6 +65,7 @@ class PourProcessModal extends Component<{}> {
   render() {
     const {
       currentSeconds,
+      isLoading,
       isNFCEnabled,
       isNFCSupported,
       isVisible,
@@ -83,18 +94,26 @@ class PourProcessModal extends Component<{}> {
               </TouchableItem>
             )}
           <View style={styles.progressContainer}>
-            <Progress.Circle
-              borderWidth={0}
-              color="#fa0"
-              formatText={this._formatText}
-              progress={currentSeconds / 30}
-              showsText
-              size={120}
-              textStyle={styles.progressText}
-              thickness={16}
-              unfilledColor="#1d5f68"
-              width={120}
-            />
+            {isLoading ? (
+              <LoadingIndicator
+                activitySize={120}
+                color="white"
+                style={styles.loadingIndicator}
+              />
+            ) : (
+              <Progress.Circle
+                borderWidth={0}
+                color="#fa0"
+                formatText={this._formatText}
+                progress={currentSeconds / 30}
+                showsText
+                size={120}
+                textStyle={styles.progressText}
+                thickness={16}
+                unfilledColor="#1d5f68"
+                width={120}
+              />
+            )}
           </View>
           {isNFCEnabled && (
             <Text style={styles.smallText}>or enter a code</Text>
@@ -112,8 +131,10 @@ class PourProcessModal extends Component<{}> {
             style={styles.input}
             value={PourProcessStore.totp}
           />
+          <Text style={styles.errorText}>{PourProcessStore.errorText}</Text>
           <View style={styles.buttonContainer}>
             <Button
+              disabled={isLoading}
               onPress={PourProcessStore.onPourPress}
               secondary
               title="Start Pour"

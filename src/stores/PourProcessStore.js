@@ -17,12 +17,13 @@ const GPSCoordinatesStore = createGPSCoordinatesStore();
 class PourProcessStore {
   _totpTimer: ?IntervalID = null;
 
-  @observable isNFCSupported: boolean = true;
-  @observable isNFCEnabled: boolean = false;
   @observable currentSeconds: number = 0;
+  @observable errorText: string = '';
+  @observable isLoading: boolean = false;
+  @observable isNFCEnabled: boolean = false;
+  @observable isNFCSupported: boolean = true;
   @observable isVisible: boolean = false;
   @observable totp: string = '';
-  @observable isLoading: boolean = false;
 
   constructor() {
     NfcManager.start().catch(() =>
@@ -37,7 +38,7 @@ class PourProcessStore {
     if (newTotp === this.totp) {
       return;
     }
-
+    this._setErrorText('');
     this.totp = newTotp;
     if (this.totp.length === 6) {
       this.onPourPress();
@@ -81,6 +82,8 @@ class PourProcessStore {
     this.isVisible = false;
   };
 
+  @action _setErrorText = (errorText: string) => (this.errorText = errorText);
+
   onEnableNFCPress = () => {
     this.onHideModal();
     NfcManager.goToNfcSetting();
@@ -93,6 +96,7 @@ class PourProcessStore {
   _processPour = async (deviceID?: EntityID) => {
     try {
       this._setIsLoading(true);
+      this._setErrorText('');
       const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
 
       await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour`, {
@@ -117,19 +121,13 @@ class PourProcessStore {
         text: 'You can start pouring now!',
       });
     } catch (error) {
+      this.setTotp('');
       if (!deviceID) {
-        SnackBarStore.showMessage({
-          duration: 3000,
-          style: 'danger',
-          text:
-            'The passcode you entered was incorrect or expired.  Please try a new code.',
-        });
+        this._setErrorText(
+          'The passcode you entered was incorrect or expired.  Please try a new code.',
+        );
       } else {
-        SnackBarStore.showMessage({
-          duration: 3000,
-          style: 'danger',
-          text: 'An error during processing pour',
-        });
+        this._setErrorText('An error during processing pour');
       }
     } finally {
       this._setIsLoading(false);
