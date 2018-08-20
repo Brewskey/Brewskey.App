@@ -26,7 +26,7 @@ type InjectedProps = {|
 @observer
 class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
-    tabBarLabel: 'Leaderboard',
+    tabBarLabel: 'Leader\nboard',
   };
 
   @observable
@@ -39,7 +39,10 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
   };
 
   render() {
-    const { noFlowSensorWarning, tap: { id } } = this.injectedProps;
+    const {
+      noFlowSensorWarning,
+      tap: { id },
+    } = this.injectedProps;
     return (
       <LeaderboardList
         duration={this._leaderboardDuration}
