@@ -43,7 +43,7 @@ const PintCounter = ({ ounces }: Props) => {
           <Pint key={index} />
         ))
       )}
-      {partialPintLevel && <Pint level={partialPintLevel} />}
+      {partialPintLevel ? <Pint level={partialPintLevel} /> : null}
     </View>
   );
 };
