@@ -79,6 +79,7 @@ class PourProcessStore {
     GPSCoordinatesStore.flushCache();
     NfcManager.unregisterTagEvent();
     this._stopTotpTimer();
+    this.setTotp('');
     this.isVisible = false;
   };
 
