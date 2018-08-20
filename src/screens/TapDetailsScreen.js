@@ -4,6 +4,7 @@ import type { EntityID, FlowSensor, Permission, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
@@ -44,6 +45,11 @@ const tabScreens = {
 
 const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
   ...theme.tabBar,
+  initialLayout: {
+    height: 0,
+    width: Dimensions.get('window').width,
+  },
+  optimizationsEnabled: true,
   swipeEnabled: false,
 });
 

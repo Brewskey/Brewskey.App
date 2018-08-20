@@ -3,6 +3,7 @@
 import type { EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
+import { Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
@@ -25,7 +26,12 @@ const EditTapRouter = createMaterialTopTabNavigator(
   /* eslint-enable */
   {
     ...theme.tabBar,
+    initialLayout: {
+      height: 0,
+      width: Dimensions.get('window').width,
+    },
     lazy: true,
+    optimizationsEnabled: true,
   },
 );
 
