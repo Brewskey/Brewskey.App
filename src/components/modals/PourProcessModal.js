@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import Button from '../../common/buttons/Button';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import { observer } from 'mobx-react/native';
 import * as Progress from 'react-native-progress';
@@ -12,7 +11,6 @@ import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
-  buttonContainer: { width: '100%' },
   enableNFCContainer: {
     marginBottom: 12,
   },
@@ -122,24 +120,18 @@ class PourProcessModal extends Component<{}> {
             autoCapitalize="none"
             autoCorrect={false}
             autoFocus
+            clearButtonMode="always"
+            editable={!PourProcessStore.isLoading}
+            enablesReturnKeyAutomatically={false}
             keyboardType="numeric"
             maxLength={6}
             selectionColor={COLORS.textInverse}
             underlineColorAndroid={COLORS.secondary}
             onChangeText={PourProcessStore.setTotp}
-            onSubmitEditing={PourProcessStore.onPourPress}
             style={styles.input}
             value={PourProcessStore.totp}
           />
           <Text style={styles.errorText}>{PourProcessStore.errorText}</Text>
-          <View style={styles.buttonContainer}>
-            <Button
-              disabled={isLoading}
-              onPress={PourProcessStore.onPourPress}
-              secondary
-              title="Start Pour"
-            />
-          </View>
         </View>
       </CenteredModal>
     );

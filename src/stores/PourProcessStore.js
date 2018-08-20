@@ -121,7 +121,6 @@ class PourProcessStore {
         text: 'You can start pouring now!',
       });
     } catch (error) {
-      this.setTotp('');
       if (!deviceID) {
         this._setErrorText(
           'The passcode you entered was incorrect or expired.  Please try a new code.',
