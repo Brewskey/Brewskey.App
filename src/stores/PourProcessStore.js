@@ -78,6 +78,7 @@ class PourProcessStore {
   onHideModal = () => {
     GPSCoordinatesStore.flushCache();
     NfcManager.unregisterTagEvent();
+
     this._stopTotpTimer();
     this.setTotp('');
     this.isVisible = false;
@@ -144,10 +145,37 @@ class PourProcessStore {
     this.isVisible = isVisible;
   };
 
-  _onNFCTagDiscovered = () => {
-    // todo parse NFC message;
-    const deviceID = '123';
-    this._processPour(deviceID);
+  _onNFCTagDiscovered = (tag: Object) => {
+    let payload;
+    if (tag.ndefMessage) {
+      // eslint-disable-next-line prefer-destructuring
+      payload = tag.ndefMessage[1].payload;
+    } else {
+      if (!tag[1].payload[0]) {
+        tag[1].payload.shift();
+      }
+
+      // eslint-disable-next-line prefer-destructuring
+      payload = tag[1].payload;
+    }
+
+    const tagValue = String.fromCharCode.apply(
+      null,
+      payload[0] === 0 ? payload.slice(1) : payload,
+    );
+
+    if (tagValue.indexOf('https://brewskey.com/') < 0) {
+      return;
+    }
+
+    const index = tagValue.indexOf('d/');
+
+    if (index < 0) {
+      return;
+    }
+    const deviceId = tagValue.substring(index).match(/\d+/)[0];
+
+    this._processPour(deviceId);
   };
 
   @action
