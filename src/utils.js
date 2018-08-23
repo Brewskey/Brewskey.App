@@ -1,5 +1,7 @@
 // @flow
 
+import type { Keg } from 'brewskey.js-api';
+
 import * as React from 'react';
 
 import { KEG_SIZES_BY_KEG_TYPE } from './constants';

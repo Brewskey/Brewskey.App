@@ -42,6 +42,7 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import MenuScreen from './screens/MenuScreen';
 import StatsScreen from './screens/StatsScreen';
 import HelpScreen from './screens/HelpScreen';
+import MyFriendsScreen from './screens/MyFriendsScreen';
 
 import NuxLocationScreen from './screens/NuxLocationScreen';
 import NuxWifiSetupScreen from './screens/NuxWifiScreen';
@@ -78,6 +79,7 @@ const AppRouter = createSwitchNavigator(
             nuxFinish: NuxFinishScreen,
             profile: ProfileScreen,
             myProfile: MyProfileScreen,
+            myFriends: MyFriendsScreen,
             locations: createStackNavigator(
               {
                 locations: LocationsScreen,

@@ -21,7 +21,6 @@ import LoadingListFooter from '../common/LoadingListFooter';
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
-  showPhoneNumber?: boolean,
 |};
 
 type InjectedProps = {|
@@ -55,7 +54,6 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
       loadedRow={LoadedRow}
       loader={item.loader}
       onListItemPress={this._onListItemPress}
-      showPhoneNumber={this.props.showPhoneNumber}
     />
   );
 
@@ -71,6 +69,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
+        onRefresh={this._listStore.reload}
         renderItem={this._renderRow}
       />
     );
@@ -80,14 +79,12 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 const LoadedRow = ({
   item: friend,
   onListItemPress,
-  showPhoneNumber,
 }: RowItemProps<Friend, *>) => (
   <ListItem
     avatar={<UserAvatar userName={friend.friendAccount.userName} />}
     hideChevron
     item={friend}
     onPress={onListItemPress}
-    subtitle={showPhoneNumber ? friend.friendAccount.phoneNumber : ''}
     title={friend.friendAccount.userName}
   />
 );

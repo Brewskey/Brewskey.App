@@ -1,6 +1,7 @@
 // @flow
 
 import type { Coordinates, NearbyLocation } from '../types';
+import type { LocationPermissionStatus } from '../stores/ApiRequestStores/PermissionStores';
 
 import { action, computed } from 'mobx';
 import OpenAppSettings from 'react-native-app-settings';
@@ -85,7 +86,9 @@ class HomeScreenStore {
     return this.searchTextStore.debouncedText
       ? GoogleCoordinatesStore.get(this.searchTextStore.debouncedText)
       : LocationPermissionStore.get().map(
-          permissionStatus =>
+          (
+            permissionStatus: LocationPermissionStatus,
+          ): LoadObject<Coordinates> =>
             permissionStatus === LOCATION_PERMISSION_STATUSES.AUTHORIZED
               ? GPSCoordinatesStore.get()
               : LoadObject.empty(),
