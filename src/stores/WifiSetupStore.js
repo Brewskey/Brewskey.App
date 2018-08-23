@@ -11,7 +11,6 @@ import {
 } from './ApiRequestStores/SoftApApiStores';
 
 import { StackActions } from 'react-navigation';
-import { getCurrentRoute } from '../NavigationService';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
@@ -29,7 +28,6 @@ class WifiSetupStore {
         // for that we need to implement custom back route behaviour
         navigation.dispatch(
           StackActions.replace({
-            key: getCurrentRoute(navigation.state).key,
             routeName: `wifiSetupStep${wifiSetupStep}`,
           }),
         ),
