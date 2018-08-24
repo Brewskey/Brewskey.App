@@ -33,10 +33,10 @@ const styles = StyleSheet.create({
 
 type Props<TItem> = {|
   deleteModalMessage: string,
+  deleteModalTitle: string,
   item: TItem,
   onDeleteItemPress?: (item: TItem) => void,
   onEditItemPress?: (item: TItem) => void,
-  deleteModalTitle: string,
 |};
 
 @observer

@@ -26,7 +26,6 @@ class MyFriendsMainScreen extends React.Component<{}> {
             ),
           ],
         }}
-        showPhoneNumber
       />
     );
   }

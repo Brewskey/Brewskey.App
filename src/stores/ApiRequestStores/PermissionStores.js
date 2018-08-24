@@ -9,7 +9,7 @@ export type LocationPermissionStatus =
   | 'undetermined';
 
 export const LOCATION_PERMISSION_STATUSES: {
-  [key]: LocationPermissionStatus,
+  [key: string]: LocationPermissionStatus,
 } = {
   AUTHORIZED: 'authorized',
   DENIED: 'denied',

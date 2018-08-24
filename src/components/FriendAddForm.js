@@ -1,7 +1,6 @@
 // @flow
 
 import type { FormProps } from '../common/form/types';
-import type { UserCredentials } from '../AuthApi';
 
 import { observer } from 'mobx-react/native';
 import * as React from 'react';
@@ -12,22 +11,8 @@ import InjectedComponent from '../common/InjectedComponent';
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
 import { FormField, form } from '../common/form';
-import AuthStore from '../stores/AuthStore';
 import { COLORS } from '../theme';
 import TextField from './TextField';
-
-const validate = (values: UserCredentials): { [key: string]: string } => {
-  const errors = {};
-  if (!values.userName) {
-    errors.userName = 'User name is required';
-  }
-
-  if (!values.password) {
-    errors.password = 'Password is required';
-  }
-
-  return errors;
-};
 
 const styles = StyleSheet.create({
   input: {
@@ -35,50 +20,51 @@ const styles = StyleSheet.create({
   },
   label: {
     color: COLORS.textInverse,
+    textAlign: 'center',
   },
   validationText: {
     color: COLORS.danger2,
   },
 });
 
+export type FriendAddFormValues = {
+  userName: string,
+};
+
+const validate = (values: FriendAddFormValues): { [key: string]: string } => {
+  const errors = {};
+  if (!values.userName) {
+    errors.userName = 'User name or email is required';
+  }
+
+  return errors;
+};
+
 type InjectedProps = FormProps;
 
 @form({ validate })
 @observer
-class LoginForm extends InjectedComponent<InjectedProps> {
-  _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(AuthStore.login);
-
+class FriendAddForm extends InjectedComponent<InjectedProps> {
   render() {
-    const { formError, invalid, submitting } = this.injectedProps;
+    const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
+
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
+          autoFocus
+          clearButtonMode="always"
           component={TextField}
-          disabled={submitting}
+          editable={!submitting}
+          enablesReturnKeyAutomatically={false}
           inputStyle={styles.input}
-          label="User name"
+          label="Enter user name or email"
           labelStyle={styles.label}
           name="userName"
-          nextFocusTo="password"
+          onSubmitEditing={handleSubmit}
           selectionColor={COLORS.textInverse}
-          underlineColorAndroid={COLORS.secondary}
-          validationTextStyle={styles.validationText}
-        />
-        <FormField
-          autoCapitalize="none"
-          autoCorrect={false}
-          component={TextField}
-          disabled={submitting}
-          inputStyle={styles.input}
-          label="Password"
-          labelStyle={styles.label}
-          name="password"
-          onSubmitEditing={this._onSubmitButtonPress}
-          secureTextEntry
-          selectionColor={COLORS.textInverse}
+          style={styles.input}
           underlineColorAndroid={COLORS.secondary}
           validationTextStyle={styles.validationText}
         />
@@ -89,9 +75,9 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           <Button
             disabled={submitting || invalid}
             loading={submitting}
-            onPress={this._onSubmitButtonPress}
+            onPress={handleSubmit}
             secondary
-            title="Log in"
+            title="Add Friend"
           />
         </SectionContent>
       </KeyboardAwareScrollView>
@@ -99,4 +85,4 @@ class LoginForm extends InjectedComponent<InjectedProps> {
   }
 }
 
-export default LoginForm;
+export default FriendAddForm;
