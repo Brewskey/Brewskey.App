@@ -124,7 +124,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     return (
       this._getPermissionLoader.map(
         (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> =>
-          loaders[0].getValue() !== null,
+          loaders[0] && loaders[0].getValue() !== null,
       ) || false
     );
   }
@@ -134,7 +134,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     return (
       this._getPermissionLoader.map(
         (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> => {
-          const value = loaders[0].getValue() || null;
+          const value = (loaders[0] && loaders[0].getValue()) || null;
 
           return value !== null && value.permissionType === 'Administrator';
         },
