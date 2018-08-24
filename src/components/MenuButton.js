@@ -38,7 +38,6 @@ class MenuButton extends React.PureComponent<Props> {
         containerViewStyle={styles.container}
         buttonStyle={[styles.button, isActive && styles.active]}
         {...rest}
-        styles={[styles.button, isActive && styles.active]}
         textStyle={styles.textStyle}
       />
     );

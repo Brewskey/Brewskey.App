@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactApplication;
+import com.evollu.react.fcm.FIRMessagingPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.krazylabs.OpenAppSettingsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -33,6 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new FIRMessagingPackage(),
+            new RNDeviceInfo(),
             new OpenAppSettingsPackage(),
             new RNDeviceInfo(),
             new FIRMessagingPackage(),

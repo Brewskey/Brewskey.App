@@ -7,6 +7,7 @@ target 'brewskey' do
 
   # Pods for brewskey
 
+  pod 'Firebase'
   pod 'Firebase/Messaging'
 
   rn_path = '../node_modules/react-native'
@@ -50,6 +51,16 @@ target 'brewskey' do
     inherit! :search_paths
     # Pods for testing
     pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
+    pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+
+    pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
+    pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+
+    pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
+    pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   end
 
