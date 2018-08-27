@@ -184,36 +184,6 @@ class $TapStore extends DAOStore<Tap> {
   }
 }
 
-type Unwrap = <T>(loadObject: LoadObject<T>) => T;
-
-export const merge = <T: Array<LoadObject<mixed>>>(
-  loadObjects: T,
-): LoadObject<$TupleMap<T, Unwrap>> => {
-  const values = [];
-  let error = null;
-  let operation = null;
-
-  loadObjects.forEach(loadObject => {
-    error = error || loadObject.getError();
-
-    if (loadObject.hasOperation()) {
-      operation = operation || loadObject.getOperation();
-    }
-
-    values.push(loadObject.getValue());
-  });
-
-  if (error) {
-    return LoadObject.withError(error);
-  }
-
-  if (operation) {
-    return LoadObject.empty().setOperation(operation);
-  }
-
-  return LoadObject.withValue(values);
-};
-
 class $PermissionStore extends DAOStore<Permission> {
   constructor() {
     super(DAOApi.PermissionDAO);

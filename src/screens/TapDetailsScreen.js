@@ -10,7 +10,6 @@ import { createMaterialTopTabNavigator } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import {
   FlowSensorStore,
-  merge,
   PermissionStore,
   TapStore,
 } from '../stores/DAOStores';
@@ -69,7 +68,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _tapDataLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
     const { id } = this.injectedProps;
-    return merge([
+    return LoadObject.merge([
       TapStore.getByID(id),
       PermissionStore.getForEntityByID('tap', id),
       FlowSensorStore.getMany({
