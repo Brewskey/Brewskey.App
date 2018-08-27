@@ -68,13 +68,12 @@ class DeviceOnlineIndicator extends React.Component<Props> {
 }
 
 type ExtraProps = {
-  iconSize: number,
   sizeStyle: Object,
 };
 
-const LoadingComponent = ({ iconSize, sizeStyle }: ExtraProps) => (
+const LoadingComponent = ({ sizeStyle }: ExtraProps) => (
   <View style={[styles.container, sizeStyle]}>
-    <ActivityIndicator size={iconSize} />
+    <ActivityIndicator size="small" />
   </View>
 );
 
