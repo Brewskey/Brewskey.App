@@ -2,8 +2,10 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
+import nullthrows from 'nullthrows';
 import { observer } from 'mobx-react/native';
 import SwipeableActionButton from './SwipeableActionButton';
+import Fragment from './Fragment';
 import DeleteModal from '../components/modals/DeleteModal';
 import ToggleStore from '../stores/ToggleStore';
 import { COLORS } from '../theme';
@@ -41,19 +43,15 @@ type Props<TItem> = {|
 
 @observer
 class QuickActions<TItem> extends React.Component<Props<TItem>> {
-  static defaultProps = {
-    onDeleteItemPress: null,
-    onEditItemPress: null,
-  };
-
   _modalToggleStore = new ToggleStore();
 
   _onDeleteModalConfirm = () => {
     this._modalToggleStore.toggleOff();
-    this.props.onDeleteItemPress(this.props.item);
+    nullthrows(this.props.onDeleteItemPress)(this.props.item);
   };
 
-  _onEditItemPress = (): void => this.props.onEditItemPress(this.props.item);
+  _onEditItemPress = (): void =>
+    nullthrows(this.props.onEditItemPress)(this.props.item);
 
   render() {
     const { deleteModalTitle, onDeleteItemPress, onEditItemPress } = this.props;
@@ -69,20 +67,22 @@ class QuickActions<TItem> extends React.Component<Props<TItem>> {
           />
         )}
         {!onDeleteItemPress ? null : (
-          <SwipeableActionButton
-            containerStyle={styles.deleteButtonContainer}
-            iconName="delete"
-            iconStyle={styles.deleteIcon}
-            onPress={this._modalToggleStore.toggleOn}
-          />
+          <Fragment>
+            <SwipeableActionButton
+              containerStyle={styles.deleteButtonContainer}
+              iconName="delete"
+              iconStyle={styles.deleteIcon}
+              onPress={this._modalToggleStore.toggleOn}
+            />
+            <DeleteModal
+              title={deleteModalTitle}
+              isVisible={this._modalToggleStore.isToggled}
+              message={this.props.deleteModalMessage}
+              onCancelButtonPress={this._modalToggleStore.toggleOff}
+              onDeleteButtonPress={this._onDeleteModalConfirm}
+            />
+          </Fragment>
         )}
-        <DeleteModal
-          title={deleteModalTitle}
-          isVisible={this._modalToggleStore.isToggled}
-          message={this.props.deleteModalMessage}
-          onCancelButtonPress={this._modalToggleStore.toggleOff}
-          onDeleteButtonPress={this._onDeleteModalConfirm}
-        />
       </View>
     );
   }

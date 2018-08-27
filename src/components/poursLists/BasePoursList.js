@@ -20,7 +20,7 @@ type Props = {|
   onDeleteItemPress?: (item: Pour) => Promise<void>,
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
-  rowItemComponent?: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  rowItemComponent?: React.ComponentType<RowItemProps<Pour, TExtraProps>>,
   slideoutComponent?: React.ComponentType<RowItemProps<Pour, *>>,
 |};
 
