@@ -67,5 +67,7 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NFCReaderUsageDescription</key>
+	<string>Brewskey uses NFC so you can tap a Brewskey box to pour!</string>
 </dict>
 </plist>

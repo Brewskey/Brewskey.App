@@ -49,10 +49,16 @@ class PourProcessStore {
   onShowModal = async () => {
     this._setIsLoading(true);
 
-    const isNFCEnabled = await NfcManager.isEnabled();
+    let isNFCEnabled = false;
+    try {
+      isNFCEnabled = await NfcManager.isEnabled();
+    } catch (error) {
+      // Log this...
+    }
     runInAction(() => {
       this.isNFCEnabled = isNFCEnabled;
     });
+
     isNFCEnabled && NfcManager.registerTagEvent(this._onNFCTagDiscovered);
 
     this._startTotpTimer();
@@ -77,7 +83,7 @@ class PourProcessStore {
   @action
   onHideModal = () => {
     GPSCoordinatesStore.flushCache();
-    NfcManager.unregisterTagEvent();
+    this.isNFCEnabled && NfcManager.unregisterTagEvent();
 
     this._stopTotpTimer();
     this.setTotp('');
@@ -88,7 +94,7 @@ class PourProcessStore {
 
   onEnableNFCPress = () => {
     this.onHideModal();
-    NfcManager.goToNfcSetting();
+    this.isNFCEnabled && NfcManager.goToNfcSetting();
   };
 
   onPourPress = () => {

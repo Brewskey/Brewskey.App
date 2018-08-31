@@ -5519,13 +5519,13 @@ react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react-native-app-settings@^2.0.0:
+"react-native-app-settings@https://github.com/KrazyLabs/react-native-app-settings":
   version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-app-settings/-/react-native-app-settings-2.0.0.tgz#d2dbcf88dbb40d7261599fc373b35bd0f9fd886e"
+  resolved "https://github.com/KrazyLabs/react-native-app-settings#9a91f2a2504908433635b16b1ffdcdc720d246fc"
 
-react-native-contacts@^2.0.0:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.1.5.tgz#45d6149e055660c88fec96cdd5e5c51df0e04f6e"
+react-native-contacts@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.3.tgz#7b229d484f41a4ed1dd6cd186dc6106c9a5edfcd"
 
 react-native-crypto@^2.1.2:
   version "2.1.2"
@@ -5609,9 +5609,9 @@ react-native-maps@^0.21.0:
     babel-plugin-module-resolver "^2.3.0"
     babel-preset-react-native "1.9.0"
 
-react-native-nfc-manager@^0.4.1:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/react-native-nfc-manager/-/react-native-nfc-manager-0.4.2.tgz#f48d3fee56fc5ea8757ee52a2adf269e7d06e357"
+"react-native-nfc-manager@https://github.com/whitedogg13/react-native-nfc-manager":
+  version "0.5.5"
+  resolved "https://github.com/whitedogg13/react-native-nfc-manager#613c34d9ae5f16ac1c26c19f541c7f9a1d182f52"
 
 react-native-permissions@^1.1.1:
   version "1.1.1"
@@ -5623,9 +5623,9 @@ react-native-progress@^3.4.0:
   dependencies:
     prop-types "^15.5.8"
 
-react-native-randombytes@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.1.0.tgz#237c7b479d1bd2de1324cd16acd5b56b2af1852a"
+react-native-randombytes@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-randombytes/-/react-native-randombytes-3.5.0.tgz#a641130a52eca65ef2165409f65d930184c6dc83"
   dependencies:
     buffer "^4.9.1"
     sjcl "^1.0.3"
