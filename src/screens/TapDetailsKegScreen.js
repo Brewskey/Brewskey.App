@@ -1,6 +1,6 @@
 // @flow
 
-import type { Beverage, Tap } from 'brewskey.js-api';
+import type { Beverage, Permission, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -20,11 +20,13 @@ import Section from '../common/Section';
 import Fragment from '../common/Fragment';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
+import { checkCanEdit } from '../permissionHelpers';
 
 type InjectedProps = {|
   navigation: Navigation,
   noFlowSensorWarning: ?React.Element<any>,
   tap: Tap,
+  tapPermission: Permission,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
@@ -60,6 +62,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     const {
       noFlowSensorWarning,
       tap: { currentKeg, id },
+      tapPermission,
     } = this.injectedProps;
 
     return (
@@ -89,7 +92,10 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
               </Fragment>
             ) : (
               <Section bottomPadded>
-                <TapDetailsNoKeg tapId={id} />
+                <TapDetailsNoKeg
+                  canEdit={checkCanEdit(tapPermission)}
+                  tapId={id}
+                />
               </Section>
             )}
             <SectionHeader title="Past Kegs" />

@@ -5,6 +5,7 @@ import type { EntityID } from 'brewskey.js-api';
 import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
 import NfcManager from 'react-native-nfc-manager';
+import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { waitForLoaded } from '../stores/DAOStores';
@@ -186,7 +187,7 @@ class PourProcessStore {
     if (index < 0) {
       return;
     }
-    const deviceId = tagValue.substring(index).match(/\d+/)[0];
+    const deviceId = nullthrows(tagValue.substring(index).match(/\d+/))[0];
 
     this._processPour(deviceId);
   };

@@ -1,6 +1,6 @@
 // @flow
 
-import type { Tap } from 'brewskey.js-api';
+import type { Permission, Tap } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { View } from 'react-native';
@@ -12,11 +12,12 @@ import Container from '../common/Container';
 import OwnerPoursList from '../components/poursLists/OwnerPoursList';
 import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { checkIsAdmin } from '../permissionHelpers';
 
 type InjectedProps = {|
-  isTapAdmin: boolean,
   noFlowSensorWarning: ?React.Element<any>,
   tap: Tap,
+  tapPermission: Permission,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
@@ -28,14 +29,14 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     const {
-      isTapAdmin,
       noFlowSensorWarning,
       tap: { id },
+      tapPermission,
     } = this.injectedProps;
     return (
       <Container>
         <OwnerPoursList
-          canDeletePours={isTapAdmin}
+          canDeletePours={checkIsAdmin(tapPermission)}
           ListHeaderComponent={
             <View>
               {noFlowSensorWarning}

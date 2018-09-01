@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID } from 'brewskey.js-api';
+import type { EntityID, KegType } from 'brewskey.js-api';
 
 import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
 
@@ -24,7 +24,7 @@ export type NearbyTap = {
   currentKeg: {
     beverageId: number, // not translated to string
     beverageName: string,
-    kegType: string,
+    kegType: KegType,
     maxOunces: number,
     ounces: number,
   },
