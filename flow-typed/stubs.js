@@ -20,3 +20,7 @@ declare module 'FlatList' {
 declare module 'VirtualizedList' {
   declare module.exports: any;
 }
+
+declare module 'react-native-permissions' {
+  declare module.exports: any;
+}

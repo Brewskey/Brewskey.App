@@ -94,7 +94,7 @@ class PourProcessModal extends Component<{}> {
           <View style={styles.progressContainer}>
             {isLoading ? (
               <LoadingIndicator
-                activitySize={120}
+                activitySize="large"
                 color="white"
                 style={styles.loadingIndicator}
               />

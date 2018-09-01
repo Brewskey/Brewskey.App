@@ -19,6 +19,7 @@ import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
+import ProfileFriendStatus from '../components/ProfileFriendStatus';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 
 /* eslint-disable sorting/sort-object-props */
@@ -56,7 +57,11 @@ type LoadedComponentProps = {|
 
 const LoadedComponent = ({ value: account }: LoadedComponentProps) => (
   <Container>
-    <Header showBackButton title={account.userName} />
+    <Header
+      rightComponent={<ProfileFriendStatus account={account} />}
+      showBackButton
+      title={account.userName}
+    />
     <ScrollView>
       <Section bottomPadded>
         <SectionContent centered paddedVertical>

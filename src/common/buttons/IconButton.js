@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   containerStyle?: Style,
-  onPress?: () => void,
+  onPress?: () => void | Promise<void>,
   // react-native-elements icon props
 };
 

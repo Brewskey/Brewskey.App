@@ -26,7 +26,7 @@ type Props = {
   borderless?: boolean,
   children?: React.Node,
   delayPressIn?: number,
-  onPress?: () => void,
+  onPress?: () => void | Promise<void>,
   pressColor?: string,
   style?: Style,
 };

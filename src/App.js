@@ -62,6 +62,7 @@ reaction(
       Signalr.startAll();
     } else {
       Signalr.stopAll();
+      DAOApi.flushCache();
     }
   },
 );

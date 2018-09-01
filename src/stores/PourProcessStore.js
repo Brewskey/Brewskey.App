@@ -2,8 +2,10 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
+import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
 import NfcManager from 'react-native-nfc-manager';
+import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { waitForLoaded } from '../stores/DAOStores';
@@ -26,9 +28,9 @@ class PourProcessStore {
   @observable totp: string = '';
 
   constructor() {
-    NfcManager.start().catch(() =>
-      runInAction(() => (this.isNFCSupported = false)),
-    );
+    NfcManager.start().catch(() => {
+      runInAction(() => (this.isNFCSupported = false));
+    });
   }
 
   @action
@@ -49,11 +51,23 @@ class PourProcessStore {
   onShowModal = async () => {
     this._setIsLoading(true);
 
-    const isNFCEnabled = await NfcManager.isEnabled();
-    runInAction(() => {
-      this.isNFCEnabled = isNFCEnabled;
-    });
-    isNFCEnabled && NfcManager.registerTagEvent(this._onNFCTagDiscovered);
+    let isNFCEnabled = false;
+
+    if (Platform.OS === 'android') {
+      isNFCEnabled = await NfcManager.isEnabled();
+      runInAction(() => {
+        this.isNFCEnabled = isNFCEnabled;
+      });
+    } else {
+      isNFCEnabled = this.isNFCSupported;
+    }
+
+    isNFCEnabled &&
+      NfcManager.registerTagEvent(
+        this._onNFCTagDiscovered,
+        'Tap Brewskey Box',
+        true,
+      );
 
     this._startTotpTimer();
 
@@ -77,7 +91,7 @@ class PourProcessStore {
   @action
   onHideModal = () => {
     GPSCoordinatesStore.flushCache();
-    NfcManager.unregisterTagEvent();
+    this.isNFCEnabled && NfcManager.unregisterTagEvent();
 
     this._stopTotpTimer();
     this.setTotp('');
@@ -88,7 +102,7 @@ class PourProcessStore {
 
   onEnableNFCPress = () => {
     this.onHideModal();
-    NfcManager.goToNfcSetting();
+    this.isNFCEnabled && NfcManager.goToNfcSetting();
   };
 
   onPourPress = () => {
@@ -173,7 +187,7 @@ class PourProcessStore {
     if (index < 0) {
       return;
     }
-    const deviceId = tagValue.substring(index).match(/\d+/)[0];
+    const deviceId = nullthrows(tagValue.substring(index).match(/\d+/))[0];
 
     this._processPour(deviceId);
   };

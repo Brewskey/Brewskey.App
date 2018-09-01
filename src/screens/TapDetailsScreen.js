@@ -28,6 +28,7 @@ import TapDetailsKegScreen from './TapDetailsKegScreen';
 import TapDetailsStatsScreen from './TapDetailsStatsScreen';
 import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
 import theme from '../theme';
+import { checkCanEdit } from '../permissionHelpers';
 
 /* eslint-disable sorting/sort-object-props */
 const tabScreens = {
@@ -66,15 +67,27 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
   static router = TapDetailsNavigator.router;
 
   @computed
-  get _tapLoader(): LoadObject<Tap> {
-    return TapStore.getByID(this.injectedProps.id);
+  get _tapDataLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
+    const { id } = this.injectedProps;
+    return LoadObject.merge([
+      TapStore.getByID(id),
+      PermissionStore.getForEntityByID('tap', id),
+      FlowSensorStore.getMany({
+        filters: [DAOApi.createFilter('tap/id').equals(id)],
+        limit: 1,
+        orderBy: [{ column: 'id', direction: 'desc' }],
+      }).map(
+        (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
+          loaders[0] || LoadObject.empty(),
+      ),
+    ]);
   }
 
   render() {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
-        loader={this._tapLoader}
+        loader={this._tapDataLoader}
         loadingComponent={LoadingComponent}
         navigation={this.injectedProps.navigation}
       />
@@ -91,73 +104,26 @@ const LoadingComponent = () => (
 
 type LoadedComponentProps = {
   navigation: Navigation,
-  value: Tap,
+  value: [Tap, ?Permission, ?FlowSensor],
 };
 
 @observer
 class LoadedComponent extends React.Component<LoadedComponentProps> {
-  @computed
-  get _flowSensorLoader(): LoadObject<FlowSensor> {
-    const {
-      value: { id },
-    } = this.props;
-    return FlowSensorStore.getMany({
-      filters: [DAOApi.createFilter('tap/id').equals(id)],
-      limit: 1,
-      orderBy: [{ column: 'id', direction: 'desc' }],
-    }).map(
-      (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
-        loaders[0] || LoadObject.empty(),
-    );
-  }
-
-  @computed
-  get _getPermissionLoader(): LoadObject<Permission> {
-    const tap = this.props.value;
-    return PermissionStore.getMany({
-      filters: [DAOApi.createFilter('tap/id').equals(tap.id)],
-      limit: 1,
-    });
-  }
-
-  @computed
-  get _canEdit(): boolean {
-    return (
-      this._getPermissionLoader.map(
-        (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> =>
-          loaders[0].getValue() !== null,
-      ) || false
-    );
-  }
-
-  @computed
-  get _isTapAdmin(): boolean {
-    return (
-      this._getPermissionLoader.map(
-        (loaders: Array<LoadObject<Permission>>): LoadObject<Permission> => {
-          const value = loaders[0].getValue() || null;
-
-          return value !== null && value.permissionType === 'Administrator';
-        },
-      ) || false
-    );
-  }
-
   _onNoFlowSensorWarningPress = () => {
-    const {
-      navigation,
-      value: { id },
-    } = this.props;
+    const { navigation, value } = this.props;
+    const [tap] = value;
+
     navigation.navigate('newFlowSensor', {
       returnOnFinish: true,
       showBackButton: true,
-      tapId: id,
+      tapId: tap.id,
     });
   };
 
   render() {
     const { navigation, value } = this.props;
-    const { id, hideLeaderboard, hideStats } = value;
+    const [tap, tapPermission, flowSensor] = value;
+    const { id, hideLeaderboard, hideStats } = tap;
 
     // workaround for dynamically hiding tabs
     // todo change it when they implement the feature
@@ -178,18 +144,19 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
         route.routeName === navState.routes[navState.index].routeName,
     );
 
-    const noFlowSensorWarning = this._flowSensorLoader.isEmpty() ? (
-      <WarningNotification
-        message="You haven't setup flow sensor on the tap. Click to setup."
-        onPress={this._onNoFlowSensorWarningPress}
-      />
-    ) : null;
+    const noFlowSensorWarning =
+      !flowSensor && checkCanEdit(tapPermission) ? (
+        <WarningNotification
+          message="You haven't setup flow sensor on the tap. Click to setup."
+          onPress={this._onNoFlowSensorWarningPress}
+        />
+      ) : null;
 
     return (
       <Container>
         <Header
           rightComponent={
-            !this._canEdit ? null : (
+            !checkCanEdit(tapPermission) ? null : (
               <HeaderNavigationButton
                 name="edit"
                 params={{ id }}
@@ -210,9 +177,9 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
             },
           }}
           screenProps={{
-            isTapAdmin: this._isTapAdmin,
             noFlowSensorWarning,
-            tap: value,
+            tap,
+            tapPermission,
           }}
         />
       </Container>

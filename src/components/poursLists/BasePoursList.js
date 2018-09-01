@@ -17,11 +17,11 @@ type Props = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
-  onDeleteItemPress?: (item: Pour) => void,
+  onDeleteItemPress?: (item: Pour) => Promise<void>,
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
+  rowItemComponent?: React.ComponentType<RowItemProps<Pour, TExtraProps>>,
   slideoutComponent?: React.ComponentType<RowItemProps<Pour, *>>,
-  rowItemComponent?: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
 |};
 
 @withNavigation

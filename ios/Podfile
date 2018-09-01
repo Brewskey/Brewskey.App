@@ -7,6 +7,7 @@ target 'brewskey' do
 
   # Pods for brewskey
 
+  pod 'Firebase'
   pod 'Firebase/Messaging'
 
   rn_path = '../node_modules/react-native'
@@ -15,6 +16,7 @@ target 'brewskey' do
   # See http://facebook.github.io/react-native/docs/integration-with-existing-apps.html#configuring-cocoapods-dependencies
   pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
   pod 'React', path: rn_path, subspecs: [
+    'ART',
     'Core',
     'CxxBridge',
     'DevSupport',
@@ -46,10 +48,24 @@ target 'brewskey' do
   pod 'Google-Maps-iOS-Utils' # Remove this line if you don't want to support GoogleMaps on iOS
 
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
+
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+  pod 'react-native-fcm', :path => '../node_modules/react-native-fcm'
+  pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+  pod 'react-native-nfc-manager', :path => '../node_modules/react-native-nfc-manager'
+  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+  
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'brewskey-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
 
   end
 
@@ -67,9 +83,9 @@ post_install do |installer|
         config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
       end
     end
-    if target.name == "React"
-      target.remove_from_project
-    end
+    # if target.name == "React"
+    #   target.remove_from_project
+    # end
   end
 end
 

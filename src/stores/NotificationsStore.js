@@ -4,7 +4,7 @@ import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import {
   action,
   computed,
@@ -248,6 +248,7 @@ class NotificationsStore {
   };
 
   _registerToken = async () => {
+    await FCM.requestPermissions({ alert: true, badge: false, sound: true });
     const fcmToken = await FCM.getFCMToken();
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
@@ -280,13 +281,19 @@ class NotificationsStore {
   _onRawNotification = (rawNotification: Object) => {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
-    if (rawNotification.fcm.action === 'android.intent.action.MAIN') {
+
+    let parsedNotification = null;
+    if (Platform.os === 'android') {
+      if (rawNotification.fcm.action === 'android.intent.action.MAIN') {
+        return;
+      }
+
+      parsedNotification = rawNotification.custom_notification
+        ? JSON.parse(rawNotification.custom_notification)
+        : rawNotification;
+    } else {
       return;
     }
-
-    const parsedNotification = rawNotification.custom_notification
-      ? JSON.parse(rawNotification.custom_notification)
-      : rawNotification;
 
     const existingNotification = this._notificationsByID.get(
       parsedNotification.id,

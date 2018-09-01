@@ -21,15 +21,6 @@ export const KEG_NAME_BY_KEG_TYPE: { [KegType]: string } = {
   SlimQuarter: 'Slim Quarter Keg',
 };
 
-export const KEG_SIZES_BY_KEG_TYPE: { [KegType]: number } = {
-  Cornelius: 640,
-  HalfBarrel: 1984,
-  Mini: 169,
-  QuarterBarrel: 992,
-  SixthBarrel: 661,
-  SlimQuarter: 992,
-};
-
 export const DESCRIPTION_BY_DEVICE_STATE: { [key: DeviceStatus]: string } = {
   Active:
     'The Brewskey Box is currently in the standard mode. ' +
