@@ -88,7 +88,7 @@ PODS:
     - React/Core (= 0.55.3)
   - react-native-contacts (2.2.3):
     - React
-  - react-native-fcm (14.2.1):
+  - react-native-fcm (16.2.0):
     - Firebase/Messaging
     - React
   - react-native-fetch-blob (0.10.6):

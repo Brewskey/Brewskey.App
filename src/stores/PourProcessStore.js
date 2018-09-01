@@ -2,6 +2,7 @@
 
 import type { EntityID } from 'brewskey.js-api';
 
+import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
 import NfcManager from 'react-native-nfc-manager';
 import AuthStore from './AuthStore';
@@ -26,9 +27,9 @@ class PourProcessStore {
   @observable totp: string = '';
 
   constructor() {
-    NfcManager.start().catch(() =>
-      runInAction(() => (this.isNFCSupported = false)),
-    );
+    NfcManager.start().catch(() => {
+      runInAction(() => (this.isNFCSupported = false));
+    });
   }
 
   @action
@@ -50,16 +51,22 @@ class PourProcessStore {
     this._setIsLoading(true);
 
     let isNFCEnabled = false;
-    try {
-      isNFCEnabled = await NfcManager.isEnabled();
-    } catch (error) {
-      // Log this...
-    }
-    runInAction(() => {
-      this.isNFCEnabled = isNFCEnabled;
-    });
 
-    isNFCEnabled && NfcManager.registerTagEvent(this._onNFCTagDiscovered);
+    if (Platform.OS === 'android') {
+      isNFCEnabled = await NfcManager.isEnabled();
+      runInAction(() => {
+        this.isNFCEnabled = isNFCEnabled;
+      });
+    } else {
+      isNFCEnabled = this.isNFCSupported;
+    }
+
+    isNFCEnabled &&
+      NfcManager.registerTagEvent(
+        this._onNFCTagDiscovered,
+        'Tap Brewskey Box',
+        true,
+      );
 
     this._startTotpTimer();
 
