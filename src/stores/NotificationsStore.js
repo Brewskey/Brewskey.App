@@ -257,7 +257,7 @@ class NotificationsStore {
       body: JSON.stringify({
         deviceToken: fcmToken,
         installationId: deviceUniqueID,
-        platform: 'fcm',
+        platform: Platform.ios === 'android' ? 'fcm' : 'ios',
         removeTapIDs: this._disabledTapIDs,
       }),
       headers: {
