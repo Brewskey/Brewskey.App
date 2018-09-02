@@ -1,10 +1,11 @@
 // @flow
+/* eslint-disable react-native/split-platform-components */
 
 import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
-import { AppState, Platform } from 'react-native';
+import { AppState, Platform, PushNotificationIOS } from 'react-native';
 import {
   action,
   computed,
@@ -77,7 +78,7 @@ class NotificationsStore {
   constructor() {
     PushNotification.configure({
       onNotification: this._onRawNotification,
-      onRegister: token => (this._token = token),
+      onRegister: result => (this._token = result.token),
       senderID: '394986866677',
     });
 
@@ -85,6 +86,7 @@ class NotificationsStore {
       if (nextAppState === 'active') {
         PushNotification.cancelAllLocalNotifications();
       }
+      this._rehydrateState();
     });
 
     reaction(
@@ -227,6 +229,22 @@ class NotificationsStore {
       NOTIFICATIONS_STORAGE_KEY,
     );
 
+    if (Platform.OS === 'ios') {
+      const newNotifications = await new Promise(resolve =>
+        PushNotificationIOS.getDeliveredNotifications(resolve),
+      );
+      PushNotificationIOS.removeDeliveredNotifications(
+        newNotifications.map(item => item.identifier),
+      );
+
+      notifications.push(
+        ...newNotifications.map(item => ({
+          ...item.userInfo,
+          ...item.userInfo.aps.alert,
+        })),
+      );
+    }
+
     const notificationEntries = notifications
       ? notifications.map((notification: Notification): [
           string,
@@ -249,16 +267,23 @@ class NotificationsStore {
   };
 
   _registerToken = async () => {
+    // wait for AuthStore.token
+    while (!AuthStore.token) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
     const deviceUniqueID = DeviceInfo.getUniqueID();
+
+    const body = JSON.stringify({
+      deviceToken: this._token,
+      installationId: deviceUniqueID,
+      platform: Platform.OS === 'android' ? 'fcm' : 'ios',
+      removeTapIDs: this._disabledTapIDs,
+    });
 
     // eslint-disable-next-line
     await fetch(`${BASE_PUSH_URL}/`, {
-      body: JSON.stringify({
-        deviceToken: this._token,
-        installationId: deviceUniqueID,
-        platform: Platform.ios === 'android' ? 'fcm' : 'ios',
-        removeTapIDs: this._disabledTapIDs,
-      }),
+      body,
       headers: {
         Accept: 'application/json',
         Authorization: `Bearer ${AuthStore.token || ''}`,
@@ -282,7 +307,7 @@ class NotificationsStore {
     // from main icon when the app is in background currently
 
     let parsedNotification = null;
-    if (Platform.os === 'android') {
+    if (Platform.OS === 'android') {
       if (rawNotification.fcm.action === 'android.intent.action.MAIN') {
         return;
       }
@@ -291,8 +316,10 @@ class NotificationsStore {
         ? JSON.parse(rawNotification.custom_notification)
         : rawNotification;
     } else {
-      // notification.finish(PushNotificationIOS.FetchResult.NoData);
-      return;
+      parsedNotification = {
+        ...rawNotification.data,
+        ...rawNotification.alert,
+      };
     }
 
     const existingNotification = this._notificationsByID.get(

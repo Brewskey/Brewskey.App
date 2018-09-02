@@ -88,9 +88,6 @@ PODS:
     - React/Core (= 0.55.3)
   - react-native-contacts (2.2.3):
     - React
-  - react-native-fcm (16.2.0):
-    - Firebase/Messaging
-    - React
   - react-native-fetch-blob (0.10.6):
     - React/Core
   - react-native-google-maps (0.21.0):
@@ -142,6 +139,8 @@ PODS:
     - React/Core
   - React/RCTNetwork (0.55.3):
     - React/Core
+  - React/RCTPushNotification (0.55.3):
+    - React/Core
   - React/RCTSettings (0.55.3):
     - React/Core
   - React/RCTText (0.55.3):
@@ -171,7 +170,6 @@ DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
   - react-native-contacts (from `../node_modules/react-native-contacts`)
-  - react-native-fcm (from `../node_modules/react-native-fcm`)
   - react-native-fetch-blob (from `../node_modules/react-native-fetch-blob`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
@@ -188,6 +186,7 @@ DEPENDENCIES:
   - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTLinkingIOS (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTPushNotification (from `../node_modules/react-native`)
   - React/RCTSettings (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTVibration (from `../node_modules/react-native`)
@@ -224,8 +223,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
-  react-native-fcm:
-    :path: "../node_modules/react-native-fcm"
   react-native-fetch-blob:
     :path: "../node_modules/react-native-fetch-blob"
   react-native-google-maps:
@@ -267,7 +264,6 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: aa2040dbb6f317b95314968021bd2888816e03d5
   react-native-contacts: 1a8913219e54d1fa20e817b99d9b42b9ec98558d
-  react-native-fcm: 7de3ba1108aba709c3d2b4237594554eb5f6f026
   react-native-fetch-blob: 63394b1d7b0781547b3e4463b3195790177b1222
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-image-picker: 42cfe2c8435d893414f8714a81e480313cb1412b
@@ -280,6 +276,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: 3cdac6507b68f92838b8985a7a4a0737f820eeb2
+PODFILE CHECKSUM: d614312afb1e716e654b06cdbe161a5278354cce
 
 COCOAPODS: 1.5.3

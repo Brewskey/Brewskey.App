@@ -26,6 +26,7 @@ target 'brewskey' do
     'RCTImage',
     'RCTLinkingIOS',
     'RCTNetwork',
+    'RCTPushNotification',
     'RCTSettings',
     'RCTText',
     'RCTVibration',
@@ -55,7 +56,6 @@ target 'brewskey' do
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
   pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
-  pod 'react-native-fcm', :path => '../node_modules/react-native-fcm'
   pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
   pod 'react-native-nfc-manager', :path => '../node_modules/react-native-nfc-manager'
@@ -63,11 +63,11 @@ target 'brewskey' do
   
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
-  target 'brewskey-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
+  # target 'brewskey-tvOSTests' do
+  #   inherit! :search_paths
+  #   # Pods for testing
 
-  end
+  # end
 
   target 'brewskeyTests' do
     inherit! :search_paths
