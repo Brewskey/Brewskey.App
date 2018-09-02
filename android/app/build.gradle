@@ -94,8 +94,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.brewskey.app"
@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-push-notification')
     compile project(':react-native-device-info')
     compile project(':react-native-app-settings')
     compile (project(':react-native-device-info')){
