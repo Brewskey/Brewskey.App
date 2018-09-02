@@ -21,6 +21,8 @@
 
 ; Custom ignores
 .*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
+.*/node_modules/react-native-permissions/**/.*
+
 
 [include]
 

@@ -30,6 +30,12 @@ import type { IAtom } from 'mobx';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { autorun, createAtom } from 'mobx';
 
+export type PermissionEntityType =
+  | 'device'
+  | 'location'
+  | 'organization'
+  | 'tap';
+
 export const waitForLoaded = <TValue>(
   getLoader: () => LoadObject<TValue>,
   timeout?: number = 10000,
@@ -178,6 +184,28 @@ class $TapStore extends DAOStore<Tap> {
   }
 }
 
+class $PermissionStore extends DAOStore<Permission> {
+  constructor() {
+    super(DAOApi.PermissionDAO);
+  }
+
+  getForEntityByID(
+    permissionEntityType: PermissionEntityType,
+    entityID: EntityID,
+  ): LoadObject<Permission> {
+    return this.getMany({
+      filters: [
+        DAOApi.createFilter(`${permissionEntityType}/id`).equals(entityID),
+      ],
+      limit: 1,
+    }).map(
+      (
+        permissionLoaders: Array<LoadObject<Permission>>,
+      ): LoadObject<Permission> => permissionLoaders[0] || LoadObject.empty(),
+    );
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
 export const AchievementStore: $AchievementStore = new $AchievementStore(
   DAOApi.AchievementDAO,
@@ -201,9 +229,7 @@ export const LocationStore: DAOStore<Location> = new DAOStore(
 export const OrganizationStore: DAOStore<Organization> = new DAOStore(
   DAOApi.OrganizationDAO,
 );
-export const PermissionStore: DAOStore<Permission> = new DAOStore(
-  DAOApi.PermissionDAO,
-);
+export const PermissionStore: $PermissionStore = new $PermissionStore();
 export const PourStore: DAOStore<Pour> = new DAOStore(DAOApi.PourDAO);
 export const ReportStore: DAOStore<Report> = new DAOStore(DAOApi.ReportDAO);
 export const ScheduleStore: DAOStore<Schedule> = new DAOStore(

@@ -7,6 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
+import Fragment from '../common/Fragment';
 import Container from '../common/Container';
 import { withNavigation } from 'react-navigation';
 
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = { tapId: EntityID };
+type Props = { canEdit: boolean, tapId: EntityID };
 
 type InjectedProps = {| navigation: Navigation |};
 
@@ -37,14 +38,21 @@ class TapDetailsNoKeg extends InjectedComponent<InjectedProps, Props> {
     });
 
   render() {
+    const { canEdit } = this.props;
     return (
       <Container centered style={styles.container}>
-        <Text style={styles.text}>You don't have keg on the tap.</Text>
-        <TouchableOpacity onPress={this._onSetupPress}>
-          <Text style={[styles.text, styles.textLink]}>
-            Click to setup one.
-          </Text>
-        </TouchableOpacity>
+        {canEdit ? (
+          <Fragment>
+            <Text style={styles.text}>You don't have keg on the tap.</Text>
+            <TouchableOpacity onPress={this._onSetupPress}>
+              <Text style={[styles.text, styles.textLink]}>
+                Click to setup one.
+              </Text>
+            </TouchableOpacity>
+          </Fragment>
+        ) : (
+          <Text style={styles.text}>No keg on the tap.</Text>
+        )}
       </Container>
     );
   }

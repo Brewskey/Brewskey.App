@@ -1,10 +1,9 @@
 // @flow
 
-import type { Keg } from 'brewskey.js-api';
+import type { KegType } from 'brewskey.js-api';
 
 import * as React from 'react';
-
-import { KEG_SIZES_BY_KEG_TYPE } from './constants';
+import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 
 // eslint-disable-next-line
 const EMAIL_REGEXP = /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
@@ -24,11 +23,19 @@ export const isClassBasedComponent = (
   component: React.ComponentType<any>,
 ): boolean => !!(component: any).prototype.render;
 
-export const calculateKegLevel = (keg: Keg): number => {
-  const KEG_OUNCES = KEG_SIZES_BY_KEG_TYPE[keg.kegType];
+export const calculateKegLevel = ({
+  kegType,
+  maxOunces,
+  ounces,
+}: {
+  kegType: KegType,
+  maxOunces: number,
+  ounces: number,
+}): number => {
+  const KEG_OUNCES = MAX_OUNCES_BY_KEG_TYPE[kegType];
 
   const level =
-    (KEG_OUNCES - (KEG_OUNCES - keg.maxOunces) - keg.ounces) / KEG_OUNCES * 100;
+    (KEG_OUNCES - (KEG_OUNCES - maxOunces) - ounces) / KEG_OUNCES * 100;
   return Math.min(Math.max(0, level), 100);
 };
 
