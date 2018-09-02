@@ -14,7 +14,7 @@ import {
   spy,
   when,
 } from 'mobx';
-import FCM, { FCMEvent } from 'react-native-fcm';
+import PushNotification from 'react-native-push-notification';
 import DeviceInfo from 'react-native-device-info';
 import AuthStore from './AuthStore';
 import Storage from '../Storage';
@@ -72,13 +72,20 @@ class NotificationsStore {
     boolean,
   > = observable.map();
 
+  _token: string;
+
   constructor() {
+    PushNotification.configure({
+      onNotification: this._onRawNotification,
+      onRegister: token => (this._token = token),
+      senderID: '394986866677',
+    });
+
     AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'active') {
-        FCM.removeAllDeliveredNotifications();
+        PushNotification.cancelAllLocalNotifications();
       }
     });
-    FCM.on(FCMEvent.Notification, this._onRawNotification);
 
     reaction(
       () => this._disabledTapIDs,
@@ -159,12 +166,6 @@ class NotificationsStore {
   get _disabledTapIDs(): Array<EntityID> {
     return Array.from(this._notificationsDisabledByTapID.toJS().keys());
   }
-
-  handleInitialNotification = async () => {
-    await when(() => this._isReady);
-    const initialNotification = await FCM.getInitialNotification();
-    initialNotification && this._onRawNotification(initialNotification);
-  };
 
   onNotificationPress = async (notification: Notification): Promise<void> => {
     await when(() => this._isReady);
@@ -248,14 +249,12 @@ class NotificationsStore {
   };
 
   _registerToken = async () => {
-    await FCM.requestPermissions({ alert: true, badge: false, sound: true });
-    const fcmToken = await FCM.getFCMToken();
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     // eslint-disable-next-line
     await fetch(`${BASE_PUSH_URL}/`, {
       body: JSON.stringify({
-        deviceToken: fcmToken,
+        deviceToken: this._token,
         installationId: deviceUniqueID,
         platform: Platform.ios === 'android' ? 'fcm' : 'ios',
         removeTapIDs: this._disabledTapIDs,
@@ -292,6 +291,7 @@ class NotificationsStore {
         ? JSON.parse(rawNotification.custom_notification)
         : rawNotification;
     } else {
+      // notification.finish(PushNotificationIOS.FetchResult.NoData);
       return;
     }
 

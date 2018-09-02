@@ -4,11 +4,8 @@ import android.app.Application;
 
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactApplication;
-import com.evollu.react.fcm.FIRMessagingPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.krazylabs.OpenAppSettingsPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.evollu.react.fcm.FIRMessagingPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -37,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new OpenAppSettingsPackage(),
             new RNDeviceInfo(),
-            new FIRMessagingPackage(),
             new RandomBytesPackage(),
           new ImagePickerPackage(),
           new MapsPackage(),

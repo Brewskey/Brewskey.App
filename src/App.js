@@ -87,7 +87,6 @@ class App extends React.Component<{}> {
         NavigationService.navigate('login');
       }
     });
-    NotificationsStore.handleInitialNotification();
   }
 
   _setNavigationRef = ref => {
