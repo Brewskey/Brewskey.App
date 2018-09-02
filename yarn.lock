@@ -5570,10 +5570,6 @@ react-native-elements@0.19.0:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-fcm@^16.2.0:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-fcm/-/react-native-fcm-16.2.0.tgz#abd6ca80337080279d13c561753025ef44fa655b"
-
 react-native-fetch-blob@^0.10.8:
   version "0.10.8"
   resolved "https://registry.yarnpkg.com/react-native-fetch-blob/-/react-native-fetch-blob-0.10.8.tgz#4fc256abae0cb5f10e7c41f28c11b3ff330d72a9"
@@ -5622,6 +5618,10 @@ react-native-progress@^3.4.0:
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.4.0.tgz#c002e6efb2f0b82dd6889510e669c492da2718ac"
   dependencies:
     prop-types "^15.5.8"
+
+react-native-push-notification@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-push-notification/-/react-native-push-notification-3.1.1.tgz#99ce426e78e95788c298f73750cc4e68db04d7ab"
 
 react-native-randombytes@^3.5.0:
   version "3.5.0"
