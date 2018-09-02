@@ -1,6 +1,6 @@
 // @flow
 
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 // eslint-disable-next-line
 import { PermissionsAndroid } from 'react-native';
 import Contacts from 'react-native-contacts';
@@ -30,7 +30,14 @@ export type Contact = {|
 |};
 
 class ContactsStore {
-  @observable contacts: Array<Contact> = [];
+  @observable _contacts: Array<Contact> = [];
+
+  // duplicate the contacts data because of weird crash on contacts list
+  // when react-native debug mode disabled.
+  @computed
+  get contacts(): Array<Contact> {
+    return this._contacts.slice();
+  }
 
   constructor() {
     // todo separate logic for ios
@@ -43,14 +50,14 @@ class ContactsStore {
         if (error) {
           return;
         }
-        this.setContacts(contacts);
+        this._setContacts(contacts);
       });
     });
   }
 
   @action
-  setContacts = (contacts: Array<Contact>) => {
-    this.contacts = contacts;
+  _setContacts = (contacts: Array<Contact>) => {
+    this._contacts = contacts;
   };
 }
 
