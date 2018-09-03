@@ -1,4 +1,4 @@
-package com.brewskey;
+package com.brewskey.app;
 
 import android.app.Application;
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.brewskey">
+    package="com.brewskey.app">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -26,29 +26,27 @@
         android:name="com.google.firebase.messaging.default_notification_icon"
         android:resource="@mipmap/ic_notif"
       />
-      <service android:name="com.evollu.react.fcm.MessagingService" android:enabled="true" android:exported="true">
-        <intent-filter>
-          <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-        </intent-filter>
-      </service>
-      <service android:name="com.evollu.react.fcm.InstanceIdService" android:exported="false">
-        <intent-filter>
-          <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-        </intent-filter>
-      </service>
-      <receiver android:name="com.evollu.react.fcm.FIRLocalMessagingPublisher"/>
-      <receiver
-        android:enabled="true"
-        android:exported="true"
-        android:name="com.evollu.react.fcm.FIRSystemBootEventReceiver"
-      >
-        <intent-filter>
-          <action android:name="android.intent.action.BOOT_COMPLETED"/>
-          <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-          <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-          <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-      </receiver>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
+            android:value="YOUR NOTIFICATION CHANNEL NAME"/>
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
+            android:value="YOUR NOTIFICATION CHANNEL DESCRIPTION"/>
+        <!-- Change the resource name to your App's accent color - or any other color you want -->
+        <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
+            android:resource="@android:color/white"/>
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+        <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
+        <service
+            android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

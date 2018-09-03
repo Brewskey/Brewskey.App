@@ -308,10 +308,6 @@ class NotificationsStore {
 
     let parsedNotification = null;
     if (Platform.OS === 'android') {
-      if (rawNotification.fcm.action === 'android.intent.action.MAIN') {
-        return;
-      }
-
       parsedNotification = rawNotification.custom_notification
         ? JSON.parse(rawNotification.custom_notification)
         : rawNotification;
