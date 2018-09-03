@@ -225,9 +225,8 @@ class NotificationsStore {
   };
 
   _rehydrateState = async () => {
-    const notifications = await Storage.getForCurrentUser(
-      NOTIFICATIONS_STORAGE_KEY,
-    );
+    const notifications =
+      (await Storage.getForCurrentUser(NOTIFICATIONS_STORAGE_KEY)) || [];
 
     if (Platform.OS === 'ios') {
       const newNotifications = await new Promise(resolve =>
