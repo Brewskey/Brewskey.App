@@ -79,7 +79,7 @@ class ProfileFriendStatus extends React.Component<Props> {
     if (friendAddResultLoader.hasError()) {
       SnackBarStore.showMessage({
         style: 'danger',
-        text: (friendAddResultLoader.getErrorEnforcing(): any),
+        text: friendAddResultLoader.getErrorEnforcing().toString(),
       });
       FriendAddStore.flushCache();
       return;
