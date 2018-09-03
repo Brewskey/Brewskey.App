@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     flexDirection: 'row',
     height: 49,
-    overflow: 'visible',
+    overflow: 'hidden',
     position: 'relative',
   },
 });
