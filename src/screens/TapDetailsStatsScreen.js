@@ -9,10 +9,10 @@ import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
-import OwnerPoursList from '../components/poursLists/OwnerPoursList';
 import SectionHeader from '../common/SectionHeader';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import { checkIsAdmin } from '../permissionHelpers';
+import SectionPoursList from '../components/poursLists/SectionPoursList';
 
 type InjectedProps = {|
   noFlowSensorWarning: ?React.Element<any>,
@@ -35,7 +35,7 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
     } = this.injectedProps;
     return (
       <Container>
-        <OwnerPoursList
+        <SectionPoursList
           canDeletePours={checkIsAdmin(tapPermission)}
           ListHeaderComponent={
             <View>

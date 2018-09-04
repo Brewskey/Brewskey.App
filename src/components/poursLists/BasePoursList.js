@@ -53,17 +53,6 @@ class BasePoursList extends React.Component<Props> {
     this._listStore.reload();
   };
 
-  _renderRow = (
-    { item }: { item: Row<Pour> },
-    ...swipeableStateProps
-  ): React.Element<any> => (
-    <LoaderRow
-      loadedRow={this.props.loadedRow}
-      loader={item.loader}
-      {...swipeableStateProps}
-    />
-  );
-
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps

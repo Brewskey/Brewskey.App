@@ -140,6 +140,7 @@ const AppRouter = createSwitchNavigator(
       },
       {
         animationEnabled: false,
+        lazy: true,
         swipeEnabled: false,
         tabBarComponent: MainTabBar,
         tabBarPosition: 'bottom',
