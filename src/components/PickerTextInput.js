@@ -7,8 +7,7 @@ import type { PickerValue } from '../stores/PickerStore';
 import * as React from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { TouchableOpacity } from 'react-native';
-import Fragment from '../common/Fragment';
+import { TouchableOpacity, View } from 'react-native';
 import {
   FormInput,
   FormLabel,
@@ -56,10 +55,12 @@ class PickerTextInput<TEntity: { id: EntityID }> extends React.Component<
       ...rest
     } = this.props;
 
+    // have to wrap Input in view to be able to get touch event on Touchable
+    // https://github.com/facebook/react-native/issues/14958
     return (
-      <Fragment>
+      <TouchableOpacity onPress={onPress}>
         <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-        <TouchableOpacity onPress={onPress}>
+        <View pointerEvents="none">
           <FormInput
             {...rest}
             editable={false}
@@ -67,9 +68,9 @@ class PickerTextInput<TEntity: { id: EntityID }> extends React.Component<
             placeholder={placeholder}
             value={this._stringValue}
           />
-          <FormValidationMessage>{error}</FormValidationMessage>
-        </TouchableOpacity>
-      </Fragment>
+        </View>
+        <FormValidationMessage>{error}</FormValidationMessage>
+      </TouchableOpacity>
     );
   }
 }
