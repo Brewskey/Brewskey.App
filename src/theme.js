@@ -31,6 +31,19 @@ export const TYPOGRAPHY = {
 };
 /* eslint-enable sorting/sort-object-props */
 
+// for full effect on android we probably have to set elevation
+// prop to the <View /> itself and it also will affect zIndex  and
+// for elevation level > 1 drops more big shadows
+// but since we never use high elevation this is not really necessary
+export const getElevationStyle = (elevation: number) => ({
+  elevation,
+  shadowOffset: {
+    height: 0.6 * elevation,
+  },
+  shadowOpacity: 0.0015 * elevation + 0.18,
+  shadowRadius: 0.54 * elevation,
+});
+
 const theme = {
   button: {
     white: {
