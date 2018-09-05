@@ -192,7 +192,7 @@ class $PermissionStore extends DAOStore<Permission> {
   getForEntityByID(
     permissionEntityType: PermissionEntityType,
     entityID: EntityID,
-  ): LoadObject<Permission> {
+  ): LoadObject<?Permission> {
     return this.getMany({
       filters: [
         DAOApi.createFilter(`${permissionEntityType}/id`).equals(entityID),
@@ -201,7 +201,8 @@ class $PermissionStore extends DAOStore<Permission> {
     }).map(
       (
         permissionLoaders: Array<LoadObject<Permission>>,
-      ): LoadObject<Permission> => permissionLoaders[0] || LoadObject.empty(),
+      ): LoadObject<?Permission> =>
+        (permissionLoaders[0]: any) || LoadObject.empty(),
     );
   }
 }

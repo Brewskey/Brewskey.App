@@ -66,24 +66,24 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
         />
         <FormField
           component={CheckBoxField}
+          disabled={submitting}
           initialValue={tap.hideLeaderboard}
-          disabled={submitting}
-          name="hideLeaderboard"
           label="Hide leaderboard"
+          name="hideLeaderboard"
         />
         <FormField
           component={CheckBoxField}
+          disabled={submitting}
           initialValue={tap.hideStats}
-          disabled={submitting}
-          name="hideStats"
           label="Hide stats"
+          name="hideStats"
         />
         <FormField
           component={CheckBoxField}
-          initialValue={tap.disableBadges}
           disabled={submitting}
-          name="disableBadges"
+          initialValue={tap.disableBadges}
           label="Disable badges"
+          name="disableBadges"
         />
         <FormField initialValue={tap.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
