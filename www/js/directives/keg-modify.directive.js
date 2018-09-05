@@ -70,6 +70,10 @@ angular.module('brewskey.directives').directive('kegModify', [
           model.startingPercentage = 100;
         };
 
+        scope.$watch('model.startingPercentage', function(newValue, oldValue) {
+          scope.model.changed = oldValue && oldValue !== newValue;
+        });
+
         $ionicModal
           .fromTemplateUrl('templates/modals/beer-selector.html', {
             scope: scope,
