@@ -23,7 +23,9 @@ type Props = {
 };
 
 const AchievementListItem = (props: Props) => {
-  const { notification: { achievementType } } = props;
+  const {
+    notification: { achievementType },
+  } = props;
   const badge = BADGE_BY_TYPE[achievementType];
 
   return (
