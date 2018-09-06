@@ -34,12 +34,6 @@ const withPicker = <TEntity, TProps: Props<TEntity>>(
       onChange: this.props.onChange,
     });
 
-    componentDidUpdate(prevProps: TProps & PickerProps<TEntity>) {
-      if (prevProps.value !== this.props.value) {
-        this._pickerStore.setValue(this.props.value);
-      }
-    }
-
     render() {
       return (
         <Component

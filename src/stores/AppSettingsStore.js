@@ -1,6 +1,6 @@
 // @flow
 
-import type { EntityID } from 'brewskey.js-api';
+import type { Organization } from 'brewskey.js-api';
 
 import { action, computed, observable, reaction, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
@@ -12,14 +12,14 @@ const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
 type AppSettings = {|
   manageTapsEnabled: boolean,
-  selectedOrganizationID: ?EntityID,
+  selectedOrganization: ?Organization,
 |};
 
 class AppSettingsStore {
   @observable
   _appSettings = {
     manageTapsEnabled: false,
-    selectedOrganizationID: null,
+    selectedOrganization: null,
   };
 
   constructor() {
@@ -44,21 +44,20 @@ class AppSettingsStore {
         this._appSettings = appSettings;
       }
 
-      if (this._appSettings.selectedOrganizationID) {
-        DAOApi.setOrganizationID(appSettings.selectedOrganizationID);
-      } else if (this._appSettings.selectedOrganizationID === undefined) {
+      if (this._appSettings.selectedOrganization) {
+        DAOApi.setOrganizationID(appSettings.selectedOrganization.id);
+      } else if (this._appSettings.selectedOrganization === undefined) {
         (async () => {
           const organizations = await waitForLoaded(() =>
             OrganizationStore.getMany(),
           );
 
           if (organizations.length) {
-            const selectedOrganizationID = organizations[0].getValueEnforcing()
-              .id;
+            const selectedOrganization = organizations[0].getValueEnforcing();
 
-            DAOApi.setOrganizationID(selectedOrganizationID);
+            DAOApi.setOrganizationID(selectedOrganization.id);
             this.updateAppSettings({
-              selectedOrganizationID,
+              selectedOrganization,
             });
           }
         })();
@@ -66,10 +65,12 @@ class AppSettingsStore {
     });
   };
 
-  onOrganizationChange = (selectedOrganizationID: ?EntityID) => {
-    DAOApi.setOrganizationID(selectedOrganizationID);
+  onOrganizationChange = (selectedOrganization: ?Organization) => {
+    DAOApi.setOrganizationID(
+      selectedOrganization ? selectedOrganization.id : null,
+    );
     this.updateAppSettings({
-      selectedOrganizationID: selectedOrganizationID || null,
+      selectedOrganization: selectedOrganization || null,
     });
   };
 
@@ -91,8 +92,8 @@ class AppSettingsStore {
   }
 
   @computed
-  get selectedOrganizationID(): ?EntityID {
-    return this._appSettings.selectedOrganizationID;
+  get selectedOrganization(): ?Organization {
+    return this._appSettings.selectedOrganization;
   }
 }
 

@@ -1,19 +1,20 @@
 // @flow
-
-import type { EntityID } from 'brewskey.js-api';
-import type { Style } from '../types';
-import type { PickerValue } from '../stores/PickerStore';
+import type { Style } from '../../types';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
+import { StyleSheet, Text } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { TouchableOpacity } from 'react-native';
-import Fragment from '../common/Fragment';
-import {
-  FormInput,
-  FormLabel,
-  FormValidationMessage,
-} from 'react-native-elements';
+import PickerInput from './PickerInput';
+import { COLORS, TYPOGRAPHY } from '../../theme';
+
+const styles = StyleSheet.create({
+  valueText: {
+    ...TYPOGRAPHY.paragraph,
+    color: COLORS.textInput,
+  },
+});
 
 type Props<TEntity> = {
   error?: ?string,
@@ -28,9 +29,7 @@ type Props<TEntity> = {
 };
 
 @observer
-class PickerTextInput<TEntity: { id: EntityID }> extends React.Component<
-  Props<TEntity>,
-> {
+class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   static defaultProps = {
     placeholder: 'Please select...',
     stringValueExtractor: (item: Object): string => item.name,
@@ -53,23 +52,20 @@ class PickerTextInput<TEntity: { id: EntityID }> extends React.Component<
       labelStyle,
       onPress,
       placeholder,
-      ...rest
+      value,
     } = this.props;
 
     return (
-      <Fragment>
-        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-        <TouchableOpacity onPress={onPress}>
-          <FormInput
-            {...rest}
-            editable={false}
-            multiline
-            placeholder={placeholder}
-            value={this._stringValue}
-          />
-          <FormValidationMessage>{error}</FormValidationMessage>
-        </TouchableOpacity>
-      </Fragment>
+      <PickerInput
+        labelStyle={labelStyle}
+        error={error}
+        label={label}
+        onPress={onPress}
+        placeholder={placeholder}
+        value={value}
+      >
+        <Text style={styles.valueText}>{this._stringValue}</Text>
+      </PickerInput>
     );
   }
 }

@@ -1,7 +1,6 @@
 // @flow
-
 import * as React from 'react';
-import PickerField from '../common/PickerField';
+import SimplePicker from '../components/pickers/SimplePicker';
 
 export type LeaderboardDurationValue = 'P0D' | 'P30D' | 'P0DT12H';
 
@@ -27,16 +26,18 @@ type Props = {|
 |};
 
 const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
-  <PickerField onChange={onChange} placeholder={null} value={value}>
-    {Array.from((Object.values(LEADERBOARD_DURATION_OPTIONS): any)).map(
-      ({
-        label,
-        value: optionValue,
-      }: LeaderboardDurationOptions): React.Node => (
-        <PickerField.Item key={optionValue} label={label} value={optionValue} />
-      ),
-    )}
-  </PickerField>
+  <SimplePicker
+    headerTitle="Select Leaderboard duration"
+    label=" Leaderboard duration"
+    onChange={(onChange: any)}
+    pickerValues={Array.from(
+      (Object.values(LEADERBOARD_DURATION_OPTIONS): any),
+    ).map(({ label, value: optionValue }: LeaderboardDurationOptions) => ({
+      label,
+      value: optionValue,
+    }))}
+    value={value}
+  />
 );
 
 export default LeaderBoardDurationPicker;

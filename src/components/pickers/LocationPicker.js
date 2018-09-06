@@ -1,15 +1,15 @@
 // @flow
 
 import type { Location, QueryOptions } from 'brewskey.js-api';
-import type { Style } from '../types';
-import type { PickerValue } from '../stores/PickerStore';
+import type { Style } from '../../types';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { LocationStore } from '../stores/DAOStores';
-import LoaderRow from '../common/LoaderRow';
-import SelectableListItem from '../common/SelectableListItem';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
+import { LocationStore } from '../../stores/DAOStores';
+import LoaderRow from '../../common/LoaderRow';
+import SelectableListItem from '../../common/SelectableListItem';
+import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
   error?: ?string,
