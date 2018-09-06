@@ -9,14 +9,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import AuthStore from '../stores/AuthStore';
 import UserAvatar from '../common/avatars/UserAvatar';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 import TouchableItem from '../common/buttons/TouchableItem';
 
 const styles = StyleSheet.create({
   container: {
+    ...getElevationStyle(1),
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.secondary2,
-    elevation: 1,
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 12,

@@ -1,7 +1,7 @@
 // @flow
 import * as React from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { COLORS, TYPOGRAPHY, getElevationStyle } from '../../theme';
 import HeaderBackButton from './HeaderBackButton';
 import { getElementFromComponentProp } from '../../utils';
 
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   outerContainer: {
+    ...getElevationStyle(1),
     backgroundColor: COLORS.primary2,
-    elevation: 2,
     height: 60,
     overflow: 'visible',
     paddingHorizontal: 12,

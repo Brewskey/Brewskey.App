@@ -2,16 +2,16 @@
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { COLORS } from '../theme';
+import { COLORS, getElevationStyle } from '../theme';
 
 const styles = StyleSheet.create({
   innerContainer: {
     backgroundColor: COLORS.secondary,
   },
   innerContainerPadded: {
+    ...getElevationStyle(1),
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: COLORS.secondary2,
-    elevation: 1,
   },
   outerContainerPadded: {
     backgroundColor: COLORS.secondary2,
