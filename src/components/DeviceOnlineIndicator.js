@@ -68,6 +68,7 @@ class DeviceOnlineIndicator extends React.Component<Props> {
 }
 
 type ExtraProps = {
+  iconSize: number,
   sizeStyle: Object,
 };
 
