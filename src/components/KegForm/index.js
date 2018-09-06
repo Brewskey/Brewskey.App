@@ -7,14 +7,13 @@ import * as React from 'react';
 import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
-import { BeverageStore } from '../../stores/DAOStores';
 import { observer } from 'mobx-react/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
-import PickerField from '../../common/PickerField';
-import BeveragePicker from '../BeveragePicker';
+import SimplePicker from '../../components/pickers/SimplePicker';
+import BeveragePicker from '../pickers/BeveragePicker';
 import KegLevelSliderField from './KegLevelSliderField';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { form, FormField } from '../../common/form';
@@ -84,24 +83,20 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
           component={BeveragePicker}
           disabled={submitting}
           initialValue={keg.beverage}
-          itemsLoader={BeverageStore.getMany()}
-          label="Beverage"
           name="beverageId"
           parseOnSubmit={(value: Beverage): EntityID => value.id}
         />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
+          headerTitle="Select Keg Type"
           initialValue={keg && keg.kegType}
           label="Keg type"
           name="kegType"
-        >
-          {Object.entries(KEG_NAME_BY_KEG_TYPE).map(
-            ([type, name]: [any, any]): React.Node => (
-              <PickerField.Item key={type} label={name} value={type} />
-            ),
+          pickerValues={Object.entries(KEG_NAME_BY_KEG_TYPE).map(
+            ([type, name]: [any, any]) => ({ label: name, value: type }),
           )}
-        </FormField>
+        />
         <FormField
           component={KegLevelSliderField}
           initialValue={initialStartingPercentage}

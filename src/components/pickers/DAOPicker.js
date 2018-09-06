@@ -1,31 +1,31 @@
 // @flow
 
 import type { EntityID, QueryOptions } from 'brewskey.js-api';
-import type { Style } from '../types';
-import type DAOStore from '../stores/DAOStores';
-import type { Row } from '../stores/DAOListStore';
-import type { PickerValue } from '../stores/PickerStore';
-import type { PickerProps } from '../common/withPicker';
+import type { Style } from '../../types';
+import type DAOStore from '../../stores/DAOStores';
+import type { Row } from '../../stores/DAOListStore';
+import type { PickerValue } from '../../stores/PickerStore';
+import type { PickerProps } from '../../common/withPicker';
 
 import * as React from 'react';
-import InjectedComponent from '../common/InjectedComponent';
-import { View } from 'react-native';
+import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { autorun } from 'mobx';
-import Header from '../common/Header';
-import HeaderIconButton from '../common/Header/HeaderIconButton';
-import HeaderSearchBar from '../common/Header/HeaderSearchBar';
-import DebouncedTextStore from '../stores/DebouncedTextStore';
-import ToggleStore from '../stores/ToggleStore';
-import List from '../common/List';
-import Container from '../common/Container';
-import LoadingListFooter from '../common/LoadingListFooter';
-import DAOListStore from '../stores/DAOListStore';
-import Modal from '../components/modals/Modal';
+import Header from '../../common/Header';
+import HeaderIconButton from '../../common/Header/HeaderIconButton';
+import HeaderSearchBar from '../../common/Header/HeaderSearchBar';
+import DebouncedTextStore from '../../stores/DebouncedTextStore';
+import ToggleStore from '../../stores/ToggleStore';
+import List from '../../common/List';
+import Container from '../../common/Container';
+import Fragment from '../../common/Fragment';
+import LoadingListFooter from '../../common/LoadingListFooter';
+import DAOListStore from '../../stores/DAOListStore';
+import Modal from '../../components/modals/Modal';
 import DAOApi from 'brewskey.js-api';
 import PickerTextInput from './PickerTextInput';
-import PickerControl from '../components/PickerControl';
-import withPicker from '../common/withPicker';
+import PickerControl from './PickerControl';
+import withPicker from '../../common/withPicker';
 
 type RenderRowProps<TEntity> = {|
   index: number,
@@ -44,6 +44,8 @@ type Props<TEntity> = {
   labelStyle?: Style,
   multiple?: boolean,
   onChange?: (value: PickerValue<TEntity>) => void,
+  // todo figure flow for pickerInputComponent, it throws weird error for React.Component
+  pickerInputComponent?: any,
   placeholder?: string,
   placeholderTextColor?: string,
   queryOptions: QueryOptions,
@@ -113,15 +115,17 @@ class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
       headerTitle,
       label,
       multiple,
+      pickerInputComponent = PickerTextInput,
       placeholder,
       stringValueExtractor,
       ...rest
     } = this.props;
     const { clear, value } = this.injectedProps;
+    const PickerInputComponent = pickerInputComponent;
 
     return (
-      <View>
-        <PickerTextInput
+      <Fragment>
+        <PickerInputComponent
           {...rest}
           error={error}
           label={label}
@@ -169,7 +173,7 @@ class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
             </Container>
           )}
         </Modal>
-      </View>
+      </Fragment>
     );
   }
 }

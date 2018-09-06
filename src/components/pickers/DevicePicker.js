@@ -1,13 +1,13 @@
 // @flow
 
 import type { Device, QueryOptions } from 'brewskey.js-api';
-import type { PickerValue } from '../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { DeviceStore } from '../stores/DAOStores';
-import LoaderRow from '../common/LoaderRow';
-import SelectableListItem from '../common/SelectableListItem';
+import { DeviceStore } from '../../stores/DAOStores';
+import LoaderRow from '../../common/LoaderRow';
+import SelectableListItem from '../../common/SelectableListItem';
 
 type Props = {|
   error?: ?string,

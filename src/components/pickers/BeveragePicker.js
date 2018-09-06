@@ -1,14 +1,14 @@
 // @flow
 
 import type { Beverage, QueryOptions } from 'brewskey.js-api';
-import type { PickerValue } from '../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { BeverageStore } from '../stores/DAOStores';
-import LoaderRow from '../common/LoaderRow';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import SelectableListItem from '../common/SelectableListItem';
+import { BeverageStore } from '../../stores/DAOStores';
+import LoaderRow from '../../common/LoaderRow';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import SelectableListItem from '../../common/SelectableListItem';
 
 type Props = {|
   error?: ?string,

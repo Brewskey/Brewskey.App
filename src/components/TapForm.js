@@ -12,7 +12,7 @@ import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
-import DevicePicker from './DevicePicker';
+import DevicePicker from './pickers/DevicePicker';
 import { form, FormField } from '../common/form';
 
 const validate = (values: TapMutator): { [key: string]: string } => {

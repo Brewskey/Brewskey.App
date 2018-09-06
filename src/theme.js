@@ -16,6 +16,8 @@ export const COLORS = {
   success: '#71F197',
   text: '#43484d',
   textFaded: 'rgba(0, 0, 0, 0.6)',
+  textInput: '#86939e',
+  textInputPlaceholder: '#bdc6cf',
   textInverse: '#fff',
   textInverseFaded: 'rgba(255,255,255,0.7)',
 };
