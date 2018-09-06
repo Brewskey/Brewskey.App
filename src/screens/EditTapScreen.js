@@ -1,6 +1,7 @@
 // @flow
 
 import type { EntityID } from 'brewskey.js-api';
+import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { Dimensions } from 'react-native';
@@ -36,18 +37,21 @@ const EditTapRouter = createMaterialTopTabNavigator(
 
 type InjectedProps = {
   id: EntityID,
+  navigation: Navigation,
 };
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class EditTapScreen extends InjectedComponent<InjectedProps> {
+  static router = EditTapRouter.router;
+
   render() {
-    const { id } = this.injectedProps;
+    const { id, navigation } = this.injectedProps;
 
     return (
       <Container>
         <Header showBackButton title="Edit Tap" />
-        <EditTapRouter screenProps={{ tapId: id }} />
+        <EditTapRouter screenProps={{ tapId: id }} navigation={navigation} />
       </Container>
     );
   }
