@@ -11,30 +11,22 @@ import {
   View,
 } from 'react-native';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   placeholderText: {
-    ...TYPOGRAPHY.paragraph,
     color: COLORS.textInputPlaceholder,
+    fontSize: 17,
   },
   underline: {
     backgroundColor: COLORS.secondary3,
     height: 1,
-    marginHorizontal: Platform.OS === 'ios' ? 20 : 15,
+    marginHorizontal: 20,
   },
   valueContainer: {
     justifyContent: 'center',
-    ...Platform.select({
-      android: {
-        marginHorizontal: 15,
-        minHeight: 46,
-      },
-      ios: {
-        marginHorizontal: 20,
-        minHeight: 36,
-      },
-    }),
+    marginHorizontal: 20,
+    minHeight: Platform.OS === 'ios' ? 36 : 46,
   },
 });
 
