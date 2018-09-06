@@ -7,12 +7,12 @@ import { StyleSheet, Text } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import PickerInput from './PickerInput';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   valueText: {
-    ...TYPOGRAPHY.paragraph,
     color: COLORS.textInput,
+    fontSize: 17,
   },
 });
 

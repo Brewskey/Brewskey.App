@@ -107,7 +107,6 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           initialValue={beverage.description}
           label="Description"
           name="description"
-          placeholder="Please select..."
         />
         <FormField
           component={SimplePicker}
@@ -127,6 +126,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           component={SimplePicker}
           disabled={submitting}
           initialValue={beverage.servingTemperature}
+          headerTitle="Select Serving Temperature"
           label="Serving temperature"
           name="servingTemperature"
           pickerValues={[

@@ -25,3 +25,8 @@ allprojects {
         }
     }
 }
+
+ext {
+    // Other settings
+    compileSdkVersion = 27 // default: 23
+}
