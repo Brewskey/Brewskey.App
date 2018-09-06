@@ -31,7 +31,6 @@ const EditTapRouter = createMaterialTopTabNavigator(
       width: Dimensions.get('window').width,
     },
     lazy: true,
-    optimizationsEnabled: true,
   },
 );
 

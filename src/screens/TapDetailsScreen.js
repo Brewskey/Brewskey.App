@@ -51,7 +51,6 @@ const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
     width: Dimensions.get('window').width,
   },
   lazy: true,
-  optimizationsEnabled: true,
   swipeEnabled: false,
 });
 
