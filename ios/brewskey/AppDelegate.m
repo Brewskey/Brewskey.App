@@ -12,6 +12,8 @@
 
 #import <React/RCTPushNotificationManager.h>
 
+#import "RNSplashScreen.h" 
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -32,6 +34,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
+  [RNSplashScreen show];
   return YES;
 }
 

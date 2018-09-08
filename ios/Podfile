@@ -69,6 +69,8 @@ target 'brewskey' do
 
   # end
 
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
   target 'brewskeyTests' do
     inherit! :search_paths
     # Pods for testing

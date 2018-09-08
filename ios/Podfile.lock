@@ -102,6 +102,8 @@ PODS:
     - React
   - react-native-randombytes (3.5.0):
     - React
+  - react-native-splash-screen (3.1.1):
+    - React
   - React/ART (0.55.3):
     - React/Core
   - React/Core (0.55.3):
@@ -176,6 +178,7 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-nfc-manager (from `../node_modules/react-native-nfc-manager`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React/ART (from `../node_modules/react-native`)
   - React/Core (from `../node_modules/react-native`)
   - React/CxxBridge (from `../node_modules/react-native`)
@@ -235,6 +238,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-nfc-manager"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   ReactNativePermissions:
     :path: "../node_modules/react-native-permissions"
   RNDeviceInfo:
@@ -270,12 +275,13 @@ SPEC CHECKSUMS:
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   react-native-nfc-manager: a74ef58b29f0015ae9e70f120645b796668ba5c2
   react-native-randombytes: d3184d351604f78e019535178766590188bbc133
+  react-native-splash-screen: 8e3f866dc79bfe533baeffd0a38c33f7a7eae7f8
   ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   RNOpenAppSettings: 7ec58f46d289c981c881bfe1539dd86d93237eea
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: d614312afb1e716e654b06cdbe161a5278354cce
+PODFILE CHECKSUM: 94a9d08934e96f7bbdf42e56471fc03cee6d99c7
 
 COCOAPODS: 1.5.3
