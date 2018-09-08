@@ -3,6 +3,7 @@
 import type { KegType } from 'brewskey.js-api';
 
 import * as React from 'react';
+import { Dimensions, Platform, StatusBar } from 'react-native';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 
 // eslint-disable-next-line
@@ -100,4 +101,30 @@ export const parseError = (error: Object): string => {
   }
 
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
+};
+
+export const checkIsIphoneX = (): boolean => {
+  const { height, width } = Dimensions.get('window');
+  return (
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    !Platform.isTVOS &&
+    (height === 812 || width === 812)
+  );
+};
+
+export const getStatusBarHeight = ({
+  skipAndroid = false,
+}: {
+  skipAndroid?: boolean,
+}): number => {
+  if (Platform.OS === 'ios') {
+    return checkIsIphoneX() ? 44 : 20;
+  }
+
+  if (skipAndroid) {
+    return 0;
+  }
+
+  return StatusBar.currentHeight;
 };

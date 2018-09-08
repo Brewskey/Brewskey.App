@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Modal as RNModal, TouchableWithoutFeedback } from 'react-native';
+import Fragment from '../../common/Fragment';
+import StatusBarFake from './StatusBarFake';
 
 const emptyFunction = () => {};
 
@@ -30,13 +32,16 @@ const Modal = ({
     transparent={transparent}
     visible={isVisible}
   >
-    {isTouchable ? (
-      <TouchableWithoutFeedback onPress={onHideModal}>
-        {children}
-      </TouchableWithoutFeedback>
-    ) : (
-      children
-    )}
+    <Fragment>
+      <StatusBarFake />
+      {isTouchable ? (
+        <TouchableWithoutFeedback onPress={onHideModal}>
+          {children}
+        </TouchableWithoutFeedback>
+      ) : (
+        children
+      )}
+    </Fragment>
   </RNModal>
 );
 
