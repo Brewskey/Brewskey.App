@@ -10,6 +10,7 @@ type Props = {
   isTouchable?: boolean,
   isVisible: boolean,
   onHideModal?: () => void,
+  shouldHideOnRequestClose?: boolean,
   transparent?: boolean,
   // other RN modal props,
 };
@@ -20,13 +21,16 @@ const Modal = ({
   isTouchable = true,
   isVisible,
   onHideModal,
+  shouldHideOnRequestClose = true,
   transparent = true,
   ...rest
 }: Props) => (
   <RNModal
     {...rest}
     animationType={animationType}
-    onRequestClose={emptyFunction}
+    onRequestClose={
+      shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
+    }
     transparent={transparent}
     visible={isVisible}
   >

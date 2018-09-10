@@ -84,7 +84,10 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
           stringValueExtractor={this._stringValueExtractor}
           value={value}
         />
-        <Modal isVisible={this._modalToggleStore.isToggled}>
+        <Modal
+          isVisible={this._modalToggleStore.isToggled}
+          onHideModal={this._modalToggleStore.toggleOff}
+        >
           <Container>
             <Header
               leftComponent={

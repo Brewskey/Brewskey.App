@@ -19,7 +19,12 @@ type Props = {|
 |};
 
 const HardwareSetupModal = ({ isVisible, onHideModal }: Props) => (
-  <Modal hardwareAccelerated isTouchable={false} isVisible={isVisible}>
+  <Modal
+    hardwareAccelerated
+    isTouchable={false}
+    isVisible={isVisible}
+    shouldHideOnRequestClose={false}
+  >
     <View style={styles.container}>
       <HardwareSetupGuide onClosePress={onHideModal} />
     </View>
