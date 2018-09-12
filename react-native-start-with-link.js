@@ -47,7 +47,7 @@ function generateRnCliConfig(symlinkPathes, configName) {
 var path = require('path');
 var blacklist;
 try {
-  blacklist = require('metro-bundler/src/blacklist');
+  blacklist = require('metro-config/src/defaults/blacklist');
 } catch(e) {
   blacklist = require('metro/src/blacklist');
 }
@@ -64,8 +64,13 @@ var config = {
     'stream': require.resolve('readable-stream'),
     'vm': require.resolve('vm-browserify')
   },
-  getBlacklistRE() {
-    return blacklist([
+  watchFolders: [
+    ${symlinkPathes
+      .map(path => `path.resolve('${path}')`)
+      .map(path => path.replace(/\\/g, '//'))}
+  ],
+  resolver: {
+    blacklistRE: blacklist([
       ${symlinkPathes
         .map(path => path.replace(/\\/g, '//'))
         .map(
@@ -75,22 +80,11 @@ var config = {
               '[/\\\\]',
             )}[/\\\\]node_modules[/\\\\]react-native[/\\\\].*/`,
         )}
-    ]);
+    ]),
   },
-  getProjectRoots() {
-    return [
-      // Keep your project directory.
-      path.resolve(__dirname),
-
-      // Include your forked package as a new root.
-      ${symlinkPathes
-        .map(path => `path.resolve('${path}')`)
-        .map(path => path.replace(/\\/g, '//'))}
-    ];
-  }
 };
 module.exports = config;
-  `;
+`;
 
   fs.writeFileSync(configName, fileBody);
 }
