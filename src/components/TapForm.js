@@ -18,10 +18,6 @@ import { form, FormField } from '../common/form';
 const validate = (values: TapMutator): { [key: string]: string } => {
   const errors = {};
 
-  if (!values.name) {
-    errors.name = 'Name is required';
-  }
-
   if (!values.deviceId) {
     errors.deviceId = 'Brewskey box is required';
   }
