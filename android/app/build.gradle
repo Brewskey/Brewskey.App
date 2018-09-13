@@ -146,7 +146,7 @@ dependencies {
     }
     implementation project(':react-native-randombytes')
     implementation project(':react-native-contacts')
-    implementation project(':react-native-fetch-blob')
+    implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-picker')
     implementation(project(':react-native-maps')){
         exclude group: 'com.google.android.gms', module: 'play-services-base'

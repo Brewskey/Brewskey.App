@@ -88,8 +88,6 @@ PODS:
     - React/Core (= 0.57.0)
   - react-native-contacts (2.2.3):
     - React
-  - react-native-fetch-blob (0.10.6):
-    - React/Core
   - react-native-google-maps (0.21.0):
     - Google-Maps-iOS-Utils (= 2.1.0)
     - GoogleMaps (= 2.5.0)
@@ -155,6 +153,8 @@ PODS:
     - React/RCTBlob
   - ReactNativePermissions (1.1.1):
     - React
+  - rn-fetch-blob (0.10.6):
+    - React/Core
   - RNDeviceInfo (0.21.5):
     - React
   - RNOpenAppSettings (1.0.0):
@@ -172,7 +172,6 @@ DEPENDENCIES:
   - Google-Maps-iOS-Utils
   - GoogleMaps
   - react-native-contacts (from `../node_modules/react-native-contacts`)
-  - react-native-fetch-blob (from `../node_modules/react-native-fetch-blob`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -195,6 +194,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - ReactNativePermissions (from `../node_modules/react-native-permissions`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -226,8 +226,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native"
   react-native-contacts:
     :path: "../node_modules/react-native-contacts"
-  react-native-fetch-blob:
-    :path: "../node_modules/react-native-fetch-blob"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-image-picker:
@@ -242,6 +240,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-splash-screen"
   ReactNativePermissions:
     :path: "../node_modules/react-native-permissions"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNOpenAppSettings:
@@ -269,7 +269,6 @@ SPEC CHECKSUMS:
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-contacts: 1a8913219e54d1fa20e817b99d9b42b9ec98558d
-  react-native-fetch-blob: 63394b1d7b0781547b3e4463b3195790177b1222
   react-native-google-maps: 2cfe3b01f8422c7dae51d8764139fd70f888cfce
   react-native-image-picker: 42cfe2c8435d893414f8714a81e480313cb1412b
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
@@ -277,11 +276,12 @@ SPEC CHECKSUMS:
   react-native-randombytes: d3184d351604f78e019535178766590188bbc133
   react-native-splash-screen: 8e3f866dc79bfe533baeffd0a38c33f7a7eae7f8
   ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
+  rn-fetch-blob: 76a8f798dae965bbcd146a2438f2e1d381c91ae3
   RNDeviceInfo: 568c5641057313b4912d08a7742ff0b2f753ed5c
   RNOpenAppSettings: 7ec58f46d289c981c881bfe1539dd86d93237eea
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 94a9d08934e96f7bbdf42e56471fc03cee6d99c7
+PODFILE CHECKSUM: 2588e59faa4d7b6cfab7583d9e4849c26647ed88
 
 COCOAPODS: 1.5.3

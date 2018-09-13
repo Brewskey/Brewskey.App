@@ -79,8 +79,8 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A9B6E1F392C481EBE761A5B /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		4DAAE3B5D3284EEA9FB9D24D /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		52E2373621365786009CEE1D /* libreact-native-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		52E2375821365E32009CEE1D /* libreact-native-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E2373621365786009CEE1D /* librn-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "librn-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		52E2375821365E32009CEE1D /* librn-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "librn-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E2375A2136DBCA009CEE1D /* libPods-brewskey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-brewskey.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E2377A2136E8F2009CEE1D /* brewskey.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = brewskey.entitlements; path = brewskey/brewskey.entitlements; sourceTree = "<group>"; };
 		52E237C1213A629A009CEE1D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "brewskey/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -191,11 +191,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				52E2373621365786009CEE1D /* libreact-native-fetch-blob.a */,
+				52E2373621365786009CEE1D /* librn-fetch-blob.a */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				14A827CB4EE9462E230C98C3 /* libPods-brewskey.a */,
 				9BAA0AA58A0FE6749D0A290A /* libPods-brewskey-tvOSTests.a */,
-				52E2375821365E32009CEE1D /* libreact-native-fetch-blob.a */,
+				52E2375821365E32009CEE1D /* librn-fetch-blob.a */,
 				52E2375A2136DBCA009CEE1D /* libPods-brewskey.a */,
 				AAFA810135D696BCAD1F38CB /* libPods-brewskeyTests.a */,
 			);

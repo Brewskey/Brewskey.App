@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.airbnb.android.react.maps.MapsPackage;
 import com.facebook.react.ReactApplication;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
@@ -15,7 +16,6 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import community.revteltech.nfc.NfcManagerPackage;
 
@@ -34,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFetchBlobPackage(),
             new SplashScreenReactPackage(),
             new ReactNativePushNotificationPackage(),
             new OpenAppSettingsPackage(),
@@ -43,7 +44,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MapsPackage(),
           new NfcManagerPackage(),
           new ReactNativeContacts(),
-          new RNFetchBlobPackage(),
           new VectorIconsPackage()
       );
     }
