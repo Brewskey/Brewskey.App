@@ -141,30 +141,21 @@ dependencies {
     implementation project(':react-native-push-notification')
     implementation project(':react-native-device-info')
     implementation project(':react-native-app-settings')
-    implementation (project(':react-native-device-info')){
-        exclude group: "com.google.android.gms" 
-    }
+    implementation project(':react-native-device-info')
     implementation project(':react-native-randombytes')
     implementation project(':react-native-contacts')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-picker')
-    implementation(project(':react-native-maps')){
-        exclude group: 'com.google.android.gms', module: 'play-services-base'
-        exclude group: 'com.google.android.gms', module: 'play-services-maps'
-    }
+
+    implementation project(':react-native-maps')
+
     implementation project(':react-native-nfc-manager')
     implementation project(':react-native-vector-icons')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}'
-    implementation 'com.facebook.react:react-native:+'  // From node_modules
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation "com.facebook.react:react-native:+"  // From node_modules
 
-    implementation 'com.google.firebase:firebase-core:10.0.1'
-    implementation 'com.google.firebase:firebase-messaging:10.0.1'
-
-    implementation 'com.google.android.gms:play-services-gcm:10.0.1'
-    implementation 'com.google.android.gms:play-services-base:10.0.1'
-    implementation 'com.google.android.gms:play-services-maps:10.0.1'
 }
 
 // Run this once to be able to run the application with BUCK
@@ -174,4 +165,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply plugin: 'com.google.gms.google-services'
+// apply plugin: 'com.google.gms.google-services'
