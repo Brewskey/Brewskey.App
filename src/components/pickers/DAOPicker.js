@@ -5,10 +5,8 @@ import type { Style } from '../../types';
 import type DAOStore from '../../stores/DAOStores';
 import type { Row } from '../../stores/DAOListStore';
 import type { PickerValue } from '../../stores/PickerStore';
-import type { PickerProps } from '../../common/withPicker';
 
 import * as React from 'react';
-import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { autorun } from 'mobx';
 import Header from '../../common/Header';
@@ -25,7 +23,7 @@ import Modal from '../../components/modals/Modal';
 import DAOApi from 'brewskey.js-api';
 import PickerTextInput from './PickerTextInput';
 import PickerControl from './PickerControl';
-import withPicker from '../../common/withPicker';
+import PickerStore from '../../stores/PickerStore';
 
 type RenderRowProps<TEntity> = {|
   index: number,
@@ -59,10 +57,8 @@ type Props<TEntity> = {
   // other react-native textInput props
 };
 
-@withPicker
 @observer
-class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
-  PickerProps<TEntity>,
+class DAOPicker<TEntity: { id: EntityID }> extends React.Component<
   Props<TEntity>,
 > {
   static defaultProps = {
@@ -73,6 +69,12 @@ class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   _listStore: DAOListStore<TEntity> = new DAOListStore(this.props.daoStore);
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
+
+  _pickerStore: PickerStore<TEntity> = new PickerStore({
+    initialValue: this.props.value,
+    multiple: this.props.multiple,
+    onChange: this.props.onChange,
+  });
 
   componentDidMount() {
     const { queryOptions, searchBy } = this.props;
@@ -98,8 +100,8 @@ class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
   _renderRow = (
     renderRowProps: RenderRowProps<TEntity>,
   ): React.Element<any> => {
-    const { checkIsSelected, toggleItem } = this.injectedProps;
     const { renderRow } = this.props;
+    const { checkIsSelected, toggleItem } = this._pickerStore;
     const {
       item: { loader },
     } = renderRowProps;
@@ -120,7 +122,7 @@ class DAOPicker<TEntity: { id: EntityID }> extends InjectedComponent<
       stringValueExtractor,
       ...rest
     } = this.props;
-    const { clear, value } = this.injectedProps;
+    const { clear, value } = this._pickerStore;
     const PickerInputComponent = pickerInputComponent;
 
     return (
