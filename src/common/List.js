@@ -4,8 +4,14 @@ import type { Props as VirtualizedListProps } from 'react-native/Libraries/Lists
 import type { Section } from '../types';
 
 import * as React from 'react';
-import { FlatList, SectionList } from 'react-native';
+import { FlatList, SectionList, StyleSheet } from 'react-native';
 import { ON_END_REACHED_THRESHOLD } from '../constants';
+
+const styles = StyleSheet.create({
+  contentContainerStyle: {
+    flexGrow: 1,
+  },
+});
 
 type ListType = 'flatList' | 'sectionList';
 
@@ -46,11 +52,12 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
 
     return (
       <ListComponent
+        contentContainerStyle={styles.contentContainerStyle}
         {...rest}
-        sections={sections}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? (this._onRefresh: any) : null}
         refreshing={this.state.isRefreshing}
+        sections={sections}
       />
     );
   }
