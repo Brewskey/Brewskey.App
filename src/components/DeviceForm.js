@@ -30,8 +30,8 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
     errors.deviceStatus = 'Status is required!';
   }
 
-  if (!values.location) {
-    errors.location = 'Location is required!';
+  if (!values.locationId) {
+    errors.locationId = 'Location is required!';
   }
 
   if (!values.name) {
