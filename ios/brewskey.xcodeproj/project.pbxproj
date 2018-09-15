@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* brewskeyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* brewskeyTests.m */; };
 		0695C75EA0504686B93E1B9F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 565D6B503ABB41C385F35031 /* Octicons.ttf */; };
@@ -14,6 +15,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		300D987569AFF17FE8CC22C1 /* libPods-brewskey.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 14A827CB4EE9462E230C98C3 /* libPods-brewskey.a */; };
+		52DE1E23213E0E2900D97F0D /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 52DE1E22213E0E2900D97F0D /* main.jsbundle */; };
 		52E237C2213A629A009CEE1D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 52E237C1213A629A009CEE1D /* GoogleService-Info.plist */; };
 		5C89BD6674B341A2AC04CADC /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B258A2010781456B94CC1338 /* MaterialCommunityIcons.ttf */; };
 		69695D00DD8045AB82EC8B86 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FE73CFEE11C64ABBACBB0790 /* FontAwesome.ttf */; };
@@ -38,7 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* brewskeyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = brewskeyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* brewskeyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = brewskeyTests.m; sourceTree = "<group>"; };
@@ -58,6 +59,7 @@
 		381C9E4962838DA5CEEA41A9 /* Pods-brewskeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-brewskeyTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-brewskeyTests/Pods-brewskeyTests.release.xcconfig"; sourceTree = "<group>"; };
 		3A9B6E1F392C481EBE761A5B /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		4DAAE3B5D3284EEA9FB9D24D /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		52DE1E22213E0E2900D97F0D /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = brewskey/main.jsbundle; sourceTree = "<group>"; };
 		52E2373621365786009CEE1D /* libreact-native-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E2375821365E32009CEE1D /* libreact-native-fetch-blob.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-fetch-blob.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52E2375A2136DBCA009CEE1D /* libPods-brewskey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-brewskey.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,9 +122,9 @@
 		13B07FAE1A68108700A75B9A /* brewskey */ = {
 			isa = PBXGroup;
 			children = (
+				52DE1E22213E0E2900D97F0D /* main.jsbundle */,
 				52E237C1213A629A009CEE1D /* GoogleService-Info.plist */,
 				52E2377A2136E8F2009CEE1D /* brewskey.entitlements */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -333,6 +335,7 @@
 				EF9C7CB718804885A707DEBE /* MaterialIcons.ttf in Resources */,
 				0695C75EA0504686B93E1B9F /* Octicons.ttf in Resources */,
 				11D78A98DF8749C78C565C5E /* SimpleLineIcons.ttf in Resources */,
+				52DE1E23213E0E2900D97F0D /* main.jsbundle in Resources */,
 				F66B79F51E164364964CCD30 /* Zocial.ttf in Resources */,
 				52E237C2213A629A009CEE1D /* GoogleService-Info.plist in Resources */,
 			);

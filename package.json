@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/brewskey/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "lint": "eslint ./src --max-warnings 0 --fix",
     "precommit": "lint-staged",
     "start": "node react-native-start-with-link.js",

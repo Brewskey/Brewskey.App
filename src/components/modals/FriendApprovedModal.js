@@ -45,12 +45,13 @@ class FriendApprovedModal extends React.Component<Props> {
 
   render() {
     const { account, isVisible, onHideModal } = this.props;
+    const { isToggled } = this._deleteModalToggleStore;
 
     return (
       <Fragment>
         <CenteredModal
           header={<Text style={styles.headerText}>You are friends!</Text>}
-          isVisible={isVisible}
+          isVisible={isVisible && !isToggled}
           onHideModal={onHideModal}
         >
           <View style={styles.root}>
@@ -65,7 +66,7 @@ class FriendApprovedModal extends React.Component<Props> {
           </View>
         </CenteredModal>
         <DeleteModal
-          isVisible={this._deleteModalToggleStore.isToggled}
+          isVisible={isToggled}
           message={`Are you sure you want to delete ${
             account.userName
           } from friends?`}
