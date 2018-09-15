@@ -53,7 +53,7 @@ target 'brewskey' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
-  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
+  pod 'rn-fetch-blob', :path => '../node_modules/rn-fetch-blob'
   pod 'RNOpenAppSettings', :path => '../node_modules/react-native-app-settings'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
   pod 'react-native-nfc-manager', :path => '../node_modules/react-native-nfc-manager'
@@ -66,6 +66,10 @@ target 'brewskey' do
   #   # Pods for testing
 
   # end
+
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
+
+  pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
   target 'brewskeyTests' do
     inherit! :search_paths

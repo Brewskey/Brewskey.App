@@ -2,6 +2,7 @@
 
 import type { ObservableMap } from 'mobx';
 
+import autobind from 'autobind-decorator';
 import { action, computed, observable } from 'mobx';
 
 export type PickerValue<TEntity> = ?TEntity | Array<TEntity>;
@@ -34,7 +35,8 @@ class PickerStore<TEntity> {
   // this also can be done with ObservableArray instead ObservableMap
   // but I need keys for initialParams in forms in cases where initialValue
   // is ShortenedEntity
-  @observable _valueByKey: ObservableMap<string, TEntity> = observable.map();
+  @observable
+  _valueByKey: ObservableMap<string, TEntity> = observable.map();
 
   constructor({
     initialValue,
@@ -58,6 +60,7 @@ class PickerStore<TEntity> {
       : null;
   }
 
+  @autobind
   checkIsSelected(item: TEntity): boolean {
     return this._valueByKey.has(this._keyExtractor(item));
   }
@@ -68,14 +71,14 @@ class PickerStore<TEntity> {
     this._onChange && this._onChange(this.value);
   }
 
+  @autobind
   @action
   setValue(value: PickerValue<TEntity>) {
     let entries;
     if (Array.isArray(value)) {
-      entries = value.map((item: TEntity): [string, TEntity] => [
-        this._keyExtractor(item),
-        item,
-      ]);
+      entries = value.map(
+        (item: TEntity): [string, TEntity] => [this._keyExtractor(item), item],
+      );
     } else {
       entries = value ? [[this._keyExtractor(value), value]] : [];
     }
@@ -83,6 +86,7 @@ class PickerStore<TEntity> {
     this._valueByKey.replace((entries: any));
   }
 
+  @autobind
   @action
   toggleItem(item: TEntity) {
     const itemKey = this._keyExtractor(item);

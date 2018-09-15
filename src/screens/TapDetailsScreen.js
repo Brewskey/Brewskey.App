@@ -51,7 +51,6 @@ const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
     width: Dimensions.get('window').width,
   },
   lazy: true,
-  optimizationsEnabled: true,
   swipeEnabled: false,
 });
 
@@ -68,7 +67,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _tapDataLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
-    const { id } = this.injectedProps;
+    const { id = 2 } = this.injectedProps;
     return LoadObject.merge([
       TapStore.getByID(id),
       PermissionStore.getForEntityByID('tap', id),

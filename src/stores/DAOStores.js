@@ -50,24 +50,26 @@ export const waitForLoaded = <TValue>(
         }, timeout);
       }
 
-      const loader = getLoader().map((result: $FlowFixMe): $FlowFixMe => {
-        if (!Array.isArray(result)) {
+      const loader = getLoader().map(
+        (result: $FlowFixMe): $FlowFixMe => {
+          if (!Array.isArray(result)) {
+            return result;
+          }
+
+          if (
+            result.some(
+              (item: $FlowFixMe): boolean =>
+                item instanceof LoadObject
+                  ? item.isLoading() || item.isUpdating()
+                  : false,
+            )
+          ) {
+            return LoadObject.loading();
+          }
+
           return result;
-        }
-
-        if (
-          result.some(
-            (item: $FlowFixMe): boolean =>
-              item instanceof LoadObject
-                ? item.isLoading() || item.isUpdating()
-                : false,
-          )
-        ) {
-          return LoadObject.loading();
-        }
-
-        return result;
-      });
+        },
+      );
 
       if (loader.isUpdating()) {
         return;
@@ -192,7 +194,7 @@ class $PermissionStore extends DAOStore<Permission> {
   getForEntityByID(
     permissionEntityType: PermissionEntityType,
     entityID: EntityID,
-  ): LoadObject<Permission> {
+  ): LoadObject<?Permission> {
     return this.getMany({
       filters: [
         DAOApi.createFilter(`${permissionEntityType}/id`).equals(entityID),
@@ -201,7 +203,8 @@ class $PermissionStore extends DAOStore<Permission> {
     }).map(
       (
         permissionLoaders: Array<LoadObject<Permission>>,
-      ): LoadObject<Permission> => permissionLoaders[0] || LoadObject.empty(),
+      ): LoadObject<?Permission> =>
+        (permissionLoaders[0]: any) || LoadObject.empty(),
     );
   }
 }

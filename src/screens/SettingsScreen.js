@@ -1,7 +1,6 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type { Organization } from 'brewskey.js-api';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
@@ -15,9 +14,8 @@ import { OrganizationStore } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import AppSettingsStore from '../stores/AppSettingsStore';
-import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 import Section from '../common/Section';
-import PickerField from '../common/PickerField';
+import OrganizationPicker from '../components/pickers/OrganizationPicker';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -40,7 +38,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
       isManageTapsEnabled,
       onOrganizationChange,
       onToggleManageTaps,
-      selectedOrganizationID,
+      selectedOrganization,
     } = AppSettingsStore;
 
     return (
@@ -48,26 +46,10 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
         <Header showBackButton title="Settings" />
         <ScrollView>
           <Section bottomPadded>
-            <LoaderPickerField
-              enabled={this._hasOrganizations}
-              itemsLoader={OrganizationStore.getMany()}
-              key="organization"
-              label="Selected Organization"
-              name="organization"
+            <OrganizationPicker
               onChange={onOrganizationChange}
-              placeholder="None"
-              value={selectedOrganizationID}
-            >
-              {(items: Array<Organization>): Array<React.Node> =>
-                items.map(({ id, name }: Organization): React.Node => (
-                  <PickerField.Item
-                    key={id}
-                    label={`${id} - ${name}`}
-                    value={id}
-                  />
-                ))
-              }
-            </LoaderPickerField>
+              value={selectedOrganization}
+            />
           </Section>
           <Section>
             <ListItem

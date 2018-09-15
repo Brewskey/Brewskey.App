@@ -10,14 +10,14 @@ import { KegStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import { calculateKegLevel } from '../utils';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 
 const LOW_KEG_LEVEL = 10;
 
 const styles = StyleSheet.create({
   container: {
+    ...getElevationStyle(1),
     backgroundColor: COLORS.secondary,
-    elevation: 1,
     height: 50,
     justifyContent: 'center',
   },

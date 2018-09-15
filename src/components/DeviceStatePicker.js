@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import PickerField from '../common/PickerField';
+import SimplePicker from '../components/pickers/SimplePicker';
 import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
 
 const styles = StyleSheet.create({
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  error?: ?string,
+  error?: string,
   onBlur: () => void,
   onChange: (value: any) => void,
   placeholder?: string,
@@ -23,12 +23,17 @@ type Props = {|
 
 const DeviceStatePicker = (props: Props) => (
   <View>
-    <PickerField label="State" {...props}>
-      <PickerField.Item label="Active" value="Active" />
-      <PickerField.Item label="Cleaning" value="Cleaning" />
-      <PickerField.Item label="Unlocked" value="Unlocked" />
-      <PickerField.Item label="Inactive" value="Inactive" />
-    </PickerField>
+    <SimplePicker
+      headerTitle="Select State"
+      label="State"
+      {...props}
+      pickerValues={[
+        { label: 'Active', value: 'Active' },
+        { label: 'Cleaning', value: 'Cleaning' },
+        { label: 'Unlocked', value: 'Unlocked' },
+        { label: 'Incative', value: 'Incative' },
+      ]}
+    />
     <Text style={styles.descriptionText}>
       {DESCRIPTION_BY_DEVICE_STATE[props.value]}
     </Text>

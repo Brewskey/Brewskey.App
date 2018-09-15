@@ -61,8 +61,10 @@ export type Notification =
   | NewFriendRequestNotification;
 
 class NotificationsStore {
-  @observable _isReady: boolean = false;
-  @observable _navigation: ?Navigation = null;
+  @observable
+  _isReady: boolean = false;
+  @observable
+  _navigation: ?Navigation = null;
   @observable
   _notificationsByID: ObservableMap<string, Notification> = observable.map();
 
@@ -194,9 +196,11 @@ class NotificationsStore {
     this._navigation = navigation;
   };
 
-  @action deleteAllNotifications = () => this._notificationsByID.clear();
+  @action
+  deleteAllNotifications = () => this._notificationsByID.clear();
 
-  @action deleteByID = (id: string) => this._notificationsByID.delete(id);
+  @action
+  deleteByID = (id: string) => this._notificationsByID.delete(id);
 
   @action
   setRead = (notificationID: string) => {
@@ -225,9 +229,8 @@ class NotificationsStore {
   };
 
   _rehydrateState = async () => {
-    const notifications = await Storage.getForCurrentUser(
-      NOTIFICATIONS_STORAGE_KEY,
-    );
+    const notifications =
+      (await Storage.getForCurrentUser(NOTIFICATIONS_STORAGE_KEY)) || [];
 
     if (Platform.OS === 'ios') {
       const newNotifications = await new Promise(resolve =>
@@ -246,10 +249,12 @@ class NotificationsStore {
     }
 
     const notificationEntries = notifications
-      ? notifications.map((notification: Notification): [
-          string,
-          Notification,
-        ] => [notification.id, notification])
+      ? notifications.map(
+          (notification: Notification): [string, Notification] => [
+            notification.id,
+            notification,
+          ],
+        )
       : [];
 
     const disabledTapIDs = await Storage.getForCurrentUser(

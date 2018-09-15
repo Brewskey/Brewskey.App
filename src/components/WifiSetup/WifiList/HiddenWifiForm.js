@@ -9,7 +9,7 @@ import { FormValidationMessage } from 'react-native-elements';
 import injectedComponent from '../../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { form, FormField } from '../../../common/form';
-import PickerField from '../../../common/PickerField';
+import SimplePicker from '../../../components/pickers/SimplePicker';
 import Button from '../../../common/buttons/Button';
 import TextField from '../../../components/TextField';
 import { WIFI_SECURITIES } from '../../../SoftApService';
@@ -49,13 +49,15 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField component={TextField} label="SSID" name="ssid" />
-        <FormField component={PickerField} label="Security" name="security">
-          {Object.entries(WIFI_SECURITIES).map(
-            ([name, value]: [any, any]): React.Node => (
-              <PickerField.Item key={value} label={name} value={value} />
-            ),
+        <FormField
+          component={SimplePicker}
+          label="Security"
+          name="security"
+          headerTitle="Select Wifi Security"
+          pickerValues={Object.entries(WIFI_SECURITIES).map(
+            ([name, value]: [any, any]) => ({ label: name, value }),
           )}
-        </FormField>
+        />
         {values.security !== WIFI_SECURITIES.OPEN && (
           <FormField
             component={TextField}

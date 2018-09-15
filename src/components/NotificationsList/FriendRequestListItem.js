@@ -13,7 +13,9 @@ type Props = {
 };
 
 const FriendRequestListItem = (props: Props) => {
-  const { notification: { friendUserName } } = props;
+  const {
+    notification: { friendUserName },
+  } = props;
   return (
     <NotificationListItem
       {...props}

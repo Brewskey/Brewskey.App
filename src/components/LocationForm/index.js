@@ -2,7 +2,6 @@
 
 import type { Location, LocationMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
-import type { StateConfig } from './stateList';
 
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
@@ -15,7 +14,7 @@ import { form, FormField } from '../../common/form';
 import TextField from '../TextField';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
-import PickerField from '../../common/PickerField';
+import SimplePicker from '../../components/pickers/SimplePicker';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -99,15 +98,17 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           name="description"
         />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
+          headerTitle="Select Location Type"
           initialValue={location.locationType}
           label="Location type"
           name="locationType"
-        >
-          <PickerField.Item label="Kegerator" value="Kegerator" />
-          <PickerField.Item label="Bar" value="Bar" />
-        </FormField>
+          pickerValues={[
+            { label: 'Kegerator', value: 'Kegerator' },
+            { label: 'Bar', value: 'Bar' },
+          ]}
+        />
         <FormField
           component={TextField}
           disabled={submitting}
@@ -132,16 +133,14 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           name="city"
         />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
+          headerTitle="Select State"
           initialValue={location.state}
           label="State"
           name="state"
-        >
-          {STATE_LIST.map((stateConfig: StateConfig): React.Node => (
-            <PickerField.Item key={stateConfig.value} {...stateConfig} />
-          ))}
-        </FormField>
+          pickerValues={STATE_LIST}
+        />
         <FormField
           component={TextField}
           disabled={submitting}

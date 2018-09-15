@@ -12,7 +12,7 @@ import Button from '../common/buttons/Button';
 import InjectedComponent from '../common/InjectedComponent';
 import Header from '../common/Header';
 import Container from '../common/Container';
-import LocationPicker from '../components/LocationPicker';
+import LocationPicker from '../components/pickers/LocationPicker';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import NuxSoftwareSetupStore from '../stores/NuxSoftwareSetupStore';

@@ -4,11 +4,13 @@ import type {
   Availability,
   Beverage,
   BeverageMutator,
+  EntityID,
   Glass,
   Srm,
   Style,
 } from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
+import type { SimplePickerValue } from '../components/pickers/SimplePicker';
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
@@ -18,18 +20,15 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
-import {
-  AvailabilityStore,
-  GlassStore,
-  SrmStore,
-  StyleStore,
-} from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
-import PickerField from '../common/PickerField';
-import LoaderPickerField from '../common/PickerField/LoaderPickerField';
 import BeverageImagePicker from '../components/BeverageImagePicker';
+import AvailabilityPicker from './pickers/AvailabilityPicker';
+import GlassPicker from './pickers/GlassPicker';
+import StylePicker from './pickers/StylePicker';
+import SimplePicker from './pickers/SimplePicker';
+import SrmPicker from './pickers/SrmPicker';
 
 const styles = StyleSheet.create({
   imagePickerContainer: {
@@ -66,8 +65,6 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
-  // todo Implement custom component for srm
-  // todo implement autocomplete for style?
   render() {
     const { beverage = {}, submitButtonLabel } = this.props;
 
@@ -112,74 +109,62 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="description"
         />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
+          headerTitle="Select Beverage Type"
           initialValue={beverage.beverageType}
-          label="Type"
+          label="Beverage Type"
           name="beverageType"
-        >
-          <PickerField.Item label="Beer" value="Beer" />
-          <PickerField.Item label="Cider" value="Cider" />
-          <PickerField.Item label="Coffee" value="Coffee" />
-          <PickerField.Item label="Soda" value="Soda" />
-        </FormField>
+          pickerValues={[
+            { label: 'Beer', value: 'Beer' },
+            { label: 'Cider', value: 'Cider' },
+            { label: 'Coffee', value: 'Coffee' },
+            { label: 'Soda', value: 'Soda' },
+          ]}
+        />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
           initialValue={beverage.servingTemperature}
+          headerTitle="Select Serving Temperature"
           label="Serving temperature"
           name="servingTemperature"
-        >
-          <PickerField.Item label="Cellar" value="cellar" />
-          <PickerField.Item label="Cold" value="cold" />
-          <PickerField.Item label="Cool" value="cool" />
-          <PickerField.Item label="Hot" value="hot" />
-          <PickerField.Item label="Very Cold" value="very_cold" />
-          <PickerField.Item label="Warm" value="warm" />
-        </FormField>
+          pickerValues={[
+            { label: 'Cellar', value: 'cellar' },
+            { label: 'Very Cold', value: 'very_cold' },
+            { label: 'Cold', value: 'cold' },
+            { label: 'Cool', value: 'cool' },
+            { label: 'Warm', value: 'warm' },
+            { label: 'Hot', value: 'hot' },
+          ]}
+        />
         <FormField
-          component={PickerField}
+          component={SimplePicker}
           disabled={submitting}
           initialValue={beverage.year}
           label="Year"
           name="year"
-        >
-          {yearsRange.map((year: number): React.Node => (
-            <PickerField.Item
-              key={year}
-              label={year.toString()}
-              value={year.toString()}
-            />
-          ))}
-        </FormField>
+          pickerValues={yearsRange.map(
+            (year: number): SimplePickerValue<string> => ({
+              label: year.toString(),
+              value: year.toString(),
+            }),
+          )}
+        />
         <FormField
-          component={LoaderPickerField}
+          component={AvailabilityPicker}
           disabled={submitting}
-          initialValue={beverage.availability && beverage.availability.id}
-          itemsLoader={AvailabilityStore.getMany()}
-          label="Availability"
+          initialValue={beverage.availability}
           name="availableId"
-        >
-          {(items: Array<Availability>): Array<React.Node> =>
-            items.map(({ id, name }: Availability): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))
-          }
-        </FormField>
+          parseOnSubmit={(value: ?Availability): ?EntityID => value && value.id}
+        />
         <FormField
-          component={LoaderPickerField}
+          component={GlassPicker}
           disabled={submitting}
-          initialValue={beverage.glass && beverage.glass.id}
-          itemsLoader={GlassStore.getMany()}
-          label="Glass"
+          initialValue={beverage.glass}
           name="glasswareId"
-        >
-          {(items: Array<Glass>): Array<React.Node> =>
-            items.map(({ id, name }: Glass): React.Node => (
-              <PickerField.Item key={id} label={name} value={id} />
-            ))
-          }
-        </FormField>
+          parseOnSubmit={(value: ?Glass): ?EntityID => value && value.id}
+        />
         <FormField
           component={CheckBoxField}
           disabled={submitting}
@@ -189,35 +174,23 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
         />
         {values.beverageType === 'Beer' && [
           <FormField
-            component={LoaderPickerField}
+            component={SrmPicker}
             disabled={submitting}
-            initialValue={beverage.srm && beverage.srm.id}
-            itemsLoader={SrmStore.getMany()}
+            initialValue={beverage.srm}
             key="srm"
             label="Srm"
             name="srmId"
-          >
-            {(items: Array<Srm>): Array<React.Node> =>
-              items.map(({ id, name }: Srm): React.Node => (
-                <PickerField.Item key={id} label={name} value={id} />
-              ))
-            }
-          </FormField>,
+            parseOnSubmit={(value: ?Srm): ?EntityID => value && value.id}
+          />,
           <FormField
-            component={LoaderPickerField}
+            component={StylePicker}
             disabled={submitting}
-            initialValue={beverage.style && beverage.style.id}
-            itemsLoader={StyleStore.getMany()}
+            initialValue={beverage.style}
             key="style"
             label="Style"
             name="styleId"
-          >
-            {(items: Array<Style>): Array<React.Node> =>
-              items.map(({ id, name }: Style): React.Node => (
-                <PickerField.Item key={id} label={name} value={id} />
-              ))
-            }
-          </FormField>,
+            parseOnSubmit={(value: ?Style): ?EntityID => value && value.id}
+          />,
           <FormField
             component={TextField}
             disabled={submitting}

@@ -1,6 +1,8 @@
 // @flow
 import * as React from 'react';
 import { Modal as RNModal, TouchableWithoutFeedback } from 'react-native';
+import Fragment from '../../common/Fragment';
+import StatusBarFake from './StatusBarFake';
 
 const emptyFunction = () => {};
 
@@ -10,6 +12,7 @@ type Props = {
   isTouchable?: boolean,
   isVisible: boolean,
   onHideModal?: () => void,
+  shouldHideOnRequestClose?: boolean,
   transparent?: boolean,
   // other RN modal props,
 };
@@ -20,23 +23,29 @@ const Modal = ({
   isTouchable = true,
   isVisible,
   onHideModal,
+  shouldHideOnRequestClose = true,
   transparent = true,
   ...rest
 }: Props) => (
   <RNModal
     {...rest}
     animationType={animationType}
-    onRequestClose={emptyFunction}
+    onRequestClose={
+      shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
+    }
     transparent={transparent}
     visible={isVisible}
   >
-    {isTouchable ? (
-      <TouchableWithoutFeedback onPress={onHideModal}>
-        {children}
-      </TouchableWithoutFeedback>
-    ) : (
-      children
-    )}
+    <Fragment>
+      <StatusBarFake />
+      {isTouchable ? (
+        <TouchableWithoutFeedback onPress={onHideModal}>
+          {children}
+        </TouchableWithoutFeedback>
+      ) : (
+        children
+      )}
+    </Fragment>
   </RNModal>
 );
 

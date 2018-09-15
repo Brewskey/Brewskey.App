@@ -13,7 +13,7 @@ import SwipeableList from '../../common/SwipeableList';
 import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
-type Props = {|
+type Props<TExtraProps> = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
@@ -26,7 +26,7 @@ type Props = {|
 
 @withNavigation
 @observer
-class BasePoursList extends React.Component<Props> {
+class BasePoursList<TExtraProps> extends React.Component<Props<TExtraProps>> {
   static defaultProps = {
     queryOptions: {},
   };
@@ -52,17 +52,6 @@ class BasePoursList extends React.Component<Props> {
     onRefresh && onRefresh();
     this._listStore.reload();
   };
-
-  _renderRow = (
-    { item }: { item: Row<Pour> },
-    ...swipeableStateProps
-  ): React.Element<any> => (
-    <LoaderRow
-      loadedRow={this.props.loadedRow}
-      loader={item.loader}
-      {...swipeableStateProps}
-    />
-  );
 
   _renderRow = ({
     info: { item: row, index, separators },

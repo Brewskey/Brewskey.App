@@ -16,6 +16,8 @@ export const COLORS = {
   success: '#71F197',
   text: '#43484d',
   textFaded: 'rgba(0, 0, 0, 0.6)',
+  textInput: '#86939e',
+  textInputPlaceholder: '#bdc6cf',
   textInverse: '#fff',
   textInverseFaded: 'rgba(255,255,255,0.7)',
 };
@@ -30,6 +32,19 @@ export const TYPOGRAPHY = {
   small: { fontSize: 14 },
 };
 /* eslint-enable sorting/sort-object-props */
+
+// for full effect on android we probably have to set elevation
+// prop to the <View /> itself and it also will affect zIndex  and
+// for elevation level > 1 drops more big shadows
+// but since we never use high elevation this is not really necessary
+export const getElevationStyle = (elevation: number) => ({
+  elevation,
+  shadowOffset: {
+    height: 0.6 * elevation,
+  },
+  shadowOpacity: 0.0015 * elevation + 0.18,
+  shadowRadius: 0.54 * elevation,
+});
 
 const theme = {
   button: {

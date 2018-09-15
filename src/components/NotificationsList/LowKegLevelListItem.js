@@ -13,7 +13,9 @@ type Props = {
 };
 
 const LowKegLevelListItem = (props: Props) => {
-  const { notification: { beverageId } } = props;
+  const {
+    notification: { beverageId },
+  } = props;
   return (
     <NotificationListItem
       {...props}

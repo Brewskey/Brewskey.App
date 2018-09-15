@@ -1,19 +1,16 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
+import Container from '../common/Container';
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-  },
   messageText: {
     ...TYPOGRAPHY.secondary,
     color: COLORS.textFaded,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
     textAlign: 'center',
   },
 });
@@ -23,9 +20,9 @@ type Props = {|
 |};
 
 const ListEmpty = ({ message }: Props) => (
-  <View style={styles.container}>
+  <Container centered>
     <Text style={styles.messageText}>{message}</Text>
-  </View>
+  </Container>
 );
 
 export default ListEmpty;

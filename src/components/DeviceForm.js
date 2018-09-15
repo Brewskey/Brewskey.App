@@ -20,7 +20,7 @@ import SectionContent from '../common/SectionContent';
 import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
-import LocationPicker from './LocationPicker';
+import LocationPicker from './pickers/LocationPicker';
 import DeviceStatePicker from './DeviceStatePicker';
 
 export const validate = (values: DeviceMutator): { [key: string]: string } => {
@@ -30,8 +30,8 @@ export const validate = (values: DeviceMutator): { [key: string]: string } => {
     errors.deviceStatus = 'Status is required!';
   }
 
-  if (!values.location) {
-    errors.location = 'Location is required!';
+  if (!values.locationId) {
+    errors.locationId = 'Location is required!';
   }
 
   if (!values.name) {
