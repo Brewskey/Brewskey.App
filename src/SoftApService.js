@@ -37,6 +37,11 @@ const translateWifiFromApi = ({
   ssid,
 });
 
+const HEADERS = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+};
+
 class SoftAPService {
   static configureWifi = async ({
     channel = DEFAULT_WIFI_CHANNEL,
@@ -50,16 +55,16 @@ class SoftAPService {
       ? publicKey.encrypt(password, 'hex')
       : '';
 
-    const { r: responseCode } = await fetchJSON({
-      body: {
+    const { r: responseCode } = await fetchJSON(`${BASE_URL}/configure-ap`, {
+      body: JSON.stringify({
         ch: channel,
         idx: index,
         pwd: encryptedPassword,
         sec: security,
         'ssid-value': ssid,
-      },
+      }),
+      headers: HEADERS,
       method: 'POST',
-      url: `${BASE_URL}/configure-ap`,
     });
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
@@ -68,10 +73,10 @@ class SoftAPService {
   };
 
   static connectWifi = async (networkIndex?: number = 0): Promise<void> => {
-    const { r: responseCode } = await fetchJSON({
-      body: { idx: networkIndex },
+    const { r: responseCode } = await fetchJSON(`${BASE_URL}/connect-ap`, {
+      body: JSON.stringify({ idx: networkIndex }),
+      headers: HEADERS,
       method: 'POST',
-      url: `${BASE_URL}/connect-ap`,
     });
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
@@ -80,18 +85,25 @@ class SoftAPService {
   };
 
   static getParticleID = async (): Promise<string> => {
-    const { id } = await fetchJSON(`${BASE_URL}/device-id`);
+    const { id } = await fetchJSON(`${BASE_URL}/device-id`, {
+      headers: HEADERS,
+    });
     return id;
   };
 
   static scanWifi = async (): Promise<Array<WifiNetwork>> => {
-    const { scans } = await fetchJSON(`${BASE_URL}/scan-ap`);
+    const { scans } = await fetchJSON(`${BASE_URL}/scan-ap`, {
+      headers: HEADERS,
+    });
     return scans.map(translateWifiFromApi);
   };
 
   static _getPublicKey = async (): Promise<Object> => {
     const { b: rawDerPublicKey, r: responseCode } = await fetchJSON(
       `${BASE_URL}/public-key`,
+      {
+        headers: HEADERS,
+      },
     );
 
     if (responseCode !== SUCCESS_RESPONSE_CODE) {
