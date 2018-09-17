@@ -10,6 +10,7 @@ import {
   FormValidationMessage,
 } from 'react-native-elements';
 import nullthrows from 'nullthrows';
+import { COLORS } from '../theme';
 
 export type Props = {
   error?: ?string,
@@ -19,12 +20,17 @@ export type Props = {
   labelStyle?: Style,
   onBlur?: () => void,
   onChange: (value: any) => void,
+  underlineColorAndroid?: string,
   validationTextStyle?: Style,
   value: any,
   // other react-native textInput props
 };
 
 class TextField extends React.Component<Props> {
+  static defaultProps = {
+    underlineColorAndroid: COLORS.secondary3,
+  };
+
   _inputRef: ?FormInput;
 
   _setRef = (ref: FormInput) => {
