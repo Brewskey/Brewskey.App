@@ -26,7 +26,6 @@ class PourButton extends React.Component<{}> {
   render() {
     return !PourProcessStore.isLoading ? (
       <Icon
-        borderless
         color={COLORS.secondary}
         component={TouchableItem}
         containerStyle={styles.container}
