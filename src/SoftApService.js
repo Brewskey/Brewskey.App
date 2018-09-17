@@ -37,6 +37,10 @@ const translateWifiFromApi = ({
   ssid,
 });
 
+const HEADERS = {
+  'Content-Type': 'multipart/form-data',
+};
+
 class SoftAPService {
   static configureWifi = async ({
     channel = DEFAULT_WIFI_CHANNEL,
@@ -50,33 +54,34 @@ class SoftAPService {
       ? publicKey.encrypt(password, 'hex')
       : '';
 
-    const { r: responseCode } = await fetchJSON({
-      body: {
-        ch: channel,
-        idx: index,
-        pwd: encryptedPassword,
-        sec: security,
-        'ssid-value': ssid,
-      },
-      method: 'POST',
-      url: `${BASE_URL}/configure-ap`,
+    const body = JSON.stringify({
+      ch: channel,
+      idx: index,
+      pwd: encryptedPassword,
+      sec: security,
+      'ssid-value': ssid,
     });
 
-    if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('error on configure wifi on Brewskey box!');
-    }
+    await fetchJSON(`${BASE_URL}/configure-ap`, {
+      body,
+      headers: {
+        ...HEADERS,
+        'Content-Length': body.length,
+      },
+      method: 'POST',
+    });
   };
 
   static connectWifi = async (networkIndex?: number = 0): Promise<void> => {
-    const { r: responseCode } = await fetchJSON({
-      body: { idx: networkIndex },
+    const body = JSON.stringify({ idx: networkIndex });
+    await fetchJSON(`${BASE_URL}/connect-ap`, {
+      body,
+      headers: {
+        ...HEADERS,
+        'Content-Length': body.length,
+      },
       method: 'POST',
-      url: `${BASE_URL}/connect-ap`,
     });
-
-    if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('Error on connecting Brewskey box to wifi network!');
-    }
   };
 
   static getParticleID = async (): Promise<string> => {
