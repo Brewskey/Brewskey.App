@@ -46,7 +46,8 @@ type Props = {|
 
 @observer
 class WifiListItem extends React.Component<Props> {
-  @observable _password = '';
+  @observable
+  _password = '';
 
   @action
   _onPasswordChange = (password: string) => {
@@ -89,7 +90,7 @@ class WifiListItem extends React.Component<Props> {
         {isExpanded && [
           isPasswordRequired && (
             <TextField
-              disabled={isConnecting}
+              editable={!isConnecting}
               key="password"
               label="Password"
               onChange={this._onPasswordChange}

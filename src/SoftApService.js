@@ -6,20 +6,22 @@ import { fetchJSON } from './utils';
 import NodeRSA from 'node-rsa';
 
 const BASE_URL = 'http://192.168.0.1:80';
-const SUCCESS_RESPONSE_CODE = 0;
-const DEFAULT_WIFI_INDEX = 0;
 const DEFAULT_WIFI_CHANNEL = 3;
+const DEFAULT_WIFI_INDEX = 0;
+const PUBLIC_KEY_TIMEOUT = 5000;
+const INCORRECT_WIFI_PASSWORD_CODE = -4;
+const SUCCESS_RESPONSE_CODE = 0;
 
 /* eslint-disable sorting/sort-object-props */
 export const WIFI_SECURITIES = {
   OPEN: 0,
   WEP_PSK: 1,
   WEP_SHARED: 32769,
-  WPA_AES_PSK: 2097156,
-  WPA_TKIP_PSK: 2097154,
   WPA2_AES_PSK: 4194308,
   WPA2_MIXED_PSK: 4194310,
   WPA2_TKIP_PSK: 4194306,
+  WPA_AES_PSK: 2097156,
+  WPA_TKIP_PSK: 2097154,
 };
 /* eslint-enable */
 
@@ -38,7 +40,7 @@ const translateWifiFromApi = ({
 });
 
 const HEADERS = {
-  'Content-Type': 'multipart/form-data',
+  'Content-Type': 'application/x-www-form-urlencoded',
 };
 
 class SoftAPService {
@@ -59,10 +61,10 @@ class SoftAPService {
       idx: index,
       pwd: encryptedPassword,
       sec: security,
-      'ssid-value': ssid,
+      ssid,
     });
 
-    await fetchJSON(`${BASE_URL}/configure-ap`, {
+    const { r: responseCode } = await fetchJSON(`${BASE_URL}/configure-ap`, {
       body,
       headers: {
         ...HEADERS,
@@ -70,6 +72,17 @@ class SoftAPService {
       },
       method: 'POST',
     });
+
+    if (responseCode === INCORRECT_WIFI_PASSWORD_CODE) {
+      throw new Error('Incorrect Wifi password!');
+    }
+
+    if (responseCode !== SUCCESS_RESPONSE_CODE) {
+      throw new Error(
+        'Error on wifi network configuration for Brewskey Box! ' +
+          'Please, try again.',
+      );
+    }
   };
 
   static connectWifi = async (networkIndex?: number = 0): Promise<void> => {
@@ -94,22 +107,34 @@ class SoftAPService {
     return scans.map(translateWifiFromApi);
   };
 
-  static _getPublicKey = async (): Promise<Object> => {
-    const { b: rawDerPublicKey, r: responseCode } = await fetchJSON(
-      `${BASE_URL}/public-key`,
-    );
+  static _getPublicKey = async (): Promise<Object> =>
+    new Promise(async (resolve, reject) => {
+      setTimeout(
+        () =>
+          reject(
+            new Error(
+              "Can't get public key from Brewskey Box." +
+                'Please repeat the whole setup from the beginning.',
+            ),
+          ),
+        PUBLIC_KEY_TIMEOUT,
+      );
 
-    if (responseCode !== SUCCESS_RESPONSE_CODE) {
-      throw new Error('Error on getting public Brewskey box key!');
-    }
+      const { b: rawDerPublicKey, r: responseCode } = await fetchJSON(
+        `${BASE_URL}/public-key`,
+      );
 
-    const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
-    const publicKey = new NodeRSA(derBuffer.slice(22), 'pkcs1-public-der', {
-      encryptionScheme: 'pkcs1',
+      if (responseCode !== SUCCESS_RESPONSE_CODE) {
+        reject(new Error('Error on getting public Brewskey box key!'));
+      }
+
+      const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
+      const publicKey = new NodeRSA(derBuffer.slice(22), 'pkcs1-public-der', {
+        encryptionScheme: 'pkcs1',
+      });
+
+      resolve(publicKey);
     });
-
-    return publicKey;
-  };
 }
 
 export default SoftAPService;
