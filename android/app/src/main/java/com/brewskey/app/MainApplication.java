@@ -55,18 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ImagePickerPackage(),
             new RNDeviceInfo(),
             new ReactNativeContacts(),
-            new OpenAppSettingsPackage(),
-            new RNFetchBlobPackage(),
-            new SplashScreenReactPackage(),
-            new ReactNativePushNotificationPackage(),
-            new OpenAppSettingsPackage(),
-            new RNDeviceInfo(),
-            new RandomBytesPackage(),
-          new ImagePickerPackage(),
-          new MapsPackage(),
-          new NfcManagerPackage(),
-          new ReactNativeContacts(),
-          new VectorIconsPackage()
+            new OpenAppSettingsPackage()
       );
     }
 

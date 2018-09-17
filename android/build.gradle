@@ -5,8 +5,8 @@ buildscript {
         compileSdkVersion = 27
         googlePlayServicesVersion = "15.0.1"
         minSdkVersion = 16
-        supportLibVersion = "27.1.1"
-        targetSdkVersion = 26
+        supportLibVersion = "27.0.3"
+        targetSdkVersion = 23
     }
     repositories {
         jcenter()

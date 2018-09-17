@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "build:ios": "react-native bundle --entry-file='index.js' --bundle-output='./ios/brewskey/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
+    "build:android":
+      "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bu‌​ndle --assets-dest android/app/src/main/res/",
+    "build:ios":
+      "react-native bundle --entry-file='index.js' --bundle-output='./ios/brewskey/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "lint": "eslint ./src --max-warnings 0 --fix",
     "precommit": "lint-staged",
     "start": "node react-native-start-with-link.js",
+    "setup-wifi": "babel-node setup-wifi.js",
     "test": "node node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
@@ -15,7 +19,8 @@
     "array-flatten": "^2.1.1",
     "assert": "^1.4.1",
     "autobind-decorator": "^2.1.0",
-    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api":
+      "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
     "buffer": "^5.0.8",
     "constants-browserify": "^1.0.0",
     "deepmerge": "^2.0.1",
@@ -32,16 +37,19 @@
     "prop-types": "^15.6.0",
     "react": "16.5.0",
     "react-native": "0.57.0",
-    "react-native-app-settings": "https://github.com/KrazyLabs/react-native-app-settings",
+    "react-native-app-settings":
+      "https://github.com/KrazyLabs/react-native-app-settings",
     "react-native-contacts": "^2.2.3",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "^0.21.5",
     "react-native-elements": "0.19.0",
     "react-native-image-picker": "^0.26.10",
-    "react-native-img-cache": "https://github.com/Brewskey/react-native-img-cache",
+    "react-native-img-cache":
+      "https://github.com/Brewskey/react-native-img-cache",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
     "react-native-maps": "^0.21.0",
-    "react-native-nfc-manager": "https://github.com/whitedogg13/react-native-nfc-manager",
+    "react-native-nfc-manager":
+      "https://github.com/whitedogg13/react-native-nfc-manager",
     "react-native-permissions": "^1.1.1",
     "react-native-progress": "^3.4.0",
     "react-native-push-notification": "^3.1.1",
@@ -56,7 +64,9 @@
     "vm-browserify": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "babel-eslint": "^9.0.0",
     "babel-jest": "^23.6.0",
     "eslint": "^4.8.0",
@@ -69,19 +79,17 @@
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-react-native": "^3.1.0",
     "eslint-plugin-sorting": "^0.3.0",
+    "fetch-everywhere": "^1.0.5",
     "husky": "^0.14.3",
     "jest": "^22.4.3",
     "lint-staged": "^7.0.4",
     "metro-react-native-babel-preset": "^0.45.2",
     "prettier": "^1.14.2",
-    "react-test-renderer": "^16.0.0"
+    "react-test-renderer": "^16.0.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,json}": [
-      "prettier --write",
-      "npm run lint",
-      "git add"
-    ]
+    "src/**/*.{js,json}": ["prettier --write", "npm run lint", "git add"]
   },
   "jest": {
     "preset": "react-native"
