@@ -87,7 +87,7 @@ class SoftAPService {
 
   static connectWifi = async (networkIndex?: number = 0): Promise<void> => {
     const body = JSON.stringify({ idx: networkIndex });
-    await fetchJSON(`${BASE_URL}/connect-ap`, {
+    const { r: responseCode } = await fetchJSON(`${BASE_URL}/connect-ap`, {
       body,
       headers: {
         ...HEADERS,
@@ -95,6 +95,10 @@ class SoftAPService {
       },
       method: 'POST',
     });
+
+    if (responseCode !== SUCCESS_RESPONSE_CODE) {
+      throw new Error('Error on connecting Brewskey box to wifi network!');
+    }
   };
 
   static getParticleID = async (): Promise<string> => {
