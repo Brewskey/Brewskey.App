@@ -74,8 +74,8 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-//    bundleInRelease: true,
-    bundleAssetName: "com.brewksey.app",
+    bundleInDebug: true,
+    //bundleAssetName: "com.brewksey.app",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -158,7 +158,6 @@ dependencies {
     compile project(':react-native-maps')
     compile project(':react-native-image-picker')
     compile project(':react-native-device-info')
-    compile project(':react-native-contacts')
     compile project(':react-native-app-settings')
     implementation project(':react-native-splash-screen')
     implementation project(':react-native-push-notification')
@@ -166,7 +165,6 @@ dependencies {
     implementation project(':react-native-app-settings')
     implementation project(':react-native-device-info')
     implementation project(':react-native-randombytes')
-    implementation project(':react-native-contacts')
     implementation project(':rn-fetch-blob')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-maps')

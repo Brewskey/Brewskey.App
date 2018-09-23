@@ -10,25 +10,13 @@ import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import community.revteltech.nfc.NfcManagerPackage;
-import com.airbnb.android.react.maps.MapsPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.krazylabs.OpenAppSettingsPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
-import com.learnium.RNDeviceInfo.RNDeviceInfo;
-import com.krazylabs.OpenAppSettingsPackage;
-import com.bitgo.randombytes.RandomBytesPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.imagepicker.ImagePickerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
-import community.revteltech.nfc.NfcManagerPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +42,6 @@ public class MainApplication extends Application implements ReactApplication {
             new MapsPackage(),
             new ImagePickerPackage(),
             new RNDeviceInfo(),
-            new ReactNativeContacts(),
             new OpenAppSettingsPackage()
       );
     }

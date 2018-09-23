@@ -78,12 +78,6 @@ class NotificationsStore {
   _token: string;
 
   constructor() {
-    PushNotification.configure({
-      onNotification: this._onRawNotification,
-      onRegister: result => (this._token = result.token),
-      senderID: '394986866677',
-    });
-
     AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'active') {
         PushNotification.cancelAllLocalNotifications();
@@ -277,6 +271,13 @@ class NotificationsStore {
       // eslint-disable-next-line no-await-in-loop
       await new Promise(resolve => setTimeout(resolve, 10));
     }
+
+    PushNotification.configure({
+      onNotification: this._onRawNotification,
+      onRegister: result => (this._token = result.token),
+      senderID: '394986866677',
+    });
+
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     const body = JSON.stringify({

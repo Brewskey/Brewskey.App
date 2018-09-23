@@ -5689,10 +5689,6 @@ react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "2.0.0"
   resolved "https://github.com/KrazyLabs/react-native-app-settings#9a91f2a2504908433635b16b1ffdcdc720d246fc"
 
-react-native-contacts@^2.2.3:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-2.2.3.tgz#7b229d484f41a4ed1dd6cd186dc6106c9a5edfcd"
-
 react-native-crypto@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-native-crypto/-/react-native-crypto-2.1.2.tgz#cfe68cad51cd1f73a4202b7ac164f96c1144cb2a"
