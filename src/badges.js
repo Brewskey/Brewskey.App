@@ -62,12 +62,12 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
     name: 'Back On The Bus',
   },
   BeerAficionado: {
-    description: "You've tried 20 different types of beers on Tappt.",
+    description: "You've tried 20 different types of beers on Brewskey.",
     image: { large: BeerAficionadoLarge, small: BeerAficionadoSmall },
     name: 'Beer Aficionado',
   },
   BeerAuthority: {
-    description: "You've tried 10 different types of beers on Tappt.",
+    description: "You've tried 10 different types of beers on Brewskey.",
     image: { large: BeerAuthorityLarge, small: BeerAuthoritySmall },
     name: 'Beer Authority',
   },
@@ -78,12 +78,12 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
     name: 'Beer Before Noon',
   },
   BeerBuff: {
-    description: "You've tried 5 different types of beers on Tappt.",
+    description: "You've tried 5 different types of beers on Brewskey.",
     image: { large: BeerBuffLarge, small: BeerBuffSmall },
     name: 'Beer Buff',
   },
   BeerConnoisseur: {
-    description: "You've tried 30 different types of beers on Tappt.",
+    description: "You've tried 30 different types of beers on Brewskey.",
     image: { large: BeerConnoisseurLarge, small: BeerConnoisseurSmall },
     name: 'Beer Connoisseur',
   },
@@ -130,7 +130,7 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
     description:
       "Hope you didn't get foam.  You poured the last pour of the keg.",
     image: { large: LastPourOfTheKegLarge, small: LastPourOfTheKegSmall },
-    name: 'Tappt Out',
+    name: 'Brewskey Out',
   },
   LastPourOfTheNight: {
     description: 'You poured the last beer before midnight.',
@@ -154,7 +154,7 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
   },
   Welcome: {
     description:
-      'Congrats on your first pour. Keep using Tappt to unlock more achievements.',
+      'Congrats on your first pour. Keep using Brewskey to unlock more achievements.',
     image: { large: WelcomeLarge, small: WelcomeSmall },
     name: 'Welcome',
   },
