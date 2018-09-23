@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   text: {
     ...TYPOGRAPHY.secondary,
     color: COLORS.textFaded,
+    marginTop: 8,
     textAlign: 'center',
   },
 });

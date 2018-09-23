@@ -27,8 +27,9 @@ const styles = StyleSheet.create({
 });
 
 const IMAGE_PICKER_OPTIONS = {
-  maxHeight: 2048,
-  maxWidth: 2048,
+  allowsEditing: true,
+  maxHeight: 1024,
+  maxWidth: 1024,
   mediaType: 'photo',
   rotation: 0,
   title: 'Select Avatar',
