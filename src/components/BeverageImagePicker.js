@@ -9,6 +9,11 @@ import { observer } from 'mobx-react/native';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
 const IMAGE_PICKER_OPTIONS = {
+  allowsEditing: true,
+  maxHeight: 1024,
+  maxWidth: 1024,
+  mediaType: 'photo',
+  rotation: 0,
   title: 'Select beverage photo',
 };
 
