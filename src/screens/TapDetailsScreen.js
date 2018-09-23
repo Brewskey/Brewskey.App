@@ -67,7 +67,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _tapDataLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
-    const { id = 2 } = this.injectedProps;
+    const { id } = this.injectedProps;
     return LoadObject.merge([
       TapStore.getByID(id),
       PermissionStore.getForEntityByID('tap', id),

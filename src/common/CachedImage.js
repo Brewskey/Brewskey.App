@@ -13,12 +13,12 @@ type Props = {
 };
 
 export const flushImageCache = (uri: string) => {
-  // todo make it more robust
-  const uriWithoutBrewskeyApiParams = uri.split(/icon.jpg?|large.jpg?/)[0];
+  const uriWithoutBrewskeyApiParams = uri.match(/=?(\/?.*\.jpg)/)[0];
 
   Object.keys(ImageCache.get().cache)
-    .filter((cacheKey: string): boolean =>
-      cacheKey.includes(uriWithoutBrewskeyApiParams),
+    .filter(
+      (cacheKey: string): boolean =>
+        cacheKey.includes(uriWithoutBrewskeyApiParams),
     )
     .forEach((cacheKey: string) => {
       // todo this deletes only cached link(not file!) from cache.

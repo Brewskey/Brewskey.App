@@ -27,6 +27,7 @@ type Props = {|
 
 const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
   <SimplePicker
+    doesRequireConfirmation={false}
     headerTitle="Select Leaderboard duration"
     label=" Leaderboard duration"
     onChange={(onChange: any)}

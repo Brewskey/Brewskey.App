@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
 });
 
 const IMAGE_PICKER_OPTIONS = {
+  maxHeight: 2048,
+  maxWidth: 2048,
+  mediaType: 'photo',
+  rotation: 0,
   title: 'Select Avatar',
 };
 
@@ -34,7 +38,8 @@ const IMAGE_PICKER_OPTIONS = {
 class AvatarPicker extends React.Component<{}> {
   _cachedImageRef: ?CachedImage;
 
-  @observable _updateAvatarCacheKey = null;
+  @observable
+  _updateAvatarCacheKey = null;
 
   @computed
   get _isLoading(): boolean {

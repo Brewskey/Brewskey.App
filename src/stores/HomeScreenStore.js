@@ -37,6 +37,7 @@ class HomeScreenStore {
           return;
         }
         LocationPermissionStore.flushCache();
+        this.refresh();
         AppState.removeEventListener('change', onAppStateChange);
       };
       AppState.addEventListener('change', onAppStateChange);
@@ -97,9 +98,10 @@ class HomeScreenStore {
 
   @computed
   get _nearbyLocationsLoader(): LoadObject<Array<NearbyLocation>> {
-    return this._coordinatesLoader.map((coordinates: Coordinates): LoadObject<
-      Array<NearbyLocation>,
-    > => NearbyLocationsStore.get(coordinates));
+    return this._coordinatesLoader.map(
+      (coordinates: Coordinates): LoadObject<Array<NearbyLocation>> =>
+        NearbyLocationsStore.get(coordinates),
+    );
   }
 }
 

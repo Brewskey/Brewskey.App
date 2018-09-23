@@ -4,6 +4,8 @@ import type { Beverage, Permission, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { StyleSheet, Text } from 'react-native';
+import { COLORS, TYPOGRAPHY } from '../theme';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
@@ -28,6 +30,14 @@ type InjectedProps = {|
   tap: Tap,
   tapPermission: Permission,
 |};
+
+const styles = StyleSheet.create({
+  text: {
+    ...TYPOGRAPHY.secondary,
+    color: COLORS.textFaded,
+    textAlign: 'center',
+  },
+});
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
@@ -79,6 +89,10 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                       kegID={currentKeg.id}
                       ref={this._setKegLevelBarRef}
                     />
+                    <Text style={styles.text}>
+                      {Math.round(currentKeg.maxOunces - currentKeg.ounces)} oz.
+                      of {Math.round(currentKeg.maxOunces)} oz. remaining
+                    </Text>
                   </SectionContent>
                 </Section>
                 <Section bottomPadded>

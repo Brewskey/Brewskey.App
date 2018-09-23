@@ -75,8 +75,6 @@ class NotificationsStore {
     boolean,
   > = observable.map();
 
-  _token: string;
-
   constructor() {
     AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'active') {
@@ -272,16 +270,21 @@ class NotificationsStore {
       await new Promise(resolve => setTimeout(resolve, 10));
     }
 
-    PushNotification.configure({
-      onNotification: this._onRawNotification,
-      onRegister: result => (this._token = result.token),
-      senderID: '394986866677',
+    const deviceToken = await new Promise((resolve, reject) => {
+      PushNotification.configure({
+        onNotification: this._onRawNotification,
+        onRegister: result => {
+          resolve(result.token);
+        },
+        senderID: '394986866677',
+      });
+      setTimeout(reject, 10000);
     });
 
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     const body = JSON.stringify({
-      deviceToken: this._token,
+      deviceToken,
       installationId: deviceUniqueID,
       platform: Platform.OS === 'android' ? 'fcm' : 'ios',
       removeTapIDs: this._disabledTapIDs,

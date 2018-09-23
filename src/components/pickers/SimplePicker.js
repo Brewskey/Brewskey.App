@@ -19,6 +19,7 @@ import PickerStore from '../../stores/PickerStore';
 export type SimplePickerValue<TValue> = {| label: string, value: TValue |};
 
 type Props<TValue> = {
+  doesRequireConfirmation: boolean,
   error?: string,
   headerTitle: string,
   label: string,
@@ -31,6 +32,10 @@ type Props<TValue> = {
 
 @observer
 class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
+  static defaultProps = {
+    doesRequireConfirmation: true,
+  };
+
   _pickerStore: PickerStore<SimplePickerValue<TValue>> = new PickerStore({
     initialValue: this.props.pickerValues.find(
       pickerValue => pickerValue.value === this.props.value,
@@ -42,6 +47,9 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
         ? pickerValue.map(simplePickerValue => simplePickerValue.value)
         : pickerValue && pickerValue.value;
       this.props.onChange(valueToSumbit);
+      if (!this.props.doesRequireConfirmation) {
+        this._modalToggleStore.toggleOff();
+      }
     },
   });
 
@@ -63,6 +71,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
 
   render() {
     const {
+      doesRequireConfirmation,
       error,
       label,
       headerTitle,
@@ -104,12 +113,14 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
               keyExtractor={this._listKeyExtractor}
               renderItem={this._renderItem}
             />
-            <PickerControl
-              multiple={multiple}
-              onClearPress={clear}
-              onSelectPress={this._modalToggleStore.toggleOff}
-              value={value}
-            />
+            {!doesRequireConfirmation ? null : (
+              <PickerControl
+                multiple={multiple}
+                onClearPress={clear}
+                onSelectPress={this._modalToggleStore.toggleOff}
+                value={value}
+              />
+            )}
           </Container>
         </Modal>
       </Fragment>
