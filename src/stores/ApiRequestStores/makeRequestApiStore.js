@@ -6,6 +6,13 @@ import nullthrows from 'nullthrows';
 import { action, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 
+// Collection of all the API stores. This is used for flushing when
+// logging out.
+const STORES: Array<{ flushCache: () => void }> = [];
+
+export const flushAPIStoreCaches = () =>
+  STORES.forEach(store => store.flushCache());
+
 export const deepIdCast = (node: any): any => {
   Object.keys(node).forEach((key: string) => {
     if (node[key] === Object(node[key])) {
@@ -47,11 +54,12 @@ const makeRequestApiStore = <TResult>(
     if (!requestLoaderByKey.has(cacheKey)) {
       setLoaderValue(LoadObject.loading());
       getRequestPromise(...requestArgs)
-        .then((result: TResult): void =>
-          setLoaderValue(LoadObject.withValue(result)),
+        .then(
+          (result: TResult): void =>
+            setLoaderValue(LoadObject.withValue(result)),
         )
-        .catch((error: Error): void =>
-          setLoaderValue(LoadObject.withError(error)),
+        .catch(
+          (error: Error): void => setLoaderValue(LoadObject.withError(error)),
         );
     }
 
@@ -69,7 +77,11 @@ const makeRequestApiStore = <TResult>(
 
   const flushCache = () => requestLoaderByKey.clear();
 
-  return { fetch, flushCache, get, getFromCache };
+  const store = { fetch, flushCache, get, getFromCache };
+
+  STORES.push(store);
+
+  return store;
 };
 
 export default makeRequestApiStore;
