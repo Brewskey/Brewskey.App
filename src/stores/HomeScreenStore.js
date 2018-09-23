@@ -28,7 +28,7 @@ class HomeScreenStore {
   onAskLocationPermissionButtonPress = () => {
     if (
       LocationPermissionStore.get().getValue() ===
-      LOCATION_PERMISSION_STATUSES.DENIED
+      LOCATION_PERMISSION_STATUSES.AUTHORIZED
     ) {
       LocationPermissionStore.flushCache();
     } else {
@@ -49,10 +49,13 @@ class HomeScreenStore {
   @action
   refresh = () => {
     if (this.searchTextStore.debouncedText) {
-      NearbyLocationsStore.flushCache();
+      GoogleCoordinatesStore.flushCache();
     } else {
       GPSCoordinatesStore.flushCache();
+      LocationPermissionStore.flushCache();
     }
+
+    NearbyLocationsStore.flushCache();
   };
 
   @computed

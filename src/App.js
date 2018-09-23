@@ -15,6 +15,7 @@ import { UNAUTH_ERROR_CODE } from './constants';
 import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
+import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
 
 mobxConfigure(
   ({
@@ -63,6 +64,7 @@ reaction(
     } else {
       Signalr.stopAll();
       DAOApi.flushCache();
+      flushAPIStoreCaches();
     }
   },
 );
