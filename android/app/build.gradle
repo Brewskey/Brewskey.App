@@ -112,7 +112,7 @@ android {
         applicationId "com.brewskey.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 563
+        versionCode 564
         versionName "1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
