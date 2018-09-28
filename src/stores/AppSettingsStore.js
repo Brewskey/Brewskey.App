@@ -7,6 +7,7 @@ import DAOApi from 'brewskey.js-api';
 import AuthStore from './AuthStore';
 import { OrganizationStore, waitForLoaded } from './DAOStores';
 import Storage from '../Storage';
+import codePush from 'react-native-code-push';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
@@ -21,6 +22,12 @@ class AppSettingsStore {
     manageTapsEnabled: false,
     selectedOrganization: null,
   };
+
+  @observable
+  updateMetadata: ?{
+    appVersion: string,
+    label: string,
+  } = null;
 
   constructor() {
     reaction(
@@ -39,7 +46,9 @@ class AppSettingsStore {
       APP_SETTINGS_STORAGE_KEY,
     );
 
-    runInAction(() => {
+    runInAction(async () => {
+      this.updateMetadata = await codePush.getUpdateMetadata();
+
       if (appSettings) {
         this._appSettings = appSettings;
       }

@@ -16,6 +16,7 @@ import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
+import codePush from 'react-native-code-push';
 
 mobxConfigure(
   ({
@@ -76,6 +77,7 @@ const styles = StyleSheet.create({
   },
 });
 
+@codePush
 class App extends React.Component<{}> {
   componentDidMount() {
     autorun(async () => {

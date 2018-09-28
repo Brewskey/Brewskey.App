@@ -17,6 +17,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.microsoft.codepush.react.CodePush;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +28,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected String getJSBundleFile() {
+      return CodePush.getJSBundleFile();
     }
 
     @Override
@@ -42,7 +48,8 @@ public class MainApplication extends Application implements ReactApplication {
             new MapsPackage(),
             new ImagePickerPackage(),
             new RNDeviceInfo(),
-            new OpenAppSettingsPackage()
+            new OpenAppSettingsPackage(),
+            new CodePush("ZlNwkrexUXfszUfPqdPtmkTvByYM505a7461-8d36-4cd2-9890-9634a2c7bfe6", MainApplication.this, BuildConfig.DEBUG)
       );
     }
 

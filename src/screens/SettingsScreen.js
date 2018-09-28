@@ -4,7 +4,8 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
+import { COLORS, TYPOGRAPHY } from '../theme';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { ListItem } from 'react-native-elements';
@@ -16,6 +17,15 @@ import Header from '../common/Header';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import Section from '../common/Section';
 import OrganizationPicker from '../components/pickers/OrganizationPicker';
+
+const styles = StyleSheet.create({
+  versionText: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+    marginLeft: 4,
+    marginTop: 12,
+  },
+});
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -39,6 +49,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
       onOrganizationChange,
       onToggleManageTaps,
       selectedOrganization,
+      updateMetadata,
     } = AppSettingsStore;
 
     return (
@@ -51,7 +62,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               value={selectedOrganization}
             />
           </Section>
-          <Section>
+          <Section bottomPadded={updateMetadata !== null}>
             <ListItem
               hideChevron
               onSwitch={onToggleManageTaps}
@@ -60,6 +71,13 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               title="Manage taps"
             />
           </Section>
+          {updateMetadata === null ? null : (
+            <Section topPadded>
+              <Text style={styles.versionText}>
+                {updateMetadata.appVersion} - {updateMetadata.label}
+              </Text>
+            </Section>
+          )}
         </ScrollView>
       </Container>
     );
