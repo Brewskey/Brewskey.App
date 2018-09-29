@@ -50,6 +50,20 @@ import NuxDeviceScreen from './screens/NuxDeviceScreen';
 import NuxTapScreen from './screens/NuxTapScreen';
 import NuxFinishScreen from './screens/NuxFinishScreen';
 
+const STACK_CONFIG = {
+  headerMode: 'none',
+};
+
+/* eslint-disable sorting/sort-object-props */
+const TapRouting = {
+  tapDetails: TapDetailsScreen,
+  editTap: EditTapScreen,
+  newKeg: NewKegScreen,
+  newTap: NewTapScreen,
+  editFlowSensor: EditFlowSensorScreen,
+  profile: ProfileScreen,
+};
+
 /* eslint-disable sorting/sort-object-props */
 const AppRouter = createSwitchNavigator(
   {
@@ -60,13 +74,17 @@ const AppRouter = createSwitchNavigator(
         register: RegisterScreen,
         resetPassword: ResetPasswordScreen,
       },
-      {
-        headerMode: 'none',
-      },
+      STACK_CONFIG,
     ),
     main: createBottomTabNavigator(
       {
-        home: HomeScreen,
+        home: createStackNavigator(
+          {
+            home: HomeScreen,
+            tapDetails: createStackNavigator(TapRouting, STACK_CONFIG),
+          },
+          STACK_CONFIG,
+        ),
         stats: StatsScreen,
         notifications: NotificationsScreen,
         menu: createStackNavigator(
@@ -87,20 +105,14 @@ const AppRouter = createSwitchNavigator(
                 locationDetails: LocationDetailsScreen,
                 newLocation: NewLocationScreen,
               },
-              { headerMode: 'none' },
+              STACK_CONFIG,
             ),
             taps: createStackNavigator(
               {
                 taps: TapsScreen,
-                editTap: EditTapScreen,
-                newKeg: NewKegScreen,
-                newTap: NewTapScreen,
-                tapDetails: TapDetailsScreen,
-                editFlowSensor: EditFlowSensorScreen,
+                ...TapRouting,
               },
-              {
-                headerMode: 'none',
-              },
+              STACK_CONFIG,
             ),
             newFlowSensor: NewFlowSensorScreen,
             newFlowSensorCustom: NewFlowSensorCustomScreen,
@@ -111,10 +123,9 @@ const AppRouter = createSwitchNavigator(
                 editDevice: EditDeviceScreen,
                 newDevice: NewDeviceScreen,
                 wifiSetup: WifiSetupScreen,
+                ...TapRouting,
               },
-              {
-                headerMode: 'none',
-              },
+              STACK_CONFIG,
             ),
             myBeverages: createStackNavigator(
               {
@@ -123,19 +134,17 @@ const AppRouter = createSwitchNavigator(
                 editBeverage: EditBeverageScreen,
                 newBeverage: NewBeverageScreen,
               },
-              {
-                headerMode: 'none',
-              },
+              STACK_CONFIG,
             ),
             help: HelpScreen,
             settings: createStackNavigator(
               {
                 settings: SettingsScreen,
               },
-              { headerMode: 'none' },
+              STACK_CONFIG,
             ),
           },
-          { headerMode: 'none' },
+          STACK_CONFIG,
         ),
       },
       {
