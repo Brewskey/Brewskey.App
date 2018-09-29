@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import DAOApi, { LoadObject } from 'brewskey.js-api';
+import DAOApi, { LoadObject, MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, TapStore } from '../stores/DAOStores';
@@ -92,7 +92,8 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                     />
                     <Text style={styles.text}>
                       {Math.round(currentKeg.maxOunces - currentKeg.ounces)} oz.
-                      of {Math.round(currentKeg.maxOunces)} oz. remaining
+                      of {MAX_OUNCES_BY_KEG_TYPE[currentKeg.kegType]} oz.
+                      remaining
                     </Text>
                   </SectionContent>
                 </Section>

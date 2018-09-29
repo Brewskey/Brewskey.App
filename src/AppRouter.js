@@ -81,7 +81,7 @@ const AppRouter = createSwitchNavigator(
         home: createStackNavigator(
           {
             home: HomeScreen,
-            tapDetails: createStackNavigator(TapRouting, STACK_CONFIG),
+            ...TapRouting,
           },
           STACK_CONFIG,
         ),
