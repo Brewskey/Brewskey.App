@@ -17,6 +17,7 @@ import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import LoadingListFooter from '../common/LoadingListFooter';
 import { COLORS } from '../theme';
+import isEqual from 'react-fast-compare';
 
 const styles = StyleSheet.create({
   friendContainer: {
@@ -51,8 +52,11 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
     this._listStore.initialize(this.props.queryOptions);
   }
 
-  componentDidUpdate() {
-    this._listStore.setQueryOptions(this.props.queryOptions);
+  componentDidUpdate(prevProps: Props) {
+    if (!isEqual(prevProps.queryOptions, this.props.queryOptions)) {
+      this._listStore.setQueryOptions(this.props.queryOptions);
+      this._listStore.reset();
+    }
   }
 
   _keyExtractor = (row: Row<Friend>): string => row.key;

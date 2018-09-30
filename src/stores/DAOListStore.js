@@ -17,9 +17,12 @@ class DAOListStore<TEntity: { id: EntityID }> {
   _daoStore: DAOStore<TEntity>;
   _pageSize: number;
 
-  @observable _baseQueryOptions: QueryOptions = {};
-  @observable _queryOptionsList: Array<QueryOptions> = [];
-  @observable _isInitialized;
+  @observable
+  _baseQueryOptions: QueryOptions = {};
+  @observable
+  _queryOptionsList: Array<QueryOptions> = [];
+  @observable
+  _isInitialized;
 
   constructor(daoStore: DAOStore<TEntity>, pageSize?: number = 20) {
     this._daoStore = daoStore;
@@ -61,29 +64,33 @@ class DAOListStore<TEntity: { id: EntityID }> {
         const queryLoadObject = this._daoStore.getMany(queryOptions);
 
         return rowKeys
-          .map((key: number): Row<TEntity> => ({
-            key: key.toString(),
-            loader: LoadObject.loading(),
-          }))
-          .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
-            let loader = LoadObject.loading();
+          .map(
+            (key: number): Row<TEntity> => ({
+              key: key.toString(),
+              loader: LoadObject.loading(),
+            }),
+          )
+          .map(
+            ({ key }: Row<TEntity>, index: number): Row<TEntity> => {
+              let loader = LoadObject.loading();
 
-            if (queryLoadObject.hasValue()) {
-              loader = queryLoadObject.map(
-                (entries: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
-                  entries[index],
-              );
-            } else if (queryLoadObject.hasError()) {
-              loader = LoadObject.withError(
-                queryLoadObject.getErrorEnforcing(),
-              );
-            }
+              if (queryLoadObject.hasValue()) {
+                loader = queryLoadObject.map(
+                  (entries: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
+                    entries[index],
+                );
+              } else if (queryLoadObject.hasError()) {
+                loader = LoadObject.withError(
+                  queryLoadObject.getErrorEnforcing(),
+                );
+              }
 
-            return {
-              key,
-              loader,
-            };
-          });
+              return {
+                key,
+                loader,
+              };
+            },
+          );
       }),
     );
   }
