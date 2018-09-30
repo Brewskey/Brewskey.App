@@ -29,6 +29,7 @@ type InjectedProps = {|
 @observer
 class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   _listStore: LeaderboardListStore = new LeaderboardListStore();
+  iterator: number = 1;
 
   componentDidMount() {
     const { duration, tapID } = this.props;
@@ -42,7 +43,10 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     }
   }
 
-  _keyExtractor = (item: LeaderboardItem): string => item.userName;
+  _keyExtractor = (item: LeaderboardItem): string => {
+    this.iterator += 1;
+    return item.userName || this.iterator;
+  };
 
   _onListItemPress = ({ userID }: LeaderboardItem) =>
     this.injectedProps.navigation.navigate('profile', {
