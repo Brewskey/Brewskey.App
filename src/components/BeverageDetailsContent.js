@@ -63,8 +63,8 @@ const BeverageDetailsContent = ({
       </View>
       <Text style={styles.descriptionText}>{description}</Text>
       <OverviewItem title="Type" value={beverageType} />
-      {style && <OverviewItem title="Style" value={style.name} />}
-      {glass && <OverviewItem title="Glass" value={glass.name} />}
+      {style ? <OverviewItem title="Style" value={style.name} /> : null}
+      {glass ? <OverviewItem title="Glass" value={glass.name} /> : null}
       <OverviewItem title="Organic?" value={isOrganic ? 'Yes' : 'No'} />
     </Fragment>
   );

@@ -28,7 +28,9 @@ class WifiSetupStep2Screen extends InjectedComponent<InjectedProps> {
         <SectionContent paddedHorizontal paddedVertical>
           <PhoneConnectInstructions />
         </SectionContent>
-        {wifiSetupStore.particleIDLoader.isLoading() && <LoadingIndicator />}
+        {wifiSetupStore.particleIDLoader.isLoading() ? (
+          <LoadingIndicator />
+        ) : null}
       </Container>
     );
   }

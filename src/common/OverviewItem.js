@@ -29,7 +29,7 @@ type Props = {|
 
 const OverviewItem = ({ iconName, iconType, title, value }: Props) => (
   <View style={styles.container}>
-    {iconName && <Icon name={iconName} type={iconType} />}
+    {iconName ? <Icon name={iconName} type={iconType} /> : null}
     <Text style={styles.titleText}>{title}</Text>
     <Text style={styles.valueText}>{value}</Text>
   </View>

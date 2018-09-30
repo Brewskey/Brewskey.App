@@ -44,7 +44,7 @@ class NotificationsScreen extends InjectedComponent<InjectedProps> {
             />
           }
         />
-        {this.injectedProps.isFocused && <NotificationsList />}
+        {this.injectedProps.isFocused ? <NotificationsList /> : null}
         <DeleteModal
           title="Clear all notifications"
           isVisible={this._deleteModalToggleStore.isToggled}

@@ -80,7 +80,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
 
     return (
       <Fragment>
-        {showTopSeparator && <ListSubSectionSeparator />}
+        {showTopSeparator ? <ListSubSectionSeparator /> : null}
         <ListItem
           avatar={
             <BeverageAvatar

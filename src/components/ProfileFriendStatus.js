@@ -4,14 +4,11 @@ import type { Account, Friend } from 'brewskey.js-api';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
-import { StyleSheet } from 'react-native';
-import { action, computed, observable, when } from 'mobx';
+import { action, observable } from 'mobx';
 import { observer } from 'mobx-react/native';
-import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
+import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
 import Fragment from '../common/Fragment';
 import HeaderIconButton from '../common/Header/HeaderIconButton';
-import LoadingIndicator from '../common/LoadingIndicator';
-import { COLORS } from '../theme';
 import AuthStore from '../stores/AuthStore';
 import { FriendStore } from '../stores/DAOStores';
 import FriendApprovedModal from './modals/FriendApprovedModal';
@@ -21,46 +18,17 @@ import ToggleStore from '../stores/ToggleStore';
 import FriendAddStore from '../stores/ApiRequestStores/FriendAddStore';
 import SnackBarStore from '../stores/SnackBarStore';
 
-const styles = StyleSheet.create({
-  loadingIndicator: {
-    paddingHorizontal: 12,
-  },
-});
-
 type Props = {
   account: Account,
+  friend: ?Friend,
 };
 
 @observer
 class ProfileFriendStatus extends React.Component<Props> {
   _modalToggleStore = new ToggleStore();
 
-  @observable _friendAddCacheKey: ?string = null;
-
-  @computed
-  get _isLoading(): boolean {
-    return (
-      this._friendLoader.isLoading() ||
-      (!!this._friendAddCacheKey &&
-        FriendAddStore.getFromCache(
-          nullthrows(this._friendAddCacheKey),
-        ).isLoading())
-    );
-  }
-
-  @computed
-  get _friendLoader(): LoadObject<Friend> {
-    return FriendStore.getMany({
-      filters: [
-        DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
-        DAOApi.createFilter('friendAccount/id').equals(this.props.account.id),
-      ],
-      limit: 1,
-    }).map(
-      (loaders: Array<LoadObject<Friend>>): LoadObject<Friend> =>
-        loaders[0] || LoadObject.empty(),
-    );
-  }
+  @observable
+  _friendAddCacheKey: ?string = null;
 
   @action
   _onFriendAddPress = async () => {
@@ -70,7 +38,6 @@ class ProfileFriendStatus extends React.Component<Props> {
 
     this._modalToggleStore.toggleOff();
     this._friendAddCacheKey = FriendAddStore.fetch(userName);
-    await when(() => !this._isLoading);
 
     const friendAddResultLoader = FriendAddStore.getFromCache(
       nullthrows(this._friendAddCacheKey),
@@ -94,8 +61,8 @@ class ProfileFriendStatus extends React.Component<Props> {
   _onFriendDeletePress = async () => {
     const {
       account: { userName },
+      friend: { id: friendId },
     } = this.props;
-    const friendId = this._friendLoader.getValueEnforcing().id;
 
     this._modalToggleStore.toggleOff();
     await DAOApi.FriendDAO.deleteByID(friendId);
@@ -105,26 +72,13 @@ class ProfileFriendStatus extends React.Component<Props> {
   };
 
   render() {
-    const { account } = this.props;
+    const { account, friend } = this.props;
 
-    if (
-      AuthStore.userID === this.props.account.id ||
-      this._friendLoader.hasError()
-    ) {
+    if (AuthStore.userID === this.props.account.id) {
       return null;
     }
 
-    if (this._isLoading) {
-      return (
-        <LoadingIndicator
-          activitySize="small"
-          color={COLORS.secondary}
-          style={styles.loadingIndicator}
-        />
-      );
-    }
-
-    if (!this._friendLoader.hasValue()) {
+    if (!friend) {
       return (
         <Fragment>
           <HeaderIconButton
@@ -142,10 +96,7 @@ class ProfileFriendStatus extends React.Component<Props> {
       );
     }
 
-    if (
-      this._friendLoader.getValueEnforcing().friendStatus ===
-      FRIEND_STATUSES.APPROVED
-    ) {
+    if (friend.friendStatus === FRIEND_STATUSES.APPROVED) {
       return (
         <Fragment>
           <HeaderIconButton
@@ -163,10 +114,7 @@ class ProfileFriendStatus extends React.Component<Props> {
       );
     }
 
-    if (
-      this._friendLoader.getValueEnforcing().friendStatus ===
-      FRIEND_STATUSES.PENDING
-    ) {
+    if (friend.friendStatus === FRIEND_STATUSES.PENDING) {
       return (
         <Fragment>
           <HeaderIconButton

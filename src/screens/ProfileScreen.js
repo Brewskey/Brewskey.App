@@ -14,13 +14,16 @@ import SectionHeader from '../common/SectionHeader';
 import UserBadges from '../components/UserBadges';
 import Container from '../common/Container';
 import { observer } from 'mobx-react/native';
-import { AccountStore } from '../stores/DAOStores';
+import { AccountStore, FriendStore } from '../stores/DAOStores';
+import AuthStore from '../stores/AuthStore';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';
 import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
 import ProfileFriendStatus from '../components/ProfileFriendStatus';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import FriendsHorizontalList from '../components/FriendsHorizontalList';
+import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
 
 /* eslint-disable sorting/sort-object-props */
 type InjectedProps = {|
@@ -37,7 +40,19 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
-        loader={AccountStore.getByID(id)}
+        loader={LoadObject.merge([
+          AccountStore.getByID(id),
+          FriendStore.getMany({
+            filters: [
+              DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
+              DAOApi.createFilter('friendAccount/id').equals(id),
+            ],
+            limit: 1,
+          }).map(
+            (loaders: Array<LoadObject<Friend>>): LoadObject<Friend> =>
+              loaders[0] || LoadObject.empty(),
+          ),
+        ])}
         loadingComponent={LoadingComponent}
       />
     );
@@ -55,7 +70,9 @@ type LoadedComponentProps = {|
   value: Account,
 |};
 
-const LoadedComponent = ({ value: account }: LoadedComponentProps) => (
+const LoadedComponent = ({
+  value: [account, friend],
+}: LoadedComponentProps) => (
   <Container>
     <Header
       rightComponent={<ProfileFriendStatus account={account} />}
@@ -65,13 +82,37 @@ const LoadedComponent = ({ value: account }: LoadedComponentProps) => (
     <ScrollView>
       <Section bottomPadded>
         <SectionContent centered paddedVertical>
-          <UserAvatar userName={account.userName} size={200} />
+          <UserAvatar friend={friend} userName={account.userName} size={200} />
         </SectionContent>
       </Section>
-      <Section bottomPadded>
-        <SectionHeader title="Badges" />
-        <UserBadges userID={account.id} />
-      </Section>
+      {AuthStore.userID !== account.id &&
+      (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
+        <Section>
+          <SectionHeader
+            title={`You aren't friends with ${account.userName}`}
+          />
+        </Section>
+      ) : (
+        <React.Fragment>
+          <Section bottomPadded>
+            <SectionHeader title="Friends" />
+            <FriendsHorizontalList
+              queryOptions={{
+                filters: [
+                  DAOApi.createFilter('owningAccount/id').equals(account.id),
+                  DAOApi.createFilter('friendStatus').equals(
+                    FRIEND_STATUSES.APPROVED,
+                  ),
+                ],
+              }}
+            />
+          </Section>
+          <Section bottomPadded>
+            <SectionHeader title="Badges" />
+            <UserBadges userID={account.id} />
+          </Section>
+        </React.Fragment>
+      )}
     </ScrollView>
   </Container>
 );
