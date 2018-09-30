@@ -71,7 +71,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               title="Manage taps"
             />
           </Section>
-          {updateMetadata === null ? null : (
+          {!updateMetadata ? null : (
             <Section topPadded>
               <Text style={styles.versionText}>
                 {updateMetadata.appVersion} - {updateMetadata.label}
