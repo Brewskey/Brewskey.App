@@ -6,7 +6,7 @@ import type { Row } from '../stores/DAOListStore';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 import { observer } from 'mobx-react/native';
 import DAOListStore from '../stores/DAOListStore';
@@ -16,11 +16,19 @@ import ListEmpty from '../common/ListEmpty';
 import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import LoadingListFooter from '../common/LoadingListFooter';
+import BaseAvatar from '../common/avatars/BaseAvatar';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   friendContainer: {
+    alignItems: 'center',
     padding: 12,
+  },
+  userNameLoadingPlaceholder: {
+    backgroundColor: COLORS.secondary2,
+    height: 6,
+    marginTop: 4,
+    width: 60,
   },
   userNameText: {
     color: COLORS.text,
@@ -64,6 +72,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
     <LoaderRow
       loadedRow={LoadedRow}
       loader={item.loader}
+      loadingRow={LoadingRow}
       onListItemPress={this._onListItemPress}
     />
   );
@@ -88,6 +97,13 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
+const LoadingRow = () => (
+  <View style={styles.friendContainer}>
+    <BaseAvatar />
+    <View style={styles.userNameLoadingPlaceholder} />
+  </View>
+);
+
 type LoadedRowProps = {
   item: Friend,
   onListItemPress: Friend => void,
@@ -102,7 +118,7 @@ class LoadedRow extends React.PureComponent<LoadedRowProps> {
     const { item: friend } = this.props;
     return (
       <TouchableOpacity onPress={this._onPress} style={styles.friendContainer}>
-        <UserAvatar size={150} userName={friend.friendAccount.userName} />
+        <UserAvatar userName={friend.friendAccount.userName} />
         <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
       </TouchableOpacity>
     );
