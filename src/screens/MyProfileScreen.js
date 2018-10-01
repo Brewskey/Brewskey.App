@@ -12,9 +12,6 @@ import ChangePasswordForm from '../components/ChangePasswordForm';
 import Section from '../common/Section';
 import SectionContent from '../common/SectionContent';
 import SectionHeader from '../common/SectionHeader';
-import FriendsHorizontalList from '../components/FriendsHorizontalList';
-import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
-import AuthStore from '../stores/AuthStore';
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
@@ -28,21 +25,6 @@ class MyProfileScreen extends React.Component<{}> {
             <SectionContent centered>
               <AvatarPicker />
             </SectionContent>
-          </Section>
-          <Section bottomPadded>
-            <SectionHeader title="Friends" />
-            <FriendsHorizontalList
-              queryOptions={{
-                filters: [
-                  DAOApi.createFilter('owningAccount/id').equals(
-                    AuthStore.userID,
-                  ),
-                  DAOApi.createFilter('friendStatus').equals(
-                    FRIEND_STATUSES.APPROVED,
-                  ),
-                ],
-              }}
-            />
           </Section>
           <Section>
             <SectionHeader title="Change password" />
