@@ -4,7 +4,6 @@ import type { KeyValueMap, ObservableMap } from 'mobx';
 
 import autobind from 'autobind-decorator';
 import { action, computed, observable } from 'mobx';
-import nullthrows from 'nullthrows';
 
 type $If<Condition: boolean, Then, Else> = $Call<
   ((true, Then, Else) => Then) & ((false, Then, Else) => Else),
@@ -66,7 +65,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
       return values;
     }
 
-    return (nullthrows(values[0]): any);
+    return (values[0]: any);
   }
 
   @autobind
