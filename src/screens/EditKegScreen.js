@@ -31,14 +31,9 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _kegLoader(): LoadObject<Keg> {
     const { tapId } = this.injectedProps;
-    return KegStore.getMany({
+    return KegStore.getSingle({
       filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-      limit: 1,
-      orderBy: [{ column: 'id', direction: 'desc' }],
-    }).map(
-      (loaders: Array<LoadObject<Keg>>): LoadObject<Keg> =>
-        loaders[0] || LoadObject.empty(),
-    );
+    });
   }
 
   _onReplaceSubmit = async (values: KegMutator): Promise<void> => {

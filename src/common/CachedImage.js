@@ -13,7 +13,11 @@ type Props = {
 };
 
 export const flushImageCache = (uri: string) => {
-  const uriWithoutBrewskeyApiParams = uri.match(/=?(\/?.*\.jpg)/)[0];
+  const uriWithoutBrewskeyApiParams = (uri.match(/=?(\/?.*\.jpg)/) || [])[0];
+
+  if (!uriWithoutBrewskeyApiParams) {
+    return;
+  }
 
   Object.keys(ImageCache.get().cache)
     .filter(

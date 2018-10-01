@@ -20,16 +20,16 @@ const EXIT_ANIMATION_DURATION = 200;
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
-    bottom: 49,
-    height: 60,
     justifyContent: 'center',
     overflow: 'hidden',
     position: 'absolute',
     width: '100%',
     zIndex: 99999,
   },
-  messageContainer: {
+  text: {
+    textAlign: 'center',
+  },
+  textContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
     height: 60,
@@ -37,9 +37,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     position: 'absolute',
     width: 300,
-  },
-  text: {
-    textAlign: 'center',
   },
   textDanger: {
     color: COLORS.danger,
@@ -68,24 +65,26 @@ class SnackMessage extends React.Component<{}, State> {
     reaction(
       () => SnackBarStore.currentMessage,
       (currentMessage: ?SnackBarMessage) => {
-        if (currentMessage) {
-          Animated.sequence([
-            Animated.timing(this.state.bottomAnimValue, {
-              duration: ENTER_ANIMATION_DURATION,
-              toValue: 0,
-            }),
-            Animated.timing(this.state.bottomAnimValue, {
-              delay:
-                currentMessage.duration -
-                ENTER_ANIMATION_DURATION -
-                ENTER_ANIMATION_DURATION,
-              duration: EXIT_ANIMATION_DURATION,
-              toValue: -60,
-            }),
-          ]).start(({ finished }: { finished: boolean }) => {
-            finished && SnackBarStore.dropCurrentMessage();
-          });
+        if (!currentMessage) {
+          return;
         }
+        // TODO - support top/bottom
+        Animated.sequence([
+          Animated.timing(this.state.bottomAnimValue, {
+            duration: ENTER_ANIMATION_DURATION,
+            toValue: 0,
+          }),
+          Animated.timing(this.state.bottomAnimValue, {
+            delay:
+              currentMessage.duration -
+              ENTER_ANIMATION_DURATION -
+              ENTER_ANIMATION_DURATION,
+            duration: EXIT_ANIMATION_DURATION,
+            toValue: -60,
+          }),
+        ]).start(({ finished }: { finished: boolean }) => {
+          finished && SnackBarStore.dropCurrentMessage();
+        });
       },
     );
   }
@@ -93,47 +92,67 @@ class SnackMessage extends React.Component<{}, State> {
   _onMessagePress = () => {
     Animated.timing(this.state.bottomAnimValue, {
       duration: EXIT_ANIMATION_DURATION,
-      toValue: -60,
+      toValue: 0,
     }).start(SnackBarStore.dropCurrentMessage);
   };
 
   render() {
-    let dynamicTextStyle;
-    switch (
-      SnackBarStore.currentMessage && SnackBarStore.currentMessage.style
-    ) {
-      case 'danger': {
-        dynamicTextStyle = styles.textDanger;
-        break;
-      }
-      case 'success': {
-        dynamicTextStyle = styles.textSuccess;
-        break;
-      }
-      default: {
-        dynamicTextStyle = styles.textDefault;
-      }
+    const { currentMessage } = SnackBarStore;
+    if (!currentMessage) {
+      return null;
     }
 
     return (
       <View pointerEvents="box-none" style={styles.container}>
         <TouchableWithoutFeedback onPress={this._onMessagePress}>
-          <Animated.View
-            style={[
-              styles.messageContainer,
-              { bottom: this.state.bottomAnimValue },
-            ]}
-          >
-            {SnackBarStore.currentMessage && (
-              <Text numberOfLines={2} style={[styles.text, dynamicTextStyle]}>
-                {SnackBarStore.currentMessage.text}
-              </Text>
-            )}
+          <Animated.View style={{ bottom: this.state.bottomAnimValue }}>
+            <Content {...currentMessage} />
           </Animated.View>
         </TouchableWithoutFeedback>
       </View>
     );
   }
 }
+
+const Content = (props: SnackBarMessage) => {
+  if (props.text) {
+    return <TextMessage style={props.style} text={props.text} />;
+  } else if (props.content) {
+    return props.content;
+  }
+
+  return null;
+};
+
+const TextMessage = ({
+  style = 'default',
+  text,
+}: {
+  style?: 'default' | 'danger' | 'success',
+  text: string,
+}) => {
+  let dynamicTextStyle = null;
+  switch (style) {
+    case 'danger': {
+      dynamicTextStyle = styles.textDanger;
+      break;
+    }
+    case 'success': {
+      dynamicTextStyle = styles.textSuccess;
+      break;
+    }
+    default: {
+      dynamicTextStyle = styles.textDefault;
+    }
+  }
+
+  return (
+    <View style={styles.textContainer}>
+      <Text numberOfLines={2} style={[styles.text, dynamicTextStyle]}>
+        {text}
+      </Text>
+    </View>
+  );
+};
 
 export default SnackMessage;

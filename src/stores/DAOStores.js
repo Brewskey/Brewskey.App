@@ -123,6 +123,10 @@ class DAOStore<TEntity: { id: EntityID }> {
     return this.__callDAOFunction('fetchMany', queryOptions);
   }
 
+  getSingle(queryOptions: ?QueryOptions): LoadObject<TEntity> {
+    return this.__callDAOFunction('getSingle', queryOptions);
+  }
+
   __callDAOFunction = (functionName: string, ...args: Array<any>) => {
     if (this._atom.reportObserved()) {
       return (this._dao: any)[functionName](...args);

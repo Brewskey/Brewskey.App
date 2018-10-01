@@ -9,15 +9,21 @@ import { DeviceStore } from '../../stores/DAOStores';
 import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 
-type Props = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Device>) => void,
+  multiple: TMultiple,
+  onChange: (value: PickerValue<Device, TMultiple>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Device>,
+  value: PickerValue<Device, TMultiple>,
 |};
 
-class DevicePicker extends React.Component<Props> {
+class DevicePicker<TMultiple: boolean> extends React.Component<
+  Props<TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}
@@ -28,15 +34,16 @@ class DevicePicker extends React.Component<Props> {
   );
 
   render() {
-    const { multiple } = this.props;
+    const { multiple, value } = this.props;
     return (
       <DAOPicker
-        {...this.props}
         daoStore={DeviceStore}
         headerTitle={`Select Brewskey Box${multiple ? 'es' : ''}`}
         label={`Brewskey box${multiple ? 'es' : ''}`}
+        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(device: Device): string => device.name}
+        value={value}
       />
     );
   }

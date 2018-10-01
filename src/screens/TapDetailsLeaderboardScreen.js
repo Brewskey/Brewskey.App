@@ -15,6 +15,7 @@ import LeaderboardDurationPicker, {
   LEADERBOARD_DURATION_OPTIONS,
 } from '../components/LeaderboardDurationPicker';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import nullthrows from 'nullthrows';
 
 type InjectedProps = {|
   noFlowSensorWarning: ?React.Element<any>,
@@ -30,12 +31,12 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
   };
 
   @observable
-  _leaderboardDuration: LeaderboardDurationValue = LEADERBOARD_DURATION_OPTIONS
-    .TWELVE_HOURS.value;
+  _leaderboardDuration: LeaderboardDurationValue =
+    LEADERBOARD_DURATION_OPTIONS.TWELVE_HOURS.value;
 
   @action
-  _onChangeLeaderboardDuration = (duration: LeaderboardDurationValue) => {
-    this._leaderboardDuration = duration;
+  _onChangeLeaderboardDuration = (duration: ?LeaderboardDurationValue) => {
+    this._leaderboardDuration = nullthrows(duration);
   };
 
   render() {

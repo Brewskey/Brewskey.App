@@ -1,6 +1,6 @@
 // @flow
 
-import type { Account, EntityID } from 'brewskey.js-api';
+import type { Account, EntityID, Friend } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -75,7 +75,7 @@ const LoadedComponent = ({
 }: LoadedComponentProps) => (
   <Container>
     <Header
-      rightComponent={<ProfileFriendStatus account={account} />}
+      rightComponent={<ProfileFriendStatus account={account} friend={friend} />}
       showBackButton
       title={account.userName}
     />

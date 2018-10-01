@@ -55,7 +55,7 @@ type Props = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class NuxLocationScreen extends InjectedComponent<Props> {
-  _onLocationChange = (location: PickerValue<Location>) => {
+  _onLocationChange = (location: PickerValue<Location, false>) => {
     // todo
     // PickerValue: ?TEntity | Array<TEntity>
     // depends on multiple prop, try to find a way to do conditional
@@ -98,6 +98,7 @@ class NuxLocationScreen extends InjectedComponent<Props> {
             <LocationPicker
               inputStyle={styles.input}
               labelStyle={styles.label}
+              multiple={false}
               onChange={this._onLocationChange}
               placeholderTextColor={COLORS.textInverse}
               selectionColor={COLORS.textInverse}

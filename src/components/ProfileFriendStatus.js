@@ -61,11 +61,11 @@ class ProfileFriendStatus extends React.Component<Props> {
   _onFriendDeletePress = async () => {
     const {
       account: { userName },
-      friend: { id: friendId },
+      friend,
     } = this.props;
 
     this._modalToggleStore.toggleOff();
-    await DAOApi.FriendDAO.deleteByID(friendId);
+    await DAOApi.FriendDAO.deleteByID(nullthrows(friend).id);
     SnackBarStore.showMessage({
       text: `You removed ${userName} from friends.`,
     });

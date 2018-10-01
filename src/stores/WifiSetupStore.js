@@ -15,9 +15,12 @@ import { StackActions } from 'react-navigation';
 type WifiSetupStep = 1 | 2 | 3 | 4;
 
 class WifiSetupStore {
-  @observable wifiSetupStep: WifiSetupStep = 1;
-  @observable _particleIDLoaderCacheKey: string = '';
-  @observable _wifiSetupLoaderCacheKey: string = '';
+  @observable
+  wifiSetupStep: WifiSetupStep = 1;
+  @observable
+  _particleIDLoaderCacheKey: string = '';
+  @observable
+  _wifiSetupLoaderCacheKey: string = '';
   _disposers: Array<Function> = [];
 
   initialize = (navigation: Navigation) => {
@@ -51,7 +54,7 @@ class WifiSetupStore {
   @computed
   get wifiSetupLoader(): LoadObject<void> {
     return WifiConfigureStore.getFromCache(this._wifiSetupLoaderCacheKey).map(
-      (): LoadObject<void> => WifiConnectStore.get(),
+      (): void => WifiConnectStore.get(),
     );
   }
 

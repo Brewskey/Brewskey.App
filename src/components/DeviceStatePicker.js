@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
 
 type Props = {|
   error?: string,
-  onBlur: () => void,
   onChange: (value: any) => void,
   placeholder?: string,
   value: any,
@@ -26,13 +25,14 @@ const DeviceStatePicker = (props: Props) => (
     <SimplePicker
       headerTitle="Select State"
       label="State"
-      {...props}
+      onChange={props.onChange}
       pickerValues={[
         { label: 'Active', value: 'Active' },
         { label: 'Cleaning', value: 'Cleaning' },
         { label: 'Unlocked', value: 'Unlocked' },
         { label: 'Incative', value: 'Incative' },
       ]}
+      value={props.value}
     />
     <Text style={styles.descriptionText}>
       {DESCRIPTION_BY_DEVICE_STATE[props.value]}

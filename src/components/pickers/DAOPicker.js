@@ -33,15 +33,15 @@ type RenderRowProps<TEntity> = {|
   toggleItem: (item: TEntity) => void,
 |};
 
-type Props<TEntity> = {
+type Props<TEntity, TMultiple> = {
   daoStore: DAOStore<TEntity>,
   error?: ?string,
   headerTitle: string,
   inputStyle?: Style,
   label: string,
   labelStyle?: Style,
-  multiple?: boolean,
-  onChange?: (value: PickerValue<TEntity>) => void,
+  multiple: TMultiple,
+  onChange?: (value: PickerValue<TEntity, TMultiple>) => void,
   // todo figure flow for pickerInputComponent, it throws weird error for React.Component
   pickerInputComponent?: any,
   placeholder?: string,
@@ -53,14 +53,15 @@ type Props<TEntity> = {
   stringValueExtractor?: (item: TEntity) => string,
   underlineColorAndroid?: string,
   validationTextStyle?: Style,
-  value?: PickerValue<TEntity>,
+  value: PickerValue<TEntity, TMultiple>,
   // other react-native textInput props
 };
 
 @observer
-class DAOPicker<TEntity: { id: EntityID }> extends React.Component<
-  Props<TEntity>,
-> {
+class DAOPicker<
+  TEntity: { id: EntityID },
+  TMultiple: boolean,
+> extends React.Component<Props<TEntity, TMultiple>> {
   static defaultProps = {
     queryOptions: {},
     searchBy: 'name',
@@ -70,7 +71,7 @@ class DAOPicker<TEntity: { id: EntityID }> extends React.Component<
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
-  _pickerStore: PickerStore<TEntity> = new PickerStore({
+  _pickerStore: PickerStore<TEntity, TMultiple> = new PickerStore({
     initialValue: this.props.value,
     multiple: this.props.multiple,
     onChange: this.props.onChange,
@@ -120,7 +121,6 @@ class DAOPicker<TEntity: { id: EntityID }> extends React.Component<
       pickerInputComponent = PickerTextInput,
       placeholder,
       stringValueExtractor,
-      ...rest
     } = this.props;
     const { clear, value } = this._pickerStore;
     const PickerInputComponent = pickerInputComponent;
@@ -128,9 +128,9 @@ class DAOPicker<TEntity: { id: EntityID }> extends React.Component<
     return (
       <Fragment>
         <PickerInputComponent
-          {...rest}
           error={error}
           label={label}
+          multiple={multiple}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={stringValueExtractor}

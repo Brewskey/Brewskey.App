@@ -20,9 +20,15 @@ export const LEADERBOARD_DURATION_OPTIONS: {
 };
 /* eslint-enable */
 
+const LEADERBOARD_DURATION_PICKER_VALUES: Array<LeaderboardDurationOptions> = [
+  LEADERBOARD_DURATION_OPTIONS.TWELVE_HOURS,
+  LEADERBOARD_DURATION_OPTIONS.MONTH,
+  LEADERBOARD_DURATION_OPTIONS.ALL_TIME,
+];
+
 type Props = {|
   value: LeaderboardDurationValue,
-  onChange: (value: LeaderboardDurationValue) => void,
+  onChange: (value: ?LeaderboardDurationValue) => void,
 |};
 
 const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
@@ -30,13 +36,8 @@ const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
     doesRequireConfirmation={false}
     headerTitle="Select Leaderboard duration"
     label=" Leaderboard duration"
-    onChange={(onChange: any)}
-    pickerValues={Array.from(
-      (Object.values(LEADERBOARD_DURATION_OPTIONS): any),
-    ).map(({ label, value: optionValue }: LeaderboardDurationOptions) => ({
-      label,
-      value: optionValue,
-    }))}
+    onChange={onChange}
+    pickerValues={LEADERBOARD_DURATION_PICKER_VALUES}
     value={value}
   />
 );

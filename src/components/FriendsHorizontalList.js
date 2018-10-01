@@ -53,8 +53,9 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (!isEqual(prevProps.queryOptions, this.props.queryOptions)) {
-      this._listStore.setQueryOptions(this.props.queryOptions);
+    const { queryOptions } = this.props;
+    if (queryOptions && !isEqual(prevProps.queryOptions, queryOptions)) {
+      this._listStore.setQueryOptions(queryOptions);
       this._listStore.reset();
     }
   }

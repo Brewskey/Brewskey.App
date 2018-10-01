@@ -1,7 +1,6 @@
 // @flow
 
 import type { QueryOptions, Organization } from 'brewskey.js-api';
-import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
@@ -11,9 +10,9 @@ import SelectableListItem from '../../common/SelectableListItem';
 
 type Props = {|
   error?: ?string,
-  onChange: (value: PickerValue<Organization>) => void,
+  onChange: (value: ?Organization) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Organization>,
+  value: ?Organization,
 |};
 
 class OrganizaionPicker extends React.Component<Props> {
@@ -27,17 +26,19 @@ class OrganizaionPicker extends React.Component<Props> {
   );
 
   render() {
+    const { value } = this.props;
     return (
       <DAOPicker
-        {...this.props}
         daoStore={OrganizationStore}
         headerTitle="Select Organization"
         label="Organization"
+        multiple={false}
         placeholder="None"
         renderRow={this._renderRow}
         stringValueExtractor={({ id, name }: Organization): string =>
           `${id} - ${name}`
         }
+        value={value}
       />
     );
   }
