@@ -124,7 +124,7 @@ class DAOStore<TEntity: { id: EntityID }> {
   }
 
   getSingle(queryOptions: ?QueryOptions): LoadObject<TEntity> {
-    return this.__callDAOFunction('getSingle', queryOptions);
+    return this.__callDAOFunction('fetchSingle', queryOptions);
   }
 
   __callDAOFunction = (functionName: string, ...args: Array<any>) => {

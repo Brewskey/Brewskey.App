@@ -3,7 +3,6 @@
 import type { SnackBarMessage } from '../stores/SnackBarStore';
 
 import * as React from 'react';
-import { reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   Animated,
@@ -15,16 +14,17 @@ import {
 import { COLORS } from '../theme';
 import SnackBarStore from '../stores/SnackBarStore';
 
-const ENTER_ANIMATION_DURATION = 200;
-const EXIT_ANIMATION_DURATION = 200;
+const ENTER_ANIMATION_DURATION = 300;
+const EXIT_ANIMATION_DURATION = 300;
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
     position: 'absolute',
     width: '100%',
-    zIndex: 99999,
+    zIndex: 99999999,
   },
   text: {
     textAlign: 'center',
@@ -32,10 +32,8 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.7)',
-    height: 60,
     justifyContent: 'center',
-    paddingHorizontal: 12,
-    position: 'absolute',
+    padding: 12,
     width: 300,
   },
   textDanger: {
@@ -50,50 +48,51 @@ const styles = StyleSheet.create({
 });
 
 type State = {|
-  bottomAnimValue: Object,
+  animationValue: Object,
+  height: number,
 |};
 
 @observer
 class SnackMessage extends React.Component<{}, State> {
   state = {
-    bottomAnimValue: new Animated.Value(-60),
+    animationValue: new Animated.Value(-60),
+    height: 0,
   };
 
-  constructor(props: {}) {
-    super(props);
-
-    reaction(
-      () => SnackBarStore.currentMessage,
-      (currentMessage: ?SnackBarMessage) => {
-        if (!currentMessage) {
-          return;
-        }
-        // TODO - support top/bottom
-        Animated.sequence([
-          Animated.timing(this.state.bottomAnimValue, {
-            duration: ENTER_ANIMATION_DURATION,
-            toValue: 0,
-          }),
-          Animated.timing(this.state.bottomAnimValue, {
-            delay:
-              currentMessage.duration -
-              ENTER_ANIMATION_DURATION -
-              ENTER_ANIMATION_DURATION,
-            duration: EXIT_ANIMATION_DURATION,
-            toValue: -60,
-          }),
-        ]).start(({ finished }: { finished: boolean }) => {
-          finished && SnackBarStore.dropCurrentMessage();
-        });
-      },
-    );
-  }
-
   _onMessagePress = () => {
-    Animated.timing(this.state.bottomAnimValue, {
+    Animated.timing(this.state.animationValue, {
       duration: EXIT_ANIMATION_DURATION,
-      toValue: 0,
+      toValue: -this.state.height,
     }).start(SnackBarStore.dropCurrentMessage);
+  };
+
+  _onLayout = event => {
+    if (SnackBarStore.currentMessage === null || this.state.height !== 0) {
+      return;
+    }
+
+    const { height } = event.nativeEvent.layout;
+
+    this.setState(() => ({
+      height,
+    }));
+
+    this.state.animationValue.setValue(-height);
+
+    Animated.sequence([
+      Animated.timing(this.state.animationValue, {
+        duration: ENTER_ANIMATION_DURATION,
+        toValue: 60,
+      }),
+      Animated.timing(this.state.animationValue, {
+        delay: SnackBarStore.currentMessage.duration,
+        duration: EXIT_ANIMATION_DURATION,
+        toValue: -height,
+      }),
+    ]).start(({ finished }: { finished: boolean }) => {
+      finished && SnackBarStore.dropCurrentMessage();
+      this.setState(() => ({ height: 0 }));
+    });
   };
 
   render() {
@@ -103,13 +102,20 @@ class SnackMessage extends React.Component<{}, State> {
     }
 
     return (
-      <View pointerEvents="box-none" style={styles.container}>
+      <Animated.View
+        onLayout={this.state.height === 0 ? this._onLayout : null}
+        pointerEvents="box-none"
+        style={[
+          styles.container,
+          currentMessage.position === 'bottom'
+            ? { bottom: this.state.animationValue, top: undefined }
+            : { bottom: undefined, top: this.state.animationValue },
+        ]}
+      >
         <TouchableWithoutFeedback onPress={this._onMessagePress}>
-          <Animated.View style={{ bottom: this.state.bottomAnimValue }}>
-            <Content {...currentMessage} />
-          </Animated.View>
+          <Content {...currentMessage} />
         </TouchableWithoutFeedback>
-      </View>
+      </Animated.View>
     );
   }
 }

@@ -15,7 +15,6 @@ import { UNAUTH_ERROR_CODE } from './constants';
 import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
-import SnackBarStore from './stores/SnackBarStore';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
 import codePush from 'react-native-code-push';
 
@@ -92,8 +91,6 @@ class App extends React.Component<{}> {
         NavigationService.navigate('login');
       }
     });
-
-    SnackBarStore.showMessage({ text: 'The pour was deleted' });
   }
 
   _setNavigationRef = ref => {
