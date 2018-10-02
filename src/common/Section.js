@@ -1,5 +1,7 @@
 // @flow
 
+import type { Style } from '../types';
+
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { COLORS, getElevationStyle } from '../theme';
@@ -20,18 +22,20 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  children?: React.Node,
   bottomPadded?: boolean,
+  children?: React.Node,
+  innerContainerStyle?: Style,
 |};
 
 class Section extends React.PureComponent<Props> {
   render() {
-    const { bottomPadded, children } = this.props;
+    const { bottomPadded, children, innerContainerStyle } = this.props;
     const innerElement = (
       <View
         style={[
           styles.innerContainer,
           bottomPadded && styles.innerContainerPadded,
+          innerContainerStyle,
         ]}
       >
         {children}

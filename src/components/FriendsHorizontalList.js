@@ -99,7 +99,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
 
 const LoadingRow = () => (
   <View style={styles.friendContainer}>
-    <BaseAvatar />
+    <BaseAvatar size={100} />
     <View style={styles.userNameLoadingPlaceholder} />
   </View>
 );
@@ -118,7 +118,7 @@ class LoadedRow extends React.PureComponent<LoadedRowProps> {
     const { item: friend } = this.props;
     return (
       <TouchableOpacity onPress={this._onPress} style={styles.friendContainer}>
-        <UserAvatar userName={friend.friendAccount.userName} />
+        <UserAvatar size={100} userName={friend.friendAccount.userName} />
         <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
       </TouchableOpacity>
     );
