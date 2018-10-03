@@ -5,8 +5,12 @@ import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
-import * as React from 'react';
-import { AppState, Platform, PushNotificationIOS } from 'react-native';
+import {
+  AppState,
+  Platform,
+  PushNotificationIOS,
+  Vibration,
+} from 'react-native';
 import {
   action,
   computed,
@@ -23,7 +27,6 @@ import Storage from '../Storage';
 import { AchievementStore, KegStore } from './DAOStores';
 import CONFIG from '../config';
 import NavigationService from '../NavigationService';
-import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
 import SnackBarStore from './SnackBarStore';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
@@ -333,7 +336,7 @@ class NotificationsStore {
       parsedNotification.id,
     );
 
-    const openedFromTray = !!parsedNotification.opened_from_tray;
+    const openedFromTray = !!parsedNotification.userInteraction;
 
     const notification = {
       ...parsedNotification,
@@ -345,29 +348,14 @@ class NotificationsStore {
     if (openedFromTray) {
       this.onNotificationPress(notification);
     } else {
-      const ListItemComponent = NotificationComponentByType[notification.type];
-
+      Vibration.vibrate(500);
       SnackBarStore.showMessage({
-        content: (
-          <ListItemComponent
-            isSwipeable={false}
-            notification={(notification: any)}
-            onOpen={this._onItemOpen}
-            onPress={this.onNotificationPress}
-            onReadEnd={() => {}}
-          />
-        ),
+        duration: 3000,
+        notification,
         position: 'top',
       });
     }
   };
-
-  _onItemOpen = (notification: Notification) => {
-    this.deleteByID(notification.id);
-  };
-
-  _onNotificationReadEnd = (notification: Notification) =>
-    this.setRead(notification.id);
 
   _handleNotificationPressByType = (notification: Notification) => {
     switch (notification.type) {

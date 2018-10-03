@@ -1,6 +1,7 @@
 // @flow
 
 import type { SnackBarMessage } from '../stores/SnackBarStore';
+import type { Notification } from '../stores/NotificationsStore';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -12,7 +13,9 @@ import {
   View,
 } from 'react-native';
 import { COLORS } from '../theme';
+import NotificationsStore from '../stores/NotificationsStore';
 import SnackBarStore from '../stores/SnackBarStore';
+import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
 
 const ENTER_ANIMATION_DURATION = 300;
 const EXIT_ANIMATION_DURATION = 300;
@@ -28,7 +31,15 @@ const styles = StyleSheet.create({
   },
   notificationContainer: {
     borderColor: COLORS.secondary3,
+    borderRadius: 4,
     borderWidth: 1,
+    shadowColor: '#000000',
+    shadowOffset: {
+      height: 1,
+      width: 0,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 4,
     width: '100%',
   },
   text: {
@@ -127,18 +138,41 @@ class SnackMessage extends React.Component<{}, State> {
   }
 }
 
+const onItemOpen = (notification: Notification) => {
+  NotificationsStore.deleteByID(notification.id);
+};
+
 const Content = (props: SnackBarMessage) => {
   if (props.text) {
     return <TextMessage style={props.style} text={props.text} />;
-  } else if (props.content) {
-    return (
-      <View style={{ padding: 10, width: '100%' }}>
-        <View style={styles.notificationContainer}>{props.content}</View>
-      </View>
+  }
+  let snackContent = null;
+  if (props.content) {
+    snackContent = props.content;
+  } else if (props.notification) {
+    const { notification } = props;
+    const ListItemComponent = NotificationComponentByType[notification.type];
+
+    snackContent = (
+      <ListItemComponent
+        isSwipeable={false}
+        notification={notification}
+        onOpen={onItemOpen}
+        onPress={NotificationsStore.onNotificationPress}
+        onReadEnd={() => {}}
+      />
     );
+  } else {
+    return null;
   }
 
-  return null;
+  return (
+    <View style={{ padding: 10, width: '100%' }}>
+      <View elevation={5} style={styles.notificationContainer}>
+        {snackContent}
+      </View>
+    </View>
+  );
 };
 
 const TextMessage = ({

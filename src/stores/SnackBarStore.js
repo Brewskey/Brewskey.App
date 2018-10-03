@@ -1,6 +1,7 @@
 // @flow
 
 import type { Node } from 'react';
+import type { Notification } from './NotificationsStore';
 
 import { action, computed, observable } from 'mobx';
 import nullthrows from 'nullthrows';
@@ -18,6 +19,11 @@ type SnackBarMessageParameters =
       content: Node,
       duration?: number,
       position?: 'bottom' | 'top',
+    |}
+  | {|
+      duration?: number,
+      notification: Notification,
+      position?: 'bottom' | 'top',
     |};
 export type SnackBarMessage =
   | {|
@@ -29,6 +35,11 @@ export type SnackBarMessage =
   | {|
       content: Node,
       duration: number,
+      position: 'bottom' | 'top',
+    |}
+  | {|
+      duration: number,
+      notification: Notification,
       position: 'bottom' | 'top',
     |};
 
@@ -58,6 +69,12 @@ class SnackBarStore {
         ...messageParameters,
       };
     } else if (messageParameters.content) {
+      mergedParameters = {
+        duration: 2000,
+        position: 'bottom',
+        ...messageParameters,
+      };
+    } else if (messageParameters.notification) {
       mergedParameters = {
         duration: 2000,
         position: 'bottom',
