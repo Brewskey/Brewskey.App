@@ -59,9 +59,9 @@ class SnackBarStore {
       };
     } else if (messageParameters.content) {
       mergedParameters = {
-        content: messageParameters.content,
         duration: 2000,
         position: 'bottom',
+        ...messageParameters,
       };
     }
 

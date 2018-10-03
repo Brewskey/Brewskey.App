@@ -26,6 +26,11 @@ const styles = StyleSheet.create({
     width: '100%',
     zIndex: 99999999,
   },
+  notificationContainer: {
+    borderColor: COLORS.secondary3,
+    borderWidth: 1,
+    width: '100%',
+  },
   text: {
     textAlign: 'center',
   },
@@ -52,10 +57,12 @@ type State = {|
   height: number,
 |};
 
+const OFFSET = 20;
+
 @observer
 class SnackMessage extends React.Component<{}, State> {
   state = {
-    animationValue: new Animated.Value(-60),
+    animationValue: new Animated.Value(-OFFSET),
     height: 0,
   };
 
@@ -82,7 +89,7 @@ class SnackMessage extends React.Component<{}, State> {
     Animated.sequence([
       Animated.timing(this.state.animationValue, {
         duration: ENTER_ANIMATION_DURATION,
-        toValue: 60,
+        toValue: OFFSET,
       }),
       Animated.timing(this.state.animationValue, {
         delay: SnackBarStore.currentMessage.duration,
@@ -124,7 +131,11 @@ const Content = (props: SnackBarMessage) => {
   if (props.text) {
     return <TextMessage style={props.style} text={props.text} />;
   } else if (props.content) {
-    return props.content;
+    return (
+      <View style={{ padding: 10, width: '100%' }}>
+        <View style={styles.notificationContainer}>{props.content}</View>
+      </View>
+    );
   }
 
   return null;

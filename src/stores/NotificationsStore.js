@@ -5,6 +5,7 @@ import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
+import * as React from 'react';
 import { AppState, Platform, PushNotificationIOS } from 'react-native';
 import {
   action,
@@ -22,6 +23,8 @@ import Storage from '../Storage';
 import { AchievementStore, KegStore } from './DAOStores';
 import CONFIG from '../config';
 import NavigationService from '../NavigationService';
+import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
+import SnackBarStore from './SnackBarStore';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
 
@@ -68,6 +71,8 @@ class NotificationsStore {
   @observable
   _notificationsByID: ObservableMap<string, Notification> = observable.map();
 
+  _deviceToken: string;
+
   // its Map but used as Set since mobx doesn't support Set;
   @observable
   _notificationsDisabledByTapID: ObservableMap<
@@ -81,6 +86,14 @@ class NotificationsStore {
         PushNotification.cancelAllLocalNotifications();
       }
       this._rehydrateState();
+    });
+
+    PushNotification.configure({
+      onNotification: this._onRawNotification,
+      onRegister: result => {
+        this._deviceToken = result.token;
+      },
+      senderID: '394986866677',
     });
 
     reaction(
@@ -270,21 +283,10 @@ class NotificationsStore {
       await new Promise(resolve => setTimeout(resolve, 10));
     }
 
-    const deviceToken = await new Promise((resolve, reject) => {
-      PushNotification.configure({
-        onNotification: this._onRawNotification,
-        onRegister: result => {
-          resolve(result.token);
-        },
-        senderID: '394986866677',
-      });
-      setTimeout(reject, 10000);
-    });
-
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     const body = JSON.stringify({
-      deviceToken,
+      deviceToken: this._deviceToken,
       installationId: deviceUniqueID,
       platform: Platform.OS === 'android' ? 'fcm' : 'ios',
       removeTapIDs: this._disabledTapIDs,
@@ -333,16 +335,39 @@ class NotificationsStore {
 
     const openedFromTray = !!parsedNotification.opened_from_tray;
 
-    this._addNotification({
+    const notification = {
       ...parsedNotification,
       date: existingNotification ? existingNotification.date : new Date(),
       isRead: openedFromTray,
-    });
+    };
+    this._addNotification(notification);
 
     if (openedFromTray) {
-      this.onNotificationPress(parsedNotification);
+      this.onNotificationPress(notification);
+    } else {
+      const ListItemComponent = NotificationComponentByType[notification.type];
+
+      SnackBarStore.showMessage({
+        content: (
+          <ListItemComponent
+            isSwipeable={false}
+            notification={(notification: any)}
+            onOpen={this._onItemOpen}
+            onPress={this.onNotificationPress}
+            onReadEnd={() => {}}
+          />
+        ),
+        position: 'top',
+      });
     }
   };
+
+  _onItemOpen = (notification: Notification) => {
+    this.deleteByID(notification.id);
+  };
+
+  _onNotificationReadEnd = (notification: Notification) =>
+    this.setRead(notification.id);
 
   _handleNotificationPressByType = (notification: Notification) => {
     switch (notification.type) {
