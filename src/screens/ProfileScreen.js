@@ -4,7 +4,7 @@ import type { Account, EntityID, Friend } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -24,6 +24,12 @@ import ProfileFriendStatus from '../components/ProfileFriendStatus';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import FriendsHorizontalList from '../components/FriendsHorizontalList';
 import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
+
+const styles = StyleSheet.create({
+  friendsListSection: {
+    height: 194,
+  },
+});
 
 /* eslint-disable sorting/sort-object-props */
 type InjectedProps = {|
@@ -94,7 +100,7 @@ const LoadedComponent = ({
         </Section>
       ) : (
         <React.Fragment>
-          <Section bottomPadded>
+          <Section bottomPadded innerContainerStyle={styles.friendsListSection}>
             <SectionHeader title="Friends" />
             <FriendsHorizontalList
               queryOptions={{
