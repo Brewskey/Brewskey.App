@@ -25,6 +25,7 @@ type SnackBarMessageParameters =
       notification: Notification,
       position?: 'bottom' | 'top',
     |};
+
 export type SnackBarMessage =
   | {|
       duration: number,

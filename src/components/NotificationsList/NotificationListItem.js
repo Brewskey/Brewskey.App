@@ -31,11 +31,6 @@ const styles = StyleSheet.create({
   dateText: {
     color: COLORS.textFaded,
   },
-  headerContainer: {
-    alignItems: 'baseline',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
   mainContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -137,10 +132,8 @@ class NotificationListItem extends React.PureComponent<Props, State> {
         <Animated.View style={[styles.container, { backgroundColor }]}>
           {LeftComponent}
           <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.titleText}>{title}</Text>
-              <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
-            </View>
+            <Text style={styles.titleText}>{title}</Text>
+            <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
             <View style={styles.contentContainer}>{contentElement}</View>
           </View>
         </Animated.View>
