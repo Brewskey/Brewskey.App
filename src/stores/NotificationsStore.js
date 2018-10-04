@@ -29,7 +29,7 @@ import CONFIG from '../config';
 import NavigationService from '../NavigationService';
 import SnackBarStore from './SnackBarStore';
 
-const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
+const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';

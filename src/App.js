@@ -45,7 +45,7 @@ const setDAOHeaders = (token: string) => {
 };
 
 DAOApi.initializeDAOApi({
-  endpoint: `${config.HOST}api/v2/`,
+  endpoint: `${config.HOST}/api/v2/`,
 });
 
 DAOApi.onError((error: Error) => {

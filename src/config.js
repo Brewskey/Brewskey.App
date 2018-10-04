@@ -1,7 +1,10 @@
 // @flow
 
+// const HOST = 'https://brewskey.com';
+const HOST = 'http://localhost:2484';
+
 export default {
-  CDN: 'https://brewskey.com/cdn/',
-  HOST: 'https://brewskey.com/',
-  SIGNALR: 'https://brewskey.com/signalr/hubs',
+  CDN: `${HOST}/cdn/`,
+  HOST,
+  SIGNALR: `${HOST}/signalr/hubs`,
 };

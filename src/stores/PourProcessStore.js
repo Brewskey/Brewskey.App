@@ -19,13 +19,20 @@ const GPSCoordinatesStore = createGPSCoordinatesStore();
 class PourProcessStore {
   _totpTimer: ?IntervalID = null;
 
-  @observable currentSeconds: number = 0;
-  @observable errorText: string = '';
-  @observable isLoading: boolean = false;
-  @observable isNFCEnabled: boolean = false;
-  @observable isNFCSupported: boolean = true;
-  @observable isVisible: boolean = false;
-  @observable totp: string = '';
+  @observable
+  currentSeconds: number = 0;
+  @observable
+  errorText: string = '';
+  @observable
+  isLoading: boolean = false;
+  @observable
+  isNFCEnabled: boolean = false;
+  @observable
+  isNFCSupported: boolean = true;
+  @observable
+  isVisible: boolean = false;
+  @observable
+  totp: string = '';
 
   constructor() {
     NfcManager.start().catch(() => {
@@ -98,7 +105,8 @@ class PourProcessStore {
     this.isVisible = false;
   };
 
-  @action _setErrorText = (errorText: string) => (this.errorText = errorText);
+  @action
+  _setErrorText = (errorText: string) => (this.errorText = errorText);
 
   onEnableNFCPress = () => {
     this.onHideModal();
@@ -115,7 +123,7 @@ class PourProcessStore {
       this._setErrorText('');
       const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
 
-      await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour`, {
+      await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour/`, {
         body: JSON.stringify({
           ...coordinates,
           deviceId: deviceID || undefined,
@@ -178,7 +186,7 @@ class PourProcessStore {
       payload[0] === 0 ? payload.slice(1) : payload,
     );
 
-    if (tagValue.indexOf('https://brewskey.com/') < 0) {
+    if (tagValue.indexOf(CONFIG.HOST) < 0) {
       return;
     }
 
@@ -194,7 +202,7 @@ class PourProcessStore {
 
   @action
   _updateTotpTimer = () => {
-    this.currentSeconds = 30 - new Date().getSeconds() % 30;
+    this.currentSeconds = 30 - (new Date().getSeconds() % 30);
   };
 
   _startTotpTimer = () => {

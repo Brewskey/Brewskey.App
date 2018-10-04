@@ -14,7 +14,7 @@ export type UserCredentials = {
 
 class AuthApi {
   static login = ({ password, userName }: UserCredentials): Promise<Object> =>
-    fetchJSON(`${CONFIG.HOST}token/`, {
+    fetchJSON(`${CONFIG.HOST}/token/`, {
       body: `grant_type=password&userName=${userName}&password=${password}`,
       headers: { 'Content-type': 'application/x-www-form-urlencoded' },
       method: 'POST',
@@ -23,7 +23,7 @@ class AuthApi {
   static changePassword = (
     changePasswordFields: ChangePasswordFormFields,
   ): Promise<Object> =>
-    fetchJSON(`${CONFIG.HOST}api/account/change-password/`, {
+    fetchJSON(`${CONFIG.HOST}/api/account/change-password/`, {
       body: JSON.stringify({
         ...changePasswordFields,
         confirmPassword: changePasswordFields.newPassword,
@@ -37,7 +37,7 @@ class AuthApi {
     });
 
   static register = (registerFields: RegisterFormFields): Promise<Object> =>
-    fetchJSON(`${CONFIG.HOST}api/account/register/`, {
+    fetchJSON(`${CONFIG.HOST}/api/account/register/`, {
       body: JSON.stringify(registerFields),
       headers: {
         Accept: 'application/json',
@@ -47,7 +47,7 @@ class AuthApi {
     });
 
   static resetPassword = (email: string): Promise<void> =>
-    fetchJSON(`${CONFIG.HOST}api/account/reset-password/`, {
+    fetchJSON(`${CONFIG.HOST}/api/account/reset-password/`, {
       body: JSON.stringify({ email }),
       headers: {
         Accept: 'application/json',

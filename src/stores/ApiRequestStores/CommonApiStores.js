@@ -40,7 +40,7 @@ export const NearbyLocationsStore = makeNearbyLocationsStore();
 export const UpdateAvatarStore = makeApiRequestStore(
   (avatarData: string): Promise<void> =>
     // eslint-disable-next-line no-undef
-    fetch(`${CONFIG.HOST}api/profile/photo/`, {
+    fetch(`${CONFIG.HOST}/api/profile/photo/`, {
       body: JSON.stringify({ photo: avatarData }),
       headers: {
         Accept: 'application/json',
@@ -54,7 +54,7 @@ export const UpdateAvatarStore = makeApiRequestStore(
 export const UpdateBeverageImageStore = makeApiRequestStore(
   (beverageID: EntityID, beverageData: string): Promise<void> =>
     // eslint-disable-next-line no-undef
-    fetch(`${CONFIG.HOST}api/v2/beverages/${beverageID}/photo/`, {
+    fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
       body: JSON.stringify({ photo: beverageData }),
       headers: {
         Accept: 'application/json',

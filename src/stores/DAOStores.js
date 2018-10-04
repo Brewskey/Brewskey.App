@@ -203,7 +203,7 @@ class $PermissionStore extends DAOStore<Permission> {
       filters: [
         DAOApi.createFilter(`${permissionEntityType}/id`).equals(entityID),
       ],
-      limit: 1,
+      take: 1,
     }).map(
       (
         permissionLoaders: Array<LoadObject<Permission>>,
