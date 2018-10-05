@@ -23,6 +23,7 @@ type Props = {|
 const DeviceStatePicker = (props: Props) => (
   <View>
     <SimplePicker
+      doesRequireConfirmation={false}
       headerTitle="Select State"
       label="State"
       onChange={props.onChange}
@@ -30,7 +31,7 @@ const DeviceStatePicker = (props: Props) => (
         { label: 'Active', value: 'Active' },
         { label: 'Cleaning', value: 'Cleaning' },
         { label: 'Unlocked', value: 'Unlocked' },
-        { label: 'Incative', value: 'Incative' },
+        { label: 'Inactive', value: 'Inactive' },
       ]}
       value={props.value}
     />

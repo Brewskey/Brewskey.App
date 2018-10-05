@@ -73,6 +73,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
     return this._valueByKey.has(this._keyExtractor(item));
   }
 
+  @autobind
   @action
   clear() {
     this._valueByKey.clear();
