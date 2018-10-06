@@ -3,7 +3,7 @@
 import type { EntityID, LoadObject, Keg } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { Animated, StyleSheet, View, Text } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { KegStore } from '../stores/DAOStores';
@@ -84,7 +84,31 @@ type LoadedProps = {|
   value: Keg,
 |};
 
-class LoadedKegLevelBar extends React.PureComponent<LoadedProps> {
+class LoadedKegLevelBar extends React.Component<LoadedProps> {
+  _animationValue: Object;
+
+  constructor(props: LoadedProps) {
+    super(props);
+    this._animationValue = new Animated.Value(0);
+    this._animate();
+  }
+
+  componentWillMount() {}
+
+  componentDidUpdate(prevProps: LoadedProps) {
+    if (this.props.value !== prevProps.value) {
+      this._animationValue.setValue(0);
+      this._animate();
+    }
+  }
+
+  _animate = () => {
+    Animated.timing(this._animationValue, {
+      duration: 500,
+      toValue: 1,
+    }).start();
+  };
+
   render() {
     const { value } = this.props;
     const kegLevel = calculateKegLevel(value);
@@ -95,10 +119,15 @@ class LoadedKegLevelBar extends React.PureComponent<LoadedProps> {
 
     return (
       <View style={styles.container}>
-        <View
+        <Animated.View
           style={[
             styles.filledBar,
-            { width: `${kegLevel}%` },
+            {
+              width: this._animationValue.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0%', `${kegLevel}%`],
+              }),
+            },
             isLowLevel && styles.filledBarDanger,
           ]}
         />

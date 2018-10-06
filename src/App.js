@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
 import { autorun, configure as mobxConfigure, reaction } from 'mobx';
@@ -76,11 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-// Hack because phones aren't drawing `hairlineWidth` when it's less than 0.5
-if (Platform.OS === 'ios') {
-  StyleSheet.hairlineWidth = 1;
-}
 
 @codePush
 class App extends React.Component<{}> {
