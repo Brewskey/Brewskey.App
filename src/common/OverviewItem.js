@@ -8,14 +8,18 @@ import { TYPOGRAPHY } from '../theme';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    paddingBottom: 4,
     paddingHorizontal: 12,
   },
   titleText: {
     ...TYPOGRAPHY.paragraph,
+    flex: 0,
     fontWeight: 'bold',
+    marginRight: 12,
   },
   valueText: {
     ...TYPOGRAPHY.paragraph,
+    flex: 1,
     marginLeft: 'auto',
   },
 });
