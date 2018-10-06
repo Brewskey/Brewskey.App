@@ -8,6 +8,7 @@ import { observer } from 'mobx-react/native';
 import { Badge } from 'react-native-elements';
 import { StyleSheet, Text, View } from 'react-native';
 import FriendRequestsListStore from '../stores/FriendRequestsListStore';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   badge: {
@@ -50,7 +51,7 @@ const Badges = observer(
           containerStyle={{
             ...styles.badge,
           }}
-          textStyle={{ ...styles.badgeText, color: 'black' }}
+          textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
           value={FriendRequestsListStore.pendingRequestsCount}
         />
       </View>

@@ -104,6 +104,7 @@ class LoadedKegLevelBar extends React.Component<LoadedProps> {
 
   _animate = () => {
     Animated.timing(this._animationValue, {
+      delay: 300,
       duration: 500,
       toValue: 1,
     }).start();
