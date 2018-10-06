@@ -63,7 +63,10 @@ class BeverageDetailsContent extends React.Component<Props, State> {
 
   _getSize = () => {
     Image.getSize(this._getURI(), (width, height) => {
-      this.setState({ height: Math.min(height, BEVERAGE_IMAGE_SIZE * 1.5) });
+      const calculatedHeight = (BEVERAGE_IMAGE_SIZE / width) * height;
+      this.setState({
+        height: Math.min(calculatedHeight, BEVERAGE_IMAGE_SIZE * 1.5),
+      });
     });
   };
 
