@@ -30,6 +30,7 @@ const MyFriendsNavigator = createMaterialTopTabNavigator(
   /* eslint-enable */
   {
     ...theme.tabBar,
+    backBehavior: 'none',
     lazy: true,
   },
 );

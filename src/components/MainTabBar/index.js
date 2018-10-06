@@ -8,7 +8,10 @@ import nullthrows from 'nullthrows';
 import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
-import NotificationsIconContainer from './NotificationsIconContainer';
+import BadgeContainer from './BadgeContainer';
+import { observer } from 'mobx-react/native';
+import NotificationsStore from '../../stores/NotificationsStore';
+import FriendRequestsListStore from '../../stores/FriendRequestsListStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -77,7 +80,7 @@ class MainTabBar extends React.Component<Props> {
         <PourButton />
         <TabBarButton
           icon={{ name: 'notifications' }}
-          iconContainerComponent={NotificationsIconContainer}
+          iconContainerComponent={NotificationBadges}
           isFocused={
             currentIndex === getIndexByRouteName('notifications', state.routes)
           }
@@ -86,6 +89,7 @@ class MainTabBar extends React.Component<Props> {
         />
         <TabBarButton
           icon={{ name: 'menu' }}
+          iconContainerComponent={FriendRequestBadge}
           isFocused={currentIndex === getIndexByRouteName('menu', state.routes)}
           onPress={this._onTabPress}
           route={getRouteByRouteName('menu', state.routes)}
@@ -94,5 +98,16 @@ class MainTabBar extends React.Component<Props> {
     );
   }
 }
+
+const NotificationBadges = observer((props: any) => (
+  <BadgeContainer {...props} badgeCount={NotificationsStore.unreadCount} />
+));
+
+const FriendRequestBadge = observer((props: any) => (
+  <BadgeContainer
+    {...props}
+    badgeCount={FriendRequestsListStore.pendingRequestsCount}
+  />
+));
 
 export default MainTabBar;

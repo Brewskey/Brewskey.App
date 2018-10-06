@@ -86,7 +86,14 @@ const AppRouter = createSwitchNavigator(
           STACK_CONFIG,
         ),
         stats: StatsScreen,
-        notifications: NotificationsScreen,
+        notifications: createStackNavigator(
+          {
+            notifications: NotificationsScreen,
+            myFriends: MyFriendsScreen,
+            ...TapRouting,
+          },
+          STACK_CONFIG,
+        ),
         menu: createStackNavigator(
           {
             mainMenu: MenuScreen,
