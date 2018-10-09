@@ -1,6 +1,6 @@
 // @flow
 
-import type { Account, EntityID, Friend } from 'brewskey.js-api';
+import type { Account, EntityID } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -48,16 +48,13 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedComponent}
         loader={LoadObject.merge([
           AccountStore.getByID(id),
-          FriendStore.getMany({
+          FriendStore.getSingle({
             filters: [
               DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
               DAOApi.createFilter('friendAccount/id').equals(id),
             ],
             limit: 1,
-          }).map(
-            (loaders: Array<LoadObject<Friend>>): LoadObject<Friend> =>
-              loaders[0] || LoadObject.empty(),
-          ),
+          }),
         ])}
         loadingComponent={LoadingComponent}
       />

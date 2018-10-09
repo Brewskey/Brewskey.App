@@ -13,7 +13,8 @@ class FriendRequestsListStore {
   get _pendingRequestsLoader(): LoadObject<Array<LoadObject<Friend>>> {
     return FriendStore.getMany({
       filters: [
-        DAOApi.createFilter('friendAccount/id').equals(AuthStore.userID),
+        DAOApi.createFilter('friendAccount').notEquals(null),
+        DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
         DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
       ],
       orderBy: [
@@ -30,7 +31,9 @@ class FriendRequestsListStore {
     return FriendStore.getMany({
       filters: [
         DAOApi.createFilter('friendAccount').notEquals(null),
-        DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
+        DAOApi.createFilter('friendStatus').equals(
+          FRIEND_STATUSES.AWAITING_APPROVAL,
+        ),
         DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
       ],
       orderBy: [
@@ -59,7 +62,8 @@ class FriendRequestsListStore {
     return (
       FriendStore.count({
         filters: [
-          DAOApi.createFilter('friendAccount/id').equals(AuthStore.userID),
+          DAOApi.createFilter('friendAccount').notEquals(null),
+          DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
           DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
         ],
       }).getValue() || 0

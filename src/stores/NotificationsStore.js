@@ -24,7 +24,7 @@ import PushNotification from 'react-native-push-notification';
 import DeviceInfo from 'react-native-device-info';
 import AuthStore from './AuthStore';
 import Storage from '../Storage';
-import { AchievementStore, KegStore } from './DAOStores';
+import { AchievementStore, FriendStore, KegStore } from './DAOStores';
 import CONFIG from '../config';
 import NavigationService from '../NavigationService';
 import SnackBarStore from './SnackBarStore';
@@ -227,8 +227,12 @@ class NotificationsStore {
   };
 
   @action
-  _addNotification = (notification: Notification): void =>
+  _addNotification = (notification: Notification): void => {
+    if (notification.type === 'newFriendRequest') {
+      FriendStore.flushCache();
+    }
     this._notificationsByID.set(notification.id, notification);
+  };
 
   @action
   _cleanState = () => {
@@ -277,6 +281,12 @@ class NotificationsStore {
       this._notificationsDisabledByTapID.merge((disabledTapsIDsEntries: any));
       this._notificationsByID.merge((notificationEntries: any));
     });
+
+    if (notifications.some(item => item.type === 'newFriendRequest')) {
+      runInAction(() => {
+        FriendStore.flushCache();
+      });
+    }
   };
 
   _registerToken = async () => {
@@ -376,6 +386,7 @@ class NotificationsStore {
         break;
       }
       case 'newFriendRequest': {
+        FriendStore.flushCache();
         NavigationService.navigate('myFriendsRequest');
         break;
       }
