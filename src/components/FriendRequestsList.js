@@ -72,14 +72,11 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
     });
 
   _onFriendAcceptPress = async (friend: Friend) => {
-    DAOApi.FriendDAO.put(friend.id, {
+    await DAOApi.FriendDAO.put(friend.id, {
       ...friend,
       friendStatus: FRIEND_STATUSES.APPROVED,
     });
-
-    // SUPER HACK - We really need to figure out a better way to do this.
-    // I tried using the waitForLoaded API but that didn't work :(
-    setTimeout(() => FriendRequestsListStore.reload(), 300);
+    FriendRequestsListStore.reload();
   };
 
   _onFriendDeclinePress = ({ id }: Friend) => {
