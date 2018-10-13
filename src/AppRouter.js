@@ -96,7 +96,7 @@ const AppRouter = createSwitchNavigator(
         ),
         menu: createStackNavigator(
           {
-            mainMenu: MenuScreen,
+            menu: MenuScreen,
             nuxLocation: NuxLocationScreen,
             nuxWifi: NuxWifiSetupScreen,
             nuxDevice: NuxDeviceScreen,

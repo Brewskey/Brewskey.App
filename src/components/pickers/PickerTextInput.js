@@ -51,6 +51,7 @@ class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
   render() {
     const {
       error,
+      inputStyle,
       label,
       labelStyle,
       onPress,
@@ -67,7 +68,7 @@ class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
         placeholder={placeholder}
         value={value}
       >
-        <Text style={styles.valueText}>{this._stringValue}</Text>
+        <Text style={[styles.valueText, inputStyle]}>{this._stringValue}</Text>
       </PickerInput>
     );
   }

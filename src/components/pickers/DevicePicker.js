@@ -34,16 +34,15 @@ class DevicePicker<TMultiple: boolean> extends React.Component<
   );
 
   render() {
-    const { multiple, value } = this.props;
+    const { multiple } = this.props;
     return (
       <DAOPicker
+        {...this.props}
         daoStore={DeviceStore}
         headerTitle={`Select Brewskey Box${multiple ? 'es' : ''}`}
         label={`Brewskey box${multiple ? 'es' : ''}`}
-        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(device: Device): string => device.name}
-        value={value}
       />
     );
   }

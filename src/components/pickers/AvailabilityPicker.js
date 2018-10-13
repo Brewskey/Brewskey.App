@@ -34,18 +34,16 @@ class AvailabilityPicker<TMultiple: boolean> extends React.Component<
   );
 
   render() {
-    const { multiple, value } = this.props;
     return (
       <DAOPicker
+        {...this.props}
         daoStore={AvailabilityStore}
         headerTitle="Select Availability"
         label="Availability"
-        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(availability: Availability): string =>
           availability.name
         }
-        value={value}
       />
     );
   }

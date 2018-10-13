@@ -116,7 +116,9 @@ class DAOPicker<
     const {
       error,
       headerTitle,
+      inputStyle,
       label,
+      labelStyle,
       multiple,
       pickerInputComponent = PickerTextInput,
       placeholder,
@@ -129,7 +131,9 @@ class DAOPicker<
       <Fragment>
         <PickerInputComponent
           error={error}
+          inputStyle={inputStyle}
           label={label}
+          labelStyle={labelStyle}
           multiple={multiple}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}

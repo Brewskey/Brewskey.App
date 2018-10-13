@@ -35,16 +35,15 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
   );
 
   render() {
-    const { multiple, value } = this.props;
+    const { multiple } = this.props;
     return (
       <DAOPicker
+        {...this.props}
         daoStore={BeverageStore}
         headerTitle={`Select Beverage${multiple ? 's' : ''}`}
         label={`Beverage${multiple ? 's' : ''}`}
-        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(beverage: Beverage): string => beverage.name}
-        value={value}
       />
     );
   }

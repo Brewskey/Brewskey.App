@@ -18,6 +18,7 @@ import KegLevelSliderField from './KegLevelSliderField';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { form, FormField } from '../../common/form';
 import { COLORS } from '../../theme';
+import { calculateKegLevel } from '../../utils';
 
 const validate = (values: KegMutator): { [key: string]: string } => {
   const errors = {};
@@ -29,12 +30,19 @@ const validate = (values: KegMutator): { [key: string]: string } => {
   if (!values.kegType) {
     errors.kegType = 'Keg type is required';
   }
-
   return errors;
 };
 
+const KEG_VALUES = Object.entries(KEG_NAME_BY_KEG_TYPE)
+  .sort(
+    (a, b) =>
+      MAX_OUNCES_BY_KEG_TYPE[a[0]] > MAX_OUNCES_BY_KEG_TYPE[b[0]] ? 1 : -1,
+  )
+  .map(([type, name]: [any, any]) => ({ label: name, value: type }));
+
 type Props = {|
   keg?: Keg,
+  onFloatedSubmit: (values: KegMutator) => void | Promise<any>,
   onReplaceSubmit?: (values: KegMutator) => void | Promise<any>,
   onSubmit: (values: KegMutator) => void | Promise<any>,
   showReplaceButton?: boolean,
@@ -51,6 +59,9 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
 
   _onReplaceSubmit = () =>
     this.injectedProps.handleSubmit(nullthrows(this.props.onReplaceSubmit));
+
+  _onFloatKeg = () =>
+    this.injectedProps.handleSubmit(nullthrows(this.props.onFloatedSubmit));
 
   render() {
     const {
@@ -77,6 +88,10 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         ? (keg.maxOunces / selectedKegTypeMaxOunces) * 100
         : 100;
 
+    const currentPercentage = !keg ? 100 : calculateKegLevel(keg);
+    const shouldShowFloatedButton =
+      currentPercentage < 10 && keg.floatedDate === null;
+
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <FormField
@@ -89,13 +104,12 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormField
           component={SimplePicker}
           disabled={submitting}
+          doesRequireConfirmation={false}
           headerTitle="Select Keg Type"
           initialValue={keg && keg.kegType}
           label="Keg type"
           name="kegType"
-          pickerValues={Object.entries(KEG_NAME_BY_KEG_TYPE).map(
-            ([type, name]: [any, any]) => ({ label: name, value: type }),
-          )}
+          pickerValues={KEG_VALUES}
         />
         <FormField
           component={KegLevelSliderField}
@@ -106,8 +120,18 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormField initialValue={tapId} name="tapId" />
         <FormField initialValue={keg.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
-        {showReplaceButton && (
+        {!showReplaceButton ? null : (
           <SectionContent paddedVertical>
+            {!shouldShowFloatedButton ? null : (
+              <Button
+                backgroundColor={COLORS.accent}
+                disabled={submitting}
+                loading={submitting}
+                onPress={this._onFloatKeg}
+                style={{ marginBottom: 4 }}
+                title="Keg Floated"
+              />
+            )}
             <Button
               disabled={pristine || invalid || submitting}
               loading={submitting}

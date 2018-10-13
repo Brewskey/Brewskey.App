@@ -43,16 +43,15 @@ class LocationPicker<TMultiple: boolean> extends React.PureComponent<
   );
 
   render() {
-    const { multiple, value } = this.props;
+    const { multiple } = this.props;
     return (
       <DAOPicker
+        {...this.props}
         daoStore={LocationStore}
         headerTitle={`Select Location${multiple ? 's' : ''}`}
         label={`Location${multiple ? 's' : ''}`}
-        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(location: Location): string => location.name}
-        value={value}
       />
     );
   }

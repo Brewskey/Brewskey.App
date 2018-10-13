@@ -213,6 +213,16 @@ class $PermissionStore extends DAOStore<Permission> {
   }
 }
 
+class $KegStore extends DAOStore<Keg> {
+  constructor() {
+    super(DAOApi.KegDAO);
+  }
+
+  floatKeg(entityID: EntityID): EntityID {
+    return this.__callDAOFunction('floatKeg', entityID);
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
 export const AchievementStore: $AchievementStore = new $AchievementStore(
   DAOApi.AchievementDAO,
@@ -229,7 +239,7 @@ export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
   DAOApi.FlowSensorDAO,
 );
 export const FriendStore: DAOStore<Friend> = new DAOStore(DAOApi.FriendDAO);
-export const KegStore: DAOStore<Keg> = new DAOStore(DAOApi.KegDAO);
+export const KegStore: $KegStore = new $KegStore();
 export const LocationStore: DAOStore<Location> = new DAOStore(
   DAOApi.LocationDAO,
 );

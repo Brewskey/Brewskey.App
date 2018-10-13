@@ -1710,7 +1710,7 @@ braces@^2.3.1:
 
 "brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git#loadobject":
   version "0.2.0-SNAPSHOT"
-  resolved "git://github.com/Brewskey/brewskey.js-api.git#3759f89c8303d48df3be4d8abfaf9b2a9f6317d3"
+  resolved "git://github.com/Brewskey/brewskey.js-api.git#35ba98d15de7b9c39f56ee9391fa2887f6982c93"
   dependencies:
     babel-preset-react-hmre "^1.1.1"
     nullthrows "^1.1.0"

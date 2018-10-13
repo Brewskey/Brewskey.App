@@ -34,16 +34,14 @@ class GlassPicker<TMultiple: boolean> extends React.Component<
   );
 
   render() {
-    const { multiple, value } = this.props;
     return (
       <DAOPicker
+        {...this.props}
         daoStore={GlassStore}
         headerTitle="Select Glass"
         label="Glass"
-        multiple={multiple}
         renderRow={this._renderRow}
         stringValueExtractor={(glass: Glass): string => glass.name}
-        value={value}
       />
     );
   }

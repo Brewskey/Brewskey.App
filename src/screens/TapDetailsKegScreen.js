@@ -89,8 +89,11 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                       ref={this._setKegLevelBarRef}
                     />
                     <Text style={styles.text}>
-                      {Math.round(currentKeg.maxOunces - currentKeg.ounces)} oz.
-                      of {MAX_OUNCES_BY_KEG_TYPE[currentKeg.kegType]} oz.
+                      {Math.max(
+                        0,
+                        Math.round(currentKeg.maxOunces - currentKeg.ounces),
+                      )}{' '}
+                      oz. of {MAX_OUNCES_BY_KEG_TYPE[currentKeg.kegType]} oz.
                       remaining
                     </Text>
                   </SectionContent>

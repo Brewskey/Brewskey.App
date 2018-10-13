@@ -34,14 +34,16 @@ class NavigationService {
       NavigationActions.navigate({ params, routeName }),
     );
 
-  // todo this works only for rootNavigator
-  // need to implement something like navigateDeep with good api
-  static reset = (routeName: string, params?: NavigationParams): void =>
+  static reset = (
+    stackName: string,
+    routeName: string,
+    params?: NavigationParams,
+  ): void =>
     NavigationService.getNavigator().dispatch(
       StackActions.reset({
         actions: [NavigationActions.navigate({ params, routeName })],
         index: 0,
-        key: null,
+        key: stackName,
       }),
     );
 }

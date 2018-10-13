@@ -36,10 +36,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   input: {
-    color: COLORS.textInverse,
+    color: 'white',
   },
   label: {
-    color: COLORS.textInverse,
+    color: 'white',
   },
   validationText: {
     color: COLORS.danger2,
@@ -86,8 +86,8 @@ class NuxLocationScreen extends InjectedComponent<Props> {
                 'is to set up a location for your Brewskey box.'}
             {hasOneLocation &&
               `You've already set up the location ${
-                NuxSoftwareSetupStore.selectLocation
-                  ? NuxSoftwareSetupStore.selectLocation.name
+                NuxSoftwareSetupStore.selectedLocation
+                  ? NuxSoftwareSetupStore.selectedLocation.name
                   : ''
               }`}
             {hasManyLocations &&
@@ -100,9 +100,9 @@ class NuxLocationScreen extends InjectedComponent<Props> {
               labelStyle={styles.label}
               multiple={false}
               onChange={this._onLocationChange}
-              placeholderTextColor={COLORS.textInverse}
-              selectionColor={COLORS.textInverse}
-              underlineColorAndroid={COLORS.secondary}
+              placeholderTextColor="white"
+              selectionColor="white"
+              underlineColorAndroid="white"
               validationTextStyle={styles.validationText}
               value={NuxSoftwareSetupStore.selectedLocation}
             />
