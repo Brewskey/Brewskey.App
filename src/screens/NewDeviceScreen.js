@@ -37,7 +37,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     const { navigation, onDeviceCreated } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
     const device = await waitForLoaded(() => DeviceStore.getByID(clientID));
-    SnackBarStore.showMessage({ text: 'New brewskey box created' });
+    SnackBarStore.showMessage({ text: 'New Brewskey box created' });
 
     if (onDeviceCreated) {
       onDeviceCreated(device);
@@ -62,7 +62,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
 
     return (
       <Container>
-        <Header showBackButton={showBackButton} title="New brewskey box" />
+        <Header showBackButton={showBackButton} title="New Brewskey box" />
         <DeviceForm
           device={initialValues}
           hideLocation={hideLocation}

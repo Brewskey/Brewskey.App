@@ -17,7 +17,9 @@ const styles = StyleSheet.create({
 // todo add funny icon
 const NearbyLocationsEmpty = () => (
   <Container centered>
-    <Text style={styles.text}>There are not brewskey locations near you!</Text>
+    <Text style={styles.text}>
+      There are not any Brewskey locations near you!
+    </Text>
   </Container>
 );
 

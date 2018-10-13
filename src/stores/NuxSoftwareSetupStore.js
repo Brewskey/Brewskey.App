@@ -87,7 +87,8 @@ class NuxSoftwareSetupStore {
       onContinuePress: () => {
         this.selectLocation(null);
 
-        NavigationService.reset('menu', 'taps');
+        NavigationService.reset('menu', 'menu');
+        NavigationService.navigate('taps');
         NavigationService.navigate('tapDetails', { id: tapID });
       },
     });
