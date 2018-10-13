@@ -26,13 +26,14 @@ class OrganizaionPicker extends React.Component<Props> {
   );
 
   render() {
-    const { value } = this.props;
+    const { onChange, value } = this.props;
     return (
       <DAOPicker
         daoStore={OrganizationStore}
         headerTitle="Select Organization"
         label="Organization"
         multiple={false}
+        onChange={onChange}
         placeholder="None"
         renderRow={this._renderRow}
         stringValueExtractor={({ id, name }: Organization): string =>
