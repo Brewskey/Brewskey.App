@@ -1710,10 +1710,10 @@ braces@^2.3.1:
 
 "brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git#loadobject":
   version "0.2.0-SNAPSHOT"
-  resolved "git://github.com/Brewskey/brewskey.js-api.git#e5f5317273d51e5833d595b9e6a1c028d9aaee0e"
+  resolved "git://github.com/Brewskey/brewskey.js-api.git#35ba98d15de7b9c39f56ee9391fa2887f6982c93"
   dependencies:
     babel-preset-react-hmre "^1.1.1"
-    nullthrows "^1.0.0"
+    nullthrows "^1.1.0"
     odata "git+https://github.com/Brewskey/o.js.git"
 
 brorand@^1.0.1:
@@ -3073,9 +3073,9 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flow-bin@^0.58.0:
-  version "0.58.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.58.0.tgz#62d5a776589419e5656800a0e5230a5e585ca65e"
+flow-bin@^0.81.0:
+  version "0.81.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.81.0.tgz#7f0a733dce1dad3cb1447c692639292dc3d60bf5"
 
 for-in@^1.0.1, for-in@^1.0.2:
   version "1.0.2"
@@ -5298,10 +5298,6 @@ npmlog@^4.0.2:
     gauge "~2.7.3"
     set-blocking "~2.0.0"
 
-nullthrows@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/nullthrows/-/nullthrows-1.0.1.tgz#db2129889ca3188c323fb71b1be3f4a317e3f106"
-
 nullthrows@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/nullthrows/-/nullthrows-1.1.0.tgz#832bb19ef7fedab989f81675c846e2858a3917a2"
@@ -5896,10 +5892,6 @@ react-devtools-core@3.3.4:
   dependencies:
     shell-quote "^1.6.1"
     ws "^3.3.1"
-
-react-fast-compare@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.2.tgz#0560ba7a61a1662d9cea8cd97a0d9db7591bab1c"
 
 react-is@^16.3.2:
   version "16.3.2"

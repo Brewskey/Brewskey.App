@@ -16,20 +16,23 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = {
+type Props<TEntity, TMultiple: boolean> = {|
   error?: ?string,
   inputStyle?: Style,
   label: string,
   labelStyle?: Style,
+  multiple: TMultiple,
   onPress: () => void,
   placeholder?: string,
   stringValueExtractor: (item: TEntity) => string,
-  value?: PickerValue<TEntity>,
+  value?: PickerValue<TEntity, TMultiple>,
   // other react-native textInput props
-};
+|};
 
 @observer
-class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
+class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
+  Props<TEntity, TMultiple>,
+> {
   static defaultProps = {
     placeholder: 'Please select...',
     stringValueExtractor: (item: Object): string => item.name,
@@ -48,6 +51,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
   render() {
     const {
       error,
+      inputStyle,
       label,
       labelStyle,
       onPress,
@@ -64,7 +68,7 @@ class PickerTextInput<TEntity> extends React.Component<Props<TEntity>> {
         placeholder={placeholder}
         value={value}
       >
-        <Text style={styles.valueText}>{this._stringValue}</Text>
+        <Text style={[styles.valueText, inputStyle]}>{this._stringValue}</Text>
       </PickerInput>
     );
   }

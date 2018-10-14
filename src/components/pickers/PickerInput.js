@@ -42,11 +42,19 @@ export type Props = {
 
 class PickerInput extends React.Component<Props> {
   render() {
-    const { children, error, label, onPress, placeholder, value } = this.props;
+    const {
+      children,
+      error,
+      label,
+      labelStyle,
+      onPress,
+      placeholder,
+      value,
+    } = this.props;
 
     return (
       <TouchableOpacity onPress={onPress}>
-        <FormLabel>{label}</FormLabel>
+        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <View style={styles.valueContainer}>
           {!value || (Array.isArray(value) && !value.length) ? (
             <Text style={styles.placeholderText}>{placeholder}</Text>

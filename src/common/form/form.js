@@ -39,14 +39,15 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
     _handleSubmit = async (
       callback?: OnSubmitCallbackFunction,
     ): Promise<void> => {
-      this._formStore.setFormError(null);
-      this._formStore.validate();
-      Keyboard.dismiss();
-      if (this._formStore.invalid) {
-        return;
-      }
-
       try {
+        this._formStore.setFormError(null);
+        this._formStore.validate();
+        Keyboard.dismiss();
+
+        if (this._formStore.invalid) {
+          return;
+        }
+
         const { onSubmit } = this.props;
         this._formStore.setSubmitting(true);
 

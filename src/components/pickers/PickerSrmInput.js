@@ -16,7 +16,7 @@ type Props = {
   labelStyle?: Style,
   onPress: () => void,
   placeholder?: string,
-  value?: PickerValue<Srm>,
+  value?: PickerValue<Srm, false>,
   // other react-native textInput props
 };
 

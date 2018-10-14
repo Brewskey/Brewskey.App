@@ -43,7 +43,7 @@ const SETUP_STEPS = [
     }
     image={SensorCableToBoxImage}
     key={4}
-    title="4. Run cable from your brewskey box to sensor"
+    title="4. Run cable from your Brewskey box to sensor"
   />,
   <SetupStep
     description={

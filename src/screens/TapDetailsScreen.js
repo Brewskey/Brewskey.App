@@ -71,14 +71,9 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
     return LoadObject.merge([
       TapStore.getByID(id),
       PermissionStore.getForEntityByID('tap', id),
-      FlowSensorStore.getMany({
+      FlowSensorStore.getSingle({
         filters: [DAOApi.createFilter('tap/id').equals(id)],
-        limit: 1,
-        orderBy: [{ column: 'id', direction: 'desc' }],
-      }).map(
-        (loaders: Array<LoadObject<FlowSensor>>): LoadObject<FlowSensor> =>
-          loaders[0] || LoadObject.empty(),
-      ),
+      }),
     ]);
   }
 

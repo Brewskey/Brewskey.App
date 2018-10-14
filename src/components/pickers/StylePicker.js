@@ -11,10 +11,9 @@ import SelectableListItem from '../../common/SelectableListItem';
 
 type Props = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Style>) => void,
+  onChange: (value: ?PickerValue<Style, false>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Style>,
+  value: PickerValue<Style, false>,
 |};
 
 class GlassPicker extends React.Component<Props> {
@@ -34,6 +33,7 @@ class GlassPicker extends React.Component<Props> {
         daoStore={StyleStore}
         headerTitle="Select Style"
         label="Style"
+        multiple={false}
         renderRow={this._renderRow}
         stringValueExtractor={(style: Style): string => style.name}
       />

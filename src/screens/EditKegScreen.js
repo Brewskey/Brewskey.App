@@ -31,14 +31,9 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _kegLoader(): LoadObject<Keg> {
     const { tapId } = this.injectedProps;
-    return KegStore.getMany({
+    return KegStore.getSingle({
       filters: [DAOApi.createFilter('tap/id').equals(tapId)],
-      limit: 1,
-      orderBy: [{ column: 'id', direction: 'desc' }],
-    }).map(
-      (loaders: Array<LoadObject<Keg>>): LoadObject<Keg> =>
-        loaders[0] || LoadObject.empty(),
-    );
+    });
   }
 
   _onReplaceSubmit = async (values: KegMutator): Promise<void> => {
@@ -56,6 +51,14 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
 
+  _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
+    const id = nullthrows(values.id);
+    DAOApi.KegDAO.floatKeg(id);
+    await waitForLoaded(() => KegStore.getByID(id));
+    TapStore.flushCache();
+    SnackBarStore.showMessage({ text: 'Current keg floated' });
+  };
+
   render() {
     return (
       <LoaderComponent
@@ -63,6 +66,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedComponent}
         loader={this._kegLoader}
         onEditSubmit={this._onEditSubmit}
+        onFloatedSubmit={this._onFloatKegSubmit}
         onReplaceSubmit={this._onReplaceSubmit}
         tapId={this.injectedProps.tapId}
         updatingComponent={LoadedComponent}
@@ -73,6 +77,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
 type ExtraProps = {
   onEditSubmit: (values: KegMutator) => Promise<void>,
+  onFloatedSubmit: (values: KegMutator) => Promise<void>,
   onReplaceSubmit: (values: KegMutator) => Promise<void>,
   tapId: EntityID,
 };
@@ -83,12 +88,14 @@ type LoadedComponentProps = {
 
 const LoadedComponent = ({
   onEditSubmit,
+  onFloatedSubmit,
   onReplaceSubmit,
   tapId,
   value,
 }: LoadedComponentProps) => (
   <KegForm
     keg={value}
+    onFloatedSubmit={onFloatedSubmit}
     onReplaceSubmit={onReplaceSubmit}
     onSubmit={onEditSubmit}
     showReplaceButton

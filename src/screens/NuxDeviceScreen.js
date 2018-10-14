@@ -40,7 +40,7 @@ class NuxDeviceScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <Container>
-        <Header title="3. Give a name to your device" />
+        <Header title="3. Name your device" />
         <View style={styles.container}>
           <Text style={styles.descriptionText}>
             Great! Your Brewskey box is now connected to WiFi and have white

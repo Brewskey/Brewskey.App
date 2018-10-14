@@ -29,7 +29,7 @@ const DeviceTapListEmpty = ({ onAddTapPress }: Props) => (
   <View style={styles.container}>
     <Text style={styles.text}>You don't have keg on the tap.</Text>
     <TouchableOpacity onPress={onAddTapPress}>
-      <Text style={[styles.text, styles.textLink]}>Click to set up one.</Text>
+      <Text style={[styles.text, styles.textLink]}>Click to set one up</Text>
     </TouchableOpacity>
   </View>
 );

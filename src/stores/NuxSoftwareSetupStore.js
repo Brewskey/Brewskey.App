@@ -7,7 +7,8 @@ import { LocationStore, waitForLoaded } from './DAOStores';
 import NavigationService from '../NavigationService';
 
 class NuxSoftwareSetupStore {
-  @observable selectedLocation: ?Location = null;
+  @observable
+  selectedLocation: ?Location = null;
 
   @action
   selectLocation = (location: ?Location) => {
@@ -18,9 +19,7 @@ class NuxSoftwareSetupStore {
     const locationsCount = await waitForLoaded(() => LocationStore.count());
 
     if (locationsCount === 1) {
-      const location = (await waitForLoaded(() =>
-        LocationStore.getMany({ take: 1 }),
-      ))[0].getValueEnforcing();
+      const location = await waitForLoaded(() => LocationStore.getSingle());
 
       this.selectLocation(location);
     }
@@ -87,7 +86,9 @@ class NuxSoftwareSetupStore {
     NavigationService.navigate('nuxFinish', {
       onContinuePress: () => {
         this.selectLocation(null);
-        // todo fix to reset on react-navigation@2.0.0
+
+        NavigationService.reset('menu', 'menu');
+        NavigationService.navigate('taps');
         NavigationService.navigate('tapDetails', { id: tapID });
       },
     });

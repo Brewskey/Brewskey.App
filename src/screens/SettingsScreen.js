@@ -16,7 +16,9 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import Section from '../common/Section';
+import SectionHeader from '../common/SectionHeader';
 import OrganizationPicker from '../components/pickers/OrganizationPicker';
+import ChangePasswordForm from '../components/ChangePasswordForm';
 
 const styles = StyleSheet.create({
   versionText: {
@@ -36,11 +38,8 @@ type InjectedProps = {|
 class SettingsScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _hasOrganizations(): boolean {
-    const organizationsLoader = OrganizationStore.getMany();
-    return (
-      organizationsLoader.hasValue() &&
-      organizationsLoader.getValueEnforcing().length > 0
-    );
+    const organizationsLoader = OrganizationStore.count();
+    return (organizationsLoader.getValue() || 0) > 1;
   }
 
   render() {
@@ -57,12 +56,10 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
         <Header showBackButton title="Settings" />
         <ScrollView>
           <Section bottomPadded>
-            <OrganizationPicker
-              onChange={onOrganizationChange}
-              value={selectedOrganization}
-            />
+            <SectionHeader title="Change password" />
+            <ChangePasswordForm />
           </Section>
-          <Section bottomPadded={updateMetadata !== null}>
+          <Section bottomPadded={this._hasOrganizations}>
             <ListItem
               hideChevron
               onSwitch={onToggleManageTaps}
@@ -71,8 +68,16 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               title="Manage taps"
             />
           </Section>
+          {!this._hasOrganizations ? null : (
+            <Section bottomPadded={updateMetadata !== null}>
+              <OrganizationPicker
+                onChange={onOrganizationChange}
+                value={selectedOrganization}
+              />
+            </Section>
+          )}
           {!updateMetadata ? null : (
-            <Section topPadded>
+            <Section>
               <Text style={styles.versionText}>
                 {updateMetadata.appVersion} - {updateMetadata.label}
               </Text>

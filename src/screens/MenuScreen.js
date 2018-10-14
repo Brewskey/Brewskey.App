@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import ErrorScreen from '../common/ErrorScreen';
@@ -14,6 +14,27 @@ import MenuUserBlock from '../components/MenuUserBlock';
 import MenuSeparator from '../components/MenuSeparator';
 import MenuLogoutButton from '../components/MenuLogoutButton';
 import MenuNavigationButton from '../components/MenuNavigationButton';
+import { Badge } from 'react-native-elements';
+import { COLORS } from '../theme';
+import FriendRequestsListStore from '../stores/FriendRequestsListStore';
+import { NavigationActions } from 'react-navigation';
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: COLORS.primary2,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  badgeText: {
+    fontSize: 12,
+  },
+  container: {
+    position: 'absolute',
+    right: 8,
+    top: 12,
+    zIndex: 10,
+  },
+});
 
 errorBoundary(ErrorScreen);
 @observer
@@ -32,11 +53,29 @@ class MenuScreen extends React.Component<{}> {
             <MenuUserBlock />
           </Section>
           <Section>
-            <MenuNavigationButton
-              icon={{ name: 'people' }}
-              routeName="myFriends"
-              title="Friends"
-            />
+            <View>
+              <MenuNavigationButton
+                action={
+                  FriendRequestsListStore.pendingRequestsCount === 0
+                    ? undefined
+                    : NavigationActions.navigate({
+                        routeName: 'myFriendsRequest',
+                      })
+                }
+                icon={{ name: 'people' }}
+                routeName="myFriends"
+                title="Friends"
+              />
+              {FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
+                <View style={styles.container}>
+                  <Badge
+                    containerStyle={styles.badge}
+                    textStyle={styles.badgeText}
+                    value={FriendRequestsListStore.pendingRequestsCount}
+                  />
+                </View>
+              )}
+            </View>
             {AppSettingsStore.isManageTapsEnabled && [
               <MenuSeparator key="separator1" />,
               <MenuNavigationButton

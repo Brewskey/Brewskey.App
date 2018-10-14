@@ -11,22 +11,28 @@ import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
-type Props = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
   inputStyle?: Style,
   labelStyle?: Style,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Location>) => void,
+  multiple: TMultiple,
+  onChange: (value: PickerValue<Location, TMultiple>) => void,
   placeholderTextColor?: string,
   queryOptions?: QueryOptions,
   selectionColor?: string,
   underlineColorAndroid?: string,
   validationTextStyle?: Style,
-  value: PickerValue<Location>,
+  value: PickerValue<Location, TMultiple>,
   // react-native textInput props
 |};
 
-class LocationPicker extends React.PureComponent<Props> {
+class LocationPicker<TMultiple: boolean> extends React.PureComponent<
+  Props<TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

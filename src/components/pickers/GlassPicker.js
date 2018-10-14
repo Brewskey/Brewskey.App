@@ -9,15 +9,21 @@ import { GlassStore } from '../../stores/DAOStores';
 import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 
-type Props = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Glass>) => void,
+  multiple: TMultiple,
+  onChange: (value: PickerValue<Glass, TMultiple>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Glass>,
+  value: PickerValue<Glass, TMultiple>,
 |};
 
-class GlassPicker extends React.Component<Props> {
+class GlassPicker<TMultiple: boolean> extends React.Component<
+  Props<TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

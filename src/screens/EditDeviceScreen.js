@@ -42,7 +42,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     DAOApi.DeviceDAO.put(nullthrows(values.id), values);
     await waitForLoaded(() => this._deviceLoader);
     this.injectedProps.navigation.goBack(null);
-    SnackBarStore.showMessage({ text: 'The brewskey box edited' });
+    SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };
 
   render() {

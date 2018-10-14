@@ -1,7 +1,5 @@
 // @flow
 
-import type { PickerValue } from '../../stores/PickerStore';
-
 import * as React from 'react';
 import { observer } from 'mobx-react/native';
 import ToggleStore from '../../stores/ToggleStore';
@@ -18,35 +16,40 @@ import PickerStore from '../../stores/PickerStore';
 
 export type SimplePickerValue<TValue> = {| label: string, value: TValue |};
 
-type Props<TValue> = {
+type Props<TValue> = {|
   doesRequireConfirmation: boolean,
   error?: string,
   headerTitle: string,
   label: string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<TValue>) => void,
+  onChange: (value: TValue) => void,
   pickerValues: Array<SimplePickerValue<TValue>>,
   placeholder?: string,
-  value: PickerValue<TValue>,
-};
+  value: TValue,
+|};
+
+type SinglePicker = false;
 
 @observer
-class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
+class SimplePicker<TValue> extends React.Component<Props<TValue>> {
   static defaultProps = {
     doesRequireConfirmation: true,
   };
 
-  _pickerStore: PickerStore<SimplePickerValue<TValue>> = new PickerStore({
+  _pickerStore: PickerStore<
+    SimplePickerValue<TValue>,
+    SinglePicker,
+  > = new PickerStore({
     initialValue: this.props.pickerValues.find(
       pickerValue => pickerValue.value === this.props.value,
     ),
     keyExtractor: pickerValue => (pickerValue.value: any).toString(),
-    multiple: this.props.multiple,
-    onChange: (pickerValue: PickerValue<SimplePickerValue<TValue>>) => {
-      const valueToSumbit = Array.isArray(pickerValue)
-        ? pickerValue.map(simplePickerValue => simplePickerValue.value)
-        : pickerValue && pickerValue.value;
-      this.props.onChange(valueToSumbit);
+    multiple: (false: SinglePicker),
+    onChange: (pickerValue: ?SimplePickerValue<TValue>) => {
+      if (!pickerValue) {
+        return;
+      }
+
+      this.props.onChange(pickerValue.value);
       if (!this.props.doesRequireConfirmation) {
         this._modalToggleStore.toggleOff();
       }
@@ -75,19 +78,17 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
       error,
       label,
       headerTitle,
-      multiple,
       pickerValues,
       placeholder,
-      ...rest
     } = this.props;
     const { clear, value } = this._pickerStore;
 
     return (
       <Fragment>
         <PickerTextInput
-          {...rest}
           error={error}
           label={label}
+          multiple={false}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={this._stringValueExtractor}
@@ -115,7 +116,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>, any> {
             />
             {!doesRequireConfirmation ? null : (
               <PickerControl
-                multiple={multiple}
+                multiple={false}
                 onClearPress={clear}
                 onSelectPress={this._modalToggleStore.toggleOff}
                 value={value}

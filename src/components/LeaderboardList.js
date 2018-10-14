@@ -45,7 +45,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (item: LeaderboardItem): string => {
     this.iterator += 1;
-    return item.userName || this.iterator;
+    return item.userName || this.iterator.toString();
   };
 
   _onListItemPress = ({ userID }: LeaderboardItem) =>

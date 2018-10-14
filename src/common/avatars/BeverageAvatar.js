@@ -32,7 +32,7 @@ class BeverageAvatar extends React.PureComponent<Props> {
           uri ||
           `${
             CONFIG.CDN
-          }beverages/${beverageIdString}-icon.jpg?w=${size}&h=${size}&mode=crop${
+          }beverages/${beverageIdString}-icon.jpg?w=${size}&h=${size}&trim.threshold=80&mode=crop&${
             cached ? '' : new Date().toString()
           }`
         }

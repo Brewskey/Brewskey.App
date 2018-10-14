@@ -57,9 +57,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     } = this.injectedProps;
     return TapStore.getByID(id).map(
       ({ currentKeg }: Tap): LoadObject<Beverage> =>
-        currentKeg
-          ? BeverageStore.getByID(currentKeg.beverage.id)
-          : LoadObject.empty(),
+        BeverageStore.getByID(currentKeg.beverage.id),
     );
   }
 
@@ -91,8 +89,11 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                       ref={this._setKegLevelBarRef}
                     />
                     <Text style={styles.text}>
-                      {Math.round(currentKeg.maxOunces - currentKeg.ounces)} oz.
-                      of {MAX_OUNCES_BY_KEG_TYPE[currentKeg.kegType]} oz.
+                      {Math.max(
+                        0,
+                        Math.round(currentKeg.maxOunces - currentKeg.ounces),
+                      )}{' '}
+                      oz. of {MAX_OUNCES_BY_KEG_TYPE[currentKeg.kegType]} oz.
                       remaining
                     </Text>
                   </SectionContent>

@@ -4,7 +4,7 @@ import type { Account, EntityID } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -25,6 +25,12 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import FriendsHorizontalList from '../components/FriendsHorizontalList';
 import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
 
+const styles = StyleSheet.create({
+  friendsListSection: {
+    height: 194,
+  },
+});
+
 /* eslint-disable sorting/sort-object-props */
 type InjectedProps = {|
   id: EntityID,
@@ -42,16 +48,13 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
         loadedComponent={LoadedComponent}
         loader={LoadObject.merge([
           AccountStore.getByID(id),
-          FriendStore.getMany({
+          FriendStore.getSingle({
             filters: [
               DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
               DAOApi.createFilter('friendAccount/id').equals(id),
             ],
             limit: 1,
-          }).map(
-            (loaders: Array<LoadObject<Friend>>): LoadObject<Friend> =>
-              loaders[0] || LoadObject.empty(),
-          ),
+          }),
         ])}
         loadingComponent={LoadingComponent}
       />
@@ -75,7 +78,7 @@ const LoadedComponent = ({
 }: LoadedComponentProps) => (
   <Container>
     <Header
-      rightComponent={<ProfileFriendStatus account={account} />}
+      rightComponent={<ProfileFriendStatus account={account} friend={friend} />}
       showBackButton
       title={account.userName}
     />
@@ -94,7 +97,7 @@ const LoadedComponent = ({
         </Section>
       ) : (
         <React.Fragment>
-          <Section bottomPadded>
+          <Section bottomPadded innerContainerStyle={styles.friendsListSection}>
             <SectionHeader title="Friends" />
             <FriendsHorizontalList
               queryOptions={{

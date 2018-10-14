@@ -10,15 +10,7 @@ import ErrorBoundary from '../../common/ErrorBoundary';
 import ErrorListItem from '../../common/ErrorListItem';
 import ListEmpty from '../../common/ListEmpty';
 import NotificationsStore from '../../stores/NotificationsStore';
-import LowKegLevelListItem from './LowKegLevelListItem';
-import AchievementListItem from './AchievementListItem';
-import FriendRequestListItem from './FriendRequestListItem';
-
-const LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE = {
-  lowKegLevel: LowKegLevelListItem,
-  newAchievement: AchievementListItem,
-  newFriendRequest: FriendRequestListItem,
-};
+import NotificationComponentByType from './NotificationComponentByType';
 
 @observer
 class NotificationsList extends React.Component<{}> {
@@ -32,8 +24,7 @@ class NotificationsList extends React.Component<{}> {
     NotificationsStore.setRead(notification.id);
 
   _renderItem = ({ item }: { item: Notification }): React.Element<any> => {
-    const ListItemComponent =
-      LIST_ITEM_COMPONENT_BY_NOTIFICATION_TYPE[item.type] || View;
+    const ListItemComponent = NotificationComponentByType[item.type] || View;
 
     return (
       <ErrorBoundary fallbackComponent={ErrorListItem}>

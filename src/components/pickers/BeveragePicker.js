@@ -10,15 +10,21 @@ import LoaderRow from '../../common/LoaderRow';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import SelectableListItem from '../../common/SelectableListItem';
 
-type Props = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Beverage>) => void,
+  multiple: TMultiple,
+  onChange: (value: PickerValue<Beverage, TMultiple>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Beverage>,
+  value: PickerValue<Beverage, TMultiple>,
 |};
 
-class BeveragePicker extends React.Component<Props> {
+class BeveragePicker<TMultiple: boolean> extends React.Component<
+  Props<TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

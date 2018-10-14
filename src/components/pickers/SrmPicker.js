@@ -13,10 +13,9 @@ import PickerSrmInput from './PickerSrmInput';
 
 type Props = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Srm>) => void,
+  onChange: (value: PickerValue<Srm, false>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Srm>,
+  value: PickerValue<Srm, false>,
 |};
 
 class SrmPicker extends React.Component<Props> {
@@ -35,6 +34,7 @@ class SrmPicker extends React.Component<Props> {
         {...this.props}
         daoStore={SrmStore}
         headerTitle="Select Srm"
+        multiple={false}
         label="Srm"
         pickerInputComponent={PickerSrmInput}
         renderRow={this._renderRow}

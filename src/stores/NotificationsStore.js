@@ -5,7 +5,12 @@ import type { AchievementType, EntityID } from 'brewskey.js-api';
 import type { ObservableMap } from 'mobx';
 import type { Navigation } from '../types';
 
-import { AppState, Platform, PushNotificationIOS } from 'react-native';
+import {
+  AppState,
+  Platform,
+  PushNotificationIOS,
+  Vibration,
+} from 'react-native';
 import {
   action,
   computed,
@@ -19,11 +24,12 @@ import PushNotification from 'react-native-push-notification';
 import DeviceInfo from 'react-native-device-info';
 import AuthStore from './AuthStore';
 import Storage from '../Storage';
-import { AchievementStore, KegStore } from './DAOStores';
+import { AchievementStore, FriendStore, KegStore } from './DAOStores';
 import CONFIG from '../config';
 import NavigationService from '../NavigationService';
+import SnackBarStore from './SnackBarStore';
 
-const BASE_PUSH_URL = `${CONFIG.HOST}api/v2/push`;
+const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
@@ -68,6 +74,8 @@ class NotificationsStore {
   @observable
   _notificationsByID: ObservableMap<string, Notification> = observable.map();
 
+  _deviceToken: string;
+
   // its Map but used as Set since mobx doesn't support Set;
   @observable
   _notificationsDisabledByTapID: ObservableMap<
@@ -81,6 +89,14 @@ class NotificationsStore {
         PushNotification.cancelAllLocalNotifications();
       }
       this._rehydrateState();
+    });
+
+    PushNotification.configure({
+      onNotification: this._onRawNotification,
+      onRegister: result => {
+        this._deviceToken = result.token;
+      },
+      senderID: '394986866677',
     });
 
     reaction(
@@ -211,8 +227,12 @@ class NotificationsStore {
   };
 
   @action
-  _addNotification = (notification: Notification): void =>
+  _addNotification = (notification: Notification): void => {
+    if (notification.type === 'newFriendRequest') {
+      FriendStore.flushCache();
+    }
     this._notificationsByID.set(notification.id, notification);
+  };
 
   @action
   _cleanState = () => {
@@ -261,6 +281,12 @@ class NotificationsStore {
       this._notificationsDisabledByTapID.merge((disabledTapsIDsEntries: any));
       this._notificationsByID.merge((notificationEntries: any));
     });
+
+    if (notifications.some(item => item.type === 'newFriendRequest')) {
+      runInAction(() => {
+        FriendStore.flushCache();
+      });
+    }
   };
 
   _registerToken = async () => {
@@ -270,21 +296,10 @@ class NotificationsStore {
       await new Promise(resolve => setTimeout(resolve, 10));
     }
 
-    const deviceToken = await new Promise((resolve, reject) => {
-      PushNotification.configure({
-        onNotification: this._onRawNotification,
-        onRegister: result => {
-          resolve(result.token);
-        },
-        senderID: '394986866677',
-      });
-      setTimeout(reject, 10000);
-    });
-
     const deviceUniqueID = DeviceInfo.getUniqueID();
 
     const body = JSON.stringify({
-      deviceToken,
+      deviceToken: this._deviceToken,
       installationId: deviceUniqueID,
       platform: Platform.OS === 'android' ? 'fcm' : 'ios',
       removeTapIDs: this._disabledTapIDs,
@@ -331,16 +346,24 @@ class NotificationsStore {
       parsedNotification.id,
     );
 
-    const openedFromTray = !!parsedNotification.opened_from_tray;
+    const openedFromTray = !!parsedNotification.userInteraction;
 
-    this._addNotification({
+    const notification = {
       ...parsedNotification,
       date: existingNotification ? existingNotification.date : new Date(),
       isRead: openedFromTray,
-    });
+    };
+    this._addNotification(notification);
 
     if (openedFromTray) {
-      this.onNotificationPress(parsedNotification);
+      this.onNotificationPress(notification);
+    } else {
+      Vibration.vibrate(500);
+      SnackBarStore.showMessage({
+        duration: 3000,
+        notification,
+        position: 'top',
+      });
     }
   };
 
@@ -363,6 +386,7 @@ class NotificationsStore {
         break;
       }
       case 'newFriendRequest': {
+        FriendStore.flushCache();
         NavigationService.navigate('myFriendsRequest');
         break;
       }

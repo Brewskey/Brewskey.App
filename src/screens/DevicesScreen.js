@@ -8,11 +8,9 @@ import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
-import DAOApi from 'brewskey.js-api';
 import { observer } from 'mobx-react/native';
 import Container from '../common/Container';
 import Section from '../common/Section';
-import AuthStore from '../stores/AuthStore';
 import Header from '../common/Header';
 import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
 import NuxNoEntity from '../components/NuxNoEntity';
@@ -61,11 +59,6 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
           title="Devices"
         />
         <DevicesList
-          queryOptions={{
-            filters: [
-              DAOApi.createFilter('createdBy/id').equals(AuthStore.userID),
-            ],
-          }}
           ListEmptyComponent={NuxNoEntity}
           renderListHeader={this._renderListHeader}
         />

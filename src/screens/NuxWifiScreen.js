@@ -50,7 +50,7 @@ class NuxWifiScreen extends InjectedComponent<InjectedProps> {
             size={200}
           />
           <Text style={styles.descriptionText}>
-            Next, you need to setup wifi on your brewskey box.
+            Next, you need to setup WiFi on your Brewskey box.
           </Text>
           <Button
             onPress={this.injectedProps.onContinuePress}

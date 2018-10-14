@@ -123,6 +123,10 @@ class DAOStore<TEntity: { id: EntityID }> {
     return this.__callDAOFunction('fetchMany', queryOptions);
   }
 
+  getSingle(queryOptions: ?QueryOptions): LoadObject<TEntity> {
+    return this.__callDAOFunction('fetchSingle', queryOptions);
+  }
+
   __callDAOFunction = (functionName: string, ...args: Array<any>) => {
     if (this._atom.reportObserved()) {
       return (this._dao: any)[functionName](...args);
@@ -199,13 +203,23 @@ class $PermissionStore extends DAOStore<Permission> {
       filters: [
         DAOApi.createFilter(`${permissionEntityType}/id`).equals(entityID),
       ],
-      limit: 1,
+      take: 1,
     }).map(
       (
         permissionLoaders: Array<LoadObject<Permission>>,
       ): LoadObject<?Permission> =>
         (permissionLoaders[0]: any) || LoadObject.empty(),
     );
+  }
+}
+
+class $KegStore extends DAOStore<Keg> {
+  constructor() {
+    super(DAOApi.KegDAO);
+  }
+
+  floatKeg(entityID: EntityID): EntityID {
+    return this.__callDAOFunction('floatKeg', entityID);
   }
 }
 
@@ -225,7 +239,7 @@ export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
   DAOApi.FlowSensorDAO,
 );
 export const FriendStore: DAOStore<Friend> = new DAOStore(DAOApi.FriendDAO);
-export const KegStore: DAOStore<Keg> = new DAOStore(DAOApi.KegDAO);
+export const KegStore: $KegStore = new $KegStore();
 export const LocationStore: DAOStore<Location> = new DAOStore(
   DAOApi.LocationDAO,
 );

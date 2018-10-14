@@ -40,7 +40,7 @@ class NuxTapScreen extends InjectedComponent<InjectedProps> {
   render() {
     return (
       <Container>
-        <Header title="3. Give a name to your device" />
+        <Header title="4. Create a tap" />
         <View style={styles.container}>
           <Text style={styles.descriptionText}>
             Almost done. You'll need to set up at least on tap on your Brewskey

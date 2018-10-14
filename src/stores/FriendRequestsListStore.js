@@ -13,7 +13,8 @@ class FriendRequestsListStore {
   get _pendingRequestsLoader(): LoadObject<Array<LoadObject<Friend>>> {
     return FriendStore.getMany({
       filters: [
-        DAOApi.createFilter('friendAccount/id').equals(AuthStore.userID),
+        DAOApi.createFilter('friendAccount').notEquals(null),
+        DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
         DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
       ],
       orderBy: [
@@ -30,7 +31,9 @@ class FriendRequestsListStore {
     return FriendStore.getMany({
       filters: [
         DAOApi.createFilter('friendAccount').notEquals(null),
-        DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
+        DAOApi.createFilter('friendStatus').equals(
+          FRIEND_STATUSES.AWAITING_APPROVAL,
+        ),
         DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
       ],
       orderBy: [
@@ -45,24 +48,37 @@ class FriendRequestsListStore {
   @computed
   get pendingRequestsLoaderRows(): Array<Row<Friend>> {
     return this._pendingRequestsLoader.hasValue()
-      ? this._pendingRequestsLoader
-          .getValueEnforcing()
-          .map((loader: LoadObject<Friend>, index: number): Row<Friend> => ({
+      ? this._pendingRequestsLoader.getValueEnforcing().map(
+          (loader: LoadObject<Friend>, index: number): Row<Friend> => ({
             key: index.toString(),
             loader,
-          }))
+          }),
+        )
       : [];
+  }
+
+  @computed
+  get pendingRequestsCount(): number {
+    return (
+      FriendStore.count({
+        filters: [
+          DAOApi.createFilter('friendAccount').notEquals(null),
+          DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
+          DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
+        ],
+      }).getValue() || 0
+    );
   }
 
   @computed
   get myRequestsLoaderRows(): Array<Row<Friend>> {
     return this._myRequestsLoader.hasValue()
-      ? this._myRequestsLoader
-          .getValueEnforcing()
-          .map((loader: LoadObject<Friend>, index: number): Row<Friend> => ({
+      ? this._myRequestsLoader.getValueEnforcing().map(
+          (loader: LoadObject<Friend>, index: number): Row<Friend> => ({
             key: index.toString(),
             loader,
-          }))
+          }),
+        )
       : [];
   }
 

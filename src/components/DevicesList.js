@@ -76,7 +76,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
     await DAOApi.DeviceDAO.deleteByID(item.id);
-    SnackBarStore.showMessage({ text: 'The brewskey box was deleted' });
+    SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
   };
 
   _onEditItemPress = ({ id }: Device) => {
@@ -153,7 +153,7 @@ const Slideout = ({
 }: RowItemProps<Device, *>) => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
-    deleteModalTitle="Delete brewskey box"
+    deleteModalTitle="Delete Brewskey box"
     item={item}
     onDeleteItemPress={onDeleteItemPress}
     onEditItemPress={onEditItemPress}

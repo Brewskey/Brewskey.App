@@ -1,14 +1,12 @@
 // @flow
 
-import type { Element } from 'react';
-
 // todo figure out how we can use generic TValue for
 // value and initialValue props
 export type Field = {|
   error: ?string,
   initialValue: any,
   parseOnSubmit: (value: any) => any,
-  refElement?: Element<any>,
+  refElement?: any,
   touched: boolean,
   value: any,
 |};

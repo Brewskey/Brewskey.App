@@ -23,6 +23,7 @@ type Props = {
   loading?: boolean,
   onPress?: (...args: Array<any>) => any,
   secondary?: boolean,
+  style?: Object,
   // react-native-elemenets button porps
 };
 
@@ -53,12 +54,14 @@ class Button extends React.Component<Props> {
       disabled,
       loading,
       secondary,
+      style,
       ...rest
     } = this.props;
 
     return (
       <RNEButton
         backgroundColor={secondary ? COLORS.secondary : backgroundColor}
+        buttonStyle={style}
         color={secondary ? COLORS.text : color}
         disabledStyle={secondary && styles.secondaryDisabledButton}
         disabledTextStyle={secondary && styles.secondaryDisabledText}

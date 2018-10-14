@@ -85,14 +85,6 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
         <FormField
           component={TextField}
           disabled={submitting}
-          initialValue={location.summary}
-          label="Summary"
-          name="summary"
-          nextFocusTo="description"
-        />
-        <FormField
-          component={TextField}
-          disabled={submitting}
           initialValue={location.description}
           label="Description"
           name="description"
@@ -100,6 +92,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
         <FormField
           component={SimplePicker}
           disabled={submitting}
+          doesRequireConfirmation={false}
           headerTitle="Select Location Type"
           initialValue={location.locationType}
           label="Location type"
@@ -135,6 +128,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
         <FormField
           component={SimplePicker}
           disabled={submitting}
+          doesRequireConfirmation={false}
           headerTitle="Select State"
           initialValue={location.state}
           label="State"

@@ -32,7 +32,7 @@ class FriendPendingRequestListItem extends React.PureComponent<Props> {
 
     return (
       <ListItem
-        avatar={<UserAvatar userName={friend.owningAccount.userName} />}
+        avatar={<UserAvatar userName={friend.friendAccount.userName} />}
         item={friend}
         onPress={onPress}
         rightIcon={
@@ -49,7 +49,7 @@ class FriendPendingRequestListItem extends React.PureComponent<Props> {
             />
           </View>
         }
-        title={friend.owningAccount.userName}
+        title={friend.friendAccount.userName}
       />
     );
   }

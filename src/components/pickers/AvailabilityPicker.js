@@ -9,15 +9,21 @@ import { AvailabilityStore } from '../../stores/DAOStores';
 import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 
-type Props = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
-  multiple?: boolean,
-  onChange: (value: PickerValue<Availability>) => void,
+  multiple: TMultiple,
+  onChange: (value: PickerValue<Availability, TMultiple>) => void,
   queryOptions?: QueryOptions,
-  value: PickerValue<Availability>,
+  value: PickerValue<Availability, TMultiple>,
 |};
 
-class AvailabilityPicker extends React.Component<Props> {
+class AvailabilityPicker<TMultiple: boolean> extends React.Component<
+  Props<TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}

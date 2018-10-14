@@ -32,15 +32,21 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = {|
-  multiple: ?boolean,
+type Props<TEntity, TMultiple: boolean> = {|
+  multiple: TMultiple,
   onClearPress: () => void,
   onSelectPress: () => void,
-  value: PickerValue<TEntity>,
+  value: PickerValue<TEntity, TMultiple>,
 |};
 
 @observer
-class PickerControl<TEntity> extends React.Component<Props<TEntity>> {
+class PickerControl<TEntity, TMultiple: boolean> extends React.Component<
+  Props<TEntity, TMultiple>,
+> {
+  static defaultProps = {
+    multiple: false,
+  };
+
   render() {
     const { onClearPress, onSelectPress, value } = this.props;
     const selectButtonTitle =

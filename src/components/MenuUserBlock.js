@@ -39,7 +39,10 @@ type InjectedProps = {|
 
 @withNavigation
 class MenuUserBlock extends InjectedComponent<InjectedProps> {
-  _onPress = () => this.injectedProps.navigation.navigate('myProfile');
+  _onPress = () =>
+    this.injectedProps.navigation.navigate('profile', {
+      id: AuthStore.userID,
+    });
 
   render() {
     return (

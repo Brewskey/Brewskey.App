@@ -19,20 +19,17 @@ const styles = StyleSheet.create({
   container: {
     borderBottomColor: COLORS.secondary3,
     borderBottomWidth: 1,
+    display: 'flex',
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 8,
+    width: '100%',
   },
   contentContainer: {
     flex: 1,
   },
   dateText: {
     color: COLORS.textFaded,
-  },
-  headerContainer: {
-    alignItems: 'baseline',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   mainContainer: {
     flex: 1,
@@ -57,6 +54,7 @@ const styles = StyleSheet.create({
 
 export type Props = {
   contentComponent?: React.Node,
+  isSwipeable: boolean,
   leftComponent?: React.Node,
   notification: Notification,
   onOpen: (notification: Notification) => void,
@@ -70,6 +68,10 @@ type State = {
 
 class NotificationListItem extends React.PureComponent<Props, State> {
   _readAnimation: Object;
+
+  static defaultProps = {
+    isSwipeable: true,
+  };
 
   state = {
     readAnimationValue: new Animated.Value(0),
@@ -107,6 +109,7 @@ class NotificationListItem extends React.PureComponent<Props, State> {
     const { readAnimationValue } = this.state;
     const {
       contentComponent: ContentComponent,
+      isSwipeable,
       leftComponent: LeftComponent,
       notification: { body, date, isRead, title },
     } = this.props;
@@ -124,6 +127,23 @@ class NotificationListItem extends React.PureComponent<Props, State> {
       </View>
     );
 
+    const content = (
+      <TouchableItem onPress={this._onPress}>
+        <Animated.View style={[styles.container, { backgroundColor }]}>
+          {LeftComponent}
+          <View style={styles.mainContainer}>
+            <Text style={styles.titleText}>{title}</Text>
+            <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
+            <View style={styles.contentContainer}>{contentElement}</View>
+          </View>
+        </Animated.View>
+      </TouchableItem>
+    );
+
+    if (!isSwipeable) {
+      return content;
+    }
+
     return (
       <RNSwipeableRow
         maxSwipeDistance={250}
@@ -132,18 +152,7 @@ class NotificationListItem extends React.PureComponent<Props, State> {
         slideoutView={<SlideoutView />}
         swipeThreshold={250}
       >
-        <TouchableItem onPress={this._onPress}>
-          <Animated.View style={[styles.container, { backgroundColor }]}>
-            {LeftComponent}
-            <View style={styles.mainContainer}>
-              <View style={styles.headerContainer}>
-                <Text style={styles.titleText}>{title}</Text>
-                <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
-              </View>
-              <View style={styles.contentContainer}>{contentElement}</View>
-            </View>
-          </Animated.View>
-        </TouchableItem>
+        {content}
       </RNSwipeableRow>
     );
   }
