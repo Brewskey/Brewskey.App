@@ -6,7 +6,6 @@ import type {
   AchievementCounter,
   Availability,
   Beverage,
-  DAO,
   Device,
   EntityID,
   FlowSensor,
@@ -14,6 +13,7 @@ import type {
   Glass,
   Keg,
   Location,
+  ODataDAO,
   Organization,
   ParticleAttributes,
   Permission,
@@ -91,9 +91,9 @@ export const waitForLoaded = <TValue>(
 
 class DAOStore<TEntity: { id: EntityID }> {
   _atom: IAtom;
-  _dao: DAO<TEntity, *>;
+  _dao: ODataDAO<TEntity, *>;
 
-  constructor(dao: DAO<TEntity, *>) {
+  constructor(dao: ODataDAO<TEntity, *>) {
     this._dao = dao;
     this._atom = createAtom(
       `DAO_ATOM/${dao.getEntityName()}`,

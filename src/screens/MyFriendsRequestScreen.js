@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 @errorBoundary(<ErrorScreen showBackButton />)
 class MyFriendsRequestScreen extends React.Component<{}> {
   static navigationOptions = {
-    tabBarLabel: ({ tintColor }) => (
+    tabBarLabel: ({ tintColor }: { tintColor: string }) => (
       <View>
         <Text style={{ color: tintColor }}>Requests</Text>
         <Badges />

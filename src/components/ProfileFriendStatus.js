@@ -10,7 +10,7 @@ import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
 import Fragment from '../common/Fragment';
 import HeaderIconButton from '../common/Header/HeaderIconButton';
 import AuthStore from '../stores/AuthStore';
-import { FriendStore } from '../stores/DAOStores';
+import { FriendStore, waitForLoaded } from '../stores/DAOStores';
 import FriendApprovedModal from './modals/FriendApprovedModal';
 import FriendAddModal from './modals/FriendAddModal';
 import FriendPendingModal from './modals/FriendPendingModal';
@@ -65,7 +65,8 @@ class ProfileFriendStatus extends React.Component<Props> {
     } = this.props;
 
     this._modalToggleStore.toggleOff();
-    await DAOApi.FriendDAO.deleteByID(nullthrows(friend).id);
+    const clientID = DAOApi.FriendDAO.deleteByID(nullthrows(friend).id);
+    await waitForLoaded(() => DAOApi.FriendDAO.fetchByID(clientID));
     SnackBarStore.showMessage({
       text: `You removed ${userName} from friends.`,
     });

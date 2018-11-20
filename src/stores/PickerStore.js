@@ -1,6 +1,6 @@
 // @flow
 
-import type { KeyValueMap, ObservableMap } from 'mobx';
+import type { ObservableMap } from 'mobx';
 
 import autobind from 'autobind-decorator';
 import { action, computed, observable } from 'mobx';
@@ -83,20 +83,11 @@ class PickerStore<TEntity, TMultiple: boolean> {
   @autobind
   @action
   setValue(value: PickerValue<TEntity, TMultiple>) {
-    let entries: KeyValueMap<TEntity> = {};
+    let entries: Array<[string, TEntity]> = [];
     if (Array.isArray(value)) {
-      entries = value.reduce(
-        (
-          accumulator: KeyValueMap<TEntity>,
-          item: TEntity,
-        ): KeyValueMap<TEntity> => ({
-          ...accumulator,
-          [this._keyExtractor(item)]: item,
-        }),
-        entries,
-      );
+      entries = value.map(item => [this._keyExtractor(item), item]);
     } else {
-      entries = { [this._keyExtractor(value)]: value };
+      entries = [[this._keyExtractor(value), value]];
     }
 
     this._valueByKey.replace(entries);

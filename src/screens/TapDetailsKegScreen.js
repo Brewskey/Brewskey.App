@@ -55,9 +55,8 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     const {
       tap: { id },
     } = this.injectedProps;
-    return TapStore.getByID(id).map(
-      ({ currentKeg }: Tap): LoadObject<Beverage> =>
-        BeverageStore.getByID(currentKeg.beverage.id),
+    return TapStore.getByID(id).map<Beverage>(({ currentKeg }) =>
+      BeverageStore.getByID(currentKeg.beverage.id),
     );
   }
 

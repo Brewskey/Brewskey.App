@@ -53,7 +53,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
-    DAOApi.KegDAO.floatKeg(id);
+    DAOApi.KegDAO.floatKeg(id.toString());
     await waitForLoaded(() => KegStore.getByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg floated' });
@@ -104,8 +104,13 @@ const LoadedComponent = ({
   />
 );
 
-const EmptyComponent = ({ onReplaceSubmit, tapId }: ExtraProps) => (
+const EmptyComponent = ({
+  onFloatedSubmit,
+  onReplaceSubmit,
+  tapId,
+}: ExtraProps) => (
   <KegForm
+    onFloatedSubmit={onFloatedSubmit}
     onSubmit={onReplaceSubmit}
     submitButtonLabel="Create keg"
     tapId={tapId}

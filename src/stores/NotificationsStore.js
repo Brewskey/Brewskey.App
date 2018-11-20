@@ -34,32 +34,35 @@ const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
 
-type BaseNotificationProps = {
+type BaseNotificationProps = {|
   body: string,
   date: Date,
   id: string,
   isRead: string,
   title: string,
-};
+|};
 
-export type LowKegLevelNotification = BaseNotificationProps & {
+export type LowKegLevelNotification = {|
+  ...BaseNotificationProps,
   beverageId: EntityID,
   beverageName: string,
   kegId: EntityID,
   tapId: EntityID,
   type: 'lowKegLevel',
-};
+|};
 
-export type NewAchievementNotification = BaseNotificationProps & {
+export type NewAchievementNotification = {|
+  ...BaseNotificationProps,
   achievementType: AchievementType,
   type: 'newAchievement',
-};
+|};
 
-export type NewFriendRequestNotification = BaseNotificationProps & {
+export type NewFriendRequestNotification = {|
+  ...BaseNotificationProps,
   friendId: EntityID,
   friendUserName: string,
   type: 'newFriendRequest',
-};
+|};
 
 export type Notification =
   | LowKegLevelNotification

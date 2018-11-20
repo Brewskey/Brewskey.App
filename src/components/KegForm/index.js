@@ -64,12 +64,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     this.injectedProps.handleSubmit(nullthrows(this.props.onFloatedSubmit));
 
   render() {
-    const {
-      keg = {},
-      showReplaceButton,
-      submitButtonLabel,
-      tapId,
-    } = this.props;
+    const { keg, showReplaceButton, submitButtonLabel, tapId } = this.props;
     const {
       formError,
       invalid,
@@ -81,7 +76,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     const selectedKegTypeMaxOunces =
       MAX_OUNCES_BY_KEG_TYPE[values.kegType] || 0;
 
-    const isInitialKegType = keg.kegType === values.kegType;
+    const isInitialKegType = keg && keg.kegType === values.kegType;
 
     const initialStartingPercentage =
       isInitialKegType && selectedKegTypeMaxOunces
@@ -97,7 +92,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         <FormField
           component={BeveragePicker}
           disabled={submitting}
-          initialValue={keg.beverage}
+          initialValue={keg && keg.beverage}
           name="beverageId"
           parseOnSubmit={(value: Beverage): EntityID => value.id}
         />
@@ -118,7 +113,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
           name="startingPercentage"
         />
         <FormField initialValue={tapId} name="tapId" />
-        <FormField initialValue={keg.id} name="id" />
+        <FormField initialValue={keg && keg.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
         {!showReplaceButton ? null : (
           <SectionContent paddedVertical>

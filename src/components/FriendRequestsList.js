@@ -18,6 +18,7 @@ import FriendPendingRequestListItem from './FriendPendingRequestListItem';
 import FriendMyRequestListItem from './FriendMyRequestListItem';
 import FriendRequestsListStore from '../stores/FriendRequestsListStore';
 import ListEmpty from '../common/ListEmpty';
+import { waitForLoaded } from '../stores/DAOStores';
 
 type InjectedProps = {
   navigation: Navigation,
@@ -72,20 +73,23 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
     });
 
   _onFriendAcceptPress = async (friend: Friend) => {
-    await DAOApi.FriendDAO.put(friend.id, {
+    const clientID = DAOApi.FriendDAO.put(friend.id, {
       ...friend,
       friendStatus: FRIEND_STATUSES.APPROVED,
     });
+    await waitForLoaded(() => DAOApi.FriendDAO.fetchByID(clientID));
     FriendRequestsListStore.reload();
   };
 
-  _onFriendDeclinePress = ({ id }: Friend) => {
-    DAOApi.FriendDAO.deleteByID(id);
+  _onFriendDeclinePress = async ({ id }: Friend) => {
+    const clientID = DAOApi.FriendDAO.deleteByID(id);
+    await waitForLoaded(() => DAOApi.FriendDAO.fetchByID(clientID));
     FriendRequestsListStore.reload();
   };
 
-  _onFriendCancelMyRequestPress = ({ id }: Friend) => {
-    DAOApi.FriendDAO.deleteByID(id);
+  _onFriendCancelMyRequestPress = async ({ id }: Friend) => {
+    const clientID = DAOApi.FriendDAO.deleteByID(id);
+    await waitForLoaded(() => DAOApi.FriendDAO.fetchByID(clientID));
     FriendRequestsListStore.reload();
   };
 
