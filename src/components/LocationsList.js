@@ -64,7 +64,9 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Location): Promise<void> => {
     const clientID = DAOApi.LocationDAO.deleteByID(item.id);
-    await DAOApi.LocationDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.LocationDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The location was deleted' });
   };
 

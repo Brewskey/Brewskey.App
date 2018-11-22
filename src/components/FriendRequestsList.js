@@ -82,13 +82,17 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
 
   _onFriendDeclinePress = async ({ id }: Friend) => {
     const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     FriendRequestsListStore.reload();
   };
 
   _onFriendCancelMyRequestPress = async ({ id }: Friend) => {
     const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     FriendRequestsListStore.reload();
   };
 

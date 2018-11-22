@@ -45,7 +45,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Pour): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(item.id);
-    await DAOApi.PourDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.PourDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

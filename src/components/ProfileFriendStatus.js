@@ -66,7 +66,9 @@ class ProfileFriendStatus extends React.Component<Props> {
 
     this._modalToggleStore.toggleOff();
     const clientID = DAOApi.FriendDAO.deleteByID(nullthrows(friend).id);
-    await DAOApi.FriendDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({
       text: `You removed ${userName} from friends.`,
     });

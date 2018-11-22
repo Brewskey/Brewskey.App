@@ -76,7 +76,9 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
     const clientID = DAOApi.DeviceDAO.deleteByID(item.id);
-    await DAOApi.DeviceDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.DeviceDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
   };
 
