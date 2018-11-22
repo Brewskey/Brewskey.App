@@ -34,7 +34,7 @@ const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
 
-type BaseNotificationProps = {|
+export type BaseNotificationProps = {|
   body: string,
   date: Date,
   id: string,

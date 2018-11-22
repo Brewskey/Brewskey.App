@@ -18,7 +18,7 @@ import SwipeableList from '../common/SwipeableList';
 import LoaderRow from '../common/LoaderRow';
 import SwipeableRow from '../common/SwipeableRow';
 import SnackBarStore from '../stores/SnackBarStore';
-import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import { BeverageStore } from '../stores/DAOStores';
 import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
@@ -62,7 +62,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Beverage): Promise<void> => {
     const clientID = DAOApi.BeverageDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.BeverageDAO.fetchByID(clientID));
+    await DAOApi.BeverageDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The beverage was deleted' });
   };
 

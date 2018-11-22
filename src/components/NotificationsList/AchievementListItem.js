@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props = {|
   ...NotificationListItemProps,
   notification: NewAchievementNotification,
-};
+|};
 
 const AchievementListItem = (props: Props) => {
   const {

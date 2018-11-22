@@ -1,9 +1,7 @@
 // @flow
 
-import type { ObservableMap } from 'mobx';
-
 import autobind from 'autobind-decorator';
-import { action, computed, observable } from 'mobx';
+import { ObservableMap, action, computed, observable } from 'mobx';
 
 type $If<Condition: boolean, Then, Else> = $Call<
   ((true, Then, Else) => Then) & ((false, Then, Else) => Else),
@@ -90,7 +88,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
       entries = [[this._keyExtractor(value), value]];
     }
 
-    this._valueByKey.replace(entries);
+    this._valueByKey.replace(new ObservableMap(entries));
   }
 
   @autobind

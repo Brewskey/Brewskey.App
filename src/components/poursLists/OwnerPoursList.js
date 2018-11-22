@@ -18,7 +18,6 @@ import UserAvatar from '../../common/avatars/UserAvatar';
 import BasePoursList from './BasePoursList';
 import SnackBarStore from '../../stores/SnackBarStore';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { waitForLoaded } from '../../stores/DAOStores';
 
 type Props = {|
   canDeletePours: boolean,
@@ -46,7 +45,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Pour): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.PourDAO.fetchByID(clientID));
+    await DAOApi.PourDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

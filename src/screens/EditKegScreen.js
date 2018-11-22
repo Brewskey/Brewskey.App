@@ -10,7 +10,7 @@ import { observer } from 'mobx-react/native';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
-import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
+import { KegStore, TapStore } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderComponent from '../common/LoaderComponent';
 import KegForm from '../components/KegForm';
@@ -38,7 +38,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   _onReplaceSubmit = async (values: KegMutator): Promise<void> => {
     const clientID = DAOApi.KegDAO.post(values);
-    await waitForLoaded(() => KegStore.getByID(clientID));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Keg replaced' });
   };
@@ -46,7 +46,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onEditSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.put(id, values);
-    await waitForLoaded(() => KegStore.getByID(id));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
@@ -54,7 +54,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.floatKeg(id.toString());
-    await waitForLoaded(() => KegStore.getByID(id));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID.getByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg floated' });
   };

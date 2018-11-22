@@ -33,12 +33,11 @@ const validate = (values: KegMutator): { [key: string]: string } => {
   return errors;
 };
 
-const KEG_VALUES = Object.entries(KEG_NAME_BY_KEG_TYPE)
+const KEG_VALUES = Object.keys(KEG_NAME_BY_KEG_TYPE)
   .sort(
-    (a, b) =>
-      MAX_OUNCES_BY_KEG_TYPE[a[0]] > MAX_OUNCES_BY_KEG_TYPE[b[0]] ? 1 : -1,
+    (a, b) => (MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1),
   )
-  .map(([type, name]: [any, any]) => ({ label: name, value: type }));
+  .map(kegType => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
 
 type Props = {|
   keg?: Keg,
@@ -79,13 +78,13 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     const isInitialKegType = keg && keg.kegType === values.kegType;
 
     const initialStartingPercentage =
-      isInitialKegType && selectedKegTypeMaxOunces
+      isInitialKegType && selectedKegTypeMaxOunces && keg
         ? (keg.maxOunces / selectedKegTypeMaxOunces) * 100
         : 100;
 
     const currentPercentage = !keg ? 100 : calculateKegLevel(keg);
     const shouldShowFloatedButton =
-      currentPercentage < 10 && keg.floatedDate === null;
+      currentPercentage < 10 && keg && keg.floatedDate === null;
 
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">

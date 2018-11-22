@@ -9,7 +9,7 @@ import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
-import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import { TapStore } from '../stores/DAOStores';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import NotificationsStore from '../stores/NotificationsStore';
@@ -42,7 +42,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
-    await waitForLoaded(() => TapStore.getByID(id));
+    await TapStore.waitForLoaded(dao => dao.getByID(id));
     SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 

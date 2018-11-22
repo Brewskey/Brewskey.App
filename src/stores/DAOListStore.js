@@ -76,9 +76,8 @@ class DAOListStore<TEntity: { id: EntityID }> {
               let loader: LoadObject<TEntity> = LoadObject.loading();
 
               if (queryLoadObject.hasValue()) {
-                loader = queryLoadObject.map(entries =>
-                  nullthrows(entries[index]),
-                );
+                const entities = queryLoadObject.getValueEnforcing();
+                loader = nullthrows(entities[index]);
               } else if (queryLoadObject.hasError()) {
                 loader = LoadObject.withError(
                   queryLoadObject.getErrorEnforcing(),

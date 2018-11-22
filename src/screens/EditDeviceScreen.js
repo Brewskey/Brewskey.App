@@ -12,7 +12,7 @@ import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
+import { DeviceStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -39,8 +39,10 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
   }
 
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
-    DAOApi.DeviceDAO.put(nullthrows(values.id), values);
-    await waitForLoaded(() => this._deviceLoader);
+    const id = nullthrows(values.id);
+    DAOApi.DeviceDAO.put(id, values);
+    await DAOApi.DeviceDAO.waitForLoaded(dao => dao.fetchByID(id));
+
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };

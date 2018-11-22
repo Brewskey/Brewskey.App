@@ -10,7 +10,7 @@ import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { withNavigation } from 'react-navigation';
-import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import { TapStore } from '../stores/DAOStores';
 import DAOApi from 'brewskey.js-api';
 import DAOListStore from '../stores/DAOListStore';
 import LoaderRow from '../common/LoaderRow';
@@ -53,7 +53,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.TapDAO.fetchByID(clientID));
+    await DAOApi.TapDAO.waitForLoaded(dao => dao.fetchByID(clientID));
   };
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });

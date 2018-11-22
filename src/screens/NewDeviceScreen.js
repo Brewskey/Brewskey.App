@@ -10,7 +10,6 @@ import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
-import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -36,7 +35,9 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     const { navigation, onDeviceCreated } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
-    const device = await waitForLoaded(() => DeviceStore.getByID(clientID));
+    const device = await DAOApi.DeviceDAO.waitForLoaded(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'New Brewskey box created' });
 
     if (onDeviceCreated) {

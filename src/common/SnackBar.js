@@ -16,6 +16,7 @@ import { COLORS } from '../theme';
 import NotificationsStore from '../stores/NotificationsStore';
 import SnackBarStore from '../stores/SnackBarStore';
 import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
+import nullthrows from 'nullthrows';
 
 const ENTER_ANIMATION_DURATION = 300;
 const EXIT_ANIMATION_DURATION = 300;
@@ -104,7 +105,7 @@ class SnackMessage extends React.Component<{}, State> {
         toValue: OFFSET,
       }),
       Animated.timing(this.state.animationValue, {
-        delay: currentMessage.duration,
+        delay: nullthrows(currentMessage).duration,
         duration: EXIT_ANIMATION_DURATION,
         toValue: -height,
       }),

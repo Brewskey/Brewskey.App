@@ -7,7 +7,6 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
-import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -49,7 +48,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
       ...DEFAULT_FLOW_SENSOR,
       tapId,
     });
-    await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
 
     this._onFlowSensorCreated();
   };

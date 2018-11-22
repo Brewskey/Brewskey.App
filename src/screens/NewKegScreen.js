@@ -7,7 +7,7 @@ import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
-import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
+import { TapStore } from '../stores/DAOStores';
 import SnackBarStore from '../stores/SnackBarStore';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -28,7 +28,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
   _onFormSubmit = async (values: KegMutator): Promise<void> => {
     const { navigation, onTapSetupFinish, tapId } = this.injectedProps;
     const clientID = DAOApi.KegDAO.post(values);
-    await waitForLoaded(() => KegStore.getByID(clientID));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     TapStore.flushCache();
 
     SnackBarStore.showMessage({ text: 'New keg added' });

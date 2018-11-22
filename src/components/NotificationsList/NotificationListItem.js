@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type Props = {
+export type Props = {|
   contentComponent?: React.Node,
   isSwipeable: boolean,
   leftComponent?: React.Node,
@@ -60,11 +60,11 @@ export type Props = {
   onOpen: (notification: Notification) => void,
   onPress: (notification: Notification) => void | Promise<any>,
   onReadEnd: (notification: Notification) => void,
-};
+|};
 
-type State = {
+type State = {|
   readAnimationValue: Object,
-};
+|};
 
 class NotificationListItem extends React.PureComponent<Props, State> {
   _readAnimation: Object;

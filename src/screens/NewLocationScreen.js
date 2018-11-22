@@ -6,7 +6,6 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
-import { LocationStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -32,7 +31,9 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: LocationMutator): Promise<void> => {
     const { navigation, onLocationCreated } = this.injectedProps;
     const clientID = DAOApi.LocationDAO.post(values);
-    const location = await waitForLoaded(() => LocationStore.getByID(clientID));
+    const location = await DAOApi.LocationDAO.waitForLoaded(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'New location created' });
 
     if (onLocationCreated) {

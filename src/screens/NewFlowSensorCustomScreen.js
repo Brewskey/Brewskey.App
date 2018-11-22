@@ -5,7 +5,6 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
-import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -26,7 +25,7 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const { onFlowSensorCreated } = this.injectedProps;
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     onFlowSensorCreated();
   };
 

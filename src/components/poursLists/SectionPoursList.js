@@ -21,7 +21,6 @@ import UserAvatar from '../../common/avatars/UserAvatar';
 import LoadingListFooter from '../../common/LoadingListFooter';
 import KegSectionHeader from './KegSectionHeader';
 import SnackBarStore from '../../stores/SnackBarStore';
-import { waitForLoaded } from '../../stores/DAOStores';
 
 type InjectedProps = {
   navigation: Navigation,
@@ -66,7 +65,7 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (pour: Pour): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(pour.id);
-    await waitForLoaded(() => DAOApi.PourDAO.fetchByID(clientID));
+    await DAOApi.PourDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

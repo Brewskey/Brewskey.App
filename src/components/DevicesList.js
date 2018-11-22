@@ -19,7 +19,7 @@ import LoaderRow from '../common/LoaderRow';
 import ListEmpty from '../common/ListEmpty';
 import SwipeableRow from '../common/SwipeableRow';
 import SnackBarStore from '../stores/SnackBarStore';
-import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
+import { DeviceStore } from '../stores/DAOStores';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 import DeviceOnlineIndicator from './DeviceOnlineIndicator';
@@ -76,7 +76,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
     const clientID = DAOApi.DeviceDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.DeviceDAO.fetchByID(clientID));
+    await DAOApi.DeviceDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
   };
 

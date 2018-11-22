@@ -21,7 +21,7 @@ import SwipeableRow from '../common/SwipeableRow';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 import DAOListStore from '../stores/DAOListStore';
 import SnackBarStore from '../stores/SnackBarStore';
-import { LocationStore, waitForLoaded } from '../stores/DAOStores';
+import { LocationStore } from '../stores/DAOStores';
 
 type Props = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
@@ -64,7 +64,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Location): Promise<void> => {
     const clientID = DAOApi.LocationDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.LocationDAO.fetchByID(clientID));
+    await DAOApi.LocationDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The location was deleted' });
   };
 

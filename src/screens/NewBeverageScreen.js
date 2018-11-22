@@ -7,7 +7,7 @@ import * as React from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
-import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
+import { waitForLoaded } from '../stores/DAOStores';
 import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
 import { flushImageCache } from '../common/CachedImage';
 import ErrorScreen from '../common/ErrorScreen';
@@ -30,7 +30,9 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const { beverageImage, ...beverageMutator } = values;
     const clientID = DAOApi.BeverageDAO.post(beverageMutator);
-    const { id } = await waitForLoaded(() => BeverageStore.getByID(clientID));
+    const { id } = await DAOApi.BeverageDAO.waitForLoaded(dao =>
+      dao.fetchByID(clientID),
+    );
 
     if (beverageImage) {
       await waitForLoaded(() =>

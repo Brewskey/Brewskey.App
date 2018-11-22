@@ -18,7 +18,6 @@ import SwipeableList from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
 import SnackBarStore from '../stores/SnackBarStore';
-import { waitForLoaded } from '../stores/DAOStores';
 
 type Props = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
@@ -53,7 +52,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
-    await waitForLoaded(() => DAOApi.TapDAO.fetchByID(clientID));
+    await DAOApi.TapDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The tap was deleted' });
   };
 

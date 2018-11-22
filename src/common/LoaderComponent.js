@@ -6,7 +6,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react/native';
 import LoadingIndicator from './LoadingIndicator';
 
-type Props<TValue, TExtraProps = {}> = {
+type Props<TValue, TExtraProps = {}> = {|
   ...TExtraProps,
   deletingComponent: React.ComponentType<TExtraProps>,
   emptyComponent: React.ComponentType<TExtraProps>,
@@ -18,7 +18,7 @@ type Props<TValue, TExtraProps = {}> = {
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
   updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
-};
+|};
 
 const LoaderComponent = observer(
   <TValue, TExtraProps>({

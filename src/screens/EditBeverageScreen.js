@@ -47,8 +47,8 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     const { beverageImage, ...beverageMutator } = values;
     const id = nullthrows(values.id);
 
-    DAOApi.BeverageDAO.put(id, beverageMutator);
-    await waitForLoaded(() => this._beverageLoader);
+    const clientID = DAOApi.BeverageDAO.put(id, beverageMutator);
+    await DAOApi.BeverageDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     if (beverageImage) {
       await waitForLoaded(() =>
         UpdateBeverageImageStore.get(id, beverageImage),
