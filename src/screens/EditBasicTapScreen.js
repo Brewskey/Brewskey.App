@@ -42,7 +42,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
-    await TapStore.waitForLoaded(dao => dao.getByID(id));
+    await DAOApi.TapDAO.waitForLoaded(dao => dao.fetchByID(id));
     SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 
