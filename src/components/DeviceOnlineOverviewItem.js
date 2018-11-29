@@ -56,7 +56,7 @@ type ErrorComponentProps = {
 
 const ErrorComponent = ({ deviceID }: ErrorComponentProps) => (
   <OverviewItem
-    description="Ops! There was an error on checking online status."
+    description="Oops! There was an error on checking online status."
     deviceID={deviceID}
     rightComponent={DeviceOnlineIndicator}
     title="Online Status"
