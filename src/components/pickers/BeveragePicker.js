@@ -42,6 +42,15 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
         daoStore={BeverageStore}
         headerTitle={`Select Beverage${multiple ? 's' : ''}`}
         label={`Beverage${multiple ? 's' : ''}`}
+        queryOptions={{
+          // order by ID so homebrew shows up first
+          orderBy: [
+            {
+              column: 'id',
+              direction: 'desc',
+            },
+          ],
+        }}
         renderRow={this._renderRow}
         stringValueExtractor={(beverage: Beverage): string => beverage.name}
       />
