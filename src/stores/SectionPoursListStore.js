@@ -95,11 +95,9 @@ class SectionPoursListStore {
               if (
                 pourLoaders.some(
                   (pourLoader: LoadObject<Pour>): boolean =>
-                    pourLoader.isLoading() ||
-                    (pourLoader.hasValue() &&
-                      KegStore.getByID(
-                        pourLoader.getValueEnforcing().id,
-                      ).isLoading()),
+                    pourLoader
+                      .map(pour => KegStore.getByID(pour.keg.id))
+                      .isLoading(),
                 )
               ) {
                 return LoadObject.loading();

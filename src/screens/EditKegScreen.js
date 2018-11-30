@@ -54,7 +54,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.floatKeg(id.toString());
-    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID.getByID(id));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg floated' });
   };
