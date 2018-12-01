@@ -8,7 +8,7 @@ import LoadingIndicator from './LoadingIndicator';
 
 type Props<TValue, TExtraProps = {}> = {|
   ...TExtraProps,
-  deletingComponent: React.ComponentType<TExtraProps>,
+  deletingComponent?: React.ComponentType<TExtraProps>,
   emptyComponent: React.ComponentType<TExtraProps>,
   errorComponent: React.ComponentType<{ ...TExtraProps, error: Error }>,
   loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
@@ -17,7 +17,7 @@ type Props<TValue, TExtraProps = {}> = {|
   >,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
-  updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
+  updatingComponent?: React.ComponentType<{ ...TExtraProps, value: TValue }>,
 |};
 
 const LoaderComponent = observer(
@@ -37,11 +37,13 @@ const LoaderComponent = observer(
     }
 
     if (loader.isUpdating()) {
-      return <UpdatingComponent {...rest} value={loader.getValueEnforcing()} />;
+      const Component = UpdatingComponent || LoadingComponent;
+      return <Component {...rest} value={loader.getValue()} />;
     }
 
     if (loader.isDeleting()) {
-      return <DeletingComponent {...rest} />;
+      const Component = DeletingComponent || LoadingComponent;
+      return <Component {...rest} />;
     }
 
     if (loader.hasError()) {
