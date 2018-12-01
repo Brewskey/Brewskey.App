@@ -5,9 +5,9 @@ import type { FormProps } from '../../common/form/types';
 import type { FlowSensorItem } from './flowSensorItems';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../../common/InjectedComponent';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
@@ -59,7 +59,7 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
         : selectedFlowSensorItem.defaultPulses;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           component={FlowSensorSwiperField}
           name="flowSensorType"
@@ -88,7 +88,7 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
             loading={submitting}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

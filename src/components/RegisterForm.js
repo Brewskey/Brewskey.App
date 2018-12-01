@@ -3,12 +3,12 @@
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import AuthApi from '../AuthApi';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { form, FormField } from '../common/form';
 import SectionContent from '../common/SectionContent';
 import TextField from '../components/TextField';
@@ -67,7 +67,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
     const { formError, invalid, submitting } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -105,7 +105,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
             title="Register"
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

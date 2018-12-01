@@ -10,6 +10,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { DeviceStore } from '../stores/DAOStores';
@@ -51,12 +52,14 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
-        <LoaderComponent
-          loadedComponent={LoadedComponent}
-          loader={this._deviceLoader}
-          onFormSubmit={this._onFormSubmit}
-          updatingComponent={LoadedComponent}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <LoaderComponent
+            loadedComponent={LoadedComponent}
+            loader={this._deviceLoader}
+            onFormSubmit={this._onFormSubmit}
+            updatingComponent={LoadedComponent}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

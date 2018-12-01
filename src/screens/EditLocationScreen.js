@@ -23,6 +23,7 @@ import LoaderComponent from '../common/LoaderComponent';
 import SnackBarStore from '../stores/SnackBarStore';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LocationForm from '../components/LocationForm';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   id: EntityID,
@@ -50,12 +51,14 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit location" />
-        <LoaderComponent
-          loadedComponent={LoadedComponent}
-          loader={this._locationLoader}
-          onFormSubmit={this._onFormSubmit}
-          updatingComponent={LoadedComponent}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <LoaderComponent
+            loadedComponent={LoadedComponent}
+            loader={this._locationLoader}
+            onFormSubmit={this._onFormSubmit}
+            updatingComponent={LoadedComponent}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

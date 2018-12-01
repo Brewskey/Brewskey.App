@@ -4,7 +4,7 @@ import type { FormProps } from '../../../common/form/types';
 import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
 import injectedComponent from '../../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
@@ -47,7 +47,7 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField component={TextField} label="SSID" name="ssid" />
         <FormField
           component={SimplePicker}
@@ -74,7 +74,7 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
           onPress={handleSubmit}
           title="Connect"
         />
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

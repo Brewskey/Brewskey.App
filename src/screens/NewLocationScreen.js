@@ -14,6 +14,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import LocationForm from '../components/LocationForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -61,10 +62,12 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
           showBackButton={this.injectedProps.showBackButton}
           title="New location"
         />
-        <LocationForm
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Create location"
-        />
+        <KeyboardAwareScrollView>
+          <LocationForm
+            onSubmit={this._onFormSubmit}
+            submitButtonLabel="Create location"
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }
