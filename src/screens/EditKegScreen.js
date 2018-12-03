@@ -15,6 +15,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import LoaderComponent from '../common/LoaderComponent';
 import KegForm from '../components/KegForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {
   tapId: EntityID,
@@ -61,16 +62,18 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   render() {
     return (
-      <LoaderComponent
-        emptyComponent={EmptyComponent}
-        loadedComponent={LoadedComponent}
-        loader={this._kegLoader}
-        onEditSubmit={this._onEditSubmit}
-        onFloatedSubmit={this._onFloatKegSubmit}
-        onReplaceSubmit={this._onReplaceSubmit}
-        tapId={this.injectedProps.tapId}
-        updatingComponent={LoadedComponent}
-      />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <LoaderComponent
+          emptyComponent={EmptyComponent}
+          loadedComponent={LoadedComponent}
+          loader={this._kegLoader}
+          onEditSubmit={this._onEditSubmit}
+          onFloatedSubmit={this._onFloatKegSubmit}
+          onReplaceSubmit={this._onReplaceSubmit}
+          tapId={this.injectedProps.tapId}
+          updatingComponent={LoadedComponent}
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }

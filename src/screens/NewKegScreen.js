@@ -15,6 +15,7 @@ import KegForm from '../components/KegForm';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedComponentProps = {
   navigation: Navigation,
@@ -55,12 +56,14 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     const { tapId } = this.injectedProps;
     return (
       <Container>
-        <Header title="Add keg" />
-        <KegForm
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Add keg"
-          tapId={tapId}
-        />
+        <Header showBackButton title="Add keg" />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <KegForm
+            onSubmit={this._onFormSubmit}
+            submitButtonLabel="Add keg"
+            tapId={tapId}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

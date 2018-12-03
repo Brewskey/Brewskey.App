@@ -17,6 +17,7 @@ import FlowSensorForm from '../components/FlowSensorForm';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import SnackBarStore from '../stores/SnackBarStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -42,13 +43,15 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
   render() {
     const { tapId } = this.injectedProps;
     return (
-      <LoaderComponent
-        emptyComponent={EmptyComponent}
-        loadedComponent={LoadedComponent}
-        loader={this._flowSensorLoader}
-        tapId={tapId}
-        updatingComponent={LoadedComponent}
-      />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <LoaderComponent
+          emptyComponent={EmptyComponent}
+          loadedComponent={LoadedComponent}
+          loader={this._flowSensorLoader}
+          tapId={tapId}
+          updatingComponent={LoadedComponent}
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }

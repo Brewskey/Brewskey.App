@@ -49,13 +49,13 @@ class ResetPasswordScreen extends React.Component<Props> {
     return (
       <Container>
         <Header showBackButton title="Reset password" />
-        <SectionContent paddedHorizontal paddedVertical>
-          <Text style={styles.text}>
-            Enter your email address and we'll send a password reset email to
-            you.
-          </Text>
-        </SectionContent>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <SectionContent paddedHorizontal paddedVertical>
+            <Text style={styles.text}>
+              Enter your email address and we'll send a password reset email to
+              you.
+            </Text>
+          </SectionContent>
           <ResetPasswordForm onSubmit={this._onFormSubmit} />
           <ResetPasswordModal
             isVisible={this._modalToggleStore.isToggled}

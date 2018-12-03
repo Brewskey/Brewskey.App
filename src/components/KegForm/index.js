@@ -4,11 +4,11 @@ import type { Beverage, EntityID, Keg, KegMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
@@ -87,7 +87,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
       currentPercentage < 10 && keg && keg.floatedDate === null;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           component={BeveragePicker}
           disabled={submitting}
@@ -144,7 +144,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
             transparent={showReplaceButton}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

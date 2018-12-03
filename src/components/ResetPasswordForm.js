@@ -3,9 +3,9 @@
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../common/InjectedComponent';
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
@@ -40,7 +40,7 @@ class ForgotPasswordForm extends InjectedComponent<FormProps> {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -59,7 +59,7 @@ class ForgotPasswordForm extends InjectedComponent<FormProps> {
             title="Request password reset"
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

@@ -4,7 +4,8 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
@@ -54,7 +55,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Settings" />
-        <ScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
           <Section bottomPadded>
             <SectionHeader title="Change password" />
             <ChangePasswordForm />
@@ -83,7 +84,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
               </Text>
             </Section>
           )}
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

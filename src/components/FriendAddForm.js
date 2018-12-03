@@ -2,12 +2,11 @@
 
 import type { FormProps } from '../common/form/types';
 
-import { observer } from 'mobx-react/native';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../common/InjectedComponent';
+import { StyleSheet, View } from 'react-native';
+import { observer } from 'mobx-react/native';
+import { FormValidationMessage } from 'react-native-elements';
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
 import { FormField, form } from '../common/form';
@@ -49,7 +48,7 @@ class FriendAddForm extends InjectedComponent<InjectedProps> {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -80,7 +79,7 @@ class FriendAddForm extends InjectedComponent<InjectedProps> {
             title="Add Friend"
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }
