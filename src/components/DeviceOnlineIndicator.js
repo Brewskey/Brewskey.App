@@ -6,7 +6,7 @@ import * as React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { DeviceStore } from '../stores/DAOStores';
+import { CloudDeviceStore } from '../stores/DAOStores';
 import { Icon } from 'react-native-elements';
 import LoaderComponent from '../common/LoaderComponent';
 import theme, { COLORS } from '../theme';
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  deviceID: EntityID,
+  particleID: EntityID,
   size: number,
 |};
 
@@ -40,7 +40,7 @@ class DeviceOnlineIndicator extends React.Component<Props> {
 
   @computed
   get _onlineStatusLoader(): LoadObject<boolean> {
-    return DeviceStore.getParticleAttributes(this.props.deviceID).map(
+    return CloudDeviceStore.getOne(this.props.particleID).map(
       ({ connected }: ParticleAttributes): boolean => connected,
     );
   }

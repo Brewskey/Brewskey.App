@@ -6,6 +6,7 @@ import type {
   AchievementCounter,
   Availability,
   Beverage,
+  CloudDevice,
   Device,
   EntityID,
   FlowSensor,
@@ -223,6 +224,16 @@ class $KegStore extends DAOStore<Keg> {
   }
 }
 
+class $CloudDeviceStore extends DAOStore<CloudDevice> {
+  constructor() {
+    super((DAOApi.CloudDeviceDAO: $FlowFixMe));
+  }
+
+  getOne(particleId: EntityID) {
+    return this.__callDAOFunction('getOne', particleId);
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
 export const AchievementStore: $AchievementStore = new $AchievementStore(
   DAOApi.AchievementDAO,
@@ -233,6 +244,7 @@ export const AvailabilityStore: DAOStore<Availability> = new DAOStore(
 export const BeverageStore: DAOStore<Beverage> = new DAOStore(
   DAOApi.BeverageDAO,
 );
+export const CloudDeviceStore: $CloudDeviceStore = new $CloudDeviceStore();
 export const DeviceStore: $DeviceStore = new $DeviceStore(DAOApi.DeviceDAO);
 export const GlassStore: DAOStore<Glass> = new DAOStore(DAOApi.GlassDAO);
 export const FlowSensorStore: DAOStore<FlowSensor> = new DAOStore(
