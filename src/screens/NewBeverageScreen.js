@@ -7,6 +7,7 @@ import * as React from 'react';
 import { NavigationActions, StackActions } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import DAOApi from 'brewskey.js-api';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { waitForLoaded } from '../stores/DAOStores';
 import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
 import { flushImageCache } from '../common/CachedImage';
@@ -60,10 +61,12 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="New beverage" />
-        <BeverageForm
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Create beverage"
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <BeverageForm
+            onSubmit={this._onFormSubmit}
+            submitButtonLabel="Create beverage"
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

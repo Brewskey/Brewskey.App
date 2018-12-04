@@ -4,10 +4,10 @@ import type { Device, EntityID, Tap, TapMutator } from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
 import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
@@ -47,7 +47,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           component={TextField}
           initialValue={tap.description}
@@ -91,7 +91,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
             title={submitButtonLabel}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

@@ -6,8 +6,7 @@ import type { FormProps } from '../../common/form/types';
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
-import { StyleSheet } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { StyleSheet, View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';
 import { form, FormField } from '../../common/form';
@@ -70,17 +69,14 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
     } = this.injectedProps;
 
     return (
-      <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
-        style={styles.container}
-      >
+      <View style={styles.container}>
         <FormField
           component={TextField}
           disabled={submitting}
           initialValue={location.name}
           label="Name"
           name="name"
-          nextFocusTo="summary"
+          nextFocusTo="description"
         />
         <FormField
           component={TextField}
@@ -154,7 +150,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
             title={submitButtonLabel}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

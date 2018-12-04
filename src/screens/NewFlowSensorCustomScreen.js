@@ -12,6 +12,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import FlowSensorForm from '../components/FlowSensorForm';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -34,7 +35,9 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Set tap sensor" />
-        <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }
