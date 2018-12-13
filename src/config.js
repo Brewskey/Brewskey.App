@@ -6,5 +6,4 @@ const HOST = 'https://brewskey.com';
 export default {
   CDN: `${HOST}/cdn/`,
   HOST,
-  SIGNALR: `${HOST}/signalr/hubs`,
 };
