@@ -1,25 +1,27 @@
 // @flow
 
-import type { UserCredentials } from '../AuthApi';
+import type { UserCredentials } from 'brewskey.js-api';
 
 import { AsyncStorage } from 'react-native';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
-import AuthApi from '../AuthApi';
+import DAOApi from 'brewskey.js-api';
 import Storage from '../Storage';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
 type AuthState = {|
+  accessToken: ?string,
   id: ?string,
+  refreshToken: ?string,
   roles: ?Array<string>,
-  token: ?string,
   userName: ?string,
 |};
 
 const initialAuthState = {
+  accessToken: null,
   id: null,
+  refreshToken: null,
   roles: null,
-  token: null,
   userName: null,
 };
 
@@ -34,7 +36,7 @@ class AuthStore {
       reaction(
         (): AuthState => this._authState,
         (authState: AuthState) => {
-          if (authState.token) {
+          if (authState.accessToken) {
             Storage.set(AUTH_STORAGE_KEY, authState);
           } else {
             AsyncStorage.removeItem(AUTH_STORAGE_KEY);
@@ -46,15 +48,11 @@ class AuthStore {
 
   @action
   login = async (userCredentials: UserCredentials): Promise<void> => {
-    const { access_token, id, roles, userName } = await AuthApi.login(
-      userCredentials,
-    );
+    const authResponse = await DAOApi.Auth.login(userCredentials);
 
     const authState = {
-      id,
-      roles: JSON.parse(roles),
-      token: access_token,
-      userName,
+      ...authResponse,
+      roles: JSON.parse(authResponse.roles),
     };
 
     runInAction('loginSuccess', () => {
@@ -68,8 +66,8 @@ class AuthStore {
   };
 
   @computed
-  get token(): ?string {
-    return this._authState.token;
+  get accessToken(): ?string {
+    return this._authState.accessToken;
   }
 
   @computed
@@ -84,17 +82,33 @@ class AuthStore {
 
   @computed
   get isAuthorized(): boolean {
-    return !!this._authState.token;
+    return !!this._authState.accessToken;
   }
 
   _rehydrateState = async (): Promise<void> => {
-    const authState = await Storage.get(AUTH_STORAGE_KEY);
-    runInAction(() => {
-      if (authState && authState.token) {
-        this._authState = authState;
+    try {
+      const authState = await Storage.get(AUTH_STORAGE_KEY);
+      let newAuthState = authState;
+
+      if (authState && authState.refreshToken) {
+        const newAuthResponse = await DAOApi.Auth.refreshToken(
+          authState.refreshToken,
+        );
+        newAuthState = { ...authState, ...newAuthResponse };
       }
-      this.isReady = true;
-    });
+
+      runInAction(() => {
+        if (newAuthState && newAuthState.accessToken) {
+          this._authState = newAuthState;
+        }
+      });
+    } catch (error) {
+      // swallow
+    } finally {
+      runInAction(() => {
+        this.isReady = true;
+      });
+    }
   };
 }
 

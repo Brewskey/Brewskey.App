@@ -5,7 +5,7 @@ import type { FormProps } from '../common/form/types';
 import * as React from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
-import AuthApi from '../AuthApi';
+import DAOApi from 'brewskey.js-api';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
@@ -55,7 +55,7 @@ const validate = ({
 @observer
 class RegisterForm extends InjectedComponent<FormProps> {
   _onSubmit = async (values: RegisterFormFields): Promise<void> => {
-    await AuthApi.register(values);
+    await DAOApi.Auth.register(values);
     const { password, userName } = values;
     await AuthStore.login({ password, userName });
   };

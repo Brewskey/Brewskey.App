@@ -5,7 +5,6 @@ import type { FormProps } from '../common/form/types';
 import * as React from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
-import AuthApi from '../AuthApi';
 import InjectedComponent from '../common/InjectedComponent';
 import { FormValidationMessage } from 'react-native-elements';
 import { form, FormField } from '../common/form';
@@ -43,14 +42,15 @@ const validate = ({
   return errors;
 };
 
+type Props = {|
+  onSubmit: (values: ChangePasswordFormFields) => void | Promise<any>,
+|};
+
 @form({ validate })
 @observer
-class ChangePasswordForm extends InjectedComponent<FormProps> {
-  _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(AuthApi.changePassword);
-
+class ChangePasswordForm extends InjectedComponent<FormProps, Props> {
   render() {
-    const { formError, invalid, submitting } = this.injectedProps;
+    const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
     return (
       <View>
         <FormField
@@ -70,7 +70,7 @@ class ChangePasswordForm extends InjectedComponent<FormProps> {
           disabled={submitting}
           label="New password"
           name="newPassword"
-          onSubmitEditing={this._onSubmitButtonPress}
+          onSubmitEditing={handleSubmit}
           secureTextEntry
         />
         <FormValidationMessage>{formError}</FormValidationMessage>
@@ -78,7 +78,7 @@ class ChangePasswordForm extends InjectedComponent<FormProps> {
           <Button
             disabled={submitting || invalid}
             loading={submitting}
-            onPress={this._onSubmitButtonPress}
+            onPress={handleSubmit}
             title="Change password"
           />
         </SectionContent>

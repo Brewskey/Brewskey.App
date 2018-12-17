@@ -36,7 +36,7 @@ reaction(
   (): boolean => AuthStore.isAuthorized,
   (isAuthorized: boolean) => {
     if (isAuthorized) {
-      DAOApi.setToken(nullthrows(AuthStore.token));
+      DAOApi.setToken(nullthrows(AuthStore.accessToken));
       DAOApi.CloudDeviceDAO.startOnlineStatusListener();
       try {
         DAOApi.Signalr.startAll();

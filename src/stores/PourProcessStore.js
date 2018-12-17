@@ -131,7 +131,7 @@ class PourProcessStore {
         }),
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${AuthStore.token || ''}`,
+          Authorization: `Bearer ${AuthStore.accessToken || ''}`,
           'Content-Type': 'application/json',
         },
         method: 'POST',

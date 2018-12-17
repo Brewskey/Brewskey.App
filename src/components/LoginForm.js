@@ -1,7 +1,7 @@
 // @flow
 
 import type { FormProps } from '../common/form/types';
-import type { UserCredentials } from '../AuthApi';
+import type { UserCredentials } from 'brewskey.js-api';
 
 import { observer } from 'mobx-react/native';
 import * as React from 'react';

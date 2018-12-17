@@ -22,7 +22,7 @@ const makeNearbyLocationsStore = () => {
       `,
         {
           headers: {
-            Authorization: `Bearer ${AuthStore.token || ''}`,
+            Authorization: `Bearer ${AuthStore.accessToken || ''}`,
           },
         },
       ).then(deepIdCast),
@@ -44,7 +44,7 @@ export const UpdateAvatarStore = makeApiRequestStore(
       body: JSON.stringify({ photo: avatarData }),
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.token || ''}`,
+        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',
@@ -58,7 +58,7 @@ export const UpdateBeverageImageStore = makeApiRequestStore(
       body: JSON.stringify({ photo: beverageData }),
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.token || ''}`,
+        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',
