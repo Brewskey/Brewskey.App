@@ -4,9 +4,11 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import DAOApi from 'brewskey.js-api';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS, TYPOGRAPHY } from '../theme';
+import SnackBarStore from '../stores/SnackBarStore';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { ListItem } from 'react-native-elements';
@@ -43,6 +45,11 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (organizationsLoader.getValue() || 0) > 1;
   }
 
+  _onChangePasswordSubmit = async values => {
+    await DAOApi.Auth.changePassword(values);
+    SnackBarStore.showMessage({ text: 'Password changed!' });
+  };
+
   render() {
     const {
       isManageTapsEnabled,
@@ -58,7 +65,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
         <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
           <Section bottomPadded>
             <SectionHeader title="Change password" />
-            <ChangePasswordForm />
+            <ChangePasswordForm onSubmit={this._onChangePasswordSubmit} />
           </Section>
           <Section bottomPadded={this._hasOrganizations}>
             <ListItem
