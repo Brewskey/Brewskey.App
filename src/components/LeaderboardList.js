@@ -13,7 +13,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 import PintCounter from '../components/PintCounter';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
-import LeaderboardListEmpty from './LeaderboardListEmpty';
+import ListEmpty from '../common/ListEmpty';
 
 type Props = {|
   duration: string,
@@ -61,12 +61,12 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     index: number,
   }): React.Element<any> => (
     <ListItem
-      avatar={<UserAvatar userName={item.userName} />}
+      avatar={<UserAvatar userName={item.userName || ''} />}
       item={item}
-      onPress={this._onListItemPress}
+      onPress={item.userID ? this._onListItemPress : undefined}
       rightIcon={<PintCounter ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
-      title={`${index + 1}. ${item.userName}`}
+      title={`${index + 1}. ${item.userName || 'anonymous'}`}
     />
   );
 
@@ -76,7 +76,9 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
         data={this._listStore.rows}
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={
-          !this._listStore.isLoading ? LeaderboardListEmpty : null
+          !this._listStore.isLoading ? (
+            <ListEmpty message="There is nobody on the leaderboard for selected period!" />
+          ) : null
         }
         ListFooterComponent={
           <LoadingListFooter isLoading={this._listStore.isLoading} />
