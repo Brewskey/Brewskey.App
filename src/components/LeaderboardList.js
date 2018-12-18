@@ -66,7 +66,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
       onPress={item.userID ? this._onListItemPress : undefined}
       rightIcon={<PintCounter ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
-      title={`${index + 1}. ${item.userName || 'anonymous'}`}
+      title={`${index + 1}. ${item.userName || ''}`}
     />
   );
 
