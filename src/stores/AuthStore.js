@@ -50,13 +50,8 @@ class AuthStore {
   login = async (userCredentials: UserCredentials): Promise<void> => {
     const authResponse = await DAOApi.Auth.login(userCredentials);
 
-    const authState = {
-      ...authResponse,
-      roles: JSON.parse(authResponse.roles),
-    };
-
     runInAction('loginSuccess', () => {
-      this._authState = authState;
+      this._authState = authResponse;
     });
   };
 
@@ -103,7 +98,7 @@ class AuthStore {
         }
       });
     } catch (error) {
-      // swallow
+      AsyncStorage.removeItem(AUTH_STORAGE_KEY);
     } finally {
       runInAction(() => {
         this.isReady = true;
