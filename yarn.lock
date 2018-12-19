@@ -1680,15 +1680,16 @@ braces@^2.3.1:
     split-string "^3.0.2"
     to-regex "^3.0.1"
 
-"brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git#loadobject":
+"brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git":
   version "0.2.0-SNAPSHOT"
-  resolved "git://github.com/Brewskey/brewskey.js-api.git#911290493480ed4842529938596ace8cd03f05a5"
+  resolved "git://github.com/Brewskey/brewskey.js-api.git#a292c9e279746264ccd770b6e7c5aa53b1e76be2"
   dependencies:
     array-flatten "^2.1.1"
     debounce "^1.2.0"
     event-source-polyfill "^1.0.4"
     nullthrows "^1.1.0"
     odata "git+https://github.com/Brewskey/o.js.git"
+    qs "^6.6.0"
     react-native-signalr "git+https://github.com/Brewskey/react-native-signalr.git"
 
 brorand@^1.0.1:
@@ -5602,7 +5603,7 @@ q@*, q@^1.4.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
 
-qs@^6.5.1:
+qs@^6.5.1, qs@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.6.0.tgz#a99c0f69a8d26bf7ef012f871cdabb0aee4424c2"
 
