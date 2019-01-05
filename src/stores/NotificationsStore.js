@@ -98,6 +98,7 @@ class NotificationsStore {
       onNotification: this._onRawNotification,
       onRegister: result => {
         this._deviceToken = result.token;
+        this._registerToken();
       },
       senderID: '394986866677',
     });

@@ -58,6 +58,17 @@ const styles = StyleSheet.create({
 
 @observer
 class PourProcessModal extends Component<{}> {
+  render() {
+    return PourProcessStore.shouldShowPaymentScreen ? (
+      <PourProcessPaymentModal />
+    ) : (
+      <PourProcessInputModal />
+    );
+  }
+}
+
+@observer
+class PourProcessInputModal extends Component<{}> {
   _formatText = () => PourProcessStore.currentSeconds;
 
   render() {
@@ -69,6 +80,7 @@ class PourProcessModal extends Component<{}> {
       isVisible,
       onHideModal,
     } = PourProcessStore;
+
     const headerText = isNFCEnabled
       ? 'Tap phone to pour'
       : 'Enter code to pour';
@@ -80,17 +92,16 @@ class PourProcessModal extends Component<{}> {
         isVisible={isVisible}
       >
         <View style={styles.root}>
-          {isNFCSupported &&
-            !isNFCEnabled && (
-              <TouchableItem
-                onPress={PourProcessStore.onEnableNFCPress}
-                style={styles.enableNFCContainer}
-              >
-                <Text style={styles.enableNFCText}>
-                  or press here to enable NFC on your device
-                </Text>
-              </TouchableItem>
-            )}
+          {isNFCSupported && !isNFCEnabled && (
+            <TouchableItem
+              onPress={PourProcessStore.onEnableNFCPress}
+              style={styles.enableNFCContainer}
+            >
+              <Text style={styles.enableNFCText}>
+                or press here to enable NFC on your device
+              </Text>
+            </TouchableItem>
+          )}
           <View style={styles.progressContainer}>
             {isLoading ? (
               <LoadingIndicator
@@ -133,6 +144,24 @@ class PourProcessModal extends Component<{}> {
           />
           <Text style={styles.errorText}>{PourProcessStore.errorText}</Text>
         </View>
+      </CenteredModal>
+    );
+  }
+}
+
+@observer
+class PourProcessPaymentModal extends Component<{}> {
+  render() {
+    const { isVisible, onHideModal } = PourProcessStore;
+    const headerText = 'Freakin Sweet';
+
+    return (
+      <CenteredModal
+        header={<Text style={styles.headerText}>{headerText}</Text>}
+        isVisible={isVisible}
+        onHideModal={onHideModal}
+      >
+        <View style={styles.root}>Do the thing</View>
       </CenteredModal>
     );
   }

@@ -18,7 +18,7 @@ const makeNearbyLocationsStore = () => {
       fetchJSON(
         `${
           CONFIG.HOST
-        }/api/v2/Locations/Nearby/?longitude=${longitude}&latitude=${latitude}&radius=${radius}
+        }/api/v2/Locations/Default.nearby()/?longitude=${longitude}&latitude=${latitude}&radius=${radius}
       `,
         {
           headers: {

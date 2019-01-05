@@ -22,6 +22,8 @@ class PourProcessStore {
   @observable
   currentSeconds: number = 0;
   @observable
+  deviceID: EntityID = 0;
+  @observable
   errorText: string = '';
   @observable
   isLoading: boolean = false;
@@ -33,6 +35,8 @@ class PourProcessStore {
   isVisible: boolean = false;
   @observable
   totp: string = '';
+  @observable
+  shouldShowPaymentScreen: boolean = false;
 
   constructor() {
     NfcManager.start().catch(() => {
@@ -57,6 +61,7 @@ class PourProcessStore {
   @action
   onShowModal = async () => {
     this._setIsLoading(true);
+    this.shouldShowPaymentScreen = false;
 
     let isNFCEnabled = false;
 
@@ -121,19 +126,36 @@ class PourProcessStore {
     try {
       this._setIsLoading(true);
       this._setErrorText('');
+
+      const headers = {
+        Accept: 'application/json',
+        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+        'Content-Type': 'application/json',
+      };
+
       const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
+      const body = JSON.stringify({
+        ...coordinates,
+        deviceId: deviceID || undefined,
+        totp: this.totp,
+      });
+
+      const paymentResult = await fetchJSON(
+        `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
+        {
+          body,
+          headers,
+          method: 'POST',
+        },
+      );
+
+      if (paymentResult.shouldAskForPayment) {
+        await this._showPayments(paymentResult.deviceID);
+      }
 
       await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour/`, {
-        body: JSON.stringify({
-          ...coordinates,
-          deviceId: deviceID || undefined,
-          totp: this.totp,
-        }),
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${AuthStore.accessToken || ''}`,
-          'Content-Type': 'application/json',
-        },
+        body,
+        headers,
         method: 'POST',
       });
       this.setTotp('');
@@ -216,6 +238,13 @@ class PourProcessStore {
     }
     clearInterval(this._totpTimer);
     this._totpTimer = null;
+  };
+
+  @action
+  _showPayments = (deviceID: EntityID) => {
+    this.deviceID = deviceID;
+    this.shouldShowPaymentScreen = true;
+    return new Promise();
   };
 }
 

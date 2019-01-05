@@ -1682,7 +1682,7 @@ braces@^2.3.1:
 
 "brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git":
   version "0.2.0-SNAPSHOT"
-  resolved "git://github.com/Brewskey/brewskey.js-api.git#a292c9e279746264ccd770b6e7c5aa53b1e76be2"
+  resolved "git://github.com/Brewskey/brewskey.js-api.git#c79c1e65fefffc0f3aeb8cb04c22ac5053f311c1"
   dependencies:
     array-flatten "^2.1.1"
     debounce "^1.2.0"
