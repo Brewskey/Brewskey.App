@@ -34,6 +34,8 @@ subprojects {
 
 allprojects {
     repositories {
+        // Add jitpack repository (added by tipsi-stripe)
+        maven { url "https://jitpack.io" }
         mavenLocal()
         jcenter()
         maven {

@@ -61,6 +61,7 @@
     "react-navigation": "^2.14.0",
     "readable-stream": "^2.3.3",
     "rn-fetch-blob": "^0.10.13",
+    "tipsi-stripe": "^6.1.2",
     "vm-browserify": "^1.0.1"
   },
   "devDependencies": {

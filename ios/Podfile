@@ -2,6 +2,7 @@
 # platform :ios, '9.0'
 
 target 'brewskey' do
+  pod 'Stripe', '~> 13.2.0'
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
   # use_frameworks!
 
@@ -70,6 +71,8 @@ target 'brewskey' do
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
+  pod 'tipsi-stripe', :path => '../node_modules/tipsi-stripe'
 
   target 'brewskeyTests' do
     inherit! :search_paths

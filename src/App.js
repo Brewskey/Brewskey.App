@@ -17,6 +17,13 @@ import SnackBar from './common/SnackBar';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
 import codePush from 'react-native-code-push';
 import SnackBarStore from './stores/SnackBarStore';
+import stripe from 'tipsi-stripe';
+
+stripe.setOptions({
+  androidPayMode: 'test', // Android only
+  merchantId: 'MERCHANT_ID', // Optional
+  publishableKey: 'PUBLISHABLE_KEY',
+});
 
 mobxConfigure({
   enforceActions: 'observed',
