@@ -150,6 +150,7 @@ android {
 }
 
 dependencies {
+    compile project(':tipsi-stripe')
     compile project(':rn-fetch-blob')
     compile project(':react-native-vector-icons')
     compile project(':react-native-splash-screen')
@@ -186,3 +187,9 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+// todo
+// temporary fix for 
+// https://github.com/Microsoft/react-native-code-push/issues/1448
+// https://github.com/invertase/react-native-firebase/issues/1676
+// need to figure out better
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

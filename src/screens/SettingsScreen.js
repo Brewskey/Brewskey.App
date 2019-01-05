@@ -22,6 +22,7 @@ import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import OrganizationPicker from '../components/pickers/OrganizationPicker';
 import ChangePasswordForm from '../components/ChangePasswordForm';
+import CardForm from '../components/CardForm';
 
 const styles = StyleSheet.create({
   versionText: {
@@ -77,13 +78,16 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
             />
           </Section>
           {!this._hasOrganizations ? null : (
-            <Section bottomPadded={updateMetadata !== null}>
+            <Section bottomPadded>
               <OrganizationPicker
                 onChange={onOrganizationChange}
                 value={selectedOrganization}
               />
             </Section>
           )}
+          <Section bottomPadded={updateMetadata !== null}>
+            <CardForm />
+          </Section>
           {!updateMetadata ? null : (
             <Section>
               <Text style={styles.versionText}>
