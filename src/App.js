@@ -8,7 +8,6 @@ import { autorun, configure as mobxConfigure, reaction } from 'mobx';
 import config from './config';
 import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
-import Signalr from './signalr';
 import AuthStore from './stores/AuthStore';
 import NotificationsStore from './stores/NotificationsStore';
 import { UNAUTH_ERROR_CODE } from './constants';
@@ -17,36 +16,13 @@ import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
 import codePush from 'react-native-code-push';
+import SnackBarStore from './stores/SnackBarStore';
 
-mobxConfigure(
-  ({
-    enforceActions: true,
-    // cast because of wrong mobx typings
-  }: any),
-);
-
-const setDAOHeaders = (token: string) => {
-  const daoHeaders = DAOApi.getHeaders().filter(
-    (header: { name: string, value: string }): boolean =>
-      header.name !== 'Authorization' && header.name !== 'timezoneOffset',
-  );
-
-  DAOApi.setHeaders([
-    ...daoHeaders,
-    {
-      name: 'timezoneOffset',
-      value: new Date().getTimezoneOffset().toString(),
-    },
-    {
-      name: 'Authorization',
-      value: `Bearer ${token}`,
-    },
-  ]);
-};
-
-DAOApi.initializeDAOApi({
-  endpoint: `${config.HOST}/api/v2/`,
+mobxConfigure({
+  enforceActions: 'observed',
 });
+
+DAOApi.initialize(config.HOST);
 
 DAOApi.onError((error: Error) => {
   // todo fix the type in dao-api to remove the casting
@@ -60,10 +36,23 @@ reaction(
   (): boolean => AuthStore.isAuthorized,
   (isAuthorized: boolean) => {
     if (isAuthorized) {
-      setDAOHeaders(nullthrows(AuthStore.token));
-      Signalr.startAll();
+      DAOApi.setToken(nullthrows(AuthStore.accessToken));
+      DAOApi.CloudDeviceDAO.startOnlineStatusListener();
+      try {
+        DAOApi.Signalr.startAll();
+      } catch (error) {
+        SnackBarStore.showMessage({
+          style: 'danger',
+          text: "Can't establish socket connection. autorefreshes wont work",
+        });
+      }
     } else {
-      Signalr.stopAll();
+      DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
+      try {
+        DAOApi.Signalr.stopAll();
+      } catch (error) {
+        // swallow
+      }
       DAOApi.flushCache();
       flushAPIStoreCaches();
     }

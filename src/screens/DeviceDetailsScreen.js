@@ -94,7 +94,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
               <Section bottomPadded>
                 <OverviewItem title="Box ID" value={particleId} />
                 <DeviceStateOverviewItem deviceState={deviceStatus} />
-                <DeviceOnlineOverviewItem deviceID={id} />
+                <DeviceOnlineOverviewItem particleID={particleId} />
               </Section>
               <SectionHeader title="Taps" />
             </Container>

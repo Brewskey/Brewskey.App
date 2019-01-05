@@ -22,7 +22,7 @@
     "array-flatten": "^2.1.1",
     "assert": "^1.4.1",
     "autobind-decorator": "^2.1.0",
-    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git#loadobject",
+    "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git",
     "buffer": "^5.0.8",
     "constants-browserify": "^1.0.0",
     "deepmerge": "^2.0.1",

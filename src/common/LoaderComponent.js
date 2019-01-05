@@ -36,9 +36,8 @@ const LoaderComponent = observer(
       return <LoadingComponent {...rest} />;
     }
 
-    if (loader.isUpdating()) {
-      const Component = UpdatingComponent || LoadingComponent;
-      return <Component {...rest} value={loader.getValue()} />;
+    if (loader.isUpdating() && UpdatingComponent) {
+      return <UpdatingComponent {...rest} value={loader.getValue()} />;
     }
 
     if (loader.isDeleting()) {

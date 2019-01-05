@@ -142,7 +142,7 @@ const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Device, *>) => (
     onPress={onItemPress}
     rightIcon={
       <View style={styles.onlineIndicatorWrapper}>
-        <DeviceOnlineIndicator deviceID={item.id} />
+        <DeviceOnlineIndicator particleID={item.particleId} />
       </View>
     }
     title={item.name}

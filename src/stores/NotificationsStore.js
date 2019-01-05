@@ -293,8 +293,8 @@ class NotificationsStore {
   };
 
   _registerToken = async () => {
-    // wait for AuthStore.token
-    while (!AuthStore.token) {
+    // wait for AuthStore.accessToken
+    while (!AuthStore.accessToken) {
       // eslint-disable-next-line no-await-in-loop
       await new Promise(resolve => setTimeout(resolve, 10));
     }
@@ -313,7 +313,7 @@ class NotificationsStore {
       body,
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.token || ''}`,
+        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',
