@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* brewskeyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* brewskeyTests.m */; };
 		0695C75EA0504686B93E1B9F /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 565D6B503ABB41C385F35031 /* Octicons.ttf */; };
@@ -33,6 +32,9 @@
 		EF9C7CB718804885A707DEBE /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CE185BEF1ECF46C3BAED3E03 /* MaterialIcons.ttf */; };
 		F34A12DD0C274BB5BDD2051F /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 208B8A596CAD42B49EEB0C96 /* Feather.ttf */; };
 		F66B79F51E164364964CCD30 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3A9B6E1F392C481EBE761A5B /* Zocial.ttf */; };
+		3495F81A28184142B479556F /* libAppCenterReactNative.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 148AB3512E8C4A1BB959A670 /* libAppCenterReactNative.a */; };
+		B9C65E72B87B46D881CB321A /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 17443A7855F34D5EAAE30ACF /* AppCenter-Config.plist */; };
+		6D3C99A7716F4461B56C40A8 /* libAppCenterReactNativeAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2B0B113ED34478E894F7D08 /* libAppCenterReactNativeAnalytics.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +85,11 @@
 		FC8CAEE15FB04B5EBA26AFE1 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		FD2367A475C142E099AD70ED /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FE73CFEE11C64ABBACBB0790 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		BA61AED6D1F84A59927DA60A /* AppCenterReactNative.xcodeproj */ = {isa = PBXFileReference; name = "AppCenterReactNative.xcodeproj"; path = "../node_modules/appcenter/ios/AppCenterReactNative.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		148AB3512E8C4A1BB959A670 /* libAppCenterReactNative.a */ = {isa = PBXFileReference; name = "libAppCenterReactNative.a"; path = "libAppCenterReactNative.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		17443A7855F34D5EAAE30ACF /* AppCenter-Config.plist */ = {isa = PBXFileReference; name = "AppCenter-Config.plist"; path = "brewskey/AppCenter-Config.plist"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = text.plist.xml; explicitFileType = undefined; includeInIndex = 0; };
+		B7A2366914354DBA9C9DCFCE /* AppCenterReactNativeAnalytics.xcodeproj */ = {isa = PBXFileReference; name = "AppCenterReactNativeAnalytics.xcodeproj"; path = "../node_modules/appcenter-analytics/ios/AppCenterReactNativeAnalytics.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B2B0B113ED34478E894F7D08 /* libAppCenterReactNativeAnalytics.a */ = {isa = PBXFileReference; name = "libAppCenterReactNativeAnalytics.a"; path = "libAppCenterReactNativeAnalytics.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +113,8 @@
 				139105C61AF99C1200B5F7CC /* BuildFile in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* BuildFile in Frameworks */,
 				139FDEF61B0652A700C62182 /* BuildFile in Frameworks */,
+				3495F81A28184142B479556F /* libAppCenterReactNative.a in Frameworks */,
+				6D3C99A7716F4461B56C40A8 /* libAppCenterReactNativeAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +188,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				BA61AED6D1F84A59927DA60A /* AppCenterReactNative.xcodeproj */,
+				B7A2366914354DBA9C9DCFCE /* AppCenterReactNativeAnalytics.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -205,6 +216,7 @@
 				6E8858571B5F4373B343F11E /* Resources */,
 				C3F6B7ED20882B13005DB741 /* Recovered References */,
 				8378318EA6E83EA0AA6FF8D2 /* Pods */,
+				17443A7855F34D5EAAE30ACF /* AppCenter-Config.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -344,6 +356,7 @@
 				11D78A98DF8749C78C565C5E /* SimpleLineIcons.ttf in Resources */,
 				F66B79F51E164364964CCD30 /* Zocial.ttf in Resources */,
 				52E237C2213A629A009CEE1D /* GoogleService-Info.plist in Resources */,
+				B9C65E72B87B46D881CB321A /* AppCenter-Config.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,12 +513,16 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)..\node_modules\neact-native-app-settingsios",
 					"$(SRCROOT)/../node_modules/react-native-nfc-manager/ios",
+					"$(SRCROOT)\..\node_modules\appcenter\ios\AppCenterReactNative",
+					"$(SRCROOT)\..\node_modules\appcenter-analytics\ios\AppCenterReactNativeAnalytics",
 				);
 				INFOPLIST_FILE = brewskeyTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -532,12 +549,16 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)..\node_modules\neact-native-app-settingsios",
 					"$(SRCROOT)/../node_modules/react-native-nfc-manager/ios",
+					"$(SRCROOT)\..\node_modules\appcenter\ios\AppCenterReactNative",
+					"$(SRCROOT)\..\node_modules\appcenter-analytics\ios\AppCenterReactNativeAnalytics",
 				);
 				INFOPLIST_FILE = brewskeyTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -575,6 +596,8 @@
 					"react-native-app-settingsios",
 					"$(SRCROOT)/../node_modules/react-native-nfc-manager/ios",
 					"$(PROJECT_DIR)/Pods/Headers/**",
+					"$(SRCROOT)\..\node_modules\appcenter\ios\AppCenterReactNative",
+					"$(SRCROOT)\..\node_modules\appcenter-analytics\ios\AppCenterReactNativeAnalytics",
 				);
 				INFOPLIST_FILE = brewskey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
@@ -612,6 +635,8 @@
 					"react-native-app-settingsios",
 					"$(SRCROOT)/../node_modules/react-native-nfc-manager/ios",
 					"$(PROJECT_DIR)/Pods/Headers/**",
+					"$(SRCROOT)\..\node_modules\appcenter\ios\AppCenterReactNative",
+					"$(SRCROOT)\..\node_modules\appcenter-analytics\ios\AppCenterReactNativeAnalytics",
 				);
 				INFOPLIST_FILE = brewskey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;

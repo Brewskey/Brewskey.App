@@ -19,6 +19,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
+    "appcenter": "^1.11.0",
+    "appcenter-analytics": "^1.11.0",
+    "appcenter-crashes": "^1.11.0",
     "array-flatten": "^2.1.1",
     "assert": "^1.4.1",
     "autobind-decorator": "^2.1.0",
@@ -41,7 +44,6 @@
     "react-native": "0.57.0",
     "react-native-app-settings": "https://github.com/KrazyLabs/react-native-app-settings",
     "react-native-code-push": "^5.4.2",
-    "react-native-contacts": "^2.2.3",
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "^0.21.5",
     "react-native-elements": "0.19.0",
