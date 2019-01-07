@@ -44,8 +44,8 @@ reaction(
   (isAuthorized: boolean) => {
     if (isAuthorized) {
       DAOApi.setToken(nullthrows(AuthStore.accessToken));
-      DAOApi.CloudDeviceDAO.startOnlineStatusListener();
       try {
+        DAOApi.CloudDeviceDAO.startOnlineStatusListener();
         DAOApi.Signalr.startAll();
       } catch (error) {
         SnackBarStore.showMessage({

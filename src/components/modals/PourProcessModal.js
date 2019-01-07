@@ -1,11 +1,14 @@
 // @flow
 
+import type { Tap } from 'brewskey.js-api';
+
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import { observer } from 'mobx-react/native';
 import * as Progress from 'react-native-progress';
 import PourProcessStore from '../../stores/PourProcessStore';
+import PourPaymentStore from '../../stores/PourPaymentStore';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
@@ -151,9 +154,15 @@ class PourProcessInputModal extends Component<{}> {
 
 @observer
 class PourProcessPaymentModal extends Component<{}> {
+  _store = new PourPaymentStore(PourProcessStore.deviceID);
+
   render() {
     const { isVisible, onHideModal } = PourProcessStore;
-    const headerText = 'Freakin Sweet';
+    const headerText = 'Brewskey Payments';
+
+    const tapsLoader = this._store.tapsWithPaymentEnabled;
+    const isLoading = tapsLoader.isLoading();
+    const taps = tapsLoader.getValue() || [];
 
     return (
       <CenteredModal
@@ -161,8 +170,50 @@ class PourProcessPaymentModal extends Component<{}> {
         isVisible={isVisible}
         onHideModal={onHideModal}
       >
-        <View style={styles.root}>Do the thing</View>
+        <View style={styles.root}>
+          {isLoading ? (
+            <LoadingIndicator
+              activitySize="large"
+              color="white"
+              style={styles.loadingIndicator}
+            />
+          ) : (
+            <>
+              <Text style={styles.smallText}>
+                {taps.length > 1 ? 'These taps' : 'This tap'} has payments
+                enabled.
+              </Text>
+              {taps.map(tap => (
+                <TapPayment key={tap.id} tap={tap} />
+              ))}
+            </>
+          )}
+        </View>
       </CenteredModal>
+    );
+  }
+}
+
+type TapPaymentProps = {|
+  tap: Tap,
+|};
+
+@observer
+class TapPayment extends Component<TapPaymentProps> {
+  render() {
+    const { currentKeg, pricePerOunce, tapNumber } = this.props.tap;
+    return (
+      <View>
+        <Text style={styles.smallText}>
+          Tap {tapNumber} - {currentKeg.beverage.name}
+        </Text>
+        <Text style={styles.smallText}>
+          ${pricePerOunce.toFixed(2)} per ounce
+        </Text>
+        <Text style={styles.smallText}>
+          ${(pricePerOunce * 12).toFixed(2)} for a 12 ounce cup.
+        </Text>
+      </View>
     );
   }
 }

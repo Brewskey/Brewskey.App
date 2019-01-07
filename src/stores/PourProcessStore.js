@@ -61,7 +61,8 @@ class PourProcessStore {
   @action
   onShowModal = async () => {
     this._setIsLoading(true);
-    this.shouldShowPaymentScreen = false;
+    this.shouldShowPaymentScreen = true;
+    this.deviceID = 25;
 
     let isNFCEnabled = false;
 
