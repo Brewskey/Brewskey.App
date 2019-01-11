@@ -5,6 +5,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
+import DAOApi from 'brewskey.js-api';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
@@ -23,6 +24,15 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
+  componentDidMount() {
+    DAOApi.CloudDeviceDAO.flushCache();
+    DAOApi.CloudDeviceDAO.startOnlineStatusListener();
+  }
+
+  componentWillUnmount() {
+    DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
+  }
+
   _onWifiSetupButtonPress = () =>
     this.injectedProps.navigation.navigate('wifiSetup');
 

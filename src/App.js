@@ -45,7 +45,6 @@ reaction(
     if (isAuthorized) {
       DAOApi.setToken(nullthrows(AuthStore.accessToken));
       try {
-        DAOApi.CloudDeviceDAO.startOnlineStatusListener();
         DAOApi.Signalr.startAll();
       } catch (error) {
         SnackBarStore.showMessage({
@@ -54,7 +53,6 @@ reaction(
         });
       }
     } else {
-      DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
       try {
         DAOApi.Signalr.stopAll();
       } catch (error) {
