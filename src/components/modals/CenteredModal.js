@@ -39,6 +39,8 @@ type Props = {|
 
 @observer
 class CenteredModal extends React.Component<Props> {
+  _onPress = event => event.stopPropagation();
+
   render() {
     const {
       children,
@@ -51,7 +53,7 @@ class CenteredModal extends React.Component<Props> {
     return (
       <Modal isVisible={isVisible} onHideModal={onHideModal}>
         <View style={styles.container}>
-          <View style={styles.modal}>
+          <View onPress={this._onPress} style={styles.modal}>
             {!header ? null : <View style={styles.header}>{header}</View>}
             <View style={[styles.content, contentContainerStyle]}>
               {children}
