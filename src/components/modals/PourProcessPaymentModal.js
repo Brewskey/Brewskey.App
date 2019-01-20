@@ -5,6 +5,9 @@ import type { Tap } from 'brewskey.js-api';
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import { observer } from 'mobx-react/native';
+import Button from '../../common/buttons/Button';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { ListItem as RNEListItem } from 'react-native-elements';
 import PourProcessStore from '../../stores/PourProcessStore';
 import PourPaymentStore from '../../stores/PourPaymentStore';
 import LoadingIndicator from '../../common/LoadingIndicator';
@@ -12,6 +15,24 @@ import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
+  content: {
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    maxHeight: 400,
+  },
+  copy: {
+    color: COLORS.textInverse,
+    fontSize: 16,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  footer: {
+    paddingBottom: 8,
+    paddingLeft: 8,
+    paddingRight: 8,
+    paddingTop: 16,
+    width: '100%',
+  },
   headerText: {
     color: COLORS.textInverse,
     fontSize: 18,
@@ -20,18 +41,9 @@ const styles = StyleSheet.create({
   loadingIndicator: {
     height: 120,
   },
-  root: {
-    alignItems: 'center',
-    maxHeight: '50%',
-    width: 290,
-  },
   scrollView: {
-    flexGrow: 0,
-  },
-  smallText: {
-    color: COLORS.textInverse,
-    fontSize: 12,
-    marginTop: 12,
+    flexGrow: 1,
+    width: '100%',
   },
 });
 
@@ -41,7 +53,6 @@ class PourProcessPaymentModal extends Component<{}> {
 
   render() {
     const { isVisible, onHideModal } = PourProcessStore;
-    const headerText = 'Brewskey Payments';
 
     const tapsLoader = this._store.tapsWithPaymentEnabled;
     const isLoading = tapsLoader.isLoading();
@@ -49,40 +60,48 @@ class PourProcessPaymentModal extends Component<{}> {
 
     return (
       <CenteredModal
-        header={<Text style={styles.headerText}>{headerText}</Text>}
+        contentContainerStyle={{ padding: 0 }}
+        header={<Text style={styles.headerText}>Brewskey Payments</Text>}
         isVisible={isVisible}
         onHideModal={onHideModal}
+        width="90%"
       >
-        <View style={styles.root}>
-          <ScrollView style={styles.scrollView}>
-            {isLoading ? (
-              <LoadingIndicator
-                activitySize="large"
-                color="white"
-                style={styles.loadingIndicator}
+        {isLoading ? (
+          <LoadingIndicator
+            activitySize="large"
+            color="white"
+            style={styles.loadingIndicator}
+          />
+        ) : (
+          <View onStartShouldSetResponder={() => true} style={styles.content}>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={styles.copy}>
+                {taps.length > 1 ? 'These taps have' : 'This tap has'} payments
+                enabled.
+              </Text>
+              <Text style={styles.copy}>Click Continue to start pouring.</Text>
+            </View>
+            <ScrollView
+              contentContainerStyle={{ padding: 8 }}
+              style={styles.scrollView}
+            >
+              <View style={{ flex: 1 }}>
+                {taps.map(tap => (
+                  <TapPayment key={tap.id} tap={tap} />
+                ))}
+              </View>
+            </ScrollView>
+            <View style={styles.footer}>
+              <Button
+                large
+                raised
+                secondary
+                containerViewStyle={{ marginLeft: 0, width: '100%' }}
+                title="Continue"
               />
-            ) : (
-              <>
-                <Text style={styles.smallText}>
-                  {taps.length > 1 ? 'These taps' : 'This tap'} has payments
-                  enabled.
-                </Text>
-                {taps.map(tap => (
-                  <TapPayment key={tap.id} tap={tap} />
-                ))}
-                {taps.map(tap => (
-                  <TapPayment key={tap.id} tap={tap} />
-                ))}
-                {taps.map(tap => (
-                  <TapPayment key={tap.id} tap={tap} />
-                ))}
-                {taps.map(tap => (
-                  <TapPayment key={tap.id} tap={tap} />
-                ))}
-              </>
-            )}
-          </ScrollView>
-        </View>
+            </View>
+          </View>
+        )}
       </CenteredModal>
     );
   }
@@ -92,22 +111,43 @@ type TapPaymentProps = {|
   tap: Tap,
 |};
 
+const tapStyles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.secondary,
+  },
+  subtitle: { color: COLORS.textFaded },
+  title: { color: COLORS.text },
+});
+
 @observer
 class TapPayment extends Component<TapPaymentProps> {
   render() {
-    const { currentKeg, pricePerOunce, tapNumber } = this.props.tap;
+    const { currentKeg, id, pricePerOunce, tapNumber } = this.props.tap;
+    const { beverage } = currentKeg;
     return (
-      <View>
-        <Text style={styles.smallText}>
-          Tap {tapNumber} - {currentKeg.beverage.name}
-        </Text>
-        <Text style={styles.smallText}>
-          ${pricePerOunce.toFixed(2)} per ounce
-        </Text>
-        <Text style={styles.smallText}>
-          ${(pricePerOunce * 12).toFixed(2)} for a 12 ounce cup.
-        </Text>
-      </View>
+      <RNEListItem
+        avatar={<BeverageAvatar beverageId={beverage.id} />}
+        containerStyle={tapStyles.container}
+        hideChevron
+        key={id}
+        title={`Tap ${tapNumber} - ${beverage.name}`}
+        titleStyle={tapStyles.title}
+        subtitle={`$${(pricePerOunce * 12).toFixed(
+          2,
+        )} for 12 ounces — $${pricePerOunce.toFixed(2)} per ounce`}
+        subtitleStyle={tapStyles.subtitle}
+      />
+      // <View>
+      //   <Text style={styles.smallText}>
+      //     Tap {tapNumber} - {currentKeg.beverage.name}
+      //   </Text>
+      //   <Text style={styles.smallText}>
+      //     ${pricePerOunce.toFixed(2)} per ounce
+      //   </Text>
+      //   <Text style={styles.smallText}>
+      //     ${(pricePerOunce * 12).toFixed(2)} for a 12 ounce cup.
+      //   </Text>
+      // </View>
     );
   }
 }
