@@ -23,7 +23,7 @@ class MenuLogoutButton extends React.Component<{}> {
         <MenuButton
           icon={{ name: 'logout', type: 'material-community' }}
           onPress={this._modalToggleStore.toggleOn}
-          title="log out"
+          title="Log Out"
         />
         <LogoutModal
           isVisible={this._modalToggleStore.isToggled}

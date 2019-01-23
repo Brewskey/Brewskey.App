@@ -7,6 +7,8 @@ import type {
   Availability,
   Beverage,
   CloudDevice,
+  CreditCardDetails,
+  CreditCardDetailsMutator,
   Device,
   EntityID,
   FlowSensor,
@@ -21,6 +23,7 @@ import type {
   Pour,
   QueryOptions,
   Report,
+  RestDAO,
   Schedule,
   Srm,
   Style,
@@ -149,6 +152,41 @@ class DAOStore<TEntity: { id: EntityID }> {
   };
 }
 
+class RestDAOStore<TEntity, TMutator> {
+  _atom: IAtom;
+
+  _dao: RestDAO<TEntity, TMutator>;
+
+  constructor(entityName: string, dao: RestDAO<TEntity, TMutator>) {
+    this._dao = dao;
+    this._atom = createAtom(
+      `DAO_ATOM/${entityName}`,
+      this._onStartObserved,
+      this._onStopObserved,
+    );
+  }
+
+  __callDAOFunction = (functionName: string, ...args: Array<any>) => {
+    if (this._atom.reportObserved()) {
+      return (this._dao: any)[functionName](...args);
+    }
+
+    throw new Error(`Observable computation is called out of observer context`);
+  };
+
+  _onStartObserved = () => {
+    this._dao.subscribe(this._onNewDAOEvent);
+  };
+
+  _onStopObserved = () => {
+    this._dao.unsubscribe(this._onNewDAOEvent);
+  };
+
+  _onNewDAOEvent = () => {
+    (this._atom: $FlowFixMe).reportChanged();
+  };
+}
+
 class $AchievementStore extends DAOStore<Achievement> {
   getAchievementCounters(
     userID: EntityID,
@@ -234,6 +272,27 @@ class $CloudDeviceStore extends DAOStore<CloudDevice> {
   }
 }
 
+class $PaymentsStore extends RestDAOStore<
+  CreditCardDetails,
+  CreditCardDetailsMutator,
+> {
+  constructor() {
+    super('payments', DAOApi.PaymentsDAO);
+  }
+
+  get(): LoadObject<CreditCardDetails> {
+    return this.__callDAOFunction('get');
+  }
+
+  getOneForAccount(userName: string): LoadObject<CreditCardDetails> {
+    return this.__callDAOFunction('getOneForAccount', userName);
+  }
+
+  addPaymentMethod(token: string): LoadObject<CreditCardDetails> {
+    return this.__callDAOFunction('addPaymentMethod', token);
+  }
+}
+
 export const AccountStore: DAOStore<Account> = new DAOStore(DAOApi.AccountDAO);
 export const AchievementStore: $AchievementStore = new $AchievementStore(
   DAOApi.AchievementDAO,
@@ -258,6 +317,7 @@ export const LocationStore: DAOStore<Location> = new DAOStore(
 export const OrganizationStore: DAOStore<Organization> = new DAOStore(
   DAOApi.OrganizationDAO,
 );
+export const PaymentsStore: $PaymentsStore = new $PaymentsStore();
 export const PermissionStore: $PermissionStore = new $PermissionStore();
 export const PourStore: DAOStore<Pour> = new DAOStore(DAOApi.PourDAO);
 export const ReportStore: DAOStore<Report> = new DAOStore(DAOApi.ReportDAO);

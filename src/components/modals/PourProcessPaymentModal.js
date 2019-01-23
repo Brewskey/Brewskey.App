@@ -8,6 +8,7 @@ import { observer } from 'mobx-react/native';
 import Button from '../../common/buttons/Button';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import { ListItem as RNEListItem } from 'react-native-elements';
+import NavigationService from '../../NavigationService';
 import PourProcessStore from '../../stores/PourProcessStore';
 import PourPaymentStore from '../../stores/PourPaymentStore';
 import LoadingIndicator from '../../common/LoadingIndicator';
@@ -51,12 +52,24 @@ const styles = StyleSheet.create({
 class PourProcessPaymentModal extends Component<{}> {
   _store = new PourPaymentStore(PourProcessStore.deviceID);
 
+  _onContinuePress = () => {
+    if (this._store.hasCreditCardDetails) {
+      // continue normal payment
+    } else {
+      PourProcessStore.onHideModal();
+      NavigationService.navigate('payments');
+    }
+  };
+
   render() {
     const { isVisible, onHideModal } = PourProcessStore;
 
     const tapsLoader = this._store.tapsWithPaymentEnabled;
     const isLoading = tapsLoader.isLoading();
     const taps = tapsLoader.getValue() || [];
+
+    const { hasCreditCardDetails } = this._store;
+    const buttonText = hasCreditCardDetails ? 'Continue' : 'Add Payment Info';
 
     return (
       <CenteredModal
@@ -79,7 +92,11 @@ class PourProcessPaymentModal extends Component<{}> {
                 {taps.length > 1 ? 'These taps have' : 'This tap has'} payments
                 enabled.
               </Text>
-              <Text style={styles.copy}>Click Continue to start pouring.</Text>
+              {!hasCreditCardDetails ? null : (
+                <Text style={styles.copy}>
+                  Click Continue to start pouring.
+                </Text>
+              )}
             </View>
             <ScrollView
               contentContainerStyle={{ padding: 8 }}
@@ -93,11 +110,12 @@ class PourProcessPaymentModal extends Component<{}> {
             </ScrollView>
             <View style={styles.footer}>
               <Button
+                containerViewStyle={{ marginLeft: 0, width: '100%' }}
                 large
+                onPress={this._onContinuePress}
                 raised
                 secondary
-                containerViewStyle={{ marginLeft: 0, width: '100%' }}
-                title="Continue"
+                title={buttonText}
               />
             </View>
           </View>

@@ -1,10 +1,14 @@
 // @flow
 
-import type { EntityID, QueryOptions } from 'brewskey.js-api';
+import type {
+  CreditCardDetails,
+  EntityID,
+  QueryOptions,
+} from 'brewskey.js-api';
 
 import DAOApi from 'brewskey.js-api';
 import { computed } from 'mobx';
-import { TapStore } from './DAOStores';
+import { PaymentsStore, TapStore } from './DAOStores';
 
 class PourPaymentStore {
   _queryOptions: QueryOptions;
@@ -22,6 +26,15 @@ class PourPaymentStore {
   get tapsWithPaymentEnabled(): LoadObject<Array<NearbyLocation>> {
     return TapStore.getMany(this._queryOptions).map(taps =>
       taps.map(tap => tap.getValue()).filter(Boolean),
+    );
+  }
+
+  @computed
+  get hasCreditCardDetails(): LoadObject<CreditCardDetails> {
+    return (
+      PaymentsStore.get()
+        .map(details => !!details)
+        .getValue() || false
     );
   }
 }

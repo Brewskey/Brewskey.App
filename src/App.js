@@ -21,8 +21,8 @@ import stripe from 'tipsi-stripe';
 
 stripe.setOptions({
   androidPayMode: 'test', // Android only
-  merchantId: 'MERCHANT_ID', // Optional
-  publishableKey: 'PUBLISHABLE_KEY',
+  // merchantId: 'MERCHANT_ID', // Optional
+  publishableKey: 'pk_test_B8kBbgSzIHam4hf1RRNC2WRf',
 });
 
 mobxConfigure({

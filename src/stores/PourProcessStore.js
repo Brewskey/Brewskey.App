@@ -109,6 +109,7 @@ class PourProcessStore {
     this._stopTotpTimer();
     this.setTotp('');
     this.isVisible = false;
+    this.shouldShowPaymentScreen = false;
   };
 
   @action
