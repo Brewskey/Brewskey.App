@@ -34,32 +34,35 @@ const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 const NOTIFICATIONS_STORAGE_KEY = 'notifications';
 const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
 
-type BaseNotificationProps = {
+export type BaseNotificationProps = {|
   body: string,
   date: Date,
   id: string,
   isRead: string,
   title: string,
-};
+|};
 
-export type LowKegLevelNotification = BaseNotificationProps & {
+export type LowKegLevelNotification = {|
+  ...BaseNotificationProps,
   beverageId: EntityID,
   beverageName: string,
   kegId: EntityID,
   tapId: EntityID,
   type: 'lowKegLevel',
-};
+|};
 
-export type NewAchievementNotification = BaseNotificationProps & {
+export type NewAchievementNotification = {|
+  ...BaseNotificationProps,
   achievementType: AchievementType,
   type: 'newAchievement',
-};
+|};
 
-export type NewFriendRequestNotification = BaseNotificationProps & {
+export type NewFriendRequestNotification = {|
+  ...BaseNotificationProps,
   friendId: EntityID,
   friendUserName: string,
   type: 'newFriendRequest',
-};
+|};
 
 export type Notification =
   | LowKegLevelNotification
@@ -95,6 +98,7 @@ class NotificationsStore {
       onNotification: this._onRawNotification,
       onRegister: result => {
         this._deviceToken = result.token;
+        this._registerToken();
       },
       senderID: '394986866677',
     });
@@ -290,8 +294,8 @@ class NotificationsStore {
   };
 
   _registerToken = async () => {
-    // wait for AuthStore.token
-    while (!AuthStore.token) {
+    // wait for AuthStore.accessToken
+    while (!AuthStore.accessToken) {
       // eslint-disable-next-line no-await-in-loop
       await new Promise(resolve => setTimeout(resolve, 10));
     }
@@ -310,7 +314,7 @@ class NotificationsStore {
       body,
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.token || ''}`,
+        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',

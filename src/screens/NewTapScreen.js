@@ -5,11 +5,11 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DAOApi from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import { TapStore, waitForLoaded } from '../stores/DAOStores';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import TapForm from '../components/TapForm';
@@ -32,7 +32,9 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const { navigation, onTapSetupFinish, showBackButton } = this.injectedProps;
     const clientID = DAOApi.TapDAO.post(values);
-    const { id } = await waitForLoaded(() => TapStore.getByID(clientID));
+    const { id } = await DAOApi.TapDAO.waitForLoaded(dao =>
+      dao.fetchByID(clientID),
+    );
 
     navigation.navigate('newFlowSensor', {
       onTapSetupFinish,
@@ -48,11 +50,13 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton={showBackButton} title="New tap" />
-        <TapForm
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Create tap"
-          tap={initialValues}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <TapForm
+            onSubmit={this._onFormSubmit}
+            submitButtonLabel="Create tap"
+            tap={initialValues}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

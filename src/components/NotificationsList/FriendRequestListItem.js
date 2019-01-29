@@ -7,10 +7,10 @@ import * as React from 'react';
 import UserAvatar from '../../common/avatars/UserAvatar';
 import NotificationListItem from './NotificationListItem';
 
-type Props = {
+type Props = {|
   ...NotificationListItemProps,
   notification: NewFriendRequestNotification,
-};
+|};
 
 const FriendRequestListItem = (props: Props) => {
   const {

@@ -6,9 +6,9 @@ import * as React from 'react';
 import { observer } from 'mobx-react/native';
 import LoadingIndicator from './LoadingIndicator';
 
-type Props<TValue, TExtraProps = {}> = {
+type Props<TValue, TExtraProps = {}> = {|
   ...TExtraProps,
-  deletingComponent: React.ComponentType<TExtraProps>,
+  deletingComponent?: React.ComponentType<TExtraProps>,
   emptyComponent: React.ComponentType<TExtraProps>,
   errorComponent: React.ComponentType<{ ...TExtraProps, error: Error }>,
   loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
@@ -17,8 +17,8 @@ type Props<TValue, TExtraProps = {}> = {
   >,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
-  updatingComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
-};
+  updatingComponent?: React.ComponentType<{ ...TExtraProps, value: TValue }>,
+|};
 
 const LoaderComponent = observer(
   <TValue, TExtraProps>({
@@ -36,12 +36,13 @@ const LoaderComponent = observer(
       return <LoadingComponent {...rest} />;
     }
 
-    if (loader.isUpdating()) {
-      return <UpdatingComponent {...rest} value={loader.getValueEnforcing()} />;
+    if (loader.isUpdating() && UpdatingComponent) {
+      return <UpdatingComponent {...rest} value={loader.getValue()} />;
     }
 
     if (loader.isDeleting()) {
-      return <DeletingComponent {...rest} />;
+      const Component = DeletingComponent || LoadingComponent;
+      return <Component {...rest} />;
     }
 
     if (loader.hasError()) {

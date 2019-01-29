@@ -14,7 +14,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
-import { LocationStore, waitForLoaded } from '../stores/DAOStores';
+import { LocationStore } from '../stores/DAOStores';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
@@ -23,6 +23,7 @@ import LoaderComponent from '../common/LoaderComponent';
 import SnackBarStore from '../stores/SnackBarStore';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LocationForm from '../components/LocationForm';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   id: EntityID,
@@ -39,8 +40,9 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
   }
 
   _onFormSubmit = async (values: LocationMutator): Promise<void> => {
-    DAOApi.LocationDAO.put(nullthrows(values.id), values);
-    await waitForLoaded(() => this._locationLoader);
+    const id = nullthrows(values.id);
+    DAOApi.LocationDAO.put(id, values);
+    await DAOApi.LocationDAO.waitForLoaded(dao => dao.fetchByID(id));
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'Location edited.' });
   };
@@ -49,12 +51,14 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit location" />
-        <LoaderComponent
-          loadedComponent={LoadedComponent}
-          loader={this._locationLoader}
-          onFormSubmit={this._onFormSubmit}
-          updatingComponent={LoadedComponent}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <LoaderComponent
+            loadedComponent={LoadedComponent}
+            loader={this._locationLoader}
+            onFormSubmit={this._onFormSubmit}
+            updatingComponent={LoadedComponent}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

@@ -10,11 +10,11 @@ import CenteredModal from './CenteredModal';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
+  buttonStyle: { width: 100 },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  buttonStyle: { width: 100 },
   headerText: {
     ...TYPOGRAPHY.secondary,
     color: COLORS.textInverse,

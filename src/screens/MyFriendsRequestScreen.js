@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 @errorBoundary(<ErrorScreen showBackButton />)
 class MyFriendsRequestScreen extends React.Component<{}> {
   static navigationOptions = {
-    tabBarLabel: ({ tintColor }) => (
+    tabBarLabel: ({ tintColor }: { tintColor: string }) => (
       <View>
         <Text style={{ color: tintColor }}>Requests</Text>
         <Badges />
@@ -43,19 +43,18 @@ class MyFriendsRequestScreen extends React.Component<{}> {
   }
 }
 
-const Badges = observer(
-  () =>
-    FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
-      <View elevation={5} style={styles.container}>
-        <Badge
-          containerStyle={{
-            ...styles.badge,
-          }}
-          textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
-          value={FriendRequestsListStore.pendingRequestsCount}
-        />
-      </View>
-    ),
+const Badges = observer(() =>
+  FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
+    <View elevation={5} style={styles.container}>
+      <Badge
+        containerStyle={{
+          ...styles.badge,
+        }}
+        textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
+        value={FriendRequestsListStore.pendingRequestsCount}
+      />
+    </View>
+  ),
 );
 
 export default MyFriendsRequestScreen;

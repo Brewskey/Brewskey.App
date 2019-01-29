@@ -13,10 +13,9 @@ import type { FormProps } from '../common/form/types';
 import type { SimplePickerValue } from '../components/pickers/SimplePicker';
 
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
@@ -86,7 +85,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
       .reverse();
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           beverageId={beverage.id}
           containerStyle={styles.imagePickerContainer}
@@ -232,7 +231,7 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
             title={submitButtonLabel}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

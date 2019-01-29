@@ -6,11 +6,11 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { NavigationActions, StackActions } from 'react-navigation';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
-import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -36,7 +36,9 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     const { navigation, onDeviceCreated } = this.injectedProps;
     const clientID = DAOApi.DeviceDAO.post(values);
-    const device = await waitForLoaded(() => DeviceStore.getByID(clientID));
+    const device = await DAOApi.DeviceDAO.waitForLoaded(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'New Brewskey box created' });
 
     if (onDeviceCreated) {
@@ -63,12 +65,14 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton={showBackButton} title="New Brewskey box" />
-        <DeviceForm
-          device={initialValues}
-          hideLocation={hideLocation}
-          onSubmit={this._onFormSubmit}
-          submitButtonLabel="Create Device"
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <DeviceForm
+            device={initialValues}
+            hideLocation={hideLocation}
+            onSubmit={this._onFormSubmit}
+            submitButtonLabel="Create Device"
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

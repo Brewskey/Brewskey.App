@@ -10,9 +10,10 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { DeviceStore, waitForLoaded } from '../stores/DAOStores';
+import { DeviceStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -39,8 +40,10 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
   }
 
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
-    DAOApi.DeviceDAO.put(nullthrows(values.id), values);
-    await waitForLoaded(() => this._deviceLoader);
+    const id = nullthrows(values.id);
+    DAOApi.DeviceDAO.put(id, values);
+    await DAOApi.DeviceDAO.waitForLoaded(dao => dao.fetchByID(id));
+
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };
@@ -49,12 +52,14 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
-        <LoaderComponent
-          loadedComponent={LoadedComponent}
-          loader={this._deviceLoader}
-          onFormSubmit={this._onFormSubmit}
-          updatingComponent={LoadedComponent}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <LoaderComponent
+            loadedComponent={LoadedComponent}
+            loader={this._deviceLoader}
+            onFormSubmit={this._onFormSubmit}
+            updatingComponent={LoadedComponent}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

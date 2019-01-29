@@ -3,7 +3,6 @@
 import type { Notification } from '../../stores/NotificationsStore';
 
 import * as React from 'react';
-import { View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import List from '../../common/List';
 import ErrorBoundary from '../../common/ErrorBoundary';
@@ -23,20 +22,17 @@ class NotificationsList extends React.Component<{}> {
   _onNotificationReadEnd = (notification: Notification) =>
     NotificationsStore.setRead(notification.id);
 
-  _renderItem = ({ item }: { item: Notification }): React.Element<any> => {
-    const ListItemComponent = NotificationComponentByType[item.type] || View;
-
-    return (
-      <ErrorBoundary fallbackComponent={ErrorListItem}>
-        <ListItemComponent
-          notification={(item: any)}
-          onOpen={this._onItemOpen}
-          onPress={NotificationsStore.onNotificationPress}
-          onReadEnd={this._onNotificationReadEnd}
-        />
-      </ErrorBoundary>
-    );
-  };
+  _renderItem = ({ item }: { item: Notification }): React.Element<any> => (
+    <ErrorBoundary fallbackComponent={ErrorListItem}>
+      <NotificationComponentByType
+        isSwipeable
+        notification={item}
+        onOpen={this._onItemOpen}
+        onPress={NotificationsStore.onNotificationPress}
+        onReadEnd={this._onNotificationReadEnd}
+      />
+    </ErrorBoundary>
+  );
 
   render() {
     return (

@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   modal: {
+    alignItems: 'stretch',
     backgroundColor: 'rgb(35,131,147)',
+    flexDirection: 'column',
   },
 });
 
@@ -35,10 +37,13 @@ type Props = {|
   header?: React.Element<any>,
   isVisible: boolean,
   onHideModal: () => void,
+  width?: number | string,
 |};
 
 @observer
 class CenteredModal extends React.Component<Props> {
+  _onPress = () => {};
+
   render() {
     const {
       children,
@@ -46,12 +51,16 @@ class CenteredModal extends React.Component<Props> {
       header,
       isVisible,
       onHideModal,
+      width,
     } = this.props;
 
     return (
       <Modal isVisible={isVisible} onHideModal={onHideModal}>
         <View style={styles.container}>
-          <View style={styles.modal}>
+          <View
+            onStartShouldSetResponder={() => true}
+            style={[styles.modal, { maxHeight: '80%', width }]}
+          >
             {!header ? null : <View style={styles.header}>{header}</View>}
             <View style={[styles.content, contentContainerStyle]}>
               {children}

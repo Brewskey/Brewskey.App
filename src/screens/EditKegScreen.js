@@ -10,11 +10,12 @@ import { observer } from 'mobx-react/native';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
-import { KegStore, TapStore, waitForLoaded } from '../stores/DAOStores';
+import { KegStore, TapStore } from '../stores/DAOStores';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import LoaderComponent from '../common/LoaderComponent';
 import KegForm from '../components/KegForm';
 import SnackBarStore from '../stores/SnackBarStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {
   tapId: EntityID,
@@ -38,7 +39,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   _onReplaceSubmit = async (values: KegMutator): Promise<void> => {
     const clientID = DAOApi.KegDAO.post(values);
-    await waitForLoaded(() => KegStore.getByID(clientID));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Keg replaced' });
   };
@@ -46,31 +47,33 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onEditSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.put(id, values);
-    await waitForLoaded(() => KegStore.getByID(id));
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
 
   _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
-    DAOApi.KegDAO.floatKeg(id);
-    await waitForLoaded(() => KegStore.getByID(id));
+    DAOApi.KegDAO.floatKeg(id.toString());
+    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg floated' });
   };
 
   render() {
     return (
-      <LoaderComponent
-        emptyComponent={EmptyComponent}
-        loadedComponent={LoadedComponent}
-        loader={this._kegLoader}
-        onEditSubmit={this._onEditSubmit}
-        onFloatedSubmit={this._onFloatKegSubmit}
-        onReplaceSubmit={this._onReplaceSubmit}
-        tapId={this.injectedProps.tapId}
-        updatingComponent={LoadedComponent}
-      />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <LoaderComponent
+          emptyComponent={EmptyComponent}
+          loadedComponent={LoadedComponent}
+          loader={this._kegLoader}
+          onEditSubmit={this._onEditSubmit}
+          onFloatedSubmit={this._onFloatKegSubmit}
+          onReplaceSubmit={this._onReplaceSubmit}
+          tapId={this.injectedProps.tapId}
+          updatingComponent={LoadedComponent}
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -104,8 +107,13 @@ const LoadedComponent = ({
   />
 );
 
-const EmptyComponent = ({ onReplaceSubmit, tapId }: ExtraProps) => (
+const EmptyComponent = ({
+  onFloatedSubmit,
+  onReplaceSubmit,
+  tapId,
+}: ExtraProps) => (
   <KegForm
+    onFloatedSubmit={onFloatedSubmit}
     onSubmit={onReplaceSubmit}
     submitButtonLabel="Create keg"
     tapId={tapId}

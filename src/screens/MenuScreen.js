@@ -105,6 +105,11 @@ class MenuScreen extends React.Component<{}> {
               <MenuSeparator key="separator2" />,
             ]}
             <MenuNavigationButton
+              icon={{ name: 'credit-card' }}
+              routeName="payments"
+              title="Payment"
+            />
+            <MenuNavigationButton
               icon={{ name: 'help' }}
               routeName="help"
               title="Help"

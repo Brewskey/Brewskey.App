@@ -63,7 +63,10 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Location>): string => row.key;
 
   _onDeleteItemPress = async (item: Location): Promise<void> => {
-    await DAOApi.LocationDAO.deleteByID(item.id);
+    const clientID = DAOApi.LocationDAO.deleteByID(item.id);
+    await DAOApi.LocationDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The location was deleted' });
   };
 

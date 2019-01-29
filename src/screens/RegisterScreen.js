@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
@@ -13,7 +14,9 @@ class RegisterScreen extends React.Component<{}> {
     return (
       <Container>
         <Header showBackButton title="Register account" />
-        <RegisterForm />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <RegisterForm />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

@@ -16,6 +16,7 @@ import { COLORS } from '../theme';
 import NotificationsStore from '../stores/NotificationsStore';
 import SnackBarStore from '../stores/SnackBarStore';
 import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
+import nullthrows from 'nullthrows';
 
 const ENTER_ANIMATION_DURATION = 300;
 const EXIT_ANIMATION_DURATION = 300;
@@ -85,7 +86,8 @@ class SnackMessage extends React.Component<{}, State> {
   };
 
   _onLayout = event => {
-    if (SnackBarStore.currentMessage === null || this.state.height !== 0) {
+    const { currentMessage } = SnackBarStore;
+    if (currentMessage === null || this.state.height !== 0) {
       return;
     }
 
@@ -103,7 +105,7 @@ class SnackMessage extends React.Component<{}, State> {
         toValue: OFFSET,
       }),
       Animated.timing(this.state.animationValue, {
-        delay: SnackBarStore.currentMessage.duration,
+        delay: nullthrows(currentMessage).duration,
         duration: EXIT_ANIMATION_DURATION,
         toValue: -height,
       }),
@@ -150,18 +152,14 @@ const Content = (props: SnackBarMessage) => {
   if (props.content) {
     snackContent = props.content;
   } else if (props.notification) {
-    const { notification } = props;
-    const ListItemComponent = NotificationComponentByType[notification.type];
-
-    snackContent = (
-      <ListItemComponent
-        isSwipeable={false}
-        notification={notification}
-        onOpen={onItemOpen}
-        onPress={NotificationsStore.onNotificationPress}
-        onReadEnd={() => {}}
-      />
-    );
+    const componentProps = {
+      isSwipeable: false,
+      notification: props.notification,
+      onOpen: onItemOpen,
+      onPress: NotificationsStore.onNotificationPress,
+      onReadEnd: () => {},
+    };
+    snackContent = <NotificationComponentByType {...componentProps} />;
   } else {
     return null;
   }

@@ -5,6 +5,7 @@ import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react/native';
 import Container from '../../../common/Container';
@@ -31,7 +32,8 @@ type Props = {|
 
 @observer
 class HiddenWifiInput extends React.Component<Props> {
-  @observable _isExpanded: boolean = false;
+  @observable
+  _isExpanded: boolean = false;
 
   @action
   _toggleIsExpanded = () => {
@@ -43,15 +45,17 @@ class HiddenWifiInput extends React.Component<Props> {
 
     return (
       <Container style={styles.container}>
-        <TouchableOpacity onPress={this._toggleIsExpanded}>
-          <Text style={styles.title}>Hidden network</Text>
-        </TouchableOpacity>
-        {this._isExpanded && (
-          <HiddenWifiForm
-            error={wifiSetupLoader.getError()}
-            onSubmit={onConnectPress}
-          />
-        )}
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <TouchableOpacity onPress={this._toggleIsExpanded}>
+            <Text style={styles.title}>Hidden network</Text>
+          </TouchableOpacity>
+          {this._isExpanded && (
+            <HiddenWifiForm
+              error={wifiSetupLoader.getError()}
+              onSubmit={onConnectPress}
+            />
+          )}
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

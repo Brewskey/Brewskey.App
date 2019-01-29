@@ -64,7 +64,8 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _onDeleteItemPress = async (pour: Pour): Promise<void> => {
-    await DAOApi.PourDAO.deleteByID(pour.id);
+    const clientID = DAOApi.PourDAO.deleteByID(pour.id);
+    await DAOApi.PourDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

@@ -4,11 +4,11 @@ import type { Navigation } from '../types';
 import type { ResetPasswordFormValues } from '../components/ResetPasswordForm';
 
 import * as React from 'react';
+import DAOApi from 'brewskey.js-api';
 import { StyleSheet, Text } from 'react-native';
 import { observer } from 'mobx-react/native';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
-import AuthApi from '../AuthApi';
 import Header from '../common/Header';
 import ToggleStore from '../stores/ToggleStore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -36,7 +36,7 @@ class ResetPasswordScreen extends React.Component<Props> {
   _modalToggleStore: ToggleStore = new ToggleStore();
 
   _onFormSubmit = async ({ email }: ResetPasswordFormValues): Promise<void> => {
-    await AuthApi.resetPassword(email);
+    await DAOApi.Auth.resetPassword(email);
     this._modalToggleStore.toggleOn();
   };
 
@@ -49,13 +49,13 @@ class ResetPasswordScreen extends React.Component<Props> {
     return (
       <Container>
         <Header showBackButton title="Reset password" />
-        <SectionContent paddedHorizontal paddedVertical>
-          <Text style={styles.text}>
-            Enter your email address and we'll send a password reset email to
-            you.
-          </Text>
-        </SectionContent>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <SectionContent paddedHorizontal paddedVertical>
+            <Text style={styles.text}>
+              Enter your email address and we'll send a password reset email to
+              you.
+            </Text>
+          </SectionContent>
           <ResetPasswordForm onSubmit={this._onFormSubmit} />
           <ResetPasswordModal
             isVisible={this._modalToggleStore.isToggled}

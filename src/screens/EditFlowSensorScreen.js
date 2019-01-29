@@ -12,11 +12,12 @@ import { observer } from 'mobx-react/native';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
-import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
+import { FlowSensorStore } from '../stores/DAOStores';
 import FlowSensorForm from '../components/FlowSensorForm';
 import LoaderComponent from '../common/LoaderComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import SnackBarStore from '../stores/SnackBarStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -42,13 +43,15 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
   render() {
     const { tapId } = this.injectedProps;
     return (
-      <LoaderComponent
-        emptyComponent={EmptyComponent}
-        loadedComponent={LoadedComponent}
-        loader={this._flowSensorLoader}
-        tapId={tapId}
-        updatingComponent={LoadedComponent}
-      />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <LoaderComponent
+          emptyComponent={EmptyComponent}
+          loadedComponent={LoadedComponent}
+          loader={this._flowSensorLoader}
+          tapId={tapId}
+          updatingComponent={LoadedComponent}
+        />
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -77,10 +80,10 @@ class LoadedComponent extends InjectedComponent<
     if (initialFlowSensor.flowSensorType === values.flowSensorType) {
       const id = nullthrows(values.id);
       DAOApi.FlowSensorDAO.put(id, values);
-      await waitForLoaded(() => FlowSensorStore.getByID(id));
+      await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(id));
     } else {
       const clientID = DAOApi.FlowSensorDAO.post(values);
-      await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+      await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     }
     SnackBarStore.showMessage({ text: 'The flow sensor set' });
   };
@@ -105,7 +108,7 @@ class EmptyComponent extends InjectedComponent<
 > {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
   };
 
   render() {

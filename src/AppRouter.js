@@ -33,6 +33,7 @@ import NewFlowSensorCustomScreen from './screens/NewFlowSensorCustomScreen';
 import NewKegScreen from './screens/NewKegScreen';
 import NewLocationScreen from './screens/NewLocationScreen';
 import NewTapScreen from './screens/NewTapScreen';
+import PaymentsScreen from './screens/PaymentsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import TapDetailsScreen from './screens/TapDetailsScreen';
@@ -143,6 +144,7 @@ const AppRouter = createSwitchNavigator(
               },
               STACK_CONFIG,
             ),
+            payments: PaymentsScreen,
             help: HelpScreen,
             settings: createStackNavigator(
               {

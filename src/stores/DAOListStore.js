@@ -7,8 +7,9 @@ import { action, computed, observable } from 'mobx';
 import flattenArray from 'array-flatten';
 import { LoadObject } from 'brewskey.js-api';
 import { createRange } from '../utils';
+import nullthrows from 'nullthrows';
 
-export type Row<TEntity> = {|
+export type Row<TEntity: { id: EntityID }> = {|
   key: string,
   loader: LoadObject<TEntity>,
 |};
@@ -72,13 +73,11 @@ class DAOListStore<TEntity: { id: EntityID }> {
           )
           .map(
             ({ key }: Row<TEntity>, index: number): Row<TEntity> => {
-              let loader = LoadObject.loading();
+              let loader: LoadObject<TEntity> = LoadObject.loading();
 
               if (queryLoadObject.hasValue()) {
-                loader = queryLoadObject.map(
-                  (entries: Array<LoadObject<TEntity>>): LoadObject<TEntity> =>
-                    entries[index],
-                );
+                const entities = queryLoadObject.getValueEnforcing();
+                loader = nullthrows(entities[index]);
               } else if (queryLoadObject.hasError()) {
                 loader = LoadObject.withError(
                   queryLoadObject.getErrorEnforcing(),

@@ -6,10 +6,11 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
-import { TapStore, waitForLoaded } from '../stores/DAOStores';
+import { TapStore } from '../stores/DAOStores';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import NotificationsStore from '../stores/NotificationsStore';
@@ -42,7 +43,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
-    await waitForLoaded(() => TapStore.getByID(id));
+    await DAOApi.TapDAO.waitForLoaded(dao => dao.fetchByID(id));
     SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 
@@ -73,22 +74,24 @@ class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
     const { onTapFormSubmit, value } = this.props;
     return (
       <Container>
-        <Section bottomPadded>
-          <ListItem
-            hideChevron
-            onSwitch={this._onToggleNotifications}
-            switchButton
-            switched={NotificationsStore.getIsNotificationsEnabledForTap(
-              value.id,
-            )}
-            title="Notifications"
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <Section bottomPadded>
+            <ListItem
+              hideChevron
+              onSwitch={this._onToggleNotifications}
+              switchButton
+              switched={NotificationsStore.getIsNotificationsEnabledForTap(
+                value.id,
+              )}
+              title="Notifications"
+            />
+          </Section>
+          <TapForm
+            onSubmit={onTapFormSubmit}
+            submitButtonLabel="Edit tap"
+            tap={value}
           />
-        </Section>
-        <TapForm
-          onSubmit={onTapFormSubmit}
-          submitButtonLabel="Edit tap"
-          tap={value}
-        />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

@@ -75,7 +75,10 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Device>): string => row.key;
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
-    await DAOApi.DeviceDAO.deleteByID(item.id);
+    const clientID = DAOApi.DeviceDAO.deleteByID(item.id);
+    await DAOApi.DeviceDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
   };
 
@@ -139,7 +142,7 @@ const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Device, *>) => (
     onPress={onItemPress}
     rightIcon={
       <View style={styles.onlineIndicatorWrapper}>
-        <DeviceOnlineIndicator deviceID={item.id} />
+        <DeviceOnlineIndicator particleID={item.particleId} />
       </View>
     }
     title={item.name}

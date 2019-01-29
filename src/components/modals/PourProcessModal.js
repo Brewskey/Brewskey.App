@@ -6,6 +6,7 @@ import TouchableItem from '../../common/buttons/TouchableItem';
 import { observer } from 'mobx-react/native';
 import * as Progress from 'react-native-progress';
 import PourProcessStore from '../../stores/PourProcessStore';
+import PourProcessPaymentModal from './PourProcessPaymentModal';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
@@ -58,6 +59,17 @@ const styles = StyleSheet.create({
 
 @observer
 class PourProcessModal extends Component<{}> {
+  render() {
+    return PourProcessStore.shouldShowPaymentScreen ? (
+      <PourProcessPaymentModal />
+    ) : (
+      <PourProcessInputModal />
+    );
+  }
+}
+
+@observer
+class PourProcessInputModal extends Component<{}> {
   _formatText = () => PourProcessStore.currentSeconds;
 
   render() {
@@ -69,6 +81,7 @@ class PourProcessModal extends Component<{}> {
       isVisible,
       onHideModal,
     } = PourProcessStore;
+
     const headerText = isNFCEnabled
       ? 'Tap phone to pour'
       : 'Enter code to pour';
@@ -80,17 +93,16 @@ class PourProcessModal extends Component<{}> {
         isVisible={isVisible}
       >
         <View style={styles.root}>
-          {isNFCSupported &&
-            !isNFCEnabled && (
-              <TouchableItem
-                onPress={PourProcessStore.onEnableNFCPress}
-                style={styles.enableNFCContainer}
-              >
-                <Text style={styles.enableNFCText}>
-                  or press here to enable NFC on your device
-                </Text>
-              </TouchableItem>
-            )}
+          {isNFCSupported && !isNFCEnabled && (
+            <TouchableItem
+              onPress={PourProcessStore.onEnableNFCPress}
+              style={styles.enableNFCContainer}
+            >
+              <Text style={styles.enableNFCText}>
+                or press here to enable NFC on your device
+              </Text>
+            </TouchableItem>
+          )}
           <View style={styles.progressContainer}>
             {isLoading ? (
               <LoadingIndicator

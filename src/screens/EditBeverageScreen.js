@@ -14,6 +14,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import DAOApi from 'brewskey.js-api';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
 import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
 import { flushImageCache } from '../common/CachedImage';
@@ -47,8 +48,8 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     const { beverageImage, ...beverageMutator } = values;
     const id = nullthrows(values.id);
 
-    DAOApi.BeverageDAO.put(id, beverageMutator);
-    await waitForLoaded(() => this._beverageLoader);
+    const clientID = DAOApi.BeverageDAO.put(id, beverageMutator);
+    await DAOApi.BeverageDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     if (beverageImage) {
       await waitForLoaded(() =>
         UpdateBeverageImageStore.get(id, beverageImage),
@@ -65,12 +66,14 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />
-        <LoaderComponent
-          loadedComponent={LoadedComponent}
-          loader={this._beverageLoader}
-          onFormSubmit={this._onFormSubmit}
-          updatingComponent={LoadedComponent}
-        />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <LoaderComponent
+            loadedComponent={LoadedComponent}
+            loader={this._beverageLoader}
+            onFormSubmit={this._onFormSubmit}
+            updatingComponent={LoadedComponent}
+          />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

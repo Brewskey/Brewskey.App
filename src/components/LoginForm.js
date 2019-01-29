@@ -1,13 +1,12 @@
 // @flow
 
 import type { FormProps } from '../common/form/types';
-import type { UserCredentials } from '../AuthApi';
+import type { UserCredentials } from 'brewskey.js-api';
 
 import { observer } from 'mobx-react/native';
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import InjectedComponent from '../common/InjectedComponent';
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
@@ -52,7 +51,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
   render() {
     const { formError, invalid, submitting } = this.injectedProps;
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -94,7 +93,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
             title="Log in"
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

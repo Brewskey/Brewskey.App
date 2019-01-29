@@ -51,7 +51,8 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     });
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
-    await DAOApi.TapDAO.deleteByID(item.id);
+    const clientID = DAOApi.TapDAO.deleteByID(item.id);
+    await DAOApi.TapDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The tap was deleted' });
   };
 

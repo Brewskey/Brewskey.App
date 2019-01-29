@@ -5,20 +5,20 @@ import type { EntityID, LoadObject, ParticleAttributes } from 'brewskey.js-api';
 import * as React from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
-import { DeviceStore } from '../stores/DAOStores';
+import { CloudDeviceStore } from '../stores/DAOStores';
 import OverviewItem from '../common/OverviewItem2';
 import LoaderComponent from '../common/LoaderComponent';
 import DeviceOnlineIndicator from './DeviceOnlineIndicator';
 
 type Props = {|
-  deviceID: EntityID,
+  particleID: EntityID,
 |};
 
 @observer
 class DeviceOnlineOverviewItem extends React.Component<Props> {
   @computed
   get _onlineStatusLoader(): LoadObject<boolean> {
-    return DeviceStore.getParticleAttributes(this.props.deviceID).map(
+    return CloudDeviceStore.getOne(this.props.particleID).map(
       ({ connected }: ParticleAttributes): boolean => connected,
     );
   }
@@ -26,7 +26,7 @@ class DeviceOnlineOverviewItem extends React.Component<Props> {
   render() {
     return (
       <LoaderComponent
-        deviceID={this.props.deviceID}
+        particleID={this.props.particleID}
         errorComponent={ErrorComponent}
         loadedComponent={LoadedComponent}
         loader={this._onlineStatusLoader}
@@ -37,12 +37,12 @@ class DeviceOnlineOverviewItem extends React.Component<Props> {
 }
 
 type LoadingComponentProps = {
-  deviceID: EntityID,
+  particleID: EntityID,
 };
 
-const LoadingComponent = ({ deviceID }: LoadingComponentProps) => (
+const LoadingComponent = ({ particleID }: LoadingComponentProps) => (
   <OverviewItem
-    deviceID={deviceID}
+    particleID={particleID}
     rightComponent={DeviceOnlineIndicator}
     title="Online Status"
     value="Loading..."
@@ -50,14 +50,14 @@ const LoadingComponent = ({ deviceID }: LoadingComponentProps) => (
 );
 
 type ErrorComponentProps = {
-  deviceID: EntityID,
+  particleID: EntityID,
   error: Error,
 };
 
-const ErrorComponent = ({ deviceID }: ErrorComponentProps) => (
+const ErrorComponent = ({ particleID }: ErrorComponentProps) => (
   <OverviewItem
-    description="Ops! There was an error on checking online status."
-    deviceID={deviceID}
+    description="Oops! There was an error on checking online status."
+    particleID={particleID}
     rightComponent={DeviceOnlineIndicator}
     title="Online Status"
     value="Error!"
@@ -65,16 +65,16 @@ const ErrorComponent = ({ deviceID }: ErrorComponentProps) => (
 );
 
 type LoadedComponentProps = {
-  deviceID: EntityID,
+  particleID: EntityID,
   value: boolean,
 };
 
 const LoadedComponent = ({
-  deviceID,
+  particleID,
   value: connected,
 }: LoadedComponentProps) => (
   <OverviewItem
-    deviceID={deviceID}
+    particleID={particleID}
     description={
       !connected && 'Check that your device is powerd on and connected to WiFi'
     }

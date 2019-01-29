@@ -5,7 +5,6 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
-import { FlowSensorStore, waitForLoaded } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -13,6 +12,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import FlowSensorForm from '../components/FlowSensorForm';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -26,7 +26,7 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const { onFlowSensorCreated } = this.injectedProps;
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    await waitForLoaded(() => FlowSensorStore.getByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
     onFlowSensorCreated();
   };
 
@@ -35,7 +35,9 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Set tap sensor" />
-        <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+          <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
+        </KeyboardAwareScrollView>
       </Container>
     );
   }

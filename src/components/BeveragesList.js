@@ -61,7 +61,10 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Beverage>): string => row.key;
 
   _onDeleteItemPress = async (item: Beverage): Promise<void> => {
-    await DAOApi.BeverageDAO.deleteByID(item.id);
+    const clientID = DAOApi.BeverageDAO.deleteByID(item.id);
+    await DAOApi.BeverageDAO.waitForLoadedNullable(dao =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The beverage was deleted' });
   };
 

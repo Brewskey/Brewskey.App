@@ -7,10 +7,10 @@ import * as React from 'react';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import NotificationListItem from './NotificationListItem';
 
-type Props = {
+type Props = {|
   ...NotificationListItemProps,
   notification: LowKegLevelNotification,
-};
+|};
 
 const LowKegLevelListItem = (props: Props) => {
   const {

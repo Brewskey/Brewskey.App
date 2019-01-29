@@ -54,7 +54,7 @@ class WifiSetupStore {
   @computed
   get wifiSetupLoader(): LoadObject<void> {
     return WifiConfigureStore.getFromCache(this._wifiSetupLoaderCacheKey).map(
-      (): void => WifiConnectStore.get(),
+      () => WifiConnectStore.get(),
     );
   }
 

@@ -4,11 +4,11 @@ import type { Beverage, EntityID, Keg, KegMutator } from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react/native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
@@ -33,12 +33,11 @@ const validate = (values: KegMutator): { [key: string]: string } => {
   return errors;
 };
 
-const KEG_VALUES = Object.entries(KEG_NAME_BY_KEG_TYPE)
-  .sort(
-    (a, b) =>
-      MAX_OUNCES_BY_KEG_TYPE[a[0]] > MAX_OUNCES_BY_KEG_TYPE[b[0]] ? 1 : -1,
+const KEG_VALUES = Object.keys(KEG_NAME_BY_KEG_TYPE)
+  .sort((a, b) =>
+    MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1,
   )
-  .map(([type, name]: [any, any]) => ({ label: name, value: type }));
+  .map(kegType => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
 
 type Props = {|
   keg?: Keg,
@@ -64,12 +63,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     this.injectedProps.handleSubmit(nullthrows(this.props.onFloatedSubmit));
 
   render() {
-    const {
-      keg = {},
-      showReplaceButton,
-      submitButtonLabel,
-      tapId,
-    } = this.props;
+    const { keg, showReplaceButton, submitButtonLabel, tapId } = this.props;
     const {
       formError,
       invalid,
@@ -81,23 +75,23 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     const selectedKegTypeMaxOunces =
       MAX_OUNCES_BY_KEG_TYPE[values.kegType] || 0;
 
-    const isInitialKegType = keg.kegType === values.kegType;
+    const isInitialKegType = keg && keg.kegType === values.kegType;
 
     const initialStartingPercentage =
-      isInitialKegType && selectedKegTypeMaxOunces
+      isInitialKegType && selectedKegTypeMaxOunces && keg
         ? (keg.maxOunces / selectedKegTypeMaxOunces) * 100
         : 100;
 
     const currentPercentage = !keg ? 100 : calculateKegLevel(keg);
     const shouldShowFloatedButton =
-      currentPercentage < 10 && keg.floatedDate === null;
+      currentPercentage < 10 && keg && keg.floatedDate === null;
 
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <View>
         <FormField
           component={BeveragePicker}
           disabled={submitting}
-          initialValue={keg.beverage}
+          initialValue={keg && keg.beverage}
           name="beverageId"
           parseOnSubmit={(value: Beverage): EntityID => value.id}
         />
@@ -118,7 +112,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
           name="startingPercentage"
         />
         <FormField initialValue={tapId} name="tapId" />
-        <FormField initialValue={keg.id} name="id" />
+        <FormField initialValue={keg && keg.id} name="id" />
         <FormValidationMessage>{formError}</FormValidationMessage>
         {!showReplaceButton ? null : (
           <SectionContent paddedVertical>
@@ -150,7 +144,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
             transparent={showReplaceButton}
           />
         </SectionContent>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }
