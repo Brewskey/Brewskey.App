@@ -55,6 +55,7 @@ class PourProcessPaymentModal extends Component<{}> {
   _onContinuePress = () => {
     if (this._store.hasCreditCardDetails) {
       // continue normal payment
+      PourProcessStore.startPaymentPour();
     } else {
       PourProcessStore.onHideModal();
       NavigationService.navigate('payments');
@@ -86,7 +87,7 @@ class PourProcessPaymentModal extends Component<{}> {
             style={styles.loadingIndicator}
           />
         ) : (
-          <View onStartShouldSetResponder={() => true} style={styles.content}>
+          <View style={styles.content}>
             <View style={{ marginBottom: 16 }}>
               <Text style={styles.copy}>
                 {taps.length > 1 ? 'These taps have' : 'This tap has'} payments

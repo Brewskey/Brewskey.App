@@ -37,6 +37,8 @@ class PourProcessStore {
   totp: string = '';
   @observable
   shouldShowPaymentScreen: boolean = false;
+  @observable
+  _didAuthorizePayment: boolean = false;
 
   constructor() {
     NfcManager.start().catch(() => {
@@ -61,8 +63,8 @@ class PourProcessStore {
   @action
   onShowModal = async () => {
     this._setIsLoading(true);
-    this.shouldShowPaymentScreen = true;
-    this.deviceID = 25;
+    // this.shouldShowPaymentScreen = true;
+    // this.deviceID = 25;
 
     let isNFCEnabled = false;
 
@@ -110,6 +112,14 @@ class PourProcessStore {
     this.setTotp('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
+    this._didAuthorizePayment = false;
+    this.deviceID = null;
+  };
+
+  @action
+  startPaymentPour = () => {
+    this._didAuthorizePayment = true;
+    this._sendPourAuthorization();
   };
 
   @action
@@ -124,52 +134,26 @@ class PourProcessStore {
     this._processPour();
   };
 
-  _processPour = async (deviceID?: EntityID) => {
+  _processPour = async () => {
     try {
       this._setIsLoading(true);
       this._setErrorText('');
 
-      const headers = {
-        Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
-        'Content-Type': 'application/json',
-      };
-
-      const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
-      const body = JSON.stringify({
-        ...coordinates,
-        deviceId: deviceID || undefined,
-        totp: this.totp,
-      });
-
+      const payload = await this._getAuthPayload();
       const paymentResult = await fetchJSON(
         `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
-        {
-          body,
-          headers,
-          method: 'POST',
-        },
+        payload,
       );
 
       if (paymentResult.shouldAskForPayment) {
-        await this._showPayments(paymentResult.deviceID);
+        this._showPayments(paymentResult.deviceID);
+        return;
       }
 
-      await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour/`, {
-        body,
-        headers,
-        method: 'POST',
-      });
-      this.setTotp('');
-      this.onHideModal();
-
-      SnackBarStore.showMessage({
-        duration: 3000,
-        style: 'success',
-        text: 'You can start pouring now!',
-      });
+      this.deviceID = paymentResult.deviceID;
+      await this._sendPourAuthorization();
     } catch (error) {
-      if (!deviceID) {
+      if (!this.deviceID) {
         this._setErrorText(
           'The passcode you entered was incorrect or expired.  Please try a new code.',
         );
@@ -179,6 +163,57 @@ class PourProcessStore {
     } finally {
       this._setIsLoading(false);
     }
+  };
+
+  _sendPourAuthorization = async () => {
+    try {
+      this._setIsLoading(true);
+      this._setErrorText('');
+
+      const payload = await this._getAuthPayload();
+
+      await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour/`, payload);
+      this.setTotp('');
+      this.onHideModal();
+
+      SnackBarStore.showMessage({
+        duration: 3000,
+        style: 'success',
+        text: 'You can start pouring now!',
+      });
+    } catch (error) {
+      if (!this.deviceID) {
+        this._setErrorText(
+          'The passcode you entered was incorrect or expired.  Please try a new code.',
+        );
+      } else {
+        this._setErrorText('An error during processing pour');
+      }
+    } finally {
+      this._setIsLoading(false);
+    }
+  };
+
+  _getAuthPayload = async () => {
+    const headers = {
+      Accept: 'application/json',
+      Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+      'Content-Type': 'application/json',
+    };
+
+    const coordinates = await waitForLoaded(() => GPSCoordinatesStore.get());
+    const body = JSON.stringify({
+      ...coordinates,
+      deviceId: this.deviceID || undefined,
+      didAuthorizePayment: this._didAuthorizePayment,
+      totp: this.totp,
+    });
+
+    return {
+      body,
+      headers,
+      method: 'POST',
+    };
   };
 
   @action
@@ -219,9 +254,9 @@ class PourProcessStore {
     if (index < 0) {
       return;
     }
-    const deviceId = nullthrows(tagValue.substring(index).match(/\d+/))[0];
 
-    this._processPour(deviceId);
+    [this.deviceID] = nullthrows(tagValue.substring(index).match(/\d+/));
+    this._processPour();
   };
 
   @action
@@ -246,7 +281,6 @@ class PourProcessStore {
   _showPayments = (deviceID: EntityID) => {
     this.deviceID = deviceID;
     this.shouldShowPaymentScreen = true;
-    return new Promise();
   };
 }
 
