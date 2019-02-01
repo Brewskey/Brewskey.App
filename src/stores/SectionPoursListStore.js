@@ -140,9 +140,8 @@ class SectionPoursListStore {
   @computed
   get _extendedPours(): Array<Pour> {
     return flattenArray(
-      this._pageLoaders.map(
-        pageLoadObject =>
-          pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
+      this._pageLoaders.map(pageLoadObject =>
+        pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
       ),
     );
   }

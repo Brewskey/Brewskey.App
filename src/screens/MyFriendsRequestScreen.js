@@ -43,19 +43,18 @@ class MyFriendsRequestScreen extends React.Component<{}> {
   }
 }
 
-const Badges = observer(
-  () =>
-    FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
-      <View elevation={5} style={styles.container}>
-        <Badge
-          containerStyle={{
-            ...styles.badge,
-          }}
-          textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
-          value={FriendRequestsListStore.pendingRequestsCount}
-        />
-      </View>
-    ),
+const Badges = observer(() =>
+  FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
+    <View elevation={5} style={styles.container}>
+      <Badge
+        containerStyle={{
+          ...styles.badge,
+        }}
+        textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
+        value={FriendRequestsListStore.pendingRequestsCount}
+      />
+    </View>
+  ),
 );
 
 export default MyFriendsRequestScreen;
