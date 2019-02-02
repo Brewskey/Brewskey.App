@@ -75,6 +75,7 @@ class PourProcessStore {
       isNFCEnabled = this.isNFCSupported;
     }
 
+    NfcManager.unregisterTagEvent();
     isNFCEnabled &&
       NfcManager.registerTagEvent(
         this._onNFCTagDiscovered,
