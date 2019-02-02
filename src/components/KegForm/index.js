@@ -34,8 +34,8 @@ const validate = (values: KegMutator): { [key: string]: string } => {
 };
 
 const KEG_VALUES = Object.keys(KEG_NAME_BY_KEG_TYPE)
-  .sort(
-    (a, b) => (MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1),
+  .sort((a, b) =>
+    MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1,
   )
   .map(kegType => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
 
