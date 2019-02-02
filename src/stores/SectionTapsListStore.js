@@ -123,9 +123,8 @@ class SectionTapsListStore {
   @computed
   get _taps(): Array<Tap> {
     return flattenArray(
-      this._pageLoadObjects.map(
-        pageLoadObject =>
-          pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
+      this._pageLoadObjects.map(pageLoadObject =>
+        pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
       ),
     );
   }

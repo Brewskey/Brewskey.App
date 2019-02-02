@@ -26,8 +26,10 @@ const initialAuthState = {
 };
 
 class AuthStore {
-  @observable _authState: AuthState = initialAuthState;
-  @observable isReady: boolean = false;
+  @observable
+  _authState: AuthState = initialAuthState;
+  @observable
+  isReady: boolean = false;
 
   constructor() {
     (async () => {

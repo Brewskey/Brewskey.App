@@ -57,7 +57,10 @@ class CenteredModal extends React.Component<Props> {
     return (
       <Modal isVisible={isVisible} onHideModal={onHideModal}>
         <View style={styles.container}>
-          <View style={[styles.modal, { maxHeight: '80%', width }]}>
+          <View
+            onStartShouldSetResponder={() => true}
+            style={[styles.modal, { maxHeight: '80%', width }]}
+          >
             {!header ? null : <View style={styles.header}>{header}</View>}
             <View style={[styles.content, contentContainerStyle]}>
               {children}
