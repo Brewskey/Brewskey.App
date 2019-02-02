@@ -71,7 +71,7 @@
     "sorting/sort-object-props": [
       2,
       {
-        "ignoreCase": true,
+        "ignoreCase": false,
         "ignoreMethods": false
       }
     ]
