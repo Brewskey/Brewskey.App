@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import BrewskeyLogo from '../resources/brewskey-large.png';
 import LoginForm from '../components/LoginForm';
 import { COLORS } from '../theme';
+import AuthStore from '../stores/AuthStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -54,7 +55,7 @@ class LoginScreen extends React.Component<Props> {
             style={styles.image}
           />
         </View>
-        <LoginForm />
+        <LoginForm isInverse onSubmit={AuthStore.login} />
         <Button onPress={this._onRegisterPress} title="Register" transparent />
         <Button
           onPress={this._onForgotPasswordPress}
