@@ -36,6 +36,7 @@ class PaymentsScreenStore {
 
     try {
       const { tokenId } = await stripe.createTokenWithCard(formParams);
+      PaymentsDAO.flushCache();
       PaymentsDAO.addPaymentMethod(tokenId);
       await PaymentsDAO.waitForLoadedNullable(dao => dao.get());
       SnackBarStore.showMessage({
