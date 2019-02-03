@@ -1,5 +1,7 @@
 // @flow
 
+import type { UserCredentials } from 'brewskey.js-api';
+
 import NfcManager, { Ndef } from 'react-native-nfc-manager';
 import { action, observable, runInAction } from 'mobx';
 import DAOApi from 'brewskey.js-api';
@@ -12,13 +14,9 @@ class NFCWriterStore {
   @observable
   isNFCSupported: boolean = true;
   @observable
-  userName: string;
-  @observable
-  password: string;
-  @observable
   status: NFCWriterStoreStatus = 'instructions';
   @observable
-  _token: string = null;
+  _token: ?string = null;
 
   constructor() {
     this.status = 'instructions';
@@ -30,22 +28,14 @@ class NFCWriterStore {
   }
 
   @action
-  onBeginUserLogin() {
+  onBeginUserLogin = () => {
     this.status = 'login';
     this._resetValues();
-  }
+  };
 
   @action
-  async onAuthenticateUser() {
-    let accessToken = null;
-    try {
-      ({ accessToken } = await DAOApi.Auth.login({
-        password: this.password,
-        userName: this.userName,
-      }));
-    } catch (error) {
-      // form errors
-    }
+  onAuthenticateUser = async (userCredentials: UserCredentials) => {
+    const { accessToken } = await DAOApi.Auth.login(userCredentials);
 
     try {
       // Use token to grab auth for NFC
@@ -64,6 +54,7 @@ class NFCWriterStore {
       );
 
       this._token = await response.text();
+      this._token = this._token.replace('"', '');
     } catch (error) {
       SnackBarStore.showMessage({
         style: 'danger',
@@ -72,34 +63,38 @@ class NFCWriterStore {
     }
 
     this._enableNFCWriting();
-  }
+  };
 
   @action
-  onFinished() {
+  onFinished = () => {
     this._resetValues();
-  }
+  };
 
   @action
-  async _enableNFCWriting() {
+  _enableNFCWriting = async () => {
     this.status = 'writing';
 
     await NfcManager.registerTagEvent(this._onTagDiscovered);
-  }
+  };
 
   @action
-  async _onTagDiscovered() {
+  _onTagDiscovered = async () => {
     const payload = Ndef.encodeMessage([Ndef.textRecord(this._token)]);
 
-    await NfcManager.writeNdefMessage(payload);
-  }
+    await NfcManager.requestNdefWrite(payload);
+
+    SnackBarStore.showMessage({
+      style: 'success',
+      text: "You've successfully written to your card.",
+    });
+  };
 
   @action
-  _resetValues() {
+  _resetValues = () => {
     this._token = null;
-    this.userName = null;
-    this.password = null;
+    NfcManager.cancelNdefWrite();
     NfcManager.unregisterTagEvent();
-  }
+  };
 }
 
 export default NFCWriterStore;

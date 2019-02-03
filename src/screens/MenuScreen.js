@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react/native';
 import AppSettingsStore from '../stores/AppSettingsStore';
 import ErrorScreen from '../common/ErrorScreen';
@@ -104,6 +104,14 @@ class MenuScreen extends React.Component<{}> {
               />,
               <MenuSeparator key="separator2" />,
             ]}
+            {Platform.OS !== 'android' ? null : (
+              <MenuNavigationButton
+                icon={{ name: 'nfc' }}
+                routeName="writeNFC"
+                title="Setup NFC Cards"
+              />
+            )}
+
             <MenuNavigationButton
               icon={{ name: 'credit-card' }}
               routeName="payments"

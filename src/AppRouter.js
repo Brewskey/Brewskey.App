@@ -44,6 +44,7 @@ import MenuScreen from './screens/MenuScreen';
 import StatsScreen from './screens/StatsScreen';
 import HelpScreen from './screens/HelpScreen';
 import MyFriendsScreen from './screens/MyFriendsScreen';
+import WriteNFCScreen from './screens/WriteNFCScreen';
 
 import NuxLocationScreen from './screens/NuxLocationScreen';
 import NuxWifiSetupScreen from './screens/NuxWifiScreen';
@@ -144,6 +145,7 @@ const AppRouter = createSwitchNavigator(
               },
               STACK_CONFIG,
             ),
+            writeNFC: WriteNFCScreen,
             payments: PaymentsScreen,
             help: HelpScreen,
             settings: createStackNavigator(
