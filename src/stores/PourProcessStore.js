@@ -22,7 +22,7 @@ class PourProcessStore {
   @observable
   currentSeconds: number = 0;
   @observable
-  deviceID: EntityID = 0;
+  deviceID: ?EntityID = 0;
   @observable
   errorText: string = '';
   @observable
@@ -77,7 +77,6 @@ class PourProcessStore {
       isNFCEnabled = this.isNFCSupported;
     }
 
-    NfcManager.unregisterTagEvent();
     isNFCEnabled &&
       NfcManager.registerTagEvent(
         this._onNFCTagDiscovered,
