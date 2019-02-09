@@ -54,7 +54,7 @@ class NFCWriterStore {
       );
 
       this._token = await response.text();
-      this._token = this._token.replace('"', '');
+      this._token = this._token.replace(/"/g, '');
     } catch (error) {
       SnackBarStore.showMessage({
         style: 'danger',
