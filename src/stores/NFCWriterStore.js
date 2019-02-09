@@ -53,8 +53,8 @@ class NFCWriterStore {
         },
       );
 
-      this._token = await response.text();
-      this._token = this._token.replace(/"/g, '');
+      const { token } = await response.json();
+      this._token = token;
     } catch (error) {
       SnackBarStore.showMessage({
         style: 'danger',
@@ -74,19 +74,42 @@ class NFCWriterStore {
   _enableNFCWriting = async () => {
     this.status = 'writing';
 
-    await NfcManager.registerTagEvent(this._onTagDiscovered);
+    await NfcManager.registerTagEvent(() => {});
+    // Artificial wait to allow Android to get ready.
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    this._requestWriteTag();
   };
 
   @action
-  _onTagDiscovered = async () => {
+  _requestWriteTag = async () => {
     const payload = Ndef.encodeMessage([Ndef.textRecord(this._token)]);
 
-    await NfcManager.requestNdefWrite(payload);
+    // First try to format the card
+    // console.log('1');
+    // const isFormattable = await NfcManager.isSupported('NdefFormatable');
+    // console.log('2');
 
-    SnackBarStore.showMessage({
-      style: 'success',
-      text: "You've successfully written to your card.",
-    });
+    try {
+      await NfcManager.requestNdefWrite(payload);
+
+      SnackBarStore.showMessage({
+        style: 'success',
+        text: "You've successfully written to your card.",
+      });
+    } catch (error) {
+      if (this._token == null) {
+        return;
+      }
+
+      SnackBarStore.showMessage({
+        style: 'danger',
+        text: "Card didn't write. Try again!",
+      });
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    this._requestWriteTag();
   };
 
   @action
