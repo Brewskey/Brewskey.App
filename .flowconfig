@@ -78,5 +78,5 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 ; custom options
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
-[version]
-^0.81.0
+; [version]
+; ^0.81.0

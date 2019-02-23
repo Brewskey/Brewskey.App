@@ -11,7 +11,6 @@ import InjectedComponent from '../common/InjectedComponent';
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
 import { FormField, form } from '../common/form';
-import AuthStore from '../stores/AuthStore';
 import { COLORS } from '../theme';
 import TextField from './TextField';
 
@@ -40,16 +39,20 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = FormProps;
+type InjectedProps = {|
+  ...FormProps,
+  isInverse: boolean,
+  onSubmit: (values: any) => void,
+|};
 
 @form({ validate })
 @observer
 class LoginForm extends InjectedComponent<InjectedProps> {
   _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(AuthStore.login);
+    this.injectedProps.handleSubmit(this.injectedProps.onSubmit);
 
   render() {
-    const { formError, invalid, submitting } = this.injectedProps;
+    const { formError, invalid, isInverse, submitting } = this.injectedProps;
     return (
       <View>
         <FormField
@@ -57,13 +60,13 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          inputStyle={styles.input}
+          inputStyle={isInverse ? styles.input : undefined}
           label="User name"
-          labelStyle={styles.label}
+          labelStyle={isInverse ? styles.label : undefined}
           name="userName"
           nextFocusTo="password"
-          selectionColor={COLORS.textInverse}
-          underlineColorAndroid={COLORS.secondary}
+          selectionColor={isInverse ? COLORS.textInverse : undefined}
+          underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
         <FormField
@@ -71,14 +74,14 @@ class LoginForm extends InjectedComponent<InjectedProps> {
           autoCorrect={false}
           component={TextField}
           disabled={submitting}
-          inputStyle={styles.input}
+          inputStyle={isInverse ? styles.input : null}
           label="Password"
-          labelStyle={styles.label}
+          labelStyle={isInverse ? styles.label : null}
           name="password"
           onSubmitEditing={this._onSubmitButtonPress}
           secureTextEntry
-          selectionColor={COLORS.textInverse}
-          underlineColorAndroid={COLORS.secondary}
+          selectionColor={isInverse ? COLORS.textInverse : undefined}
+          underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
         <FormValidationMessage labelStyle={styles.validationText}>
@@ -89,7 +92,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
             disabled={submitting || invalid}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
-            secondary
+            secondary={isInverse}
             title="Log in"
           />
         </SectionContent>

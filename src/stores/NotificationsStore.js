@@ -17,7 +17,6 @@ import {
   observable,
   reaction,
   runInAction,
-  spy,
   when,
 } from 'mobx';
 import PushNotification from 'react-native-push-notification';
@@ -94,15 +93,6 @@ class NotificationsStore {
       this._rehydrateState();
     });
 
-    PushNotification.configure({
-      onNotification: this._onRawNotification,
-      onRegister: result => {
-        this._deviceToken = result.token;
-        this._registerToken();
-      },
-      senderID: '394986866677',
-    });
-
     reaction(
       () => this._disabledTapIDs,
       (disabledTapIDs: Array<EntityID>) => {
@@ -143,6 +133,15 @@ class NotificationsStore {
           this._cleanState();
         } else {
           // calls on login and on every app start
+          PushNotification.configure({
+            onNotification: this._onRawNotification,
+            onRegister: result => {
+              this._deviceToken = result.token;
+              this._registerToken();
+            },
+            senderID: '394986866677',
+          });
+
           await this._rehydrateState();
           this.setIsReady(true);
         }
@@ -151,11 +150,11 @@ class NotificationsStore {
     );
 
     // calls only login
-    spy(event => {
-      if (event.type === 'action' && event.name === 'loginSuccess') {
-        this._registerToken();
-      }
-    });
+    // spy(event => {
+    //   if (event.type === 'action' && event.name === 'loginSuccess') {
+    //     this._registerToken();
+    //   }
+    // });
   }
 
   @computed
