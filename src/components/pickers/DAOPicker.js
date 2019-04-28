@@ -50,6 +50,7 @@ type Props<TEntity, TMultiple> = {
   renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   searchBy: string,
   selectionColor?: string,
+  shouldUseSearchQuery: boolean,
   stringValueExtractor?: (item: TEntity) => string,
   underlineColorAndroid?: string,
   validationTextStyle?: Style,
@@ -65,6 +66,7 @@ class DAOPicker<
   static defaultProps = {
     queryOptions: {},
     searchBy: 'name',
+    shouldUseSearchQuery: false,
   };
 
   _listStore: DAOListStore<TEntity> = new DAOListStore(this.props.daoStore);
@@ -78,18 +80,22 @@ class DAOPicker<
   });
 
   componentDidMount() {
-    const { queryOptions, searchBy } = this.props;
+    const { queryOptions, searchBy, shouldUseSearchQuery } = this.props;
     this._listStore.initialize(queryOptions);
 
     autorun(() => {
       this._listStore.setQueryOptions({
         ...queryOptions,
-        filters: [
-          ...(queryOptions.filters || []),
-          DAOApi.createFilter(searchBy).contains(
-            this._searchTextStore.debouncedText,
-          ),
-        ],
+        ...(!shouldUseSearchQuery
+          ? {
+              filters: [
+                ...(queryOptions.filters || []),
+                DAOApi.createFilter(searchBy).contains(
+                  this._searchTextStore.debouncedText,
+                ),
+              ],
+            }
+          : { search: this._searchTextStore.debouncedText }),
       });
 
       this._listStore.reset();
