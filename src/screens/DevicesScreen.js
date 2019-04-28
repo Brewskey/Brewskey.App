@@ -3,6 +3,7 @@
 import type { Navigation } from '../types';
 
 import * as React from 'react';
+import { AppState } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import DAOApi from 'brewskey.js-api';
@@ -25,13 +26,23 @@ type InjectedProps = {|
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
   componentDidMount() {
+    AppState.addEventListener('change', this._onAppStateChange);
     DAOApi.CloudDeviceDAO.flushCache();
     DAOApi.CloudDeviceDAO.startOnlineStatusListener();
   }
 
   componentWillUnmount() {
+    AppState.removeEventListener('change', this._onAppStateChange);
     DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
   }
+
+  _onAppStateChange = appState => {
+    if (appState === 'active') {
+      DAOApi.CloudDeviceDAO.startOnlineStatusListener();
+    } else {
+      DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
+    }
+  };
 
   _onWifiSetupButtonPress = () =>
     this.injectedProps.navigation.navigate('wifiSetup');

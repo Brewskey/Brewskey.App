@@ -21,7 +21,7 @@ import stripe from 'tipsi-stripe';
 
 stripe.setOptions({
   androidPayMode: 'test', // Android only
-  // merchantId: 'MERCHANT_ID', // Optional
+  merchantId: 'merchant.com.brewskey.app', // Optional
   publishableKey: 'pk_test_B8kBbgSzIHam4hf1RRNC2WRf',
 });
 
