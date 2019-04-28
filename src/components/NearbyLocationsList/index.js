@@ -65,6 +65,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     const {
       currentKeg,
       device: { name: deviceName },
+      name,
       tapNumber,
     } = item;
 
@@ -99,7 +100,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
           item={item}
           onPress={this._onItemPress}
           title={`${tapNumber} - ${beverageName}`}
-          subtitle={deviceName}
+          subtitle={(name != null ? `${name} - ` : '') + deviceName}
         />
       </Fragment>
     );

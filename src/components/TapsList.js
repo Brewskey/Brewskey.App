@@ -52,9 +52,11 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Tap>): string => row.key;
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
+    DAOApi.TapDAO.flushQueryCaches();
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
     await DAOApi.TapDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
   };
+
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });
     nullthrows(this._swipeableListRef).resetOpenRow();

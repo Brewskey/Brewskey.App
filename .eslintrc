@@ -54,6 +54,7 @@
     "no-return-assign": 0,
     "no-underscore-dangle": 0,
     "no-unused-expressions": 0,
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_", "ignoreRestSiblings": true }],
     "no-use-before-define": 0,
     "react-native/no-color-literals": 0,
     "react-native/no-inline-styles": 0,

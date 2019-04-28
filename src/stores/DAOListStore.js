@@ -77,7 +77,13 @@ class DAOListStore<TEntity: { id: EntityID }> {
 
               if (queryLoadObject.hasValue()) {
                 const entities = queryLoadObject.getValueEnforcing();
-                loader = nullthrows(entities[index]);
+                if (entities.length) {
+                  loader = nullthrows(entities[index]);
+
+                  if (!(loader instanceof LoadObject)) {
+                    loader = LoadObject.withValue(loader);
+                  }
+                }
               } else if (queryLoadObject.hasError()) {
                 loader = LoadObject.withError(
                   queryLoadObject.getErrorEnforcing(),

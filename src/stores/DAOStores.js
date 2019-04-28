@@ -262,6 +262,22 @@ class $KegStore extends DAOStore<Keg> {
   }
 }
 
+class $BeverageSearchStore extends DAOStore<Beverage> {
+  constructor() {
+    super(DAOApi.BeverageDAO);
+  }
+
+  getMany(
+    queryOptions: ?QueryOptions,
+  ): LoadObject<Array<LoadObject<Beverage>>> {
+    return this.__callDAOFunction('search', queryOptions);
+  }
+
+  count(_: ?QueryOptions): LoadObject<number> {
+    return LoadObject.withValue(100);
+  }
+}
+
 class $CloudDeviceStore extends DAOStore<CloudDevice> {
   constructor() {
     super((DAOApi.CloudDeviceDAO: $FlowFixMe));
@@ -303,6 +319,7 @@ export const AvailabilityStore: DAOStore<Availability> = new DAOStore(
 export const BeverageStore: DAOStore<Beverage> = new DAOStore(
   DAOApi.BeverageDAO,
 );
+export const BeverageSearchStore: $BeverageSearchStore = new $BeverageSearchStore();
 export const CloudDeviceStore: $CloudDeviceStore = new $CloudDeviceStore();
 export const DeviceStore: $DeviceStore = new $DeviceStore(DAOApi.DeviceDAO);
 export const GlassStore: DAOStore<Glass> = new DAOStore(DAOApi.GlassDAO);

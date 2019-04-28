@@ -39,6 +39,8 @@ class PourProcessStore {
   shouldShowPaymentScreen: boolean = false;
   @observable
   _didAuthorizePayment: boolean = false;
+  @observable
+  _hasReadTag: boolean = false;
 
   constructor() {
     NfcManager.start().catch(() => {
@@ -77,13 +79,18 @@ class PourProcessStore {
       isNFCEnabled = this.isNFCSupported;
     }
 
-    NfcManager.unregisterTagEvent();
-    isNFCEnabled &&
+    if (isNFCEnabled) {
       NfcManager.registerTagEvent(
         this._onNFCTagDiscovered,
         'Tap Brewskey Box',
         true,
+        // {
+        //   invalidateAfterFirstRead: true,
+        //   isReaderModeEnabled: true,
+        //   readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+        // },
       );
+    }
 
     this._startTotpTimer();
 
@@ -107,13 +114,16 @@ class PourProcessStore {
   @action
   onHideModal = () => {
     GPSCoordinatesStore.flushCache();
-    this.isNFCEnabled && NfcManager.unregisterTagEvent();
+    if (this.isNFCEnabled) {
+      NfcManager.unregisterTagEvent();
+    }
 
     this._stopTotpTimer();
     this.setTotp('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
     this._didAuthorizePayment = false;
+    this._hasReadTag = false;
     this.deviceID = null;
   };
 
@@ -228,6 +238,11 @@ class PourProcessStore {
   };
 
   _onNFCTagDiscovered = (tag: Object) => {
+    if (this._hasReadTag) {
+      return;
+    }
+
+    this._hasReadTag = true;
     let payload;
     if (tag.ndefMessage) {
       // eslint-disable-next-line prefer-destructuring

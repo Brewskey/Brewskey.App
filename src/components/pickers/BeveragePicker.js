@@ -5,7 +5,7 @@ import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { BeverageStore } from '../../stores/DAOStores';
+import { BeverageSearchStore } from '../../stores/DAOStores';
 import LoaderRow from '../../common/LoaderRow';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import SelectableListItem from '../../common/SelectableListItem';
@@ -39,7 +39,7 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
     return (
       <DAOPicker
         {...this.props}
-        daoStore={BeverageStore}
+        daoStore={BeverageSearchStore}
         headerTitle={`Select Beverage${multiple ? 's' : ''}`}
         label={`Beverage${multiple ? 's' : ''}`}
         queryOptions={{
