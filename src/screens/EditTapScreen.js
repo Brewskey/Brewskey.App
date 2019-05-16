@@ -46,12 +46,12 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   static router = EditTapRouter.router;
 
   render() {
-    const { id, navigation } = this.injectedProps;
+    const { id } = this.injectedProps;
 
     return (
       <Container>
         <Header showBackButton title="Edit Tap" />
-        <EditTapRouter screenProps={{ tapId: id }} navigation={navigation} />
+        <EditTapRouter screenProps={{ tapId: id }} />
       </Container>
     );
   }

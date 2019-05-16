@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TEntity, TMultiple: boolean> = {|
+  description?: string,
   error?: ?string,
   inputStyle?: Style,
   label: string,
@@ -50,6 +51,7 @@ class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
 
   render() {
     const {
+      description,
       error,
       inputStyle,
       label,
@@ -61,6 +63,7 @@ class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
 
     return (
       <PickerInput
+        description={description}
         labelStyle={labelStyle}
         error={error}
         label={label}

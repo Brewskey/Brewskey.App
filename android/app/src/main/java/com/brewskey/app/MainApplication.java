@@ -7,9 +7,9 @@ import com.facebook.react.ReactApplication;
 import com.gettipsi.stripe.StripeReactPackage;
 import com.microsoft.codepush.react.CodePush;
 
-import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
-import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
-import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
+//import com.microsoft.appcenter.reactnative.crashes.AppCenterReactNativeCrashesPackage;
+//import com.microsoft.appcenter.reactnative.analytics.AppCenterReactNativeAnalyticsPackage;
+//import com.microsoft.appcenter.reactnative.appcenter.AppCenterReactNativePackage;
 import com.gettipsi.stripe.StripeReactPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -46,14 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new StripeReactPackage(),
-            new CodePush(null, getApplicationContext(), BuildConfig.DEBUG),
-
-
-
-            new AppCenterReactNativeCrashesPackage(MainApplication.this, getResources().getString(R.string.appCenterCrashes_whenToSendCrashes)),
-            new AppCenterReactNativeAnalyticsPackage(MainApplication.this, getResources().getString(R.string.appCenterAnalytics_whenToEnableAnalytics)),
-            new AppCenterReactNativePackage(MainApplication.this),
             new StripeReactPackage(),
             new RNFetchBlobPackage(),
             new VectorIconsPackage(),

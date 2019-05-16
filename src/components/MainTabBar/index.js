@@ -3,15 +3,16 @@
 import type { Navigation } from '../../types';
 
 import * as React from 'react';
+import { observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
 import BadgeContainer from './BadgeContainer';
-import { observer } from 'mobx-react/native';
 import NotificationsStore from '../../stores/NotificationsStore';
 import FriendRequestsListStore from '../../stores/FriendRequestsListStore';
+import TabBarStore from '../../stores/TabBarStore';
 
 const styles = StyleSheet.create({
   container: {
@@ -46,6 +47,7 @@ type Props = {
   // other props from createMaterialTopTabNavigator
 };
 
+@observer
 class MainTabBar extends React.Component<Props> {
   // the logic is stolen from there:
   // https://github.com/react-navigation/react-navigation-tabs/blob/master/src/views/BottomTabBar.js#L203-L205
@@ -59,6 +61,11 @@ class MainTabBar extends React.Component<Props> {
     const {
       navigation: { state },
     } = this.props;
+
+    if (!TabBarStore.isTabBarVisible) {
+      return null;
+    }
+
     const currentIndex = state.index;
 
     return (

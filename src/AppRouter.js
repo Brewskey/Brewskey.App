@@ -52,6 +52,8 @@ import NuxDeviceScreen from './screens/NuxDeviceScreen';
 import NuxTapScreen from './screens/NuxTapScreen';
 import NuxFinishScreen from './screens/NuxFinishScreen';
 
+import hideTabHOC from './components/hideTabHOC';
+
 const STACK_CONFIG = {
   headerMode: 'none',
 };
@@ -59,10 +61,10 @@ const STACK_CONFIG = {
 /* eslint-disable sorting/sort-object-props */
 const TapRouting = {
   tapDetails: TapDetailsScreen,
-  editTap: EditTapScreen,
-  newKeg: NewKegScreen,
-  newTap: NewTapScreen,
-  editFlowSensor: EditFlowSensorScreen,
+  editTap: hideTabHOC(EditTapScreen),
+  newKeg: hideTabHOC(NewKegScreen),
+  newTap: hideTabHOC(NewTapScreen),
+  editFlowSensor: hideTabHOC(EditFlowSensorScreen),
   profile: ProfileScreen,
 };
 
@@ -110,9 +112,9 @@ const AppRouter = createSwitchNavigator(
             locations: createStackNavigator(
               {
                 locations: LocationsScreen,
-                editLocation: EditLocationScreen,
+                editLocation: hideTabHOC(EditLocationScreen),
                 locationDetails: LocationDetailsScreen,
-                newLocation: NewLocationScreen,
+                newLocation: hideTabHOC(NewLocationScreen),
               },
               STACK_CONFIG,
             ),
@@ -123,15 +125,15 @@ const AppRouter = createSwitchNavigator(
               },
               STACK_CONFIG,
             ),
-            newFlowSensor: NewFlowSensorScreen,
-            newFlowSensorCustom: NewFlowSensorCustomScreen,
+            newFlowSensor: hideTabHOC(NewFlowSensorScreen),
+            newFlowSensorCustom: hideTabHOC(NewFlowSensorCustomScreen),
             devices: createStackNavigator(
               {
                 devices: DevicesScreen,
                 deviceDetails: DeviceDetailsScreen,
-                editDevice: EditDeviceScreen,
-                newDevice: NewDeviceScreen,
-                wifiSetup: WifiSetupScreen,
+                editDevice: hideTabHOC(EditDeviceScreen),
+                newDevice: hideTabHOC(NewDeviceScreen),
+                wifiSetup: hideTabHOC(WifiSetupScreen),
                 ...TapRouting,
               },
               STACK_CONFIG,
@@ -140,12 +142,12 @@ const AppRouter = createSwitchNavigator(
               {
                 myBeverages: MyBeveragesScreen,
                 beverageDetails: BeverageDetailsScreen,
-                editBeverage: EditBeverageScreen,
-                newBeverage: NewBeverageScreen,
+                editBeverage: hideTabHOC(EditBeverageScreen),
+                newBeverage: hideTabHOC(NewBeverageScreen),
               },
               STACK_CONFIG,
             ),
-            writeNFC: WriteNFCScreen,
+            writeNFC: hideTabHOC(WriteNFCScreen),
             payments: PaymentsScreen,
             help: HelpScreen,
             settings: createStackNavigator(

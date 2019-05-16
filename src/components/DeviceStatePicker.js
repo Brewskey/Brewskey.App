@@ -1,17 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import SimplePicker from '../components/pickers/SimplePicker';
 import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
-
-const styles = StyleSheet.create({
-  descriptionText: {
-    alignItems: 'center',
-    marginHorizontal: 13,
-    textAlign: 'center',
-  },
-});
 
 type Props = {|
   error?: string,
@@ -21,24 +12,20 @@ type Props = {|
 |};
 
 const DeviceStatePicker = (props: Props) => (
-  <View>
-    <SimplePicker
-      doesRequireConfirmation={false}
-      headerTitle="Select State"
-      label="State"
-      onChange={props.onChange}
-      pickerValues={[
-        { label: 'Active', value: 'Active' },
-        { label: 'Cleaning', value: 'Cleaning' },
-        { label: 'Unlocked', value: 'Unlocked' },
-        { label: 'Inactive', value: 'Inactive' },
-      ]}
-      value={props.value}
-    />
-    <Text style={styles.descriptionText}>
-      {DESCRIPTION_BY_DEVICE_STATE[props.value]}
-    </Text>
-  </View>
+  <SimplePicker
+    description={DESCRIPTION_BY_DEVICE_STATE[props.value]}
+    doesRequireConfirmation={false}
+    headerTitle="Select State"
+    label="State"
+    onChange={props.onChange}
+    pickerValues={[
+      { label: 'Active', value: 'Active' },
+      { label: 'Cleaning', value: 'Cleaning' },
+      { label: 'Unlocked', value: 'Unlocked' },
+      { label: 'Inactive', value: 'Inactive' },
+    ]}
+    value={props.value}
+  />
 );
 
 export default DeviceStatePicker;

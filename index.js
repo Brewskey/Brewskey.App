@@ -2,6 +2,8 @@
 
 import './globals';
 import { AppRegistry } from 'react-native';
+import RNEventSource from 'react-native-event-source'
+global.EventSource = RNEventSource;
 
 // import applyDecoratedDescriptor from '@babel/runtime/helpers/esm/applyDecoratedDescriptor';
 // import initializerDefineProperty from '@babel/runtime/helpers/esm/initializerDefineProperty';

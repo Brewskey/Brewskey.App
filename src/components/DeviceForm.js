@@ -22,6 +22,9 @@ import { form, FormField } from '../common/form';
 import TextField from './TextField';
 import LocationPicker from './pickers/LocationPicker';
 import DeviceStatePicker from './DeviceStatePicker';
+import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
+import CheckBoxField from './CheckBoxField';
+import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 
 export const validate = (values: DeviceMutator): { [key: string]: string } => {
   const errors = {};
@@ -68,10 +71,12 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
       invalid,
       pristine,
       submitting,
+      values,
     } = this.injectedProps;
 
     return (
       <View>
+        <FormField initialValue={device.id} name="id" />
         <FormField initialValue={device.particleId} name="particleId" />
         <FormField
           component={TextField}
@@ -91,7 +96,53 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           initialValue={device.id ? device.deviceStatus : 'Active'}
           name="deviceStatus"
         />
-        <FormField initialValue={device.id} name="id" />
+        {['Active', 'Inactive'].includes(values.deviceStatus) ? (
+          <FormField initialValue={3600} name="secondsToStayOpen" />
+        ) : (
+          <FormField
+            component={DeviceTimeOpenPicker}
+            initialValue={device.secondsToStayOpen}
+            name="secondsToStayOpen"
+          />
+        )}
+        <FormField
+          component={TextField}
+          description="Time in seconds before and after a pour that the pour remains authorized and the LEDs are green."
+          disabled={submitting}
+          initialValue={device.timeForValveOpen}
+          keyboardType="number-pad"
+          label="Pour Time Buffer"
+          name="timeForValveOpen"
+          parseOnSubmit={(value: number): number => Math.max(value, 5)}
+        />
+        <FormField
+          component={BrightnessSliderField}
+          initialValue={device.ledBrightness}
+          name="ledBrightness"
+          parseOnSubmit={(value: number): number => value.toFixed(0)}
+        />
+        <FormField
+          component={CheckBoxField}
+          disabled={submitting}
+          initialValue={device.isScreenDisabled}
+          label="Is Screen Disabled"
+          name="isScreenDisabled"
+        />
+        {values.isScreenDisabled ? (
+          <FormField
+            initialValue={device.isTotpDisabled}
+            name="isTotpDisabled"
+          />
+        ) : (
+          <FormField
+            component={CheckBoxField}
+            description="Disable the passcode shown on the Brewskey box"
+            disabled={submitting}
+            initialValue={device.isTotpDisabled}
+            label="Is Passcode Disabled"
+            name="isTotpDisabled"
+          />
+        )}
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button

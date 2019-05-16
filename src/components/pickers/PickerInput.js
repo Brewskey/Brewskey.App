@@ -11,9 +11,15 @@ import {
   View,
 } from 'react-native';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';
-import { COLORS } from '../../theme';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
+  descriptionText: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+    marginHorizontal: 20,
+    marginTop: 8,
+  },
   placeholderText: {
     color: COLORS.textInputPlaceholder,
     fontSize: 17,
@@ -32,6 +38,7 @@ const styles = StyleSheet.create({
 
 export type Props = {
   children?: React.Node,
+  description?: string,
   error?: ?string,
   label?: string,
   labelStyle: Style,
@@ -44,6 +51,7 @@ class PickerInput extends React.Component<Props> {
   render() {
     const {
       children,
+      description,
       error,
       label,
       labelStyle,
@@ -63,6 +71,9 @@ class PickerInput extends React.Component<Props> {
           )}
         </View>
         <View style={styles.underline} />
+        {description == null ? null : (
+          <Text style={styles.descriptionText}>{description}</Text>
+        )}
         <FormValidationMessage>{error}</FormValidationMessage>
       </TouchableOpacity>
     );

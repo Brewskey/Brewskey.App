@@ -17,6 +17,7 @@ import PickerStore from '../../stores/PickerStore';
 export type SimplePickerValue<TValue> = {| label: string, value: TValue |};
 
 type Props<TValue> = {|
+  description?: string,
   doesRequireConfirmation: boolean,
   error?: string,
   headerTitle: string,
@@ -74,6 +75,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
 
   render() {
     const {
+      description,
       doesRequireConfirmation,
       error,
       label,
@@ -86,6 +88,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     return (
       <Fragment>
         <PickerTextInput
+          description={description}
           error={error}
           label={label}
           multiple={false}
