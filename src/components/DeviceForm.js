@@ -16,7 +16,6 @@ import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
-import SectionContent from '../common/SectionContent';
 import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';
 import TextField from './TextField';
@@ -25,6 +24,8 @@ import DeviceStatePicker from './DeviceStatePicker';
 import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
 import CheckBoxField from './CheckBoxField';
 import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
+import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
+import { Fill } from 'react-slot-fill';
 
 export const validate = (values: DeviceMutator): { [key: string]: string } => {
   const errors = {};
@@ -76,6 +77,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
 
     return (
       <View>
+        <FormValidationMessage>{formError}</FormValidationMessage>
         <FormField initialValue={device.id} name="id" />
         <FormField initialValue={device.particleId} name="particleId" />
         <FormField
@@ -122,6 +124,11 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           parseOnSubmit={(value: number): number => value.toFixed(0)}
         />
         <FormField
+          component={DeviceNFCStatusPicker}
+          initialValue={device.nfcStatus}
+          name="nfcStatus"
+        />
+        <FormField
           component={CheckBoxField}
           disabled={submitting}
           initialValue={device.isScreenDisabled}
@@ -129,29 +136,44 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           name="isScreenDisabled"
         />
         {values.isScreenDisabled ? (
-          <FormField
-            initialValue={device.isTotpDisabled}
-            name="isTotpDisabled"
-          />
+          <>
+            <FormField
+              initialValue={device.isTotpDisabled}
+              name="isTotpDisabled"
+            />
+            <FormField
+              initialValue={device.shouldInvertScreen}
+              name="shouldInvertScreen"
+            />
+          </>
         ) : (
-          <FormField
-            component={CheckBoxField}
-            description="Disable the passcode shown on the Brewskey box"
-            disabled={submitting}
-            initialValue={device.isTotpDisabled}
-            label="Is Passcode Disabled"
-            name="isTotpDisabled"
-          />
+          <>
+            <FormField
+              component={CheckBoxField}
+              description="Disable the passcode shown on the Brewskey box"
+              disabled={submitting}
+              initialValue={device.isTotpDisabled}
+              label="Is Passcode Disabled"
+              name="isTotpDisabled"
+            />
+            <FormField
+              component={CheckBoxField}
+              disabled={submitting}
+              initialValue={device.shouldInvertScreen}
+              label="Invert Screen"
+              name="shouldInvertScreen"
+            />
+          </>
         )}
-        <FormValidationMessage>{formError}</FormValidationMessage>
-        <SectionContent paddedVertical>
+        <Fill name="MainTabBar">
           <Button
             disabled={invalid || pristine || submitting}
             loading={submitting}
             onPress={handleSubmit}
+            style={{ marginVertical: 12 }}
             title={submitButtonLabel}
           />
-        </SectionContent>
+        </Fill>
       </View>
     );
   }

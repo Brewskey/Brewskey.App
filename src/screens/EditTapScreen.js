@@ -4,8 +4,9 @@ import type { EntityID } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
-import { Dimensions } from 'react-native';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react/native';
+import { TapStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -15,25 +16,18 @@ import EditBasicTapScreen from './EditBasicTapScreen';
 import EditFlowSensorScreen from './EditFlowSensorScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import EditKegScreen from './EditKegScreen';
-import theme from '../theme';
+import createTopTabNavigator from '../components/hoc/createTopTabNavigator';
 
 /* eslint-disable sorting/sort-object-props */
-const EditTapRouter = createMaterialTopTabNavigator(
-  {
-    editKegScreen: { screen: EditKegScreen },
-    editFlowSensor: { screen: EditFlowSensorScreen },
-    editTap: { screen: EditBasicTapScreen },
+const EditTapRouter = createTopTabNavigator({
+  editKegScreen: EditKegScreen,
+  editFlowSensor: EditFlowSensorScreen,
+  editTap: EditBasicTapScreen,
+  editTapPayments: {
+    getShouldShowTab: ({ tap }) => tap != null && tap.isPaymentEnabled,
+    screen: EditBasicTapScreen,
   },
-  /* eslint-enable */
-  {
-    ...theme.tabBar,
-    initialLayout: {
-      height: 0,
-      width: Dimensions.get('window').width,
-    },
-    lazy: true,
-  },
-);
+});
 
 type InjectedProps = {
   id: EntityID,
@@ -42,16 +36,26 @@ type InjectedProps = {
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
+@observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {
   static router = EditTapRouter.router;
 
+  @computed
+  get _tapLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
+    const { id } = this.injectedProps;
+    return TapStore.getByID(id);
+  }
+
   render() {
     const { id, navigation } = this.injectedProps;
-
+    const tap = this._tapLoader.getValue();
     return (
       <Container>
         <Header showBackButton title="Edit Tap" />
-        <EditTapRouter screenProps={{ tapId: id }} navigation={navigation} />
+        <EditTapRouter
+          screenProps={{ tap, tapId: id }}
+          navigation={navigation}
+        />
       </Container>
     );
   }

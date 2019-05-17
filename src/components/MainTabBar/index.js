@@ -13,16 +13,19 @@ import BadgeContainer from './BadgeContainer';
 import NotificationsStore from '../../stores/NotificationsStore';
 import FriendRequestsListStore from '../../stores/FriendRequestsListStore';
 import TabBarStore from '../../stores/TabBarStore';
+import { Slot } from 'react-slot-fill';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.secondary,
     borderTopColor: 'rgba(0, 0, 0, .3)',
     borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    height: 49,
     overflow: 'hidden',
     position: 'relative',
+  },
+  navContainer: {
+    flexDirection: 'row',
+    height: 49,
   },
 });
 
@@ -63,13 +66,17 @@ class MainTabBar extends React.Component<Props> {
     } = this.props;
 
     if (!TabBarStore.isTabBarVisible) {
-      return null;
+      return (
+        <View style={styles.container}>
+          <Slot name="MainTabBar" />
+        </View>
+      );
     }
 
     const currentIndex = state.index;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.navContainer]}>
         <TabBarButton
           icon={{ name: 'home' }}
           isFocused={currentIndex === getIndexByRouteName('home', state.routes)}

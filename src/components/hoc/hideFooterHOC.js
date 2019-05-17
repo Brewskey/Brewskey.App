@@ -1,11 +1,11 @@
 // @flow
 
-import type { Navigation } from '../types';
+import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import { runInAction } from 'mobx';
-import TabBarStore from '../stores/TabBarStore';
+import TabBarStore from '../../stores/TabBarStore';
 
 export default function hideTabHOC<Config: { navigation: Navigation }>(
   Component: React.AbstractComponent<Config>,
