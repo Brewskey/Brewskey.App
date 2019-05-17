@@ -6717,10 +6717,9 @@ react-native-elements@^0.19.1:
     opencollective "^1.0.3"
     prop-types "^15.5.8"
 
-react-native-event-source@^1.0.5:
+"react-native-event-source@https://github.com/jlkalberer/react-native-event-source":
   version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-event-source/-/react-native-event-source-1.0.5.tgz#3fe811a5ca751055a71496308dcac692e44ead6c"
-  integrity sha512-hRXXFW/rWqZ7BtwKsF3Uz7q902g9VBuVFzIM6unYifKC6KO/WYTMnvKMMztAo5KsHFpwB6CYGOFtkhYSp3HI+w==
+  resolved "https://github.com/jlkalberer/react-native-event-source#174541db0139e2167c3f4ecc281b12356a6a28d1"
 
 react-native-image-picker@^0.26.10:
   version "0.26.10"

@@ -70,6 +70,10 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     navigation.navigate('newTap', { initialValues: { device: value } });
   };
 
+  _onRefresh = () => {
+    DeviceStore.flushCacheForEntity(this.props.value.id);
+  };
+
   render() {
     const {
       value: { deviceStatus, id, name, particleId },
@@ -100,6 +104,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
             </Container>
           }
           onAddTapPress={this._onAddTapPress}
+          onRefresh={this._onRefresh}
           queryOptions={{
             filters: [DAOApi.createFilter('device/id').equals(id)],
           }}

@@ -44,7 +44,7 @@
     "react-native-crypto": "^2.1.2",
     "react-native-device-info": "^0.21.5",
     "react-native-elements": "^0.19.1",
-    "react-native-event-source": "^1.0.5",
+    "react-native-event-source": "https://github.com/jlkalberer/react-native-event-source",
     "react-native-image-picker": "^0.26.10",
     "react-native-img-cache": "https://github.com/Brewskey/react-native-img-cache",
     "react-native-keyboard-aware-scroll-view": "^0.5.0",
