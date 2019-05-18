@@ -100,7 +100,10 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
           item={item}
           onPress={this._onItemPress}
           title={`${tapNumber} - ${beverageName}`}
-          subtitle={(name != null ? `${name} - ` : '') + deviceName}
+          subtitle={
+            (name != null && name.trim().length ? `${name} - ` : '') +
+            deviceName
+          }
         />
       </Fragment>
     );

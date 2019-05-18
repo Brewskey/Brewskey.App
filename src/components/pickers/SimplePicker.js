@@ -17,7 +17,7 @@ import PickerStore from '../../stores/PickerStore';
 export type SimplePickerValue<TValue> = {| label: string, value: TValue |};
 
 type Props<TValue> = {|
-  description?: string,
+  description?: React.Node,
   doesRequireConfirmation: boolean,
   error?: string,
   headerTitle: string,

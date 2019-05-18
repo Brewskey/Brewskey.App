@@ -14,6 +14,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import EditBasicTapScreen from './EditBasicTapScreen';
 import EditFlowSensorScreen from './EditFlowSensorScreen';
+import EditTapPaymentsScreen from './EditTapPaymentsScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import EditKegScreen from './EditKegScreen';
 import createTopTabNavigator from '../components/hoc/createTopTabNavigator';
@@ -25,7 +26,7 @@ const EditTapRouter = createTopTabNavigator({
   editTap: EditBasicTapScreen,
   editTapPayments: {
     getShouldShowTab: ({ tap }) => tap != null && tap.isPaymentEnabled,
-    screen: EditBasicTapScreen,
+    screen: EditTapPaymentsScreen,
   },
 });
 

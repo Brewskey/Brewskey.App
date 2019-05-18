@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TEntity, TMultiple: boolean> = {|
-  description?: string,
+  description?: React.Node,
   error?: ?string,
   inputStyle?: Style,
   label: string,

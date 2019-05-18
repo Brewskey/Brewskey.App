@@ -7,6 +7,7 @@ import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom: 12,
     paddingHorizontal: 20,
   },
   sliderLabelContainer: {
