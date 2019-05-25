@@ -36,6 +36,7 @@ const validate = (values: TapMutator): { [key: string]: string } => {
 };
 
 type Props = {|
+  isFocused: Boolean,
   onSubmit: (values: TapMutator) => void | Promise<any>,
   submitButtonLabel: string,
   tap?: Tap,
@@ -76,7 +77,6 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
 
     return (
       <View>
-        <FormValidationMessage>{formError}</FormValidationMessage>
         <FormField initialValue={tap.id} name="id" />
         <FormField
           component={TextField}
@@ -123,6 +123,7 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
 
         {!isFocused ? null : (
           <Fill name="MainTabBar">
+            <FormValidationMessage>{formError}</FormValidationMessage>
             <Button
               disabled={submitting || invalid || pristine}
               loading={submitting}

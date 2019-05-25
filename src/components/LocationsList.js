@@ -123,7 +123,7 @@ const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Location, *>) => (
     hideChevron
     item={item}
     onPress={onItemPress}
-    subtitle={item.summary || NULL_STRING_PLACEHOLDER}
+    subtitle={item.description || NULL_STRING_PLACEHOLDER}
     title={item.name}
   />
 );

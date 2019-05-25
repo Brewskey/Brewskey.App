@@ -77,7 +77,6 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
 
     return (
       <View>
-        <FormValidationMessage>{formError}</FormValidationMessage>
         <FormField initialValue={device.id} name="id" />
         <FormField initialValue={device.particleId} name="particleId" />
         <FormField
@@ -166,6 +165,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           </>
         )}
         <Fill name="MainTabBar">
+          <FormValidationMessage>{formError}</FormValidationMessage>
           <Button
             disabled={invalid || pristine || submitting}
             loading={submitting}

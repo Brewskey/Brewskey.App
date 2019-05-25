@@ -1,10 +1,19 @@
 // @flow
 
-import type { Location, LocationMutator } from 'brewskey.js-api';
+import type {
+  EntityID,
+  Location,
+  LocationMutator,
+  Organization,
+} from 'brewskey.js-api';
 import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
+import { withNavigationFocus } from 'react-navigation';
+import { Fill } from 'react-slot-fill';
+import { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
+import { computed } from 'mobx';
 import { observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
@@ -12,8 +21,9 @@ import STATE_LIST from './stateList';
 import { form, FormField } from '../../common/form';
 import TextField from '../TextField';
 import Button from '../../common/buttons/Button';
-import SectionContent from '../../common/SectionContent';
 import SimplePicker from '../../components/pickers/SimplePicker';
+import { OrganizationStore } from '../../stores/DAOStores';
+import OrganizationPicker from '../../components/pickers/OrganizationPicker';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -46,6 +56,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
+  isFocused: Boolean,
   location?: Location,
   onSubmit: (values: LocationMutator) => void | Promise<any>,
   submitButtonLabel: string,
@@ -56,10 +67,46 @@ type InjectedProps = {|
 |};
 
 @form({ validate })
+@withNavigationFocus
 @observer
 class LocationForm extends InjectedComponent<InjectedProps, Props> {
+  @computed
+  get _organizationCount(): number {
+    return OrganizationStore.count().getValue() || 0;
+  }
+
+  @computed
+  get _organization(): ?Organization {
+    const {
+      values: { organizationId },
+    } = this.injectedProps;
+    if (organizationId) {
+      return OrganizationStore.getByID(
+        organizationId.id || organizationId,
+      ).getValue();
+    }
+
+    return OrganizationStore.getMany()
+      .map(result => (result[0] != null ? result[0].getValue() : null))
+      .getValue();
+  }
+
+  @computed
+  get _squareLocationLoader(): LoadObject<
+    Array<{|
+      locationID: string,
+      name: string,
+    |}>,
+  > {
+    if (this._organization == null || !this._organization.canEnablePayments) {
+      return LoadObject.empty();
+    }
+
+    return OrganizationStore.fetchSquareLocations(this._organization.id);
+  }
+
   render() {
-    const { location = {}, submitButtonLabel } = this.props;
+    const { isFocused, location = {}, submitButtonLabel } = this.props;
     const {
       formError,
       handleSubmit,
@@ -68,8 +115,26 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
       submitting,
     } = this.injectedProps;
 
+    let organizationField = null;
+    if (this._organizationCount === 1 && this._organization != null) {
+      organizationField = (
+        <FormField name="organizationId" initialValue={this._organization.id} />
+      );
+    } else if (this._organizationCount > 1) {
+      organizationField = (
+        <FormField
+          component={OrganizationPicker}
+          initialValue={location.organization}
+          name="organizationId"
+          parseOnSubmit={(value: Organization): EntityID => value.id}
+        />
+      );
+    }
+
     return (
       <View style={styles.container}>
+        <FormField name="id" initialValue={location.id} />
+        {organizationField}
         <FormField
           component={TextField}
           disabled={submitting}
@@ -138,18 +203,38 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           keyboardType="numeric"
           label="Zip"
           name="zipCode"
-          onSubmitEditing={handleSubmit}
         />
-        <FormField name="id" initialValue={location.id} />
-        <FormValidationMessage>{formError}</FormValidationMessage>
-        <SectionContent paddedVertical>
-          <Button
-            disabled={submitting || invalid || pristine}
-            loading={submitting}
-            onPress={handleSubmit}
-            title={submitButtonLabel}
+        {this._organization == null ||
+        !this._organization.canEnablePayments ||
+        !this._squareLocationLoader.hasValue() ? null : (
+          <FormField
+            component={SimplePicker}
+            disabled={submitting}
+            doesRequireConfirmation={false}
+            headerTitle="Select Square Location"
+            initialValue={location.squareLocationID}
+            label="Square Location"
+            name="squareLocationID"
+            pickerValues={this._squareLocationLoader
+              .getValueEnforcing()
+              .map(item => ({
+                label: item.name,
+                value: item.locationID,
+              }))}
           />
-        </SectionContent>
+        )}
+        {!isFocused ? null : (
+          <Fill name="MainTabBar">
+            <FormValidationMessage>{formError}</FormValidationMessage>
+            <Button
+              disabled={submitting || invalid || pristine}
+              loading={submitting}
+              onPress={handleSubmit}
+              style={{ marginVertical: 12 }}
+              title={submitButtonLabel}
+            />
+          </Fill>
+        )}
       </View>
     );
   }
