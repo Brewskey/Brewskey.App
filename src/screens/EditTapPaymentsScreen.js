@@ -49,7 +49,7 @@ type InjectedProps = {|
 @observer
 class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
   static navigationOptions = {
-    tabBarLabel: 'Payments',
+    tabBarLabel: 'Prices',
   };
 
   @computed
@@ -149,11 +149,11 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
 const validate = (values: PriceVariantMutator): { [key: string]: string } => {
   const errors = {};
 
-  if (!values.ounces) {
+  if (!values.ounces || !parseInt(values.ounces, 10)) {
     errors.ounces = 'Ounces is required';
   }
 
-  if (!values.price) {
+  if (!values.price || !parseInt(values.price, 10)) {
     errors.price = 'Price is required';
   }
 
@@ -198,7 +198,7 @@ class LoadedComponent extends InjectedComponent<FormProps, Props> {
 
     return (
       <Container>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView>
           {location == null || location.squareLocationID != null ? null : (
             <Section bottomPadded>
               <SectionHeader title="Set Square Location" />

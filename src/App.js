@@ -72,7 +72,10 @@ const styles = StyleSheet.create({
   },
 });
 
-@codePush
+@codePush({
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.IMMEDIATE,
+})
 class App extends React.Component<{}> {
   componentDidMount() {
     autorun(async () => {
