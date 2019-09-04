@@ -149,11 +149,11 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
 const validate = (values: PriceVariantMutator): { [key: string]: string } => {
   const errors = {};
 
-  if (!values.ounces || !parseInt(values.ounces, 10)) {
+  if (!values.ounces || !parseFloat(values.ounces, 10)) {
     errors.ounces = 'Ounces is required';
   }
 
-  if (!values.price || !parseInt(values.price, 10)) {
+  if (!values.price || !parseFloat(values.price, 10)) {
     errors.price = 'Price is required';
   }
 

@@ -150,18 +150,18 @@ class PourProcessStore {
       this._setIsLoading(true);
       this._setErrorText('');
 
-      const payload = await this._getAuthPayload();
-      const paymentResult = await fetchJSON(
-        `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
-        payload,
-      );
+      // const payload = await this._getAuthPayload();
+      // const paymentResult = await fetchJSON(
+      //   `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
+      //   payload,
+      // );
 
-      if (paymentResult.shouldAskForPayment) {
-        this._showPayments(paymentResult.deviceID);
-        return;
-      }
+      // if (paymentResult.shouldAskForPayment) {
+      //   this._showPayments(paymentResult.deviceID);
+      //   return;
+      // }
 
-      this.deviceID = paymentResult.deviceID;
+      // this.deviceID = paymentResult.deviceID;
       await this._sendPourAuthorization();
     } catch (error) {
       if (!this.deviceID) {

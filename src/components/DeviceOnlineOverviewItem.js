@@ -19,7 +19,7 @@ class DeviceOnlineOverviewItem extends React.Component<Props> {
   @computed
   get _onlineStatusLoader(): LoadObject<boolean> {
     return CloudDeviceStore.getOne(this.props.particleID).map(
-      ({ connected }: ParticleAttributes): boolean => connected,
+      ({ connected }: ParticleAttributes): boolean => !!connected,
     );
   }
 
