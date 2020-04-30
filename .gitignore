@@ -1,5 +1,3 @@
-.vscode
-
 # OSX
 #
 .DS_Store
@@ -23,8 +21,6 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-
-Pods
 
 # Android/IntelliJ
 #
@@ -56,11 +52,5 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
-rn-cli-config-with-links.js
 # Bundle artifact
 *.jsbundle
-
-
-# android
-android/gradle.properties
-android/app/release/*

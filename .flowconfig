@@ -1,6 +1,4 @@
 [ignore]
-<PROJECT_ROOT>/node_modules/react-native/.*
-
 ; We fork some components by platform
 .*/*[.]android.js
 
@@ -20,11 +18,6 @@
 
 ; Ignore metro
 .*/node_modules/metro/.*
-
-; Custom ignores
-.*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
-.*/node_modules/react-native-permissions/**/.*
-
 
 [include]
 
@@ -74,9 +67,9 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
-
-; custom options
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
-; [version]
-; ^0.81.0
+
+[version]
+^0.78.0
+
