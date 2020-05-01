@@ -16,7 +16,7 @@ type Props = {|
   value: PickerValue<Style, false>,
 |};
 
-class GlassPicker extends React.Component<Props> {
+class StylePicker extends React.Component<Props> {
   _renderRow = ({ item: row, isSelected, toggleItem }) => (
     <LoaderRow
       isSelected={isSelected}
@@ -52,4 +52,4 @@ const LoadedRow = ({ item: style, isSelected, toggleItem }: Object) => (
   />
 );
 
-export default GlassPicker;
+export default StylePicker;

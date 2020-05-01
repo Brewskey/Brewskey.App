@@ -5,19 +5,18 @@ import type { WifiNetwork } from '../../types';
 import makeRequestApiStore from './makeRequestApiStore';
 import SoftApService from '../../SoftApService';
 
-export const WifiNetworksStore = makeRequestApiStore((): Promise<
-  Array<WifiNetwork>,
-> => SoftApService.scanWifi());
-
-export const WifiConfigureStore = makeRequestApiStore(
-  (wifiNetwork: WifiNetwork): Promise<void> =>
-    SoftApService.configureWifi(wifiNetwork),
+export const WifiNetworksStore = makeRequestApiStore<Array<WifiNetwork>>(() =>
+  SoftApService.scanWifi(),
 );
 
-export const WifiConnectStore = makeRequestApiStore((index?: number): Promise<
-  void,
-> => SoftApService.connectWifi(index));
+export const WifiConfigureStore = makeRequestApiStore<void>((wifiNetwork) =>
+  SoftApService.configureWifi(wifiNetwork),
+);
 
-export const ParticleIDStore = makeRequestApiStore((): Promise<string> =>
+export const WifiConnectStore = makeRequestApiStore<void>((index) =>
+  SoftApService.connectWifi(index),
+);
+
+export const ParticleIDStore = makeRequestApiStore<string>(() =>
   SoftApService.getParticleID(),
 );

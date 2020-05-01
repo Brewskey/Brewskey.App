@@ -18,7 +18,7 @@ export const LOCATION_PERMISSION_STATUSES: {
 };
 
 export const createLocationPermissionStore = () =>
-  makeRequestApiStore((): Promise<LocationPermissionStatus> =>
+  makeRequestApiStore<LocationPermissionStatus>(() =>
     Permissions.request('location'),
   );
 

@@ -255,7 +255,8 @@ class PourProcessStore {
       return;
     }
 
-    [this.deviceID] = nullthrows(tagValue.substring(index).match(/\d+/));
+    const result = nullthrows(tagValue.substring(index).match(/\d+/));
+    this.deviceID = result[0];
     this._processPour();
   };
 

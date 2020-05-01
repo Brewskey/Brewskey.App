@@ -8,7 +8,7 @@ import * as React from 'react';
 import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
@@ -39,7 +39,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     this._listStore.initialize();
   }
 
-  _getSwipeableListRef = ref => {
+  _getSwipeableListRef = (ref) => {
     this._swipeableListRef = ref;
   };
 
@@ -52,7 +52,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
-    await DAOApi.TapDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
+    await DAOApi.TapDAO.waitForLoadedNullable((dao) => dao.fetchByID(clientID));
     SnackBarStore.showMessage({ text: 'The tap was deleted' });
   };
 

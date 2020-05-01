@@ -5,7 +5,7 @@ import type { Location } from 'brewskey.js-api';
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { action, observable } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import IconButton from '../common/buttons/IconButton';
 import LocationMapModal from './modals/LocationMapModal';

@@ -5,7 +5,7 @@ import type { Account, Friend } from 'brewskey.js-api';
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import { action, observable } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
 import Fragment from '../common/Fragment';
 import HeaderIconButton from '../common/Header/HeaderIconButton';
@@ -66,7 +66,7 @@ class ProfileFriendStatus extends React.Component<Props> {
 
     this._modalToggleStore.toggleOff();
     const clientID = DAOApi.FriendDAO.deleteByID(nullthrows(friend).id);
-    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+    await DAOApi.FriendDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     SnackBarStore.showMessage({

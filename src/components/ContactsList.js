@@ -3,7 +3,7 @@
 import type { Contact } from '../stores/ContactsStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import List from '../common/List';
 import BaseAvatar from '../common/avatars/BaseAvatar';
 import ContactsStore from '../stores/ContactsStore';

@@ -6,7 +6,7 @@ import type { RowItemProps } from '../../common/SwipeableRow';
 
 import * as React from 'react';
 import moment from 'moment';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
@@ -45,7 +45,9 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Pour): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(item.id);
-    await DAOApi.PourDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
+    await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

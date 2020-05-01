@@ -29,7 +29,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
   _onFormSubmit = async (values: KegMutator): Promise<void> => {
     const { navigation, onTapSetupFinish, tapId } = this.injectedProps;
     const clientID = DAOApi.KegDAO.post(values);
-    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     TapStore.flushCache();
 
     SnackBarStore.showMessage({ text: 'New keg added' });
@@ -62,6 +62,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
             onSubmit={this._onFormSubmit}
             submitButtonLabel="Add keg"
             tapId={tapId}
+            onFloatedSubmit={() => {}}
           />
         </KeyboardAwareScrollView>
       </Container>

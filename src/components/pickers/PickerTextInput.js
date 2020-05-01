@@ -1,11 +1,11 @@
 // @flow
 import type { Style } from '../../types';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import PickerInput from './PickerInput';
 import { COLORS } from '../../theme';
 
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity, TMultiple: boolean> = {|
+type Props<TEntity, TMultiple: BoolUnion> = {|
   error?: ?string,
   inputStyle?: Style,
   label: string,
@@ -30,12 +30,11 @@ type Props<TEntity, TMultiple: boolean> = {|
 |};
 
 @observer
-class PickerTextInput<TEntity, TMultiple: boolean> extends React.Component<
+class PickerTextInput<TEntity, TMultiple: BoolUnion> extends React.Component<
   Props<TEntity, TMultiple>,
 > {
   static defaultProps = {
     placeholder: 'Please select...',
-    stringValueExtractor: (item: Object): string => item.name,
   };
 
   @computed

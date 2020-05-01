@@ -3,7 +3,7 @@
 import type { Notification } from '../../stores/NotificationsStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import List from '../../common/List';
 import ErrorBoundary from '../../common/ErrorBoundary';
 import ErrorListItem from '../../common/ErrorListItem';
@@ -13,7 +13,7 @@ import NotificationComponentByType from './NotificationComponentByType';
 
 @observer
 class NotificationsList extends React.Component<{}> {
-  _keyExtractor = notification => notification.id;
+  _keyExtractor = (notification) => notification.id;
 
   _onItemOpen = (notification: Notification) => {
     NotificationsStore.deleteByID(notification.id);

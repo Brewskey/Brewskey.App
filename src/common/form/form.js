@@ -6,7 +6,7 @@ import * as React from 'react';
 import { Keyboard } from 'react-native';
 import PropTypes from 'prop-types';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import FormStore from './FormStore';
 
 type FormSetupProps = {
@@ -18,7 +18,7 @@ type OnSubmitCallbackFunction = (values: {
 }) => void | Promise<any>;
 
 const form = ({ validate }: FormSetupProps = {}): Function => <
-  TProps: { onSubmit?: OnSubmitCallbackFunction },
+  TProps: {| onSubmit?: OnSubmitCallbackFunction |},
 >(
   Component: React.ComponentType<{ ...TProps, ...FormProps }>,
 ): React.ComponentType<TProps> => {

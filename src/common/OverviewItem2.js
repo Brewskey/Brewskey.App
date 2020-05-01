@@ -31,15 +31,19 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TExtraProps = {}> = {
+type BaseProps<TExtraProps> = {|
   ...TExtraProps,
   description?: string,
-  leftComponent: React.ComponentType<Props<TExtraProps>>,
   paddedHorizontal: boolean,
-  rightComponent: React.ComponentType<Props<TExtraProps>>,
   title: string,
   value: string,
-};
+|};
+
+type Props<TExtraProps> = {|
+  ...BaseProps<TExtraProps>,
+  leftComponent: React.ComponentType<BaseProps<TExtraProps>>,
+  rightComponent: React.ComponentType<BaseProps<TExtraProps>>,
+|};
 
 class OverviewItem<TExtraProps> extends React.PureComponent<
   Props<TExtraProps>,
@@ -48,7 +52,7 @@ class OverviewItem<TExtraProps> extends React.PureComponent<
     paddedHorizontal: true,
   };
 
-  render() {
+  render(): React.Node {
     const {
       description,
       leftComponent: LeftComponent,
@@ -58,14 +62,16 @@ class OverviewItem<TExtraProps> extends React.PureComponent<
       value,
     } = this.props;
 
+    const { leftComponent: _, rightComponent: _2, ...otherProps } = this.props;
+
     return (
       <SectionContent
         containerStyle={styles.container}
         paddedHorizontal={paddedHorizontal}
       >
-        {LeftComponent && (
+        {LeftComponent == null ? null : (
           <View style={styles.leftComponentContainer}>
-            <LeftComponent {...this.props} />
+            <LeftComponent {...otherProps} />
           </View>
         )}
         <View>
@@ -75,9 +81,9 @@ class OverviewItem<TExtraProps> extends React.PureComponent<
             <Text style={styles.description}>{description}</Text>
           ) : null}
         </View>
-        {RightComponent && (
+        {RightComponent == null ? null : (
           <View style={styles.rightComponentContainer}>
-            <RightComponent {...this.props} />
+            <RightComponent {...otherProps} />
           </View>
         )}
       </SectionContent>

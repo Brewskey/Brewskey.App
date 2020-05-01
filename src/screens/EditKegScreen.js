@@ -6,7 +6,7 @@ import * as React from 'react';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import nullthrows from 'nullthrows';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
@@ -39,7 +39,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   _onReplaceSubmit = async (values: KegMutator): Promise<void> => {
     const clientID = DAOApi.KegDAO.post(values);
-    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Keg replaced' });
   };
@@ -47,7 +47,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onEditSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.put(id, values);
-    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
+    await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg updated' });
   };
@@ -55,7 +55,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   _onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.KegDAO.floatKeg(id.toString());
-    await DAOApi.KegDAO.waitForLoaded(dao => dao.fetchByID(id));
+    await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(id));
     TapStore.flushCache();
     SnackBarStore.showMessage({ text: 'Current keg floated' });
   };
@@ -78,16 +78,17 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
   }
 }
 
-type ExtraProps = {
+type ExtraProps = {|
   onEditSubmit: (values: KegMutator) => Promise<void>,
   onFloatedSubmit: (values: KegMutator) => Promise<void>,
   onReplaceSubmit: (values: KegMutator) => Promise<void>,
   tapId: EntityID,
-};
+|};
 
-type LoadedComponentProps = {
+type LoadedComponentProps = {|
+  ...ExtraProps,
   value: Keg,
-} & ExtraProps;
+|};
 
 const LoadedComponent = ({
   onEditSubmit,

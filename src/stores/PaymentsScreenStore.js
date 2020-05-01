@@ -1,6 +1,6 @@
 // @flow
 
-import type { CreditCardDetails } from 'brewskey.js-api';
+import type { CreditCardDetails, LoadObject } from 'brewskey.js-api';
 
 import stripe from 'tipsi-stripe';
 import { action, computed, observable, runInAction } from 'mobx';
@@ -38,7 +38,7 @@ class PaymentsScreenStore {
       const { tokenId } = await stripe.createTokenWithCard(formParams);
       PaymentsDAO.flushCache();
       PaymentsDAO.addPaymentMethod(tokenId);
-      await PaymentsDAO.waitForLoadedNullable(dao => dao.get());
+      await PaymentsDAO.waitForLoadedNullable((dao) => dao.get());
       SnackBarStore.showMessage({
         style: 'success',
         text: 'You successfully added your card',
@@ -61,7 +61,7 @@ class PaymentsScreenStore {
 
     try {
       PaymentsDAO.removePaymentMethod();
-      await PaymentsDAO.waitForLoadedNullable(dao => dao.get());
+      await PaymentsDAO.waitForLoadedNullable((dao) => dao.get());
       SnackBarStore.showMessage({
         style: 'success',
         text: 'You successfully removed your card',

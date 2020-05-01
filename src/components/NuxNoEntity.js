@@ -8,7 +8,7 @@ import Button from '../common/buttons/Button';
 import TextBlock from '../common/TextBlock';
 import { withNavigation } from 'react-navigation';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import HardwareSetupModal from './modals/HardwareSetupModal';
 import ToggleStore from '../stores/ToggleStore';

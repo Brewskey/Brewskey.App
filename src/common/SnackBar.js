@@ -85,7 +85,7 @@ class SnackMessage extends React.Component<{}, State> {
     }).start(SnackBarStore.dropCurrentMessage);
   };
 
-  _onLayout = event => {
+  _onLayout = (event) => {
     const { currentMessage } = SnackBarStore;
     if (currentMessage === null || this.state.height !== 0) {
       return;
@@ -133,7 +133,7 @@ class SnackMessage extends React.Component<{}, State> {
         ]}
       >
         <TouchableWithoutFeedback onPress={this._onMessagePress}>
-          <Content {...currentMessage} />
+          <Content message={currentMessage} />
         </TouchableWithoutFeedback>
       </Animated.View>
     );
@@ -144,17 +144,17 @@ const onItemOpen = (notification: Notification) => {
   NotificationsStore.deleteByID(notification.id);
 };
 
-const Content = (props: SnackBarMessage) => {
-  if (props.text) {
-    return <TextMessage style={props.style} text={props.text} />;
+const Content = ({ message }: {| message: SnackBarMessage |}): React.Node => {
+  if (message.text) {
+    return <TextMessage style={message.style} text={message.text} />;
   }
   let snackContent = null;
-  if (props.content) {
-    snackContent = props.content;
-  } else if (props.notification) {
+  if (message.content) {
+    snackContent = message.content;
+  } else if (message.notification) {
     const componentProps = {
       isSwipeable: false,
-      notification: props.notification,
+      notification: message.notification,
       onOpen: onItemOpen,
       onPress: NotificationsStore.onNotificationPress,
       onReadEnd: () => {},
@@ -176,10 +176,10 @@ const Content = (props: SnackBarMessage) => {
 const TextMessage = ({
   style = 'default',
   text,
-}: {
+}: {|
   style?: 'default' | 'danger' | 'success',
   text: string,
-}) => {
+|}) => {
   let dynamicTextStyle = null;
   switch (style) {
     case 'danger': {

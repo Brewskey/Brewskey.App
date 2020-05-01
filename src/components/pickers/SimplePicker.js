@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ToggleStore from '../../stores/ToggleStore';
 import List from '../../common/List';
 import Container from '../../common/Container';
@@ -35,15 +35,12 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     doesRequireConfirmation: true,
   };
 
-  _pickerStore: PickerStore<
-    SimplePickerValue<TValue>,
-    SinglePicker,
-  > = new PickerStore({
+  _pickerStore = new PickerStore<SimplePickerValue<TValue>, false>({
     initialValue: this.props.pickerValues.find(
-      pickerValue => pickerValue.value === this.props.value,
+      (pickerValue) => pickerValue.value === this.props.value,
     ),
-    keyExtractor: pickerValue => (pickerValue.value: any).toString(),
-    multiple: (false: SinglePicker),
+    keyExtractor: (pickerValue) => (pickerValue.value: any).toString(),
+    multiple: false,
     onChange: (pickerValue: ?SimplePickerValue<TValue>) => {
       if (!pickerValue) {
         return;
@@ -58,9 +55,11 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
 
   _modalToggleStore: ToggleStore = new ToggleStore();
 
-  _stringValueExtractor = (pickerValue): string => pickerValue.label;
+  _stringValueExtractor = (pickerValue: SimplePickerValue<TValue>): string =>
+    pickerValue.label;
 
-  _listKeyExtractor = textPickerValue => textPickerValue.value.toString();
+  _listKeyExtractor = (textPickerValue: SimplePickerValue<TValue>) =>
+    JSON.stringify(textPickerValue.value);
 
   _renderItem = ({ item: pickerValue }) => (
     <SelectableListItem

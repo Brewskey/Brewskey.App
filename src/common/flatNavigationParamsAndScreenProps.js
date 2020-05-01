@@ -8,7 +8,7 @@ import hoistNonReactStatic from 'hoist-non-react-statics';
 // todo fix following eslint error
 /* eslint-disable react/display-name */
 const flatNavigationParamsAndScreenProps = <
-  TProps: { navigation: Navigation, screenProps?: Object },
+  TProps: {| navigation: Navigation, screenProps?: Object |},
   TParams,
 >(
   Component: React.ComponentType<TProps>,
@@ -19,7 +19,7 @@ const flatNavigationParamsAndScreenProps = <
     render() {
       const { navigation, screenProps } = this.props;
       const params = (navigation && navigation.state.params) || {};
-      return <Component {...params} {...screenProps || {}} {...this.props} />;
+      return <Component {...params} {...(screenProps || {})} {...this.props} />;
     }
   }
 

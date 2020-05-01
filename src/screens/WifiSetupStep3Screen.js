@@ -7,7 +7,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import WifiList from '../components/WifiSetup/WifiList';
 import HiddenWifiInput from '../components/WifiSetup/WifiList/HiddenWifiInput';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 
 type InjectedProps = {
   wifiSetupStore: WifiSetupStore,

@@ -2,29 +2,27 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { isClassBasedComponent } from '../../utils';
 
 // todo add generic types for value
-type Props = {
+type Props<TProps> = {|
+  ...TProps,
+  blurOnSubmit?: boolean,
   children?: React.Node | Function,
   component?: ?React.ComponentType<any>,
   format: (value: any) => any,
   initialValue?: any,
   name: string,
-  parse: (value: any) => any,
-};
-
-type BaseProps = {
-  blurOnSubmit?: boolean,
   nextFocusTo?: string,
   onSubmitEditing?: Function,
+  parse: (value: any) => any,
   parseOnSubmit?: (value: any) => any,
   returnKeyType?: string,
-};
+|};
 
 @observer
-class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
+class FormField<TProps> extends React.Component<Props<TProps>> {
   static defaultProps = {
     format: (value: any): any => value,
     parse: (value: any): any => value,
@@ -34,7 +32,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
     formStore: PropTypes.object,
   };
 
-  constructor(props: Props & TProps, context: Object) {
+  constructor(props: Props<TProps>, context: Object) {
     super(props, context);
 
     context.formStore.initField({
@@ -44,7 +42,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
     });
   }
 
-  componentDidUpdate(prevProps: Props & TProps) {
+  componentDidUpdate(prevProps: Props<TProps>) {
     if (prevProps.initialValue !== this.props.initialValue) {
       this.context.formStore.initField({
         initialValue: this.props.initialValue,
@@ -62,7 +60,7 @@ class FormField<TProps: BaseProps> extends React.Component<Props & TProps> {
       this.props.parse(value),
     );
 
-  _setRefElement = refElement => {
+  _setRefElement = (refElement) => {
     this.context.formStore.setFieldRefElement(this.props.name, refElement);
   };
 

@@ -3,7 +3,7 @@
 import makeRequestApiStore from './makeRequestApiStore';
 import DAOApi from 'brewskey.js-api';
 
-const FriendAddStore = makeRequestApiStore((userName: string): Promise<void> =>
+const FriendAddStore = makeRequestApiStore<void>((userName: string) =>
   DAOApi.FriendDAO.addFriend(userName),
 );
 

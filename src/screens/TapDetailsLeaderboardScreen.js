@@ -6,7 +6,7 @@ import type { LeaderboardDurationValue } from '../components/LeaderboardDuration
 import * as React from 'react';
 import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { action, observable } from 'mobx';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';

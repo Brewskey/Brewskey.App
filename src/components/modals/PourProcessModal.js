@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import TouchableItem from '../../common/buttons/TouchableItem';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import * as Progress from 'react-native-progress';
 import PourProcessStore from '../../stores/PourProcessStore';
 import PourProcessPaymentModal from './PourProcessPaymentModal';

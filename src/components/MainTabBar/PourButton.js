@@ -4,7 +4,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { COLORS } from '../../theme';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import PourProcessStore from '../../stores/PourProcessStore';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import LoadingIndicator from '../../common/LoadingIndicator';

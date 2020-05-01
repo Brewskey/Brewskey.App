@@ -25,16 +25,8 @@ export const WIFI_SECURITIES = {
 };
 /* eslint-enable */
 
-const translateWifiFromApi = ({
-  ch,
-  mdr,
-  rssi,
-  sec,
-  ssid,
-}: Object): WifiNetwork => ({
+const translateWifiFromApi = ({ ch, sec, ssid }: Object): WifiNetwork => ({
   channel: ch,
-  mdr,
-  rssi,
   security: sec,
   ssid,
 });

@@ -5,7 +5,7 @@ import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { StyleSheet, View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
 import STATE_LIST from './stateList';

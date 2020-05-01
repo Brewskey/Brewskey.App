@@ -5,7 +5,7 @@ import type { EntityID, LoadObject, ParticleAttributes } from 'brewskey.js-api';
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { CloudDeviceStore } from '../stores/DAOStores';
 import { Icon } from 'react-native-elements';
 import LoaderComponent from '../common/LoaderComponent';

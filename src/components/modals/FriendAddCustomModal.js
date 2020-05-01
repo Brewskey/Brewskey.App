@@ -4,7 +4,7 @@ import type { FriendAddFormValues } from '../FriendAddForm';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import CenteredModal from './CenteredModal';
 import FriendAddForm from '../FriendAddForm';
 import { COLORS, TYPOGRAPHY } from '../../theme';

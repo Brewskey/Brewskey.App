@@ -8,7 +8,7 @@ import type { KegSection } from '../../stores/SectionPoursListStore';
 import * as React from 'react';
 import moment from 'moment';
 import DAOApi from 'brewskey.js-api';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import InjectedComponent from '../../common/InjectedComponent';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
@@ -65,7 +65,9 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (pour: Pour): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(pour.id);
-    await DAOApi.PourDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
+    await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
+      dao.fetchByID(clientID),
+    );
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 

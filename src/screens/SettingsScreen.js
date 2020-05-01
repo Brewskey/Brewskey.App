@@ -10,7 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { COLORS, TYPOGRAPHY } from '../theme';
 import SnackBarStore from '../stores/SnackBarStore';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { ListItem } from 'react-native-elements';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -45,7 +45,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (organizationsLoader.getValue() || 0) > 1;
   }
 
-  _onChangePasswordSubmit = async values => {
+  _onChangePasswordSubmit = async (values) => {
     await DAOApi.Auth.changePassword(values);
     SnackBarStore.showMessage({ text: 'Password changed!' });
   };

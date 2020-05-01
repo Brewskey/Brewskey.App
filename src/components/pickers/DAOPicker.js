@@ -4,10 +4,10 @@ import type { EntityID, QueryOptions } from 'brewskey.js-api';
 import type { Style } from '../../types';
 import type DAOStore from '../../stores/DAOStores';
 import type { Row } from '../../stores/DAOListStore';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
 import Header from '../../common/Header';
 import HeaderIconButton from '../../common/Header/HeaderIconButton';
@@ -33,7 +33,7 @@ type RenderRowProps<TEntity> = {|
   toggleItem: (item: TEntity) => void,
 |};
 
-type Props<TEntity, TMultiple> = {
+type Props<TEntity, TMultiple: BoolUnion> = {
   daoStore: DAOStore<TEntity>,
   error?: ?string,
   headerTitle: string,
@@ -50,28 +50,34 @@ type Props<TEntity, TMultiple> = {
   renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
   searchBy: string,
   selectionColor?: string,
-  stringValueExtractor?: (item: TEntity) => string,
+  stringValueExtractor: (item: TEntity) => string,
   underlineColorAndroid?: string,
   validationTextStyle?: Style,
   value: PickerValue<TEntity, TMultiple>,
   // other react-native textInput props
 };
 
+type TEntityBase<TEntity> = {|
+  ...TEntity,
+  id: EntityID,
+|};
+
 @observer
-class DAOPicker<
-  TEntity: { id: EntityID },
-  TMultiple: boolean,
-> extends React.Component<Props<TEntity, TMultiple>> {
+class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
+  Props<TEntityBase<TEntity>, TMultiple>,
+> {
   static defaultProps = {
     queryOptions: {},
     searchBy: 'name',
   };
 
-  _listStore: DAOListStore<TEntity> = new DAOListStore(this.props.daoStore);
+  _listStore: DAOListStore<TEntityBase<TEntity>> = new DAOListStore(
+    this.props.daoStore,
+  );
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
-  _pickerStore: PickerStore<TEntity, TMultiple> = new PickerStore({
+  _pickerStore: PickerStore<TEntityBase<TEntity>, TMultiple> = new PickerStore({
     initialValue: this.props.value,
     multiple: this.props.multiple,
     onChange: this.props.onChange,
@@ -96,10 +102,10 @@ class DAOPicker<
     });
   }
 
-  _listKeyExtractor = (row: Row<TEntity>): string => row.key;
+  _listKeyExtractor = (row: Row<TEntityBase<TEntity>>): string => row.key;
 
   _renderRow = (
-    renderRowProps: RenderRowProps<TEntity>,
+    renderRowProps: RenderRowProps<TEntityBase<TEntity>>,
   ): React.Element<any> => {
     const { renderRow } = this.props;
     const { checkIsSelected, toggleItem } = this._pickerStore;

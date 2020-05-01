@@ -3,7 +3,7 @@
 import type { FormProps } from '../common/form/types';
 import type { UserCredentials } from 'brewskey.js-api';
 
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';

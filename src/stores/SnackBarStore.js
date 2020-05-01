@@ -32,16 +32,19 @@ export type SnackBarMessage =
       position: 'bottom' | 'top',
       style: TextStyleType,
       text: string,
+      type: 'text',
     |}
   | {|
       content: Node,
       duration: number,
       position: 'bottom' | 'top',
+      type: 'content',
     |}
   | {|
       duration: number,
       notification: Notification,
       position: 'bottom' | 'top',
+      type: 'notification',
     |};
 
 class SnackBarStore {
@@ -60,30 +63,29 @@ class SnackBarStore {
 
   @action
   showMessage = (messageParameters: SnackBarMessageParameters) => {
-    let mergedParameters = null;
-
     if (messageParameters.text) {
-      mergedParameters = {
+      this._messages.push({
         duration: 2000,
         position: 'bottom',
         style: 'default',
+        type: 'text',
         ...messageParameters,
-      };
+      });
     } else if (messageParameters.content) {
-      mergedParameters = {
+      this._messages.push({
         duration: 2000,
         position: 'bottom',
+        type: 'content',
         ...messageParameters,
-      };
+      });
     } else if (messageParameters.notification) {
-      mergedParameters = {
+      this._messages.push({
         duration: 2000,
         position: 'bottom',
+        type: 'notification',
         ...messageParameters,
-      };
+      });
     }
-
-    this._messages.push(nullthrows(mergedParameters));
   };
 }
 

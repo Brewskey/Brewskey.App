@@ -12,7 +12,8 @@ import {
 import nullthrows from 'nullthrows';
 import { COLORS } from '../theme';
 
-export type Props = {
+export type Props<TOtherProps> = {|
+  ...TOtherProps,
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
   inputStyle?: Style,
@@ -24,9 +25,9 @@ export type Props = {
   validationTextStyle?: Style,
   value: any,
   // other react-native textInput props
-};
+|};
 
-class TextField extends React.Component<Props> {
+class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
   static defaultProps = {
     underlineColorAndroid: COLORS.secondary3,
   };

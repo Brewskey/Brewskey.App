@@ -3,7 +3,7 @@
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { action, computed, observable } from 'mobx';
 import Swiper from 'react-native-swiper';
 import { COLORS } from '../../theme';
@@ -68,7 +68,7 @@ class HardwareSetupGuide extends React.Component<Props> {
     }
   };
 
-  _setSwiperRef = ref => (this._swiper = ref);
+  _setSwiperRef = (ref) => (this._swiper = ref);
 
   render() {
     return (

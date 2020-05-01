@@ -8,7 +8,7 @@ import nullthrows from 'nullthrows';
 import { withNavigation } from 'react-navigation';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
@@ -28,9 +28,9 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    tabBarLabel: 'Flow Sensor',
-  };
+  // static navigationOptions = {
+  //   tabBarLabel: 'Flow Sensor',
+  // };
 
   @computed
   get _flowSensorLoader(): LoadObject<FlowSensor> {
@@ -80,10 +80,12 @@ class LoadedComponent extends InjectedComponent<
     if (initialFlowSensor.flowSensorType === values.flowSensorType) {
       const id = nullthrows(values.id);
       DAOApi.FlowSensorDAO.put(id, values);
-      await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(id));
+      await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(id));
     } else {
       const clientID = DAOApi.FlowSensorDAO.post(values);
-      await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+      await DAOApi.FlowSensorDAO.waitForLoaded((dao) =>
+        dao.fetchByID(clientID),
+      );
     }
     SnackBarStore.showMessage({ text: 'The flow sensor set' });
   };
@@ -108,7 +110,7 @@ class EmptyComponent extends InjectedComponent<
 > {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
   };
 
   render() {

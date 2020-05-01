@@ -5,7 +5,7 @@ import type { EntityID, LoadObject, Keg } from 'brewskey.js-api';
 import * as React from 'react';
 import { Animated, StyleSheet, View, Text } from 'react-native';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { KegStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
 import LoadingIndicator from '../common/LoadingIndicator';

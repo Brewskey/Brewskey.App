@@ -13,7 +13,7 @@ const getGPSPosition = (): Promise<Position> =>
   );
 
 export const createGPSCoordinatesStore = () =>
-  makeRequestApiStore((): Promise<Coordinates> =>
+  makeRequestApiStore<Coordinates>(() =>
     getGPSPosition().then((position: Position): Coordinates => ({
       latitude: position.coords.latitude,
       longitude: position.coords.longitude,

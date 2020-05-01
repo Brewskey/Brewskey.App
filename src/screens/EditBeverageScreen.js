@@ -12,7 +12,7 @@ import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
@@ -49,7 +49,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     const id = nullthrows(values.id);
 
     const clientID = DAOApi.BeverageDAO.put(id, beverageMutator);
-    await DAOApi.BeverageDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.BeverageDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     if (beverageImage) {
       await waitForLoaded(() =>
         UpdateBeverageImageStore.get(id, beverageImage),
@@ -79,10 +79,10 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
   }
 }
 
-type LoadedComponentProps = () => {
+type LoadedComponentProps = {|
   onFormSubmit: (values: BeverageMutator) => void,
   value: Beverage,
-};
+|};
 
 const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
   <BeverageForm

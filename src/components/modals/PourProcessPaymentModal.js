@@ -4,7 +4,7 @@ import type { Tap } from 'brewskey.js-api';
 
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import Button from '../../common/buttons/Button';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import { ListItem as RNEListItem } from 'react-native-elements';
@@ -14,6 +14,7 @@ import PourPaymentStore from '../../stores/PourPaymentStore';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
+import nullthrows from 'nullthrows';
 
 const styles = StyleSheet.create({
   content: {
@@ -49,8 +50,8 @@ const styles = StyleSheet.create({
 });
 
 @observer
-class PourProcessPaymentModal extends Component<{}> {
-  _store = new PourPaymentStore(PourProcessStore.deviceID);
+class PourProcessPaymentModal extends Component<{||}> {
+  _store = new PourPaymentStore(nullthrows(PourProcessStore.deviceID));
 
   _onContinuePress = () => {
     if (this._store.hasCreditCardDetails) {
@@ -104,7 +105,7 @@ class PourProcessPaymentModal extends Component<{}> {
               style={styles.scrollView}
             >
               <View style={{ flex: 1 }}>
-                {taps.map(tap => (
+                {taps.map((tap) => (
                   <TapPayment key={tap.id} tap={tap} />
                 ))}
               </View>
@@ -141,7 +142,8 @@ const tapStyles = StyleSheet.create({
 @observer
 class TapPayment extends Component<TapPaymentProps> {
   render() {
-    const { currentKeg, id, pricePerOunce, tapNumber } = this.props.tap;
+    const pricePerOunce = 0;
+    const { currentKeg, id, tapNumber } = this.props.tap;
     const { beverage } = currentKeg;
     return (
       <RNEListItem

@@ -5,7 +5,7 @@ import type { PickerValue } from '../stores/PickerStore';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { Icon } from 'react-native-elements';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import Button from '../common/buttons/Button';

@@ -13,7 +13,7 @@ import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import UserBadges from '../components/UserBadges';
 import Container from '../common/Container';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { AccountStore, FriendStore } from '../stores/DAOStores';
 import AuthStore from '../stores/AuthStore';
 import LoaderComponent from '../common/LoaderComponent';

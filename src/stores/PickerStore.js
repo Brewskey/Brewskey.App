@@ -3,14 +3,16 @@
 import autobind from 'autobind-decorator';
 import { ObservableMap, action, computed, observable } from 'mobx';
 
-type $If<Condition: boolean, Then, Else> = $Call<
+export type BoolUnion = true | false;
+
+type $If<Condition: BoolUnion, Then, Else> = $Call<
   ((true, Then, Else) => Then) & ((false, Then, Else) => Else),
   Condition,
   Then,
   Else,
 >;
 
-export type PickerValue<TEntity, TMultiple: boolean> = $If<
+export type PickerValue<TEntity, TMultiple: BoolUnion> = $If<
   TMultiple,
   Array<TEntity>,
   ?TEntity,
@@ -18,10 +20,10 @@ export type PickerValue<TEntity, TMultiple: boolean> = $If<
 
 export type KeyExtractor<TEntity> = (item: TEntity) => string;
 
-type PickerStoreProps<TEntity, TMultiple: boolean> = {|
+type PickerStoreProps<TEntity, TMultiple: BoolUnion> = {|
   +initialValue: PickerValue<TEntity, TMultiple>,
   +keyExtractor?: KeyExtractor<TEntity>,
-  +multiple: TMultiple,
+  +multiple: BoolUnion,
   +onChange?: (value: PickerValue<TEntity, TMultiple>) => void,
 |};
 
@@ -35,10 +37,10 @@ const defaultKeyExtractor = <TEntity>(item: TEntity): string => {
   return castedItem.id.toString();
 };
 
-class PickerStore<TEntity, TMultiple: boolean> {
+class PickerStore<TEntity, TMultiple: BoolUnion> {
   _keyExtractor: KeyExtractor<TEntity>;
-  +_multiple: TMultiple;
   _onChange: ?(value: PickerValue<TEntity, TMultiple>) => void;
+  _config: PickerStoreProps<TEntity, TMultiple>;
 
   // mobx doesn't support observable Set
   // this also can be done with ObservableArray instead ObservableMap
@@ -48,9 +50,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
   _valueByKey: ObservableMap<string, TEntity> = observable.map();
 
   constructor(config: PickerStoreProps<TEntity, TMultiple>) {
-    if (config.multiple) {
-      this._multiple = config.multiple;
-    }
+    this._config = config;
     this._onChange = config.onChange;
     this._keyExtractor = config.keyExtractor || defaultKeyExtractor;
     config.initialValue && this.setValue(config.initialValue);
@@ -59,7 +59,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
   @computed
   get value(): PickerValue<TEntity, TMultiple> {
     const values: Array<TEntity> = Array.from(this._valueByKey.toJS().values());
-    if (this._multiple === true) {
+    if (this._config.multiple === true) {
       return values;
     }
 
@@ -83,7 +83,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
   setValue(value: PickerValue<TEntity, TMultiple>) {
     let entries: Array<[string, TEntity]> = [];
     if (Array.isArray(value)) {
-      entries = value.map(item => [this._keyExtractor(item), item]);
+      entries = value.map((item) => [this._keyExtractor(item), item]);
     } else {
       entries = [[this._keyExtractor(value), value]];
     }
@@ -99,7 +99,7 @@ class PickerStore<TEntity, TMultiple: boolean> {
     if (this._valueByKey.has(itemKey)) {
       this._valueByKey.delete(itemKey);
     } else {
-      !this._multiple && this._valueByKey.clear();
+      !this._config.multiple && this._valueByKey.clear();
       this._valueByKey.set(itemKey, item);
     }
 

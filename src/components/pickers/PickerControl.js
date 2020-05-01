@@ -1,9 +1,9 @@
 // @flow
 
-import type { PickerValue } from '../../stores/PickerStore';
+import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
 import { COLORS } from '../../theme';
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity, TMultiple: boolean> = {|
+type Props<TEntity, TMultiple: BoolUnion> = {|
   multiple: TMultiple,
   onClearPress: () => void,
   onSelectPress: () => void,
@@ -40,7 +40,7 @@ type Props<TEntity, TMultiple: boolean> = {|
 |};
 
 @observer
-class PickerControl<TEntity, TMultiple: boolean> extends React.Component<
+class PickerControl<TEntity, TMultiple: BoolUnion> extends React.Component<
   Props<TEntity, TMultiple>,
 > {
   static defaultProps = {

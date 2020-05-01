@@ -4,7 +4,7 @@ import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import FriendRequestsList from '../components/FriendRequestsList';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { Badge } from 'react-native-elements';
 import { StyleSheet, Text, View } from 'react-native';
 import FriendRequestsListStore from '../stores/FriendRequestsListStore';
@@ -29,14 +29,14 @@ const styles = StyleSheet.create({
 
 @errorBoundary(<ErrorScreen showBackButton />)
 class MyFriendsRequestScreen extends React.Component<{}> {
-  static navigationOptions = {
-    tabBarLabel: ({ tintColor }: { tintColor: string }) => (
-      <View>
-        <Text style={{ color: tintColor }}>Requests</Text>
-        <Badges />
-      </View>
-    ),
-  };
+  // static navigationOptions = {
+  //   tabBarLabel: ({ tintColor }: { tintColor: string }) => (
+  //     <View>
+  //       <Text style={{ color: tintColor }}>Requests</Text>
+  //       <Badges />
+  //     </View>
+  //   ),
+  // };
 
   render() {
     return <FriendRequestsList />;

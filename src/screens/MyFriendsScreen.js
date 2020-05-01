@@ -4,7 +4,7 @@ import type { Navigation } from '../types';
 import type { FriendAddFormValues } from '../components/FriendAddForm';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
 import { createMaterialTopTabNavigator } from 'react-navigation';
 import DAOApi from 'brewskey.js-api';

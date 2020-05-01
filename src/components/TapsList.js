@@ -8,7 +8,7 @@ import type { RowItemProps } from '../common/SwipeableRow';
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import { TapStore } from '../stores/DAOStores';
 import DAOApi from 'brewskey.js-api';
@@ -45,7 +45,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
     this._listStore.initialize(this.props.queryOptions);
   }
 
-  _getSwipeableListRef = ref => {
+  _getSwipeableListRef = (ref) => {
     this._swipeableListRef = ref;
   };
 
@@ -53,7 +53,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
-    await DAOApi.TapDAO.waitForLoadedNullable(dao => dao.fetchByID(clientID));
+    await DAOApi.TapDAO.waitForLoadedNullable((dao) => dao.fetchByID(clientID));
   };
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });

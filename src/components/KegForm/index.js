@@ -8,7 +8,7 @@ import { View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
@@ -37,7 +37,7 @@ const KEG_VALUES = Object.keys(KEG_NAME_BY_KEG_TYPE)
   .sort((a, b) =>
     MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1,
   )
-  .map(kegType => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
+  .map((kegType) => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
 
 type Props = {|
   keg?: Keg,

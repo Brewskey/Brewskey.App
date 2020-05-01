@@ -86,7 +86,7 @@ class NotificationsStore {
   > = observable.map();
 
   constructor() {
-    AppState.addEventListener('change', nextAppState => {
+    AppState.addEventListener('change', (nextAppState) => {
       if (nextAppState === 'active') {
         PushNotification.cancelAllLocalNotifications();
       }
@@ -135,7 +135,7 @@ class NotificationsStore {
           // calls on login and on every app start
           PushNotification.configure({
             onNotification: this._onRawNotification,
-            onRegister: result => {
+            onRegister: (result) => {
               this._deviceToken = result.token;
               this._registerToken();
             },
@@ -248,15 +248,15 @@ class NotificationsStore {
       (await Storage.getForCurrentUser(NOTIFICATIONS_STORAGE_KEY)) || [];
 
     if (Platform.OS === 'ios') {
-      const newNotifications = await new Promise(resolve =>
+      const newNotifications = await new Promise((resolve) =>
         PushNotificationIOS.getDeliveredNotifications(resolve),
       );
       PushNotificationIOS.removeDeliveredNotifications(
-        newNotifications.map(item => item.identifier),
+        newNotifications.map((item) => item.identifier),
       );
 
       notifications.push(
-        ...newNotifications.map(item => ({
+        ...newNotifications.map((item) => ({
           ...item.userInfo,
           ...item.userInfo.aps.alert,
         })),
@@ -264,12 +264,10 @@ class NotificationsStore {
     }
 
     const notificationEntries = notifications
-      ? notifications.map(
-          (notification: Notification): [string, Notification] => [
-            notification.id,
-            notification,
-          ],
-        )
+      ? notifications.map((notification: Notification): [
+          string,
+          Notification,
+        ] => [notification.id, notification])
       : [];
 
     const disabledTapIDs = await Storage.getForCurrentUser(
@@ -285,7 +283,7 @@ class NotificationsStore {
       this._notificationsByID.merge((notificationEntries: any));
     });
 
-    if (notifications.some(item => item.type === 'newFriendRequest')) {
+    if (notifications.some((item) => item.type === 'newFriendRequest')) {
       runInAction(() => {
         FriendStore.flushCache();
       });
@@ -296,10 +294,10 @@ class NotificationsStore {
     // wait for AuthStore.accessToken
     while (!AuthStore.accessToken) {
       // eslint-disable-next-line no-await-in-loop
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
 
-    const deviceUniqueID = DeviceInfo.getUniqueID();
+    const deviceUniqueID = DeviceInfo.getUniqueId();
 
     const body = JSON.stringify({
       deviceToken: this._deviceToken,
@@ -322,7 +320,7 @@ class NotificationsStore {
 
   _unregisterToken = () =>
     // eslint-disable-next-line
-    fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueID()}`, {
+    fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueId()}`, {
       headers: {
         'Content-Type': 'application/json',
       },

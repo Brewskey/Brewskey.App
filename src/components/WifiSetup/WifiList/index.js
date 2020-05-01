@@ -9,7 +9,7 @@ import WifiListEmpty from './WifiListEmpty';
 import WifiListError from './WifiListError';
 import List from '../../../common/List';
 import { action, computed, observable } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { WifiNetworksStore } from '../../../stores/ApiRequestStores/SoftApApiStores';
 import LoadingListFooter from '../../../common/LoadingListFooter';
 

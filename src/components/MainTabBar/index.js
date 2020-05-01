@@ -9,7 +9,7 @@ import { COLORS } from '../../theme';
 import TabBarButton from './TabBarButton';
 import PourButton from './PourButton';
 import BadgeContainer from './BadgeContainer';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import NotificationsStore from '../../stores/NotificationsStore';
 import FriendRequestsListStore from '../../stores/FriendRequestsListStore';
 
@@ -49,7 +49,7 @@ type Props = {
 class MainTabBar extends React.Component<Props> {
   // the logic is stolen from there:
   // https://github.com/react-navigation/react-navigation-tabs/blob/master/src/views/BottomTabBar.js#L203-L205
-  _onTabPress = route => {
+  _onTabPress = (route) => {
     const { jumpTo, onTabPress } = this.props;
     jumpTo(route.key);
     onTabPress({ route });

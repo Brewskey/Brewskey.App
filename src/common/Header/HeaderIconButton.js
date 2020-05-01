@@ -4,11 +4,7 @@ import * as React from 'react';
 import { COLORS } from '../../theme';
 import IconButton from '../buttons/IconButton';
 
-type Props = {
-  // IconButton props
-};
-
-const HeaderIconButton = (props: Props) => (
+const HeaderIconButton = <TProps>(props: TProps) => (
   <IconButton color={COLORS.textInverse} {...props} />
 );
 

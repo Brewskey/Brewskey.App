@@ -10,7 +10,7 @@ import DAOApi, { LoadObject, MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { BeverageStore, TapStore } from '../stores/DAOStores';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
@@ -64,7 +64,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     this._kegLevelBar && this._kegLevelBar.refresh();
   };
 
-  _setKegLevelBarRef = ref => (this._kegLevelBar = ref);
+  _setKegLevelBarRef = (ref) => (this._kegLevelBar = ref);
 
   render() {
     const {

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import AvatarPicker from '../components/AvatarPicker';
@@ -28,7 +28,7 @@ class MyProfileScreen extends React.Component<{}> {
           </Section>
           <Section>
             <SectionHeader title="Change password" />
-            <ChangePasswordForm />
+            <ChangePasswordForm onSubmit={() => {}} />
           </Section>
         </KeyboardAwareScrollView>
       </Container>

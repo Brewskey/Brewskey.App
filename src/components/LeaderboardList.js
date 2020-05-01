@@ -5,7 +5,7 @@ import type { EntityID, LeaderboardItem } from 'brewskey.js-api';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import List from '../common/List';
 import { withNavigation } from 'react-navigation';
 import LeaderboardListStore from '../stores/LeaderboardListStore';

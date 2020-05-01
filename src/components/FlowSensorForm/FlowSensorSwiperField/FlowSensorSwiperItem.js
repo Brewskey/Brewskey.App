@@ -20,7 +20,11 @@ type Props = {|
   title: string,
 |};
 
-const FlowSensorSwiperItem = ({ description, image, title }: Props) => (
+const FlowSensorSwiperItem = ({
+  description,
+  image,
+  title,
+}: Props): React.Node => (
   <View style={styles.container}>
     <Text style={styles.title}>{title}</Text>
     <Image source={image} style={styles.image} resizeMode="contain" />

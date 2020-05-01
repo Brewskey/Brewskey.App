@@ -13,7 +13,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';

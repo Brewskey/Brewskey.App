@@ -25,8 +25,8 @@ const getCoordinatesFromGeoResponse = ({
   return { latitude: lat, longitude: lng };
 };
 
-export const GoogleCoordinatesStore = makeRequestApiStore(
-  (address: string): Promise<Coordinates> =>
+export const GoogleCoordinatesStore = makeRequestApiStore<Coordinates>(
+  (address: string) =>
     fetchJSON(
       'https://maps.googleapis.com/maps/api/geocode/json' +
         `?address=${address}&key=${API_KEY}`,

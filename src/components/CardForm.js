@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { PaymentCardTextField } from 'tipsi-stripe';
 import PaymentsScreenStore from '../stores/PaymentsScreenStore';
 

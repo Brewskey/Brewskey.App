@@ -7,7 +7,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { FormValidationMessage } from 'react-native-elements';
 import injectedComponent from '../../../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { form, FormField } from '../../../common/form';
 import SimplePicker from '../../../components/pickers/SimplePicker';
 import Button from '../../../common/buttons/Button';
@@ -54,9 +54,9 @@ class HiddenWifiForm extends injectedComponent<FormProps, Props> {
           label="Security"
           name="security"
           headerTitle="Select Wifi Security"
-          pickerValues={Object.entries(WIFI_SECURITIES).map(
-            ([name, value]: [any, any]) => ({ label: name, value }),
-          )}
+          pickerValues={Object.entries(
+            WIFI_SECURITIES,
+          ).map(([name, value]: [any, any]) => ({ label: name, value }))}
         />
         {values.security !== WIFI_SECURITIES.OPEN && (
           <FormField

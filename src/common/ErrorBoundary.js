@@ -5,7 +5,7 @@ import { getElementFromComponentProp } from '../utils';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
 type Props = {
-  children?: React.Node,
+  children: React.Node,
   fallbackComponent: ?React.Element<any> | React.ComponentType<any>,
 };
 
@@ -22,11 +22,11 @@ class ErrorBoundary extends React.PureComponent<Props, State> {
     this.setState(() => ({ error }));
   }
 
-  render() {
+  render(): React.Node {
     const { fallbackComponent } = this.props;
 
     if (this.state.error) {
-      return getElementFromComponentProp(fallbackComponent);
+      return getElementFromComponentProp(fallbackComponent) ?? null;
     }
     return this.props.children;
   }

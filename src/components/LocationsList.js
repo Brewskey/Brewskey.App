@@ -6,7 +6,7 @@ import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 import DAOApi from 'brewskey.js-api';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import nullthrows from 'nullthrows';
 import * as React from 'react';
 import { withNavigation } from 'react-navigation';
@@ -56,7 +56,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = ref => {
+  _getSwipeableListRef = (ref) => {
     this._swipeableListRef = ref;
   };
 
@@ -64,7 +64,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Location): Promise<void> => {
     const clientID = DAOApi.LocationDAO.deleteByID(item.id);
-    await DAOApi.LocationDAO.waitForLoadedNullable(dao =>
+    await DAOApi.LocationDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     SnackBarStore.showMessage({ text: 'The location was deleted' });

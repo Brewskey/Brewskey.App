@@ -5,7 +5,7 @@ import type { Row } from '../stores/DAOListStore';
 import type { Navigation, Section } from '../types';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { computed } from 'mobx';
 import { withNavigation } from 'react-navigation';
 import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
@@ -76,13 +76,13 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
       ...friend,
       friendStatus: FRIEND_STATUSES.APPROVED,
     });
-    await DAOApi.FriendDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FriendDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     FriendRequestsListStore.reload();
   };
 
   _onFriendDeclinePress = async ({ id }: Friend) => {
     const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+    await DAOApi.FriendDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     FriendRequestsListStore.reload();
@@ -90,7 +90,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
 
   _onFriendCancelMyRequestPress = async ({ id }: Friend) => {
     const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoadedNullable(dao =>
+    await DAOApi.FriendDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     FriendRequestsListStore.reload();

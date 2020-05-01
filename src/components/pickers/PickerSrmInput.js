@@ -5,7 +5,7 @@ import type { Style } from '../../types';
 import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import PickerInput from './PickerInput';
 import PickerSrmInputValue from './PickerSrmInputValue';
 

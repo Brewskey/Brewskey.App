@@ -4,16 +4,16 @@ import * as React from 'react';
 import DAOApi, { FRIEND_STATUSES } from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import FriendsList from '../components/FriendsList';
 import AuthStore from '../stores/AuthStore';
 
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class MyFriendsMainScreen extends React.Component<{}> {
-  static navigationOptions = {
-    tabBarLabel: 'Friends',
-  };
+  // static navigationOptions = {
+  //   tabBarLabel: 'Friends',
+  // };
 
   render() {
     return (

@@ -8,7 +8,7 @@ import type { RowItemProps } from '../common/SwipeableRow';
 import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import QuickActions from '../common/QuickActions';
@@ -54,7 +54,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = ref => {
+  _getSwipeableListRef = (ref) => {
     this._swipeableListRef = ref;
   };
 
@@ -62,7 +62,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Beverage): Promise<void> => {
     const clientID = DAOApi.BeverageDAO.deleteByID(item.id);
-    await DAOApi.BeverageDAO.waitForLoadedNullable(dao =>
+    await DAOApi.BeverageDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     SnackBarStore.showMessage({ text: 'The beverage was deleted' });

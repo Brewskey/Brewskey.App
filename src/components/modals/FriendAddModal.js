@@ -4,7 +4,7 @@ import type { Account } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import Button from '../../common/buttons/Button';
 import CenteredModal from './CenteredModal';
 import { COLORS, TYPOGRAPHY } from '../../theme';

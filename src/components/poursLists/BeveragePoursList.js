@@ -5,7 +5,7 @@ import type { RowItemProps } from '../../common/SwipeableRow';
 
 import * as React from 'react';
 import moment from 'moment';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import ListItem from '../../common/ListItem';
 import ListEmpty from '../../common/ListEmpty';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';

@@ -37,17 +37,17 @@ export type NearbyTap = {
   tapNumber: number,
 };
 
-export type NearbyLocation = {
+export type NearbyLocation = {|
   id: EntityID,
   name: string,
   summary: ?string,
   taps: Array<NearbyTap>,
-};
+|};
 
-export type WifiNetwork = {
+export type WifiNetwork = {|
   channel?: number,
   index?: number,
   password?: string,
   security: number,
   ssid: string,
-};
+|};

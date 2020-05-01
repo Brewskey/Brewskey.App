@@ -12,7 +12,7 @@ import * as React from 'react';
 import DAOApi from 'brewskey.js-api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { DeviceStore } from '../stores/DAOStores';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
@@ -42,7 +42,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.DeviceDAO.put(id, values);
-    await DAOApi.DeviceDAO.waitForLoaded(dao => dao.fetchByID(id));
+    await DAOApi.DeviceDAO.waitForLoaded((dao) => dao.fetchByID(id));
 
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });

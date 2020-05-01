@@ -8,7 +8,7 @@ import type { RowItemProps } from '../common/SwipeableRow';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { withNavigation } from 'react-navigation';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOListStore from '../stores/DAOListStore';
 import { FriendStore } from '../stores/DAOStores';
 import List from '../common/List';

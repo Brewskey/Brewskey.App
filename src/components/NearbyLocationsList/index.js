@@ -9,7 +9,7 @@ import type {
 
 import * as React from 'react';
 import InjectedComponent from '../../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import Fragment from '../../common/Fragment';
 import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
 import { computed } from 'mobx';

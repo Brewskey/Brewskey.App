@@ -7,7 +7,7 @@ import type {
 } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import nullthrows from 'nullthrows';
 import { action, computed, observable, when } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
@@ -44,7 +44,7 @@ class UserBadges extends React.Component<Props> {
 
   refresh = () => AchievementStore.flushCustomCache();
 
-  @action _setLoadedComponentRef = ref => (this._loadedComponent = ref);
+  @action _setLoadedComponentRef = (ref) => (this._loadedComponent = ref);
 
   render() {
     return (

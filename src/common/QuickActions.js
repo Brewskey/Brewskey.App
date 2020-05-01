@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import SwipeableActionButton from './SwipeableActionButton';
 import Fragment from './Fragment';
 import DeleteModal from '../components/modals/DeleteModal';

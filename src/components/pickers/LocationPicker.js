@@ -2,7 +2,7 @@
 
 import type { Location, QueryOptions } from 'brewskey.js-api';
 import type { Style } from '../../types';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
@@ -11,7 +11,7 @@ import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
-type Props<TMultiple: boolean> = {|
+type Props<TMultiple: BoolUnion> = {|
   error?: ?string,
   inputStyle?: Style,
   labelStyle?: Style,
@@ -26,7 +26,7 @@ type Props<TMultiple: boolean> = {|
   // react-native textInput props
 |};
 
-class LocationPicker<TMultiple: boolean> extends React.PureComponent<
+class LocationPicker<TMultiple: BoolUnion> extends React.PureComponent<
   Props<TMultiple>,
 > {
   static defaultProps = {

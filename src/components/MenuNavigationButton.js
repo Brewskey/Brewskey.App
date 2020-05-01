@@ -9,17 +9,21 @@ import InjectedComponent from '../common/InjectedComponent';
 import { withNavigation } from 'react-navigation';
 import MenuButton from './MenuButton';
 
-type Props = {
+type Props<TOtherProps> = MenuButtonProps<{|
+  ...TOtherProps,
   action?: NavigationNavigateAction,
   routeName: string,
-} & MenuButtonProps;
+|}>;
 
 type InjectedProps = {|
   navigation: Navigation,
 |};
 
 @withNavigation
-class MenuNavigationButton extends InjectedComponent<InjectedProps, Props> {
+class MenuNavigationButton<TOtherProps> extends InjectedComponent<
+  InjectedProps,
+  Props<TOtherProps>,
+> {
   _onPress = () =>
     this.injectedProps.navigation.navigate({
       action: this.props.action,

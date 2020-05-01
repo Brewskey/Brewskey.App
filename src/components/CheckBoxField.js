@@ -4,13 +4,13 @@ import * as React from 'react';
 import { CheckBox } from 'react-native-elements';
 import { COLORS } from '../theme';
 
-type Props = {
+type Props = {|
   label: string,
   onBlur: () => void,
   onChange: (value: boolean) => void,
   value: boolean,
   // other react-native-elements checkbox props
-};
+|};
 
 class CheckBoxField extends React.PureComponent<Props> {
   _onCheckBoxValueChange = () => {

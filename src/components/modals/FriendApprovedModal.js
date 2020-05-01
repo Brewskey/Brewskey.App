@@ -4,7 +4,7 @@ import type { Account } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import Button from '../../common/buttons/Button';
 import Fragment from '../../common/Fragment';
 import CenteredModal from './CenteredModal';
@@ -67,9 +67,7 @@ class FriendApprovedModal extends React.Component<Props> {
         </CenteredModal>
         <DeleteModal
           isVisible={isToggled}
-          message={`Are you sure you want to delete ${
-            account.userName
-          } from friends?`}
+          message={`Are you sure you want to delete ${account.userName} from friends?`}
           onCancelButtonPress={this._deleteModalToggleStore.toggleOff}
           onDeleteButtonPress={this._onFriendDeletePress}
           title="Remove friend"

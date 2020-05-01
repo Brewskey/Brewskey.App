@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { LocationStore } from '../stores/DAOStores';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 import ErrorScreen from '../common/ErrorScreen';

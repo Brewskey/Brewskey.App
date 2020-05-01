@@ -23,13 +23,14 @@ const styles = StyleSheet.create({
   },
 });
 
-export type Props = {
-  icon: { name: string, type?: string },
+export type Props<TRNEProps> = {|
+  ...TRNEProps,
+  icon: {| name: string, type?: string |},
   isActive?: boolean,
   // other RNEButton Props
-};
+|};
 
-class MenuButton extends React.PureComponent<Props> {
+class MenuButton<TRNEProps> extends React.PureComponent<Props<TRNEProps>> {
   render() {
     const { icon, isActive, ...rest } = this.props;
     return (

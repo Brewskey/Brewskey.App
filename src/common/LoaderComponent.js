@@ -3,7 +3,7 @@
 import type { LoadObject } from 'brewskey.js-api';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import LoadingIndicator from './LoadingIndicator';
 
 type Props<TValue, TExtraProps = {}> = {|
@@ -17,7 +17,7 @@ type Props<TValue, TExtraProps = {}> = {|
   >,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
-  updatingComponent?: React.ComponentType<{ ...TExtraProps, value: TValue }>,
+  updatingComponent?: React.ComponentType<{ ...TExtraProps, value: ?TValue }>,
 |};
 
 const LoaderComponent = observer(

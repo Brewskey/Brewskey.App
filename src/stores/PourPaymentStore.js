@@ -3,8 +3,11 @@
 import type {
   CreditCardDetails,
   EntityID,
+  LoadObject,
   QueryOptions,
+  Tap,
 } from 'brewskey.js-api';
+import type { NearbyLocation } from '../types';
 
 import DAOApi from 'brewskey.js-api';
 import { computed } from 'mobx';
@@ -23,17 +26,17 @@ class PourPaymentStore {
   }
 
   @computed
-  get tapsWithPaymentEnabled(): LoadObject<Array<NearbyLocation>> {
-    return TapStore.getMany(this._queryOptions).map(taps =>
-      taps.map(tap => tap.getValue()).filter(Boolean),
+  get tapsWithPaymentEnabled(): LoadObject<Array<Tap>> {
+    return TapStore.getMany(this._queryOptions).map((taps) =>
+      taps.map((tap) => tap.getValue()).filter(Boolean),
     );
   }
 
   @computed
-  get hasCreditCardDetails(): LoadObject<CreditCardDetails> {
+  get hasCreditCardDetails(): boolean {
     return (
       PaymentsStore.get()
-        .map(details => !!details)
+        .map((details) => !!details)
         .getValue() || false
     );
   }

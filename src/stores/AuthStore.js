@@ -1,6 +1,6 @@
 // @flow
 
-import type { UserCredentials } from 'brewskey.js-api';
+import type { AuthResponse, UserCredentials } from 'brewskey.js-api';
 
 import { AsyncStorage } from 'react-native';
 import { action, computed, observable, reaction, runInAction } from 'mobx';
@@ -9,25 +9,24 @@ import Storage from '../Storage';
 
 const AUTH_STORAGE_KEY = 'auth_state';
 
-type AuthState = {|
-  accessToken: ?string,
-  id: ?string,
-  refreshToken: ?string,
-  roles: ?Array<string>,
-  userName: ?string,
-|};
-
-const initialAuthState = {
-  accessToken: null,
-  id: null,
-  refreshToken: null,
-  roles: null,
-  userName: null,
+const initialAuthState: AuthResponse = {
+  accessToken: '',
+  email: '',
+  expiresAt: new Date(),
+  expiresIn: 0,
+  id: '',
+  issuedAt: new Date(),
+  phoneNumber: '',
+  refreshToken: '',
+  roles: [],
+  tokenType: '',
+  userLogins: [],
+  userName: '',
 };
 
 class AuthStore {
   @observable
-  _authState: AuthState = initialAuthState;
+  _authState: AuthResponse = initialAuthState;
   @observable
   isReady: boolean = false;
 
@@ -36,8 +35,8 @@ class AuthStore {
       await this._rehydrateState();
 
       reaction(
-        (): AuthState => this._authState,
-        (authState: AuthState) => {
+        (): AuthResponse => this._authState,
+        (authState: AuthResponse) => {
           if (authState.accessToken) {
             Storage.set(AUTH_STORAGE_KEY, authState);
           } else {
@@ -69,7 +68,7 @@ class AuthStore {
 
   @computed
   get userID(): ?string {
-    return this._authState.id;
+    return this._authState.id === '' ? null : this._authState.id.toString();
   }
 
   @computed

@@ -5,7 +5,7 @@ import type { Style } from '../types';
 
 import * as React from 'react';
 import * as ImagePicker from 'react-native-image-picker';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
 const IMAGE_PICKER_OPTIONS = {

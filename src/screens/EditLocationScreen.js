@@ -12,7 +12,7 @@ import * as React from 'react';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { LocationStore } from '../stores/DAOStores';
 import ErrorScreen from '../common/ErrorScreen';
@@ -42,7 +42,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: LocationMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.LocationDAO.put(id, values);
-    await DAOApi.LocationDAO.waitForLoaded(dao => dao.fetchByID(id));
+    await DAOApi.LocationDAO.waitForLoaded((dao) => dao.fetchByID(id));
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'Location edited.' });
   };

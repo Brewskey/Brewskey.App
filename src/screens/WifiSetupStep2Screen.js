@@ -3,7 +3,7 @@
 import type WifiSetupStore from '../stores/WifiSetupStore';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import PhoneConnectInstructions from '../components/WifiSetup/PhoneConnectInstructions';

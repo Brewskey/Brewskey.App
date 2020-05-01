@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { Button as RNEButton } from 'react-native-elements';
 import ToggleStore from '../../stores/ToggleStore';
 import { COLORS } from '../../theme';
@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props<TRNEProps> = {|
+  ...TRNEProps,
   backgroundColor?: string,
   color?: string,
   disabled?: boolean,
@@ -24,11 +25,12 @@ type Props = {
   onPress?: (...args: Array<any>) => any,
   secondary?: boolean,
   style?: Object,
+  title: string,
   // react-native-elemenets button porps
-};
+|};
 
 @observer
-class Button extends React.Component<Props> {
+class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
   static defaultProps = {
     backgroundColor: COLORS.primary2,
     color: COLORS.textInverse,

@@ -9,7 +9,7 @@ import DAOApi from 'brewskey.js-api';
 import { errorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import Container from '../common/Container';
 import Section from '../common/Section';
 import Header from '../common/Header';

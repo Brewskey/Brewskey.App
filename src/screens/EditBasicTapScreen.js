@@ -8,7 +8,7 @@ import InjectedComponent from '../common/InjectedComponent';
 import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import { TapStore } from '../stores/DAOStores';
 import ErrorScreen from '../common/ErrorScreen';
@@ -43,7 +43,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const id = nullthrows(values.id);
     DAOApi.TapDAO.put(id, values);
-    await DAOApi.TapDAO.waitForLoaded(dao => dao.fetchByID(id));
+    await DAOApi.TapDAO.waitForLoaded((dao) => dao.fetchByID(id));
     SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 

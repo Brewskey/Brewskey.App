@@ -7,8 +7,8 @@ type Props = {|
 |};
 
 class Fragment extends React.PureComponent<Props> {
-  render() {
-    return this.props.children;
+  render(): React.Node {
+    return this.props.children ?? null;
   }
 }
 

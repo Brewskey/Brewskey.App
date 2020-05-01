@@ -4,7 +4,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { StyleSheet, Text } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import Button from '../common/buttons/Button';

@@ -9,7 +9,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
-import { observer } from 'mobx-react/native';
+import { observer } from 'mobx-react';
 import { withNavigation } from 'react-navigation';
 import SwipeableList from '../common/SwipeableList';
 import QuickActions from '../common/QuickActions';
@@ -68,7 +68,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = ref => {
+  _getSwipeableListRef = (ref) => {
     this._swipeableListRef = ref;
   };
 
@@ -76,7 +76,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
     const clientID = DAOApi.DeviceDAO.deleteByID(item.id);
-    await DAOApi.DeviceDAO.waitForLoadedNullable(dao =>
+    await DAOApi.DeviceDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
     );
     SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
