@@ -3,22 +3,14 @@
 import type { Srm } from 'brewskey.js-api';
 import type { Style } from '../../types';
 import type { PickerValue } from '../../stores/PickerStore';
+import type { Props as PickerTextInputProps } from './PickerTextInput';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import PickerInput from './PickerInput';
 import PickerSrmInputValue from './PickerSrmInputValue';
 
-type Props = {
-  error?: ?string,
-  inputStyle?: Style,
-  label: string,
-  labelStyle?: Style,
-  onPress: () => void,
-  placeholder?: string,
-  value?: PickerValue<Srm, false>,
-  // other react-native textInput props
-};
+type Props = PickerTextInputProps<Srm>;
 
 @observer
 class PickerSrmInput extends React.Component<Props> {

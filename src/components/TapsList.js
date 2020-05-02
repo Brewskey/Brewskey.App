@@ -22,7 +22,7 @@ import TapListItem from './TapListItem';
 import DeviceTapListEmpty from './DeviceTapListEmpty';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onAddTapPress: () => void,
   queryOptions?: QueryOptions,
 |};
@@ -68,7 +68,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => (
+  }): React.Node => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

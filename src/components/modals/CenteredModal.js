@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 type Props = {|
   children?: React.Node,
   contentContainerStyle?: Style,
-  header?: React.Element<any>,
+  header?: React.Node,
   isVisible: boolean,
   onHideModal: () => void,
   width?: number | string,

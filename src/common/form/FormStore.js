@@ -91,7 +91,7 @@ class FormStore {
   };
 
   @action
-  setFieldRefElement = (fieldName: string, refElement: React.Element<any>) => {
+  setFieldRefElement = (fieldName: string, refElement: React.Node) => {
     const field = this._fields.get(fieldName);
     if (!field) {
       return;

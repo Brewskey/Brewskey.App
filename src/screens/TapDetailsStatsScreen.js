@@ -15,7 +15,7 @@ import { checkIsAdmin } from '../permissionHelpers';
 import SectionPoursList from '../components/poursLists/SectionPoursList';
 
 type InjectedProps = {|
-  noFlowSensorWarning: ?React.Element<any>,
+  noFlowSensorWarning: ?React.Node,
   tap: Tap,
   tapPermission: Permission,
 |};

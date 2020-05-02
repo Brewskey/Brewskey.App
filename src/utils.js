@@ -43,14 +43,14 @@ export const calculateKegLevel = ({
 // todo this probably annotated wrong. It doesn't propogate props type to
 // returned element
 export const getElementFromComponentProp = <TProps>(
-  ComponentProp?: ?React.Element<any> | React.ComponentType<TProps>,
-): ?React.Element<any> => {
+  ComponentProp?: ?React.Node | React.ComponentType<TProps>,
+): ?React.Node => {
   if (!ComponentProp) {
     return null;
   }
 
   if (React.isValidElement(ComponentProp)) {
-    return ((ComponentProp: any): React.Element<any>);
+    return ((ComponentProp: any): React.Node);
   }
 
   const CastedComponent = ((ComponentProp: any): React.ComponentType<any>);

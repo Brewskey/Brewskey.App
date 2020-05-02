@@ -1,6 +1,6 @@
 // @flow
 
-import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -32,21 +32,14 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity, TMultiple: BoolUnion> = {|
-  multiple: TMultiple,
+type Props<TValue> = {|
   onClearPress: () => void,
   onSelectPress: () => void,
-  value: PickerValue<TEntity, TMultiple>,
+  value: TValue,
 |};
 
 @observer
-class PickerControl<TEntity, TMultiple: BoolUnion> extends React.Component<
-  Props<TEntity, TMultiple>,
-> {
-  static defaultProps = {
-    multiple: false,
-  };
-
+class PickerControl<TValue> extends React.Component<Props<TValue>> {
   render() {
     const { onClearPress, onSelectPress, value } = this.props;
     const selectButtonTitle =

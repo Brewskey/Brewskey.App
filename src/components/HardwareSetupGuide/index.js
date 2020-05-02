@@ -82,10 +82,7 @@ class HardwareSetupGuide extends React.Component<Props> {
           ref={this._setSwiperRef}
         >
           {SETUP_STEPS.map(
-            (
-              setupStep: React.Element<any>,
-              index: number,
-            ): React.Element<any> => (
+            (setupStep: React.Node, index: number): React.Node => (
               // eslint-disable-next-line react/no-array-index-key
               <View key={index} style={styles.container}>
                 {setupStep}

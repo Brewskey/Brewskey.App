@@ -18,7 +18,7 @@ import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAn
 import nullthrows from 'nullthrows';
 
 type InjectedProps = {|
-  noFlowSensorWarning: ?React.Element<any>,
+  noFlowSensorWarning: ?React.Node,
   tap: Tap,
 |};
 

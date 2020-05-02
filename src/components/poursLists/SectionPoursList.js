@@ -27,7 +27,7 @@ type InjectedProps = {
 };
 
 type Props = {
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   canDeletePours: boolean,
   queryOptions?: QueryOptions,
 };
@@ -78,7 +78,7 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => {
+  }): React.Node => {
     const RowComponent = this.props.canDeletePours
       ? SwipeableRow
       : PourListItem;

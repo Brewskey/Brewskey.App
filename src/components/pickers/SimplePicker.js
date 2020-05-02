@@ -1,5 +1,7 @@
 // @flow
 
+import type { PickerValue } from '../../stores/PickerStore';
+
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import ToggleStore from '../../stores/ToggleStore';
@@ -27,8 +29,6 @@ type Props<TValue> = {|
   value: TValue,
 |};
 
-type SinglePicker = false;
-
 @observer
 class SimplePicker<TValue> extends React.Component<Props<TValue>> {
   static defaultProps = {
@@ -41,7 +41,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     ),
     keyExtractor: (pickerValue) => (pickerValue.value: any).toString(),
     multiple: false,
-    onChange: (pickerValue: ?SimplePickerValue<TValue>) => {
+    onChange: (pickerValue) => {
       if (!pickerValue) {
         return;
       }
@@ -80,18 +80,18 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
       pickerValues,
       placeholder,
     } = this.props;
-    const { clear, value } = this._pickerStore;
+    const value = this._pickerStore.value;
+    const { clear } = this._pickerStore;
 
     return (
       <Fragment>
         <PickerTextInput
           error={error}
           label={label}
-          multiple={false}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={this._stringValueExtractor}
-          value={value}
+          value={(value: any)}
         />
         <Modal
           isVisible={this._modalToggleStore.isToggled}
@@ -115,7 +115,6 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
             />
             {!doesRequireConfirmation ? null : (
               <PickerControl
-                multiple={false}
                 onClearPress={clear}
                 onSelectPress={this._modalToggleStore.toggleOff}
                 value={value}

@@ -14,7 +14,7 @@ import { WifiNetworksStore } from '../../../stores/ApiRequestStores/SoftApApiSto
 import LoadingListFooter from '../../../common/LoadingListFooter';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
   wifiSetupLoader: LoadObject<void>,
 |};
@@ -43,7 +43,7 @@ class WifiList extends React.Component<Props> {
   }: {
     index: number,
     item: WifiNetwork,
-  }): React.Element<any> => {
+  }): React.Node => {
     const rowKey = this._keyExtractor(item);
     const isExpanded = rowKey === this._expandedRowKey;
     return (

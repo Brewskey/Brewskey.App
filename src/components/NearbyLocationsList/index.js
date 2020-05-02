@@ -61,7 +61,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
   }: {
     index: number,
     item: NearbyTap,
-  }): React.Element<any> => {
+  }): React.Node => {
     const {
       currentKeg,
       device: { name: deviceName },
@@ -105,7 +105,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     );
   };
 
-  _renderSectionHeader = ({ section }): React.Element<any> => (
+  _renderSectionHeader = ({ section }): React.Node => (
     <ListSectionHeader title={section.title} />
   );
 

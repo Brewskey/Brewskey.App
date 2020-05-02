@@ -3,16 +3,14 @@
 import autobind from 'autobind-decorator';
 import { ObservableMap, action, computed, observable } from 'mobx';
 
-export type BoolUnion = true | false;
-
-type $If<Condition: BoolUnion, Then, Else> = $Call<
+type $If<X, Then, Else = empty> = $Call<
   ((true, Then, Else) => Then) & ((false, Then, Else) => Else),
-  Condition,
+  X,
   Then,
   Else,
 >;
 
-export type PickerValue<TEntity, TMultiple: BoolUnion> = $If<
+export type PickerValue<TEntity, TMultiple> = $If<
   TMultiple,
   Array<TEntity>,
   ?TEntity,
@@ -20,10 +18,10 @@ export type PickerValue<TEntity, TMultiple: BoolUnion> = $If<
 
 export type KeyExtractor<TEntity> = (item: TEntity) => string;
 
-type PickerStoreProps<TEntity, TMultiple: BoolUnion> = {|
+type PickerStoreProps<TEntity, TMultiple> = {|
   +initialValue: PickerValue<TEntity, TMultiple>,
   +keyExtractor?: KeyExtractor<TEntity>,
-  +multiple: BoolUnion,
+  +multiple: TMultiple,
   +onChange?: (value: PickerValue<TEntity, TMultiple>) => void,
 |};
 
@@ -37,10 +35,10 @@ const defaultKeyExtractor = <TEntity>(item: TEntity): string => {
   return castedItem.id.toString();
 };
 
-class PickerStore<TEntity, TMultiple: BoolUnion> {
+class PickerStore<TEntity, TMultiple: any> {
   _keyExtractor: KeyExtractor<TEntity>;
   _onChange: ?(value: PickerValue<TEntity, TMultiple>) => void;
-  _config: PickerStoreProps<TEntity, TMultiple>;
+  _config: PickerStoreProps<TEntity, any>;
 
   // mobx doesn't support observable Set
   // this also can be done with ObservableArray instead ObservableMap

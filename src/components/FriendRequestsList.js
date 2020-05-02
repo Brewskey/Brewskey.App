@@ -98,11 +98,11 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
 
   _keyExtractor = ({ key }: Row<Friend>): string => key.toString();
 
-  _renderSectionHeader = ({ section }): React.Element<any> => (
+  _renderSectionHeader = ({ section }): React.Node => (
     <ListSectionHeader title={section.title} />
   );
 
-  _renderSectionFooter = ({ section: { data } }): ?React.Element<any> =>
+  _renderSectionFooter = ({ section: { data } }): ?React.Node =>
     !data.length ? <ListEmpty message="No requests" /> : null;
 
   render() {

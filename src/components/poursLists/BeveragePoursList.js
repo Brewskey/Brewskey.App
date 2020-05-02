@@ -14,7 +14,7 @@ import PintCounter from '../PintCounter';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
 |};

@@ -20,8 +20,8 @@ import TapListItem from './TapListItem';
 import SnackBarStore from '../stores/SnackBarStore';
 
 type Props = {|
-  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   // todo add queryOptions?
 |};
 
@@ -61,14 +61,14 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     nullthrows(this._swipeableListRef).resetOpenRow();
   };
 
-  _renderSectionHeader = ({ section }): React.Element<any> => (
+  _renderSectionHeader = ({ section }): React.Node => (
     <ListSectionHeader title={section.title} />
   );
 
   _renderRow = ({
     info: { item, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => (
+  }): React.Node => (
     <SwipeableRow
       {...swipeableStateProps}
       index={index}

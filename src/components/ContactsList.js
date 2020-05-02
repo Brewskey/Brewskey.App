@@ -11,18 +11,14 @@ import ListEmpty from '../common/ListEmpty';
 import ListItem from '../common/ListItem';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
 |};
 
 @observer
 class ContactsList extends React.Component<Props> {
   _keyExtractor = (contact: Contact): string => contact.recordID;
 
-  _renderListItem = ({
-    item: contact,
-  }: {
-    item: Contact,
-  }): React.Element<any> => {
+  _renderListItem = ({ item: contact }: { item: Contact }): React.Node => {
     const { givenName, familyName, phoneNumbers, thumbnailPath } = contact;
     const title = `${givenName || ''} ${familyName || ''}`;
     const phoneNumber = phoneNumbers.length ? phoneNumbers[0].number : '';

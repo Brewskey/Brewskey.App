@@ -39,9 +39,7 @@ const PintCounter = ({ ounces }: Props) => {
           <Pint />
         </Fragment>
       ) : (
-        wholePints.map((index: number): React.Element<any> => (
-          <Pint key={index} />
-        ))
+        wholePints.map((index: number): React.Node => <Pint key={index} />)
       )}
       {partialPintLevel ? <Pint level={partialPintLevel} /> : null}
     </View>

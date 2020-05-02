@@ -22,7 +22,7 @@ class NotificationsList extends React.Component<{}> {
   _onNotificationReadEnd = (notification: Notification) =>
     NotificationsStore.setRead(notification.id);
 
-  _renderItem = ({ item }: { item: Notification }): React.Element<any> => (
+  _renderItem = ({ item }: { item: Notification }): React.Node => (
     <ErrorBoundary fallbackComponent={ErrorListItem}>
       <NotificationComponentByType
         isSwipeable

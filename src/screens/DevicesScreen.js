@@ -42,7 +42,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
   }: {
     isEmpty: boolean,
     isLoading: boolean,
-  }): ?React.Element<any> =>
+  }): ?React.Node =>
     isEmpty || isLoading ? null : (
       <Section bottomPadded>
         <SectionContent paddedHorizontal paddedVertical>

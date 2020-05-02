@@ -14,8 +14,8 @@ import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
 type Props<TExtraProps> = {|
-  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
   onDeleteItemPress?: (item: Pour) => Promise<void>,
   onRefresh?: () => void,
@@ -56,7 +56,7 @@ class BasePoursList<TExtraProps> extends React.Component<Props<TExtraProps>> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => (
+  }): React.Node => (
     <LoaderRow
       index={index}
       loadedRow={this.props.loadedRow}

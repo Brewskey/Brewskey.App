@@ -26,7 +26,7 @@ import { checkCanEdit } from '../permissionHelpers';
 
 type InjectedProps = {|
   navigation: Navigation,
-  noFlowSensorWarning: ?React.Element<any>,
+  noFlowSensorWarning: ?React.Node,
   tap: Tap,
   tapPermission: Permission,
 |};

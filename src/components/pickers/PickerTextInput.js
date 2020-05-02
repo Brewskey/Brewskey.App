@@ -1,6 +1,6 @@
 // @flow
 import type { Style } from '../../types';
-import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -16,23 +16,20 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity, TMultiple: BoolUnion> = {|
+export type Props<TValue> = {|
   error?: ?string,
   inputStyle?: Style,
   label: string,
   labelStyle?: Style,
-  multiple: TMultiple,
   onPress: () => void,
   placeholder?: string,
-  stringValueExtractor: (item: TEntity) => string,
-  value?: PickerValue<TEntity, TMultiple>,
+  stringValueExtractor: (item: TValue) => string,
+  value: ?TValue | Array<TValue>,
   // other react-native textInput props
 |};
 
 @observer
-class PickerTextInput<TEntity, TMultiple: BoolUnion> extends React.Component<
-  Props<TEntity, TMultiple>,
-> {
+class PickerTextInput<TValue> extends React.Component<Props<TValue>> {
   static defaultProps = {
     placeholder: 'Please select...',
   };

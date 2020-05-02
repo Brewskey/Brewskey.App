@@ -39,8 +39,8 @@ const styles = StyleSheet.create({
 const FakeHeaderButton = () => <View style={styles.fakeHeaderButton} />;
 
 type Props = {|
-  leftComponent?: ?React.Element<any> | React.ComponentType<any>,
-  rightComponent?: ?React.Element<any> | React.ComponentType<any>,
+  leftComponent?: ?React.Node | React.ComponentType<any>,
+  rightComponent?: ?React.Node | React.ComponentType<any>,
   showBackButton?: boolean,
   title?: ?string,
 |};

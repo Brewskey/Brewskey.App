@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   queryOptions?: QueryOptions,
 |};
 
@@ -68,7 +68,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
     });
   };
 
-  _renderRow = ({ item }: { item: Row<Friend> }): React.Element<any> => (
+  _renderRow = ({ item }: { item: Row<Friend> }): React.Node => (
     <LoaderRow
       loadedRow={LoadedRow}
       loader={item.loader}

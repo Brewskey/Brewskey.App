@@ -16,7 +16,7 @@ import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onRefresh?: () => void | Promise<any>,
   queryOptions?: QueryOptions,
 |};
@@ -49,7 +49,7 @@ class KegsList extends React.Component<Props> {
     this._listStore.reload();
   };
 
-  _renderRow = ({ item }: { item: Row<Keg> }): React.Element<any> => (
+  _renderRow = ({ item }: { item: Row<Keg> }): React.Node => (
     <LoaderRow loader={item.loader} loadedRow={LoadedRow} />
   );
 

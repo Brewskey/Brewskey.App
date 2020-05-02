@@ -24,7 +24,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   queryOptions?: QueryOptions,
 |};
 
@@ -81,7 +81,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => (
+  }): React.Node => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

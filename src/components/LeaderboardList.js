@@ -17,7 +17,7 @@ import ListEmpty from '../common/ListEmpty';
 
 type Props = {|
   duration: string,
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   tapID: EntityID,
 |};
 
@@ -59,7 +59,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   }: {
     item: LeaderboardItem,
     index: number,
-  }): React.Element<any> => (
+  }): React.Node => (
     <ListItem
       avatar={<UserAvatar userName={item.userName || ''} />}
       item={item}

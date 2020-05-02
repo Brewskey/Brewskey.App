@@ -59,14 +59,11 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     }
   };
 
-  _setInnerListRef = ref => {
+  _setInnerListRef = (ref) => {
     this._innerListRef = ref;
   };
 
-  _renderItem = (info: {
-    item: TEntity,
-    index: number,
-  }): React.Element<any> => {
+  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,

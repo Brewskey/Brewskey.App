@@ -1,7 +1,7 @@
 // @flow
 
 import type { Glass, QueryOptions } from 'brewskey.js-api';
-import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
@@ -9,7 +9,7 @@ import { GlassStore } from '../../stores/DAOStores';
 import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 
-type Props<TMultiple: BoolUnion> = {|
+type Props<TMultiple: boolean> = {|
   error?: ?string,
   multiple: TMultiple,
   onChange: (value: PickerValue<Glass, TMultiple>) => void,
@@ -17,7 +17,7 @@ type Props<TMultiple: BoolUnion> = {|
   value: PickerValue<Glass, TMultiple>,
 |};
 
-class GlassPicker<TMultiple: BoolUnion> extends React.Component<
+class GlassPicker<TMultiple: boolean> extends React.Component<
   Props<TMultiple>,
 > {
   static defaultProps = {

@@ -1,5 +1,6 @@
 // @flow
 
+import type { PickerValue } from '../../stores/PickerStore';
 import type { QueryOptions, Organization } from 'brewskey.js-api';
 
 import * as React from 'react';

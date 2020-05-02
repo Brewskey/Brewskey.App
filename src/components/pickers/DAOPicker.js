@@ -4,7 +4,8 @@ import type { EntityID, QueryOptions } from 'brewskey.js-api';
 import type { Style } from '../../types';
 import type DAOStore from '../../stores/DAOStores';
 import type { Row } from '../../stores/DAOListStore';
-import type { BoolUnion, PickerValue } from '../../stores/PickerStore';
+import type { PickerValue } from '../../stores/PickerStore';
+import type { Props as PickerTextInputProps } from './PickerTextInput';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -25,7 +26,7 @@ import PickerTextInput from './PickerTextInput';
 import PickerControl from './PickerControl';
 import PickerStore from '../../stores/PickerStore';
 
-type RenderRowProps<TEntity> = {|
+export type RenderRowProps<TEntity> = {|
   index: number,
   isSelected: boolean,
   item: Row<TEntity>,
@@ -33,7 +34,7 @@ type RenderRowProps<TEntity> = {|
   toggleItem: (item: TEntity) => void,
 |};
 
-type Props<TEntity, TMultiple: BoolUnion> = {
+type Props<TEntity, TMultiple: boolean> = {|
   daoStore: DAOStore<TEntity>,
   error?: ?string,
   headerTitle: string,
@@ -43,11 +44,11 @@ type Props<TEntity, TMultiple: BoolUnion> = {
   multiple: TMultiple,
   onChange?: (value: PickerValue<TEntity, TMultiple>) => void,
   // todo figure flow for pickerInputComponent, it throws weird error for React.Component
-  pickerInputComponent?: any,
+  pickerInputComponent?: React.AbstractComponent<PickerTextInputProps<TEntity>>,
   placeholder?: string,
   placeholderTextColor?: string,
   queryOptions: QueryOptions,
-  renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Element<any>,
+  renderRow: (renderRowProps: RenderRowProps<TEntity>) => React.Node,
   searchBy: string,
   selectionColor?: string,
   stringValueExtractor: (item: TEntity) => string,
@@ -55,7 +56,7 @@ type Props<TEntity, TMultiple: BoolUnion> = {
   validationTextStyle?: Style,
   value: PickerValue<TEntity, TMultiple>,
   // other react-native textInput props
-};
+|};
 
 type TEntityBase<TEntity> = {|
   ...TEntity,
@@ -63,7 +64,7 @@ type TEntityBase<TEntity> = {|
 |};
 
 @observer
-class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
+class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
   Props<TEntityBase<TEntity>, TMultiple>,
 > {
   static defaultProps = {
@@ -77,7 +78,7 @@ class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
   _modalToggleStore: ToggleStore = new ToggleStore();
   _searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
-  _pickerStore: PickerStore<TEntityBase<TEntity>, TMultiple> = new PickerStore({
+  _pickerStore: PickerStore<TEntityBase<TEntity>, any> = new PickerStore({
     initialValue: this.props.value,
     multiple: this.props.multiple,
     onChange: this.props.onChange,
@@ -106,7 +107,7 @@ class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
 
   _renderRow = (
     renderRowProps: RenderRowProps<TEntityBase<TEntity>>,
-  ): React.Element<any> => {
+  ): React.Node => {
     const { renderRow } = this.props;
     const { checkIsSelected, toggleItem } = this._pickerStore;
     const {
@@ -140,11 +141,10 @@ class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
           inputStyle={inputStyle}
           label={label}
           labelStyle={labelStyle}
-          multiple={multiple}
           onPress={this._modalToggleStore.toggleOn}
           placeholder={placeholder}
           stringValueExtractor={stringValueExtractor}
-          value={value}
+          value={(value: any)}
         />
         <Modal
           isVisible={this._modalToggleStore.isToggled}
@@ -180,7 +180,6 @@ class DAOPicker<TEntity, TMultiple: BoolUnion> extends React.Component<
                 renderItem={this._renderRow}
               />
               <PickerControl
-                multiple={multiple}
                 onClearPress={clear}
                 onSelectPress={this._modalToggleStore.toggleOff}
                 value={value}

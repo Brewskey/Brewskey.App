@@ -24,8 +24,8 @@ import SnackBarStore from '../stores/SnackBarStore';
 import { LocationStore } from '../stores/DAOStores';
 
 type Props = {|
-  ListEmptyComponent?: ?(React.ComponentType<any> | React.Element<any>),
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   queryOptions?: QueryOptions,
 |};
 
@@ -83,7 +83,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Element<any> => (
+  }): React.Node => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}

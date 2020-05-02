@@ -44,9 +44,9 @@ export const waitForLoaded = <TValue>(
   getLoader: () => LoadObject<TValue>,
   timeout?: number = 10000,
 ): Promise<TValue> =>
-  new Promise((resolve: TValue => void, reject: (error: Error) => void) => {
+  new Promise((resolve: (TValue) => void, reject: (error: Error) => void) => {
     let timeoutId = null;
-    autorun(reaction => {
+    autorun((reaction) => {
       if (!timeoutId) {
         timeoutId = setTimeout(() => {
           reject(new Error('Response timeout!'));
@@ -54,26 +54,23 @@ export const waitForLoaded = <TValue>(
         }, timeout);
       }
 
-      const loader = getLoader().map(
-        (result: $FlowFixMe): $FlowFixMe => {
-          if (!Array.isArray(result)) {
-            return result;
-          }
-
-          if (
-            result.some(
-              (item: $FlowFixMe): boolean =>
-                item instanceof LoadObject
-                  ? item.isLoading() || item.isUpdating()
-                  : false,
-            )
-          ) {
-            return LoadObject.loading();
-          }
-
+      const loader = getLoader().map((result: $FlowFixMe): $FlowFixMe => {
+        if (!Array.isArray(result)) {
           return result;
-        },
-      );
+        }
+
+        if (
+          result.some((item: $FlowFixMe): boolean =>
+            item instanceof LoadObject
+              ? item.isLoading() || item.isUpdating()
+              : false,
+          )
+        ) {
+          return LoadObject.loading();
+        }
+
+        return result;
+      });
 
       if (loader.isUpdating()) {
         return;
@@ -93,11 +90,12 @@ export const waitForLoaded = <TValue>(
     });
   });
 
-class DAOStore<TEntity: { id: EntityID }> {
+type TEntityBase<TEntity> = {| ...TEntity, id: EntityID |};
+class DAOStore<TEntity> {
   _atom: IAtom;
-  _dao: ODataDAO<TEntity, *>;
+  _dao: ODataDAO<TEntityBase<TEntity>, any>;
 
-  constructor(dao: ODataDAO<TEntity, *>) {
+  constructor(dao: ODataDAO<TEntityBase<TEntity>, any>) {
     this._dao = dao;
     this._atom = createAtom(
       `DAO_ATOM/${dao.getEntityName()}`,
