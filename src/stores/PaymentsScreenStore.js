@@ -2,7 +2,7 @@
 
 import type { CreditCardDetails, LoadObject } from 'brewskey.js-api';
 
-import stripe from 'tipsi-stripe';
+//import stripe from 'tipsi-stripe';
 import { action, computed, observable, runInAction } from 'mobx';
 import { PaymentsStore } from './DAOStores';
 import DAOApi from 'brewskey.js-api';
@@ -35,7 +35,7 @@ class PaymentsScreenStore {
     this._isLoading = true;
 
     try {
-      const { tokenId } = await stripe.createTokenWithCard(formParams);
+      const { tokenId } = { tokenId: '' }; // await stripe.createTokenWithCard(formParams);
       PaymentsDAO.flushCache();
       PaymentsDAO.addPaymentMethod(tokenId);
       await PaymentsDAO.waitForLoadedNullable((dao) => dao.get());

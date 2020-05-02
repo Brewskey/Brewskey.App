@@ -5,7 +5,7 @@ import type { Navigation } from '../types';
 
 import * as React from 'react';
 import { Dimensions } from 'react-native';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';

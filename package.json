@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
+    "@react-native-community/masked-view": "^0.1.10",
     "appcenter": "^3.0.2",
     "appcenter-analytics": "^3.0.2",
     "appcenter-crashes": "^3.0.2",
@@ -56,15 +57,20 @@
     "react-native-progress": "^4.1.2",
     "react-native-push-notification": "^3.1.1",
     "react-native-randombytes": "^3.5.0",
+    "react-native-reanimated": "^1.8.0",
+    "react-native-safe-area-context": "^0.7.3",
+    "react-native-screens": "^2.7.0",
     "react-native-signalr": "^1.0.6",
     "react-native-splash-screen": "^3.1.1",
     "react-native-swipeable-list": "^0.0.9",
     "react-native-swiper": "^1.5.13",
+    "react-native-tab-view": "^2.14.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^4.3.9",
+    "react-navigation-stack": "^2.4.0",
+    "react-navigation-tabs": "^2.8.13",
     "readable-stream": "^3.6.0",
     "rn-fetch-blob": "^0.12.0",
-    "tipsi-stripe": "^7.5.3",
     "vm-browserify": "^1.0.1"
   },
   "devDependencies": {
@@ -91,6 +97,7 @@
     "lint-staged": "^10.2.1",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.0.5",
+    "react-native-eject": "^0.1.2",
     "react-test-renderer": "^16.0.0",
     "whatwg-fetch": "^3.0.0"
   },

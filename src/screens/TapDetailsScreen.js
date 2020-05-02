@@ -6,7 +6,7 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import {
   FlowSensorStore,

@@ -6,7 +6,7 @@ import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
 import InjectedComponent from '../common/InjectedComponent';
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import WifiSetupStore from '../stores/WifiSetupStore';
 import Container from '../common/Container';

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
-import { PaymentCardTextField } from 'tipsi-stripe';
+//import { PaymentCardTextField } from 'tipsi-stripe';
 import PaymentsScreenStore from '../stores/PaymentsScreenStore';
 
 const styles = StyleSheet.create({
@@ -27,14 +27,14 @@ class CardForm extends React.Component<Props> {
   render() {
     return (
       <View style={this.props.style}>
-        <PaymentCardTextField
+        {/* <PaymentCardTextField
           accessible={false}
           cvcPlaceholder="CVC"
           expirationPlaceholder="MM/YY"
           numberPlaceholder="XXXX XXXX XXXX XXXX"
           onParamsChange={PaymentsScreenStore.addNewCard}
           style={styles.field}
-        />
+        /> */}
       </View>
     );
   }

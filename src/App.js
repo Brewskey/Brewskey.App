@@ -17,13 +17,13 @@ import SnackBar from './common/SnackBar';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
 import codePush from 'react-native-code-push';
 import SnackBarStore from './stores/SnackBarStore';
-import stripe from 'tipsi-stripe';
+//import stripe from 'tipsi-stripe';
 
-stripe.setOptions({
-  androidPayMode: 'test', // Android only
-  // merchantId: 'MERCHANT_ID', // Optional
-  publishableKey: 'pk_test_B8kBbgSzIHam4hf1RRNC2WRf',
-});
+// stripe.setOptions({
+//   androidPayMode: 'test', // Android only
+//   // merchantId: 'MERCHANT_ID', // Optional
+//   publishableKey: 'pk_test_B8kBbgSzIHam4hf1RRNC2WRf',
+// });
 
 mobxConfigure({
   enforceActions: 'observed',
@@ -87,7 +87,7 @@ class App extends React.Component<{}> {
     });
   }
 
-  _setNavigationRef = ref => {
+  _setNavigationRef = (ref) => {
     // todo make navigationStore which will persist navigation
     // state, just like in redux.
     // this will allow to avoid this shitty hacks

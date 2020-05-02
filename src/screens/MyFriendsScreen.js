@@ -6,7 +6,7 @@ import type { FriendAddFormValues } from '../components/FriendAddForm';
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import DAOApi from 'brewskey.js-api';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
