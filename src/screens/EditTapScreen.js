@@ -13,45 +13,49 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import EditBasicTapScreen from './EditBasicTapScreen';
 import EditFlowSensorScreen from './EditFlowSensorScreen';
+import EditTapPaymentsScreen from './EditTapPaymentsScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import EditKegScreen from './EditKegScreen';
-import theme from '../theme';
+import createTopTabNavigator from '../components/hoc/createTopTabNavigator';
 
 /* eslint-disable sorting/sort-object-props */
-const EditTapRouter = createMaterialTopTabNavigator(
-  {
-    editKegScreen: { screen: EditKegScreen },
-    editFlowSensor: { screen: EditFlowSensorScreen },
-    editTap: { screen: EditBasicTapScreen },
+const EditTapRouter = createTopTabNavigator({
+  editKegScreen: EditKegScreen,
+  editFlowSensor: EditFlowSensorScreen,
+  editTap: EditBasicTapScreen,
+  editTapPayments: {
+    getShouldShowTab: ({ tap }) => tap != null && tap.isPaymentEnabled,
+    screen: EditTapPaymentsScreen,
   },
-  /* eslint-enable */
-  {
-    ...theme.tabBar,
-    initialLayout: {
-      height: 0,
-      width: Dimensions.get('window').width,
-    },
-    lazy: true,
-  },
-);
+});
 
 type InjectedProps = {
   id: EntityID,
   navigation: Navigation,
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
+@errorBoundary(<ErrorScreen />)
 @flatNavigationParamsAndScreenProps
+@observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {
   static router = EditTapRouter.router;
 
+  @computed
+  get _tapLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
+    const { id } = this.injectedProps;
+    return TapStore.getByID(id);
+  }
+
   render() {
     const { id, navigation } = this.injectedProps;
-
+    const tap = this._tapLoader.getValue();
     return (
       <Container>
         <Header showBackButton title="Edit Tap" />
-        <EditTapRouter screenProps={{ tapId: id }} navigation={navigation} />
+        <EditTapRouter
+          screenProps={{ tap, tapId: id }}
+          navigation={navigation}
+        />
       </Container>
     );
   }

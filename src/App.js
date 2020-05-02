@@ -18,6 +18,7 @@ import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiSto
 import codePush from 'react-native-code-push';
 import SnackBarStore from './stores/SnackBarStore';
 //import stripe from 'tipsi-stripe';
+import { Provider as SlotFillProvider } from 'react-slot-fill';
 
 // stripe.setOptions({
 //   androidPayMode: 'test', // Android only
@@ -71,7 +72,10 @@ const styles = StyleSheet.create({
   },
 });
 
-@codePush
+@codePush({
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.IMMEDIATE,
+})
 class App extends React.Component<{}> {
   componentDidMount() {
     autorun(async () => {
@@ -100,7 +104,9 @@ class App extends React.Component<{}> {
   render() {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <AppRouter ref={this._setNavigationRef} />
+        <SlotFillProvider>
+          <AppRouter ref={this._setNavigationRef} />
+        </SlotFillProvider>
         <PourProcessModal />
         <SnackBar />
       </SafeAreaView>

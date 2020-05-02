@@ -3,17 +3,18 @@
 import type { Style } from '../types';
 
 import * as React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   FormInput,
   FormLabel,
   FormValidationMessage,
 } from 'react-native-elements';
 import nullthrows from 'nullthrows';
-import { COLORS } from '../theme';
+import { COLORS, TYPOGRAPHY } from '../theme';
 
 export type Props<TOtherProps> = {|
   ...TOtherProps,
+  description?: string,
   error?: ?string,
   inputRef?: React.Ref<typeof FormInput>,
   inputStyle?: Style,
@@ -48,6 +49,7 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
 
   render() {
     const {
+      description,
       error,
       inputRef,
       inputStyle,
@@ -71,6 +73,9 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
           value={value || value === 0 ? value.toString() : null}
           {...props}
         />
+        {description == null ? null : (
+          <Text style={styles.description}>{description}</Text>
+        )}
         <FormValidationMessage labelStyle={validationTextStyle}>
           {error}
         </FormValidationMessage>
@@ -78,5 +83,13 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  description: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+    marginHorizontal: 20,
+  },
+});
 
 export default TextField;

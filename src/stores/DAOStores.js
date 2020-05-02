@@ -7,8 +7,6 @@ import type {
   Availability,
   Beverage,
   CloudDevice,
-  CreditCardDetails,
-  CreditCardDetailsMutator,
   Device,
   EntityID,
   FlowSensor,
@@ -25,6 +23,7 @@ import type {
   Report,
   RestDAO,
   Schedule,
+  SquareLocation,
   Srm,
   Style,
   Tap,
@@ -260,6 +259,14 @@ class $KegStore extends DAOStore<Keg> {
   }
 }
 
+class $OrganizationStore extends DAOStore<Organization> {
+  fetchSquareLocations(
+    organizationID: EntityID,
+  ): LoadObject<Array<SquareLocation>> {
+    return this.__callDAOFunction('fetchSquareLocations', organizationID);
+  }
+}
+
 class $CloudDeviceStore extends DAOStore<CloudDevice> {
   constructor() {
     super((DAOApi.CloudDeviceDAO: $FlowFixMe));
@@ -312,7 +319,7 @@ export const KegStore: $KegStore = new $KegStore();
 export const LocationStore: DAOStore<Location> = new DAOStore(
   DAOApi.LocationDAO,
 );
-export const OrganizationStore: DAOStore<Organization> = new DAOStore(
+export const OrganizationStore: $OrganizationStore = new $OrganizationStore(
   DAOApi.OrganizationDAO,
 );
 export const PaymentsStore: $PaymentsStore = new $PaymentsStore();
@@ -325,5 +332,8 @@ export const ScheduleStore: DAOStore<Schedule> = new DAOStore(
 export const SrmStore: DAOStore<Srm> = new DAOStore(DAOApi.SrmDAO);
 export const StyleStore: DAOStore<Style> = new DAOStore(DAOApi.StyleDAO);
 export const TapStore: $TapStore = new $TapStore(DAOApi.TapDAO);
+export const PriceVariantStore: DAOStore<PriceVariant> = new DAOStore(
+  DAOApi.PriceVariantDAO,
+);
 
 export default DAOStore;

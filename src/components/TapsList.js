@@ -24,6 +24,7 @@ import DeviceTapListEmpty from './DeviceTapListEmpty';
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onAddTapPress: () => void,
+  onRefresh?: () => void,
   queryOptions?: QueryOptions,
 |};
 
@@ -52,9 +53,11 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   _keyExtractor = (row: Row<Tap>): string => row.key;
 
   _onDeleteItemPress = async (item: Tap): Promise<void> => {
+    DAOApi.TapDAO.flushQueryCaches();
     const clientID = DAOApi.TapDAO.deleteByID(item.id);
     await DAOApi.TapDAO.waitForLoadedNullable((dao) => dao.fetchByID(clientID));
   };
+
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });
     nullthrows(this._swipeableListRef).resetOpenRow();
@@ -65,6 +68,13 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
       id: item.id,
     });
 
+  _onRefresh = () => {
+    this._listStore.reload();
+    const { onRefresh } = this.props;
+    if (onRefresh != null) {
+      onRefresh();
+    }
+  };
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
@@ -99,7 +109,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
+        onRefresh={this._onRefresh}
         ref={this._getSwipeableListRef}
         renderItem={this._renderRow}
       />

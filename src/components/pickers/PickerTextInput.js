@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 });
 
 export type Props<TValue> = {|
+  description?: React.Node,
   error?: ?string,
   inputStyle?: Style,
   label: string,
@@ -46,6 +47,7 @@ class PickerTextInput<TValue> extends React.Component<Props<TValue>> {
 
   render() {
     const {
+      description,
       error,
       inputStyle,
       label,
@@ -57,6 +59,7 @@ class PickerTextInput<TValue> extends React.Component<Props<TValue>> {
 
     return (
       <PickerInput
+        description={description}
         labelStyle={labelStyle}
         error={error}
         label={label}

@@ -11,9 +11,17 @@ import {
   View,
 } from 'react-native';
 import { FormLabel, FormValidationMessage } from 'react-native-elements';
-import { COLORS } from '../../theme';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
+  descriptionContainer: {
+    marginHorizontal: 20,
+    marginTop: 8,
+  },
+  descriptionText: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+  },
   placeholderText: {
     color: COLORS.textInputPlaceholder,
     fontSize: 17,
@@ -32,6 +40,7 @@ const styles = StyleSheet.create({
 
 export type Props = {
   children?: React.Node,
+  description?: React.Node,
   error?: ?string,
   label?: string,
   labelStyle: Style,
@@ -44,6 +53,7 @@ class PickerInput extends React.Component<Props> {
   render() {
     const {
       children,
+      description,
       error,
       label,
       labelStyle,
@@ -51,6 +61,19 @@ class PickerInput extends React.Component<Props> {
       placeholder,
       value,
     } = this.props;
+
+    let renderedDescription = null;
+    if (description != null) {
+      renderedDescription = (
+        <View style={styles.descriptionContainer}>
+          {typeof description === 'string' ? (
+            <Text style={styles.descriptionText}>{description}</Text>
+          ) : (
+            description
+          )}
+        </View>
+      );
+    }
 
     return (
       <TouchableOpacity onPress={onPress}>
@@ -63,6 +86,7 @@ class PickerInput extends React.Component<Props> {
           )}
         </View>
         <View style={styles.underline} />
+        {renderedDescription}
         <FormValidationMessage>{error}</FormValidationMessage>
       </TouchableOpacity>
     );

@@ -5,6 +5,7 @@ import { CheckBox } from 'react-native-elements';
 import { COLORS } from '../theme';
 
 type Props = {|
+  description?: string,
   label: string,
   onBlur: () => void,
   onChange: (value: boolean) => void,

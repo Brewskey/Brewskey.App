@@ -3,6 +3,7 @@
 import type { Navigation } from '../../types';
 
 import * as React from 'react';
+import { observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { COLORS } from '../../theme';
@@ -12,16 +13,20 @@ import BadgeContainer from './BadgeContainer';
 import { observer } from 'mobx-react';
 import NotificationsStore from '../../stores/NotificationsStore';
 import FriendRequestsListStore from '../../stores/FriendRequestsListStore';
+import TabBarStore from '../../stores/TabBarStore';
+import { Slot } from 'react-slot-fill';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.secondary,
     borderTopColor: 'rgba(0, 0, 0, .3)',
     borderTopWidth: StyleSheet.hairlineWidth,
-    flexDirection: 'row',
-    height: 49,
     overflow: 'hidden',
     position: 'relative',
+  },
+  navContainer: {
+    flexDirection: 'row',
+    height: 49,
   },
 });
 
@@ -46,6 +51,7 @@ type Props = {
   // other props from createMaterialTopTabNavigator
 };
 
+@observer
 class MainTabBar extends React.Component<Props> {
   // the logic is stolen from there:
   // https://github.com/react-navigation/react-navigation-tabs/blob/master/src/views/BottomTabBar.js#L203-L205
@@ -59,10 +65,19 @@ class MainTabBar extends React.Component<Props> {
     const {
       navigation: { state },
     } = this.props;
+
+    if (!TabBarStore.isTabBarVisible) {
+      return (
+        <View style={styles.container}>
+          <Slot name="MainTabBar" />
+        </View>
+      );
+    }
+
     const currentIndex = state.index;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, styles.navContainer]}>
         <TabBarButton
           icon={{ name: 'home' }}
           isFocused={currentIndex === getIndexByRouteName('home', state.routes)}

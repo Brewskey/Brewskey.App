@@ -148,7 +148,7 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
     name: 'Power Hour',
   },
   SevenDaysStraight: {
-    description: "You've poured a beer seven days in a row.",
+    description: "You've poured a drink seven days in a row.",
     image: { large: SevenDaysStraightLarge, small: SevenDaysStraightSmall },
     name: 'Seven Days Straight',
   },

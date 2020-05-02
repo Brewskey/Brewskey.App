@@ -27,7 +27,7 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-@errorBoundary(<ErrorScreen showBackButton />)
+@errorBoundary(<ErrorScreen />)
 @flatNavigationParamsAndScreenProps
 @observer
 class EditTapScreen extends InjectedComponent<InjectedProps> {

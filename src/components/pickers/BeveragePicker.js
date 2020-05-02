@@ -52,6 +52,7 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
           ],
         }}
         renderRow={this._renderRow}
+        shouldUseSearchQuery
         stringValueExtractor={(beverage: Beverage): string => beverage.name}
       />
     );

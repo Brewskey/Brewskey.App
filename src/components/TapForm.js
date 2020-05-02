@@ -1,19 +1,29 @@
 // @flow
 
-import type { Device, EntityID, Tap, TapMutator } from 'brewskey.js-api';
+import type {
+  Device,
+  EntityID,
+  Organization,
+  Tap,
+  TapMutator,
+} from 'brewskey.js-api';
 import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import { View } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
+import { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
+import { computed } from 'mobx';
 import { FormValidationMessage } from 'react-native-elements';
 import Button from '../common/buttons/Button';
-import SectionContent from '../common/SectionContent';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';
 import DevicePicker from './pickers/DevicePicker';
 import { form, FormField } from '../common/form';
+import { Fill } from 'react-slot-fill';
+import { DeviceStore, OrganizationStore } from '../stores/DAOStores';
 
 const validate = (values: TapMutator): { [key: string]: string } => {
   const errors = {};
@@ -26,6 +36,7 @@ const validate = (values: TapMutator): { [key: string]: string } => {
 };
 
 type Props = {|
+  isFocused: Boolean,
   onSubmit: (values: TapMutator) => void | Promise<any>,
   submitButtonLabel: string,
   tap?: Tap,
@@ -34,10 +45,26 @@ type Props = {|
 type InjectedProps = FormProps;
 
 @form({ validate })
+@withNavigationFocus
 @observer
 class TapForm extends InjectedComponent<InjectedProps, Props> {
+  @computed
+  get _organizationLoader(): LoadObject<Organization> {
+    const {
+      values: { deviceId },
+    } = this.injectedProps;
+
+    if (deviceId == null) {
+      return LoadObject.empty();
+    }
+
+    return DeviceStore.getByID(deviceId.id).map(device =>
+      OrganizationStore.getByID(device.organization.id),
+    );
+  }
+
   render() {
-    const { submitButtonLabel, tap = {} } = this.props;
+    const { isFocused, submitButtonLabel, tap = {} } = this.props;
     const {
       formError,
       handleSubmit,
@@ -46,8 +73,11 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
       submitting,
     } = this.injectedProps;
 
+    const organization = this._organizationLoader.getValue();
+
     return (
       <View>
+        <FormField initialValue={tap.id} name="id" />
         <FormField
           component={TextField}
           initialValue={tap.description}
@@ -60,6 +90,15 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           name="deviceId"
           parseOnSubmit={(value: Device): EntityID => value.id}
         />
+        {organization == null || !organization.canEnablePayments ? null : (
+          <FormField
+            component={CheckBoxField}
+            disabled={submitting}
+            initialValue={tap.isPaymentEnabled}
+            label="Enable Payments for this tap"
+            name="isPaymentEnabled"
+          />
+        )}
         <FormField
           component={CheckBoxField}
           disabled={submitting}
@@ -71,26 +110,29 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
           component={CheckBoxField}
           disabled={submitting}
           initialValue={tap.hideStats}
-          label="Hide stats"
+          label="Hide Stats tab"
           name="hideStats"
         />
         <FormField
           component={CheckBoxField}
           disabled={submitting}
           initialValue={tap.disableBadges}
-          label="Disable badges"
+          label="Disable Badges for tap"
           name="disableBadges"
         />
-        <FormField initialValue={tap.id} name="id" />
-        <FormValidationMessage>{formError}</FormValidationMessage>
-        <SectionContent paddedVertical>
-          <Button
-            disabled={submitting || invalid || pristine}
-            loading={submitting}
-            onPress={handleSubmit}
-            title={submitButtonLabel}
-          />
-        </SectionContent>
+
+        {!isFocused ? null : (
+          <Fill name="MainTabBar">
+            <FormValidationMessage>{formError}</FormValidationMessage>
+            <Button
+              disabled={submitting || invalid || pristine}
+              loading={submitting}
+              onPress={handleSubmit}
+              style={{ marginVertical: 12 }}
+              title={submitButtonLabel}
+            />
+          </Fill>
+        )}
       </View>
     );
   }

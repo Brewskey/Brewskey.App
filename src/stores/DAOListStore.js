@@ -14,13 +14,8 @@ export type Row<TEntity: { id: EntityID }> = {|
   loader: LoadObject<TEntity>,
 |};
 
-type TEntityBase<TEntity> = {|
-  ...TEntity,
-  id: EntityID,
-|};
-
-class DAOListStore<TEntity> {
-  _daoStore: DAOStore<TEntityBase<TEntity>>;
+class DAOListStore<TEntity: { id: EntityID }> {
+  _daoStore: DAOStore<TEntity>;
   _pageSize: number;
 
   @observable
@@ -30,10 +25,7 @@ class DAOListStore<TEntity> {
   @observable
   _isInitialized;
 
-  constructor(
-    daoStore: DAOStore<TEntityBase<TEntity>>,
-    pageSize?: number = 20,
-  ) {
+  constructor(daoStore: DAOStore<TEntity>, pageSize?: number = 20) {
     this._daoStore = daoStore;
     this._pageSize = pageSize;
   }
@@ -56,7 +48,7 @@ class DAOListStore<TEntity> {
   }
 
   @computed
-  get rows(): Array<Row<TEntityBase<TEntity>>> {
+  get rows(): Array<Row<TEntity>> {
     if (this.isFetchingRemoteCount || this._remoteCount === 0) {
       return [];
     }
@@ -73,29 +65,37 @@ class DAOListStore<TEntity> {
         const queryLoadObject = this._daoStore.getMany(queryOptions);
 
         return rowKeys
-          .map((key: number): Row<TEntityBase<TEntity>> => ({
-            key: key.toString(),
-            loader: LoadObject.loading(),
-          }))
-          .map(({ key }: Row<TEntityBase<TEntity>>, index: number): Row<
-            TEntityBase<TEntity>,
-          > => {
-            let loader: LoadObject<TEntityBase<TEntity>> = LoadObject.loading();
+          .map(
+            (key: number): Row<TEntity> => ({
+              key: key.toString(),
+              loader: LoadObject.loading(),
+            }),
+          )
+          .map(
+            ({ key }: Row<TEntity>, index: number): Row<TEntity> => {
+              let loader: LoadObject<TEntity> = LoadObject.loading();
 
-            if (queryLoadObject.hasValue()) {
-              const entities = queryLoadObject.getValueEnforcing();
-              loader = nullthrows(entities[index]);
-            } else if (queryLoadObject.hasError()) {
-              loader = LoadObject.withError(
-                queryLoadObject.getErrorEnforcing(),
-              );
-            }
+              if (queryLoadObject.hasValue()) {
+                const entities = queryLoadObject.getValueEnforcing();
+                if (entities.length) {
+                  loader = nullthrows(entities[index]);
 
-            return {
-              key,
-              loader,
-            };
-          });
+                  if (!(loader instanceof LoadObject)) {
+                    loader = LoadObject.withValue(loader);
+                  }
+                }
+              } else if (queryLoadObject.hasError()) {
+                loader = LoadObject.withError(
+                  queryLoadObject.getErrorEnforcing(),
+                );
+              }
+
+              return {
+                key,
+                loader,
+              };
+            },
+          );
       }),
     );
   }

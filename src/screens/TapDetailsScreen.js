@@ -29,22 +29,23 @@ import TapDetailsStatsScreen from './TapDetailsStatsScreen';
 import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
 import theme from '../theme';
 import { checkCanEdit } from '../permissionHelpers';
+import createTopTabNavigator from '../components/hoc/createTopTabNavigator';
 
 /* eslint-disable sorting/sort-object-props */
 const tabScreens = {
   tapDetailsKeg: { screen: TapDetailsKegScreen },
   tapDetailsStats: {
+    getShouldShowTab: ({ tap }) => !tap.hideStats,
     screen: TapDetailsStatsScreen,
-    hidePropName: 'hideStats',
   },
   tapDetailsLeaderboard: {
+    getShouldShowTab: ({ tap }) => !tap.hideLeaderboard,
     screen: TapDetailsLeaderboardScreen,
-    hidePropName: 'hideLeaderboard',
   },
 };
 /* eslint-enable */
 
-const TapDetailsNavigator = createMaterialTopTabNavigator(tabScreens, {
+const TapDetailsNavigator = createTopTabNavigator(tabScreens, {
   ...theme.tabBar,
   initialLayout: {
     height: 0,
@@ -117,26 +118,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
   render() {
     const { navigation, value } = this.props;
     const [tap, tapPermission, flowSensor] = value;
-    const { id, hideLeaderboard, hideStats } = tap;
-
-    // workaround for dynamically hiding tabs
-    // todo change it when they implement the feature
-    // https://github.com/react-navigation/react-navigation/issues/717
-    // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
-    const navState = navigation.state;
-    const hideProps = { hideLeaderboard, hideStats };
-
-    const filteredTabRoutes = navState.routes.filter(
-      (route: Object): boolean => {
-        const { hidePropName } = tabScreens[route.routeName];
-        return !hidePropName || !hideProps[hidePropName];
-      },
-    );
-
-    const activeIndex = filteredTabRoutes.findIndex(
-      (route: Object): boolean =>
-        route.routeName === navState.routes[navState.index].routeName,
-    );
+    const { id } = tap;
 
     const noFlowSensorWarning =
       !flowSensor && checkCanEdit(tapPermission) ? (
@@ -162,14 +144,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
           title="Tap"
         />
         <TapDetailsNavigator
-          navigation={{
-            ...navigation,
-            state: {
-              ...navigation.state,
-              index: activeIndex,
-              routes: filteredTabRoutes,
-            },
-          }}
+          navigation={navigation}
           screenProps={{
             noFlowSensorWarning,
             tap,

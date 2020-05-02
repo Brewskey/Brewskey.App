@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>11</string>
+	<string>12</string>
 	<key>CodePushDeploymentKey</key>
 	<string>1z1k93zez_qfmBpunTKX1SaodG11505a7461-8d36-4cd2-9890-9634a2c7bfe6</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>

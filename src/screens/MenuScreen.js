@@ -111,12 +111,11 @@ class MenuScreen extends React.Component<{}> {
                 title="Setup NFC Cards"
               />
             )}
-
-            <MenuNavigationButton
+            {/* <MenuNavigationButton
               icon={{ name: 'credit-card' }}
               routeName="payments"
               title="Payment"
-            />
+            /> */}
             <MenuNavigationButton
               icon={{ name: 'help' }}
               routeName="help"

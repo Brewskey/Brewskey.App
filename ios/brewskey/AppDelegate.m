@@ -6,8 +6,6 @@
  */
 
 #import "AppDelegate.h"
-#import <AppCenterReactNativeAnalytics/AppCenterReactNativeAnalytics.h>
-#import <AppCenterReactNative/AppCenterReactNative.h>
 #import <CodePush/CodePush.h>
 
 #import <React/RCTBundleURLProvider.h>
@@ -22,10 +20,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
-  [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];  // Initialize AppCenter analytics
-
-  [AppCenterReactNative register];  // Initialize AppCenter 
 
     #ifdef DEBUG
         jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];

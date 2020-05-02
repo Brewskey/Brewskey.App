@@ -39,6 +39,8 @@ class PourProcessStore {
   shouldShowPaymentScreen: boolean = false;
   @observable
   _didAuthorizePayment: boolean = false;
+  @observable
+  _hasReadTag: boolean = false;
 
   constructor() {
     NfcManager.start().catch(() => {
@@ -77,12 +79,18 @@ class PourProcessStore {
       isNFCEnabled = this.isNFCSupported;
     }
 
-    isNFCEnabled &&
+    if (isNFCEnabled) {
       NfcManager.registerTagEvent(
         this._onNFCTagDiscovered,
         'Tap Brewskey Box',
         true,
+        // {
+        //   invalidateAfterFirstRead: true,
+        //   isReaderModeEnabled: true,
+        //   readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+        // },
       );
+    }
 
     this._startTotpTimer();
 
@@ -106,13 +114,16 @@ class PourProcessStore {
   @action
   onHideModal = () => {
     GPSCoordinatesStore.flushCache();
-    this.isNFCEnabled && NfcManager.unregisterTagEvent();
+    if (this.isNFCEnabled) {
+      NfcManager.unregisterTagEvent();
+    }
 
     this._stopTotpTimer();
     this.setTotp('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
     this._didAuthorizePayment = false;
+    this._hasReadTag = false;
     this.deviceID = null;
   };
 
@@ -139,18 +150,18 @@ class PourProcessStore {
       this._setIsLoading(true);
       this._setErrorText('');
 
-      const payload = await this._getAuthPayload();
-      const paymentResult = await fetchJSON(
-        `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
-        payload,
-      );
+      // const payload = await this._getAuthPayload();
+      // const paymentResult = await fetchJSON(
+      //   `${CONFIG.HOST}/api/authorizations/does-require-payment/`,
+      //   payload,
+      // );
 
-      if (paymentResult.shouldAskForPayment) {
-        this._showPayments(paymentResult.deviceID);
-        return;
-      }
+      // if (paymentResult.shouldAskForPayment) {
+      //   this._showPayments(paymentResult.deviceID);
+      //   return;
+      // }
 
-      this.deviceID = paymentResult.deviceID;
+      // this.deviceID = paymentResult.deviceID;
       await this._sendPourAuthorization();
     } catch (error) {
       if (!this.deviceID) {
@@ -227,6 +238,11 @@ class PourProcessStore {
   };
 
   _onNFCTagDiscovered = (tag: Object) => {
+    if (this._hasReadTag) {
+      return;
+    }
+
+    this._hasReadTag = true;
     let payload;
     if (tag.ndefMessage) {
       // eslint-disable-next-line prefer-destructuring
