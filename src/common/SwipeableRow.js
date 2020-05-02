@@ -1,9 +1,7 @@
 // @flow
 
 import * as React from 'react';
-// imported from experimental sources
-// eslint-disable-next-line
-import RNSwipeableRow from 'SwipeableRow';
+import RNSwipeableRow from 'react-native-swipeable-list';
 
 type SwipeableProps = {
   isOpen: boolean,

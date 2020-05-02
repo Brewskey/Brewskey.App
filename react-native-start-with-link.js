@@ -26,7 +26,7 @@ function main() {
 function getSymlinkPathes(deps) {
   const depLinks = [];
   const depPathes = [];
-  deps.forEach(dep => {
+  deps.forEach((dep) => {
     const stat = fs.lstatSync('node_modules/' + dep);
     if (stat.isSymbolicLink()) {
       depLinks.push(dep);
@@ -55,19 +55,19 @@ try {
 var config = {
   watchFolders: [
     ${symlinkPathes
-      .map(path => `path.resolve('${path}')`)
-      .map(path => path.replace(/\\/g, '//'))}
+      .map((path) => `path.resolve('${path}')`)
+      .map((path) => path.replace(/\\/g, '//'))}
   ],
   resolver: {
     blacklistRE: blacklist([
       ${symlinkPathes
-        .map(path => path.replace(/\\/g, '//'))
+        .map((path) => path.replace(/\\/g, '//'))
         .map(
-          path =>
+          (path) =>
             `/${path.replace(
               /\//g,
-              '[/\\\\]',
-            )}[/\\\\]node_modules[/\\\\]react-native[/\\\\].*/`,
+              '[\\/\\\\]',
+            )}[\\/\\\\]node_modules[\\/\\\\]react-native[\\/\\\\].*/`,
         )}
     ]),
     extraNodeModules: {
@@ -91,7 +91,7 @@ module.exports = config;
 
 function runBundlerWithConfig(configName) {
   exec(
-    `node node_modules/react-native/local-cli/cli.js start --config ../../../../${configName}`,
+    `node node_modules/react-native/local-cli/cli.js start --config ${configName}`,
     { stdio: [0, 1, 2] },
   );
 }

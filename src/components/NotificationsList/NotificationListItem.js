@@ -2,11 +2,8 @@
 
 import type { Notification } from '../../stores/NotificationsStore';
 
-// imported from experimental sources
-// eslint-disable-next-line
-import RNSwipeableRow from 'SwipeableRow';
-
 import * as React from 'react';
+import RNSwipeableRow from 'react-native-swipeable-list';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
