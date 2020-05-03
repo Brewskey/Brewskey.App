@@ -6,9 +6,10 @@ import * as React from 'react';
 import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
-type Props = {
+type Props = {|
+  ...BaseAvatarProps,
   userName: string,
-} & BaseAvatarProps;
+|};
 
 class UserAvatar extends React.PureComponent<Props> {
   static defaultProps = {
@@ -17,12 +18,11 @@ class UserAvatar extends React.PureComponent<Props> {
   };
 
   render() {
+    const { userName, ...otherProps } = this.props;
     return (
       <BaseAvatar
-        {...this.props}
-        uri={`${CONFIG.CDN}photos/${this.props.userName}.jpg?w=${
-          this.props.size
-        }&h=${this.props.size}&mode=crop`}
+        {...otherProps}
+        uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${this.props.size}&h=${this.props.size}&mode=crop`}
       />
     );
   }

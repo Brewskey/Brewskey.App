@@ -82,6 +82,7 @@ class SnackMessage extends React.Component<{}, State> {
     Animated.timing(this.state.animationValue, {
       duration: EXIT_ANIMATION_DURATION,
       toValue: -this.state.height,
+      useNativeDriver: true,
     }).start(SnackBarStore.dropCurrentMessage);
   };
 
@@ -103,11 +104,13 @@ class SnackMessage extends React.Component<{}, State> {
       Animated.timing(this.state.animationValue, {
         duration: ENTER_ANIMATION_DURATION,
         toValue: OFFSET,
+        useNativeDriver: true,
       }),
       Animated.timing(this.state.animationValue, {
         delay: nullthrows(currentMessage).duration,
         duration: EXIT_ANIMATION_DURATION,
         toValue: -height,
+        useNativeDriver: true,
       }),
     ]).start(({ finished }: { finished: boolean }) => {
       finished && SnackBarStore.dropCurrentMessage();
@@ -149,9 +152,9 @@ const Content = ({ message }: {| message: SnackBarMessage |}): React.Node => {
     return <TextMessage style={message.style} text={message.text} />;
   }
   let snackContent = null;
-  if (message.content) {
+  if (message.content != null) {
     snackContent = message.content;
-  } else if (message.notification) {
+  } else if (message.notification != null) {
     const componentProps = {
       isSwipeable: false,
       notification: message.notification,
@@ -166,9 +169,7 @@ const Content = ({ message }: {| message: SnackBarMessage |}): React.Node => {
 
   return (
     <View style={{ padding: 10, width: '100%' }}>
-      <View elevation={5} style={styles.notificationContainer}>
-        {snackContent}
-      </View>
+      <View style={styles.notificationContainer}>{snackContent}</View>
     </View>
   );
 };

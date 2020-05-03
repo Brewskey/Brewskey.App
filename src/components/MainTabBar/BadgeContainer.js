@@ -26,13 +26,15 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props<TouchableItemProps> = {|
+  ...TouchableItemProps,
   children?: React.Node,
   badgeCount: number,
-  // touchableItem props
-};
+|};
 
-class BadgeContainer extends React.Component<Props> {
+class BadgeContainer<TouchableItemProps> extends React.Component<
+  Props<TouchableItemProps>,
+> {
   render() {
     const { children, badgeCount, ...props } = this.props;
 

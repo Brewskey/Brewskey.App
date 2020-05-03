@@ -1,4 +1,7 @@
 [ignore]
+;node_modules/react-native/.* ; This should be removed at some point (ideally)
+;node_modules/react-native/.*/.* ; This should be removed at some point (ideally)
+
 ; We fork some components by platform
 .*/*[.]android.js
 
@@ -14,6 +17,15 @@ node_modules/warning/.*
 
 ; Flow doesn't support platforms
 .*/Libraries/Utilities/LoadingView.js
+
+; Ignore duplicate module providers
+; For RN Apps installed via npm, "Libraries" folder is inside
+; "node_modules/react-native" but in the source repo it is in the root
+.*/Libraries/react-native/React.js
+
+; Custom ignores
+.*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
+.*/node_modules/react-native-permissions/**/.*
 
 [untyped]
 .*/node_modules/@react-native-community/cli/.*/.*

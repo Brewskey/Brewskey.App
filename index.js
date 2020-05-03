@@ -3,11 +3,12 @@
 import './globals';
 import { AppRegistry } from 'react-native';
 
+import RNEventSource from 'react-native-event-source';
+
 // import applyDecoratedDescriptor from '@babel/runtime/helpers/esm/applyDecoratedDescriptor';
 // import initializerDefineProperty from '@babel/runtime/helpers/esm/initializerDefineProperty';
 
 global.EventSource = RNEventSource;
-
 
 // $FlowFixMe
 // Object.assign(babelHelpers, {

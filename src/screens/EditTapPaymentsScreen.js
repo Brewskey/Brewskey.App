@@ -16,7 +16,6 @@ import { FormValidationMessage } from 'react-native-elements';
 import InjectedComponent from '../common/InjectedComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
-import { observer } from 'mobx-react/native';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import {
   LocationStore,
@@ -61,14 +60,14 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _location(): LoadObject<Location> {
-    return TapStore.getByID(this.injectedProps.tapId).map(tap =>
+    return TapStore.getByID(this.injectedProps.tapId).map((tap) =>
       LocationStore.getByID(tap.location.id),
     );
   }
 
   @computed
   get _organization(): LoadObject<Organization> {
-    return TapStore.getByID(this.injectedProps.tapId).map(tap =>
+    return TapStore.getByID(this.injectedProps.tapId).map((tap) =>
       OrganizationStore.getByID(tap.organization.id),
     );
   }
@@ -106,12 +105,12 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
         organizationId: organization.id,
         squareLocationID,
       });
-      await DAOApi.LocationDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+      await DAOApi.LocationDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     }
 
     if (values.id != null) {
       const clientID = DAOApi.PriceVariantDAO.put(otherValues.id, otherValues);
-      await DAOApi.PriceVariantDAO.waitForLoaded(dao =>
+      await DAOApi.PriceVariantDAO.waitForLoaded((dao) =>
         dao.fetchByID(clientID),
       );
       SnackBarStore.showMessage({ text: 'The price was edited' });
@@ -149,11 +148,11 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
 const validate = (values: PriceVariantMutator): { [key: string]: string } => {
   const errors = {};
 
-  if (!values.ounces || !parseFloat(values.ounces, 10)) {
+  if (!values.ounces || !parseFloat(values.ounces)) {
     errors.ounces = 'Ounces is required';
   }
 
-  if (!values.price || !parseFloat(values.price, 10)) {
+  if (!values.price || !parseFloat(values.price)) {
     errors.price = 'Price is required';
   }
 
@@ -211,7 +210,7 @@ class LoadedComponent extends InjectedComponent<FormProps, Props> {
                   initialValue={location.squareLocationID}
                   label="Square Location"
                   name="squareLocationID"
-                  pickerValues={squareLocations.map(item => ({
+                  pickerValues={squareLocations.map((item) => ({
                     label: item.name,
                     value: item.locationID,
                   }))}
@@ -244,7 +243,7 @@ class LoadedComponent extends InjectedComponent<FormProps, Props> {
               name="price"
               keyboardType="numeric"
               label="Price"
-              parseOnSubmit={price => (price * 100).toFixed(0)}
+              parseOnSubmit={(price) => (price * 100).toFixed(0)}
             />
           </Section>
         </KeyboardAwareScrollView>

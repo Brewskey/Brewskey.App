@@ -11,7 +11,7 @@ import theme from '../../theme';
 export default function createTopTabNavigator<
   TScreenProps: {},
   TConfig: { navigation: Navigation, screenProps: TScreenProps },
->(config: Object): React.ComponentType<NavigationContainer> {
+>(config: Object): React.ComponentType<TConfig> {
   const Navigator = createMaterialTopTabNavigator(config, {
     ...theme.tabBar,
     initialLayout: {

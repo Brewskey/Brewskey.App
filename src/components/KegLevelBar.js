@@ -107,6 +107,7 @@ class LoadedKegLevelBar extends React.Component<LoadedProps> {
       delay: 300,
       duration: 500,
       toValue: 1,
+      useNativeDriver: true,
     }).start();
   };
 

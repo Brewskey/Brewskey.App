@@ -6,8 +6,9 @@ import StatusBarFake from './StatusBarFake';
 
 const emptyFunction = () => {};
 
-type Props = {
-  animationType?: string, // todo add enum
+type Props<RNModalProps> = {|
+  ...RNModalProps,
+  animationType?: 'none' | 'slide' | 'fade', // todo add enum
   children?: React.Node,
   isTouchable?: boolean,
   isVisible: boolean,
@@ -15,9 +16,9 @@ type Props = {
   shouldHideOnRequestClose?: boolean,
   transparent?: boolean,
   // other RN modal props,
-};
+|};
 
-const Modal = ({
+const Modal = <RNModalProps>({
   animationType = 'slide',
   children,
   isTouchable = true,
@@ -26,7 +27,7 @@ const Modal = ({
   shouldHideOnRequestClose = true,
   transparent = true,
   ...rest
-}: Props) => (
+}: Props<RNModalProps>) => (
   <RNModal
     {...rest}
     animationType={animationType}

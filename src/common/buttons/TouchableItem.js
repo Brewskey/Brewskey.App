@@ -21,15 +21,14 @@ import {
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-type Props = {
-  activeOpacity?: number,
+type Props = {|
   borderless?: boolean,
   children?: React.Node,
   delayPressIn?: number,
   onPress?: () => void | Promise<void>,
   pressColor?: string,
   style?: Style,
-};
+|};
 
 export default class TouchableItem extends React.Component<Props> {
   static defaultProps = {
@@ -50,23 +49,22 @@ export default class TouchableItem extends React.Component<Props> {
       Platform.OS === 'android' &&
       Platform.Version >= ANDROID_VERSION_LOLLIPOP
     ) {
-      const { style, ...rest } = this.props;
+      const { borderless, pressColor, style, ...rest } = this.props;
       return (
         <TouchableNativeFeedback
           {...rest}
-          style={null}
           background={TouchableNativeFeedback.Ripple(
-            this.props.pressColor || '',
-            this.props.borderless || false,
+            pressColor || '',
+            borderless || false,
           )}
         >
           <View style={style}>{React.Children.only(this.props.children)}</View>
         </TouchableNativeFeedback>
       );
     }
-
+    const { borderless: _, pressColor: _1, ...otherProps } = this.props;
     return (
-      <TouchableOpacity {...this.props}>{this.props.children}</TouchableOpacity>
+      <TouchableOpacity {...otherProps}>{this.props.children}</TouchableOpacity>
     );
   }
 }

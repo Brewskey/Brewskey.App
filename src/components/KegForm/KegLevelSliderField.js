@@ -17,20 +17,21 @@ const styles = StyleSheet.create({
   valueText: { ...TYPOGRAPHY.heading, textAlign: 'center' },
 });
 
-type Props = {
+type Props<RNSliderProps> = {|
+  ...RNSliderProps,
   maxOunces: number,
   onChange: (value: number) => void,
   value: number,
   // other RNSlider props
-};
+|};
 
-const KegLevelSliderField = ({
+const KegLevelSliderField = <RNSliderProps>({
   maxOunces,
   onChange,
   value,
   ...rest
-}: Props) => {
-  const ozValue = value === 0 ? 0 : maxOunces * value / 100;
+}: Props<RNSliderProps>) => {
+  const ozValue = value === 0 ? 0 : (maxOunces * value) / 100;
 
   return (
     <View style={styles.container}>

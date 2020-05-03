@@ -83,6 +83,7 @@ class NotificationListItem extends React.PureComponent<Props, State> {
     this._readAnimation = Animated.timing(readAnimationValue, {
       duration: READ_TIMEOUT,
       toValue: 1,
+      useNativeDriver: true,
     });
 
     !isRead && this._readAnimation.start(this._onReadEnd);

@@ -8,10 +8,11 @@ import * as React from 'react';
 import List from './List';
 import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList';
 
-type Props<TEntity> = {
+type Props<TEntity> = {|
+  ...ListProps<TEntity>,
   bounceFirstRowOnMount: boolean,
   preventSwipeRight?: boolean,
-} & ListProps<TEntity>;
+|};
 
 type State = {|
   openRowKey: ?string,

@@ -3,13 +3,14 @@
 import * as React from 'react';
 import { Slider } from 'react-native';
 
-export type Props = {
+export type Props<TRest> = {|
+  // RN slider props
+  ...TRest,
   onChange: (value: number) => void,
   value: number,
-  // RN slider props
-};
+|};
 
-const SliderField = ({ value, onChange, ...rest }: Props) => (
+const SliderField = <TRest>({ value, onChange, ...rest }: Props<TRest>) => (
   <Slider {...rest} value={value} onValueChange={onChange} />
 );
 

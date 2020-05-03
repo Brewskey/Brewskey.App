@@ -40,7 +40,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Beverage> = new DAOListStore(BeverageStore);
-  _swipeableListRef: ?SwipeableList<Beverage>;
+  _swipeableListRef = React.createRef<SwipeableList<Beverage>>();
 
   componentDidMount() {
     this._listStore.initialize({
@@ -54,10 +54,6 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = (ref) => {
-    this._swipeableListRef = ref;
-  };
-
   _keyExtractor = (row: Row<Beverage>): string => row.key;
 
   _onDeleteItemPress = async (item: Beverage): Promise<void> => {
@@ -70,7 +66,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Beverage) => {
     this.injectedProps.navigation.navigate('editBeverage', { id });
-    nullthrows(this._swipeableListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef.current).resetOpenRow();
   };
 
   _onItemPress = (item: Beverage): void =>
@@ -109,7 +105,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
         ListHeaderComponent={this.props.ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
-        ref={this._getSwipeableListRef}
+        ref={this._swipeableListRef}
         renderItem={this._renderRow}
       />
     );

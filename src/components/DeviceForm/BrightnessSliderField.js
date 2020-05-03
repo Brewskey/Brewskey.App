@@ -17,13 +17,18 @@ const styles = StyleSheet.create({
   subtitleText: { ...TYPOGRAPHY.small, color: COLORS.textFaded, marginTop: 8 },
 });
 
-type Props = {
+type Props<RNSliderProps> = {|
+  ...RNSliderProps,
   onChange: (value: number) => void,
   value: number,
   // other RNSlider props
-};
+|};
 
-const BrightnessSliderField = ({ onChange, value, ...rest }: Props) => (
+const BrightnessSliderField = <RNSliderProps>({
+  onChange,
+  value,
+  ...rest
+}: Props<RNSliderProps>) => (
   <View>
     <FormLabel>LED Brightness</FormLabel>
     <View style={styles.container}>

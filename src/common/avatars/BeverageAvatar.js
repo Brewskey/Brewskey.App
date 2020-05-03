@@ -7,11 +7,12 @@ import * as React from 'react';
 import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
-type Props = {
+type Props = {|
+  ...BaseAvatarProps,
   beverageId: ?EntityID,
   cached?: boolean,
   uri?: ?string,
-} & BaseAvatarProps;
+|};
 
 class BeverageAvatar extends React.PureComponent<Props> {
   static defaultProps = {
@@ -21,12 +22,19 @@ class BeverageAvatar extends React.PureComponent<Props> {
   };
 
   render() {
-    const { beverageId, cached, rounded, size, uri } = this.props;
-    const beverageIdString = beverageId ? beverageId.toString() : '';
+    const {
+      beverageId,
+      cached,
+      rounded,
+      size,
+      uri,
+      ...otherProps
+    } = this.props;
+    const beverageIdString = beverageId != null ? beverageId.toString() : '';
 
     return (
       <BaseAvatar
-        {...this.props}
+        {...otherProps}
         rounded={rounded}
         uri={
           uri ||

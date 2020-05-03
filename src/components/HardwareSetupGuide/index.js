@@ -46,7 +46,7 @@ type Props = {|
 
 @observer
 class HardwareSetupGuide extends React.Component<Props> {
-  _swiper: ?Swiper;
+  _swiper = React.createRef<Swiper>();
 
   @observable _stepIndex: number = 0;
 
@@ -62,13 +62,11 @@ class HardwareSetupGuide extends React.Component<Props> {
 
   _onNextButtonPress = () => {
     if (!this._isLastStep) {
-      nullthrows(this._swiper).scrollBy(1);
+      nullthrows(this._swiper.current).scrollBy(1);
     } else {
       this.props.onClosePress();
     }
   };
-
-  _setSwiperRef = (ref) => (this._swiper = ref);
 
   render() {
     return (
@@ -79,7 +77,7 @@ class HardwareSetupGuide extends React.Component<Props> {
           loop={false}
           onIndexChanged={this._setStepIndex}
           paginationStyle={styles.paginationStyle}
-          ref={this._setSwiperRef}
+          ref={this._swiper}
         >
           {SETUP_STEPS.map(
             (setupStep: React.Node, index: number): React.Node => (

@@ -3,7 +3,6 @@
 import type { Navigation } from '../../types';
 
 import * as React from 'react';
-import { observer } from 'mobx-react/native';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
 import { COLORS } from '../../theme';

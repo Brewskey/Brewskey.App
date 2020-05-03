@@ -120,7 +120,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
           component={BrightnessSliderField}
           initialValue={device.ledBrightness}
           name="ledBrightness"
-          parseOnSubmit={(value: number): number => value.toFixed(0)}
+          parseOnSubmit={(value: number): string => value.toFixed(0)}
         />
         <FormField
           component={DeviceNFCStatusPicker}

@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
   textValuePulses: { ...TYPOGRAPHY.secondary, textAlign: 'center' },
 });
 
-type Props = {
+type Props = SliderFieldProps<{|
   defaultPulses: number,
-} & SliderFieldProps;
+|}>;
 
 const GallonSliderField = ({
   defaultPulses,
@@ -34,9 +34,9 @@ const GallonSliderField = ({
   value,
   ...rest
 }: Props) => {
-  const minValue = defaultPulses * (100 - BOUNDARIES_PERCENT) / 100;
-  const maxValue = defaultPulses * (100 + BOUNDARIES_PERCENT) / 100;
-  const valuePercent = (value - defaultPulses) / defaultPulses * 100;
+  const minValue = (defaultPulses * (100 - BOUNDARIES_PERCENT)) / 100;
+  const maxValue = (defaultPulses * (100 + BOUNDARIES_PERCENT)) / 100;
+  const valuePercent = ((value - defaultPulses) / defaultPulses) * 100;
 
   return (
     <View style={styles.container}>

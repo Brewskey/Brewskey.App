@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type BaseAvatarProps = {
+export type BaseAvatarProps = {|
   cached?: boolean,
   containerStyle?: Style,
   imageRef?: React.Ref<typeof CachedImage>,
@@ -21,10 +21,12 @@ export type BaseAvatarProps = {
   onPress?: () => void,
   rounded: boolean,
   size: number,
-};
+|};
 
-type Props = BaseAvatarProps & { uri?: ?string };
-
+type Props = {|
+  ...BaseAvatarProps,
+  uri?: ?string,
+|};
 class BaseAvatar extends React.PureComponent<Props> {
   static defaultProps = {
     cached: true,
@@ -44,13 +46,11 @@ class BaseAvatar extends React.PureComponent<Props> {
       uri,
     } = this.props;
 
-    const baseContainerStyle = [
-      {
-        height: size,
-        width: size,
-      },
-      rounded && { borderRadius: size / 2 },
-    ];
+    const baseContainerStyle = {
+      height: size,
+      width: size,
+      ...(rounded && { borderRadius: size / 2 }),
+    };
 
     const imageElement = cached ? (
       <CachedImage
@@ -68,8 +68,7 @@ class BaseAvatar extends React.PureComponent<Props> {
       <TouchableOpacity
         disabled={!onPress}
         onPress={onPress}
-        size={size}
-        style={[baseContainerStyle, styles.avatar, containerStyle]}
+        style={{ ...baseContainerStyle, ...styles.avatar, ...containerStyle }}
       >
         {uri ? imageElement : null}
       </TouchableOpacity>

@@ -45,7 +45,7 @@ type Props = {|
 
 @observer
 class HeaderSearchBar extends React.Component<Props> {
-  @observable _textInput: ?TextInput = null;
+  @observable _textInput = React.createRef<typeof TextInput>();
   _isExpandToggleStore: ToggleStore = new ToggleStore();
 
   _onClosePress = () => {
@@ -67,17 +67,13 @@ class HeaderSearchBar extends React.Component<Props> {
     this._isExpandToggleStore.toggleOn();
     onExpandPress && onExpandPress();
 
-    when(
-      (): boolean => !!this._textInput,
-      (): void => {
-        nullthrows(this._textInput).focus();
-      },
-    );
-  };
-
-  @action
-  _setTextInputRef = (ref) => {
-    this._textInput = ref;
+    // TODO - verify that this works
+    // when(
+    //   (): boolean => !!this._textInput,
+    //   (): void => {
+    //     nullthrows(this._textInput.current).focus();
+    //   },
+    // );
   };
 
   render() {
@@ -94,10 +90,11 @@ class HeaderSearchBar extends React.Component<Props> {
           <View style={styles.textInputContainer}>
             <HeaderIconButton name="arrow-back" onPress={this._onClosePress} />
             <TextInput
+              autoFocus={true}
               onChangeText={onChangeText}
               placeholder="Search"
               placeholderTextColor={COLORS.textInverseFaded}
-              ref={this._setTextInputRef}
+              ref={this._textInput}
               style={styles.textInput}
               underlineColorAndroid="transparent"
               value={value}
