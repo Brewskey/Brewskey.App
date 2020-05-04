@@ -72,7 +72,7 @@ class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
     }
   };
 
-  _renderItem = (info: InfoType): React.Node => {
+  _renderItem = (info: InfoType<TEntity>): React.Node => {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,

@@ -38,7 +38,9 @@ const styles = StyleSheet.create({
 
 const YEARS_RANGE_LENGTH = 10;
 
-const validate = (values: BeverageMutator): { [key: string]: string } => {
+const validate = (
+  values: BeverageMutator,
+): {| [key: $Keys<BeverageMutator>]: string |} => {
   const errors = {};
   if (!values.name) {
     errors.name = 'Name is required!';

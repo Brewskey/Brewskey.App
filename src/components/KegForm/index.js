@@ -20,7 +20,9 @@ import { form, FormField } from '../../common/form';
 import { COLORS } from '../../theme';
 import { calculateKegLevel } from '../../utils';
 
-const validate = (values: KegMutator): { [key: string]: string } => {
+const validate = (
+  values: KegMutator,
+): {| [key: $Keys<KegMutator>]: string |} => {
   const errors = {};
 
   if (!values.beverageId) {

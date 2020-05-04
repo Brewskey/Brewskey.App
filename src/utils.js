@@ -1,6 +1,6 @@
 // @flow
 
-import type { KegType } from 'brewskey.js-api';
+import type { Keg, KegType } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { Dimensions, Platform, StatusBar } from 'react-native';
@@ -28,11 +28,7 @@ export const calculateKegLevel = ({
   kegType,
   maxOunces,
   ounces,
-}: {
-  kegType: KegType,
-  maxOunces: number,
-  ounces: number,
-}): number => {
+}: Keg): number => {
   const KEG_OUNCES = MAX_OUNCES_BY_KEG_TYPE[kegType];
 
   const level =
@@ -126,5 +122,5 @@ export const getStatusBarHeight = ({
     return 0;
   }
 
-  return StatusBar.currentHeight;
+  return StatusBar.currentHeight ?? 0;
 };

@@ -49,7 +49,7 @@ class PourProcessStore {
   }
 
   @action
-  setTotp = (totp: string) => {
+  setTotp = (totp: string): void => {
     const newTotp = totp.replace(/\D/g, '');
 
     if (newTotp === this.totp) {
@@ -63,7 +63,7 @@ class PourProcessStore {
   };
 
   @action
-  onShowModal = async () => {
+  onShowModal = async (): Promise<void> => {
     this._setIsLoading(true);
     // this.shouldShowPaymentScreen = true;
     // this.deviceID = 25;
@@ -112,7 +112,7 @@ class PourProcessStore {
   };
 
   @action
-  onHideModal = () => {
+  onHideModal = (): void => {
     GPSCoordinatesStore.flushCache();
     if (this.isNFCEnabled) {
       NfcManager.unregisterTagEvent();
@@ -128,24 +128,24 @@ class PourProcessStore {
   };
 
   @action
-  startPaymentPour = () => {
+  startPaymentPour = (): void => {
     this._didAuthorizePayment = true;
     this._sendPourAuthorization();
   };
 
   @action
-  _setErrorText = (errorText: string) => (this.errorText = errorText);
+  _setErrorText = (errorText: string): void => (this.errorText = errorText);
 
-  onEnableNFCPress = () => {
+  onEnableNFCPress = (): void => {
     this.onHideModal();
     this.isNFCEnabled && NfcManager.goToNfcSetting();
   };
 
-  onPourPress = () => {
+  onPourPress = (): void => {
     this._processPour();
   };
 
-  _processPour = async () => {
+  _processPour = async (): Promise<void> => {
     try {
       this._setIsLoading(true);
       this._setErrorText('');
@@ -176,7 +176,7 @@ class PourProcessStore {
     }
   };
 
-  _sendPourAuthorization = async () => {
+  _sendPourAuthorization = async (): Promise<void> => {
     try {
       this._setIsLoading(true);
       this._setErrorText('');
@@ -205,7 +205,11 @@ class PourProcessStore {
     }
   };
 
-  _getAuthPayload = async () => {
+  _getAuthPayload = async (): Promise<{|
+    body: string,
+    headers: Object,
+    method: string,
+  |}> => {
     const headers = {
       Accept: 'application/json',
       Authorization: `Bearer ${AuthStore.accessToken || ''}`,
@@ -228,16 +232,16 @@ class PourProcessStore {
   };
 
   @action
-  _setIsLoading = (isLoading: boolean) => {
+  _setIsLoading = (isLoading: boolean): void => {
     this.isLoading = isLoading;
   };
 
   @action
-  _setIsVisible = (isVisible: boolean) => {
+  _setIsVisible = (isVisible: boolean): void => {
     this.isVisible = isVisible;
   };
 
-  _onNFCTagDiscovered = (tag: Object) => {
+  _onNFCTagDiscovered = (tag: Object): void => {
     if (this._hasReadTag) {
       return;
     }
@@ -277,16 +281,16 @@ class PourProcessStore {
   };
 
   @action
-  _updateTotpTimer = () => {
+  _updateTotpTimer = (): void => {
     this.currentSeconds = 30 - (new Date().getSeconds() % 30);
   };
 
-  _startTotpTimer = () => {
+  _startTotpTimer = (): void => {
     this._updateTotpTimer();
     this._totpTimer = setInterval(this._updateTotpTimer, 1000);
   };
 
-  _stopTotpTimer = () => {
+  _stopTotpTimer = (): void => {
     if (!this._totpTimer) {
       return;
     }
@@ -295,7 +299,7 @@ class PourProcessStore {
   };
 
   @action
-  _showPayments = (deviceID: EntityID) => {
+  _showPayments = (deviceID: EntityID): void => {
     this.deviceID = deviceID;
     this.shouldShowPaymentScreen = true;
   };

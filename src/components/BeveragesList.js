@@ -40,7 +40,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Beverage> = new DAOListStore(BeverageStore);
-  _swipeableListRef = React.createRef<SwipeableList<Beverage>>();
+  _swipeableListRef = React.createRef<SwipeableList<Beverage, {||}>>();
 
   componentDidMount() {
     this._listStore.initialize({

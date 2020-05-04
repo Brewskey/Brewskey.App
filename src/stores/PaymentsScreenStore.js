@@ -27,7 +27,10 @@ class PaymentsScreenStore {
   }
 
   @action
-  async addNewCard(isValid: boolean, formParams: PaymentFormParams) {
+  async addNewCard(
+    isValid: boolean,
+    formParams: PaymentFormParams,
+  ): Promise<void> {
     if (!isValid) {
       return;
     }
@@ -56,7 +59,7 @@ class PaymentsScreenStore {
   }
 
   @action
-  async removeCard() {
+  async removeCard(): Promise<void> {
     this._isLoading = true;
 
     try {
@@ -84,4 +87,4 @@ class PaymentsScreenStore {
   }
 }
 
-export default new PaymentsScreenStore();
+export default (new PaymentsScreenStore(): PaymentsScreenStore);

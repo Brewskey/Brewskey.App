@@ -50,7 +50,7 @@ type InjectedProps = {|
 @observer
 class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
   static defaultProps: {| queryOptions: QueryOptions |} = {
-    queryOptions: ({}: QueryOptions),
+    queryOptions: {},
   };
 
   _listStore: DAOListStore<Friend> = new DAOListStore(FriendStore);

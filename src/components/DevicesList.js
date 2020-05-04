@@ -53,11 +53,11 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     queryOptions: QueryOptions,
   |} = {
     ListEmptyComponent: <ListEmpty message="No Brewskey boxes" />,
-    queryOptions: ({}: QueryOptions),
+    queryOptions: { ...{} },
   };
 
   _listStore: DAOListStore<Device> = new DAOListStore(DeviceStore);
-  _swipeableListRef: ?SwipeableList<Device>;
+  _swipeableListRef = React.createRef<typeof SwipeableList>();
 
   componentDidMount() {
     this._listStore.initialize({
@@ -71,10 +71,6 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = (ref) => {
-    this._swipeableListRef = ref;
-  };
-
   _keyExtractor = (row: Row<Device>): string => row.key;
 
   _onDeleteItemPress = async (item: Device): Promise<void> => {
@@ -87,7 +83,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Device) => {
     this.injectedProps.navigation.navigate('editDevice', { id });
-    nullthrows(this._swipeableListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef.current).resetOpenRow();
   };
 
   _onItemPress = (item: Device): void =>

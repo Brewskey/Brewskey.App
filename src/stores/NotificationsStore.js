@@ -182,39 +182,44 @@ class NotificationsStore {
     return Array.from(this._notificationsDisabledByTapID.toJS().keys());
   }
 
-  onNotificationPress = async (notification: Notification): Promise<void> => {
+  onNotificationPress: (Notification) => Promise<void> = async (
+    notification: Notification,
+  ): Promise<void> => {
     await when(() => this._isReady);
     this._handleNotificationPressByType(notification);
   };
 
-  getIsNotificationsEnabledForTap = (tapID: EntityID) =>
-    !this._notificationsDisabledByTapID.has(tapID);
+  getIsNotificationsEnabledForTap: (EntityID) => boolean = (
+    tapID: EntityID,
+  ): boolean => !this._notificationsDisabledByTapID.has(tapID);
 
   @action
-  toggleNotificationsForTap = (tapID: EntityID) => {
+  toggleNotificationsForTap: (EntityID) => void = (tapID: EntityID): void => {
     this._notificationsDisabledByTapID.has(tapID)
       ? this._notificationsDisabledByTapID.delete(tapID)
       : this._notificationsDisabledByTapID.set(tapID, true);
   };
 
   @action
-  setIsReady = (isReady: boolean) => {
+  setIsReady: (boolean) => void = (isReady: boolean): void => {
     this._isReady = isReady;
   };
 
   @action
-  setNavigation = (navigation: Navigation) => {
+  setNavigation: (Navigation) => void = (navigation: Navigation): void => {
     this._navigation = navigation;
   };
 
   @action
-  deleteAllNotifications = () => this._notificationsByID.clear();
+  deleteAllNotifications: () => void = (): void =>
+    this._notificationsByID.clear();
 
   @action
-  deleteByID = (id: string) => this._notificationsByID.delete(id);
+  deleteByID: (string) => void = (id: string): void =>
+    this._notificationsByID.delete(id);
 
   @action
-  setRead = (notificationID: string) => {
+  setRead: (string) => void = (notificationID: string): void => {
     const notification = this._notificationsByID.get(notificationID);
     if (!notification) {
       return;
@@ -230,7 +235,9 @@ class NotificationsStore {
   };
 
   @action
-  _addNotification = (notification: Notification): void => {
+  _addNotification: (Notification) => void = (
+    notification: Notification,
+  ): void => {
     if (notification.type === 'newFriendRequest') {
       FriendStore.flushCache();
     }
@@ -238,12 +245,12 @@ class NotificationsStore {
   };
 
   @action
-  _cleanState = () => {
+  _cleanState: () => void = (): void => {
     this._notificationsByID.clear();
     this._notificationsDisabledByTapID.clear();
   };
 
-  _rehydrateState = async () => {
+  _rehydrateState: () => Promise<void> = async (): Promise<void> => {
     const notifications =
       (await Storage.getForCurrentUser(NOTIFICATIONS_STORAGE_KEY)) || [];
 
@@ -290,7 +297,7 @@ class NotificationsStore {
     }
   };
 
-  _registerToken = async () => {
+  _registerToken: () => Promise<void> = async (): Promise<void> => {
     // wait for AuthStore.accessToken
     while (!AuthStore.accessToken) {
       // eslint-disable-next-line no-await-in-loop
@@ -318,7 +325,7 @@ class NotificationsStore {
     });
   };
 
-  _unregisterToken = () =>
+  _unregisterToken: () => void = (): void =>
     // eslint-disable-next-line
     fetch(`${BASE_PUSH_URL}/${DeviceInfo.getUniqueId()}`, {
       headers: {
@@ -327,7 +334,7 @@ class NotificationsStore {
       method: 'DELETE',
     });
 
-  _onRawNotification = (rawNotification: Object) => {
+  _onRawNotification: (Object) => void = (rawNotification: Object): void => {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
 
@@ -368,7 +375,9 @@ class NotificationsStore {
     }
   };
 
-  _handleNotificationPressByType = (notification: Notification) => {
+  _handleNotificationPressByType: (Notification) => void = (
+    notification: Notification,
+  ): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
         const { kegId, tapId } = notification;

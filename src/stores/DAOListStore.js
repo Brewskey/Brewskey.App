@@ -9,13 +9,13 @@ import { LoadObject } from 'brewskey.js-api';
 import { createRange } from '../utils';
 import nullthrows from 'nullthrows';
 
-export type Row<TEntity: { id: EntityID }> = {|
+export type Row<TEntity> = {|
   key: string,
-  loader: LoadObject<TEntity>,
+  loader: LoadObject<{| ...TEntity, id: EntityID |}>,
 |};
 
-class DAOListStore<TEntity: { id: EntityID }> {
-  _daoStore: DAOStore<TEntity>;
+class DAOListStore<TEntity> {
+  _daoStore: DAOStore<{| ...TEntity, id: EntityID |}>;
   _pageSize: number;
 
   @observable
@@ -31,7 +31,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
   }
 
   @action
-  initialize = (queryOptions?: QueryOptions = {}) => {
+  initialize: (?QueryOptions) => void = (queryOptions?: QueryOptions = {}) => {
     this.setQueryOptions(queryOptions);
     this._fetchFirstPage();
     this._isInitialized = true;
@@ -65,37 +65,33 @@ class DAOListStore<TEntity: { id: EntityID }> {
         const queryLoadObject = this._daoStore.getMany(queryOptions);
 
         return rowKeys
-          .map(
-            (key: number): Row<TEntity> => ({
-              key: key.toString(),
-              loader: LoadObject.loading(),
-            }),
-          )
-          .map(
-            ({ key }: Row<TEntity>, index: number): Row<TEntity> => {
-              let loader: LoadObject<TEntity> = LoadObject.loading();
+          .map((key: number): Row<TEntity> => ({
+            key: key.toString(),
+            loader: LoadObject.loading(),
+          }))
+          .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
+            let loader: LoadObject<TEntity> = LoadObject.loading();
 
-              if (queryLoadObject.hasValue()) {
-                const entities = queryLoadObject.getValueEnforcing();
-                if (entities.length) {
-                  loader = nullthrows(entities[index]);
+            if (queryLoadObject.hasValue()) {
+              const entities = queryLoadObject.getValueEnforcing();
+              if (entities.length) {
+                loader = nullthrows(entities[index]);
 
-                  if (!(loader instanceof LoadObject)) {
-                    loader = LoadObject.withValue(loader);
-                  }
+                if (!(loader instanceof LoadObject)) {
+                  loader = LoadObject.withValue(loader);
                 }
-              } else if (queryLoadObject.hasError()) {
-                loader = LoadObject.withError(
-                  queryLoadObject.getErrorEnforcing(),
-                );
               }
+            } else if (queryLoadObject.hasError()) {
+              loader = LoadObject.withError(
+                queryLoadObject.getErrorEnforcing(),
+              );
+            }
 
-              return {
-                key,
-                loader,
-              };
-            },
-          );
+            return {
+              key,
+              loader,
+            };
+          });
       }),
     );
   }
@@ -124,7 +120,7 @@ class DAOListStore<TEntity: { id: EntityID }> {
   }
 
   @action
-  fetchNextPage = () => {
+  fetchNextPage: () => void = () => {
     if (this.isFetchingRemoteCount) {
       return;
     }
@@ -146,19 +142,19 @@ class DAOListStore<TEntity: { id: EntityID }> {
   };
 
   @action
-  reload = () => {
+  reload: () => void = () => {
     this._daoStore.flushQueryCaches();
     this.reset();
   };
 
   @action
-  reset = () => {
+  reset: () => void = () => {
     this._queryOptionsList = [];
     this._fetchFirstPage();
   };
 
   @action
-  _fetchFirstPage = () => {
+  _fetchFirstPage: () => void = () => {
     const { skip = 0, ...rest } = this._baseQueryOptions;
     this._queryOptionsList.push({
       ...rest,

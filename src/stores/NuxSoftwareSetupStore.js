@@ -11,11 +11,11 @@ class NuxSoftwareSetupStore {
   selectedLocation: ?Location = null;
 
   @action
-  selectLocation = (location: ?Location) => {
+  selectLocation: (?Location) => void = (location: ?Location): void => {
     this.selectedLocation = location;
   };
 
-  onGetStartedPress = async () => {
+  onGetStartedPress: () => Promise<void> = async (): Promise<void> => {
     const locationsCount = await waitForLoaded(() => LocationStore.count());
 
     if (locationsCount === 1) {
@@ -42,7 +42,7 @@ class NuxSoftwareSetupStore {
     });
   };
 
-  _onGetLocation = () => {
+  _onGetLocation: () => void = (): void => {
     NavigationService.navigate('nuxWifi', {
       onContinuePress: () => {
         NavigationService.navigate('wifiSetup', {
@@ -53,7 +53,7 @@ class NuxSoftwareSetupStore {
     });
   };
 
-  _onWifiSetupFinish = (particleID: string) => {
+  _onWifiSetupFinish: (string) => void = (particleID: string): void => {
     NavigationService.navigate('nuxDevice', {
       onContinuePress: () => {
         NavigationService.navigate('newDevice', {
@@ -70,7 +70,7 @@ class NuxSoftwareSetupStore {
     });
   };
 
-  _onDeviceCreated = (device: Device) => {
+  _onDeviceCreated: (Device) => void = (device: Device): void => {
     NavigationService.navigate('nuxTap', {
       onContinuePress: () => {
         NavigationService.navigate('newTap', {
@@ -82,7 +82,7 @@ class NuxSoftwareSetupStore {
     });
   };
 
-  _onTapSetupFinish = (tapID: EntityID) => {
+  _onTapSetupFinish: (EntityID) => void = (tapID: EntityID): void => {
     NavigationService.navigate('nuxFinish', {
       onContinuePress: () => {
         this.selectLocation(null);

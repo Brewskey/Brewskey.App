@@ -20,7 +20,9 @@ export type ChangePasswordFormFields = {|
 const validate = ({
   newPassword,
   oldPassword,
-}: ChangePasswordFormFields): { [key: string]: string } => {
+}: ChangePasswordFormFields): {
+  [key: $Keys<ChangePasswordFormFields>]: string,
+} => {
   const errors = {};
 
   if (!oldPassword) {

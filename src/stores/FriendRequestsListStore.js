@@ -48,12 +48,12 @@ class FriendRequestsListStore {
   @computed
   get pendingRequestsLoaderRows(): Array<Row<Friend>> {
     return this._pendingRequestsLoader.hasValue()
-      ? this._pendingRequestsLoader.getValueEnforcing().map(
-          (loader: LoadObject<Friend>, index: number): Row<Friend> => ({
+      ? this._pendingRequestsLoader
+          .getValueEnforcing()
+          .map((loader: LoadObject<Friend>, index: number): Row<Friend> => ({
             key: index.toString(),
             loader,
-          }),
-        )
+          }))
       : [];
   }
 
@@ -73,12 +73,12 @@ class FriendRequestsListStore {
   @computed
   get myRequestsLoaderRows(): Array<Row<Friend>> {
     return this._myRequestsLoader.hasValue()
-      ? this._myRequestsLoader.getValueEnforcing().map(
-          (loader: LoadObject<Friend>, index: number): Row<Friend> => ({
+      ? this._myRequestsLoader
+          .getValueEnforcing()
+          .map((loader: LoadObject<Friend>, index: number): Row<Friend> => ({
             key: index.toString(),
             loader,
-          }),
-        )
+          }))
       : [];
   }
 
@@ -96,4 +96,4 @@ class FriendRequestsListStore {
   };
 }
 
-export default new FriendRequestsListStore();
+export default (new FriendRequestsListStore(): FriendRequestsListStore);

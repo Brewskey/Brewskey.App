@@ -33,11 +33,20 @@ export const TYPOGRAPHY = {
 };
 /* eslint-enable sorting/sort-object-props */
 
+type ElevationStyle = {|
+  elevation: number,
+  shadowOffset: {| height: number |},
+  shadowOpacity: number,
+  shadowRadius: number,
+|};
+
 // for full effect on android we probably have to set elevation
 // prop to the <View /> itself and it also will affect zIndex  and
 // for elevation level > 1 drops more big shadows
 // but since we never use high elevation this is not really necessary
-export const getElevationStyle = (elevation: number) => ({
+export const getElevationStyle: (number) => ElevationStyle = (
+  elevation: number,
+) => ({
   elevation,
   shadowOffset: {
     height: 0.6 * elevation,

@@ -8,14 +8,12 @@ export type LocationPermissionStatus =
   | 'restricted'
   | 'undetermined';
 
-export const LOCATION_PERMISSION_STATUSES: {
-  [key: string]: LocationPermissionStatus,
-} = {
+export const LOCATION_PERMISSION_STATUSES = Object.freeze({
   AUTHORIZED: 'authorized',
   DENIED: 'denied',
   RESTRICTED: 'restricted',
   UNDETERMINED: 'undetermined',
-};
+});
 
 export const createLocationPermissionStore = () =>
   makeRequestApiStore<LocationPermissionStatus>(() =>

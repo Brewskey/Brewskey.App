@@ -57,12 +57,14 @@ class SnackBarStore {
   }
 
   @action
-  dropCurrentMessage = () => {
+  dropCurrentMessage: () => void = (): void => {
     this._messages.shift();
   };
 
   @action
-  showMessage = (messageParameters: SnackBarMessageParameters) => {
+  showMessage: (SnackBarMessageParameters) => void = (
+    messageParameters: SnackBarMessageParameters,
+  ): void => {
     if (messageParameters.text) {
       this._messages.push({
         duration: 2000,

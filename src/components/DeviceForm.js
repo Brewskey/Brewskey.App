@@ -27,7 +27,9 @@ import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
 import { Fill } from 'react-slot-fill';
 
-export const validate = (values: DeviceMutator): { [key: string]: string } => {
+export const validate = (
+  values: DeviceMutator,
+): { [key: $Keys<DeviceMutator>]: string } => {
   const errors = {};
 
   if (!values.deviceStatus) {

@@ -23,7 +23,7 @@ class WifiSetupStore {
   _wifiSetupLoaderCacheKey: string = '';
   _disposers: Array<Function> = [];
 
-  initialize = (navigation: Navigation) => {
+  initialize: (Navigation) => void = (navigation: Navigation): void => {
     const navigationReaction = reaction(
       () => this.wifiSetupStep,
       (wifiSetupStep: WifiSetupStep) =>
@@ -45,7 +45,7 @@ class WifiSetupStore {
     this._disposers.push(setupFinishReaction);
   };
 
-  dispose = () => {
+  dispose: () => void = (): void => {
     ParticleIDStore.flushCache();
     this._flushWifiConfigurationCache();
     this._disposers.forEach((disposer: Function) => disposer());
@@ -53,9 +53,9 @@ class WifiSetupStore {
 
   @computed
   get wifiSetupLoader(): LoadObject<void> {
-    return WifiConfigureStore.getFromCache(this._wifiSetupLoaderCacheKey).map(
-      () => WifiConnectStore.get(),
-    );
+    return WifiConfigureStore.getFromCache(
+      this._wifiSetupLoaderCacheKey,
+    ).map(() => WifiConnectStore.get());
   }
 
   @computed
@@ -64,9 +64,9 @@ class WifiSetupStore {
   }
 
   @action
-  onStep1Ready = () => {
+  onStep1Ready: () => void = (): void => {
     this._setWifiSetupStep(2);
-    const particleIDReaction = autorun(currentReaction => {
+    const particleIDReaction = autorun((currentReaction) => {
       if (this.particleIDLoader.hasValue()) {
         this._setWifiSetupStep(3);
         currentReaction.dispose();
@@ -82,17 +82,19 @@ class WifiSetupStore {
   };
 
   @action
-  _setWifiSetupStep = (step: WifiSetupStep) => {
+  _setWifiSetupStep: (WifiSetupStep) => void = (step: WifiSetupStep): void => {
     this.wifiSetupStep = step;
   };
 
   @action
-  setupWifi = async (wifiNetwork: WifiNetwork): Promise<void> => {
+  setupWifi: (WifiNetwork) => Promise<void> = async (
+    wifiNetwork: WifiNetwork,
+  ): Promise<void> => {
     this._flushWifiConfigurationCache();
     this._wifiSetupLoaderCacheKey = WifiConfigureStore.fetch(wifiNetwork);
   };
 
-  _flushWifiConfigurationCache = () => {
+  _flushWifiConfigurationCache: () => void = (): void => {
     WifiConfigureStore.flushCache();
     WifiConnectStore.flushCache();
   };

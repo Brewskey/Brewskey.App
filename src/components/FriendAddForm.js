@@ -30,7 +30,9 @@ export type FriendAddFormValues = {|
   userName: string,
 |};
 
-const validate = (values: FriendAddFormValues): { [key: string]: string } => {
+const validate = (
+  values: FriendAddFormValues,
+): { [key: $Keys<FriendAddFormValues>]: string } => {
   const errors = {};
   if (!values.userName) {
     errors.userName = 'User name or email is required';

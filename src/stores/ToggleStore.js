@@ -6,17 +6,17 @@ class ToggleStore {
   @observable isToggled: boolean = false;
 
   @action
-  toggleOn = () => {
+  toggleOn: () => void = (): void => {
     this.isToggled = true;
   };
 
   @action
-  toggleOff = () => {
+  toggleOff: () => void = (): void => {
     this.isToggled = false;
   };
 
   @action
-  toggle = () => {
+  toggle: () => void = (): void => {
     this.isToggled = !this.isToggled;
   };
 }

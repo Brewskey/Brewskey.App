@@ -37,7 +37,7 @@ const IMAGE_PICKER_OPTIONS = {
 
 @observer
 class AvatarPicker<TExtraProps> extends React.Component<{||}> {
-  _cachedImageRef = React.createRef<{| flushCache: () => void |}>();
+  _cachedImageRef = React.createRef<typeof CachedImage>();
 
   @observable
   _updateAvatarCacheKey = null;

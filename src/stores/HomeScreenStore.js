@@ -20,19 +20,19 @@ class HomeScreenStore {
   searchTextStore: DebouncedTextStore = new DebouncedTextStore();
 
   @action
-  onClearSearchBar = () => {
+  onClearSearchBar: () => void = () => {
     GPSCoordinatesStore.flushCache();
   };
 
   @action
-  onAskLocationPermissionButtonPress = () => {
+  onAskLocationPermissionButtonPress: () => void = () => {
     if (
       LocationPermissionStore.get().getValue() ===
       LOCATION_PERMISSION_STATUSES.AUTHORIZED
     ) {
       LocationPermissionStore.flushCache();
     } else {
-      const onAppStateChange = appState => {
+      const onAppStateChange = (appState) => {
         if (appState !== 'active') {
           return;
         }
@@ -47,7 +47,7 @@ class HomeScreenStore {
   };
 
   @action
-  refresh = () => {
+  refresh: () => void = () => {
     if (this.searchTextStore.debouncedText) {
       GoogleCoordinatesStore.flushCache();
     } else {
@@ -101,10 +101,9 @@ class HomeScreenStore {
 
   @computed
   get _nearbyLocationsLoader(): LoadObject<Array<NearbyLocation>> {
-    return this._coordinatesLoader.map(
-      (coordinates: Coordinates): LoadObject<Array<NearbyLocation>> =>
-        NearbyLocationsStore.get(coordinates),
-    );
+    return this._coordinatesLoader.map((coordinates: Coordinates): LoadObject<
+      Array<NearbyLocation>,
+    > => NearbyLocationsStore.get(coordinates));
   }
 }
 

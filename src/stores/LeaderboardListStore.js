@@ -20,7 +20,10 @@ class LeaderboardListStore {
   }
 
   @action
-  initialize = ({ duration, tapID }: { duration: string, tapID: EntityID }) => {
+  initialize: ({|
+    duration: string,
+    tapID: EntityID,
+  |}) => void = ({ duration, tapID }) => {
     this.setDuration(duration);
     this.setTapID(tapID);
     this._isInitialized = true;
@@ -73,7 +76,7 @@ class LeaderboardListStore {
   }
 
   @action
-  fetchNextPage = () => {
+  fetchNextPage: () => void = () => {
     if (this.isLoading) {
       return;
     }
@@ -97,23 +100,23 @@ class LeaderboardListStore {
   };
 
   @action
-  setDuration = (duration: string) => {
+  setDuration: (string) => void = (duration: string) => {
     this._duration = duration;
   };
 
   @action
-  setTapID = (tapID: EntityID) => {
+  setTapID: (EntityID) => void = (tapID) => {
     this._tapID = tapID;
   };
 
   @action
-  reload = () => {
+  reload: () => void = () => {
     this._reset();
     this._fetchFirstPage();
   };
 
   @action
-  _fetchFirstPage = () => {
+  _fetchFirstPage: () => void = () => {
     this._queryOptionsList.push({
       skip: 0,
       take: this._pageSize,
@@ -121,7 +124,7 @@ class LeaderboardListStore {
   };
 
   @action
-  _reset = () => {
+  _reset: () => void = () => {
     TapStore.flushQueryCaches();
     this._queryOptionsList = [];
   };

@@ -31,7 +31,7 @@ class SectionTapsListStore {
   }
 
   @action
-  initialize = () => {
+  initialize: () => void = (): void => {
     this._isInitialized = true;
     this._fetchFirstPage();
   };
@@ -53,61 +53,52 @@ class SectionTapsListStore {
     // it causes ListItem rerenders every time if I pass Section prop there.
     return Array.from(
       new Set(this._taps.map((tap: Tap): EntityID => tap.device.id)).values(),
-    ).map(
-      (deviceID: EntityID): Section<Tap> => {
-        const deviceTaps = this._taps.filter(tap => tap.device.id === deviceID);
-        return {
-          data: deviceTaps,
-          title: nullthrows(deviceTaps[0]).device.name,
-        };
-      },
-    );
+    ).map((deviceID: EntityID): Section<Tap> => {
+      const deviceTaps = this._taps.filter((tap) => tap.device.id === deviceID);
+      return {
+        data: deviceTaps,
+        title: nullthrows(deviceTaps[0]).device.name,
+      };
+    });
   }
 
   @computed
   get _pageLoadObjects(): Array<LoadObject<Array<Tap>>> {
     // wait until all items in pageLoadObject are loaded
     return this._queryOptionsList
-      .map(
-        (queryOptions: QueryOptions): LoadObject<Array<LoadObject<Tap>>> =>
-          TapStore.getMany(queryOptions),
+      .map((queryOptions: QueryOptions): LoadObject<Array<LoadObject<Tap>>> =>
+        TapStore.getMany(queryOptions),
       )
-      .map(
-        (
-          pageLoadObject: LoadObject<Array<LoadObject<Tap>>>,
-        ): LoadObject<Array<Tap>> =>
-          pageLoadObject.map(
-            (
-              itemLoadObjects: Array<LoadObject<Tap>>,
-            ): LoadObject<Array<Tap>> => {
-              if (
-                itemLoadObjects.some(
-                  (itemLoadObject: LoadObject<Tap>): boolean =>
-                    itemLoadObject.isLoading(),
-                )
-              ) {
-                return LoadObject.loading();
-              }
+      .map((pageLoadObject: LoadObject<Array<LoadObject<Tap>>>): LoadObject<
+        Array<Tap>,
+      > =>
+        pageLoadObject.map(
+          (itemLoadObjects: Array<LoadObject<Tap>>): LoadObject<Array<Tap>> => {
+            if (
+              itemLoadObjects.some((itemLoadObject: LoadObject<Tap>): boolean =>
+                itemLoadObject.isLoading(),
+              )
+            ) {
+              return LoadObject.loading();
+            }
 
-              if (
-                itemLoadObjects.find(
-                  (itemLoadObject: LoadObject<Tap>): boolean =>
-                    itemLoadObject.hasError(),
-                )
-              ) {
-                return LoadObject.withError(
-                  new Error('Error loading tap list page'),
-                );
-              }
-
-              return LoadObject.withValue(
-                itemLoadObjects.map(
-                  (itemLoadObject: LoadObject<Tap>): Tap =>
-                    itemLoadObject.getValueEnforcing(),
-                ),
+            if (
+              itemLoadObjects.find((itemLoadObject: LoadObject<Tap>): boolean =>
+                itemLoadObject.hasError(),
+              )
+            ) {
+              return LoadObject.withError(
+                new Error('Error loading tap list page'),
               );
-            },
-          ),
+            }
+
+            return LoadObject.withValue(
+              itemLoadObjects.map((itemLoadObject: LoadObject<Tap>): Tap =>
+                itemLoadObject.getValueEnforcing(),
+              ),
+            );
+          },
+        ),
       );
   }
 
@@ -123,7 +114,7 @@ class SectionTapsListStore {
   @computed
   get _taps(): Array<Tap> {
     return flattenArray(
-      this._pageLoadObjects.map(pageLoadObject =>
+      this._pageLoadObjects.map((pageLoadObject) =>
         pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
       ),
     );
@@ -139,7 +130,7 @@ class SectionTapsListStore {
   };
 
   @action
-  fetchNextPage = () => {
+  fetchNextPage: () => void = (): void => {
     if (this.isLoading) {
       return;
     }
@@ -163,13 +154,13 @@ class SectionTapsListStore {
   };
 
   @action
-  reload = () => {
+  reload: () => void = (): void => {
     this._reset();
     this._fetchFirstPage();
   };
 
   @action
-  _reset = () => {
+  _reset = (): void => {
     TapStore.flushCache();
     this._queryOptionsList = [];
   };

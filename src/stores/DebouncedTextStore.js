@@ -21,7 +21,7 @@ class DebouncedTextStore {
   }
 
   @action
-  setText = (text: string) => {
+  setText: (string) => void = (text: string) => {
     this.text = text;
     this._setDebouncedText(text);
   };

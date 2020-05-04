@@ -33,7 +33,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
       : [
           {
             data: FriendRequestsListStore.pendingRequestsLoaderRows,
-            renderItem: ({ item }: { item: Row<Friend> }) => (
+            renderItem: ({ item }: { item: Row<Friend> }): React.Node => (
               <LoaderRow
                 loadedRow={FriendPendingRequestListItem}
                 loader={item.loader}

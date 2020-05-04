@@ -28,13 +28,15 @@ class NFCWriterStore {
   }
 
   @action
-  onBeginUserLogin = () => {
+  onBeginUserLogin: () => void = (): void => {
     this.status = 'login';
     this._resetValues();
   };
 
   @action
-  onAuthenticateUser = async (userCredentials: UserCredentials) => {
+  onAuthenticateUser: (UserCredentials) => void = async (
+    userCredentials: UserCredentials,
+  ): void => {
     const { accessToken } = await DAOApi.Auth.login(userCredentials);
 
     try {
@@ -66,23 +68,23 @@ class NFCWriterStore {
   };
 
   @action
-  onFinished = () => {
+  onFinished: () => void = () => {
     this._resetValues();
   };
 
   @action
-  _enableNFCWriting = async () => {
+  _enableNFCWriting: () => Promise<void> = async () => {
     this.status = 'writing';
 
     await NfcManager.registerTagEvent(() => {});
     // Artificial wait to allow Android to get ready.
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     this._requestWriteTag();
   };
 
   @action
-  _requestWriteTag = async () => {
+  _requestWriteTag: () => Promise<void> = async () => {
     const payload = Ndef.encodeMessage([Ndef.textRecord(this._token)]);
 
     // First try to format the card
@@ -108,12 +110,12 @@ class NFCWriterStore {
       });
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     this._requestWriteTag();
   };
 
   @action
-  _resetValues = () => {
+  _resetValues: () => void = () => {
     this._token = null;
     NfcManager.cancelNdefWrite();
     NfcManager.unregisterTagEvent();

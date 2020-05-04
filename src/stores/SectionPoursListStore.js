@@ -58,23 +58,21 @@ class SectionPoursListStore {
         this._extendedPours.map((pour: Pour): EntityID => pour.keg.id),
       ).values(),
     )
-      .map(
-        (kegID: EntityID): any => {
-          const keg = KegStore.getByID(kegID).getValue();
-          if (!keg) {
-            return null;
-          }
+      .map((kegID: EntityID): any => {
+        const keg = KegStore.getByID(kegID).getValue();
+        if (!keg) {
+          return null;
+        }
 
-          const kegPours = this._extendedPours.filter(
-            (pour: Pour): boolean => pour.keg.id === kegID,
-          );
+        const kegPours = this._extendedPours.filter(
+          (pour: Pour): boolean => pour.keg.id === kegID,
+        );
 
-          return {
-            ...keg,
-            data: kegPours,
-          };
-        },
-      )
+        return {
+          ...keg,
+          data: kegPours,
+        };
+      })
       .filter(Boolean);
   }
 
@@ -82,46 +80,41 @@ class SectionPoursListStore {
   get _pageLoaders(): Array<LoadObject<Array<Pour>>> {
     // wait until all items in pageLoadObject are loaded
     return this._queryOptionsList
-      .map(
-        (queryOptions: QueryOptions): LoadObject<Array<LoadObject<Pour>>> =>
-          PourStore.getMany(queryOptions),
+      .map((queryOptions: QueryOptions): LoadObject<Array<LoadObject<Pour>>> =>
+        PourStore.getMany(queryOptions),
       )
-      .map(
-        (
-          pageLoader: LoadObject<Array<LoadObject<Pour>>>,
-        ): LoadObject<Array<Pour>> =>
-          pageLoader.map(
-            (pourLoaders: Array<LoadObject<Pour>>): LoadObject<Array<Pour>> => {
-              if (
-                pourLoaders.some(
-                  (pourLoader: LoadObject<Pour>): boolean =>
-                    pourLoader
-                      .map(pour => KegStore.getByID(pour.keg.id))
-                      .isLoading(),
-                )
-              ) {
-                return LoadObject.loading();
-              }
+      .map((pageLoader: LoadObject<Array<LoadObject<Pour>>>): LoadObject<
+        Array<Pour>,
+      > =>
+        pageLoader.map((pourLoaders: Array<LoadObject<Pour>>): LoadObject<
+          Array<Pour>,
+        > => {
+          if (
+            pourLoaders.some((pourLoader: LoadObject<Pour>): boolean =>
+              pourLoader
+                .map((pour) => KegStore.getByID(pour.keg.id))
+                .isLoading(),
+            )
+          ) {
+            return LoadObject.loading();
+          }
 
-              if (
-                pourLoaders.find(
-                  (pourLoader: LoadObject<Pour>): boolean =>
-                    pourLoader.hasError(),
-                )
-              ) {
-                return LoadObject.withError(
-                  new Error('Error loading pour list page'),
-                );
-              }
+          if (
+            pourLoaders.find((pourLoader: LoadObject<Pour>): boolean =>
+              pourLoader.hasError(),
+            )
+          ) {
+            return LoadObject.withError(
+              new Error('Error loading pour list page'),
+            );
+          }
 
-              return LoadObject.withValue(
-                pourLoaders.map(
-                  (pourLoader: LoadObject<Pour>): Pour =>
-                    pourLoader.getValueEnforcing(),
-                ),
-              );
-            },
-          ),
+          return LoadObject.withValue(
+            pourLoaders.map((pourLoader: LoadObject<Pour>): Pour =>
+              pourLoader.getValueEnforcing(),
+            ),
+          );
+        }),
       );
   }
 
@@ -140,7 +133,7 @@ class SectionPoursListStore {
   @computed
   get _extendedPours(): Array<Pour> {
     return flattenArray(
-      this._pageLoaders.map(pageLoadObject =>
+      this._pageLoaders.map((pageLoadObject) =>
         pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
       ),
     );

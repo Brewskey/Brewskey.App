@@ -1,7 +1,6 @@
 // @flow
 
 import type { EntityID, KegType } from 'brewskey.js-api';
-
 import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
 
 // no longer works(they made the style internal with ___ prefix):
@@ -10,7 +9,25 @@ import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
 // https://github.com/flowtype/flow-typed/issues/631
 export type Style = any;
 
-export type Section<TEntity> = { title: string } & SectionBase<TEntity>;
+export type Section<TEntity> = {|
+  data: $ReadOnlyArray<TEntity>,
+  key?: string,
+  renderItem?: ?(info: {
+    item: SectionItemT,
+    index: number,
+    section: SectionBase<SectionItemT>,
+    separators: {
+      highlight: () => void,
+      unhighlight: () => void,
+      updateProps: (select: 'leading' | 'trailing', newProps: Object) => void,
+      ...
+    },
+    ...
+  }) => React.Node,
+  ItemSeparatorComponent?: ?React.ComponentType<any>,
+  keyExtractor?: (item: SectionItemT, index?: ?number) => string,
+  title: string,
+|};
 
 // todo make the type annotation
 export type Navigation = Object;

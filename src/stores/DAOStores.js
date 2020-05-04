@@ -103,14 +103,14 @@ class DAOStore<TEntity> {
     );
   }
 
-  flushCache = () => this._dao.flushCache();
+  flushCache: () => void = () => this._dao.flushCache();
 
-  flushCustomCache = () => this._dao.flushCustomCache();
+  flushCustomCache: () => void = () => this._dao.flushCustomCache();
 
-  flushCacheForEntity = (entityID: EntityID) =>
+  flushCacheForEntity: (EntityID) => void = (entityID: EntityID) =>
     this._dao.flushCacheForEntity(entityID);
 
-  flushQueryCaches = () => this._dao.flushQueryCaches();
+  flushQueryCaches: () => void = () => this._dao.flushQueryCaches();
 
   count(queryOptions: ?QueryOptions): LoadObject<number> {
     return this.__callDAOFunction('count', queryOptions);

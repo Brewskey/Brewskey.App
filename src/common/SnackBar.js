@@ -2,7 +2,7 @@
 
 import type { SnackBarMessage } from '../stores/SnackBarStore';
 import type { Notification } from '../stores/NotificationsStore';
-import type AnimatedValue from 'react-native/Libraries/Animated/src/nodes/AnimatedValue';
+import type { EndCallback } from 'react-native/Libraries/Animated/src/animations/Animation.js';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -87,7 +87,7 @@ class SnackMessage extends React.Component<{||}, State> {
     }).start(SnackBarStore.dropCurrentMessage);
   };
 
-  _onLayout = (event) => {
+  _onLayout = (event): void => {
     const { currentMessage } = SnackBarStore;
     if (currentMessage === null || this.state.height !== 0) {
       return;
@@ -113,10 +113,12 @@ class SnackMessage extends React.Component<{||}, State> {
         toValue: -height,
         useNativeDriver: true,
       }),
-    ]).start(({ finished }: { finished: boolean }) => {
-      finished && SnackBarStore.dropCurrentMessage();
-      this.setState(() => ({ height: 0 }));
-    });
+    ]).start(
+      (({ finished }) => {
+        finished && SnackBarStore.dropCurrentMessage();
+        this.setState(() => ({ height: 0 }));
+      }: EndCallback),
+    );
   };
 
   render(): React.Node {
