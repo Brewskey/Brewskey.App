@@ -17,7 +17,7 @@ class MenuLogoutButton extends React.Component<{}> {
     AuthStore.logout();
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Fragment>
         <MenuButton

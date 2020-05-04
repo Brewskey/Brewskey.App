@@ -21,7 +21,7 @@ type Props = {|
   level?: number,
 |};
 
-const Pint = ({ level = 100 }: Props) => (
+const Pint = ({ level = 100 }: Props): React.Node => (
   <ImageBackground source={EmptyGlassImage} style={styles.glass}>
     <Image
       source={BeerImage}

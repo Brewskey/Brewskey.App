@@ -36,7 +36,7 @@ const validate = ({
 @form({ validate })
 @observer
 class ForgotPasswordForm extends InjectedComponent<FormProps> {
-  render() {
+  render(): React.Node {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
 
     return (

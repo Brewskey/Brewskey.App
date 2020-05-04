@@ -38,7 +38,7 @@ class MyFriendsRequestScreen extends React.Component<{}> {
   //   ),
   // };
 
-  render() {
+  render(): React.Node {
     return <FriendRequestsList />;
   }
 }

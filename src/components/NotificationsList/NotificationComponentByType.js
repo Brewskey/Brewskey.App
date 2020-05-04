@@ -7,7 +7,9 @@ import LowKegLevelListItem from './LowKegLevelListItem';
 import AchievementListItem from './AchievementListItem';
 import FriendRequestListItem from './FriendRequestListItem';
 
-const NotificationComponentByType = (props: NotificationListItemProps) => {
+const NotificationComponentByType = (
+  props: NotificationListItem,
+): React.Node => {
   const {
     contentComponent,
     isSwipeable,

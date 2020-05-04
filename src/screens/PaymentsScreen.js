@@ -52,7 +52,7 @@ type InjectedProps = {|
 class PaymentsScreen extends InjectedComponent<InjectedProps> {
   _onDeletePaymentPress = () => {};
 
-  render() {
+  render(): React.Node {
     const { creditCardDetailsLoader, isLoading } = PaymentsScreenStore;
     const creditCardDetails = creditCardDetailsLoader.getValue();
 

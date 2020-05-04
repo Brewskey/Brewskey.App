@@ -1,13 +1,10 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "C:\\dev\\Brewskey\\brewskey.js-api"
-		}
-	],
-	"settings": {
-		"javascript.validate.enable": false
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "javascript.validate.enable": false
+  }
 }

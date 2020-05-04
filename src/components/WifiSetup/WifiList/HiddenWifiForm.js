@@ -36,7 +36,7 @@ type Props = {|
 @form()
 @observer
 class HiddenWifiForm extends injectedComponent<FormProps, Props> {
-  render() {
+  render(): React.Node {
     const { error } = this.props;
     const {
       handleSubmit,

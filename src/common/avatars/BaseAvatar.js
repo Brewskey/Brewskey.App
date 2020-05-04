@@ -28,13 +28,13 @@ type Props = {|
   uri?: ?string,
 |};
 class BaseAvatar extends React.PureComponent<Props> {
-  static defaultProps = {
+  static defaultProps: {| cached: boolean, rounded: boolean, size: number |} = {
     cached: true,
     rounded: true,
     size: 45,
   };
 
-  render() {
+  render(): React.Node {
     const {
       cached,
       containerStyle,

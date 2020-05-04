@@ -24,7 +24,7 @@ type Props = {|
 
 @observer
 class CardForm extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     return (
       <View style={this.props.style}>
         {/* <PaymentCardTextField

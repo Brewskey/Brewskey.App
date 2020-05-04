@@ -28,7 +28,7 @@ class SrmPicker extends React.Component<Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <DAOPicker
         {...this.props}

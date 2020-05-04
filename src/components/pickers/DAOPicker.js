@@ -68,7 +68,11 @@ type TEntityBase<TEntity> = {|
 class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
   Props<TEntityBase<TEntity>, TMultiple>,
 > {
-  static defaultProps = {
+  static defaultProps: {|
+    queryOptions: QueryOptions,
+    searchBy: string,
+    shouldUseSearchQuery: boolean,
+  |} = {
     queryOptions: {},
     searchBy: 'name',
     shouldUseSearchQuery: false,
@@ -125,7 +129,7 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
     return renderRow(({ ...renderRowProps, isSelected, toggleItem }: any));
   };
 
-  render() {
+  render(): React.Node {
     const {
       error,
       headerTitle,

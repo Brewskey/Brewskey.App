@@ -50,7 +50,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'Password changed!' });
   };
 
-  render() {
+  render(): React.Node {
     const {
       isManageTapsEnabled,
       onOrganizationChange,

@@ -113,7 +113,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
     <ListSectionHeader title={section.title} />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <List
         keyExtractor={this._keyExtractor}

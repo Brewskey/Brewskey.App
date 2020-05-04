@@ -30,7 +30,7 @@ class MenuNavigationButton<TOtherProps> extends InjectedComponent<
       routeName: this.props.routeName,
     });
 
-  render() {
+  render(): React.Node {
     return <MenuButton {...this.props} onPress={this._onPress} />;
   }
 }

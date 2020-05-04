@@ -60,7 +60,7 @@ class WifiList extends React.Component<Props> {
     );
   };
 
-  render() {
+  render(): React.Node {
     const isLoading = WifiNetworksStore.get().isLoading();
     const hasError = WifiNetworksStore.get().hasError();
 

@@ -46,7 +46,7 @@ type State = {|
 |};
 
 class BeverageDetailsContent extends React.Component<Props, State> {
-  state = {
+  state: State = {
     height: 0,
     width: BEVERAGE_IMAGE_SIZE,
   };
@@ -70,7 +70,7 @@ class BeverageDetailsContent extends React.Component<Props, State> {
     });
   };
 
-  render() {
+  render(): React.Node {
     const {
       beverage: { beverageType, description, glass, isOrganic, style },
     } = this.props;

@@ -48,7 +48,7 @@ type Props<TExtraProps> = {|
 class OverviewItem<TExtraProps> extends React.PureComponent<
   Props<TExtraProps>,
 > {
-  static defaultProps = {
+  static defaultProps: {| paddedHorizontal: boolean |} = {
     paddedHorizontal: true,
   };
 

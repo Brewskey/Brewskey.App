@@ -9,7 +9,7 @@ type Props = {
   srm: Srm,
 };
 
-const PickerSrmInputValue = ({ srm }: Props) => (
+const PickerSrmInputValue = ({ srm }: Props): React.Node => (
   <ColorIcon color={`#${srm.hex}`} size={25} />
 );
 

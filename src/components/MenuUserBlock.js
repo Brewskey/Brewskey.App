@@ -44,7 +44,7 @@ class MenuUserBlock extends InjectedComponent<InjectedProps> {
       id: AuthStore.userID,
     });
 
-  render() {
+  render(): React.Node {
     return (
       <TouchableItem borderless onPress={this._onPress}>
         <View style={styles.container}>

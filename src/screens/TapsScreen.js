@@ -17,7 +17,7 @@ type Props = {|
 
 @errorBoundary(<ErrorScreen showBackButton />)
 class TapsScreen extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

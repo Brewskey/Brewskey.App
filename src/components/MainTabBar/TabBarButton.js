@@ -23,13 +23,15 @@ type Props = {|
 |};
 
 class TabBarButton extends React.PureComponent<Props> {
-  static defaultProps = {
+  static defaultProps: {|
+    iconContainerComponent: React.AbstractComponent<>,
+  |} = {
     iconContainerComponent: TouchableItem,
   };
 
   _onPress = () => this.props.onPress(this.props.route);
 
-  render() {
+  render(): React.Node {
     const {
       icon: { name, type },
       iconContainerComponent,

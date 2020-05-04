@@ -64,7 +64,7 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class BeverageForm extends InjectedComponent<InjectedProps, Props> {
-  render() {
+  render(): React.Node {
     const { beverage = {}, submitButtonLabel } = this.props;
 
     const {

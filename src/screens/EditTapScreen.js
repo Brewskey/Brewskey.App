@@ -46,7 +46,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     return TapStore.getByID(id);
   }
 
-  render() {
+  render(): React.Node {
     const { id, navigation } = this.injectedProps;
     const tap = this._tapLoader.getValue();
     return (

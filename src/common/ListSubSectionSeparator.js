@@ -11,6 +11,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const ListSubSectionSeparator = () => <View style={styles.separator} />;
+const ListSubSectionSeparator = (): React.Node => (
+  <View style={styles.separator} />
+);
 
 export default ListSubSectionSeparator;

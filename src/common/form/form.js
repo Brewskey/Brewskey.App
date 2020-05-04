@@ -9,28 +9,31 @@ import hoistNonReactStatic from 'hoist-non-react-statics';
 import { observer } from 'mobx-react';
 import FormStore from './FormStore';
 
-type FormSetupProps = {
-  validate?: ValidationFunction,
+type FormSetupProps<TObject> = {
+  validate?: ValidationFunction<TObject>,
 };
 
 type OnSubmitCallbackFunction = (values: {
   [key: string]: any,
 }) => void | Promise<any>;
 
-const form = ({ validate }: FormSetupProps = {}): Function => <
-  TProps: {| onSubmit?: OnSubmitCallbackFunction |},
+type SubmitType = {| onSubmit?: OnSubmitCallbackFunction |};
+const form = <TValidate>({ validate }: FormSetupProps<TValidate> = {}): (<
+  TProps,
 >(
-  Component: React.ComponentType<{ ...TProps, ...FormProps }>,
-): React.ComponentType<TProps> => {
+  React.ComponentType<{| ...TProps, ...SubmitType, ...FormProps |}>,
+) => React.ComponentType<{| ...TProps, ...SubmitType |}>) => <TProps>(
+  Component: React.ComponentType<{| ...TProps, ...SubmitType, ...FormProps |}>,
+): React.ComponentType<{| ...TProps, ...SubmitType |}> => {
   @observer
-  class Form extends React.Component<TProps> {
+  class Form extends React.Component<{| ...TProps, ...SubmitType |}> {
     static childContextTypes = {
       formStore: PropTypes.object,
     };
 
-    _formStore: FormStore = new FormStore({ validate });
+    _formStore: FormStore<TValidate> = new FormStore({ validate });
 
-    getChildContext(): { formStore: FormStore } {
+    getChildContext(): { formStore: FormStore<TValidate> } {
       return {
         formStore: this._formStore,
       };
@@ -67,7 +70,7 @@ const form = ({ validate }: FormSetupProps = {}): Function => <
       }
     };
 
-    render() {
+    render(): React.Node {
       return (
         <Component
           formError={this._formStore.formError}

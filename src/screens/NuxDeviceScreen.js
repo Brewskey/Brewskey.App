@@ -37,7 +37,7 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxDeviceScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header title="3. Name your device" />

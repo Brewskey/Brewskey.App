@@ -32,7 +32,7 @@ type InjectedProps = {|
 @errorBoundary(ErrorScreen)
 @observer
 class HomeScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

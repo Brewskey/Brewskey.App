@@ -45,7 +45,7 @@ class PickerTextInput<TValue> extends React.Component<Props<TValue>> {
     return value ? stringValueExtractor(value) : '';
   }
 
-  render() {
+  render(): React.Node {
     const {
       description,
       error,

@@ -26,7 +26,7 @@ class OrganizaionPicker extends React.Component<Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const { onChange, value } = this.props;
     return (
       <DAOPicker

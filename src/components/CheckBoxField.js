@@ -19,7 +19,7 @@ class CheckBoxField extends React.PureComponent<Props> {
     this.props.onBlur();
   };
 
-  render() {
+  render(): React.Node {
     const { label, value } = this.props;
     return (
       <CheckBox

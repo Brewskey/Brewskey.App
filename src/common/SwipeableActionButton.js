@@ -15,19 +15,19 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props<TIconProps> = {|
+  ...TIconProps,
   containerStyle?: Style,
   iconName: string,
   onPress?: () => void,
-  // other IconProps
-};
+|};
 
-const SwipeableActionButton = ({
+const SwipeableActionButton = <TIconProps>({
   containerStyle,
   iconName,
   onPress,
   ...rest
-}: Props) => (
+}: Props<TIconProps>): React.Node => (
   <IconButton
     {...rest}
     containerStyle={[styles.container, containerStyle]}

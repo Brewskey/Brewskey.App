@@ -23,7 +23,7 @@ type Props = {|
   showBackButton?: boolean,
 |};
 
-const ErrorScreen = ({ showBackButton }: Props) => (
+const ErrorScreen = ({ showBackButton }: Props): React.Node => (
   <Fragment>
     <Header showBackButton={showBackButton} title="Whoops! Error!" />
     <Container centered style={styles.container}>

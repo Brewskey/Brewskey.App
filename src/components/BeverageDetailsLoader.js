@@ -20,7 +20,7 @@ class BeverageDetailsLoader extends React.Component<Props> {
     return BeverageStore.getByID(this.props.beverageID);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedBeverageDetails}

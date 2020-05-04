@@ -35,7 +35,7 @@ class FlowSensorSwiperField extends React.Component<Props> {
     onChange(FLOW_SENSOR_ITEMS[index].value);
   };
 
-  render() {
+  render(): React.Node {
     return ((
       <Swiper
         index={this._index}

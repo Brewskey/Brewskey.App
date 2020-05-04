@@ -11,11 +11,10 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-type Props = {
+type Props = {|
   params?: Object,
   toRoute: string,
-  // react-native-element icon props
-};
+|};
 
 @withNavigation
 class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
@@ -24,7 +23,7 @@ class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
     this.injectedProps.navigation.navigate(toRoute, params);
   };
 
-  render() {
+  render(): React.Node {
     return <HeaderIconButton {...this.props} onPress={this._onButtonPress} />;
   }
 }

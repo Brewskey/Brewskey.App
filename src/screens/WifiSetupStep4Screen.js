@@ -23,7 +23,7 @@ class WifiSetupStep4Screen extends InjectedComponent<InjectedProps> {
     onSetupFinish(wifiSetupStore.particleIDLoader.getValueEnforcing());
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <SectionHeader title="Setup Finish!" />

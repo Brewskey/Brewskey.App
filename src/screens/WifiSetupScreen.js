@@ -66,7 +66,7 @@ class WifiSetupScreen extends InjectedComponent<InjectedProps> {
     }
   };
 
-  render() {
+  render(): React.Node {
     const { forNewDevice, navigation } = this.injectedProps;
     return (
       <Container>

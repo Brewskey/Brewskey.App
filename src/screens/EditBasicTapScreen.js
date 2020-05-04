@@ -47,7 +47,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'The tap edited' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedTapComponent}
@@ -70,7 +70,7 @@ class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
   _onToggleNotifications = () =>
     NotificationsStore.toggleNotificationsForTap(this.props.value.id);
 
-  render() {
+  render(): React.Node {
     const { onTapFormSubmit, value } = this.props;
     return (
       <Container>

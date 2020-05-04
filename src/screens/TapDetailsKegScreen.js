@@ -66,7 +66,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
 
   _setKegLevelBarRef = (ref) => (this._kegLevelBar = ref);
 
-  render() {
+  render(): React.Node {
     const {
       noFlowSensorWarning,
       tap: { currentKeg, id },

@@ -29,7 +29,7 @@ const OrderedText = ({
   index,
   paddedBottom,
   textStyle,
-}: Props) => (
+}: Props): React.Node => (
   <View
     style={[
       styles.container,

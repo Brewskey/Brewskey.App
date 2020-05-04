@@ -31,7 +31,7 @@ type Props = {|
   onChange: (value: ?LeaderboardDurationValue) => void,
 |};
 
-const LeaderBoardDurationPicker = ({ onChange, value }: Props) => (
+const LeaderBoardDurationPicker = ({ onChange, value }: Props): React.Node => (
   <SimplePicker
     doesRequireConfirmation={false}
     headerTitle="Select Leaderboard duration"

@@ -26,7 +26,7 @@ type Props = {|
   ounces: number,
 |};
 
-const PintCounter = ({ ounces }: Props) => {
+const PintCounter = ({ ounces }: ): React.Node => (
   const pints = translateToPints(ounces);
   const wholePints = createRange(0, Math.floor(pints));
   const partialPintLevel = (pints % 1) * 100;

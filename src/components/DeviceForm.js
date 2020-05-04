@@ -64,7 +64,7 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
     return LocationStore.getMany();
   }
 
-  render() {
+  render(): React.Node {
     const { device, hideLocation, submitButtonLabel } = this.props;
     const {
       formError,

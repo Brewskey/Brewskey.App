@@ -99,7 +99,7 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (pour: Pour): string => pour.id.toString();
 
-  render() {
+  render(): React.Node {
     const { ListHeaderComponent } = this.props;
 
     return (
@@ -143,7 +143,10 @@ const PourListItem = ({ item: pour, onItemPress }: RowItemProps<Pour, *>) => {
   );
 };
 
-const Slideout = ({ item, onDeleteItemPress }: RowItemProps<Pour, *>) => (
+const Slideout = ({
+  item,
+  onDeleteItemPress,
+}: RowItemProps<Pour, *>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"

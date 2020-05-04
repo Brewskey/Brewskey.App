@@ -3,7 +3,7 @@
 import * as React from 'react';
 import RNSwipeableRow from 'react-native-swipeable-list';
 
-type SwipeableProps = {
+export type SwipeableProps = {
   isOpen: boolean,
   maxSwipeDistance: number,
   onClose: () => void,
@@ -16,7 +16,7 @@ type SwipeableProps = {
   swipeThreshold?: number,
 };
 
-export type RowItemProps<TEntity, TExtraProps = {}> = {
+export type RowItemProps<TEntity, TExtraProps> = {
   // section?: Object, add this when resolve object recreation issue in SectionlistStore
   ...TExtraProps,
   index: number,
@@ -24,22 +24,28 @@ export type RowItemProps<TEntity, TExtraProps = {}> = {
   separators: Object,
 };
 
-type Props<TEntity, TExtraProps = {}> = {
+type Props<TEntity, TExtraProps> = {
   ...TExtraProps,
+  ...SwipeableProps,
+  ...RowItemProps<TEntity, TExtraProps>,
   rowItemComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   slideoutComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
-} & SwipeableProps &
-  RowItemProps<TEntity>;
+};
 
-class SwipeableRow<TEntity> extends React.PureComponent<Props<TEntity>> {
-  static defaultProps = {
+class SwipeableRow<TEntity, TExtraProps> extends React.PureComponent<
+  Props<TEntity, TExtraProps>,
+> {
+  static defaultProps: {|
+    maxSwipeDistance: number,
+    preventSwipeRight: boolean,
+  |} = {
     maxSwipeDistance: 150,
     preventSwipeRight: true,
   };
 
   _onOpen = (): void => this.props.onOpen(this.props.rowKey);
 
-  render() {
+  render(): React.Node {
     const {
       index,
       isOpen,

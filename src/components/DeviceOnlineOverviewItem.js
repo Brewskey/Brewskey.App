@@ -23,7 +23,7 @@ class DeviceOnlineOverviewItem extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         particleID={this.props.particleID}

@@ -58,12 +58,12 @@ class TapForm extends InjectedComponent<InjectedProps, Props> {
       return LoadObject.empty();
     }
 
-    return DeviceStore.getByID(deviceId.id).map(device =>
+    return DeviceStore.getByID(deviceId.id).map((device) =>
       OrganizationStore.getByID(device.organization.id),
     );
   }
 
-  render() {
+  render(): React.Node {
     const { isFocused, submitButtonLabel, tap = {} } = this.props;
     const {
       formError,

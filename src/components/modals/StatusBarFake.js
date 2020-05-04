@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const StatusBarFake = () =>
+const StatusBarFake = (): React.Node =>
   Platform.OS === 'ios' ? <View style={styles.container} /> : null;
 
 export default StatusBarFake;

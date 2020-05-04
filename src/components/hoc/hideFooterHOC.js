@@ -23,7 +23,7 @@ export default function hideTabHOC<Config: { navigation: Navigation }>(
       });
     }
 
-    render() {
+    render(): React.Node {
       return <Component {...this.props} />;
     }
   }

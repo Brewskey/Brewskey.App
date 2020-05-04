@@ -30,7 +30,7 @@ type InjectedProps = {|
 @withNavigation
 @observer
 class FriendsList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
+  static defaultProps: {| queryOptions: QueryOptions |} = {
     queryOptions: {},
   };
 
@@ -57,7 +57,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <List
@@ -79,7 +79,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 const LoadedRow = ({
   item: friend,
   onListItemPress,
-}: RowItemProps<Friend, *>) => (
+}: RowItemProps<Friend, *>): React.Node => (
   <ListItem
     avatar={<UserAvatar userName={friend.friendAccount.userName} />}
     hideChevron

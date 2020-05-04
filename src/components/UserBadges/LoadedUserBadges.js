@@ -46,7 +46,7 @@ class LoadedUserBadges extends React.Component<Props> {
     this._modalToggleStore.toggleOn();
   };
 
-  render() {
+  render(): React.Node {
     if (this.props.value.length === 0) {
       return <EmptyUserBadges />;
     }

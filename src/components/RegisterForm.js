@@ -63,7 +63,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
   _onSubmitButtonPress = (): Promise<void> =>
     this.injectedProps.handleSubmit(this._onSubmit);
 
-  render() {
+  render(): React.Node {
     const { formError, invalid, submitting } = this.injectedProps;
 
     return (

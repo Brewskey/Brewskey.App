@@ -14,11 +14,11 @@ type Props = PickerTextInputProps<Srm>;
 
 @observer
 class PickerSrmInput extends React.Component<Props> {
-  static defaultProps = {
+  static defaultProps: {| placeholder: string |} = {
     placeholder: 'Please select...',
   };
 
-  render() {
+  render(): React.Node {
     const {
       error,
       label,

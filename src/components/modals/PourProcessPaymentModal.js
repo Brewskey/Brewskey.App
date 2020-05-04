@@ -63,7 +63,7 @@ class PourProcessPaymentModal extends Component<{||}> {
     }
   };
 
-  render() {
+  render(): React.Node {
     const { isVisible, onHideModal } = PourProcessStore;
 
     const tapsLoader = this._store.tapsWithPaymentEnabled;
@@ -141,7 +141,7 @@ const tapStyles = StyleSheet.create({
 
 @observer
 class TapPayment extends Component<TapPaymentProps> {
-  render() {
+  render(): React.Node {
     const pricePerOunce = 0;
     const { currentKeg, id, tapNumber } = this.props.tap;
     const { beverage } = currentKeg;

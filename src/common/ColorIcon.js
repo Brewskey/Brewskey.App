@@ -3,12 +3,12 @@
 import * as React from 'react';
 import { View } from 'react-native';
 
-type Props = {
+type Props = {|
   color: string,
   size?: number,
-};
+|};
 
-const ColorIcon = ({ size = 45, color }: Props) => (
+const ColorIcon = ({ size = 45, color }: Props): React.Node => (
   <View
     style={{
       backgroundColor: color,

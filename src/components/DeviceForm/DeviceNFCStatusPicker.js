@@ -13,7 +13,7 @@ type Props = {|
   value: any,
 |};
 
-const DeviceTimeOpenPicker = (props: Props) => (
+const DeviceTimeOpenPicker = (props: Props): React.Node => (
   <SimplePicker
     description={DESCRIPTION_BY_VALUE[props.value]}
     doesRequireConfirmation={false}
@@ -32,7 +32,7 @@ const DeviceTimeOpenPicker = (props: Props) => (
 
 const LEARN_MORE_LINK = 'https://brewskey.com/faq#supported-nfc-cards';
 const callback = () => {
-  Linking.canOpenURL(LEARN_MORE_LINK).then(supported => {
+  Linking.canOpenURL(LEARN_MORE_LINK).then((supported) => {
     if (supported) {
       Linking.openURL(LEARN_MORE_LINK);
     } else {

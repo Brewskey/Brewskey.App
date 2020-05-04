@@ -23,7 +23,7 @@ type Props = {|
 
 @observer
 class KegsList extends React.Component<Props> {
-  static defaultProps = {
+  static defaultProps: {| queryOptions: QueryOptions |} = {
     queryOptions: {},
   };
 
@@ -53,7 +53,7 @@ class KegsList extends React.Component<Props> {
     <LoaderRow loader={item.loader} loadedRow={LoadedRow} />
   );
 
-  render() {
+  render(): React.Node {
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <List
@@ -70,7 +70,7 @@ class KegsList extends React.Component<Props> {
   }
 }
 
-const LoadedRow = ({ item: keg }: RowItemProps<Keg>) => (
+const LoadedRow = ({ item: keg }: RowItemProps<Keg>): React.Node => (
   <ListItem
     avatar={<BeverageAvatar beverageId={keg.beverage.id} />}
     hideChevron

@@ -33,7 +33,7 @@ const GallonSliderField = ({
   onChange,
   value,
   ...rest
-}: Props) => {
+}: Props): React.Node => {
   const minValue = (defaultPulses * (100 - BOUNDARIES_PERCENT)) / 100;
   const maxValue = (defaultPulses * (100 + BOUNDARIES_PERCENT)) / 100;
   const valuePercent = ((value - defaultPulses) / defaultPulses) * 100;

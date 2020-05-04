@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 
 @observer
 class PourProcessModal extends Component<{}> {
-  render() {
+  render(): React.Node {
     return PourProcessStore.shouldShowPaymentScreen ? (
       <PourProcessPaymentModal />
     ) : (
@@ -72,7 +72,7 @@ class PourProcessModal extends Component<{}> {
 class PourProcessInputModal extends Component<{}> {
   _formatText = () => PourProcessStore.currentSeconds;
 
-  render() {
+  render(): React.Node {
     const {
       currentSeconds,
       isLoading,

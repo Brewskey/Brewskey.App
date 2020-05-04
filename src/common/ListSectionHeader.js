@@ -17,7 +17,7 @@ type Props = {|
 |};
 
 class ListSectionHeader extends React.PureComponent<Props> {
-  render() {
+  render(): React.Node {
     return <Text style={styles.container}>{this.props.title}</Text>;
   }
 }

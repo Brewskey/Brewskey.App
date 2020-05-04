@@ -51,7 +51,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
     SnackBarStore.showMessage({ text: 'The pour was deleted' });
   };
 
-  render() {
+  render(): React.Node {
     const {
       canDeletePours,
       ListHeaderComponent,
@@ -107,7 +107,10 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
   );
 };
 
-const Slideout = ({ item, onDeleteItemPress }: RowItemProps<Pour, *>) => (
+const Slideout = ({
+  item,
+  onDeleteItemPress,
+}: RowItemProps<Pour, *>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"

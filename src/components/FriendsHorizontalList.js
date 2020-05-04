@@ -49,8 +49,8 @@ type InjectedProps = {|
 @withNavigation
 @observer
 class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
-    queryOptions: {},
+  static defaultProps: {| queryOptions: QueryOptions |} = {
+    queryOptions: ({}: QueryOptions),
   };
 
   _listStore: DAOListStore<Friend> = new DAOListStore(FriendStore);
@@ -77,7 +77,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <List
@@ -114,7 +114,7 @@ class LoadedRow extends React.PureComponent<LoadedRowProps> {
     const { item, onListItemPress } = this.props;
     onListItemPress(item);
   };
-  render() {
+  render(): React.Node {
     const { item: friend } = this.props;
     return (
       <TouchableOpacity onPress={this._onPress} style={styles.friendContainer}>

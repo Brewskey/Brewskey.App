@@ -21,7 +21,7 @@ class ProfileStatsScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'Stats',
   };
 
-  render() {
+  render(): React.Node {
     return (
       <View>
         <Text>Profile stats and charts </Text>

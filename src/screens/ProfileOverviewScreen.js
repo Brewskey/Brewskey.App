@@ -33,7 +33,7 @@ class ProfileOverviewScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'Overview',
   };
 
-  render() {
+  render(): React.Node {
     const { account } = this.injectedProps;
     return (
       <BeveragePoursList

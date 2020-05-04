@@ -69,7 +69,7 @@ class BasePoursList<TExtraProps> extends React.Component<Props<TExtraProps>> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const { ListEmptyComponent, ListHeaderComponent } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (

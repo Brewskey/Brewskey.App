@@ -27,7 +27,7 @@ class FriendPendingRequestListItem extends React.PureComponent<Props> {
 
   _onFriendAcceptPress = () => this.props.onFriendAcceptPress(this.props.item);
 
-  render() {
+  render(): React.Node {
     const { item: friend, onPress } = this.props;
 
     return (

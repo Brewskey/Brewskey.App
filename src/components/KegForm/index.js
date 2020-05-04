@@ -62,7 +62,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
   _onFloatKeg = () =>
     this.injectedProps.handleSubmit(nullthrows(this.props.onFloatedSubmit));
 
-  render() {
+  render(): React.Node {
     const { keg, showReplaceButton, submitButtonLabel, tapId } = this.props;
     const {
       formError,

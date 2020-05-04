@@ -41,7 +41,7 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class ProfileScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     const { id } = this.injectedProps;
     return (
       <LoaderComponent

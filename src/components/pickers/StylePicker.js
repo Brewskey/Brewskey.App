@@ -31,7 +31,7 @@ class StylePicker extends React.Component<Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <DAOPicker
         {...this.props}

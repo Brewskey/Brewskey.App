@@ -47,7 +47,10 @@ type Props = {|
   zoomDistance?: number,
 |};
 
-const LocationMap = ({ coordinates, zoomDistance = 2000 }: Props) => (
+const LocationMap = ({
+  coordinates,
+  zoomDistance = 2000,
+}: Props): React.Node => (
   <MapView
     style={styles.map}
     initialRegion={getRegion(coordinates, zoomDistance)}

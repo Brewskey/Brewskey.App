@@ -30,7 +30,7 @@ const KegLevelSliderField = <RNSliderProps>({
   onChange,
   value,
   ...rest
-}: Props<RNSliderProps>) => {
+}: Props<RNSliderProps>): React.Node => {
   const ozValue = value === 0 ? 0 : (maxOunces * value) / 100;
 
   return (

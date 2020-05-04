@@ -29,7 +29,7 @@ type Props<TMultiple: boolean> = {|
 class LocationPicker<TMultiple: boolean> extends React.PureComponent<
   Props<TMultiple>,
 > {
-  static defaultProps = {
+  static defaultProps: {| multiple: boolean |} = {
     multiple: false,
   };
 
@@ -42,7 +42,7 @@ class LocationPicker<TMultiple: boolean> extends React.PureComponent<
     />
   );
 
-  render() {
+  render(): React.Node {
     const { multiple } = this.props;
     return (
       <DAOPicker

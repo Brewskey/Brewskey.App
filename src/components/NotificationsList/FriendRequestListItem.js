@@ -12,7 +12,7 @@ type Props = {|
   notification: NewFriendRequestNotification,
 |};
 
-const FriendRequestListItem = (props: Props) => {
+const FriendRequestListItem = (props: Props): React.Node => {
   const {
     notification: { friendUserName },
   } = props;

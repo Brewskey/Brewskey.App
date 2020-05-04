@@ -44,7 +44,7 @@ type Props = {|
 class CenteredModal extends React.Component<Props> {
   _onPress = () => {};
 
-  render() {
+  render(): React.Node {
     const {
       children,
       contentContainerStyle,

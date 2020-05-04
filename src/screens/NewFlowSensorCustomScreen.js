@@ -26,11 +26,11 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
     const { onFlowSensorCreated } = this.injectedProps;
     const clientID = DAOApi.FlowSensorDAO.post(values);
-    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     onFlowSensorCreated();
   };
 
-  render() {
+  render(): React.Node {
     const { tapId } = this.injectedProps;
     return (
       <Container>

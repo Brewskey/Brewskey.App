@@ -10,7 +10,7 @@ import PlugInImage from '../../resources/installation/6_plug-in.png';
 import FinishImage from '../../resources/installation/7_finish-in-app.png';
 import SetupStep from './SetupStep';
 
-const SETUP_STEPS = [
+const SETUP_STEPS: Array<React.Node> = [
   <SetupStep
     description="To attach the flow sensor, cut your beer line near its midpoint."
     image={CutBeerLineImage}

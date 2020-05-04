@@ -65,7 +65,7 @@ class WifiListItem extends React.Component<Props> {
 
   _onPress = () => this.props.onPress(this.props.rowKey);
 
-  render() {
+  render(): React.Node {
     const {
       error,
       isConnecting,

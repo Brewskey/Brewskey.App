@@ -36,7 +36,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
     DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
   }
 
-  _onAppStateChange = appState => {
+  _onAppStateChange = (appState) => {
     if (appState === 'active') {
       DAOApi.CloudDeviceDAO.startOnlineStatusListener();
     } else {
@@ -65,7 +65,7 @@ class DevicesScreen extends InjectedComponent<InjectedProps> {
       </Section>
     );
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

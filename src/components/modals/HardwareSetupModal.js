@@ -18,7 +18,7 @@ type Props = {|
   onHideModal: () => void,
 |};
 
-const HardwareSetupModal = ({ isVisible, onHideModal }: Props) => (
+const HardwareSetupModal = ({ isVisible, onHideModal }: Props): React.Node => (
   <Modal
     hardwareAccelerated
     isTouchable={false}

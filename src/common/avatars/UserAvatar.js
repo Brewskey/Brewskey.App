@@ -12,12 +12,12 @@ type Props = {|
 |};
 
 class UserAvatar extends React.PureComponent<Props> {
-  static defaultProps = {
+  static defaultProps: {| rounded: boolean, size: number |} = {
     rounded: true,
     size: 45,
   };
 
-  render() {
+  render(): React.Node {
     const { userName, ...otherProps } = this.props;
     return (
       <BaseAvatar

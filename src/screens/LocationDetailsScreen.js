@@ -42,7 +42,7 @@ class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
     return LocationStore.getByID(this.injectedProps.id);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedLocationDetails}
@@ -66,7 +66,7 @@ type LoadedLocationDetailsProps = {
 
 const LoadedLocationDetails = ({
   value: location,
-}: LoadedLocationDetailsProps) => {
+}: LoadedLocationDetails): React.Node => (
   const { description, id, name } = location;
 
   return (

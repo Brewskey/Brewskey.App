@@ -40,7 +40,7 @@ type Props<TValue> = {|
 
 @observer
 class PickerControl<TValue> extends React.Component<Props<TValue>> {
-  render() {
+  render(): React.Node {
     const { onClearPress, onSelectPress, value } = this.props;
     const selectButtonTitle =
       Array.isArray(value) && value.length

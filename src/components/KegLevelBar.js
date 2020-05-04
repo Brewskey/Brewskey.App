@@ -61,9 +61,9 @@ class KegLevelBar extends React.Component<Props> {
     return KegStore.getByID(this.props.kegID);
   }
 
-  refresh = () => KegStore.flushCacheForEntity(this.props.kegID);
+  refresh: () => void = () => KegStore.flushCacheForEntity(this.props.kegID);
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedKegLevelBar}
@@ -111,7 +111,7 @@ class LoadedKegLevelBar extends React.Component<LoadedProps> {
     }).start();
   };
 
-  render() {
+  render(): React.Node {
     const { value } = this.props;
     const kegLevel = calculateKegLevel(value);
     const isLowLevel = kegLevel <= LOW_KEG_LEVEL;

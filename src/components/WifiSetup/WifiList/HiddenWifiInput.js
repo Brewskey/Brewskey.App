@@ -40,7 +40,7 @@ class HiddenWifiInput extends React.Component<Props> {
     this._isExpanded = !this._isExpanded;
   };
 
-  render() {
+  render(): React.Node {
     const { onConnectPress, wifiSetupLoader } = this.props;
 
     return (

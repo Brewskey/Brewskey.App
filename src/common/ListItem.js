@@ -15,21 +15,21 @@ const styles = StyleSheet.create({
   title: { color: COLORS.text },
 });
 
-type Props<TItem> = {
+type Props<TItem, TRNE> = {|
+  ...TRNE,
   containerStyle?: Style,
   item: TItem,
   onPress: (item: TItem) => void,
-  // other react-native=elements ListItemProps
-};
+|};
 
-class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
-  static defaultProps = {
+class ListItem<TItem, TRNE> extends React.PureComponent<Props<TItem, TRNE>> {
+  static defaultProps: {| onPress: (TItem) => void |} = {
     onPress: () => {},
   };
 
   _onPress = (): void => this.props.onPress(this.props.item);
 
-  render() {
+  render(): React.Node {
     return (
       <RNEListItem
         {...this.props}

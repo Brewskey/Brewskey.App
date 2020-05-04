@@ -2,6 +2,7 @@
 
 import type { SnackBarMessage } from '../stores/SnackBarStore';
 import type { Notification } from '../stores/NotificationsStore';
+import type AnimatedValue from 'react-native/Libraries/Animated/src/nodes/AnimatedValue';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -65,15 +66,15 @@ const styles = StyleSheet.create({
 });
 
 type State = {|
-  animationValue: Object,
+  animationValue: Object, // typeof Animated.Value,
   height: number,
 |};
 
 const OFFSET = 20;
 
 @observer
-class SnackMessage extends React.Component<{}, State> {
-  state = {
+class SnackMessage extends React.Component<{||}, State> {
+  state: State = {
     animationValue: new Animated.Value(-OFFSET),
     height: 0,
   };
@@ -118,7 +119,7 @@ class SnackMessage extends React.Component<{}, State> {
     });
   };
 
-  render() {
+  render(): React.Node {
     const { currentMessage } = SnackBarStore;
     if (!currentMessage) {
       return null;

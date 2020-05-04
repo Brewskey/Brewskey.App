@@ -32,7 +32,7 @@ type Props = {
 
 @observer
 class FriendPendingModal extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     const { account, isVisible, onHideModal } = this.props;
 
     return (

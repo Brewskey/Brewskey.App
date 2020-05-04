@@ -56,7 +56,7 @@ class MyFriendsScreen extends InjectedComponent<InjectedProps> {
     });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

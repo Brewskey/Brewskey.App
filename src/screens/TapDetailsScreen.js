@@ -78,7 +78,7 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
     ]);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
@@ -115,7 +115,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     });
   };
 
-  render() {
+  render(): React.Node {
     const { navigation, value } = this.props;
     const [tap, tapPermission, flowSensor] = value;
     const { id } = tap;

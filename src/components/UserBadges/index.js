@@ -46,7 +46,7 @@ class UserBadges extends React.Component<Props> {
 
   @action _setLoadedComponentRef = (ref) => (this._loadedComponent = ref);
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         emptyComponent={EmptyUserBadges}

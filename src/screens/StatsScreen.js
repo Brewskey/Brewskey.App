@@ -43,7 +43,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
     nullthrows(this._userBadges).refresh();
   };
 
-  render() {
+  render(): React.Node {
     const userID = nullthrows(AuthStore.userID);
     return (
       <Container>
@@ -54,7 +54,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
               <Section bottomPadded>
                 <SectionHeader title="Badges" />
                 <UserBadges
-                  ref={ref => (this._userBadges = ref)}
+                  ref={(ref) => (this._userBadges = ref)}
                   userID={userID}
                 />
               </Section>

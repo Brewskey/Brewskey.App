@@ -27,7 +27,7 @@ const Modal = <RNModalProps>({
   shouldHideOnRequestClose = true,
   transparent = true,
   ...rest
-}: Props<RNModalProps>) => (
+}: Props<RNModalProps>): React.Node => (
   <RNModal
     {...rest}
     animationType={animationType}

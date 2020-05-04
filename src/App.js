@@ -4,7 +4,9 @@ import * as React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
+import codePush from 'react-native-code-push';
 import { autorun, configure as mobxConfigure, reaction } from 'mobx';
+import { Provider as SlotFillProvider } from 'react-slot-fill';
 import config from './config';
 import NavigationService from './NavigationService';
 import AppRouter from './AppRouter';
@@ -15,10 +17,7 @@ import PourProcessModal from './components/modals/PourProcessModal';
 import { COLORS } from './theme';
 import SnackBar from './common/SnackBar';
 import { flushAPIStoreCaches } from './stores/ApiRequestStores/makeRequestApiStore';
-import codePush from 'react-native-code-push';
 import SnackBarStore from './stores/SnackBarStore';
-//import stripe from 'tipsi-stripe';
-import { Provider as SlotFillProvider } from 'react-slot-fill';
 
 // stripe.setOptions({
 //   androidPayMode: 'test', // Android only
@@ -101,7 +100,7 @@ class App extends React.Component<{}> {
     }
   };
 
-  render() {
+  render(): React.Node {
     return (
       <SafeAreaView style={styles.safeArea}>
         <SlotFillProvider>

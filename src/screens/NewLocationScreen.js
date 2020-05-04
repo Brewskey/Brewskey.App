@@ -32,7 +32,7 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: LocationMutator): Promise<void> => {
     const { navigation, onLocationCreated } = this.injectedProps;
     const clientID = DAOApi.LocationDAO.post(values);
-    const location = await DAOApi.LocationDAO.waitForLoaded(dao =>
+    const location = await DAOApi.LocationDAO.waitForLoaded((dao) =>
       dao.fetchByID(clientID),
     );
     SnackBarStore.showMessage({ text: 'New location created' });
@@ -55,7 +55,7 @@ class NewLocationScreen extends InjectedComponent<InjectedProps> {
     navigation.dispatch(resetRouteAction);
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

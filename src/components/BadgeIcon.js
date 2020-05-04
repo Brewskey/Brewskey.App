@@ -41,22 +41,23 @@ const styles = StyleSheet.create({
   },
 });
 
+type SizeType = 'large' | 'small';
 type Props = {|
   achievementType: AchievementType,
   count?: number,
   onPress?: (achievementCounter: AchievementType) => void,
-  size: 'large' | 'small',
+  size: SizeType,
 |};
 
 class BadgeIcon extends React.PureComponent<Props> {
-  static defaultProps = {
+  static defaultProps: {| size: SizeType |} = {
     size: 'small',
   };
 
   _onPress = () =>
     this.props.onPress && this.props.onPress(this.props.achievementType);
 
-  render() {
+  render(): React.Node {
     const { achievementType, count, size } = this.props;
     const badge = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
     const isLarge = size === 'large';

@@ -28,7 +28,7 @@ type Props = {|
 |};
 
 class Section extends React.PureComponent<Props> {
-  render() {
+  render(): React.Node {
     const { bottomPadded, children, innerContainerStyle } = this.props;
     const innerElement = (
       <View

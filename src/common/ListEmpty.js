@@ -19,7 +19,7 @@ type Props = {|
   message: string,
 |};
 
-const ListEmpty = ({ message }: Props) => (
+const ListEmpty = ({ message }: Props): React.Node => (
   <Container centered>
     <Text style={styles.messageText}>{message}</Text>
   </Container>

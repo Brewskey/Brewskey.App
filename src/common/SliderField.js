@@ -10,7 +10,11 @@ export type Props<TRest> = {|
   value: number,
 |};
 
-const SliderField = <TRest>({ value, onChange, ...rest }: Props<TRest>) => (
+const SliderField = <TRest>({
+  value,
+  onChange,
+  ...rest
+}: Props<TRest>): React.Node => (
   <Slider {...rest} value={value} onValueChange={onChange} />
 );
 

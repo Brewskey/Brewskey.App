@@ -72,7 +72,7 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const {
       description,
       doesRequireConfirmation,

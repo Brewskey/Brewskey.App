@@ -31,12 +31,12 @@ type Props = {|
 |};
 
 export default class TouchableItem extends React.Component<Props> {
-  static defaultProps = {
+  static defaultProps: {| borderless: boolean, pressColor: string |} = {
     borderless: false,
     pressColor: 'rgba(0, 0, 0, .32)',
   };
 
-  render() {
+  render(): React.Node {
     /*
      * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
      * therefore only enable it on Android Lollipop and above.

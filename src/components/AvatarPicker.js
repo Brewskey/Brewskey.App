@@ -36,8 +36,8 @@ const IMAGE_PICKER_OPTIONS = {
 };
 
 @observer
-class AvatarPicker extends React.Component<{}> {
-  _cachedImageRef: ?CachedImage;
+class AvatarPicker<TExtraProps> extends React.Component<{||}> {
+  _cachedImageRef = React.createRef<{| flushCache: () => void |}>();
 
   @observable
   _updateAvatarCacheKey = null;
@@ -60,23 +60,19 @@ class AvatarPicker extends React.Component<{}> {
         runInAction(async () => {
           this._updateAvatarCacheKey = UpdateAvatarStore.fetch(data);
           await when(() => !this._isLoading);
-          nullthrows(this._cachedImageRef).flushCache();
+          nullthrows(this._cachedImageRef.current).flushCache();
           SnackBarStore.showMessage({ text: 'Avatar updated' });
         });
       },
     );
   };
 
-  _getAvatarImageRef = (ref) => {
-    this._cachedImageRef = ref;
-  };
-
-  render() {
+  render(): React.Node {
     return this._isLoading ? (
       <LoadingIndicator style={styles.loadingIndicator} />
     ) : (
       <UserAvatar
-        imageRef={this._getAvatarImageRef}
+        imageRef={this._cachedImageRef}
         onPress={this._onAvatarPress}
         size={200}
         userName={AuthStore.userName || ''}

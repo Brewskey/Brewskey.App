@@ -43,6 +43,8 @@ emoji=true
 esproposal.optional_chaining=enable
 esproposal.nullish_coalescing=enable
 
+exact_by_default=true
+
 module.file_ext=.js
 module.file_ext=.json
 module.file_ext=.ios.js
@@ -56,10 +58,15 @@ suppress_type=$FlowIssue
 suppress_type=$FlowFixMe
 suppress_type=$FlowFixMeProps
 suppress_type=$FlowFixMeState
+suppress_type=$FlowFixMeEmpty
 
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native\\(_ios\\)?_\\(oss\\|fb\\)[a-z,_]*\\)?)\\)
 suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native\\(_ios\\)?_\\(oss\\|fb\\)[a-z,_]*\\)?)\\)?:? #[0-9]+
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
+
+experimental.well_formed_exports=true
+experimental.types_first=true
+experimental.abstract_locations=true
 
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
@@ -76,6 +83,7 @@ unsafe-getters-setters=warn
 unnecessary-invariant=warn
 signature-verification-failure=warn
 deprecated-utility=error
+unsafe-addition=error
 
 [strict]
 deprecated-type

@@ -50,7 +50,7 @@ export type Props = {
 };
 
 class PickerInput extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     const {
       children,
       description,

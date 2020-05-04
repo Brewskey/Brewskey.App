@@ -13,7 +13,9 @@ const styles = StyleSheet.create({
   textHeading: { ...TYPOGRAPHY.heading, textAlign: 'center' },
 });
 
-const GallonTextField = <TOtherProps>(props: TextFieldProps<TOtherProps>) => (
+const GallonTextField = <TOtherProps>(
+  props: TextFieldProps<TOtherProps>,
+): React.Node => (
   <View style={styles.container}>
     <Text style={styles.textHeading}>Set custom pulses</Text>
     <TextField {...props} keyboardType="numeric" />

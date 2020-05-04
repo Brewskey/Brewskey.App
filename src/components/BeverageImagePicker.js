@@ -40,7 +40,7 @@ class BeverageImagePickerField extends React.Component<Props> {
     );
   };
 
-  render() {
+  render(): React.Node {
     const { beverageId, containerStyle, value } = this.props;
 
     return (

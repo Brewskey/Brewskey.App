@@ -28,7 +28,7 @@ const BrightnessSliderField = <RNSliderProps>({
   onChange,
   value,
   ...rest
-}: Props<RNSliderProps>) => (
+}: Props<RNSliderProps>): React.Node => (
   <View>
     <FormLabel>LED Brightness</FormLabel>
     <View style={styles.container}>

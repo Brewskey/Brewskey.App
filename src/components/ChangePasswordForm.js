@@ -49,7 +49,7 @@ type Props = {|
 @form({ validate })
 @observer
 class ChangePasswordForm extends InjectedComponent<FormProps, Props> {
-  render() {
+  render(): React.Node {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
     return (
       <View>

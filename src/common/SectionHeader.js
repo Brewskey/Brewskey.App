@@ -23,7 +23,7 @@ type Props = {|
   title: string,
 |};
 
-const SectionHeader = ({ title }: Props) => (
+const SectionHeader = ({ title }: Props): React.Node => (
   <View style={styles.container}>
     <Text style={styles.title}>{title}</Text>
   </View>

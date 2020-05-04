@@ -1,5 +1,7 @@
 // @flow
 
+import type { LoaderErrorRowProps } from './LoaderRow';
+
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { ListItem as RNEListItem } from 'react-native-elements';
@@ -17,12 +19,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props = LoaderErrorRowProps<{|
   containerStyle?: Object,
-};
+|}>;
 
-class ErrorListItem extends React.PureComponent<Props> {
-  render() {
+class ErrorListItem<TExtraProps> extends React.PureComponent<Props> {
+  render(): React.Node {
     return (
       <RNEListItem
         {...this.props}

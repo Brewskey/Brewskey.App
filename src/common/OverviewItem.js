@@ -31,7 +31,12 @@ type Props = {|
   value: string,
 |};
 
-const OverviewItem = ({ iconName, iconType, title, value }: Props) => (
+const OverviewItem = ({
+  iconName,
+  iconType,
+  title,
+  value,
+}: Props): React.Node => (
   <View style={styles.container}>
     {iconName ? <Icon name={iconName} type={iconType} /> : null}
     <Text style={styles.titleText}>{title}</Text>

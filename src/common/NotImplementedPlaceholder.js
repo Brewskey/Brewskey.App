@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
 });
 
 class NotImplementedPlaceholder extends React.PureComponent<{}> {
-  render() {
+  render(): React.Node {
     return (
       <Container centered>
         <Text style={styles.text}>Coming soon...</Text>

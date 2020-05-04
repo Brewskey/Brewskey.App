@@ -10,8 +10,8 @@ import { action, computed, observable } from 'mobx';
 const FIELD_VALIDATION_DEBOUNCE_TIMEOUT = 700;
 const FORM_ERROR_KEY = '_error';
 
-type FormStoreProps = {|
-  validate?: ValidationFunction,
+type FormStoreProps<TObject> = {|
+  validate?: ValidationFunction<TObject>,
 |};
 
 type InitFieldProps = {|
@@ -21,20 +21,20 @@ type InitFieldProps = {|
 |};
 
 // todo change touched logic so it takes care about initialValue
-class FormStore {
-  _validate: ValidationFunction;
+class FormStore<TValidate> {
+  _validate: ValidationFunction<TValidate>;
   @observable _fields: ObservableMap<string, Field> = observable.map();
 
   @observable formError: ?string = null;
   @observable submitting: boolean = false;
 
   constructor({
-    validate = (): { [key: string]: string } => ({}),
-  }: FormStoreProps) {
+    validate = (): { [key: string]: string } => ({}: any),
+  }: FormStoreProps<TValidate>) {
     this._validate = validate;
   }
 
-  fieldSubmitEditing = (nextFocusTo: string) => {
+  fieldSubmitEditing: (string) => void = (nextFocusTo: string): void => {
     const field = this._fields.get(nextFocusTo);
     if (!field || !field.refElement || !field.refElement.focus) {
       return;
@@ -44,11 +44,11 @@ class FormStore {
   };
 
   @action
-  initField = ({
+  initField: (InitFieldProps) => void = ({
     initialValue,
     name,
     parseOnSubmit = <TEntity>(value: TEntity): TEntity => value,
-  }: InitFieldProps) => {
+  }: InitFieldProps): void => {
     this._fields.set(name, {
       error: null,
       initialValue,
@@ -59,19 +59,22 @@ class FormStore {
   };
 
   @action
-  blurField = (fieldName: string) => {
+  blurField: (string) => void = (fieldName: string) => {
     this.validateField(fieldName);
     this.updateFieldProps(fieldName, { touched: true });
   };
 
   @action
-  changeFieldValue = (fieldName: string, value: any) => {
+  changeFieldValue: (string, any) => void = (fieldName: string, value: any) => {
     this.updateFieldProps(fieldName, { error: null, touched: true, value });
     this.validateFieldDebounced(fieldName);
   };
 
   @action
-  updateFieldProps = (fieldName: string, props: $Shape<Field>) => {
+  updateFieldProps: (string, $Shape<Field>) => void = (
+    fieldName: string,
+    props: $Shape<Field>,
+  ) => {
     const field = this._fields.get(fieldName);
     if (!field) {
       return;
@@ -81,7 +84,10 @@ class FormStore {
   };
 
   @action
-  setFieldError = (fieldName: string, error: string) => {
+  setFieldError: (string, string) => void = (
+    fieldName: string,
+    error: string,
+  ) => {
     const field = this._fields.get(fieldName);
     if (!field) {
       return;
@@ -91,7 +97,10 @@ class FormStore {
   };
 
   @action
-  setFieldRefElement = (fieldName: string, refElement: React.Node) => {
+  setFieldRefElement: (string, React.Node) => void = (
+    fieldName: string,
+    refElement: React.Node,
+  ) => {
     const field = this._fields.get(fieldName);
     if (!field) {
       return;
@@ -101,17 +110,17 @@ class FormStore {
   };
 
   @action
-  setFormError = (error: ?string) => {
+  setFormError: (?string) => void = (error: ?string) => {
     this.formError = error;
   };
 
   @action
-  setSubmitting = (submitting: boolean) => {
+  setSubmitting: (boolean) => void = (submitting: boolean) => {
     this.submitting = submitting;
   };
 
   @action
-  validate = () => {
+  validate: () => void = () => {
     const errors = this._validate(this.values);
 
     Object.entries(errors).forEach(([key, value]: [string, mixed]) => {
@@ -125,7 +134,7 @@ class FormStore {
   };
 
   @action
-  validateField = (fieldName: string) => {
+  validateField: (string) => void = (fieldName: string) => {
     const errors = this._validate(this.values);
     const fieldError = errors[fieldName];
     if (fieldError) {
@@ -134,7 +143,7 @@ class FormStore {
   };
 
   @action
-  validateFieldDebounced = debounce(
+  validateFieldDebounced: (string) => void = debounce(
     this.validateField,
     FIELD_VALIDATION_DEBOUNCE_TIMEOUT,
   );
@@ -175,17 +184,17 @@ class FormStore {
     );
   }
 
-  getFieldError = (fieldName: string): ?string => {
+  getFieldError: (string) => ?string = (fieldName: string): ?string => {
     const field = this._fields.get(fieldName);
     return field && field.touched ? field.error : null;
   };
 
-  getFieldTouched = (fieldName: string): boolean => {
+  getFieldTouched: (string) => boolean = (fieldName: string): boolean => {
     const field = this._fields.get(fieldName);
     return field ? field.touched : false;
   };
 
-  getFieldValue = (fieldName: string): any => {
+  getFieldValue: (string) => any = (fieldName: string): any => {
     const field = this._fields.get(fieldName);
     return field ? field.value : null;
   };

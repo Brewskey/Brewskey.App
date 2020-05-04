@@ -33,7 +33,7 @@ class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
     return BeverageStore.getByID(this.injectedProps.id);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}

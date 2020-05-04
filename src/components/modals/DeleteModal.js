@@ -40,7 +40,7 @@ const DeleteModal = ({
   onCancelButtonPress,
   onDeleteButtonPress,
   title,
-}: Props) => (
+}: Props): React.Node => (
   <CenteredModal
     isVisible={isVisible}
     header={<Text style={styles.titleText}>{title}</Text>}

@@ -35,32 +35,30 @@ type Props = {|
 |};
 
 // todo add swiper
-const BadgeModal = observer(
-  ({ achievementCounter, isVisible, onHideModal }: Props) => {
-    if (!achievementCounter) {
-      return null;
-    }
+const BadgeModal = ({
+  achievementCounter,
+  isVisible,
+  onHideModal,
+}: Props): React.Node => {
+  if (!achievementCounter) {
+    return null;
+  }
 
-    const { achievementType, total } = achievementCounter;
-    const { description, name } = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
+  const { achievementType, total } = achievementCounter;
+  const { description, name } = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
 
-    return (
-      <CenteredModal
-        contentContainerStyle={styles.modalContentContainer}
-        header={<Text style={styles.headerText}>{name}</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-      >
-        <BadgeIcon
-          achievementType={achievementType}
-          count={total}
-          size="large"
-        />
-        <Text style={styles.descriptionText}>{description}</Text>
-        <Button secondary title="okay" onPress={onHideModal} />
-      </CenteredModal>
-    );
-  },
-);
+  return (
+    <CenteredModal
+      contentContainerStyle={styles.modalContentContainer}
+      header={<Text style={styles.headerText}>{name}</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+    >
+      <BadgeIcon achievementType={achievementType} count={total} size="large" />
+      <Text style={styles.descriptionText}>{description}</Text>
+      <Button secondary title="okay" onPress={onHideModal} />
+    </CenteredModal>
+  );
+};
 
-export default BadgeModal;
+export default (observer(BadgeModal): typeof BadgeModal);

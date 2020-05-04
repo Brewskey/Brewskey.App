@@ -17,7 +17,7 @@ class FriendMyRequestListItem extends React.Component<Props> {
   _onFriendCancelMyRequestPress = () =>
     this.props.onFriendCancelMyRequestPress(this.props.item);
 
-  render() {
+  render(): React.Node {
     const { item: friend, onPress } = this.props;
     return (
       <ListItem

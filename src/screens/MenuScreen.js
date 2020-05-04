@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 errorBoundary(ErrorScreen);
 @observer
 class MenuScreen extends React.Component<{}> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

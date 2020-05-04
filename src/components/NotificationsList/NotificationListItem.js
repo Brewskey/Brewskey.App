@@ -60,17 +60,17 @@ export type Props = {|
 |};
 
 type State = {|
-  readAnimationValue: Object,
+  readAnimationValue: typeof Animated.Value,
 |};
 
 class NotificationListItem extends React.PureComponent<Props, State> {
   _readAnimation: Object;
 
-  static defaultProps = {
+  static defaultProps: {| isSwipeable: boolean |} = {
     isSwipeable: true,
   };
 
-  state = {
+  state: State = {
     readAnimationValue: new Animated.Value(0),
   };
 
@@ -103,7 +103,7 @@ class NotificationListItem extends React.PureComponent<Props, State> {
 
   _onOpen = () => this.props.onOpen(this.props.notification);
 
-  render() {
+  render(): React.Node {
     const { readAnimationValue } = this.state;
     const {
       contentComponent: ContentComponent,

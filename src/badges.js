@@ -44,7 +44,7 @@ import WelcomeLarge from './resources/badges/150x150/Welcome.png';
 
 export type Badge = {|
   description: string,
-  image: { large: number, small: number },
+  image: {| large: number, small: number |},
   name: string,
 |};
 
@@ -53,8 +53,7 @@ export const BADGE_IMAGE_SIZES = {
   small: 70,
 };
 
-// todo annotate badge type when implement achievement dao
-const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
+const BADGE_BY_TYPE = Object.freeze({
   BackOnTheBus: {
     description:
       'Never give up. Never surrender! You poured a beer after 3 weeks of inactivity.',
@@ -158,6 +157,6 @@ const BADGE_BY_TYPE: { [key: AchievementType]: Badge } = {
     image: { large: WelcomeLarge, small: WelcomeSmall },
     name: 'Welcome',
   },
-};
+});
 
 export default BADGE_BY_TYPE;

@@ -120,7 +120,7 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
     }
   };
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         emptyComponent={LoadedComponent}
@@ -168,7 +168,7 @@ type Props = {|
 @form({ validate })
 @withNavigationFocus
 class LoadedComponent extends InjectedComponent<FormProps, Props> {
-  render() {
+  render(): React.Node {
     const { isFocused, tapId, value } = this.props;
 
     const {

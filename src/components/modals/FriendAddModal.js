@@ -41,7 +41,7 @@ type Props = {
 
 @observer
 class FriendApprovedModal extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     const { account, isVisible, onHideModal, onFriendAddPress } = this.props;
 
     return (

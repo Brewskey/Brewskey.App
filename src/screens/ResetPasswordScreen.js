@@ -45,7 +45,7 @@ class ResetPasswordScreen extends React.Component<Props> {
     this.props.navigation.goBack(null);
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Reset password" />

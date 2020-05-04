@@ -20,7 +20,7 @@ type Props<TMultiple: boolean> = {|
 class AvailabilityPicker<TMultiple: boolean> extends React.Component<
   Props<TMultiple>,
 > {
-  static defaultProps = {
+  static defaultProps: {| multiple: boolean |} = {
     multiple: false,
   };
 
@@ -33,7 +33,7 @@ class AvailabilityPicker<TMultiple: boolean> extends React.Component<
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <DAOPicker
         {...this.props}

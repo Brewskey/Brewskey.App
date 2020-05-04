@@ -40,7 +40,7 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
     });
   }
 
-  render() {
+  render(): React.Node {
     const { tapId } = this.injectedProps;
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
@@ -90,7 +90,7 @@ class LoadedComponent extends InjectedComponent<
     SnackBarStore.showMessage({ text: 'The flow sensor set' });
   };
 
-  render() {
+  render(): React.Node {
     const { value } = this.props;
     return (
       <FlowSensorForm
@@ -113,7 +113,7 @@ class EmptyComponent extends InjectedComponent<
     await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
   };
 
-  render() {
+  render(): React.Node {
     const { tapId } = this.injectedProps;
     return <FlowSensorForm onSubmit={this._onFormSubmit} tapId={tapId} />;
   }

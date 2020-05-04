@@ -30,6 +30,6 @@ export type FormFieldChildProps = {|
   value: any,
 |};
 
-export type ValidationFunction = (values: { [key: string]: any }) => {
-  [key: string]: string,
-};
+export type ValidationFunction<TObject> = <TObject>(
+  values: TObject,
+) => {| [key: $Keys<TObject>]: string |};

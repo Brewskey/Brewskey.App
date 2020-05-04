@@ -32,7 +32,7 @@ class NotificationsScreen extends InjectedComponent<InjectedProps> {
     this._deleteModalToggleStore.toggleOff();
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

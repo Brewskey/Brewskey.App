@@ -17,7 +17,7 @@ type Props = {|
 |};
 
 class LoadingListFooter extends React.PureComponent<Props> {
-  render() {
+  render(): React.Node {
     return !this.props.isLoading ? null : (
       <View style={styles.container}>
         <ActivityIndicator size="large" />

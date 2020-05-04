@@ -12,6 +12,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const DrawerSeparator = () => <View style={styles.separator} />;
+const DrawerSeparator = (): React.Node => <View style={styles.separator} />;
 
 export default DrawerSeparator;

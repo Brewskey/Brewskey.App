@@ -3,43 +3,55 @@
 import type { Props as ListProps } from './List';
 import type { FlatList, SectionList } from 'react-native';
 import type { Section } from '../types';
+import type { SwipeableProps } from './SwipeableRow';
 
 import * as React from 'react';
 import List from './List';
 import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList';
 
-type Props<TEntity> = {|
-  ...ListProps<TEntity>,
+type InfoType<TEntity> = {| item: TEntity, index: number |};
+
+type Props<TEntity, TOtherProps> = {|
+  ...ListProps<TEntity, TOtherProps>,
+  keyExtractor: (TEntity, number) => string,
   bounceFirstRowOnMount: boolean,
+  onScroll?: (SyntheticEvent<>) => void,
   preventSwipeRight?: boolean,
+  renderItem: ({| item: InfoType<TEntity>, ...SwipeableProps |}) => React.Node,
 |};
 
 type State = {|
   openRowKey: ?string,
 |};
 
-class SwipeableSectionList<TEntity> extends React.PureComponent<
-  Props<TEntity>,
+class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
+  Props<TEntity, TOtherProps>,
   State,
 > {
-  static defaultProps = {
+  static defaultProps: {
+    ...typeof VirtualizedList.defaultProps,
+    bounceFirstRowOnMount: boolean,
+  } = {
     ...VirtualizedList.defaultProps,
     bounceFirstRowOnMount: true,
   };
 
-  state = {
+  state: State = {
     openRowKey: null,
   };
 
-  _innerListRef: ?FlatList<TEntity> | ?SectionList<Section<TEntity>> = null;
+  _innerListRef = React.createRef<{|
+    setNativeProps: ({| scrollEnabled: boolean |}) => void,
+  |}>();
 
-  resetOpenRow = (): void => this.setState(() => ({ openRowKey: null }));
+  resetOpenRow: () => void = (): void =>
+    this.setState(() => ({ openRowKey: null }));
 
   _setListViewScrollableTo(value: boolean) {
-    if (!this._innerListRef) {
+    if (!this._innerListRef.current) {
       return;
     }
-    this._innerListRef.setNativeProps({
+    this._innerListRef.current.setNativeProps({
       scrollEnabled: value,
     });
   }
@@ -52,7 +64,7 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
 
   _onClose = (): void => this.resetOpenRow();
 
-  _onScroll = (event: SyntheticEvent<*>): void => {
+  _onScroll = (event: SyntheticEvent<>): void => {
     this.resetOpenRow();
     const { onScroll } = this.props;
     if (onScroll) {
@@ -60,11 +72,7 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     }
   };
 
-  _setInnerListRef = (ref) => {
-    this._innerListRef = ref;
-  };
-
-  _renderItem = (info: { item: TEntity, index: number }): React.Node => {
+  _renderItem = (info: InfoType): React.Node => {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,
@@ -79,12 +87,12 @@ class SwipeableSectionList<TEntity> extends React.PureComponent<
     });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <List
         {...this.props}
         extraData={this.state}
-        innerRef={this._setInnerListRef}
+        innerRef={this._innerListRef}
         onScroll={this._onScroll}
         renderItem={this._renderItem}
       />

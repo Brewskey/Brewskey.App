@@ -66,7 +66,7 @@ class WriteNFCScreen extends InjectedComponent<InjectedProps> {
     await Linking.openURL(url);
   };
 
-  render() {
+  render(): React.Node {
     const { status } = this._store;
     let content = null;
 

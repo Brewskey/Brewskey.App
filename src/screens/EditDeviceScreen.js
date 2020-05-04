@@ -48,7 +48,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />

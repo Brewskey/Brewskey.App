@@ -27,7 +27,7 @@ class TapDetailsStatsScreen extends InjectedComponent<InjectedProps> {
     tabBarLabel: 'Stats',
   };
 
-  render() {
+  render(): React.Node {
     const {
       noFlowSensorWarning,
       tap: { id },

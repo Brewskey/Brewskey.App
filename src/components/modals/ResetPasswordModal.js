@@ -30,7 +30,7 @@ type Props = {|
 |};
 
 class ResetPasswordModal extends React.PureComponent<Props> {
-  render() {
+  render(): React.Node {
     const { isVisible, onHideModal } = this.props;
     return (
       <CenteredModal

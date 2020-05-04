@@ -37,7 +37,7 @@ class LocationAddress extends React.Component<Props> {
     this._isMapVisible = !this._isMapVisible;
   };
 
-  render() {
+  render(): React.Node {
     const {
       city,
       geolocation,

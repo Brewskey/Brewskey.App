@@ -1,10 +1,10 @@
 // @flow
 
-import type { Props as VirtualizedListProps } from 'react-native/Libraries/Lists/VirtualizedList';
 import type { Section } from '../types';
 
 import * as React from 'react';
 import { FlatList, SectionList, StyleSheet } from 'react-native';
+import nullthrows from 'nullthrows';
 import { ON_END_REACHED_THRESHOLD } from '../constants';
 
 const styles = StyleSheet.create({
@@ -15,24 +15,29 @@ const styles = StyleSheet.create({
 
 type ListType = 'flatList' | 'sectionList';
 
-export type Props<TEntity> = VirtualizedListProps & {
+export type Props<TEntity, VirtualizedListProps> = {|
+  ...VirtualizedListProps,
   data?: Array<TEntity>,
   extraData?: any,
   innerRef?: $FlowFixMe,
   listType?: ListType,
+  onRefresh?: () => Promise<void>,
   sections?: Array<Section<TEntity>>,
-};
+|};
 
 type State = {|
   isRefreshing: boolean,
 |};
 
-class List<TEntity> extends React.Component<Props<TEntity>, State> {
-  static defaultProps = {
+class List<TEntity, VirtualizedListProps> extends React.Component<
+  Props<TEntity, VirtualizedListProps>,
+  State,
+> {
+  static defaultProps: {| listType: ListType |} = {
     listType: 'flatList',
   };
 
-  state = {
+  state: {| isRefreshing: boolean |} = {
     isRefreshing: false,
   };
 
@@ -46,18 +51,28 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
     this.setState(() => ({ isRefreshing: false }));
   };
 
-  render() {
-    const { onRefresh, listType, sections, ...rest } = this.props;
-    const ListComponent = listType === 'flatList' ? FlatList : SectionList;
-
-    return (
-      <ListComponent
+  render(): React.Node {
+    const { onRefresh, innerRef, listType, sections, ...rest } = this.props;
+    if (listType === 'flatList') {
+      <FlatList
         contentContainerStyle={styles.contentContainerStyle}
         {...rest}
+        ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? (this._onRefresh: any) : null}
         refreshing={this.state.isRefreshing}
-        sections={sections}
+      />;
+    }
+
+    return (
+      <SectionList
+        contentContainerStyle={styles.contentContainerStyle}
+        {...rest}
+        ref={innerRef}
+        onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+        onRefresh={onRefresh ? (this._onRefresh: any) : null}
+        refreshing={this.state.isRefreshing}
+        sections={nullthrows(sections)}
       />
     );
   }

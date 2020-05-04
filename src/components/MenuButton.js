@@ -31,7 +31,7 @@ export type Props<TRNEProps> = {|
 |};
 
 class MenuButton<TRNEProps> extends React.PureComponent<Props<TRNEProps>> {
-  render() {
+  render(): React.Node {
     const { icon, isActive, ...rest } = this.props;
     return (
       <RNEButton

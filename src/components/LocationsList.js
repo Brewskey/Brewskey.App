@@ -36,7 +36,10 @@ type InjectedProps = {|
 @withNavigation
 @observer
 class LocationsList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
+  static defaultProps: {|
+    ListEmptyComponent: React.Node,
+    queryOptions: QueryOptions,
+  |} = {
     ListEmptyComponent: <ListEmpty message="No locations" />,
     queryOptions: {},
   };
@@ -98,7 +101,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const { ListEmptyComponent, ListHeaderComponent } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
 
@@ -118,7 +121,10 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Location, *>) => (
+const SwipeableRowItem = ({
+  item,
+  onItemPress,
+}: RowItemProps<Location, *>): React.Node => (
   <ListItem
     hideChevron
     item={item}
@@ -132,7 +138,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Location, *>) => (
+}: RowItemProps<Location, *>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete location"

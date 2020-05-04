@@ -32,7 +32,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
   _onFormSubmit = async (values: TapMutator): Promise<void> => {
     const { navigation, onTapSetupFinish, showBackButton } = this.injectedProps;
     const clientID = DAOApi.TapDAO.post(values);
-    const { id } = await DAOApi.TapDAO.waitForLoaded(dao =>
+    const { id } = await DAOApi.TapDAO.waitForLoaded((dao) =>
       dao.fetchByID(clientID),
     );
 
@@ -44,7 +44,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'New tap created' });
   };
 
-  render() {
+  render(): React.Node {
     const { initialValues, showBackButton } = this.injectedProps;
 
     return (

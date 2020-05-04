@@ -11,7 +11,7 @@ class MyFriendsContactScreen extends React.Component<{}> {
     tabBarLabel: 'Contacts',
   };
 
-  render() {
+  render(): React.Node {
     return <ContactsList />;
   }
 }

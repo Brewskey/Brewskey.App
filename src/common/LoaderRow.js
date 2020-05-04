@@ -11,35 +11,40 @@ import LoaderComponent from './LoaderComponent';
 
 // todo fix Flow in the file, it should be something else intestead *
 // for TExtraProps
-type Props<TEntity, TExtraProps = {}> = {
+
+export type LoaderErrorRowProps<TExtraProps> = {|
   ...TExtraProps,
-  errorRow: React.ComponentType<{ ...TExtraProps, error: Error }>,
+  error: Error,
+|};
+
+type Props<TEntity, TExtraProps> = {|
+  ...TExtraProps,
+  ...RowItemProps<TEntity, TExtraProps>,
+  errorRow: React.ComponentType<LoaderErrorRowProps<TExtraProps>>,
   index: number,
   loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   loader: LoadObject<TEntity>,
   loadingRow: React.ComponentType<TExtraProps>,
   separators: Object,
-} & RowItemProps<TEntity, TExtraProps>;
+|};
 
-const LoaderRow = observer(
-  <TEntity>({
-    errorRow = ErrorListItem,
-    index,
-    loader,
-    loadingRow = LoadingListItem,
-    separators,
-    ...extraProps
-  }): Props<TEntity, *> => (
-    <LoaderComponent
-      {...extraProps}
-      errorComponent={errorRow}
-      index={index}
-      loadedComponent={LoadedRowComponent}
-      loader={loader}
-      loadingComponent={loadingRow}
-      separators={separators}
-    />
-  ),
+const LoaderRow = <TEntity, TExtraProps>({
+  errorRow = ErrorListItem,
+  index,
+  loader,
+  loadingRow = LoadingListItem,
+  separators,
+  ...extraProps
+}: Props<TEntity, TExtraProps>): React.Node => (
+  <LoaderComponent
+    {...extraProps}
+    errorComponent={errorRow}
+    index={index}
+    loadedComponent={LoadedRowComponent}
+    loader={loader}
+    loadingComponent={loadingRow}
+    separators={separators}
+  />
 );
 
 type LoadedRowComponentProps<TEntity, TExtraProps = {}> = {
@@ -56,4 +61,4 @@ const LoadedRowComponent = <TEntity>({
   ...rest
 }: LoadedRowComponentProps<TEntity, *>) => <LoadedRow item={value} {...rest} />;
 
-export default LoaderRow;
+export default (observer(LoaderRow): typeof LoaderRow);

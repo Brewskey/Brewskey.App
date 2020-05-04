@@ -35,7 +35,7 @@ type Props<TouchableItemProps> = {|
 class BadgeContainer<TouchableItemProps> extends React.Component<
   Props<TouchableItemProps>,
 > {
-  render() {
+  render(): React.Node {
     const { children, badgeCount, ...props } = this.props;
 
     return (

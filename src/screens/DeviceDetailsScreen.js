@@ -38,7 +38,7 @@ class DeviceDetailsScreen extends InjectedComponent<InjectedProps> {
     return DeviceStore.getByID(this.injectedProps.id);
   }
 
-  render() {
+  render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
@@ -74,7 +74,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     DeviceStore.flushCacheForEntity(this.props.value.id);
   };
 
-  render() {
+  render(): React.Node {
     const {
       value: { deviceStatus, id, name, particleId },
     } = this.props;

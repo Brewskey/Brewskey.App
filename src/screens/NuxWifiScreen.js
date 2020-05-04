@@ -38,7 +38,7 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxWifiScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header title="2. Setup Wifi" />

@@ -34,7 +34,7 @@ class NotificationsList extends React.Component<{}> {
     </ErrorBoundary>
   );
 
-  render() {
+  render(): React.Node {
     return (
       <List
         data={NotificationsStore.notifications}

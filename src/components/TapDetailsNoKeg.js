@@ -37,7 +37,7 @@ class TapDetailsNoKeg extends InjectedComponent<InjectedProps, Props> {
       tapId: this.props.tapId,
     });
 
-  render() {
+  render(): React.Node {
     const { canEdit } = this.props;
     return (
       <Container centered style={styles.container}>

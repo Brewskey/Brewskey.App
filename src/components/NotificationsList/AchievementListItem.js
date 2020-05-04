@@ -22,7 +22,7 @@ type Props = {|
   notification: NewAchievementNotification,
 |};
 
-const AchievementListItem = (props: Props) => {
+const AchievementListItem = (props: Props): React.Node => {
   const {
     notification: { achievementType },
   } = props;

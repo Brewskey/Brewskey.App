@@ -23,7 +23,7 @@ export default function createTopTabNavigator<
   });
 
   class NavigatorWrapper extends React.Component<TConfig> {
-    render() {
+    render(): React.Node {
       // workaround for dynamically hiding tabs
       // todo change it when they implement the feature
       // https://github.com/react-navigation/react-navigation/issues/717

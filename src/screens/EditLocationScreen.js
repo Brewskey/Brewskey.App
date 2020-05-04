@@ -47,7 +47,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'Location edited.' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Edit location" />

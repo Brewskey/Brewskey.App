@@ -6,13 +6,14 @@ import {
   ImageCache,
 } from 'react-native-img-cache';
 
-type Props = {
+type Props<TOtherProps> = {|
+  ...TOtherProps,
   mutable?: boolean,
-  source: { uri: string },
+  source: {| uri: string |},
   // other image Props
-};
+|};
 
-export const flushImageCache = (uri: string) => {
+export const flushImageCache = (uri: string): void => {
   const uriWithoutBrewskeyApiParams = (uri.match(/=?(\/?.*\.jpg)/) || [])[0];
 
   if (!uriWithoutBrewskeyApiParams) {
@@ -20,9 +21,8 @@ export const flushImageCache = (uri: string) => {
   }
 
   Object.keys(ImageCache.get().cache)
-    .filter(
-      (cacheKey: string): boolean =>
-        cacheKey.includes(uriWithoutBrewskeyApiParams),
+    .filter((cacheKey: string): boolean =>
+      cacheKey.includes(uriWithoutBrewskeyApiParams),
     )
     .forEach((cacheKey: string) => {
       // todo this deletes only cached link(not file!) from cache.
@@ -32,14 +32,14 @@ export const flushImageCache = (uri: string) => {
     });
 };
 
-class CachedImage extends React.Component<Props> {
-  static defaultProps = {
+class CachedImage<TOtherProps> extends React.Component<Props<TOtherProps>> {
+  static defaultProps: {| mutable: boolean |} = {
     mutable: true,
   };
 
-  flushCache = () => flushImageCache(this.props.source.uri);
+  flushCache: () => void = (): void => flushImageCache(this.props.source.uri);
 
-  render() {
+  render(): React.Node {
     return <RNCachedImage {...this.props} mutable={this.props.mutable} />;
   }
 }

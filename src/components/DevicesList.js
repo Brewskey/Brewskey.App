@@ -48,9 +48,12 @@ type InjectedProps = {|
 @withNavigation
 @observer
 class DevicesList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
+  static defaultProps: {|
+    ListEmptyComponent: React.Node,
+    queryOptions: QueryOptions,
+  |} = {
     ListEmptyComponent: <ListEmpty message="No Brewskey boxes" />,
-    queryOptions: {},
+    queryOptions: ({}: QueryOptions),
   };
 
   _listStore: DAOListStore<Device> = new DAOListStore(DeviceStore);
@@ -110,7 +113,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const { ListEmptyComponent, renderListHeader } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
 
@@ -136,7 +139,10 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Device, *>) => (
+const SwipeableRowItem = ({
+  item,
+  onItemPress,
+}: RowItemProps<Device, *>): React.Node => (
   <ListItem
     item={item}
     onPress={onItemPress}
@@ -153,7 +159,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Device, *>) => (
+}: RowItemProps<Device, *>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete Brewskey box"

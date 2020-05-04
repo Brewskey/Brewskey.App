@@ -16,7 +16,7 @@ import SectionHeader from '../common/SectionHeader';
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class MyProfileScreen extends React.Component<{}> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="My profile" />

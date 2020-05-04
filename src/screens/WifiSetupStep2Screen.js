@@ -19,7 +19,7 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 @observer
 class WifiSetupStep2Screen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     const { wifiSetupStore } = this.injectedProps;
 
     return (

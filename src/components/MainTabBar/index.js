@@ -60,7 +60,7 @@ class MainTabBar extends React.Component<Props> {
     onTabPress({ route });
   };
 
-  render() {
+  render(): React.Node {
     const {
       navigation: { state },
     } = this.props;

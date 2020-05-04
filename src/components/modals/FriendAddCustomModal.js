@@ -27,7 +27,7 @@ type Props = {
 
 @observer
 class FriendAddCustomModal extends React.Component<Props> {
-  render() {
+  render(): React.Node {
     const { isVisible, onHideModal, onFriendAddFormSubmit } = this.props;
 
     return (

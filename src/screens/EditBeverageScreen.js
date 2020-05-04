@@ -62,7 +62,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'The beverage edited.' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />

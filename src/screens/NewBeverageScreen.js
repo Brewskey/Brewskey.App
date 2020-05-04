@@ -31,7 +31,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     const { navigation } = this.injectedProps;
     const { beverageImage, ...beverageMutator } = values;
     const clientID = DAOApi.BeverageDAO.post(beverageMutator);
-    const { id } = await DAOApi.BeverageDAO.waitForLoaded(dao =>
+    const { id } = await DAOApi.BeverageDAO.waitForLoaded((dao) =>
       dao.fetchByID(clientID),
     );
 
@@ -57,7 +57,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'New beverage created.' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="New beverage" />

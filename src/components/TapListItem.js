@@ -14,7 +14,7 @@ type Props = {|
   tap: Tap,
 |};
 
-const TapListItem = ({ onPress, tap }: Props) => {
+const TapListItem = ({ onPress, tap }: ): React.Node => (
   const { currentKeg, description, tapNumber } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';

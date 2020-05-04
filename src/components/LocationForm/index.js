@@ -86,7 +86,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
     }
 
     return OrganizationStore.getMany()
-      .map(result => (result[0] != null ? result[0].getValue() : null))
+      .map((result) => (result[0] != null ? result[0].getValue() : null))
       .getValue();
   }
 
@@ -104,7 +104,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
     return OrganizationStore.fetchSquareLocations(this._organization.id);
   }
 
-  render() {
+  render(): React.Node {
     const { isFocused, location = {}, submitButtonLabel } = this.props;
     const {
       formError,
@@ -216,7 +216,7 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
             name="squareLocationID"
             pickerValues={this._squareLocationLoader
               .getValueEnforcing()
-              .map(item => ({
+              .map((item) => ({
                 label: item.name,
                 value: item.locationID,
               }))}

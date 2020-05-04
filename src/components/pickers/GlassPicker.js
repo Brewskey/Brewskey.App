@@ -20,7 +20,7 @@ type Props<TMultiple: boolean> = {|
 class GlassPicker<TMultiple: boolean> extends React.Component<
   Props<TMultiple>,
 > {
-  static defaultProps = {
+  static defaultProps: {| multiple: boolean |} = {
     multiple: false,
   };
 
@@ -33,7 +33,7 @@ class GlassPicker<TMultiple: boolean> extends React.Component<
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <DAOPicker
         {...this.props}
@@ -48,7 +48,11 @@ class GlassPicker<TMultiple: boolean> extends React.Component<
 }
 
 // todo annotate better
-const LoadedRow = ({ item: glass, isSelected, toggleItem }: Object) => (
+const LoadedRow = ({
+  item: glass,
+  isSelected,
+  toggleItem,
+}: Object): React.Node => (
   <SelectableListItem
     hideChevron
     isSelected={isSelected}

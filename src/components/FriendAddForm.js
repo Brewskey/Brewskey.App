@@ -26,9 +26,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export type FriendAddFormValues = {
+export type FriendAddFormValues = {|
   userName: string,
-};
+|};
 
 const validate = (values: FriendAddFormValues): { [key: string]: string } => {
   const errors = {};
@@ -44,7 +44,7 @@ type InjectedProps = FormProps;
 @form({ validate })
 @observer
 class FriendAddForm extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
 
     return (

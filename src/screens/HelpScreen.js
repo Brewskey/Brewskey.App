@@ -9,7 +9,7 @@ import Header from '../common/Header';
 
 @errorBoundary(<ErrorScreen showBackButton />)
 class HelpScreen extends React.Component<{}> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Help" />

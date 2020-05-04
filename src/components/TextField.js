@@ -47,7 +47,7 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
     nullthrows(this._inputRef).focus();
   };
 
-  render() {
+  render(): React.Node {
     const {
       description,
       error,

@@ -10,7 +10,7 @@ class SplashScreen extends React.Component<{}> {
     RNSplashScreen.hide();
   }
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <AppLoading />

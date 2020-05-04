@@ -14,7 +14,7 @@ type State = {
 };
 
 class ErrorBoundary extends React.PureComponent<Props, State> {
-  state = {
+  state: State = {
     error: null,
   };
 
@@ -32,13 +32,13 @@ class ErrorBoundary extends React.PureComponent<Props, State> {
   }
 }
 
-export const errorBoundary = <TProps: {}>(
+export const errorBoundary = <TProps>(
   fallbackComponent: ?React.Node | React.ComponentType<any>,
-) => (
+): ((React.ComponentType<TProps>) => Class<React.PureComponent<TProps>>) => (
   Component: React.ComponentType<TProps>,
 ): Class<React.PureComponent<TProps>> => {
   class WithErrorBoundary extends React.PureComponent<TProps> {
-    render() {
+    render(): React.Node {
       return (
         <ErrorBoundary fallbackComponent={fallbackComponent}>
           <Component {...this.props} />

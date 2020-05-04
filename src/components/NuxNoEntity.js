@@ -54,7 +54,7 @@ class NuxNoEntity extends InjectedComponent<InjectedProps> {
     this.injectedProps.navigation.navigate('nuxSoftwareSetup');
   };
 
-  render() {
+  render(): React.Node {
     return (
       <View style={styles.container}>
         <Text style={styles.headingText}>

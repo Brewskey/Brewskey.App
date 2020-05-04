@@ -37,7 +37,7 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxFinishPress extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header title="Setup completed" />

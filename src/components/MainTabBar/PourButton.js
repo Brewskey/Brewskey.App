@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
 @observer
 class PourButton extends React.Component<{}> {
-  render() {
+  render(): React.Node {
     return !PourProcessStore.isLoading ? (
       <Icon
         color={COLORS.secondary}

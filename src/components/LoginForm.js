@@ -51,7 +51,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
   _onSubmitButtonPress = (): Promise<void> =>
     this.injectedProps.handleSubmit(this.injectedProps.onSubmit);
 
-  render() {
+  render(): React.Node {
     const { formError, invalid, isInverse, submitting } = this.injectedProps;
     return (
       <View>

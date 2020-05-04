@@ -19,7 +19,11 @@ type Props = {|
   style?: Style,
 |};
 
-const LoadingContainer = ({ activitySize = 'large', color, style }: Props) => (
+const LoadingContainer = ({
+  activitySize = 'large',
+  color,
+  style,
+}: Props): React.Node => (
   <View style={style || styles.container}>
     <ActivityIndicator color={color} size={activitySize} />
   </View>

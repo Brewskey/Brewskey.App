@@ -20,7 +20,7 @@ type Props = {|
 |};
 
 const BeveragePoursList = observer(
-  ({ ListHeaderComponent, onRefresh, queryOptions }: Props) => (
+  ({ ListHeaderComponent, onRefresh, queryOptions }: Props): React.Node => (
     <BasePoursList
       ListEmptyComponent={<ListEmpty message="No recent pours" />}
       ListHeaderComponent={ListHeaderComponent}
@@ -31,7 +31,7 @@ const BeveragePoursList = observer(
   ),
 );
 
-const LoadedRow = ({ item: pour }: RowItemProps<Pour, *>) => (
+const LoadedRow = ({ item: pour }: RowItemProps<Pour, *>): React.Node => (
   <ListItem
     avatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />

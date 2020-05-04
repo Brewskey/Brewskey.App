@@ -48,7 +48,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
       ...DEFAULT_FLOW_SENSOR,
       tapId,
     });
-    await DAOApi.FlowSensorDAO.waitForLoaded(dao => dao.fetchByID(clientID));
+    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
 
     this._onFlowSensorCreated();
   };
@@ -87,7 +87,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
     }
   };
 
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header title="Setup flow sensor" />

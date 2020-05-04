@@ -25,7 +25,7 @@ type Props = {|
   onAddTapPress: () => void,
 |};
 
-const DeviceTapListEmpty = ({ onAddTapPress }: Props) => (
+const DeviceTapListEmpty = ({ onAddTapPress }: Props): React.Node => (
   <View style={styles.container}>
     <Text style={styles.text}>You don't have keg on the tap.</Text>
     <TouchableOpacity onPress={onAddTapPress}>

@@ -82,7 +82,7 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <SwipeableList
         keyExtractor={this._keyExtractor}
@@ -109,7 +109,7 @@ const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>) => (
+}: RowItemProps<Tap, *>): React.Node => (
   <TapListItem index={index} onPress={onItemPress} tap={item} />
 );
 
@@ -123,7 +123,7 @@ const Slideout = ({
     onDeleteItemPress: () => void,
     onEditItemPress: () => void,
   },
->) => (
+>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete the Tap"
     deleteModalTitle="Delete tap"

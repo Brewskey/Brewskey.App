@@ -68,7 +68,7 @@ class HardwareSetupGuide extends React.Component<Props> {
     }
   };
 
-  render() {
+  render(): React.Node {
     return (
       <View style={{ flex: 1 }}>
         <Swiper

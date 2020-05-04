@@ -52,7 +52,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     navigation.dispatch(resetRouteAction);
   };
 
-  render() {
+  render(): React.Node {
     const { tapId } = this.injectedProps;
     return (
       <Container>

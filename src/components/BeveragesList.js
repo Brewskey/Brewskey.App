@@ -35,7 +35,7 @@ type InjectedProps = {
 @withNavigation
 @observer
 class BeveragesList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
+  static defaultProps: {| queryOptions: QueryOptions |} = {
     queryOptions: {},
   };
 
@@ -92,7 +92,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
       <SwipeableList
@@ -112,7 +112,10 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-const SwipeableRowItem = ({ item, onItemPress }: RowItemProps<Beverage, *>) => (
+const SwipeableRowItem = ({
+  item,
+  onItemPress,
+}: RowItemProps<Beverage, *>): React.Node => (
   <ListItem
     avatar={<BeverageAvatar beverageId={item.id} />}
     hideChevron
@@ -127,7 +130,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Beverage, *>) => (
+}: RowItemProps<Beverage, *>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete beverage"

@@ -105,7 +105,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
   _renderSectionFooter = ({ section: { data } }): ?React.Node =>
     !data.length ? <ListEmpty message="No requests" /> : null;
 
-  render() {
+  render(): React.Node {
     return (
       <List
         keyExtractor={this._keyExtractor}

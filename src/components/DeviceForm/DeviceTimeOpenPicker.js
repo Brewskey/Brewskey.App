@@ -13,7 +13,7 @@ type Props = {|
 const SECONDS_PER_MINUTE = 60;
 const SECONDS_PER_HOUR = SECONDS_PER_MINUTE * 60;
 
-const DeviceTimeOpenPicker = (props: Props) => (
+const DeviceTimeOpenPicker = (props: Props): React.Node => (
   <SimplePicker
     doesRequireConfirmation={false}
     headerTitle="Select Time to Keep Valve Open"

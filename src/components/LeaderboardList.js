@@ -70,7 +70,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     return (
       <List
         data={this._listStore.rows}

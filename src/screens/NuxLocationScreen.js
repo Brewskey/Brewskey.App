@@ -63,7 +63,7 @@ class NuxLocationScreen extends InjectedComponent<Props> {
     NuxSoftwareSetupStore.selectLocation(((location: any): ?Location));
   };
 
-  render() {
+  render(): React.Node {
     const { locationsCount } = this.injectedProps;
     const hasNoLocation = locationsCount === 0;
     const hasOneLocation = locationsCount === 1;

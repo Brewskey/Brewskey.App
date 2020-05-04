@@ -11,7 +11,7 @@ type Props = {|
   value: any,
 |};
 
-const DeviceStatePicker = (props: Props) => (
+const DeviceStatePicker = (props: Props): React.Node => (
   <SimplePicker
     description={DESCRIPTION_BY_DEVICE_STATE[props.value]}
     doesRequireConfirmation={false}

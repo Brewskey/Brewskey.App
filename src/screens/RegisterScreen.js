@@ -10,7 +10,7 @@ import RegisterForm from '../components/RegisterForm';
 
 @errorBoundary(<ErrorScreen showBackButton />)
 class RegisterScreen extends React.Component<{}> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header showBackButton title="Register account" />

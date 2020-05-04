@@ -59,7 +59,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     navigation.dispatch(resetRouteAction);
   };
 
-  render() {
+  render(): React.Node {
     const { hideLocation, initialValues, showBackButton } = this.injectedProps;
 
     return (

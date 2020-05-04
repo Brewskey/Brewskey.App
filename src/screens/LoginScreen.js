@@ -41,7 +41,7 @@ class LoginScreen extends React.Component<Props> {
   _onForgotPasswordPress = () =>
     this.props.navigation.navigate('resetPassword');
 
-  render() {
+  render(): React.Node {
     return (
       <KeyboardAwareScrollView
         keyboardShouldPersistTaps="always"

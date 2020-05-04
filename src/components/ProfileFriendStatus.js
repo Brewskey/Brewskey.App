@@ -74,7 +74,7 @@ class ProfileFriendStatus extends React.Component<Props> {
     });
   };
 
-  render() {
+  render(): React.Node {
     const { account, friend } = this.props;
 
     if (AuthStore.userID === this.props.account.id) {

@@ -45,7 +45,7 @@ class KegSectionHeader extends React.Component<Props> {
     return false;
   }
 
-  render() {
+  render(): React.Node {
     const {
       section: { beverage, floatedDate, tapDate },
     } = this.props;

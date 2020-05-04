@@ -32,7 +32,7 @@ type InjectedProps = FormProps;
 class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
   _onSubmit = () => this.injectedProps.handleSubmit(this.props.onSubmit);
 
-  render() {
+  render(): React.Node {
     const { flowSensor = {}, tapId } = this.props;
     const { formError, invalid, submitting, values } = this.injectedProps;
 

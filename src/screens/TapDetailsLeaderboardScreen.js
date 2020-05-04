@@ -39,7 +39,7 @@ class TapDetailsLeaderboardScreen extends InjectedComponent<InjectedProps> {
     this._leaderboardDuration = nullthrows(duration);
   };
 
-  render() {
+  render(): React.Node {
     const {
       noFlowSensorWarning,
       tap: { id },

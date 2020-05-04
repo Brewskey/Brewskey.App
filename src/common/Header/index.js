@@ -46,12 +46,15 @@ type Props = {|
 |};
 
 class Header extends React.PureComponent<Props> {
-  static defaultProps = {
+  static defaultProps: {|
+    leftComponent: React.Node,
+    rightComponent: React.Node,
+  |} = {
     leftComponent: <FakeHeaderButton />,
     rightComponent: <FakeHeaderButton />,
   };
 
-  render() {
+  render(): React.Node {
     const { leftComponent, rightComponent, showBackButton, title } = this.props;
 
     const leftElement = showBackButton ? (

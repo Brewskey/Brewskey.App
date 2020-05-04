@@ -31,7 +31,7 @@ type Props<TRNEProps> = {|
 
 @observer
 class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
-  static defaultProps = {
+  static defaultProps: {| backgroundColor: string, color: string |} = {
     backgroundColor: COLORS.primary2,
     color: COLORS.textInverse,
   };
@@ -49,7 +49,7 @@ class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
     this._isLoadingToggleStore.toggleOff();
   };
 
-  render() {
+  render(): React.Node {
     const {
       backgroundColor,
       color,

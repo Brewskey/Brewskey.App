@@ -6,69 +6,67 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import LoadingIndicator from './LoadingIndicator';
 
-type Props<TValue, TExtraProps = {}> = {|
+type Props<TValue, TExtraProps> = {|
   ...TExtraProps,
   deletingComponent?: React.ComponentType<TExtraProps>,
   emptyComponent: React.ComponentType<TExtraProps>,
-  errorComponent: React.ComponentType<{ ...TExtraProps, error: Error }>,
-  loadedComponent: React.ComponentType<{ ...TExtraProps, value: TValue }>,
+  errorComponent: React.ComponentType<{| ...TExtraProps, error: Error |}>,
+  loadedComponent: React.ComponentType<{| ...TExtraProps, value: TValue |}>,
   loadedComponentRef?: React.Ref<
-    React.ComponentType<{ ...TExtraProps, value: TValue }>,
+    React.ComponentType<{| ...TExtraProps, value: TValue |}>,
   >,
   loader: LoadObject<TValue>,
   loadingComponent: React.ComponentType<TExtraProps>,
-  updatingComponent?: React.ComponentType<{ ...TExtraProps, value: ?TValue }>,
+  updatingComponent?: React.ComponentType<{| ...TExtraProps, value: ?TValue |}>,
 |};
 
-const LoaderComponent = observer(
-  <TValue, TExtraProps>({
-    deletingComponent: DeletingComponent,
-    emptyComponent: EmptyComponent,
-    errorComponent: ErrorComponent,
-    loadedComponent: LoadedComponent,
-    loadedComponentRef,
-    loader,
-    loadingComponent: LoadingComponent,
-    updatingComponent: UpdatingComponent,
-    ...rest
-  }: Props<TValue, TExtraProps>): React.Node => {
-    if (loader.isLoading()) {
-      return <LoadingComponent {...rest} />;
-    }
+const LoaderComponent = <TValue, TExtraProps>({
+  deletingComponent: DeletingComponent,
+  emptyComponent: EmptyComponent,
+  errorComponent: ErrorComponent,
+  loadedComponent: LoadedComponent,
+  loadedComponentRef,
+  loader,
+  loadingComponent: LoadingComponent,
+  updatingComponent: UpdatingComponent,
+  ...rest
+}: Props<TValue, TExtraProps>): React.Node => {
+  if (loader.isLoading()) {
+    return <LoadingComponent {...rest} />;
+  }
 
-    if (loader.isUpdating() && UpdatingComponent) {
-      return <UpdatingComponent {...rest} value={loader.getValue()} />;
-    }
+  if (loader.isUpdating() && UpdatingComponent) {
+    return <UpdatingComponent {...rest} value={loader.getValue()} />;
+  }
 
-    if (loader.isDeleting()) {
-      const Component = DeletingComponent || LoadingComponent;
-      return <Component {...rest} />;
-    }
+  if (loader.isDeleting()) {
+    const Component = DeletingComponent || LoadingComponent;
+    return <Component {...rest} />;
+  }
 
-    if (loader.hasError()) {
-      return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
-    }
+  if (loader.hasError()) {
+    return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
+  }
 
-    if (loader.isEmpty()) {
-      return <EmptyComponent {...rest} />;
-    }
+  if (loader.isEmpty()) {
+    return <EmptyComponent {...rest} />;
+  }
 
-    return (
-      <LoadedComponent
-        {...rest}
-        ref={loadedComponentRef}
-        value={loader.getValueEnforcing()}
-      />
-    );
-  },
-);
-
-LoaderComponent.defaultProps = {
-  deletingComponent: () => null,
-  emptyComponent: () => null,
-  errorComponent: () => null,
-  loadingComponent: LoadingIndicator,
-  updatingComponent: () => null,
+  return (
+    <LoadedComponent
+      {...rest}
+      ref={loadedComponentRef}
+      value={loader.getValueEnforcing()}
+    />
+  );
 };
 
-export default LoaderComponent;
+LoaderComponent.defaultProps = {
+  deletingComponent: (): React.Node => null,
+  emptyComponent: (): React.Node => null,
+  errorComponent: (): React.Node => null,
+  loadingComponent: LoadingIndicator,
+  updatingComponent: (): React.Node => null,
+};
+
+export default (observer(LoaderComponent): typeof LoaderComponent);

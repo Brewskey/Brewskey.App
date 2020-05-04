@@ -21,7 +21,7 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class MyBeveragesScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header

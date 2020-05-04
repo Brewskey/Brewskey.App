@@ -34,7 +34,7 @@ type Props = {|
   title: string,
 |};
 
-const SetupStep = ({ description, image, title }: Props) => (
+const SetupStep = ({ description, image, title }: Props): React.Node => (
   <Fragment>
     <Text style={styles.titleText}>{title}</Text>
     <Image style={styles.image} source={image} />

@@ -53,7 +53,7 @@ class QuickActions<TItem> extends React.Component<Props<TItem>> {
   _onEditItemPress = (): void =>
     nullthrows(this.props.onEditItemPress)(this.props.item);
 
-  render() {
+  render(): React.Node {
     const { deleteModalTitle, onDeleteItemPress, onEditItemPress } = this.props;
 
     return (

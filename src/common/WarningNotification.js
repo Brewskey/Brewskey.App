@@ -29,7 +29,7 @@ type Props = {
 };
 
 class WarningNotification extends React.PureComponent<Props> {
-  render() {
+  render(): React.Node {
     const { message, onPress } = this.props;
     return (
       <TouchableItem onPress={onPress}>

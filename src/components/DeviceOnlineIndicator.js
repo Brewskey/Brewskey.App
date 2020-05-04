@@ -34,7 +34,7 @@ type Props = {|
 
 @observer
 class DeviceOnlineIndicator extends React.Component<Props> {
-  static defaultProps = {
+  static defaultProps: {| size: number |} = {
     size: 25,
   };
 
@@ -45,7 +45,7 @@ class DeviceOnlineIndicator extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): React.Node {
     const { size } = this.props;
     const sizeStyle = {
       borderRadius: size / 2,

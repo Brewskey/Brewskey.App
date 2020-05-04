@@ -42,7 +42,7 @@ class ParticleIDInput extends React.Component<Props> {
 
   _onContinuePress = () => this.props.onContinuePress(this._particleID);
 
-  render() {
+  render(): React.Node {
     return (
       <View>
         {!this._isExpanded ? (

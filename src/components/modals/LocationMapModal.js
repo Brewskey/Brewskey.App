@@ -28,7 +28,11 @@ type Props = {|
   onHideModal: () => void,
 |};
 
-const LocationMapModal = ({ coordinates, isVisible, onHideModal }: Props) => (
+const LocationMapModal = ({
+  coordinates,
+  isVisible,
+  onHideModal,
+}: Props): React.Node => (
   <Modal isVisible={isVisible}>
     <View style={styles.container}>
       <LocationMap coordinates={coordinates} />

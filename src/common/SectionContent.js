@@ -19,7 +19,7 @@ const SectionContent = ({
   containerStyle,
   paddedHorizontal,
   paddedVertical = true,
-}: Props) => (
+}: Props): React.Node => (
   <View
     style={[
       centered && { alignItems: 'center', justifyContent: 'center' },

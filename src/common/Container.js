@@ -17,13 +17,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+type Props = {|
   centered?: boolean,
   children?: React.Node,
   style?: Style,
-};
+|};
 
-const Container = ({ centered, children, style }: Props) => (
+const Container = ({ centered, children, style }: Props): React.Node => (
   <View style={[styles.container, centered && styles.centered, style]}>
     {children}
   </View>

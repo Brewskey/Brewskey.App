@@ -10,7 +10,7 @@ type Props = {|
   deviceState: DeviceStatus,
 |};
 
-const DeviceStatusOverviewItem = ({ deviceState }: Props) => (
+const DeviceStatusOverviewItem = ({ deviceState }: Props): React.Node => (
   <OverviewItem
     title="State"
     value={deviceState}

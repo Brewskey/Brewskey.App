@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 });
 
 // todo add funny icon
-const NearbyLocationsEmpty = () => (
+const NearbyLocationsEmpty = (): React.Node => (
   <Container centered>
     <Text style={styles.text}>
       There are not any Brewskey locations near you!

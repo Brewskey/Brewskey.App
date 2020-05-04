@@ -43,7 +43,7 @@ class FriendApprovedModal extends React.Component<Props> {
     this.props.onFriendDeletePress();
   };
 
-  render() {
+  render(): React.Node {
     const { account, isVisible, onHideModal } = this.props;
     const { isToggled } = this._deleteModalToggleStore;
 

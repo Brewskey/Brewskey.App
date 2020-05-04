@@ -76,7 +76,7 @@ class HeaderSearchBar extends React.Component<Props> {
     // );
   };
 
-  render() {
+  render(): React.Node {
     const { value, onChangeText } = this.props;
 
     return (

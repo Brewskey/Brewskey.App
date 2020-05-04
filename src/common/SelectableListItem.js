@@ -11,18 +11,18 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = {
+type Props<TEntity, RNE> = {|
   isSelected: boolean,
   item: TEntity,
   toggleItem: (item: TEntity) => void,
   // other react-native=elements ListItemProps
-};
+|};
 
-const SelectableListItem = <TEntity>({
+const SelectableListItem = <TEntity, RNE>({
   isSelected,
   toggleItem,
   ...rest
-}: Props<TEntity>) => (
+}: Props<TEntity, RNE>): React.Node => (
   <ListItem
     {...rest}
     containerStyle={isSelected && styles.selected}

@@ -37,7 +37,7 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @flatNavigationParamsAndScreenProps
 class NuxTapScreen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     return (
       <Container>
         <Header title="4. Create a tap" />

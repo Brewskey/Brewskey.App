@@ -22,7 +22,7 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 @observer
 class WifiSetupStep1Screen extends InjectedComponent<InjectedProps> {
-  render() {
+  render(): React.Node {
     const { forNewDevice, onSetupFinish, wifiSetupStore } = this.injectedProps;
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">

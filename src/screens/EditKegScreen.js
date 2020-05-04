@@ -60,7 +60,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
     SnackBarStore.showMessage({ text: 'Current keg floated' });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
         <LoaderComponent

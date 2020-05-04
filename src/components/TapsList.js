@@ -93,7 +93,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render() {
+  render(): React.Node {
     const { ListHeaderComponent, onAddTapPress } = this.props;
 
     const isLoading = this._listStore.isFetchingRemoteCount;
@@ -121,7 +121,7 @@ const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>) => (
+}: RowItemProps<Tap, *>): React.Node => (
   <TapListItem index={index} onPress={onItemPress} tap={item} />
 );
 
@@ -129,7 +129,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Tap, *>) => (
+}: RowItemProps<Tap, *>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete the Tap?"
     deleteModalTitle="Delete tap"

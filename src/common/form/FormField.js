@@ -21,14 +21,19 @@ type Props<TProps> = {|
   returnKeyType?: string,
 |};
 
+type DefaultProps = {|
+  format: (any) => any,
+  parse: (any) => any,
+|};
+
 @observer
 class FormField<TProps> extends React.Component<Props<TProps>> {
-  static defaultProps = {
+  static defaultProps: DefaultProps = {
     format: (value: any): any => value,
     parse: (value: any): any => value,
   };
 
-  static contextTypes = {
+  static contextTypes: {| formStore: any |} = {
     formStore: PropTypes.object,
   };
 
@@ -74,7 +79,7 @@ class FormField<TProps> extends React.Component<Props<TProps>> {
     }
   };
 
-  render() {
+  render(): React.Node {
     const { component: Component } = this.props;
     if (!Component) {
       return null;

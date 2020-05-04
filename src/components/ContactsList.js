@@ -34,7 +34,7 @@ class ContactsList extends React.Component<Props> {
     );
   };
 
-  render() {
+  render(): React.Node {
     return (
       <List
         data={ContactsStore.contacts}

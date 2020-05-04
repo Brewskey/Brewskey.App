@@ -15,7 +15,7 @@ class MyFriendsMainScreen extends React.Component<{}> {
   //   tabBarLabel: 'Friends',
   // };
 
-  render() {
+  render(): React.Node {
     return (
       <FriendsList
         queryOptions={{
