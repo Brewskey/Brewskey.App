@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import DAOApi from 'brewskey.js-api';
 import AuthStore from '../stores/AuthStore';
 import InjectedComponent from '../common/InjectedComponent';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import { form, FormField } from '../common/form';
 import SectionContent from '../common/SectionContent';
 import TextField from '../components/TextField';

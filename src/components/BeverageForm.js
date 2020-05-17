@@ -16,7 +16,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 import { form, FormField } from '../common/form';

@@ -14,7 +14,7 @@ import { View } from 'react-native';
 import InjectedComponent from '../common/InjectedComponent';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import Button from '../common/buttons/Button';
 import { LocationStore } from '../stores/DAOStores';
 import { form, FormField } from '../common/form';

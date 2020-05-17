@@ -79,23 +79,23 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
     this.setState(() => ({ isRefreshing: false }));
   };
 
-  _renderFlatList(renderProps: RenderItemProps<TEntity>): React.Node {
+  _renderFlatList = (renderProps: RenderItemProps<TEntity>): React.Node => {
     const { renderItem } = this.props;
     if (renderItem == null) {
       return null;
     }
     return renderItem(renderProps);
-  }
+  };
 
-  _renderSectionList(
+  _renderSectionList = (
     renderProps: RenderItemProps<TEntity>,
-  ): null | React.Element<any> {
+  ): null | React.Element<any> => {
     const { renderItem } = this.props;
     if (renderItem == null) {
       return null;
     }
     return (renderItem(renderProps): any);
-  }
+  };
 
   render(): React.Node {
     const {
@@ -107,9 +107,9 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
       preventSwipeRight,
       renderItem: _,
       sections,
+      slideoutComponent,
       renderSectionFooter,
       renderSectionHeader,
-      slideoutComponent,
       ListEmptyComponent,
       ListFooterComponent,
       ListHeaderComponent,
@@ -122,7 +122,7 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
         ListHeaderComponent={(ListHeaderComponent: any)}
         renderSectionFooter={(renderSectionFooter: any)}
         renderSectionHeader={(renderSectionHeader: any)}
-        slideoutComponent={slideoutComponent}
+        slideoutComponent={(slideoutComponent: any)}
         bounceFirstRowOnMount={bounceFirstRowOnMount}
         contentContainerStyle={styles.contentContainerStyle}
         {...rest}
@@ -144,6 +144,7 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
         renderSectionFooter={(renderSectionFooter: any)}
         renderSectionHeader={(renderSectionHeader: any)}
         contentContainerStyle={styles.contentContainerStyle}
+        slideoutComponent={(slideoutComponent: any)}
         {...rest}
         ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}

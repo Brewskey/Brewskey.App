@@ -11,10 +11,7 @@ import DebouncedTextStore from './DebouncedTextStore';
 import { GPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { GoogleCoordinatesStore } from '../stores/ApiRequestStores/GoogleApiStores';
 import { NearbyLocationsStore } from '../stores/ApiRequestStores/CommonApiStores';
-import {
-  LOCATION_PERMISSION_STATUSES,
-  LocationPermissionStore,
-} from '../stores/ApiRequestStores/PermissionStores';
+import { LocationPermissionStore } from '../stores/ApiRequestStores/PermissionStores';
 
 class HomeScreenStore {
   searchTextStore: DebouncedTextStore = new DebouncedTextStore();
@@ -26,10 +23,7 @@ class HomeScreenStore {
 
   @action
   onAskLocationPermissionButtonPress: () => void = () => {
-    if (
-      LocationPermissionStore.get().getValue() ===
-      LOCATION_PERMISSION_STATUSES.AUTHORIZED
-    ) {
+    if (LocationPermissionStore.hasLocationPermissions()) {
       LocationPermissionStore.flushCache();
     } else {
       const onAppStateChange = (appState) => {
@@ -61,7 +55,7 @@ class HomeScreenStore {
   @computed
   get isLoading(): boolean {
     return (
-      LocationPermissionStore.get().isLoading() ||
+      LocationPermissionStore.isLoadingPermissions() ||
       this._coordinatesLoader.isLoading() ||
       this._nearbyLocationsLoader.isLoading()
     );
@@ -71,10 +65,7 @@ class HomeScreenStore {
   get isAskLocationPermissionVisible(): boolean {
     return (
       !this.searchTextStore.debouncedText &&
-      (LocationPermissionStore.get().getValue() ===
-        LOCATION_PERMISSION_STATUSES.DENIED ||
-        LocationPermissionStore.get().getValue() ===
-          LOCATION_PERMISSION_STATUSES.RESTRICTED)
+      !LocationPermissionStore.hasLocationPermissions()
     );
   }
 
@@ -89,14 +80,9 @@ class HomeScreenStore {
   get _coordinatesLoader(): LoadObject<Coordinates> {
     return this.searchTextStore.debouncedText
       ? GoogleCoordinatesStore.get(this.searchTextStore.debouncedText)
-      : LocationPermissionStore.get().map(
-          (
-            permissionStatus: LocationPermissionStatus,
-          ): LoadObject<Coordinates> =>
-            permissionStatus === LOCATION_PERMISSION_STATUSES.AUTHORIZED
-              ? GPSCoordinatesStore.get()
-              : LoadObject.empty(),
-        );
+      : LocationPermissionStore.hasLocationPermissions()
+      ? GPSCoordinatesStore.get()
+      : LoadObject.empty();
   }
 
   @computed

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Slider, StyleSheet, Text, View } from 'react-native';
-import { FormLabel } from 'react-native-elements';
+import FormLabel from '../../common/form/FormLabel';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({

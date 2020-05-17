@@ -2,22 +2,24 @@
 
 import type { Coordinates } from '../../types';
 import makeRequestApiStore from './makeRequestApiStore';
+import Geolocation from '@react-native-community/geolocation';
 
 const getGPSPosition = (): Promise<Position> =>
-  new Promise((resolve, reject: (error: PositionError) => void) =>
-    // eslint-disable-next-line no-undef
-    navigator.geolocation.getCurrentPosition(
+  new Promise((resolve, reject: (error: PositionError) => void) => {
+    Geolocation.getCurrentPosition(
       (position: Position): void => resolve(position),
       (error: PositionError): void => reject(error),
-    ),
-  );
+    );
+  });
 
 export const createGPSCoordinatesStore = () =>
   makeRequestApiStore<Coordinates>(() =>
-    getGPSPosition().then((position: Position): Coordinates => ({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    })),
+    getGPSPosition().then((position: Position): Coordinates => {
+      return {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      };
+    }),
   );
 
 export const GPSCoordinatesStore = createGPSCoordinatesStore();

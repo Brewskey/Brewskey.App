@@ -5,7 +5,7 @@ import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
 import { View } from 'react-native';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../../../common/form/FormValidationMessage';
 import injectedComponent from '../../../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { form, FormField } from '../../../common/form';

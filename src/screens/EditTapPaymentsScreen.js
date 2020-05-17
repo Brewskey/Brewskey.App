@@ -13,11 +13,12 @@ import type { FormProps } from '../common/form/types';
 
 import * as React from 'react';
 import { withNavigationFocus } from 'react-navigation';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import {
   LocationStore,

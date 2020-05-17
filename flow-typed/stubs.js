@@ -24,3 +24,9 @@
 // declare module 'react-native-permissions' {
 //   declare module.exports: any;
 // }
+
+// declare module 'react-native-swiper' {
+//   declare module.exports: React$ComponentType<any> & {
+//     scrollBy(index: number, animated?: boolean): void,
+//   };
+// }

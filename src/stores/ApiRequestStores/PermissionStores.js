@@ -1,23 +1,41 @@
 // @flow
+
 import makeRequestApiStore from './makeRequestApiStore';
-import Permissions from 'react-native-permissions';
+import { Platform } from 'react-native';
+import {
+  checkMultiple,
+  PERMISSIONS,
+  request,
+  RESULTS,
+} from 'react-native-permissions';
 
-export type LocationPermissionStatus =
-  | 'authorized'
-  | 'denied'
-  | 'restricted'
-  | 'undetermined';
+const PERMISSION_TYPES = [
+  PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+  PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+];
 
-export const LOCATION_PERMISSION_STATUSES = Object.freeze({
-  AUTHORIZED: 'authorized',
-  DENIED: 'denied',
-  RESTRICTED: 'restricted',
-  UNDETERMINED: 'undetermined',
-});
+const REQUEST_API = makeRequestApiStore<string>(() =>
+  checkMultiple(PERMISSION_TYPES),
+);
 
-export const createLocationPermissionStore = () =>
-  makeRequestApiStore<LocationPermissionStatus>(() =>
-    Permissions.request('location'),
-  );
+export class LocationPermissionStore {
+  static isLoadingPermissions(): boolean {
+    return REQUEST_API.get().isLoading();
+  }
 
-export const LocationPermissionStore = createLocationPermissionStore();
+  static hasLocationPermissions(): boolean {
+    return (
+      REQUEST_API.get()
+        .map((status) =>
+          PERMISSION_TYPES.some(
+            (permission) => status[permission] === RESULTS.GRANTED,
+          ),
+        )
+        .getValue() || false
+    );
+  }
+
+  static flushCache(): void {
+    REQUEST_API.flushCache();
+  }
+}

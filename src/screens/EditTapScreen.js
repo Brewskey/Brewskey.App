@@ -12,6 +12,8 @@ import type { Navigation } from '../types';
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
 import InjectedComponent from '../common/InjectedComponent';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';

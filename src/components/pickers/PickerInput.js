@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { FormLabel, FormValidationMessage } from 'react-native-elements';
+import FormLabel from '../../common/form/FormLabel';
+import FormValidationMessage from '../../common/form/FormValidationMessage';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({

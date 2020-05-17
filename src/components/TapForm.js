@@ -16,7 +16,7 @@ import { LoadObject } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
 import { observer } from 'mobx-react';
 import { computed } from 'mobx';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import Button from '../common/buttons/Button';
 import CheckBoxField from './CheckBoxField';
 import TextField from './TextField';

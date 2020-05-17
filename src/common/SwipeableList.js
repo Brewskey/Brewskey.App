@@ -25,36 +25,10 @@ export type RenderProps<TEntity> = {|
   swipeThreshold?: number,
 |};
 
-type Props<TEntity> = {
-  ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
-  ListFooterComponent?: ?(React.ComponentType<any> | React.Node),
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
-  bounceFirstRowOnMount: boolean,
-  disableVirtualization?: boolean,
-  data?: Array<TEntity>,
-  extraData?: any,
-  horizontal?: boolean,
-  initialNumToRender?: number,
-  innerRef?: $FlowFixMe,
-  keyExtractor: (TEntity, number) => string,
-  listType?: 'flatList' | 'sectionList',
-  maxToRenderPerBatch?: number,
-  onDeleteItemPress?: (TEntity) => Promise<void>,
-  onEndReached?: () => void,
-  onRefresh?: () => Promise<void> | void,
-  onScroll?: (ScrollEvent) => void,
-  preventSwipeRight?: boolean,
-  renderSectionHeader?: ?(info: {|
-    section: Object,
-  |}) => React.Node,
-  renderSectionFooter?: ?(info: {|
-    section: Object,
-  |}) => React.Node,
-  sections?: Array<Section<TEntity>>,
-  slideoutComponent?: React.AbstractComponent<any>,
-  stickySectionHeadersEnabled?: boolean,
+type Props<TEntity> = {|
+  ...ListProps<TEntity>,
   renderItem: (RenderProps<TEntity>) => React.Node,
-};
+|};
 
 type State = {|
   openRowKey: ?string,
@@ -64,9 +38,7 @@ class SwipeableSectionList<TEntity> extends React.Component<
   Props<TEntity>,
   State,
 > {
-  static defaultProps: {
-    bounceFirstRowOnMount: boolean,
-  } = {
+  static defaultProps = {
     bounceFirstRowOnMount: true,
   };
 
@@ -124,16 +96,15 @@ class SwipeableSectionList<TEntity> extends React.Component<
 
   render(): React.Node {
     const { renderItem: _, ...otherProps } = this.props;
-    return null;
-    // return (
-    //   <List
-    //     {...otherProps}
-    //     extraData={this.state}
-    //     innerRef={this._innerListRef}
-    //     onScroll={this._onScroll}
-    //     renderItem={this._renderItem}
-    //   />
-    // );
+    return (
+      <List
+        {...otherProps}
+        extraData={this.state}
+        innerRef={this._innerListRef}
+        onScroll={this._onScroll}
+        renderItem={this._renderItem}
+      />
+    );
   }
 }
 

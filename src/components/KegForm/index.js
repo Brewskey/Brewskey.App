@@ -9,7 +9,7 @@ import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../../common/InjectedComponent';
 import { observer } from 'mobx-react';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../../common/form/FormValidationMessage';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
 import SimplePicker from '../../components/pickers/SimplePicker';

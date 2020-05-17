@@ -4,11 +4,9 @@ import type { Style } from '../types';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {
-  FormInput,
-  FormLabel,
-  FormValidationMessage,
-} from 'react-native-elements';
+import { Input } from 'react-native-elements';
+import FormLabel from '../common/form/FormLabel';
+import FormValidationMessage from '../common/form/FormValidationMessage';
 import nullthrows from 'nullthrows';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
@@ -16,7 +14,7 @@ export type Props<TOtherProps> = {|
   ...TOtherProps,
   description?: string,
   error?: ?string,
-  inputRef?: React.Ref<typeof FormInput>,
+  inputRef?: React.Ref<typeof Input>,
   inputStyle?: Style,
   label?: string,
   labelStyle?: Style,
@@ -33,9 +31,9 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
     underlineColorAndroid: COLORS.secondary3,
   };
 
-  _inputRef: ?FormInput;
+  _inputRef: ?Input;
 
-  _setRef = (ref: FormInput) => {
+  _setRef = (ref: Input) => {
     const { inputRef } = this.props;
     this._inputRef = ref;
     if (inputRef && typeof inputRef === 'function') {
@@ -65,7 +63,7 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
     return (
       <View>
         <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-        <FormInput
+        <Input
           inputStyle={inputStyle}
           onBlur={onBlur}
           onChangeText={onChange}

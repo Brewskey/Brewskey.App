@@ -7,7 +7,7 @@ import type { FlowSensorItem } from './flowSensorItems';
 import * as React from 'react';
 import { View } from 'react-native';
 import { observer } from 'mobx-react';
-import { FormValidationMessage } from 'react-native-elements';
+import FormValidationMessage from '../../common/form/FormValidationMessage';
 import InjectedComponent from '../../common/InjectedComponent';
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
