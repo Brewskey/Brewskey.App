@@ -134,7 +134,9 @@ class PourProcessStore {
   };
 
   @action
-  _setErrorText = (errorText: string): void => (this.errorText = errorText);
+  _setErrorText = (errorText: string): void => {
+    this.errorText = errorText;
+  };
 
   onEnableNFCPress = (): void => {
     this.onHideModal();

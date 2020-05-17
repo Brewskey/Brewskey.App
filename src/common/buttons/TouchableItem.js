@@ -21,7 +21,7 @@ import {
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-type Props = {|
+export type Props = {|
   borderless?: boolean,
   children?: React.Node,
   delayPressIn?: number,

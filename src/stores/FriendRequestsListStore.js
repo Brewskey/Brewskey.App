@@ -91,7 +91,7 @@ class FriendRequestsListStore {
   }
 
   @action
-  reload = () => {
+  reload = async (): Promise<void> => {
     FriendStore.flushCache();
   };
 }

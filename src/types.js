@@ -1,5 +1,7 @@
 // @flow
 
+import * as React from 'react';
+
 import type { EntityID, KegType } from 'brewskey.js-api';
 import type { SectionBase } from 'react-native/Libraries/Lists/SectionList';
 
@@ -13,9 +15,9 @@ export type Section<TEntity> = {|
   data: $ReadOnlyArray<TEntity>,
   key?: string,
   renderItem?: ?(info: {
-    item: SectionItemT,
+    item: TEntity,
     index: number,
-    section: SectionBase<SectionItemT>,
+    section: SectionBase<TEntity>,
     separators: {
       highlight: () => void,
       unhighlight: () => void,
@@ -25,7 +27,7 @@ export type Section<TEntity> = {|
     ...
   }) => React.Node,
   ItemSeparatorComponent?: ?React.ComponentType<any>,
-  keyExtractor?: (item: SectionItemT, index?: ?number) => string,
+  keyExtractor?: (item: TEntity, index?: ?number) => string,
   title: string,
 |};
 

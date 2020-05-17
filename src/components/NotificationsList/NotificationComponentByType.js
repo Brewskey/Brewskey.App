@@ -8,7 +8,7 @@ import AchievementListItem from './AchievementListItem';
 import FriendRequestListItem from './FriendRequestListItem';
 
 const NotificationComponentByType = (
-  props: NotificationListItem,
+  props: NotificationListItemProps,
 ): React.Node => {
   const {
     contentComponent,

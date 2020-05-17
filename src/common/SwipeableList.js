@@ -1,38 +1,72 @@
 // @flow
 
-import type { Props as ListProps } from './List';
+import type { ListProps } from './List';
+import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedList';
 import type { FlatList, SectionList } from 'react-native';
 import type { Section } from '../types';
 import type { SwipeableProps } from './SwipeableRow';
+import type { ScrollEvent } from 'react-native/Libraries/Types/CoreEventTypes';
 
 import * as React from 'react';
 import List from './List';
 import VirtualizedList from 'react-native/Libraries/Lists/VirtualizedList';
 
-type InfoType<TEntity> = {| item: TEntity, index: number |};
-
-type Props<TEntity, TOtherProps> = {|
-  ...ListProps<TEntity, TOtherProps>,
-  keyExtractor: (TEntity, number) => string,
-  bounceFirstRowOnMount: boolean,
-  onScroll?: (SyntheticEvent<>) => void,
+export type RenderProps<TEntity> = {|
+  info: RenderItemProps<TEntity>,
+  isOpen: boolean,
+  onClose: () => void,
+  onOpen: (rowKey: string) => void,
+  onSwipeEnd?: () => void,
+  onSwipeStart?: () => void,
+  onDeleteItemPress?: (TEntity) => Promise<void>,
   preventSwipeRight?: boolean,
-  renderItem: ({| item: InfoType<TEntity>, ...SwipeableProps |}) => React.Node,
+  rowKey: string,
+  shouldBounceOnMount: boolean,
+  swipeThreshold?: number,
 |};
+
+type Props<TEntity> = {
+  ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
+  ListFooterComponent?: ?(React.ComponentType<any> | React.Node),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
+  bounceFirstRowOnMount: boolean,
+  disableVirtualization?: boolean,
+  data?: Array<TEntity>,
+  extraData?: any,
+  horizontal?: boolean,
+  initialNumToRender?: number,
+  innerRef?: $FlowFixMe,
+  keyExtractor: (TEntity, number) => string,
+  listType?: 'flatList' | 'sectionList',
+  maxToRenderPerBatch?: number,
+  onDeleteItemPress?: (TEntity) => Promise<void>,
+  onEndReached?: () => void,
+  onRefresh?: () => Promise<void> | void,
+  onScroll?: (ScrollEvent) => void,
+  preventSwipeRight?: boolean,
+  renderSectionHeader?: ?(info: {|
+    section: Object,
+  |}) => React.Node,
+  renderSectionFooter?: ?(info: {|
+    section: Object,
+  |}) => React.Node,
+  sections?: Array<Section<TEntity>>,
+  slideoutComponent?: React.AbstractComponent<any>,
+  stickySectionHeadersEnabled?: boolean,
+  renderItem: (RenderProps<TEntity>) => React.Node,
+};
 
 type State = {|
   openRowKey: ?string,
 |};
 
-class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
-  Props<TEntity, TOtherProps>,
+class SwipeableSectionList<TEntity> extends React.Component<
+  Props<TEntity>,
   State,
 > {
   static defaultProps: {
-    ...typeof VirtualizedList.defaultProps,
     bounceFirstRowOnMount: boolean,
   } = {
-    ...VirtualizedList.defaultProps,
     bounceFirstRowOnMount: true,
   };
 
@@ -64,7 +98,7 @@ class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
 
   _onClose = (): void => this.resetOpenRow();
 
-  _onScroll = (event: SyntheticEvent<>): void => {
+  _onScroll = (event: ScrollEvent): void => {
     this.resetOpenRow();
     const { onScroll } = this.props;
     if (onScroll) {
@@ -72,7 +106,7 @@ class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
     }
   };
 
-  _renderItem = (info: InfoType<TEntity>): React.Node => {
+  _renderItem(info: RenderItemProps<TEntity>): React.Node {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,
@@ -83,20 +117,23 @@ class SwipeableSectionList<TEntity, TOtherProps> extends React.PureComponent<
       onSwipeStart: this._setListViewNotScrollable,
       preventSwipeRight: this.props.preventSwipeRight,
       rowKey: key,
-      shouldBounceOnMount: this.props.bounceFirstRowOnMount && info.index === 0,
+      shouldBounceOnMount:
+        this.props.bounceFirstRowOnMount === true && info.index === 0,
     });
-  };
+  }
 
   render(): React.Node {
-    return (
-      <List
-        {...this.props}
-        extraData={this.state}
-        innerRef={this._innerListRef}
-        onScroll={this._onScroll}
-        renderItem={this._renderItem}
-      />
-    );
+    const { renderItem: _, ...otherProps } = this.props;
+    return null;
+    // return (
+    //   <List
+    //     {...otherProps}
+    //     extraData={this.state}
+    //     innerRef={this._innerListRef}
+    //     onScroll={this._onScroll}
+    //     renderItem={this._renderItem}
+    //   />
+    // );
   }
 }
 

@@ -1,6 +1,10 @@
 // @flow
 
-import type { NavigationContainer } from 'react-navigation';
+import type {
+  NavigationContainer,
+  NavigationContainerProps,
+  NavigationState,
+} from 'react-navigation';
 
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -174,4 +178,8 @@ const AppRouter = createSwitchNavigator(
   },
 );
 
-export default (createAppContainer(AppRouter): NavigationContainer);
+export default (createAppContainer(AppRouter): NavigationContainer<
+  NavigationState,
+  {||},
+  NavigationContainerProps<{||}, NavigationState>,
+>);

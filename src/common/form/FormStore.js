@@ -21,7 +21,7 @@ type InitFieldProps = {|
 |};
 
 // todo change touched logic so it takes care about initialValue
-class FormStore<TValidate> {
+class FormStore<TValidate: {}> {
   _validate: ValidationFunction<TValidate>;
   @observable _fields: ObservableMap<string, Field> = observable.map();
 
@@ -59,20 +59,23 @@ class FormStore<TValidate> {
   };
 
   @action
-  blurField: (string) => void = (fieldName: string) => {
+  blurField: ($Keys<TValidate>) => void = (fieldName: $Keys<TValidate>) => {
     this.validateField(fieldName);
     this.updateFieldProps(fieldName, { touched: true });
   };
 
   @action
-  changeFieldValue: (string, any) => void = (fieldName: string, value: any) => {
+  changeFieldValue: ($Keys<TValidate>, any) => void = (
+    fieldName: $Keys<TValidate>,
+    value: any,
+  ) => {
     this.updateFieldProps(fieldName, { error: null, touched: true, value });
     this.validateFieldDebounced(fieldName);
   };
 
   @action
-  updateFieldProps: (string, $Shape<Field>) => void = (
-    fieldName: string,
+  updateFieldProps: ($Keys<TValidate>, $Shape<Field>) => void = (
+    fieldName: $Keys<TValidate>,
     props: $Shape<Field>,
   ) => {
     const field = this._fields.get(fieldName);
@@ -84,8 +87,8 @@ class FormStore<TValidate> {
   };
 
   @action
-  setFieldError: (string, string) => void = (
-    fieldName: string,
+  setFieldError: ($Keys<TValidate>, string) => void = (
+    fieldName: $Keys<TValidate>,
     error: string,
   ) => {
     const field = this._fields.get(fieldName);
@@ -97,8 +100,8 @@ class FormStore<TValidate> {
   };
 
   @action
-  setFieldRefElement: (string, React.Node) => void = (
-    fieldName: string,
+  setFieldRefElement: ($Keys<TValidate>, React.Node) => void = (
+    fieldName: $Keys<TValidate>,
     refElement: React.Node,
   ) => {
     const field = this._fields.get(fieldName);
@@ -129,12 +132,12 @@ class FormStore<TValidate> {
         this.setFormError(castedValue);
         return;
       }
-      this.updateFieldProps(key, { error: castedValue, touched: true });
+      this.updateFieldProps((key: any), { error: castedValue, touched: true });
     });
   };
 
   @action
-  validateField: (string) => void = (fieldName: string) => {
+  validateField: ($Keys<TValidate>) => void = (fieldName: $Keys<TValidate>) => {
     const errors = this._validate(this.values);
     const fieldError = errors[fieldName];
     if (fieldError) {
@@ -143,7 +146,7 @@ class FormStore<TValidate> {
   };
 
   @action
-  validateFieldDebounced: (string) => void = debounce(
+  validateFieldDebounced: ($Keys<TValidate>) => void = debounce(
     this.validateField,
     FIELD_VALIDATION_DEBOUNCE_TIMEOUT,
   );
@@ -184,17 +187,23 @@ class FormStore<TValidate> {
     );
   }
 
-  getFieldError: (string) => ?string = (fieldName: string): ?string => {
+  getFieldError: ($Keys<TValidate>) => ?string = (
+    fieldName: $Keys<TValidate>,
+  ): ?string => {
     const field = this._fields.get(fieldName);
     return field && field.touched ? field.error : null;
   };
 
-  getFieldTouched: (string) => boolean = (fieldName: string): boolean => {
+  getFieldTouched: ($Keys<TValidate>) => boolean = (
+    fieldName: $Keys<TValidate>,
+  ): boolean => {
     const field = this._fields.get(fieldName);
     return field ? field.touched : false;
   };
 
-  getFieldValue: (string) => any = (fieldName: string): any => {
+  getFieldValue: ($Keys<TValidate>) => any = (
+    fieldName: $Keys<TValidate>,
+  ): any => {
     const field = this._fields.get(fieldName);
     return field ? field.value : null;
   };

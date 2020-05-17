@@ -36,7 +36,7 @@ class FlowSensorSwiperField extends React.Component<Props> {
   };
 
   render(): React.Node {
-    return ((
+    return (
       <Swiper
         index={this._index}
         loop={false}
@@ -55,7 +55,7 @@ class FlowSensorSwiperField extends React.Component<Props> {
           ),
         )}
       </Swiper>
-    ): any);
+    );
   }
 }
 

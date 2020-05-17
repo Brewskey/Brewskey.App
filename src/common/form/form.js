@@ -18,9 +18,9 @@ type OnSubmitCallbackFunction = (values: {
 }) => void | Promise<any>;
 
 type SubmitType = {| onSubmit?: OnSubmitCallbackFunction |};
-const form = <TValidate>({ validate }: FormSetupProps<TValidate> = {}): (<
-  TProps,
->(
+const form = <TValidate: Object>({
+  validate,
+}: FormSetupProps<TValidate> = {}): (<TProps>(
   React.ComponentType<{| ...TProps, ...SubmitType, ...FormProps |}>,
 ) => React.ComponentType<{| ...TProps, ...SubmitType |}>) => <TProps>(
   Component: React.ComponentType<{| ...TProps, ...SubmitType, ...FormProps |}>,

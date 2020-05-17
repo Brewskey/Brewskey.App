@@ -6,6 +6,7 @@ import type {
   Organization,
   PriceVariant,
   PriceVariantMutator,
+  Tap,
 } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type { FormProps } from '../common/form/types';
@@ -13,6 +14,7 @@ import type { FormProps } from '../common/form/types';
 import * as React from 'react';
 import { withNavigationFocus } from 'react-navigation';
 import { FormValidationMessage } from 'react-native-elements';
+import nullthrows from 'nullthrows';
 import InjectedComponent from '../common/InjectedComponent';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { computed } from 'mobx';
@@ -60,15 +62,15 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
 
   @computed
   get _location(): LoadObject<Location> {
-    return TapStore.getByID(this.injectedProps.tapId).map((tap) =>
-      LocationStore.getByID(tap.location.id),
+    return TapStore.getByID(this.injectedProps.tapId).map<Location>((tap) =>
+      LocationStore.getByID(nullthrows(tap.location).id),
     );
   }
 
   @computed
   get _organization(): LoadObject<Organization> {
-    return TapStore.getByID(this.injectedProps.tapId).map((tap) =>
-      OrganizationStore.getByID(tap.organization.id),
+    return TapStore.getByID(this.injectedProps.tapId).map<Organization>((tap) =>
+      OrganizationStore.getByID(nullthrows(tap.organization).id),
     );
   }
 
@@ -94,28 +96,35 @@ class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
   }
 
   _onFormSubmit = async (values: PriceVariantMutator): Promise<void> => {
-    const { squareLocationID, ...otherValues } = values;
+    const squareLocationID = null;
 
     if (squareLocationID != null) {
       const organization = this._organization.getValueEnforcing();
-      const location = this._location.getValueEnforcing();
+      const {
+        createdDate: _,
+        geolocation: _1,
+        isDeleted: _2,
+        organization: _3,
+        timeZone: _4,
+        ...otherProps
+      } = this._location.getValueEnforcing();
 
-      const clientID = DAOApi.LocationDAO.put(location.id, {
-        ...location,
-        organizationId: organization.id,
+      const clientID = DAOApi.LocationDAO.put(otherProps.id, {
+        ...otherProps,
+        organizationId: nullthrows(organization).id,
         squareLocationID,
       });
       await DAOApi.LocationDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
     }
 
     if (values.id != null) {
-      const clientID = DAOApi.PriceVariantDAO.put(otherValues.id, otherValues);
+      const clientID = DAOApi.PriceVariantDAO.put(values.id, values);
       await DAOApi.PriceVariantDAO.waitForLoaded((dao) =>
         dao.fetchByID(clientID),
       );
       SnackBarStore.showMessage({ text: 'The price was edited' });
     } else {
-      DAOApi.PriceVariantDAO.post(otherValues);
+      DAOApi.PriceVariantDAO.post(values);
       SnackBarStore.showMessage({ text: 'The price was created' });
     }
   };

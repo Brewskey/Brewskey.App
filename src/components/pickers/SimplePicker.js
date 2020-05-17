@@ -1,6 +1,7 @@
 // @flow
 
 import type { PickerValue } from '../../stores/PickerStore';
+import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedList';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -36,7 +37,10 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     doesRequireConfirmation: true,
   };
 
-  _pickerStore = new PickerStore<SimplePickerValue<TValue>, false>({
+  _pickerStore: PickerStore<SimplePickerValue<TValue>, false> = new PickerStore<
+    SimplePickerValue<TValue>,
+    false,
+  >({
     initialValue: this.props.pickerValues.find(
       (pickerValue) => pickerValue.value === this.props.value,
     ),
@@ -59,18 +63,22 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
   _stringValueExtractor = (pickerValue: SimplePickerValue<TValue>): string =>
     pickerValue.label;
 
-  _listKeyExtractor = (textPickerValue: SimplePickerValue<TValue>) =>
-    JSON.stringify(textPickerValue.value);
+  _listKeyExtractor = (textPickerValue) =>
+    JSON.stringify(textPickerValue.value) || '';
 
-  _renderItem = ({ item: pickerValue }) => (
-    <SelectableListItem
-      hideChevron
-      isSelected={this._pickerStore.checkIsSelected(pickerValue)}
-      item={pickerValue}
-      title={pickerValue.label}
-      toggleItem={this._pickerStore.toggleItem}
-    />
-  );
+  _renderItem({
+    item: pickerValue,
+  }: RenderItemProps<SimplePickerValue<TValue>>) {
+    return (
+      <SelectableListItem
+        hideChevron
+        isSelected={this._pickerStore.checkIsSelected(pickerValue)}
+        item={pickerValue}
+        title={pickerValue.label}
+        toggleItem={this._pickerStore.toggleItem}
+      />
+    );
+  }
 
   render(): React.Node {
     const {

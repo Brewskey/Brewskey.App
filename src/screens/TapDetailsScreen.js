@@ -45,15 +45,7 @@ const tabScreens = {
 };
 /* eslint-enable */
 
-const TapDetailsNavigator = createTopTabNavigator(tabScreens, {
-  ...theme.tabBar,
-  initialLayout: {
-    height: 0,
-    width: Dimensions.get('window').width,
-  },
-  lazy: true,
-  swipeEnabled: false,
-});
+const TapDetailsNavigator = createTopTabNavigator(tabScreens);
 
 type InjectedProps = {|
   id: EntityID,

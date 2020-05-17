@@ -2,7 +2,7 @@
 
 import type { Tap } from 'brewskey.js-api';
 
-import React, { Component } from 'react';
+import * as React from 'react';
 import { StyleSheet, ScrollView, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import Button from '../../common/buttons/Button';
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
 });
 
 @observer
-class PourProcessPaymentModal extends Component<{||}> {
+class PourProcessPaymentModal extends React.Component<{||}> {
   _store = new PourPaymentStore(nullthrows(PourProcessStore.deviceID));
 
   _onContinuePress = () => {
@@ -140,7 +140,7 @@ const tapStyles = StyleSheet.create({
 });
 
 @observer
-class TapPayment extends Component<TapPaymentProps> {
+class TapPayment extends React.Component<TapPaymentProps> {
   render(): React.Node {
     const pricePerOunce = 0;
     const { currentKeg, id, tapNumber } = this.props.tap;

@@ -7,6 +7,8 @@ import type {
   Availability,
   Beverage,
   CloudDevice,
+  CreditCardDetails,
+  CreditCardDetailsMutator,
   Device,
   EntityID,
   FlowSensor,
@@ -19,6 +21,7 @@ import type {
   ParticleAttributes,
   Permission,
   Pour,
+  PriceVariant,
   QueryOptions,
   Report,
   RestDAO,
@@ -89,12 +92,11 @@ export const waitForLoaded = <TValue>(
     });
   });
 
-type TEntityBase<TEntity> = {| ...TEntity, id: EntityID |};
 class DAOStore<TEntity> {
   _atom: IAtom;
-  _dao: ODataDAO<TEntityBase<TEntity>, any>;
+  _dao: ODataDAO<TEntity, any>;
 
-  constructor(dao: ODataDAO<TEntityBase<TEntity>, any>) {
+  constructor(dao: ODataDAO<TEntity, any>) {
     this._dao = dao;
     this._atom = createAtom(
       `DAO_ATOM/${dao.getEntityName()}`,

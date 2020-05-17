@@ -75,7 +75,7 @@ class WifiList extends React.Component<Props> {
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
-        onRefresh={!isLoading ? WifiNetworksStore.flushCache : null}
+        onRefresh={!isLoading ? WifiNetworksStore.flushCache : undefined}
         renderItem={this._renderItem}
       />
     );

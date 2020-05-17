@@ -1,6 +1,6 @@
 // @flow
 
-import type { Account, EntityID } from 'brewskey.js-api';
+import type { Account, EntityID, Friend } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -70,7 +70,7 @@ const LoadingComponent = () => (
 );
 
 type LoadedComponentProps = {|
-  value: Account,
+  value: [Account, Friend],
 |};
 
 const LoadedComponent = ({
@@ -85,7 +85,7 @@ const LoadedComponent = ({
     <ScrollView>
       <Section bottomPadded>
         <SectionContent centered paddedVertical>
-          <UserAvatar friend={friend} userName={account.userName} size={200} />
+          <UserAvatar userName={account.userName} size={200} />
         </SectionContent>
       </Section>
       {AuthStore.userID !== account.id &&

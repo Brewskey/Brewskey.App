@@ -28,7 +28,12 @@ export const calculateKegLevel = ({
   kegType,
   maxOunces,
   ounces,
-}: Keg): number => {
+}: {
+  kegType: KegType,
+  maxOunces: number,
+  ounces: number,
+  ...
+}): number => {
   const KEG_OUNCES = MAX_OUNCES_BY_KEG_TYPE[kegType];
 
   const level =

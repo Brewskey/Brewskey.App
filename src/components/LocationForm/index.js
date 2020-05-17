@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  isFocused: Boolean,
+  isFocused?: Boolean,
   location?: Location,
   onSubmit: (values: LocationMutator) => void | Promise<any>,
   submitButtonLabel: string,

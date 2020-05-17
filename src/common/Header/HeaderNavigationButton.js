@@ -11,13 +11,17 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-type Props = {|
+type Props<TExtra> = {|
+  ...TExtra,
   params?: Object,
   toRoute: string,
 |};
 
 @withNavigation
-class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
+class HeaderNavigationButton<TExtra> extends InjectedComponent<
+  InjectedProps,
+  Props<TExtra>,
+> {
   _onButtonPress = () => {
     const { params, toRoute } = this.props;
     this.injectedProps.navigation.navigate(toRoute, params);

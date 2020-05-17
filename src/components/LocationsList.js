@@ -45,7 +45,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Location> = new DAOListStore(LocationStore);
-  _swipeableListRef: ?SwipeableList<Location>;
+  _swipeableListRef = React.createRef<SwipeableList<Row<Location>>>();
 
   componentDidMount() {
     this._listStore.initialize({
@@ -59,10 +59,6 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
     });
   }
 
-  _getSwipeableListRef = (ref) => {
-    this._swipeableListRef = ref;
-  };
-
   _keyExtractor = (row: Row<Location>): string => row.key;
 
   _onDeleteItemPress = async (item: Location): Promise<void> => {
@@ -75,7 +71,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Location) => {
     this.injectedProps.navigation.navigate('editLocation', { id });
-    nullthrows(this._swipeableListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef.current).resetOpenRow();
   };
 
   _onItemPress = (item: Location): void =>
@@ -114,7 +110,7 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
         ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
-        ref={this._getSwipeableListRef}
+        ref={this._swipeableListRef}
         renderItem={this._renderRow}
       />
     );
@@ -124,7 +120,10 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<Location, *>): React.Node => (
+}: RowItemProps<
+  Location,
+  {| onItemPress: (Location) => void |},
+>): React.Node => (
   <ListItem
     hideChevron
     item={item}
@@ -138,7 +137,13 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Location, *>): React.Node => (
+}: RowItemProps<
+  Location,
+  {|
+    onDeleteItemPress: (Location) => void,
+    onEditItemPress: (Location) => void,
+  |},
+>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete location"

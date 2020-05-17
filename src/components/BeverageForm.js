@@ -9,7 +9,7 @@ import type {
   Srm,
   Style,
 } from 'brewskey.js-api';
-import type { FormProps } from '../common/form/types';
+import type { FormProps, ValidationFunction } from '../common/form/types';
 import type { SimplePickerValue } from '../components/pickers/SimplePicker';
 
 import * as React from 'react';
@@ -38,19 +38,13 @@ const styles = StyleSheet.create({
 
 const YEARS_RANGE_LENGTH = 10;
 
-const validate = (
+const validate: ValidationFunction<BeverageMutator> = (
   values: BeverageMutator,
-): {| [key: $Keys<BeverageMutator>]: string |} => {
-  const errors = {};
-  if (!values.name) {
-    errors.name = 'Name is required!';
-  }
-
-  if (!values.beverageType) {
-    errors.beverageType = 'Beverage type is required';
-  }
-
-  return errors;
+) => {
+  return {
+    name: !values.name ? 'Name is required!' : null,
+    beverageType: !values.beverageType ? 'Beverage type is required' : null,
+  };
 };
 
 type Props = {|

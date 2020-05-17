@@ -1,6 +1,6 @@
 // @flow
 
-import React, { Component } from 'react';
+import * as React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import { observer } from 'mobx-react';
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 });
 
 @observer
-class PourProcessModal extends Component<{}> {
+class PourProcessModal extends React.Component<{||}> {
   render(): React.Node {
     return PourProcessStore.shouldShowPaymentScreen ? (
       <PourProcessPaymentModal />
@@ -69,7 +69,7 @@ class PourProcessModal extends Component<{}> {
 }
 
 @observer
-class PourProcessInputModal extends Component<{}> {
+class PourProcessInputModal extends React.Component<{||}> {
   _formatText = () => PourProcessStore.currentSeconds;
 
   render(): React.Node {

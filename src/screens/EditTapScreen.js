@@ -1,6 +1,12 @@
 // @flow
 
-import type { EntityID } from 'brewskey.js-api';
+import type {
+  EntityID,
+  FlowSensor,
+  LoadObject,
+  Permission,
+  Tap,
+} from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -17,6 +23,7 @@ import EditTapPaymentsScreen from './EditTapPaymentsScreen';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import EditKegScreen from './EditKegScreen';
 import createTopTabNavigator from '../components/hoc/createTopTabNavigator';
+import { TapStore } from '../stores/DAOStores';
 
 /* eslint-disable sorting/sort-object-props */
 const EditTapRouter = createTopTabNavigator({
@@ -41,7 +48,7 @@ class EditTapScreen extends InjectedComponent<InjectedProps> {
   static router = EditTapRouter.router;
 
   @computed
-  get _tapLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
+  get _tapLoader(): LoadObject<Tap> {
     const { id } = this.injectedProps;
     return TapStore.getByID(id);
   }

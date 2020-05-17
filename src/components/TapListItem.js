@@ -10,11 +10,11 @@ import { COLORS } from '../theme';
 
 type Props = {|
   index: number,
-  onPress?: () => void,
+  onPress?: (Tap) => void,
   tap: Tap,
 |};
 
-const TapListItem = ({ onPress, tap }: ): React.Node => (
+const TapListItem = ({ onPress, tap }: Props): React.Node => {
   const { currentKeg, description, tapNumber } = tap;
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';

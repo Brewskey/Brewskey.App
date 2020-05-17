@@ -105,11 +105,17 @@ class SectionTapsList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
+type RowProps = {|
+  onDeleteItemPress: () => void,
+  onEditItemPress: () => void,
+  onItemPress: (Tap) => void,
+|};
+
 const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>): React.Node => (
+}: RowItemProps<Tap, RowProps>): React.Node => (
   <TapListItem index={index} onPress={onItemPress} tap={item} />
 );
 
@@ -117,13 +123,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<
-  Tap,
-  {
-    onDeleteItemPress: () => void,
-    onEditItemPress: () => void,
-  },
->): React.Node => (
+}: RowItemProps<Tap, RowProps>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete the Tap"
     deleteModalTitle="Delete tap"

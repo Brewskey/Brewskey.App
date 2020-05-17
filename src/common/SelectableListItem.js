@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 });
 
 type Props<TEntity, RNE> = {|
+  ...RNE,
   isSelected: boolean,
   item: TEntity,
   toggleItem: (item: TEntity) => void,

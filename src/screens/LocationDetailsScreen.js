@@ -66,7 +66,7 @@ type LoadedLocationDetailsProps = {
 
 const LoadedLocationDetails = ({
   value: location,
-}: LoadedLocationDetails): React.Node => (
+}: LoadedLocationDetailsProps): React.Node => {
   const { description, id, name } = location;
 
   return (

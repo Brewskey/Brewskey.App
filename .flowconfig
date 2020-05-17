@@ -23,12 +23,24 @@ node_modules/warning/.*
 ; "node_modules/react-native" but in the source repo it is in the root
 .*/Libraries/react-native/React.js
 
+; Ignore polyfills
+.*/Libraries/polyfills/.*
+
+; Ignore metro
+.*/node_modules/metro/.*
+
 ; Custom ignores
 .*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
 .*/node_modules/react-native-permissions/**/.*
 
 [untyped]
 .*/node_modules/@react-native-community/cli/.*/.*
+.*/node_modules/react-native-image-picker/.*
+.*/node_modules/react-native/Libraries/vendor/core/ErrorUtils.js
+
+; Try to remove these later
+;.*/Libraries/Animated/.*
+;.*/Libraries/Components/.*
 
 [include]
 
@@ -43,7 +55,7 @@ emoji=true
 esproposal.optional_chaining=enable
 esproposal.nullish_coalescing=enable
 
-exact_by_default=true
+;exact_by_default=true
 
 module.file_ext=.js
 module.file_ext=.json
@@ -64,9 +76,9 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)? *\\(si
 suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native\\(_ios\\)?_\\(oss\\|fb\\)[a-z,_]*\\)?)\\)?:? #[0-9]+
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
-experimental.well_formed_exports=true
-experimental.types_first=true
-experimental.abstract_locations=true
+;experimental.well_formed_exports=true
+;experimental.types_first=true
+;experimental.abstract_locations=true
 
 esproposal.decorators=ignore
 esproposal.export_star_as=enable
@@ -78,12 +90,12 @@ sketchy-number=warn
 untyped-type-import=warn
 nonstrict-import=warn
 deprecated-type=warn
-unsafe-getters-setters=warn
+;unsafe-getters-setters=warn
 ;inexact-spread=warn
 unnecessary-invariant=warn
 signature-verification-failure=warn
 deprecated-utility=error
-unsafe-addition=error
+;unsafe-addition=error
 
 [strict]
 deprecated-type
@@ -94,5 +106,5 @@ unsafe-getters-setters
 untyped-import
 untyped-type-import
 
-;[version]
-;^0.113.0
+[version]
+^0.113.0

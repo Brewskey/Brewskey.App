@@ -60,7 +60,7 @@ export type Props = {|
 |};
 
 type State = {|
-  readAnimationValue: typeof Animated.Value,
+  readAnimationValue: Animated.Value,
 |};
 
 class NotificationListItem extends React.PureComponent<Props, State> {
@@ -119,11 +119,12 @@ class NotificationListItem extends React.PureComponent<Props, State> {
           outputRange: [COLORS.primary4, COLORS.secondary],
         });
 
-    const contentElement = ContentComponent || (
-      <View>
-        <Text>{body}</Text>
-      </View>
-    );
+    const contentElement =
+      ContentComponent == null ? null : (
+        <View>
+          <Text>{body}</Text>
+        </View>
+      );
 
     const content = (
       <TouchableItem onPress={this._onPress}>

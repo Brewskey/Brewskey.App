@@ -36,7 +36,7 @@ const validate = (values: TapMutator): { [key: string]: string } => {
 };
 
 type Props = {|
-  isFocused: Boolean,
+  isFocused?: boolean,
   onSubmit: (values: TapMutator) => void | Promise<any>,
   submitButtonLabel: string,
   tap?: Tap,

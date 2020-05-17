@@ -34,9 +34,9 @@ class NFCWriterStore {
   };
 
   @action
-  onAuthenticateUser: (UserCredentials) => void = async (
+  onAuthenticateUser: (UserCredentials) => Promise<void> = async (
     userCredentials: UserCredentials,
-  ): void => {
+  ): Promise<void> => {
     const { accessToken } = await DAOApi.Auth.login(userCredentials);
 
     try {

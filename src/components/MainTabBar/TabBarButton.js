@@ -1,5 +1,7 @@
 // @flow
 
+import type { Props as TouchableItemProps } from '../../common/buttons/TouchableItem';
+
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
@@ -14,17 +16,19 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {|
+type Props<TComponentProps> = {|
   icon: { name: string, type?: string },
-  iconContainerComponent?: React.ComponentType<any>,
+  iconContainerComponent?: React.AbstractComponent<TComponentProps>,
   isFocused: boolean,
   onPress: (route: Object) => void,
   route: Object,
 |};
 
-class TabBarButton extends React.PureComponent<Props> {
+class TabBarButton<TComponentProps> extends React.PureComponent<
+  Props<TComponentProps>,
+> {
   static defaultProps: {|
-    iconContainerComponent: React.AbstractComponent<>,
+    iconContainerComponent: React.AbstractComponent<TouchableItemProps>,
   |} = {
     iconContainerComponent: TouchableItem,
   };

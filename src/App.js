@@ -90,7 +90,7 @@ class App extends React.Component<{}> {
     });
   }
 
-  _setNavigationRef = (ref) => {
+  _setNavigationRef = (ref: any) => {
     // todo make navigationStore which will persist navigation
     // state, just like in redux.
     // this will allow to avoid this shitty hacks

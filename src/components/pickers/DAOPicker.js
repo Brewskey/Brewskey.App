@@ -6,6 +6,7 @@ import type DAOStore from '../../stores/DAOStores';
 import type { Row } from '../../stores/DAOListStore';
 import type { PickerValue } from '../../stores/PickerStore';
 import type { Props as PickerTextInputProps } from './PickerTextInput';
+import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedList';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -52,7 +53,7 @@ type Props<TEntity, TMultiple: boolean> = {|
   searchBy: string,
   selectionColor?: string,
   shouldUseSearchQuery: boolean,
-  stringValueExtractor?: (item: TEntity) => string,
+  stringValueExtractor: (item: TEntity) => string,
   underlineColorAndroid?: string,
   validationTextStyle?: Style,
   value: PickerValue<TEntity, TMultiple>,
@@ -113,11 +114,11 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
     });
   }
 
-  _listKeyExtractor = (row: Row<TEntityBase<TEntity>>): string => row.key;
+  _listKeyExtractor = (row) => row.key;
 
-  _renderRow = (
-    renderRowProps: RenderRowProps<TEntityBase<TEntity>>,
-  ): React.Node => {
+  _renderRow(
+    renderRowProps: RenderItemProps<Row<TEntityBase<TEntity>>>,
+  ): React.Node {
     const { renderRow } = this.props;
     const { checkIsSelected, toggleItem } = this._pickerStore;
     const {
@@ -127,7 +128,7 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
       loader.hasValue() && checkIsSelected(loader.getValueEnforcing());
 
     return renderRow(({ ...renderRowProps, isSelected, toggleItem }: any));
-  };
+  }
 
   render(): React.Node {
     const {

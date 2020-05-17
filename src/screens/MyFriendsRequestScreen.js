@@ -43,9 +43,11 @@ class MyFriendsRequestScreen extends React.Component<{}> {
   }
 }
 
+const elevation: any = { elevation: 5 };
+
 const Badges = observer(() =>
   FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
-    <View elevation={5} style={styles.container}>
+    <View {...elevation} style={styles.container}>
       <Badge
         containerStyle={{
           ...styles.badge,

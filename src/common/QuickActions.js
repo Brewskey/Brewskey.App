@@ -37,7 +37,7 @@ type Props<TItem> = {|
   deleteModalMessage: string,
   deleteModalTitle: string,
   item: TItem,
-  onDeleteItemPress?: (item: TItem) => void,
+  onDeleteItemPress?: (item: TItem) => void | Promise<void>,
   onEditItemPress?: (item: TItem) => void,
 |};
 

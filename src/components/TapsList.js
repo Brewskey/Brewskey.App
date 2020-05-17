@@ -40,15 +40,11 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Tap> = new DAOListStore(TapStore);
-  _swipeableListRef: ?SwipeableList<Tap>;
+  _swipeableListRef = React.createRef<SwipeableList<Row<Tap>>>();
 
   componentDidMount() {
     this._listStore.initialize(this.props.queryOptions);
   }
-
-  _getSwipeableListRef = (ref) => {
-    this._swipeableListRef = ref;
-  };
 
   _keyExtractor = (row: Row<Tap>): string => row.key;
 
@@ -60,7 +56,7 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
 
   _onEditItemPress = ({ id }: Tap) => {
     this.injectedProps.navigation.navigate('editTap', { id });
-    nullthrows(this._swipeableListRef).resetOpenRow();
+    nullthrows(this._swipeableListRef.current).resetOpenRow();
   };
 
   _onItemPress = (item: Tap): void =>
@@ -110,18 +106,24 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
         ListHeaderComponent={ListHeaderComponent}
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._onRefresh}
-        ref={this._getSwipeableListRef}
+        ref={this._swipeableListRef}
         renderItem={this._renderRow}
       />
     );
   }
 }
 
+type RowProps = {|
+  onDeleteItemPress: () => void,
+  onEditItemPress: () => void,
+  onItemPress: (Tap) => void,
+|};
+
 const SwipeableRowItem = ({
   index,
   item,
   onItemPress,
-}: RowItemProps<Tap, *>): React.Node => (
+}: RowItemProps<Tap, RowProps>): React.Node => (
   <TapListItem index={index} onPress={onItemPress} tap={item} />
 );
 
@@ -129,7 +131,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Tap, *>): React.Node => (
+}: RowItemProps<Tap, RowProps>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete the Tap?"
     deleteModalTitle="Delete tap"

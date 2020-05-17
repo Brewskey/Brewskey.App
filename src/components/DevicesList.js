@@ -35,7 +35,7 @@ type Props = {|
   renderListHeader?: ({
     isEmpty: boolean,
     isLoading: boolean,
-  }) => ?React.Node,
+  }) => React.Node,
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   queryOptions?: QueryOptions,
@@ -53,11 +53,11 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
     queryOptions: QueryOptions,
   |} = {
     ListEmptyComponent: <ListEmpty message="No Brewskey boxes" />,
-    queryOptions: { ...{} },
+    queryOptions: {},
   };
 
   _listStore: DAOListStore<Device> = new DAOListStore(DeviceStore);
-  _swipeableListRef = React.createRef<typeof SwipeableList>();
+  _swipeableListRef = React.createRef<SwipeableList<Row<Device>>>();
 
   componentDidMount() {
     this._listStore.initialize({
@@ -128,7 +128,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
         }
         onEndReached={this._listStore.fetchNextPage}
         onRefresh={this._listStore.reload}
-        ref={this._getSwipeableListRef}
+        ref={this._swipeableListRef}
         renderItem={this._renderRow}
       />
     );
@@ -138,7 +138,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<Device, *>): React.Node => (
+}: RowItemProps<Device, {| onItemPress: (Device) => void |}>): React.Node => (
   <ListItem
     item={item}
     onPress={onItemPress}
@@ -155,7 +155,10 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Device, *>): React.Node => (
+}: RowItemProps<
+  Device,
+  {| onDeleteItemPress: (Device) => void, onEditItemPress: (Device) => void |},
+>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete Brewskey box"

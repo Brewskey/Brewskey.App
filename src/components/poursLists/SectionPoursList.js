@@ -63,7 +63,9 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
     });
   };
 
-  _onDeleteItemPress = async (pour: Pour): Promise<void> => {
+  _onDeleteItemPress: (Pour) => Promise<void> = async (
+    pour: Pour,
+  ): Promise<void> => {
     const clientID = DAOApi.PourDAO.deleteByID(pour.id);
     await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
       dao.fetchByID(clientID),
@@ -85,7 +87,6 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
 
     return (
       <RowComponent
-        {...swipeableStateProps}
         index={index}
         item={item}
         onDeleteItemPress={this._onDeleteItemPress}
@@ -122,8 +123,17 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
     );
   }
 }
+type RowExtraProps = {|
+  onDeleteItemPress: (Pour) => void | Promise<void>,
+  onItemPress: (Pour) => void,
+  rowItemComponent: React.AbstractComponent<any>,
+  slideoutComponent: React.AbstractComponent<any>,
+|};
 
-const PourListItem = ({ item: pour, onItemPress }: RowItemProps<Pour, *>) => {
+const PourListItem = ({
+  item: pour,
+  onItemPress,
+}: RowItemProps<Pour, RowExtraProps>) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -146,7 +156,7 @@ const PourListItem = ({ item: pour, onItemPress }: RowItemProps<Pour, *>) => {
 const Slideout = ({
   item,
   onDeleteItemPress,
-}: RowItemProps<Pour, *>): React.Node => (
+}: RowItemProps<Pour, RowExtraProps>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"

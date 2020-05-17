@@ -33,7 +33,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
       : [
           {
             data: FriendRequestsListStore.pendingRequestsLoaderRows,
-            renderItem: ({ item }: { item: Row<Friend> }): React.Node => (
+            renderItem: ({ item }): React.Node => (
               <LoaderRow
                 loadedRow={FriendPendingRequestListItem}
                 loader={item.loader}
@@ -46,7 +46,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
           },
           {
             data: FriendRequestsListStore.myRequestsLoaderRows,
-            renderItem: ({ item }: { item: Row<Friend> }) => (
+            renderItem: ({ item }) => (
               <LoaderRow
                 loadedRow={FriendMyRequestListItem}
                 loader={item.loader}
@@ -102,7 +102,7 @@ class FriendRequestsList extends InjectedComponent<InjectedProps> {
     <ListSectionHeader title={section.title} />
   );
 
-  _renderSectionFooter = ({ section: { data } }): ?React.Node =>
+  _renderSectionFooter = ({ section: { data } }): React.Node =>
     !data.length ? <ListEmpty message="No requests" /> : null;
 
   render(): React.Node {

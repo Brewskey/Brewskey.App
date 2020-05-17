@@ -3,7 +3,7 @@
 import * as React from 'react';
 import RNSwipeableRow from 'react-native-swipeable-list';
 
-export type SwipeableProps = {
+export type SwipeableProps = {|
   isOpen: boolean,
   maxSwipeDistance: number,
   onClose: () => void,
@@ -14,23 +14,23 @@ export type SwipeableProps = {
   rowKey: string,
   shouldBounceOnMount: boolean,
   swipeThreshold?: number,
-};
+|};
 
-export type RowItemProps<TEntity, TExtraProps> = {
+export type RowItemProps<TEntity, TExtraProps> = {|
   // section?: Object, add this when resolve object recreation issue in SectionlistStore
   ...TExtraProps,
   index: number,
   item: TEntity,
   separators: Object,
-};
+|};
 
-type Props<TEntity, TExtraProps> = {
+type Props<TEntity, TExtraProps> = {|
   ...TExtraProps,
   ...SwipeableProps,
   ...RowItemProps<TEntity, TExtraProps>,
   rowItemComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   slideoutComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
-};
+|};
 
 class SwipeableRow<TEntity, TExtraProps> extends React.PureComponent<
   Props<TEntity, TExtraProps>,

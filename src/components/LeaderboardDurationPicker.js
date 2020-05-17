@@ -4,6 +4,8 @@ import SimplePicker from '../components/pickers/SimplePicker';
 
 export type LeaderboardDurationValue = 'P0D' | 'P30D' | 'P0DT12H';
 
+type DurationKeys = 'TWELVE_HOURS' | 'MONTH' | 'ALL_TIME';
+
 type LeaderboardDurationOptions = {|
   label: string,
   value: LeaderboardDurationValue,
@@ -11,7 +13,7 @@ type LeaderboardDurationOptions = {|
 
 /* eslint-disable sorting/sort-object-props */
 export const LEADERBOARD_DURATION_OPTIONS: {
-  [key: string]: LeaderboardDurationOptions,
+  [key: DurationKeys]: LeaderboardDurationOptions,
 } = {
   TWELVE_HOURS: { label: 'Last 12 hours', value: 'P0DT12H' },
   // todo make it actual last month instead last 30 days

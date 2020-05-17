@@ -4,6 +4,7 @@ import type { Beverage, QueryOptions } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
+import type { RenderProps } from '../common/SwipeableList';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
@@ -24,7 +25,7 @@ import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 
 type Props = {|
-  ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
+  ListHeaderComponent?: ?(React.ComponentType<any> | React.Element<any>),
   queryOptions?: QueryOptions,
 |};
 
@@ -40,7 +41,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   };
 
   _listStore: DAOListStore<Beverage> = new DAOListStore(BeverageStore);
-  _swipeableListRef = React.createRef<SwipeableList<Beverage, {||}>>();
+  _swipeableListRef = React.createRef<SwipeableList<Row<Beverage>>>();
 
   componentDidMount() {
     this._listStore.initialize({
@@ -77,7 +78,7 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
   _renderRow = ({
     info: { item: row, index, separators },
     ...swipeableStateProps
-  }): React.Node => (
+  }: RenderProps<Row<Beverage>>): React.Node => (
     <LoaderRow
       index={index}
       loadedRow={SwipeableRow}
@@ -115,7 +116,10 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<Beverage, *>): React.Node => (
+}: RowItemProps<
+  Beverage,
+  {| onItemPress: (Beverage) => void |},
+>): React.Node => (
   <ListItem
     avatar={<BeverageAvatar beverageId={item.id} />}
     hideChevron
@@ -130,7 +134,13 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<Beverage, *>): React.Node => (
+}: RowItemProps<
+  Beverage,
+  {|
+    onDeleteItemPress: (Beverage) => void,
+    onEditItemPress: (Beverage) => void,
+  |},
+>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete beverage"

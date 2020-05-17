@@ -1,7 +1,7 @@
 // @flow
 
 import type { Beverage, EntityID, Keg, KegMutator } from 'brewskey.js-api';
-import type { FormProps } from '../../common/form/types';
+import type { FormProps, ValidationFunction } from '../../common/form/types';
 
 import * as React from 'react';
 import { View } from 'react-native';
@@ -20,9 +20,7 @@ import { form, FormField } from '../../common/form';
 import { COLORS } from '../../theme';
 import { calculateKegLevel } from '../../utils';
 
-const validate = (
-  values: KegMutator,
-): {| [key: $Keys<KegMutator>]: string |} => {
+const validate: ValidationFunction<KegMutator> = (values) => {
   const errors = {};
 
   if (!values.beverageId) {

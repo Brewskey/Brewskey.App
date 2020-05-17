@@ -11,11 +11,13 @@ import nullthrows from 'nullthrows';
 
 export type Row<TEntity> = {|
   key: string,
-  loader: LoadObject<{| ...TEntity, id: EntityID |}>,
+  loader: LoadObject<TEntity>,
 |};
 
+type BaseType<TEntity> = {| ...TEntity, id: EntityID |};
+
 class DAOListStore<TEntity> {
-  _daoStore: DAOStore<{| ...TEntity, id: EntityID |}>;
+  _daoStore: DAOStore<BaseType<TEntity>>;
   _pageSize: number;
 
   @observable
@@ -25,13 +27,13 @@ class DAOListStore<TEntity> {
   @observable
   _isInitialized;
 
-  constructor(daoStore: DAOStore<TEntity>, pageSize?: number = 20) {
+  constructor(daoStore: DAOStore<BaseType<TEntity>>, pageSize?: number = 20) {
     this._daoStore = daoStore;
     this._pageSize = pageSize;
   }
 
   @action
-  initialize: (?QueryOptions) => void = (queryOptions?: QueryOptions = {}) => {
+  initialize = (queryOptions?: QueryOptions = {}) => {
     this.setQueryOptions(queryOptions);
     this._fetchFirstPage();
     this._isInitialized = true;
@@ -48,7 +50,7 @@ class DAOListStore<TEntity> {
   }
 
   @computed
-  get rows(): Array<Row<TEntity>> {
+  get rows(): Array<Row<BaseType<TEntity>>> {
     if (this.isFetchingRemoteCount || this._remoteCount === 0) {
       return [];
     }
@@ -65,12 +67,14 @@ class DAOListStore<TEntity> {
         const queryLoadObject = this._daoStore.getMany(queryOptions);
 
         return rowKeys
-          .map((key: number): Row<TEntity> => ({
+          .map((key: number): Row<BaseType<TEntity>> => ({
             key: key.toString(),
             loader: LoadObject.loading(),
           }))
-          .map(({ key }: Row<TEntity>, index: number): Row<TEntity> => {
-            let loader: LoadObject<TEntity> = LoadObject.loading();
+          .map(({ key }: Row<BaseType<TEntity>>, index: number): Row<
+            BaseType<TEntity>,
+          > => {
+            let loader: LoadObject<BaseType<TEntity>> = LoadObject.loading();
 
             if (queryLoadObject.hasValue()) {
               const entities = queryLoadObject.getValueEnforcing();
@@ -142,7 +146,7 @@ class DAOListStore<TEntity> {
   };
 
   @action
-  reload: () => void = () => {
+  reload: () => Promise<void> = async () => {
     this._daoStore.flushQueryCaches();
     this.reset();
   };

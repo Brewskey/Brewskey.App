@@ -4,14 +4,18 @@ import type { Navigation } from '../../types';
 
 import * as React from 'react';
 import { Dimensions } from 'react-native';
-import { createMaterialTopTabNavigator } from 'react-navigation';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 import theme from '../../theme';
+
+type ExportType<TConfig> = React.ComponentType<TConfig> & {
+  router: Object,
+};
 
 export default function createTopTabNavigator<
   TScreenProps: {},
   TConfig: { navigation: Navigation, screenProps: TScreenProps },
->(config: Object): React.ComponentType<TConfig> {
+>(config: Object): ExportType<TConfig> {
   const Navigator = createMaterialTopTabNavigator(config, {
     ...theme.tabBar,
     initialLayout: {
@@ -61,5 +65,5 @@ export default function createTopTabNavigator<
   }
 
   hoistNonReactStatic(NavigatorWrapper, Navigator);
-  return NavigatorWrapper;
+  return ((NavigatorWrapper: any): ExportType<TConfig>);
 }
