@@ -33,7 +33,7 @@ const BeveragePoursList = observer(
 
 const LoadedRow = ({ item: pour }: RowItemProps<Pour, *>): React.Node => (
   <ListItem
-    avatar={
+    leftAvatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />
     }
     item={pour}

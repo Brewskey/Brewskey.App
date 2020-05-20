@@ -2,7 +2,7 @@
 
 import type { EntityID, LeaderboardItem, QueryOptions } from 'brewskey.js-api';
 
-import flattenArray from 'array-flatten';
+import { flatten } from 'array-flatten';
 import { action, computed, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 import { TapStore } from './DAOStores';
@@ -50,7 +50,7 @@ class LeaderboardListStore {
       return [];
     }
 
-    return flattenArray(
+    return flatten(
       this._pageLoadObjects.map(
         (
           pageLoadObject: LoadObject<Array<LeaderboardItem>>,

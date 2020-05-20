@@ -32,17 +32,19 @@ node_modules/warning/.*
 ; Custom ignores
 .*/node_modules/react-native-keyboard-aware-scroll-view/**/.*
 .*/node_modules/react-native-permissions/**/.*
-.*/node_modules/react-native/Libraries/Components/ScrollView/ScrollViewNativeComponentType.js
-.*/node_modules/react-native/Libraries/Components/TextInput/TextInput.js
-.*/node_modules/react-native/Libraries/Lists.FlatList.js
-.*/node_modules/react-native/Libraries/Lists/ViewabilityHelper.js
-.*/node_modules/react-native/Libraries/ReactNative/PaperUIManager.js
 
 [untyped]
 .*/node_modules/@react-native-community/cli/.*/.*
 .*/node_modules/react-native-image-picker/.*
 .*/node_modules/react-native/Libraries/vendor/core/ErrorUtils.js
 .*/node_modules/react-native/Libraries/Animated/*
+.*/node_modules/react-native/Libraries/Components/ScrollView/ScrollViewNativeComponentType.js
+.*/node_modules/react-native/Libraries/Components/TextInput/TextInput.js
+.*/node_modules/react-native/Libraries/Lists.FlatList.js
+.*/node_modules/react-native/Libraries/Lists/ViewabilityHelper.js
+.*/node_modules/react-native/Libraries/ReactNative/PaperUIManager.js
+.*/node_modules/react-native/Libraries/Utilities/registerGeneratedViewConfig.js
+.*/node_modules/react-native-swiper/index.js.flow
 ;.*/node_modules/react-native/.*
 
 ; Try to remove these later

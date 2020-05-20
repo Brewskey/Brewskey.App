@@ -71,8 +71,8 @@ const theme = {
   },
   tabBar: {
     tabBarOptions: {
-      activeBackgroundColor: COLORS.primary3,
-      inactiveBackgroundColor: COLORS.primary2,
+      activeTintColor: COLORS.primary3,
+      inactiveTintColor: COLORS.primary2,
       indicatorStyle: { backgroundColor: COLORS.secondary },
       style: { backgroundColor: COLORS.primary2 },
     },

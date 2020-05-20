@@ -19,6 +19,7 @@ type Props<TRNE> = {|
   // react-native-elements icon props
   ...TRNE,
   containerStyle?: Style,
+  name: string,
   onPress?: () => void | Promise<void>,
 |};
 

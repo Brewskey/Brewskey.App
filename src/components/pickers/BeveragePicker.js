@@ -62,7 +62,7 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
 // todo annotate better
 const LoadedRow = ({ item: beverage, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    avatar={<BeverageAvatar beverageId={beverage.id} />}
+    leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
     hideChevron
     isSelected={isSelected}
     item={beverage}

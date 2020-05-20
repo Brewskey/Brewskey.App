@@ -47,18 +47,20 @@ const LoaderRow = <TEntity, TExtraProps>({
   />
 );
 
-type LoadedRowComponentProps<TEntity, TExtraProps = {}> = {
+type LoadedRowComponentProps<TEntity, TExtraProps> = {|
   ...TExtraProps,
   loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
   value: TEntity,
   index: number,
   separators: Object,
-};
+|};
 
-const LoadedRowComponent = <TEntity>({
+const LoadedRowComponent = <TEntity, TExtraProps>({
   value,
   loadedRow: LoadedRow,
   ...rest
-}: LoadedRowComponentProps<TEntity, *>) => <LoadedRow item={value} {...rest} />;
+}: LoadedRowComponentProps<TEntity, TExtraProps>) => (
+  <LoadedRow item={value} {...rest} />
+);
 
 export default (observer(LoaderRow): typeof LoaderRow);

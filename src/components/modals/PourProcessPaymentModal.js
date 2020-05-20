@@ -147,9 +147,9 @@ class TapPayment extends React.Component<TapPaymentProps> {
     const { beverage } = currentKeg;
     return (
       <RNEListItem
-        avatar={<BeverageAvatar beverageId={beverage.id} />}
+        leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
         containerStyle={tapStyles.container}
-        hideChevron
+        chevron={false}
         key={id}
         title={`Tap ${tapNumber} - ${beverage.name}`}
         titleStyle={tapStyles.title}

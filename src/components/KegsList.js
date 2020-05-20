@@ -49,9 +49,9 @@ class KegsList extends React.Component<Props> {
     this._listStore.reload();
   };
 
-  _renderRow = ({ item }: { item: Row<Keg> }): React.Node => (
-    <LoaderRow loader={item.loader} loadedRow={LoadedRow} />
-  );
+  _renderRow = ({ item }: { item: Row<Keg> }): React.Node => {
+    return <LoaderRow loader={item.loader} loadedRow={LoadedRow} />;
+  };
 
   render(): React.Node {
     const isLoading = this._listStore.isFetchingRemoteCount;
@@ -72,7 +72,7 @@ class KegsList extends React.Component<Props> {
 
 const LoadedRow = ({ item: keg }): React.Node => (
   <ListItem
-    avatar={<BeverageAvatar beverageId={keg.beverage.id} />}
+    leftAvatar={<BeverageAvatar beverageId={keg.beverage.id} />}
     hideChevron
     item={keg}
     title={keg.beverage.name}

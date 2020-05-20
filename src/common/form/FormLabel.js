@@ -8,8 +8,8 @@ import normalize from 'react-native-elements/src/helpers/normalizeText';
 const styles = StyleSheet.create({
   container: {},
   label: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 10,
+    marginRight: 10,
     marginTop: 15,
     marginBottom: 1,
     color: colors.grey3,

@@ -116,24 +116,26 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
       ...rest
     } = this.props;
     if (this.props.listType === 'flatList') {
-      <FlatList
-        ListEmptyComponent={(ListEmptyComponent: any)}
-        ListFooterComponent={(ListFooterComponent: any)}
-        ListHeaderComponent={(ListHeaderComponent: any)}
-        renderSectionFooter={(renderSectionFooter: any)}
-        renderSectionHeader={(renderSectionHeader: any)}
-        slideoutComponent={(slideoutComponent: any)}
-        bounceFirstRowOnMount={bounceFirstRowOnMount}
-        contentContainerStyle={styles.contentContainerStyle}
-        {...rest}
-        ref={innerRef}
-        onDeleteItemPress={onDeleteItemPress}
-        onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        onRefresh={onRefresh ? (this._onRefresh: any) : null}
-        preventSwipeRight={preventSwipeRight}
-        refreshing={this.state.isRefreshing}
-        renderItem={this._renderFlatList}
-      />;
+      return (
+        <FlatList
+          ListEmptyComponent={(ListEmptyComponent: any)}
+          ListFooterComponent={(ListFooterComponent: any)}
+          ListHeaderComponent={(ListHeaderComponent: any)}
+          renderSectionFooter={(renderSectionFooter: any)}
+          renderSectionHeader={(renderSectionHeader: any)}
+          slideoutComponent={(slideoutComponent: any)}
+          bounceFirstRowOnMount={bounceFirstRowOnMount}
+          contentContainerStyle={styles.contentContainerStyle}
+          {...rest}
+          ref={innerRef}
+          onDeleteItemPress={onDeleteItemPress}
+          onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+          onRefresh={onRefresh ? (this._onRefresh: any) : null}
+          preventSwipeRight={preventSwipeRight}
+          refreshing={this.state.isRefreshing}
+          renderItem={this._renderFlatList}
+        />
+      );
     }
 
     return (
@@ -144,13 +146,12 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
         renderSectionFooter={(renderSectionFooter: any)}
         renderSectionHeader={(renderSectionHeader: any)}
         contentContainerStyle={styles.contentContainerStyle}
-        slideoutComponent={(slideoutComponent: any)}
         {...rest}
         ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? (this._onRefresh: any) : null}
         refreshing={this.state.isRefreshing}
-        sections={nullthrows((sections: any))}
+        sections={(sections: any)}
         renderItem={this._renderSectionList}
       />
     );

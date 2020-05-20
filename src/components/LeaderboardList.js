@@ -61,7 +61,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     index: number,
   }): React.Node => (
     <ListItem
-      avatar={<UserAvatar userName={item.userName || ''} />}
+      leftAvatar={<UserAvatar userName={item.userName || ''} />}
       item={item}
       onPress={item.userID ? this._onListItemPress : undefined}
       rightIcon={<PintCounter ounces={item.totalOunces} />}

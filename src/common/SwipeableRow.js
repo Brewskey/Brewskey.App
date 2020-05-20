@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import RNSwipeableRow from 'react-native-swipeable-list';
+import { SwipeableRow as RNSwipeableRow } from 'react-native-swipeable-list';
 
 export type SwipeableProps = {|
   isOpen: boolean,

@@ -30,13 +30,15 @@ class ListItem<TItem, TRNE> extends React.PureComponent<Props<TItem, TRNE>> {
   _onPress = (): void => this.props.onPress(this.props.item);
 
   render(): React.Node {
+    const { item: _1, onPress: _2, ...otherProps } = this.props;
     return (
       <RNEListItem
-        {...this.props}
+        {...otherProps}
         containerStyle={[styles.container, this.props.containerStyle]}
         onPress={this._onPress}
         subtitleStyle={styles.subtitle}
         titleStyle={styles.title}
+        bottomDivider
       />
     );
   }

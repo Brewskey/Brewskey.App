@@ -4,7 +4,7 @@ import type { EntityID, QueryOptions } from 'brewskey.js-api';
 import type DAOStore from '../stores/DAOStores';
 
 import { action, computed, observable } from 'mobx';
-import flattenArray from 'array-flatten';
+import { flatten } from 'array-flatten';
 import { LoadObject } from 'brewskey.js-api';
 import { createRange } from '../utils';
 import nullthrows from 'nullthrows';
@@ -55,7 +55,7 @@ class DAOListStore<TEntity> {
       return [];
     }
 
-    return flattenArray(
+    return flatten(
       this._queryOptionsList.map((queryOptions: QueryOptions) => {
         const { skip = 0, take = this._pageSize } = queryOptions;
         const queryLastItemIndex = take + skip - 1;

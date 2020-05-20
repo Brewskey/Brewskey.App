@@ -33,10 +33,10 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
 
   _inputRef: ?Input;
 
-  _setRef = (ref: Input) => {
+  _setRef = (ref: ?Input) => {
     const { inputRef } = this.props;
     this._inputRef = ref;
-    if (inputRef && typeof inputRef === 'function') {
+    if (ref != null && inputRef && typeof inputRef === 'function') {
       inputRef(ref);
     }
   };
@@ -55,6 +55,7 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
       labelStyle,
       onBlur,
       onChange,
+      underlineColorAndroid,
       validationTextStyle,
       value,
       ...props
@@ -64,11 +65,14 @@ class TextField<TOtherProps> extends React.Component<Props<TOtherProps>> {
       <View>
         <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <Input
-          inputStyle={inputStyle}
+          inputStyle={{
+            ...inputStyle,
+            borderColor: underlineColorAndroid,
+          }}
           onBlur={onBlur}
           onChangeText={onChange}
           ref={this._setRef}
-          value={value || value === 0 ? value.toString() : null}
+          value={value || value === 0 ? value.toString() : ''}
           {...props}
         />
         {description == null ? null : (

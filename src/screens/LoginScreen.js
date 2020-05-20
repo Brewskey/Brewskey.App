@@ -56,9 +56,15 @@ class LoginScreen extends React.Component<Props> {
           />
         </View>
         <LoginForm isInverse onSubmit={AuthStore.login} />
-        <Button onPress={this._onRegisterPress} title="Register" transparent />
+        <Button
+          onPress={this._onRegisterPress}
+          title="Register"
+          style={{ marginHorizontal: 12 }}
+          transparent
+        />
         <Button
           onPress={this._onForgotPasswordPress}
+          style={{ marginHorizontal: 12 }}
           title="Forgot password"
           transparent
         />

@@ -83,7 +83,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
       <Fragment>
         {showTopSeparator ? <ListSubSectionSeparator /> : null}
         <ListItem
-          avatar={
+          leftAvatar={
             <BeverageAvatar
               beverageId={currentKeg ? currentKeg.beverageId : ''}
             />
@@ -91,7 +91,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
           badge={
             kegLevel !== null
               ? {
-                  containerStyle: { backgroundColor: COLORS.accent },
+                  badgeStyle: { backgroundColor: COLORS.accent },
                   value: `${kegLevel}%`,
                 }
               : null

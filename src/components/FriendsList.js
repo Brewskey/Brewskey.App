@@ -81,7 +81,7 @@ const LoadedRow = ({
   onListItemPress,
 }: RowItemProps<Friend, *>): React.Node => (
   <ListItem
-    avatar={<UserAvatar userName={friend.friendAccount.userName} />}
+    leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
     hideChevron
     item={friend}
     onPress={onListItemPress}

@@ -69,10 +69,11 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
           </Section>
           <Section bottomPadded={this._hasOrganizations}>
             <ListItem
-              hideChevron
-              onSwitch={onToggleManageTaps}
-              switchButton
-              switched={isManageTapsEnabled}
+              chevron={false}
+              switch={{
+                onValueChange: onToggleManageTaps,
+                value: isManageTapsEnabled,
+              }}
               title="Manage taps"
             />
           </Section>

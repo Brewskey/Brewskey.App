@@ -77,12 +77,13 @@ class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
         <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
           <Section bottomPadded>
             <ListItem
-              hideChevron
-              onSwitch={this._onToggleNotifications}
-              switchButton
-              switched={NotificationsStore.getIsNotificationsEnabledForTap(
-                value.id,
-              )}
+              chevron={false}
+              switch={{
+                onValueChange: this._onToggleNotifications,
+                value: NotificationsStore.getIsNotificationsEnabledForTap(
+                  value.id,
+                ),
+              }}
               title="Notifications"
             />
           </Section>

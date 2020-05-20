@@ -28,7 +28,7 @@ class ContactsList extends React.Component<Props> {
 
     return (
       <ListItem
-        avatar={<BaseAvatar uri={thumbnailPath} />}
+        leftAvatar={<BaseAvatar uri={thumbnailPath} />}
         title={title}
         item={contact}
         rightIcon={{ name: 'add' }}

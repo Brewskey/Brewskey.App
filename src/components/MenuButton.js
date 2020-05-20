@@ -36,10 +36,10 @@ class MenuButton<TRNEProps> extends React.PureComponent<Props<TRNEProps>> {
     return (
       <RNEButton
         icon={{ ...icon, color: COLORS.textFaded, size: 20 }}
-        containerViewStyle={styles.container}
+        containerStyle={styles.container}
         buttonStyle={[styles.button, isActive && styles.active]}
         {...rest}
-        textStyle={styles.textStyle}
+        titleStyle={styles.textStyle}
       />
     );
   }

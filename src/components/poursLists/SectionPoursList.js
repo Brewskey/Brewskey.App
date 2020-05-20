@@ -143,7 +143,7 @@ const PourListItem = ({
 
   return (
     <ListItem
-      avatar={<UserAvatar userName={pourOwnerUserName} />}
+      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={onItemPress}
       hideChevron
       item={pour}

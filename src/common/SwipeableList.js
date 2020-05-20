@@ -78,7 +78,7 @@ class SwipeableSectionList<TEntity> extends React.Component<
     }
   };
 
-  _renderItem(info: RenderItemProps<TEntity>): React.Node {
+  _renderItem: (RenderItemProps<TEntity>) => React.Node = (info) => {
     const key = this.props.keyExtractor(info.item, info.index);
     return this.props.renderItem({
       info,
@@ -92,7 +92,7 @@ class SwipeableSectionList<TEntity> extends React.Component<
       shouldBounceOnMount:
         this.props.bounceFirstRowOnMount === true && info.index === 0,
     });
-  }
+  };
 
   render(): React.Node {
     const { renderItem: _, ...otherProps } = this.props;

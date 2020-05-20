@@ -64,7 +64,7 @@
     "react-native-screens": "^2.7.0",
     "react-native-signalr": "^1.0.6",
     "react-native-splash-screen": "^3.1.1",
-    "react-native-swipeable-list": "^0.0.9",
+    "react-native-swipeable-list": "https://github.com/Brewskey/react-native-swipeable-list/",
     "react-native-swiper": "https://github.com/Brewskey/react-native-swiper",
     "react-native-tab-view": "^2.14.0",
     "react-native-vector-icons": "^6.6.0",

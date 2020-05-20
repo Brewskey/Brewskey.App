@@ -4,7 +4,8 @@ import type { WifiNetwork } from '../../../types';
 
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { FormValidationMessage, Icon } from 'react-native-elements';
+import { Icon } from 'react-native-elements';
+import FormValidationMessage from '../../../common/form/FormValidationMessage';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import Button from '../../../common/buttons/Button';

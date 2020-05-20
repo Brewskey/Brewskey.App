@@ -93,6 +93,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
             loading={submitting}
             onPress={this._onSubmitButtonPress}
             secondary={isInverse}
+            style={{ marginHorizontal: 12 }}
             title="Log in"
           />
         </SectionContent>

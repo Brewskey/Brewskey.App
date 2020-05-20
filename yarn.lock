@@ -7361,10 +7361,9 @@ react-native-status-bar-height@^2.2.0:
   resolved "https://registry.yarnpkg.com/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz#bc0fb85230603850aab9667ee8111a62954de90c"
   integrity sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA==
 
-react-native-swipeable-list@^0.0.9:
+"react-native-swipeable-list@https://github.com/Brewskey/react-native-swipeable-list/":
   version "0.0.9"
-  resolved "https://registry.yarnpkg.com/react-native-swipeable-list/-/react-native-swipeable-list-0.0.9.tgz#55bd2b98cc7a3b65c7100af242f4f88a9592249a"
-  integrity sha512-qChVO/A28DbAf3i2oBEpMI18HxhNw4G6B3HYrVwx5ZSPx/0IUKFdFcaFXhlzMrWcDd4mnifmdMfEtDa83Xqlag==
+  resolved "https://github.com/Brewskey/react-native-swipeable-list/#9ddd7b4dee42ff821d24f29546a9937b6777f23a"
 
 "react-native-swiper@https://github.com/Brewskey/react-native-swiper":
   version "1.6.0-rc.2"

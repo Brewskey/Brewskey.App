@@ -41,21 +41,21 @@ class LoadingListItem<TExtraProps> extends React.PureComponent<
     return (
       <RNEListItem
         {...this.props}
-        hideChevron
+        chevron={false}
         subtitle="none"
-        subtitleContainerStyle={[
+        subtitleStyle={[
           styles.subtitleContainerStyle,
+          styles.subtitleStyle,
           { width: this._subtitleContainerWidth },
         ]}
-        subtitleStyle={styles.subtitleStyle}
         title="none"
-        titleContainerStyle={[
+        titleStyle={[
           styles.titleContainerStyle,
           {
             width: this._titleContainerWidth,
           },
+          styles.titleStyle,
         ]}
-        titleStyle={styles.titleStyle}
         containerStyle={[styles.container, this.props.containerStyle]}
       />
     );

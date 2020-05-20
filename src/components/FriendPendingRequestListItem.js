@@ -32,7 +32,7 @@ class FriendPendingRequestListItem extends React.PureComponent<Props> {
 
     return (
       <ListItem
-        avatar={<UserAvatar userName={friend.friendAccount.userName} />}
+        leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
         item={friend}
         onPress={onPress}
         rightIcon={

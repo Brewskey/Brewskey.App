@@ -97,7 +97,7 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
 
   return (
     <ListItem
-      avatar={<UserAvatar userName={pourOwnerUserName} />}
+      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={onListItemPress}
       hideChevron
       item={pour}
@@ -110,7 +110,7 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
 const Slideout = ({
   item,
   onDeleteItemPress,
-}: RowItemProps<Pour, *>): React.Node => (
+}: RowItemProps<Pour, {| onDeleteItemPress: (Pour) => void |}>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"

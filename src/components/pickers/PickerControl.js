@@ -52,17 +52,17 @@ class PickerControl<TValue> extends React.Component<Props<TValue>> {
         <Button
           disabled={Array.isArray(value) ? !value.length : !value}
           disabledStyle={styles.clearButtonDisabled}
-          disabledTextStyle={styles.clearButtonDisabledText}
+          disabledTitleStyle={styles.clearButtonDisabledText}
           onPress={onClearPress}
-          textStyle={styles.clearButtonText}
+          titleStyle={styles.clearButtonText}
           title="Clear"
-          transparent
+          type="clear"
         />
         <Button
           onPress={onSelectPress}
-          textStyle={styles.selectButtonText}
+          titleStyle={styles.selectButtonText}
           title={selectButtonTitle}
-          transparent
+          type="clear"
         />
       </View>
     );

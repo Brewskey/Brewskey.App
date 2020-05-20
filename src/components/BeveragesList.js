@@ -121,7 +121,7 @@ const SwipeableRowItem = ({
   {| onItemPress: (Beverage) => void |},
 >): React.Node => (
   <ListItem
-    avatar={<BeverageAvatar beverageId={item.id} />}
+    leftAvatar={<BeverageAvatar beverageId={item.id} />}
     hideChevron
     item={item}
     onPress={onItemPress}

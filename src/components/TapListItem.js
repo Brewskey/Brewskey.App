@@ -32,7 +32,7 @@ const TapListItem = ({ onPress, tap }: Props): React.Node => {
             }
           : null
       }
-      avatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
+      leftAvatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
       hideChevron
       item={tap}
       onPress={onPress}

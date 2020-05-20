@@ -44,9 +44,8 @@ class TabBarButton<TComponentProps> extends React.PureComponent<
 
     return (
       <Icon
-        borderless
         color={isFocused ? COLORS.primary2 : COLORS.secondary3}
-        component={iconContainerComponent}
+        Component={iconContainerComponent}
         containerStyle={styles.container}
         name={name}
         onPress={this._onPress}

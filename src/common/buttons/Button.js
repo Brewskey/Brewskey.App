@@ -62,15 +62,19 @@ class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
 
     return (
       <RNEButton
-        backgroundColor={secondary ? COLORS.secondary : backgroundColor}
-        buttonStyle={style}
-        color={secondary ? COLORS.text : color}
+        buttonStyle={{
+          backgroundColor: secondary ? COLORS.secondary : backgroundColor,
+          ...style,
+        }}
         disabledStyle={secondary && styles.secondaryDisabledButton}
-        disabledTextStyle={secondary && styles.secondaryDisabledText}
+        disabledTitleStyle={secondary && styles.secondaryDisabledText}
         {...rest}
         disabled={disabled || this._isLoadingToggleStore.isToggled}
         loading={loading || this._isLoadingToggleStore.isToggled}
         onPress={this._onPress}
+        titleStyle={{
+          color: secondary ? COLORS.text : color,
+        }}
       />
     );
   }

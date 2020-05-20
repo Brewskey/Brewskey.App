@@ -25,9 +25,10 @@ type Props = LoaderErrorRowProps<{|
 
 class ErrorListItem<TExtraProps> extends React.PureComponent<Props> {
   render(): React.Node {
+    const { error: _, ...otherProps } = this.props;
     return (
       <RNEListItem
-        {...this.props}
+        {...otherProps}
         containerStyle={[styles.container, this.props.containerStyle]}
         rightIcon={{ name: 'error' }}
         subtitle="none"
