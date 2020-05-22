@@ -33,7 +33,7 @@ export type ListProps<TEntity> = {|
   keyExtractor: (TEntity, number) => string,
   listType?: ListType,
   maxToRenderPerBatch?: number,
-  onDeleteItemPress?: (TEntity) => Promise<void>,
+  onDeleteItemPress?: (TEntity) => void,
   onEndReached?: () => void,
   onRefresh?: () => Promise<void> | void,
   onScroll?: (ScrollEvent) => void,

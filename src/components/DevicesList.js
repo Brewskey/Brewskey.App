@@ -138,7 +138,7 @@ class DevicesList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<Device, {| onItemPress: (Device) => void |}>): React.Node => (
+}: RowItemProps<Device>): React.Node => (
   <ListItem
     item={item}
     onPress={onItemPress}
@@ -155,10 +155,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<
-  Device,
-  {| onDeleteItemPress: (Device) => void, onEditItemPress: (Device) => void |},
->): React.Node => (
+}: RowItemProps<Device>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete Brewskey box"

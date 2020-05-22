@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {|
-  onContinuePress: () => void | Promise<any>,
+  onContinuePress: () => void | Promise<void>,
   locationsCount: number,
 |};
 

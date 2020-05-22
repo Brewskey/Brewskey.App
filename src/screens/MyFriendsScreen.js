@@ -24,8 +24,8 @@ import { FriendStore } from '../stores/DAOStores';
 /* eslint-disable sorting/sort-object-props */
 const MyFriendsNavigator = createMaterialTopTabNavigator(
   {
-    myFriendsMain: { screen: MyFriendsMainScreen },
-    myFriendsRequest: { screen: MyFriendsRequestScreen },
+    myFriendsMain: { screen: (MyFriendsMainScreen: any) },
+    myFriendsRequest: { screen: (MyFriendsRequestScreen: any) },
   },
   /* eslint-enable */
   {

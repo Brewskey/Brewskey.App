@@ -52,11 +52,11 @@ class AvailabilityPicker<TMultiple: boolean> extends React.Component<
 // todo annotate better
 const LoadedRow = ({ item: availability, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={availability}
     title={availability.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

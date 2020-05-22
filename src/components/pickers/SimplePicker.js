@@ -66,19 +66,19 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
   _listKeyExtractor = (textPickerValue) =>
     JSON.stringify(textPickerValue.value) || '';
 
-  _renderItem({
+  _renderItem: (RenderItemProps<SimplePickerValue<TValue>>) => React.Node = ({
     item: pickerValue,
-  }: RenderItemProps<SimplePickerValue<TValue>>) {
+  }) => {
     return (
       <SelectableListItem
-        hideChevron
+        chevron={false}
         isSelected={this._pickerStore.checkIsSelected(pickerValue)}
         item={pickerValue}
         title={pickerValue.label}
-        toggleItem={this._pickerStore.toggleItem}
+        onPress={this._pickerStore.toggleItem}
       />
     );
-  }
+  };
 
   render(): React.Node {
     const {

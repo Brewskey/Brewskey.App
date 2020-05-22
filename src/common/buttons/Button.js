@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TRNEProps> = {|
-  ...TRNEProps,
+type Props = {|
+  ...React.ElementProps<typeof RNEButton>,
   backgroundColor?: string,
   color?: string,
   disabled?: boolean,
@@ -26,11 +26,12 @@ type Props<TRNEProps> = {|
   secondary?: boolean,
   style?: Object,
   title: string,
+  type?: 'solid' | 'clear' | 'outline',
   // react-native-elemenets button porps
 |};
 
 @observer
-class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
+class Button extends React.Component<Props> {
   static defaultProps: {| backgroundColor: string, color: string |} = {
     backgroundColor: COLORS.primary2,
     color: COLORS.textInverse,
@@ -57,13 +58,19 @@ class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
       loading,
       secondary,
       style,
+      type,
       ...rest
     } = this.props;
 
     return (
       <RNEButton
         buttonStyle={{
-          backgroundColor: secondary ? COLORS.secondary : backgroundColor,
+          marginHorizontal: 12,
+          ...(type === 'solid' || type == null
+            ? {
+                backgroundColor: secondary ? COLORS.secondary : backgroundColor,
+              }
+            : null),
           ...style,
         }}
         disabledStyle={secondary && styles.secondaryDisabledButton}
@@ -75,6 +82,7 @@ class Button<TRNEProps> extends React.Component<Props<TRNEProps>> {
         titleStyle={{
           color: secondary ? COLORS.text : color,
         }}
+        type={type}
       />
     );
   }

@@ -15,14 +15,14 @@ const styles = StyleSheet.create({
   title: { color: COLORS.text },
 });
 
-type Props<TItem, TRNE> = {|
-  ...TRNE,
+type Props<TItem> = {|
+  ...React.ElementProps<typeof RNEListItem>,
   containerStyle?: Style,
   item: TItem,
   onPress: (item: TItem) => void,
 |};
 
-class ListItem<TItem, TRNE> extends React.PureComponent<Props<TItem, TRNE>> {
+class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
   static defaultProps: {| onPress: (TItem) => void |} = {
     onPress: () => {},
   };

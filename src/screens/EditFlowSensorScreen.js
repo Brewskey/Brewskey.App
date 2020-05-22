@@ -28,9 +28,9 @@ type InjectedProps = {|
 @flatNavigationParamsAndScreenProps
 @observer
 class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
-  // static navigationOptions = {
-  //   tabBarLabel: 'Flow Sensor',
-  // };
+  static navigationOptions = {
+    tabBarLabel: 'Flow Sensor',
+  };
 
   @computed
   get _flowSensorLoader(): LoadObject<FlowSensor> {
@@ -91,12 +91,12 @@ class LoadedComponent extends InjectedComponent<
   };
 
   render(): React.Node {
-    const { value } = this.props;
+    const { tapId, value } = this.props;
     return (
       <FlowSensorForm
         flowSensor={value}
         onSubmit={this._onFormSubmit}
-        tapId={value.tap.id}
+        tapId={tapId}
       />
     );
   }

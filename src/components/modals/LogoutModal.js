@@ -54,7 +54,7 @@ const DeleteModal = ({
         }}
         onPress={onLogoutButtonPress}
         title="logout"
-        transparent
+        type="clear"
       />
       <Button
         backgroundColor={COLORS.secondary}

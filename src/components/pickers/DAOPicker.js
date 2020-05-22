@@ -116,9 +116,9 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
 
   _listKeyExtractor = (row) => row.key;
 
-  _renderRow(
-    renderRowProps: RenderItemProps<Row<TEntityBase<TEntity>>>,
-  ): React.Node {
+  _renderRow: (RenderItemProps<Row<TEntityBase<TEntity>>>) => React.Node = (
+    renderRowProps,
+  ) => {
     const { renderRow } = this.props;
     const { checkIsSelected, toggleItem } = this._pickerStore;
     const {
@@ -128,7 +128,7 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
       loader.hasValue() && checkIsSelected(loader.getValueEnforcing());
 
     return renderRow(({ ...renderRowProps, isSelected, toggleItem }: any));
-  }
+  };
 
   render(): React.Node {
     const {

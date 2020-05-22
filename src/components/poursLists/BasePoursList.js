@@ -13,20 +13,22 @@ import SwipeableList from '../../common/SwipeableList';
 import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
 
-type Props<TExtraProps> = {|
+type Props<TComponentType> = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
-  loadedRow: React.ComponentType<RowItemProps<Pour, *>>,
+  loadedRow: React.ComponentType<TComponentType>,
   onDeleteItemPress?: (item: Pour) => Promise<void>,
   onRefresh?: () => void,
   queryOptions?: QueryOptions,
-  rowItemComponent?: React.ComponentType<RowItemProps<Pour, TExtraProps>>,
-  slideoutComponent?: React.ComponentType<RowItemProps<Pour, *>>,
+  rowItemComponent?: React.ComponentType<RowItemProps<Pour>>,
+  slideoutComponent?: React.ComponentType<RowItemProps<Pour>>,
 |};
 
 @withNavigation
 @observer
-class BasePoursList<TExtraProps> extends React.Component<Props<TExtraProps>> {
+class BasePoursList<TComponentType> extends React.Component<
+  Props<TComponentType>,
+> {
   static defaultProps = {
     queryOptions: {},
   };

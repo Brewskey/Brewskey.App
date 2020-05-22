@@ -23,7 +23,7 @@ type Props = LoaderErrorRowProps<{|
   containerStyle?: Object,
 |}>;
 
-class ErrorListItem<TExtraProps> extends React.PureComponent<Props> {
+class ErrorListItem extends React.PureComponent<Props> {
   render(): React.Node {
     const { error: _, ...otherProps } = this.props;
     return (

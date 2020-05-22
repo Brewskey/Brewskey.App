@@ -51,11 +51,11 @@ class DevicePicker<TMultiple: boolean> extends React.Component<
 // todo annotate better
 const LoadedRow = ({ item: device, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={device}
     title={device.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

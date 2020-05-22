@@ -94,9 +94,9 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
                   badgeStyle: { backgroundColor: COLORS.accent },
                   value: `${kegLevel}%`,
                 }
-              : null
+              : undefined
           }
-          hideChevron
+          chevron={false}
           item={item}
           onPress={this._onItemPress}
           title={`${tapNumber} - ${beverageName}`}

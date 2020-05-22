@@ -83,7 +83,7 @@ class NuxNoEntity extends InjectedComponent<InjectedProps> {
         <Button
           backgroundColor={COLORS.accent}
           color="white"
-          containerViewStyle={styles.getStartedButtonContainer}
+          containerStyle={styles.getStartedButtonContainer}
           onPress={NuxSoftwareSetupStore.onGetStartedPress}
           title="Get started"
         />

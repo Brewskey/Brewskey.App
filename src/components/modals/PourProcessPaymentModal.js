@@ -112,8 +112,7 @@ class PourProcessPaymentModal extends React.Component<{||}> {
             </ScrollView>
             <View style={styles.footer}>
               <Button
-                containerViewStyle={{ marginLeft: 0, width: '100%' }}
-                large
+                containerStyle={{ marginLeft: 0, width: '100%' }}
                 onPress={this._onContinuePress}
                 raised
                 secondary

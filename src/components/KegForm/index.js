@@ -141,7 +141,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
             loading={submitting}
             onPress={this._onSubmit}
             title={submitButtonLabel}
-            transparent={showReplaceButton}
+            type="clear"
           />
         </SectionContent>
       </View>

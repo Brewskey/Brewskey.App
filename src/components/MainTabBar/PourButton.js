@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 });
 
 @observer
-class PourButton extends React.Component<{}> {
+class PourButton extends React.Component<{||}> {
   render(): React.Node {
     return !PourProcessStore.isLoading ? (
       <Icon

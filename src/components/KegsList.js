@@ -73,7 +73,7 @@ class KegsList extends React.Component<Props> {
 const LoadedRow = ({ item: keg }): React.Node => (
   <ListItem
     leftAvatar={<BeverageAvatar beverageId={keg.beverage.id} />}
-    hideChevron
+    chevron={false}
     item={keg}
     title={keg.beverage.name}
   />

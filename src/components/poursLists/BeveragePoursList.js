@@ -31,7 +31,7 @@ const BeveragePoursList = observer(
   ),
 );
 
-const LoadedRow = ({ item: pour }: RowItemProps<Pour, *>): React.Node => (
+const LoadedRow = ({ item: pour }: RowItemProps<Pour>): React.Node => (
   <ListItem
     leftAvatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />

@@ -27,13 +27,13 @@ const TapListItem = ({ onPress, tap }: Props): React.Node => {
       badge={
         kegLevel !== null
           ? {
-              containerStyle: { backgroundColor: COLORS.accent },
+              badgeStyle: { backgroundColor: COLORS.accent },
               value: `${kegLevel}%`,
             }
-          : null
+          : undefined
       }
       leftAvatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
-      hideChevron
+      chevron={false}
       item={tap}
       onPress={onPress}
       title={`${tapNumber} - ${beverageName}`}

@@ -116,13 +116,10 @@ class BeveragesList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<
-  Beverage,
-  {| onItemPress: (Beverage) => void |},
->): React.Node => (
+}: RowItemProps<Beverage>): React.Node => (
   <ListItem
     leftAvatar={<BeverageAvatar beverageId={item.id} />}
-    hideChevron
+    chevron={false}
     item={item}
     onPress={onItemPress}
     subtitle={item.beverageType}
@@ -134,13 +131,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<
-  Beverage,
-  {|
-    onDeleteItemPress: (Beverage) => void,
-    onEditItemPress: (Beverage) => void,
-  |},
->): React.Node => (
+}: RowItemProps<Beverage>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete beverage"

@@ -625,7 +625,7 @@ declare module 'react-native-elements' {
     hairlineWidth: number,
     absoluteFill: StyleId,
     absoluteFillObject: Object,
-    flatten: (style: StyleProp<StylePropTypes, StyleId>) => StylePropTypes,
+    flatten: (style: StyleProp<StylePropTypes>) => StylePropTypes,
     create<S: Styles>(styles: S): StyleRuleSet<S>,
     setStyleAttributePreprocessor(
       property: string,
@@ -787,7 +787,7 @@ declare module 'react-native-elements' {
     adjustsFontSizeToFit?: boolean,
     minimumFontScale?: number,
     disabled?: boolean,
-    style?: StyleProp<TextStylePropTypes, StyleId>,
+    style?: StyleProp<TextStylePropTypes>,
     children?: React$Node,
   |};
 
@@ -815,7 +815,7 @@ declare module 'react-native-elements' {
     onMoveShouldSetResponderCapture?: Function,
     hitSlop?: EdgeInsetsProp,
     pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto',
-    style?: StyleProp<ViewStylePropTypes, StyleId>,
+    style?: StyleProp<ViewStylePropTypes>,
     removeClippedSubviews?: boolean,
     renderToHardwareTextureAndroid?: boolean,
     shouldRasterizeIOS?: boolean,
@@ -843,7 +843,7 @@ declare module 'react-native-elements' {
      * > `resizeMode` style property on `Image` components. The values are `contain`, `cover`,
      * > `stretch`, `center`, `repeat`.
      */
-    style?: StyleProp<ImageStylePropTypes, StyleId>,
+    style?: StyleProp<ImageStylePropTypes>,
     /**
      * The image source (either a remote URL or a local file resource).
      *
@@ -1339,7 +1339,7 @@ declare module 'react-native-elements' {
      *
      * [Styles](docs/style.html)
      */
-    style?: StyleProp<TextStylePropTypes, StyleId>,
+    style?: StyleProp<TextStylePropTypes>,
     /**
      * The color of the `TextInput` underline.
      * @platform android

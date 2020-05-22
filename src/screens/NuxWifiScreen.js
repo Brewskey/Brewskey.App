@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
 });
 
 type InjectedProps = {|
-  onContinuePress: () => void | Promise<any>,
+  onContinuePress: () => void | Promise<void>,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)

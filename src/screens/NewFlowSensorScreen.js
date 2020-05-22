@@ -93,7 +93,7 @@ class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
         <Header title="Setup flow sensor" />
         <View style={styles.container}>
           <Button
-            containerViewStyle={styles.buttonContainer}
+            containerStyle={styles.buttonContainer}
             onPress={this._onDefaultButtonPress}
             title="I got my sensor from Brewskey"
           />

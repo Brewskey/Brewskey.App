@@ -87,7 +87,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
 }
 
 // todo add pour amount rendering
-const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
+const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour>) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -97,9 +97,9 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
 
   return (
     <ListItem
+      chevron={false}
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={onListItemPress}
-      hideChevron
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}
@@ -110,7 +110,7 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour, *>) => {
 const Slideout = ({
   item,
   onDeleteItemPress,
-}: RowItemProps<Pour, {| onDeleteItemPress: (Pour) => void |}>): React.Node => (
+}: RowItemProps<Pour>): React.Node => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"

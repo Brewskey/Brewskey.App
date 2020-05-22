@@ -11,9 +11,9 @@ import AuthStore from '../stores/AuthStore';
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class MyFriendsMainScreen extends React.Component<{}> {
-  // static navigationOptions = {
-  //   tabBarLabel: 'Friends',
-  // };
+  static navigationOptions = {
+    tabBarLabel: 'Friends',
+  };
 
   render(): React.Node {
     return (

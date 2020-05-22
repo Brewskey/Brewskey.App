@@ -90,17 +90,17 @@ class HardwareSetupGuide extends React.Component<Props> {
         </Swiper>
         {!this._isLastStep && (
           <Button
-            containerViewStyle={styles.closeButtonContainer}
+            containerStyle={styles.closeButtonContainer}
             onPress={this.props.onClosePress}
             title="CLOSE"
-            transparent
+            type="clear"
           />
         )}
         <Button
-          containerViewStyle={styles.nextButtonContainer}
+          containerStyle={styles.nextButtonContainer}
           onPress={this._onNextButtonPress}
           title={this._isLastStep ? 'FINISH' : 'NEXT'}
-          transparent
+          type="clear"
         />
       </View>
     );

@@ -16,29 +16,29 @@ export type SwipeableProps = {|
   swipeThreshold?: number,
 |};
 
-export type RowItemProps<TEntity, TExtraProps> = {|
-  // section?: Object, add this when resolve object recreation issue in SectionlistStore
-  ...TExtraProps,
+export type RowItemProps<TEntity> = {|
   index: number,
   item: TEntity,
   separators: Object,
+  onDeleteItemPress?: (TEntity) => void,
+  onEditItemPress?: (TEntity) => void,
+  onItemPress?: (TEntity) => void,
+  onListItemPress?: (TEntity) => void,
 |};
 
-type Props<TEntity, TExtraProps> = {|
-  ...TExtraProps,
+type Props<TEntity> = {|
   ...SwipeableProps,
-  ...RowItemProps<TEntity, TExtraProps>,
-  rowItemComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
-  slideoutComponent: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  ...RowItemProps<TEntity>,
+  maxSwipeDistance: number,
+  preventSwipeRight: boolean,
+  rowItemComponent: React.ComponentType<RowItemProps<TEntity>>,
+  slideoutComponent: React.ComponentType<RowItemProps<TEntity>>,
 |};
 
 class SwipeableRow<TEntity, TExtraProps> extends React.PureComponent<
-  Props<TEntity, TExtraProps>,
+  Props<TEntity>,
 > {
-  static defaultProps: {|
-    maxSwipeDistance: number,
-    preventSwipeRight: boolean,
-  |} = {
+  static defaultProps = {
     maxSwipeDistance: 150,
     preventSwipeRight: true,
   };

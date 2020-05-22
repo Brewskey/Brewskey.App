@@ -63,12 +63,12 @@ class BeveragePicker<TMultiple: boolean> extends React.Component<
 const LoadedRow = ({ item: beverage, isSelected, toggleItem }: Object) => (
   <SelectableListItem
     leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={beverage}
     subtitle={beverage.beverageType}
     title={beverage.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

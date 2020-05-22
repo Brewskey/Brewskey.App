@@ -53,14 +53,14 @@ class SwipeableSectionList<TEntity> extends React.Component<
   resetOpenRow: () => void = (): void =>
     this.setState(() => ({ openRowKey: null }));
 
-  _setListViewScrollableTo(value: boolean) {
+  _setListViewScrollableTo = (value: boolean) => {
     if (!this._innerListRef.current) {
       return;
     }
     this._innerListRef.current.setNativeProps({
       scrollEnabled: value,
     });
-  }
+  };
 
   _setListViewScrollable = (): void => this._setListViewScrollableTo(true);
 

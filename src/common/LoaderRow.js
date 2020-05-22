@@ -19,12 +19,12 @@ export type LoaderErrorRowProps<TExtraProps> = {|
 
 type Props<TEntity, TExtraProps> = {|
   ...TExtraProps,
-  ...RowItemProps<TEntity, TExtraProps>,
+  ...RowItemProps<TEntity>,
   errorRow: React.ComponentType<LoaderErrorRowProps<TExtraProps>>,
   index: number,
-  loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  loadedRow: React.ComponentType<RowItemProps<TEntity>>,
   loader: LoadObject<TEntity>,
-  loadingRow: React.ComponentType<TExtraProps>,
+  loadingRow: React.ComponentType<React.ElementProps<typeof LoadingListItem>>,
   separators: Object,
 |};
 
@@ -49,7 +49,7 @@ const LoaderRow = <TEntity, TExtraProps>({
 
 type LoadedRowComponentProps<TEntity, TExtraProps> = {|
   ...TExtraProps,
-  loadedRow: React.ComponentType<RowItemProps<TEntity, TExtraProps>>,
+  loadedRow: React.ComponentType<RowItemProps<TEntity>>,
   value: TEntity,
   index: number,
   separators: Object,

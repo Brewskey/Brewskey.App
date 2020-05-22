@@ -60,12 +60,12 @@ class LocationPicker<TMultiple: boolean> extends React.PureComponent<
 // todo annotate better
 const LoadedRow = ({ item: location, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={location}
     subtitle={location.summary || NULL_STRING_PLACEHOLDER}
     title={location.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

@@ -120,12 +120,9 @@ class LocationsList extends InjectedComponent<InjectedProps, Props> {
 const SwipeableRowItem = ({
   item,
   onItemPress,
-}: RowItemProps<
-  Location,
-  {| onItemPress: (Location) => void |},
->): React.Node => (
+}: RowItemProps<Location>): React.Node => (
   <ListItem
-    hideChevron
+    chevron={false}
     item={item}
     onPress={onItemPress}
     subtitle={item.description || NULL_STRING_PLACEHOLDER}
@@ -137,13 +134,7 @@ const Slideout = ({
   item,
   onDeleteItemPress,
   onEditItemPress,
-}: RowItemProps<
-  Location,
-  {|
-    onDeleteItemPress: (Location) => void,
-    onEditItemPress: (Location) => void,
-  |},
->): React.Node => (
+}: RowItemProps<Location>): React.Node => (
   <QuickActions
     deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
     deleteModalTitle="Delete location"

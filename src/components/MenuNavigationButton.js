@@ -1,7 +1,6 @@
 // @flow
 
 import type { Navigation } from '../types';
-import type { Props as MenuButtonProps } from './MenuButton';
 import type { NavigationNavigateAction } from 'react-navigation';
 
 import * as React from 'react';
@@ -9,21 +8,18 @@ import InjectedComponent from '../common/InjectedComponent';
 import { withNavigation } from 'react-navigation';
 import MenuButton from './MenuButton';
 
-type Props<TOtherProps> = MenuButtonProps<{|
-  ...TOtherProps,
+type Props = {|
+  ...React.ElementProps<typeof MenuButton>,
   action?: NavigationNavigateAction,
   routeName: string,
-|}>;
+|};
 
 type InjectedProps = {|
   navigation: Navigation,
 |};
 
 @withNavigation
-class MenuNavigationButton<TOtherProps> extends InjectedComponent<
-  InjectedProps,
-  Props<TOtherProps>,
-> {
+class MenuNavigationButton extends InjectedComponent<InjectedProps, Props> {
   _onPress = () =>
     this.injectedProps.navigation.navigate({
       action: this.props.action,
@@ -31,7 +27,8 @@ class MenuNavigationButton<TOtherProps> extends InjectedComponent<
     });
 
   render(): React.Node {
-    return <MenuButton {...this.props} onPress={this._onPress} />;
+    const { action: _1, routeName: _2, ...otherProps } = this.props;
+    return <MenuButton {...otherProps} onPress={this._onPress} />;
   }
 }
 

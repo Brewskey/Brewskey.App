@@ -83,7 +83,7 @@ class SnackMessage extends React.Component<{||}, State> {
     Animated.timing(this.state.animationValue, {
       duration: EXIT_ANIMATION_DURATION,
       toValue: -this.state.height,
-      useNativeDriver: true,
+      useNativeDriver: false,
     }).start(SnackBarStore.dropCurrentMessage);
   };
 
@@ -105,13 +105,13 @@ class SnackMessage extends React.Component<{||}, State> {
       Animated.timing(this.state.animationValue, {
         duration: ENTER_ANIMATION_DURATION,
         toValue: OFFSET,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(this.state.animationValue, {
         delay: nullthrows(currentMessage).duration,
         duration: EXIT_ANIMATION_DURATION,
         toValue: -height,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start(
       (({ finished }) => {

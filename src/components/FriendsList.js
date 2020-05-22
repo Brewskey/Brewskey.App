@@ -4,6 +4,7 @@ import type { Friend, QueryOptions } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
+import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedList';
 
 import * as React from 'react';
 import InjectedComponent from '../common/InjectedComponent';
@@ -49,7 +50,9 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
       id: friend.friendAccount.id,
     });
 
-  _renderRow = ({ item }: { item: Row<Friend> }): React.Node => (
+  _renderRow: (RenderItemProps<Row<Friend>>) => React.Element<any> = ({
+    item,
+  }) => (
     <LoaderRow
       loadedRow={LoadedRow}
       loader={item.loader}
@@ -79,10 +82,10 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 const LoadedRow = ({
   item: friend,
   onListItemPress,
-}: RowItemProps<Friend, *>): React.Node => (
+}: RowItemProps<Friend>): React.Node => (
   <ListItem
     leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
-    hideChevron
+    chevron={false}
     item={friend}
     onPress={onListItemPress}
     title={friend.friendAccount.userName}

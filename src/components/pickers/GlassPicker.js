@@ -54,11 +54,11 @@ const LoadedRow = ({
   toggleItem,
 }: Object): React.Node => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={glass}
     title={glass.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

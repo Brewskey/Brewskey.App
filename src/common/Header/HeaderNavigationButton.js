@@ -11,24 +11,22 @@ type InjectedProps = {|
   navigation: Navigation,
 |};
 
-type Props<TExtra> = {|
-  ...TExtra,
+type Props = {|
+  ...React.ElementProps<typeof HeaderIconButton>,
   params?: Object,
   toRoute: string,
 |};
 
 @withNavigation
-class HeaderNavigationButton<TExtra> extends InjectedComponent<
-  InjectedProps,
-  Props<TExtra>,
-> {
+class HeaderNavigationButton extends InjectedComponent<InjectedProps, Props> {
   _onButtonPress = () => {
     const { params, toRoute } = this.props;
     this.injectedProps.navigation.navigate(toRoute, params);
   };
 
   render(): React.Node {
-    return <HeaderIconButton {...this.props} onPress={this._onButtonPress} />;
+    const { params: _1, toRoute: _2, ...otherProps } = this.props;
+    return <HeaderIconButton {...otherProps} onPress={this._onButtonPress} />;
   }
 }
 

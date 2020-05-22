@@ -63,14 +63,14 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
     });
   };
 
-  _onDeleteItemPress: (Pour) => Promise<void> = async (
-    pour: Pour,
-  ): Promise<void> => {
-    const clientID = DAOApi.PourDAO.deleteByID(pour.id);
-    await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
-      dao.fetchByID(clientID),
-    );
-    SnackBarStore.showMessage({ text: 'The pour was deleted' });
+  _onDeleteItemPress: (Pour) => void = (pour: Pour): void => {
+    (async () => {
+      const clientID = DAOApi.PourDAO.deleteByID(pour.id);
+      await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
+        dao.fetchByID(clientID),
+      );
+      SnackBarStore.showMessage({ text: 'The pour was deleted' });
+    })();
   };
 
   _renderSectionHeader = ({ section }: { section: KegSection }) => (
@@ -79,21 +79,39 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
 
   _renderRow = ({
     info: { item, index, separators },
+    isOpen,
+    onClose,
+    onOpen,
+    rowKey,
+    shouldBounceOnMount,
     ...swipeableStateProps
   }): React.Node => {
-    const RowComponent = this.props.canDeletePours
-      ? SwipeableRow
-      : PourListItem;
+    if (this.props.canDeletePours) {
+      return (
+        <SwipeableRow
+          index={index}
+          isOpen={isOpen}
+          item={item}
+          onDeleteItemPress={this._onDeleteItemPress}
+          onItemPress={this._onItemPress}
+          onClose={onClose}
+          onOpen={onOpen}
+          rowItemComponent={PourListItem}
+          rowKey={rowKey}
+          separators={separators}
+          shouldBounceOnMount={shouldBounceOnMount}
+          slideoutComponent={Slideout}
+        />
+      );
+    }
 
     return (
-      <RowComponent
+      <PourListItem
         index={index}
         item={item}
         onDeleteItemPress={this._onDeleteItemPress}
         onItemPress={this._onItemPress}
-        rowItemComponent={PourListItem}
         separators={separators}
-        slideoutComponent={Slideout}
       />
     );
   };
@@ -123,17 +141,11 @@ class SectionPoursList extends InjectedComponent<InjectedProps, Props> {
     );
   }
 }
-type RowExtraProps = {|
-  onDeleteItemPress: (Pour) => void | Promise<void>,
-  onItemPress: (Pour) => void,
-  rowItemComponent: React.AbstractComponent<any>,
-  slideoutComponent: React.AbstractComponent<any>,
-|};
 
-const PourListItem = ({
+function PourListItem({
   item: pour,
   onItemPress,
-}: RowItemProps<Pour, RowExtraProps>) => {
+}: RowItemProps<Pour>): React.Node {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -145,24 +157,23 @@ const PourListItem = ({
     <ListItem
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={onItemPress}
-      hideChevron
+      chevron={false}
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}
     />
   );
-};
+}
 
-const Slideout = ({
-  item,
-  onDeleteItemPress,
-}: RowItemProps<Pour, RowExtraProps>): React.Node => (
-  <QuickActions
-    deleteModalMessage="Are you sure you want to delete this pour?"
-    deleteModalTitle="Delete Pour"
-    item={item}
-    onDeleteItemPress={onDeleteItemPress}
-  />
-);
+function Slideout({ item, onDeleteItemPress }: RowItemProps<Pour>): React.Node {
+  return (
+    <QuickActions
+      deleteModalMessage="Are you sure you want to delete this pour?"
+      deleteModalTitle="Delete Pour"
+      item={item}
+      onDeleteItemPress={onDeleteItemPress}
+    />
+  );
+}
 
 export default SectionPoursList;

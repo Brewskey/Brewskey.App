@@ -47,11 +47,11 @@ class SrmPicker extends React.Component<Props> {
 // todo annotate better
 const LoadedRow = ({ item: srm, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    avatar={<ColorIcon color={`#${srm.hex}`} />}
-    hideChevron
+    leftAvatar={<ColorIcon color={`#${srm.hex}`} />}
+    chevron={false}
     isSelected={isSelected}
     item={srm}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

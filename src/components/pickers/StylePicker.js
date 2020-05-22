@@ -49,11 +49,11 @@ class StylePicker extends React.Component<Props> {
 // todo annotate better
 const LoadedRow = ({ item: style, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={style}
     title={style.name}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

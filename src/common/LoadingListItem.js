@@ -26,21 +26,20 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TExtraProps> = {|
-  ...TExtraProps,
+type Props = {|
+  ...React.ElementProps<typeof RNEListItem>,
   containerStyle?: Object,
 |};
 
-class LoadingListItem<TExtraProps> extends React.PureComponent<
-  Props<TExtraProps>,
-> {
+class LoadingListItem extends React.PureComponent<Props> {
   _subtitleContainerWidth = `${getRandomInt(60, 80)}%`;
   _titleContainerWidth = `${getRandomInt(30, 50)}%`;
 
   render(): React.Node {
+    const { containerStyle: _, ...otherProps } = this.props;
     return (
       <RNEListItem
-        {...this.props}
+        {...otherProps}
         chevron={false}
         subtitle="none"
         subtitleStyle={[

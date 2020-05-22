@@ -49,11 +49,11 @@ class OrganizaionPicker extends React.Component<Props> {
 // todo annotate better
 const LoadedRow = ({ item: organization, isSelected, toggleItem }: Object) => (
   <SelectableListItem
-    hideChevron
+    chevron={false}
     isSelected={isSelected}
     item={organization}
     title={`${organization.id} - ${organization.name}`}
-    toggleItem={toggleItem}
+    onPress={toggleItem}
   />
 );
 

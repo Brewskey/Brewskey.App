@@ -15,20 +15,19 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TRNE> = {|
-  // react-native-elements icon props
-  ...TRNE,
+type Props = {|
+  ...React.ElementProps<typeof Icon>,
   containerStyle?: Style,
   name: string,
   onPress?: () => void | Promise<void>,
 |};
 
 // todo fix ripple out of boundaries on raised buttons
-const IconButton = <TRNE>({
+const IconButton = ({
   containerStyle,
   onPress,
   ...rest
-}: Props<TRNE>): React.Node => (
+}: Props): React.Node => (
   <TouchableItem borderless onPress={onPress} style={containerStyle}>
     <Icon {...rest} containerStyle={styles.container} />
   </TouchableItem>
