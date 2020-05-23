@@ -49,7 +49,7 @@ class ResetPasswordScreen extends React.Component<Props> {
     return (
       <Container>
         <Header showBackButton title="Reset password" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <SectionContent paddedHorizontal paddedVertical>
             <Text style={styles.text}>
               Enter your email address and we'll send a password reset email to

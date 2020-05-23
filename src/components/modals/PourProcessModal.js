@@ -121,7 +121,6 @@ class PourProcessInputModal extends React.Component<{||}> {
                 textStyle={styles.progressText}
                 thickness={16}
                 unfilledColor="#1d5f68"
-                width={120}
               />
             )}
           </View>

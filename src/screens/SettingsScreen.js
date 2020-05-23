@@ -62,7 +62,7 @@ class SettingsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Settings" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <Section bottomPadded>
             <SectionHeader title="Change password" />
             <ChangePasswordForm onSubmit={this._onChangePasswordSubmit} />

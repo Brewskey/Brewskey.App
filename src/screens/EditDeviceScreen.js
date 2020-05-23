@@ -52,7 +52,7 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoaderComponent
             loadedComponent={LoadedComponent}
             loader={this._deviceLoader}

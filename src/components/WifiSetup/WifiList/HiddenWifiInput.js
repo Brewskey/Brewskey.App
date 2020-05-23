@@ -45,7 +45,7 @@ class HiddenWifiInput extends React.Component<Props> {
 
     return (
       <Container style={styles.container}>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <TouchableOpacity onPress={this._toggleIsExpanded}>
             <Text style={styles.title}>Hidden network</Text>
           </TouchableOpacity>

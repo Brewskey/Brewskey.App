@@ -83,7 +83,7 @@ class BeverageDetailsContent extends React.Component<Props, State> {
       <Fragment>
         <View style={[styles.imageContainer, styles.beverageImage, imageSize]}>
           <CacheImage
-            loadingIndicator={LoadingIndicator}
+            indicator={LoadingIndicator}
             style={[styles.beverageImage, imageSize]}
             source={{
               uri: this._getURI(),

@@ -43,7 +43,7 @@ class EditFlowSensorScreen extends InjectedComponent<InjectedProps> {
   render(): React.Node {
     const { tapId } = this.injectedProps;
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <LoaderComponent
           emptyComponent={EmptyComponent}
           loadedComponent={LoadedComponent}

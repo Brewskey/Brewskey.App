@@ -61,7 +61,7 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="New beverage" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <BeverageForm
             onSubmit={this._onFormSubmit}
             submitButtonLabel="Create beverage"

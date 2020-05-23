@@ -51,7 +51,7 @@ class EditLocationScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit location" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoaderComponent
             loadedComponent={LoadedComponent}
             loader={this._locationLoader}

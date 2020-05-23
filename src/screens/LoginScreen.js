@@ -44,7 +44,7 @@ class LoginScreen extends React.Component<Props> {
   render(): React.Node {
     return (
       <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps="handled"
         style={styles.container}
       >
         <StatusBar backgroundColor={COLORS.primary3} />

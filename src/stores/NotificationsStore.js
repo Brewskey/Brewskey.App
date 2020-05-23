@@ -125,7 +125,7 @@ class NotificationsStore {
 
     reaction(
       () => AuthStore.isAuthorized,
-      (async (isAuthorized: boolean) => {
+      async (isAuthorized: boolean) => {
         if (!isAuthorized) {
           // calls only on logout
           this._unregisterToken();
@@ -139,6 +139,7 @@ class NotificationsStore {
               this._deviceToken = result.token;
               this._registerToken();
             },
+            requestPermissions: true,
             senderID: '394986866677',
           });
 
@@ -146,7 +147,7 @@ class NotificationsStore {
           this.setIsReady(true);
         }
         // casting because Mobx reaction type expect returns undefined, not Promise
-      }: any),
+      },
     );
 
     // calls only login
@@ -334,7 +335,7 @@ class NotificationsStore {
       method: 'DELETE',
     });
 
-  _onRawNotification: (Object) => void = (rawNotification: Object): void => {
+  _onRawNotification = (rawNotification): void => {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
 
@@ -342,7 +343,7 @@ class NotificationsStore {
     if (Platform.OS === 'android') {
       parsedNotification = rawNotification.custom_notification
         ? JSON.parse(rawNotification.custom_notification)
-        : rawNotification;
+        : rawNotification.data;
     } else {
       parsedNotification = {
         ...rawNotification.data,

@@ -73,19 +73,19 @@ class SnackBarStore {
         type: 'text',
         ...messageParameters,
       });
-    } else if (messageParameters.content) {
+    } else if (messageParameters.content != null) {
       this._messages.push({
+        content: messageParameters.content,
         duration: 2000,
-        position: 'bottom',
+        position: 'top',
         type: 'content',
-        ...messageParameters,
       });
-    } else if (messageParameters.notification) {
+    } else if (messageParameters.notification != null) {
       this._messages.push({
         duration: 2000,
-        position: 'bottom',
+        notification: messageParameters.notification,
+        position: 'top',
         type: 'notification',
-        ...messageParameters,
       });
     }
   };

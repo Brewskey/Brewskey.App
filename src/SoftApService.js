@@ -103,7 +103,7 @@ class SoftAPService {
     return scans.map(translateWifiFromApi);
   };
 
-  static _getPublicKey = async (): Promise<Object> =>
+  static _getPublicKey = async (): Promise<NodeRSA> =>
     new Promise(async (resolve, reject) => {
       setTimeout(
         () =>

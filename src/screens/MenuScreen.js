@@ -69,7 +69,7 @@ class MenuScreen extends React.Component<{}> {
               {FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
                 <View style={styles.container}>
                   <Badge
-                    containerStyle={styles.badge}
+                    badgeStyle={styles.badge}
                     textStyle={styles.badgeText}
                     value={FriendRequestsListStore.pendingRequestsCount}
                   />

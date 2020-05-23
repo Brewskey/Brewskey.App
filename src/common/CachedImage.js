@@ -6,13 +6,6 @@ import {
   ImageCache,
 } from 'react-native-img-cache';
 
-type Props<TOtherProps> = {|
-  ...TOtherProps,
-  mutable?: boolean,
-  source: {| uri: string |},
-  // other image Props
-|};
-
 export const flushImageCache = (uri: string): void => {
   const uriWithoutBrewskeyApiParams = (uri.match(/=?(\/?.*\.jpg)/) || [])[0];
 
@@ -32,7 +25,9 @@ export const flushImageCache = (uri: string): void => {
     });
 };
 
-class CachedImage<TOtherProps> extends React.Component<Props<TOtherProps>> {
+class CachedImage extends React.Component<
+  React.ElementProps<typeof RNCachedImage>,
+> {
   static defaultProps: {| mutable: boolean |} = {
     mutable: true,
   };
@@ -40,7 +35,7 @@ class CachedImage<TOtherProps> extends React.Component<Props<TOtherProps>> {
   flushCache: () => void = (): void => flushImageCache(this.props.source.uri);
 
   render(): React.Node {
-    return <RNCachedImage {...this.props} mutable={this.props.mutable} />;
+    return <RNCachedImage {...this.props} />;
   }
 }
 

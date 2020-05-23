@@ -113,15 +113,19 @@ class MainTabBar extends React.Component<Props> {
   }
 }
 
-const NotificationBadges = observer((props: any) => (
-  <BadgeContainer {...props} badgeCount={NotificationsStore.unreadCount} />
-));
+const NotificationBadges = observer(
+  (props: React.ElementProps<typeof BadgeContainer>) => (
+    <BadgeContainer {...props} badgeCount={NotificationsStore.unreadCount} />
+  ),
+);
 
-const FriendRequestBadge = observer((props: any) => (
-  <BadgeContainer
-    {...props}
-    badgeCount={FriendRequestsListStore.pendingRequestsCount}
-  />
-));
+const FriendRequestBadge = observer(
+  (props: React.ElementProps<typeof BadgeContainer>) => (
+    <BadgeContainer
+      {...props}
+      badgeCount={FriendRequestsListStore.pendingRequestsCount}
+    />
+  ),
+);
 
 export default MainTabBar;

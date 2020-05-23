@@ -24,10 +24,10 @@ class AppSettingsStore {
   };
 
   @observable
-  updateMetadata: ?{
+  updateMetadata: ?{|
     appVersion: string,
     label: string,
-  } = null;
+  |} = null;
 
   constructor() {
     reaction(

@@ -14,131 +14,40 @@
  */
 
 declare module 'node-rsa' {
-  declare module.exports: any;
-}
+  declare type Scheme =
+    | 'pkcs1-private-der'
+    | 'pkcs1-private-pem'
+    | 'pkcs8-private-der'
+    | 'pkcs8-private-pem'
+    | 'pkcs1-public-der'
+    | 'pkcs1-public-pem'
+    | 'pkcs8-public-der'
+    | 'pkcs8-public-pem'
+    | 'private'
+    | 'public'
+    | 'private-der'
+    | 'public-der'
+    | 'pkcs1'
+    | 'pkcs1-private'
+    | 'pkcs1-der'
+    | 'pkcs8'
+    | 'pkcs8-private'
+    | 'pkcs8-der'
+    | 'pkcs1-public'
+    | 'pkcs8-public';
+  declare type Options = {|
+    environment?: 'browser' | 'node',
+    encryptionScheme?: 'pkcs1_oaep' | 'pkcs1',
+    signingScheme?: 'pkcs1' | 'pss' | 'scheme-hash',
+  |};
+  declare type Encoding = 'buffer' | 'binary' | 'hex' | 'base64';
+  declare class NodeRSA {
+    constructor(buffer: Buffer, ?Scheme, ?Options): NodeRSA;
 
-/**
- * We include stubs for each file inside this npm package in case you need to
- * require those files directly. Feel free to delete any files that aren't
- * needed.
- */
-declare module 'node-rsa/gruntfile' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/encryptEngines/encryptEngines' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/encryptEngines/io' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/encryptEngines/js' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/encryptEngines/node12' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/formats/components' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/formats/formats' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/formats/pkcs1' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/formats/pkcs8' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/libs/jsbn' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/libs/rsa' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/NodeRSA' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/schemes/oaep' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/schemes/pkcs1' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/schemes/pss' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/schemes/schemes' {
-  declare module.exports: any;
-}
-
-declare module 'node-rsa/src/utils' {
-  declare module.exports: any;
-}
-
-// Filename aliases
-declare module 'node-rsa/gruntfile.js' {
-  declare module.exports: $Exports<'node-rsa/gruntfile'>;
-}
-declare module 'node-rsa/src/encryptEngines/encryptEngines.js' {
-  declare module.exports: $Exports<'node-rsa/src/encryptEngines/encryptEngines'>;
-}
-declare module 'node-rsa/src/encryptEngines/io.js' {
-  declare module.exports: $Exports<'node-rsa/src/encryptEngines/io'>;
-}
-declare module 'node-rsa/src/encryptEngines/js.js' {
-  declare module.exports: $Exports<'node-rsa/src/encryptEngines/js'>;
-}
-declare module 'node-rsa/src/encryptEngines/node12.js' {
-  declare module.exports: $Exports<'node-rsa/src/encryptEngines/node12'>;
-}
-declare module 'node-rsa/src/formats/components.js' {
-  declare module.exports: $Exports<'node-rsa/src/formats/components'>;
-}
-declare module 'node-rsa/src/formats/formats.js' {
-  declare module.exports: $Exports<'node-rsa/src/formats/formats'>;
-}
-declare module 'node-rsa/src/formats/pkcs1.js' {
-  declare module.exports: $Exports<'node-rsa/src/formats/pkcs1'>;
-}
-declare module 'node-rsa/src/formats/pkcs8.js' {
-  declare module.exports: $Exports<'node-rsa/src/formats/pkcs8'>;
-}
-declare module 'node-rsa/src/libs/jsbn.js' {
-  declare module.exports: $Exports<'node-rsa/src/libs/jsbn'>;
-}
-declare module 'node-rsa/src/libs/rsa.js' {
-  declare module.exports: $Exports<'node-rsa/src/libs/rsa'>;
-}
-declare module 'node-rsa/src/NodeRSA.js' {
-  declare module.exports: $Exports<'node-rsa/src/NodeRSA'>;
-}
-declare module 'node-rsa/src/schemes/oaep.js' {
-  declare module.exports: $Exports<'node-rsa/src/schemes/oaep'>;
-}
-declare module 'node-rsa/src/schemes/pkcs1.js' {
-  declare module.exports: $Exports<'node-rsa/src/schemes/pkcs1'>;
-}
-declare module 'node-rsa/src/schemes/pss.js' {
-  declare module.exports: $Exports<'node-rsa/src/schemes/pss'>;
-}
-declare module 'node-rsa/src/schemes/schemes.js' {
-  declare module.exports: $Exports<'node-rsa/src/schemes/schemes'>;
-}
-declare module 'node-rsa/src/utils.js' {
-  declare module.exports: $Exports<'node-rsa/src/utils'>;
+    decrypt(string, ?Encoding): string;
+    decryptPrivate(string, ?Encoding): string;
+    encrypt(string, ?Encoding, ?Encoding): string;
+    encryptPrivate(string, ?Encoding, ?Encoding): string;
+  }
+  declare module.exports: typeof NodeRSA;
 }

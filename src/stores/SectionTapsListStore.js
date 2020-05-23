@@ -4,7 +4,6 @@ import type { EntityID, QueryOptions, Tap } from 'brewskey.js-api';
 import type { Section } from '../types';
 
 import nullthrows from 'nullthrows';
-import { flatten } from 'array-flatten';
 import { action, computed, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 import { TapStore } from './DAOStores';
@@ -113,10 +112,8 @@ class SectionTapsListStore {
 
   @computed
   get _taps(): Array<Tap> {
-    return flatten(
-      this._pageLoadObjects.map((pageLoadObject) =>
-        pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
-      ),
+    return this._pageLoadObjects.flatMap((pageLoadObject) =>
+      pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
     );
   }
 

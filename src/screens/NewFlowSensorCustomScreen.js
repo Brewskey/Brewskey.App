@@ -35,7 +35,7 @@ class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Set tap sensor" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
         </KeyboardAwareScrollView>
       </Container>

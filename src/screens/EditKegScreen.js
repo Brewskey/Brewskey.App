@@ -62,7 +62,7 @@ class EditKegScreen extends InjectedComponent<InjectedProps> {
 
   render(): React.Node {
     return (
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <LoaderComponent
           emptyComponent={EmptyComponent}
           loadedComponent={LoadedComponent}

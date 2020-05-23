@@ -48,14 +48,25 @@ type Props = {|
 |};
 
 const LocationMap = ({
-  coordinates,
+  coordinates: { latitude, longitude },
   zoomDistance = 2000,
 }: Props): React.Node => (
   <MapView
     style={styles.map}
-    initialRegion={getRegion(coordinates, zoomDistance)}
+    initialRegion={getRegion(
+      {
+        latitude,
+        longitude,
+      },
+      zoomDistance,
+    )}
   >
-    <MapView.Marker coordinate={coordinates} />
+    <MapView.Marker
+      coordinate={{
+        latitude,
+        longitude,
+      }}
+    />
   </MapView>
 );
 

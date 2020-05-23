@@ -11,8 +11,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary2,
     borderColor: COLORS.secondary,
     borderWidth: 1,
-    paddingHorizontal: 6,
-    paddingVertical: 0,
   },
   badgeText: {
     fontSize: 9,
@@ -43,7 +41,7 @@ class BadgeContainer extends React.Component<Props> {
           {badgeCount === 0 ? null : (
             <View style={styles.container}>
               <Badge
-                containerStyle={styles.badge}
+                badgeStyle={styles.badge}
                 textStyle={styles.badgeText}
                 value={badgeCount > 99 ? '99+' : badgeCount}
               />

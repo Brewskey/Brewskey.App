@@ -49,9 +49,7 @@ const Badges = observer(() =>
   FriendRequestsListStore.pendingRequestsCount === 0 ? null : (
     <View {...elevation} style={styles.container}>
       <Badge
-        containerStyle={{
-          ...styles.badge,
-        }}
+        badgeStyle={styles.badge}
         textStyle={{ ...styles.badgeText, color: COLORS.primary2 }}
         value={FriendRequestsListStore.pendingRequestsCount}
       />

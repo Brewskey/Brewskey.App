@@ -74,7 +74,7 @@ class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
     const { onTapFormSubmit, value } = this.props;
     return (
       <Container>
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <Section bottomPadded>
             <ListItem
               chevron={false}

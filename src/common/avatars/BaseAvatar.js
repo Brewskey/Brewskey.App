@@ -56,7 +56,6 @@ class BaseAvatar extends React.PureComponent<Props> {
       <CachedImage
         mutable={mutable}
         ref={cached ? imageRef : null}
-        size={size}
         source={{ uri: uri || '' }}
         style={baseContainerStyle}
       />

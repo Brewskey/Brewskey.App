@@ -66,7 +66,7 @@ class EditBeverageScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoaderComponent
             loadedComponent={LoadedComponent}
             loader={this._beverageLoader}

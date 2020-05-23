@@ -14,7 +14,7 @@ class RegisterScreen extends React.Component<{}> {
     return (
       <Container>
         <Header showBackButton title="Register account" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <RegisterForm />
         </KeyboardAwareScrollView>
       </Container>

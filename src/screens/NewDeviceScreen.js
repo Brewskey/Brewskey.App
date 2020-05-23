@@ -65,7 +65,7 @@ class NewDeviceScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton={showBackButton} title="New Brewskey box" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <DeviceForm
             device={initialValues ?? {}}
             hideLocation={hideLocation}

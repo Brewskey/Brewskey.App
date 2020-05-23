@@ -14,7 +14,9 @@
  */
 
 declare module 'mobx-react' {
-  declare module.exports: any;
+  declare module.exports: {
+    observer: (T) => T,
+  };
 }
 
 /**
@@ -85,7 +87,9 @@ declare module 'mobx-react/dist/mobxreact.cjs.development.js' {
   declare module.exports: $Exports<'mobx-react/dist/mobxreact.cjs.development'>;
 }
 declare module 'mobx-react/dist/mobxreact.cjs.production.min.js' {
-  declare module.exports: $Exports<'mobx-react/dist/mobxreact.cjs.production.min'>;
+  declare module.exports: $Exports<
+    'mobx-react/dist/mobxreact.cjs.production.min',
+  >;
 }
 declare module 'mobx-react/dist/mobxreact.esm.js' {
   declare module.exports: $Exports<'mobx-react/dist/mobxreact.esm'>;
@@ -94,5 +98,7 @@ declare module 'mobx-react/dist/mobxreact.umd.development.js' {
   declare module.exports: $Exports<'mobx-react/dist/mobxreact.umd.development'>;
 }
 declare module 'mobx-react/dist/mobxreact.umd.production.min.js' {
-  declare module.exports: $Exports<'mobx-react/dist/mobxreact.umd.production.min'>;
+  declare module.exports: $Exports<
+    'mobx-react/dist/mobxreact.umd.production.min',
+  >;
 }

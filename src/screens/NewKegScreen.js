@@ -57,7 +57,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     return (
       <Container>
         <Header showBackButton title="Add keg" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <KegForm
             onSubmit={this._onFormSubmit}
             submitButtonLabel="Add keg"

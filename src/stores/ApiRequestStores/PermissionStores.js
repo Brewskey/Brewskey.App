@@ -14,9 +14,7 @@ const PERMISSION_TYPES = [
   PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
 ];
 
-const REQUEST_API = makeRequestApiStore<string>(() =>
-  checkMultiple(PERMISSION_TYPES),
-);
+const REQUEST_API = makeRequestApiStore(() => checkMultiple(PERMISSION_TYPES));
 
 export class LocationPermissionStore {
   static isLoadingPermissions(): boolean {

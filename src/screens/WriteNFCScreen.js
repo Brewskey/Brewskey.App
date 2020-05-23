@@ -151,7 +151,7 @@ class WriteNFCScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="NFC Card Setup" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           {content}
         </KeyboardAwareScrollView>
       </Container>

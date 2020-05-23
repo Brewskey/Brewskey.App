@@ -14,49 +14,30 @@
  */
 
 declare module 'react-native-push-notification' {
-  declare module.exports: any;
-}
-
-/**
- * We include stubs for each file inside this npm package in case you need to
- * require those files directly. Feel free to delete any files that aren't
- * needed.
- */
-declare module 'react-native-push-notification/component/index.android' {
-  declare module.exports: any;
-}
-
-declare module 'react-native-push-notification/component/index.ios' {
-  declare module.exports: any;
-}
-
-declare module 'react-native-push-notification/component' {
-  declare module.exports: any;
-}
-
-declare module 'react-native-push-notification/react-native.config' {
-  declare module.exports: any;
-}
-
-// Filename aliases
-declare module 'react-native-push-notification/component/index.android.js' {
-  declare module.exports: $Exports<'react-native-push-notification/component/index.android'>;
-}
-declare module 'react-native-push-notification/component/index.ios.js' {
-  declare module.exports: $Exports<'react-native-push-notification/component/index.ios'>;
-}
-declare module 'react-native-push-notification/component/index' {
-  declare module.exports: $Exports<'react-native-push-notification/component'>;
-}
-declare module 'react-native-push-notification/component/index.js' {
-  declare module.exports: $Exports<'react-native-push-notification/component'>;
-}
-declare module 'react-native-push-notification/index' {
-  declare module.exports: $Exports<'react-native-push-notification'>;
-}
-declare module 'react-native-push-notification/index.js' {
-  declare module.exports: $Exports<'react-native-push-notification'>;
-}
-declare module 'react-native-push-notification/react-native.config.js' {
-  declare module.exports: $Exports<'react-native-push-notification/react-native.config'>;
+  declare type RawNotification = {|
+    alert?: any,
+    color?: string,
+    custom_notification?: string,
+    data: Object,
+    finish: () => void,
+    foreground?: boolean,
+    id: string,
+    message?: string,
+    title?: string,
+    userInteraction?: false,
+  |};
+  declare type RegisterResultType = {|
+    os: 'android' | 'ios',
+    token: string,
+  |};
+  declare type ConfigureType = {|
+    onNotification: (RawNotification) => void,
+    onRegister: (RegisterResultType) => void,
+    requestPermissions?: boolean,
+    senderID: string,
+  |};
+  declare export default class PushNotification {
+    static cancelAllLocalNotifications(): void;
+    static configure(ConfigureType): void;
+  }
 }

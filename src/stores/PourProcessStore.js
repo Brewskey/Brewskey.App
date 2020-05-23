@@ -82,8 +82,8 @@ class PourProcessStore {
     if (isNFCEnabled) {
       NfcManager.registerTagEvent(
         this._onNFCTagDiscovered,
-        'Tap Brewskey Box',
-        true,
+        // 'Tap Brewskey Box',
+        // true,
         // {
         //   invalidateAfterFirstRead: true,
         //   isReaderModeEnabled: true,

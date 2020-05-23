@@ -50,7 +50,7 @@ class NewTapScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton={showBackButton} title="New tap" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <TapForm
             onSubmit={this._onFormSubmit}
             submitButtonLabel="Create tap"

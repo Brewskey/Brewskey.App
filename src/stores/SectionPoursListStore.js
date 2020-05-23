@@ -2,7 +2,6 @@
 
 import type { EntityID, QueryOptions, Keg, Pour } from 'brewskey.js-api';
 
-import { flatten } from 'array-flatten';
 import { action, computed, observable } from 'mobx';
 import { LoadObject } from 'brewskey.js-api';
 import { PourStore, KegStore } from './DAOStores';
@@ -132,10 +131,8 @@ class SectionPoursListStore {
 
   @computed
   get _extendedPours(): Array<Pour> {
-    return flatten(
-      this._pageLoaders.map((pageLoadObject) =>
-        pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
-      ),
+    return this._pageLoaders.flatMap((pageLoadObject) =>
+      pageLoadObject.hasValue() ? pageLoadObject.getValueEnforcing() : [],
     );
   }
 

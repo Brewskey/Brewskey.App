@@ -23,7 +23,6 @@
     "appcenter": "^3.0.2",
     "appcenter-analytics": "^3.0.2",
     "appcenter-crashes": "^3.0.2",
-    "array-flatten": "^3.0.0",
     "assert": "^2.0.0",
     "autobind-decorator": "^2.1.0",
     "brewskey.js-api": "git://github.com/Brewskey/brewskey.js-api.git",
@@ -104,7 +103,6 @@
     "lint-staged": "^10.2.1",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.0.5",
-    "react-native-eject": "^0.1.2",
     "react-test-renderer": "^16.0.0",
     "whatwg-fetch": "^3.0.0"
   },

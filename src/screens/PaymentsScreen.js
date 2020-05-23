@@ -103,7 +103,7 @@ class PaymentsScreen extends InjectedComponent<InjectedProps> {
     return (
       <Container>
         <Header showBackButton title="Payment" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="always">
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <Section bottomPadded>{content}</Section>
           <Section>
             <Image source={StripeImage} style={styles.stripeImageStyle} />
