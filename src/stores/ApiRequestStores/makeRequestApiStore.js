@@ -3,15 +3,16 @@
 import type { ObservableMap } from 'mobx';
 
 import nullthrows from 'nullthrows';
-import { action, observable } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
+import { computedFn } from 'mobx-utils';
 import { LoadObject } from 'brewskey.js-api';
 
 // Collection of all the API stores. This is used for flushing when
 // logging out.
-const STORES: Array<{ flushCache: () => void }> = [];
+const STORES: Array<Store<any>> = [];
 
 export const flushAPIStoreCaches = () =>
-  STORES.forEach(store => store.flushCache());
+  STORES.forEach((store) => store.flushCache());
 
 export const deepIdCast = (node: any): any => {
   Object.keys(node).forEach((key: string) => {
@@ -26,59 +27,65 @@ export const deepIdCast = (node: any): any => {
   return node;
 };
 
-type RequestApiStore<TResult> = {|
-  fetch: (...requestArgs: Array<any>) => string,
-  flushCache: () => void,
-  get: (...requestArgs: Array<any>) => LoadObject<TResult>,
-  getFromCache: (cacheKey: string) => LoadObject<TResult>,
-|};
-
 const getCacheKey = (requestArgs: Array<any>): string =>
   `_${JSON.stringify(requestArgs).toLowerCase()}`;
 
-const makeRequestApiStore = <TResult>(
-  getRequestPromise: (...args: Array<any>) => Promise<TResult>,
-): RequestApiStore<TResult> => {
-  const requestLoaderByKey: ObservableMap<
+class Store<TResult> {
+  @observable
+  _requestLoaderByKey: ObservableMap<
     string,
-    ?LoadObject<TResult>,
+    LoadObject<TResult>,
   > = observable.map();
 
-  const fetch = (...requestArgs: Array<any>): string => {
+  _getRequestPromise: (...args: Array<any>) => Promise<TResult>;
+
+  constructor(getRequestPromise: (...args: Array<any>) => Promise<TResult>) {
+    this._getRequestPromise = getRequestPromise;
+  }
+
+  @action
+  fetch(...requestArgs: Array<any>): string {
     const cacheKey = getCacheKey(requestArgs);
 
-    const setLoaderValue = action((value: LoadObject<TResult>) =>
-      requestLoaderByKey.set(cacheKey, value),
-    );
-
-    if (!requestLoaderByKey.has(cacheKey)) {
-      setLoaderValue(LoadObject.loading());
-      getRequestPromise(...requestArgs)
-        .then(
-          (result: TResult): void =>
-            setLoaderValue(LoadObject.withValue(result)),
+    if (!this._requestLoaderByKey.has(cacheKey)) {
+      this._setValue(cacheKey, LoadObject.loading());
+      this._getRequestPromise(...requestArgs)
+        .then((result: TResult): void =>
+          this._setValue(cacheKey, LoadObject.withValue(result)),
         )
-        .catch(
-          (error: Error): void => setLoaderValue(LoadObject.withError(error)),
+        .catch((error: Error): void =>
+          this._setValue(cacheKey, LoadObject.withError(error)),
         );
     }
 
     return cacheKey;
-  };
+  }
 
-  const get = (...requestArgs: Array<any>): LoadObject<TResult> => {
-    const cacheKey = getCacheKey(requestArgs);
-    fetch(...requestArgs);
-    return nullthrows(requestLoaderByKey.get(cacheKey));
-  };
+  @action
+  flushCache() {
+    this._requestLoaderByKey = observable.map();
+  }
 
-  const getFromCache = (cacheKey: string): LoadObject<TResult> =>
-    requestLoaderByKey.get(cacheKey) || LoadObject.empty();
+  get(...requestArgs: Array<any>): LoadObject<TResult> {
+    console.log('get');
+    const cacheKey = this.fetch(...requestArgs);
+    return nullthrows(this._requestLoaderByKey.get(cacheKey));
+  }
 
-  const flushCache = () => requestLoaderByKey.clear();
+  @action
+  getFromCache(cacheKey: string): LoadObject<TResult> {
+    return this._requestLoaderByKey.get(cacheKey) || LoadObject.empty();
+  }
 
-  const store = { fetch, flushCache, get, getFromCache };
+  _setValue(cacheKey: string, value: LoadObject<TResult>) {
+    runInAction(() => this._requestLoaderByKey.set(cacheKey, value));
+  }
+}
 
+const makeRequestApiStore = <TResult>(
+  getRequestPromise: (...args: Array<any>) => Promise<TResult>,
+): Store<TResult> => {
+  const store = new Store(getRequestPromise);
   STORES.push(store);
 
   return store;

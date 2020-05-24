@@ -62,7 +62,11 @@ class TextField extends React.Component<Props> {
     } = this.props;
 
     return (
-      <View>
+      <View
+        style={{
+          marginHorizontal: 16,
+        }}
+      >
         <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <Input
           inputStyle={{

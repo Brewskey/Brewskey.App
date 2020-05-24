@@ -10,7 +10,7 @@ import DebouncedTextStore from './DebouncedTextStore';
 import { GPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { GoogleCoordinatesStore } from '../stores/ApiRequestStores/GoogleApiStores';
 import { NearbyLocationsStore } from '../stores/ApiRequestStores/CommonApiStores';
-import { LocationPermissionStore } from '../stores/ApiRequestStores/PermissionStores';
+import PermissionStore from '../stores/ApiRequestStores/PermissionStores';
 
 class HomeScreenStore {
   searchTextStore: DebouncedTextStore = new DebouncedTextStore();
@@ -22,17 +22,17 @@ class HomeScreenStore {
 
   @action
   onAskLocationPermissionButtonPress: () => void = () => {
-    if (LocationPermissionStore.hasLocationPermissions()) {
-      LocationPermissionStore.flushCache();
+    if (PermissionStore.hasLocationPermissions) {
+      PermissionStore.flushCache();
     } else {
-      const onAppStateChange = (appState) => {
+      const onAppStateChange = action((appState) => {
         if (appState !== 'active') {
           return;
         }
-        LocationPermissionStore.flushCache();
+        PermissionStore.flushCache();
         this.refresh();
         AppState.removeEventListener('change', onAppStateChange);
-      };
+      });
       AppState.addEventListener('change', onAppStateChange);
 
       OpenAppSettings.open();
@@ -45,7 +45,7 @@ class HomeScreenStore {
       GoogleCoordinatesStore.flushCache();
     } else {
       GPSCoordinatesStore.flushCache();
-      LocationPermissionStore.flushCache();
+      PermissionStore.flushCache();
     }
 
     NearbyLocationsStore.flushCache();
@@ -54,7 +54,7 @@ class HomeScreenStore {
   @computed
   get isLoading(): boolean {
     return (
-      LocationPermissionStore.isLoadingPermissions() ||
+      PermissionStore.isLoadingPermissions ||
       this._coordinatesLoader.isLoading() ||
       this._nearbyLocationsLoader.isLoading()
     );
@@ -64,7 +64,7 @@ class HomeScreenStore {
   get isAskLocationPermissionVisible(): boolean {
     return (
       !this.searchTextStore.debouncedText &&
-      !LocationPermissionStore.hasLocationPermissions()
+      !PermissionStore.hasLocationPermissions
     );
   }
 
@@ -79,7 +79,7 @@ class HomeScreenStore {
   get _coordinatesLoader(): LoadObject<Coordinates> {
     return this.searchTextStore.debouncedText
       ? GoogleCoordinatesStore.get(this.searchTextStore.debouncedText)
-      : LocationPermissionStore.hasLocationPermissions()
+      : PermissionStore.hasLocationPermissions
       ? GPSCoordinatesStore.get()
       : LoadObject.empty();
   }

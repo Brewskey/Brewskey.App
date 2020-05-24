@@ -4,7 +4,7 @@ import type { EntityID } from 'brewskey.js-api';
 
 import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
-import NfcManager from 'react-native-nfc-manager';
+import NfcManager, { NfcAdapter } from 'react-native-nfc-manager';
 import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
@@ -80,16 +80,12 @@ class PourProcessStore {
     }
 
     if (isNFCEnabled) {
-      NfcManager.registerTagEvent(
-        this._onNFCTagDiscovered,
-        // 'Tap Brewskey Box',
-        // true,
-        // {
-        //   invalidateAfterFirstRead: true,
-        //   isReaderModeEnabled: true,
-        //   readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
-        // },
-      );
+      await NfcManager.registerTagEvent({
+        alertMessage: 'Tap Brewskey Box',
+        invalidateAfterFirstRead: true,
+        isReaderModeEnabled: true,
+        readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+      }).then(this._onNFCTagDiscovered);
     }
 
     this._startTotpTimer();

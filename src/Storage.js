@@ -1,11 +1,15 @@
 // @flow
 
-import { AsyncStorage } from 'react-native';
-import { when } from 'mobx';
+import AsyncStorage from '@react-native-community/async-storage';
 import nullthrows from 'nullthrows';
-import AuthStore from './stores/AuthStore';
 
 class Storage {
+  static _getUserID: () => Promise<string> = () => '';
+
+  static setGetUserID = (getUserID: () => Promise<string>) => {
+    this._getUserID = getUserID;
+  };
+
   static set = (key: string, value: Object): Promise<void> =>
     AsyncStorage.setItem(key, JSON.stringify(value));
 
@@ -37,8 +41,7 @@ class Storage {
   };
 
   static _getUserID = async (): Promise<string> => {
-    await when((): boolean => AuthStore.isAuthorized);
-    return nullthrows(AuthStore.userID);
+    return await Storage._getUserID();
   };
 }
 

@@ -8,32 +8,45 @@ import {
   request,
   RESULTS,
 } from 'react-native-permissions';
+import { action, computed } from 'mobx';
 
 const PERMISSION_TYPES = [
   PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
   PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
 ];
 
-const REQUEST_API = makeRequestApiStore(() => checkMultiple(PERMISSION_TYPES));
+const REQUEST_API = makeRequestApiStore(() =>
+  checkMultiple(PERMISSION_TYPES).then((r) => {
+    console.log('PERMISSION_TYPES', r);
+    return r;
+  }),
+);
 
-export class LocationPermissionStore {
-  static isLoadingPermissions(): boolean {
+class PermissionStore {
+  @computed
+  get isLoadingPermissions(): boolean {
     return REQUEST_API.get().isLoading();
   }
 
-  static hasLocationPermissions(): boolean {
-    return (
+  @computed
+  get hasLocationPermissions(): boolean {
+    const result =
       REQUEST_API.get()
-        .map((status) =>
-          PERMISSION_TYPES.some(
+        .map((status) => {
+          console.log('STATUS', status);
+          return PERMISSION_TYPES.some(
             (permission) => status[permission] === RESULTS.GRANTED,
-          ),
-        )
-        .getValue() || false
-    );
+          );
+        })
+        .getValue() || false;
+    console.log(result);
+    return result;
   }
 
-  static flushCache(): void {
+  @action
+  flushCache(): void {
     REQUEST_API.flushCache();
   }
 }
+
+export default new PermissionStore();

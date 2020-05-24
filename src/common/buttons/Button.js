@@ -65,7 +65,7 @@ class Button extends React.Component<Props> {
     return (
       <RNEButton
         buttonStyle={{
-          marginHorizontal: 12,
+          marginHorizontal: 20,
           ...(type === 'solid' || type == null
             ? {
                 backgroundColor: secondary ? COLORS.secondary : backgroundColor,

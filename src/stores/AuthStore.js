@@ -2,8 +2,15 @@
 
 import type { AuthResponse, UserCredentials } from 'brewskey.js-api';
 
-import { AsyncStorage } from 'react-native';
-import { action, computed, observable, reaction, runInAction } from 'mobx';
+import AsyncStorage from '@react-native-community/async-storage';
+import {
+  action,
+  computed,
+  observable,
+  reaction,
+  runInAction,
+  when,
+} from 'mobx';
 import DAOApi from 'brewskey.js-api';
 import Storage from '../Storage';
 
@@ -31,6 +38,10 @@ class AuthStore {
   isReady: boolean = false;
 
   constructor() {
+    Storage.setGetUserID(async () => {
+      await when(() => this.isAuthorized);
+      return this.userID || '';
+    });
     (async () => {
       await this._rehydrateState();
 
