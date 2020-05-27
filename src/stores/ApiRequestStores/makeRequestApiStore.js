@@ -67,7 +67,6 @@ class Store<TResult> {
   }
 
   get(...requestArgs: Array<any>): LoadObject<TResult> {
-    console.log('get');
     const cacheKey = this.fetch(...requestArgs);
     return nullthrows(this._requestLoaderByKey.get(cacheKey));
   }

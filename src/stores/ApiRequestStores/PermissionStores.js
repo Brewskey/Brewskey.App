@@ -15,12 +15,7 @@ const PERMISSION_TYPES = [
   PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
 ];
 
-const REQUEST_API = makeRequestApiStore(() =>
-  checkMultiple(PERMISSION_TYPES).then((r) => {
-    console.log('PERMISSION_TYPES', r);
-    return r;
-  }),
-);
+const REQUEST_API = makeRequestApiStore(() => checkMultiple(PERMISSION_TYPES));
 
 class PermissionStore {
   @computed
@@ -30,17 +25,15 @@ class PermissionStore {
 
   @computed
   get hasLocationPermissions(): boolean {
-    const result =
+    return (
       REQUEST_API.get()
         .map((status) => {
-          console.log('STATUS', status);
           return PERMISSION_TYPES.some(
             (permission) => status[permission] === RESULTS.GRANTED,
           );
         })
-        .getValue() || false;
-    console.log(result);
-    return result;
+        .getValue() || false
+    );
   }
 
   @action

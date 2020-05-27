@@ -2,6 +2,9 @@
   "folders": [
     {
       "path": "."
+    },
+    {
+      "path": "..\\..\\..\\react-native-progress"
     }
   ],
   "settings": {
