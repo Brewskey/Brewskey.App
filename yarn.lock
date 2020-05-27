@@ -927,6 +927,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.10.0":
+  version "7.10.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.0.tgz#2cdcd6d7a391c24f7154235134c830cfb58ac0b1"
+  integrity sha512-tgYb3zVApHbLHYOPWtVwg25sBqHhfBXRKeKoTIyoheIxln1nA7oBl7SfHfiTG2GhDPI8EUBkOD/0wJCP/3HN4Q==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.0.0", "@babel/template@^7.3.3", "@babel/template@^7.8.3", "@babel/template@^7.8.6":
   version "7.8.6"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.8.6.tgz#86b22af15f828dfb086474f964dcc3e39c43ce2b"
@@ -1241,10 +1248,9 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@react-native-community/art@^1.1.2":
+"@react-native-community/art@https://github.com/Brewskey/art":
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@react-native-community/art/-/art-1.2.0.tgz#386d95393f6042d9006f9d4bc6063fb898794460"
-  integrity sha512-a+ZcRGl/BzLa89yi33Mbn5SHavsEXqKUMdbfLf3U8MDLElndPqUetoJyGkv63+BcPO49UMWiQRP1YUz6/zfJ+A==
+  resolved "https://github.com/Brewskey/art#8ce7ec5812c8b5231700a6a3449d6fd9c003d9dd"
   dependencies:
     art "^0.10.3"
     invariant "^2.2.4"
@@ -1852,10 +1858,10 @@ array-filter@~0.0.0:
   resolved "https://registry.yarnpkg.com/array-filter/-/array-filter-0.0.1.tgz#7da8cf2e26628ed732803581fd21f67cacd2eeec"
   integrity sha1-fajPLiZijtcygDWB/SH2fKzS7uw=
 
-array-flatten@^2.1.1:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-2.1.2.tgz#24ef80a28c1a893617e2149b0c6d0d788293b099"
-  integrity sha512-hNfzcOV8W4NdualtqBFPyVO+54DSJuZGY9qT4pRroB6S9e3iiido2ISIC5h9R2sPJ8H3FHCIiEnsv1lPXO3KtQ==
+array-flatten@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/array-flatten/-/array-flatten-3.0.0.tgz#6428ca2ee52c7b823192ec600fa3ed2f157cd541"
+  integrity sha512-zPMVc3ZYlGLNk4mpK1NzP2wg0ml9t7fUgDsayR5Y5rSzxQilzR9FGu/EH2jQOcKSAeAfWeylyW8juy3OkWRvNA==
 
 array-includes@^3.0.3, array-includes@^3.1.1:
   version "3.1.1"
@@ -2247,9 +2253,9 @@ braces@^3.0.1:
 
 "brewskey.js-api@git://github.com/Brewskey/brewskey.js-api.git":
   version "0.2.0-SNAPSHOT"
-  resolved "git://github.com/Brewskey/brewskey.js-api.git#27451a407be398c85be00b483fc6f310260d5c84"
+  resolved "git://github.com/Brewskey/brewskey.js-api.git#679cb3e5b7bba9bb252755d91a65866fc8db3440"
   dependencies:
-    array-flatten "^2.1.1"
+    array-flatten "^3.0.0"
     debounce "^1.2.0"
     nullthrows "^1.1.0"
     odata "git+https://github.com/Brewskey/o.js.git"
@@ -7317,9 +7323,10 @@ react-native-permissions@^2.1.4:
 
 "react-native-progress@https://github.com/Brewskey/react-native-progress":
   version "4.1.2"
-  resolved "https://github.com/Brewskey/react-native-progress#835a487607ff5780d910ba582c777f13ca696ced"
+  resolved "https://github.com/Brewskey/react-native-progress#72d8db46a77e7006ca0f80d4dea7bdd740d26118"
   dependencies:
-    "@react-native-community/art" "^1.1.2"
+    "@babel/runtime" "^7.10.0"
+    "@react-native-community/art" "https://github.com/Brewskey/art"
     prop-types "^15.7.2"
 
 react-native-push-notification@^3.1.1:

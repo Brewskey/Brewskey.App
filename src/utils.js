@@ -10,7 +10,7 @@ import { MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 const EMAIL_REGEXP = /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
 export const createRange = (start: number, end: number): Array<number> =>
-  Array(end - start + 1)
+  Array(end - start)
     .fill(start)
     .map((x: number, y: number): number => x + y);
 

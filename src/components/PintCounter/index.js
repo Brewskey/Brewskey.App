@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const translateToPints = (ounces: number): number =>
-  (Math.round(ounces) || 1) / 14;
+const translateToPints = (ounces: number): number => ounces / 16;
 
 type Props = {|
   ounces: number,

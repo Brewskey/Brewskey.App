@@ -1,6 +1,6 @@
 // @flow
 
-import type { Beverage, Permission, Tap } from 'brewskey.js-api';
+import type { Beverage, Keg, Permission, Tap } from 'brewskey.js-api';
 import type { Navigation } from '../types';
 
 import * as React from 'react';
@@ -8,8 +8,8 @@ import { StyleSheet, Text } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import DAOApi, { LoadObject, MAX_OUNCES_BY_KEG_TYPE } from 'brewskey.js-api';
 import InjectedComponent from '../common/InjectedComponent';
-import { computed } from 'mobx';
-import { BeverageStore, TapStore } from '../stores/DAOStores';
+import { action, computed } from 'mobx';
+import { BeverageStore, KegStore, TapStore } from '../stores/DAOStores';
 import { observer } from 'mobx-react';
 import ErrorScreen from '../common/ErrorScreen';
 import { errorBoundary } from '../common/ErrorBoundary';
@@ -60,6 +60,17 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     );
   }
 
+  @computed
+  get _currentKeg(): LoadObject<Keg> {
+    const {
+      tap: { id },
+    } = this.injectedProps;
+    return TapStore.getByID(id).map<Keg>(({ currentKeg }) =>
+      KegStore.getByID(currentKeg.id),
+    );
+  }
+
+  @action
   _onRefresh = () => {
     this._kegLevelBar && this._kegLevelBar.refresh();
   };
@@ -69,9 +80,11 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
   render(): React.Node {
     const {
       noFlowSensorWarning,
-      tap: { currentKeg, id },
+      tap: { currentKeg: kegReference, id },
       tapPermission,
     } = this.injectedProps;
+
+    const currentKeg = this._currentKeg.getValue();
 
     return (
       <KegsList
@@ -84,7 +97,7 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
                   <SectionHeader title="Keg level" />
                   <SectionContent paddedHorizontal>
                     <KegLevelBar
-                      kegID={currentKeg.id}
+                      kegID={kegReference.id}
                       ref={this._setKegLevelBarRef}
                     />
                     <Text style={styles.text}>

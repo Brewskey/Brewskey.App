@@ -4,7 +4,7 @@ import type { EntityID, LoadObject, Keg } from 'brewskey.js-api';
 
 import * as React from 'react';
 import { Animated, StyleSheet, View, Text } from 'react-native';
-import { computed } from 'mobx';
+import { action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { KegStore } from '../stores/DAOStores';
 import LoaderComponent from '../common/LoaderComponent';
@@ -61,6 +61,7 @@ class KegLevelBar extends React.Component<Props> {
     return KegStore.getByID(this.props.kegID);
   }
 
+  @action
   refresh: () => void = () => KegStore.flushCacheForEntity(this.props.kegID);
 
   render(): React.Node {

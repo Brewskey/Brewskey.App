@@ -61,7 +61,7 @@ class DAOListStore<TEntity> {
         const queryLastItemIndex = take + skip - 1;
         const rowKeys = createRange(
           skip,
-          Math.min(queryLastItemIndex, this._maxRemoteItemIndex),
+          Math.min(queryLastItemIndex, this._maxRemoteItemIndex) + 1,
         );
 
         const queryLoadObject = this._daoStore.getMany(queryOptions);
