@@ -21,6 +21,7 @@ import LoadingIndicator from '../common/LoadingIndicator';
 import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
 import ProfileFriendStatus from '../components/ProfileFriendStatus';
+import AllBeveragesHScroll from '../components/Stats/AllBeveragesHScroll';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import FriendsHorizontalList from '../components/FriendsHorizontalList';
 import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
@@ -113,6 +114,10 @@ const LoadedComponent = ({
           <Section bottomPadded>
             <SectionHeader title="Badges" />
             <UserBadges userID={account.id} />
+          </Section>
+          <Section bottomPadded>
+            <SectionHeader title="Beverages Poured" />
+            <AllBeveragesHScroll userID={account.id} />
           </Section>
         </React.Fragment>
       )}

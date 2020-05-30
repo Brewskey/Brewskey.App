@@ -39,7 +39,6 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
   componentDidUpdate(prevProps: Props) {
     if (this.props.duration !== prevProps.duration) {
       this._listStore.setDuration(this.props.duration);
-      this._listStore.reload();
     }
   }
 

@@ -67,7 +67,13 @@ class BaseAvatar extends React.PureComponent<Props> {
       <TouchableOpacity
         disabled={!onPress}
         onPress={onPress}
-        style={{ ...baseContainerStyle, ...styles.avatar, ...containerStyle }}
+        style={{
+          ...baseContainerStyle,
+          ...styles.avatar,
+          width: size,
+          height: size,
+          ...containerStyle,
+        }}
       >
         {uri ? imageElement : null}
       </TouchableOpacity>

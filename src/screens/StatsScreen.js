@@ -13,6 +13,7 @@ import { errorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import Fragment from '../common/Fragment';
+import AllBeveragesHScroll from '../components/Stats/AllBeveragesHScroll';
 import UserBadges from '../components/UserBadges';
 import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
@@ -47,7 +48,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
     const userID = nullthrows(AuthStore.userID);
     return (
       <Container>
-        <Header title="Statistics" />
+        <Header title="My Stats" />
         <BeveragePoursList
           ListHeaderComponent={
             <Fragment>
@@ -57,6 +58,10 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
                   ref={(ref) => (this._userBadges = ref)}
                   userID={userID}
                 />
+              </Section>
+              <Section bottomPadded>
+                <SectionHeader title="Beverages Poured" />
+                <AllBeveragesHScroll userID={userID} />
               </Section>
               <SectionHeader title="Recent Pours" />
             </Fragment>

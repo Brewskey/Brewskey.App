@@ -62,11 +62,8 @@ const LoaderComponent = <TValue, TExtraProps>({
 };
 
 LoaderComponent.defaultProps = {
-  deletingComponent: (): React.Node => null,
   emptyComponent: (): React.Node => null,
-  errorComponent: (): React.Node => null,
   loadingComponent: LoadingIndicator,
-  updatingComponent: (): React.Node => null,
 };
 
 export default (observer(LoaderComponent): typeof LoaderComponent);

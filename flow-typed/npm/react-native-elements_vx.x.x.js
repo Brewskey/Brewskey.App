@@ -2060,6 +2060,8 @@ declare module 'react-native-elements' {
   ) => React$ComponentType<P>;
 
   declare export type CardProps = {|
+    children: React$Node,
+
     /**
      * Outer container style
      */

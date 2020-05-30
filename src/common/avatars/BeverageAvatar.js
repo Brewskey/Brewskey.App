@@ -44,6 +44,7 @@ class BeverageAvatar extends React.PureComponent<Props> {
             cached ? '' : new Date().toString()
           }`
         }
+        size={size}
       />
     );
   }
