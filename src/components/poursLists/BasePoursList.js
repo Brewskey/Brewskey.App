@@ -12,6 +12,8 @@ import { PourStore } from '../../stores/DAOStores';
 import SwipeableList from '../../common/SwipeableList';
 import LoaderRow from '../../common/LoaderRow';
 import LoadingListFooter from '../../common/LoadingListFooter';
+import BeverageModal from '../modals/BeverageModal';
+import nullthrows from 'nullthrows';
 
 type Props<TComponentType> = {|
   ListEmptyComponent?: ?(React.ComponentType<any> | React.Node),
@@ -33,6 +35,7 @@ class BasePoursList<TComponentType> extends React.Component<
     queryOptions: {},
   };
 
+  _beverageModal = React.createRef<BeverageModal>();
   _listStore: DAOListStore<Pour> = new DAOListStore(PourStore);
 
   componentDidMount() {
@@ -67,6 +70,9 @@ class BasePoursList<TComponentType> extends React.Component<
       rowItemComponent={this.props.rowItemComponent}
       separators={separators}
       slideoutComponent={this.props.slideoutComponent}
+      onItemPress={(pour) =>
+        nullthrows(this._beverageModal.current).setBeverageID(pour.beverage.id)
+      }
       {...swipeableStateProps}
     />
   );
@@ -75,16 +81,19 @@ class BasePoursList<TComponentType> extends React.Component<
     const { ListEmptyComponent, ListHeaderComponent } = this.props;
     const isLoading = this._listStore.isFetchingRemoteCount;
     return (
-      <SwipeableList
-        data={this._listStore.rows}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={ListHeaderComponent}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._onRefresh}
-        renderItem={this._renderRow}
-      />
+      <>
+        <SwipeableList
+          data={this._listStore.rows}
+          keyExtractor={this._keyExtractor}
+          ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
+          ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+          ListHeaderComponent={ListHeaderComponent}
+          onEndReached={this._listStore.fetchNextPage}
+          onRefresh={this._onRefresh}
+          renderItem={this._renderRow}
+        />
+        <BeverageModal ref={this._beverageModal} />
+      </>
     );
   }
 }

@@ -16,16 +16,11 @@ import { observer } from 'mobx-react';
 import nullthrows from 'nullthrows';
 import { action, computed, observable, when } from 'mobx';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
-import { BeverageStore } from '../../stores/DAOStores';
+import { BeverageStore, PourStore } from '../../stores/DAOStores';
 import LoaderComponent from '../../common/LoaderComponent';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import Modal from '../modals/Modal';
-import Button from '../../common/buttons/Button';
-import ToggleStore from '../../stores/ToggleStore';
-import BeverageDetailsContent from '../BeverageDetailsContent';
-import Section from '../../common/Section';
-import SectionContent from '../../common/SectionContent';
-import SectionHeader from '../../common/SectionHeader';
+import BeverageModal from '../modals/BeverageModal';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 type Props = {|
   userID: EntityID,
@@ -33,22 +28,46 @@ type Props = {|
 
 @observer
 class AllBeveragesHScroll extends React.Component<Props> {
+  refresh = () => BeverageStore.flushCache();
+
   @computed
   get _beverages(): LoadObject<Array<LoadObject<Beverage>>> {
+    console.log(this.props.userID);
     return BeverageStore.getMany({
       filters: [
         DAOApi.createFilter('Pours').any(
           `pour: pour/owner/id eq '${this.props.userID}'`,
         ),
+        DAOApi.createFilter('Pours').any(`pour: pour/isDeleted eq false`),
       ],
     });
+  }
+
+  @computed
+  get _beverageTotals(): LoadObject<Map<EntityID, number>> {
+    return this._beverages
+      .map((loaders) =>
+        loaders.map((beverageLoader) =>
+          beverageLoader.map((beverage) => beverage.id),
+        ),
+      )
+      .map((items) => {
+        if (items.some((loader) => loader.isLoading())) {
+          return LoadObject.loading();
+        }
+
+        return PourStore.getPoursByBeverageIDs(
+          items.map((loader) => loader.getValueEnforcing()),
+          this.props.userID,
+        );
+      });
   }
 
   render(): React.Node {
     return (
       <LoaderComponent
         loadedComponent={AllBeveragesHScrollLoaded}
-        loader={this._beverages}
+        loader={LoadObject.merge([this._beverages, this._beverageTotals])}
       />
     );
   }
@@ -57,41 +76,36 @@ class AllBeveragesHScroll extends React.Component<Props> {
 export default AllBeveragesHScroll;
 
 type LoadedProps = {|
-  value: Array<LoadObject<Beverage>>,
+  value: [Array<LoadObject<Beverage>>, LoadObject<Map<EntityID, number>>],
 |};
 
 @observer
 class AllBeveragesHScrollLoaded extends React.Component<LoadedProps> {
-  @observable
-  _beverage: ?Beverage;
-
-  _modalToggleStore = new ToggleStore();
-
-  @action
-  _onShowModal = (beverage) => {
-    this._beverage = beverage;
-    this._modalToggleStore.toggleOn();
-  };
-
-  @action
-  _onHideModal = () => {
-    this._beverage = null;
-    this._modalToggleStore.toggleOn();
-  };
+  _modalRef = React.createRef<BeverageModal>();
 
   render(): React.Node {
-    const { value } = this.props;
-    if (value.length === 0 || value.some((loader) => loader.hasOperation())) {
+    const [value, countsByID] = this.props.value;
+    if (
+      value == null ||
+      value.length === 0 ||
+      value.some((loader) => loader != null && loader.hasOperation()) ||
+      countsByID == null
+    ) {
       return <Empty />;
     }
-    const beverages = value.map((loader) => loader.getValueEnforcing());
+
+    const beverages = value
+      .map((loader) => loader.getValueEnforcing())
+      .sort((a, b) => countsByID.get(b.id) - countsByID.get(a.id));
 
     return (
       <ScrollView horizontal style={{ paddingBottom: 16, marginLeft: 12 }}>
         {beverages.map((beverage: Beverage) => (
           <TouchableOpacity
             key={beverage.id}
-            onPress={() => this._onShowModal(beverage)}
+            onPress={() =>
+              nullthrows(this._modalRef.current).setBeverageID(beverage.id)
+            }
           >
             <Card
               containerStyle={{
@@ -111,57 +125,31 @@ class AllBeveragesHScrollLoaded extends React.Component<LoadedProps> {
               >
                 <BeverageAvatar beverageId={beverage.id} size={70} />
               </View>
-              <Text
-                numberOfLines={3}
-                style={{ marginTop: 8, textAlign: 'center' }}
-              >
-                {beverage.name}
-              </Text>
+              <View style={{ flex: 1, flexAlign: 'stretch' }}>
+                <Text
+                  numberOfLines={3}
+                  style={{ flexGrow: 1, marginTop: 8, textAlign: 'center' }}
+                >
+                  {beverage.name}
+                </Text>
+                <Text
+                  style={{
+                    alignSelf: 'flex-end',
+                    fontSize: 12,
+                    marginTop: 12,
+                  }}
+                >
+                  {countsByID.get(beverage.id).toFixed(0)} oz poured
+                </Text>
+              </View>
             </Card>
           </TouchableOpacity>
         ))}
-        <BeverageModal
-          beverage={this._beverage}
-          isVisible={this._modalToggleStore.isToggled}
-          onHideModal={this._onHideModal}
-        />
+        <BeverageModal ref={this._modalRef} />
       </ScrollView>
     );
   }
 }
-
-type ModalProps = {|
-  beverage: ?Beverage,
-  isVisible: boolean,
-  onHideModal: () => void,
-|};
-const BeverageModal = ({
-  beverage,
-  isVisible,
-  onHideModal,
-}: ModalProps): React.Node => {
-  if (beverage == null) {
-    return null;
-  }
-
-  return (
-    <Modal isVisible={isVisible} onHideModal={onHideModal} transparent={false}>
-      <ScrollView horizontal={false} style={{ marginVertical: 12 }}>
-        <Section>
-          <SectionHeader title={beverage.name} />
-          <SectionContent>
-            <BeverageDetailsContent beverage={beverage} />
-          </SectionContent>
-          <Button
-            title="Back"
-            onPress={onHideModal}
-            style={{ marginVertical: 12 }}
-          />
-        </Section>
-      </ScrollView>
-    </Modal>
-  );
-};
 
 const Empty = () => {
   return null;

@@ -43,7 +43,7 @@ class TapDetailsNoKeg extends InjectedComponent<InjectedProps, Props> {
       <Container centered style={styles.container}>
         {canEdit ? (
           <Fragment>
-            <Text style={styles.text}>You don't have keg on the tap.</Text>
+            <Text style={styles.text}>You don't have kegs on the tap.</Text>
             <TouchableOpacity onPress={this._onSetupPress}>
               <Text style={[styles.text, styles.textLink]}>
                 Click to setup one.

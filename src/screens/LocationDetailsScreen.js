@@ -87,12 +87,14 @@ const LoadedLocationDetails = ({
         <SectionContent paddedHorizontal>
           <LocationAddress location={location} />
         </SectionContent>
-        {description && [
-          <SectionHeader key="header" title="Description" />,
-          <SectionContent key="content" paddedHorizontal>
-            <Text style={styles.description}>{description}</Text>
-          </SectionContent>,
-        ]}
+        {description != null && description !== '' && (
+          <>
+            <SectionHeader key="header" title="Description" />
+            <SectionContent key="content" paddedHorizontal>
+              <Text style={styles.description}>{description}</Text>
+            </SectionContent>
+          </>
+        )}
       </ScrollView>
     </Container>
   );

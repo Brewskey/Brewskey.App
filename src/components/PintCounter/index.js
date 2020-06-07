@@ -1,5 +1,7 @@
 // @flow
 
+import type { EntityID } from 'brewskey.js-api';
+
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createRange } from '../../utils';
@@ -22,11 +24,12 @@ const styles = StyleSheet.create({
 const translateToPints = (ounces: number): number => ounces / 16;
 
 type Props = {|
+  beverageID: ?EntityID,
   ounces: number,
 |};
 
-const PintCounter = ({ ounces }: { ounces: number }): React.Node => {
-  const pints = translateToPints(ounces);
+const PintCounter = ({ beverageID, ounces }: Props): React.Node => {
+  const pints = translateToPints(ounces.toFixed(1));
   const wholePints = createRange(0, Math.floor(pints));
   const partialPintLevel = (pints % 1) * 100;
 
@@ -35,12 +38,16 @@ const PintCounter = ({ ounces }: { ounces: number }): React.Node => {
       {wholePints.length > 3 ? (
         <Fragment>
           <Text style={styles.countText}>x{wholePints.length}</Text>
-          <Pint />
+          <Pint beverageID={beverageID} />
         </Fragment>
       ) : (
-        wholePints.map((index: number): React.Node => <Pint key={index} />)
+        wholePints.map((index: number): React.Node => (
+          <Pint beverageID={beverageID} key={index} />
+        ))
       )}
-      {partialPintLevel ? <Pint level={partialPintLevel} /> : null}
+      {partialPintLevel ? (
+        <Pint beverageID={beverageID} level={partialPintLevel} />
+      ) : null}
     </View>
   );
 };

@@ -10,7 +10,7 @@ import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedLi
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { autorun } from 'mobx';
+import { autorun, observable, action } from 'mobx';
 import Header from '../../common/Header';
 import HeaderIconButton from '../../common/Header/HeaderIconButton';
 import HeaderSearchBar from '../../common/Header/HeaderSearchBar';
@@ -79,6 +79,9 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
     shouldUseSearchQuery: false,
   };
 
+  @observable
+  _value: any;
+
   _listStore: DAOListStore<TEntityBase<TEntity>> = new DAOListStore(
     this.props.daoStore,
   );
@@ -88,7 +91,6 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
   _pickerStore: PickerStore<TEntityBase<TEntity>, any> = new PickerStore({
     initialValue: this.props.value,
     multiple: this.props.multiple,
-    onChange: this.props.onChange,
   });
 
   componentDidMount() {
@@ -130,6 +132,25 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
     return renderRow(({ ...renderRowProps, isSelected, toggleItem }: any));
   };
 
+  @action
+  _onOpen = () => {
+    this._modalToggleStore.toggleOn();
+    const { value } = this.props;
+    if (value != null) {
+      this._pickerStore.setValue((value: any));
+    } else {
+      this._pickerStore.clear();
+    }
+  };
+
+  @action
+  _onSelect = () => {
+    this._modalToggleStore.toggleOff();
+    const { onChange } = this.props;
+    this._value = this._pickerStore.value;
+    onChange && onChange(this._value);
+  };
+
   render(): React.Node {
     const {
       error,
@@ -152,10 +173,10 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
           inputStyle={inputStyle}
           label={label}
           labelStyle={labelStyle}
-          onPress={this._modalToggleStore.toggleOn}
+          onPress={(this._onOpen: any)}
           placeholder={placeholder}
           stringValueExtractor={stringValueExtractor}
-          value={(value: any)}
+          value={(this._value: any)}
         />
         <Modal
           isVisible={this._modalToggleStore.isToggled}
@@ -192,8 +213,8 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
               />
               <PickerControl
                 onClearPress={clear}
-                onSelectPress={this._modalToggleStore.toggleOff}
-                value={value}
+                onSelectPress={this._onSelect}
+                value={this._value}
               />
             </Container>
           )}

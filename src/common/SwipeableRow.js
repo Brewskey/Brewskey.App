@@ -23,7 +23,6 @@ export type RowItemProps<TEntity> = {|
   onDeleteItemPress?: (TEntity) => void,
   onEditItemPress?: (TEntity) => void,
   onItemPress?: (TEntity) => void,
-  onListItemPress?: (TEntity) => void,
 |};
 
 type Props<TEntity> = {|

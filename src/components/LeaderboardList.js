@@ -47,7 +47,7 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     return item.userName || this.iterator.toString();
   };
 
-  _onListItemPress = ({ userID }: LeaderboardItem) =>
+  _onItemPress = ({ userID }: LeaderboardItem) =>
     this.injectedProps.navigation.navigate('profile', {
       id: userID,
     });
@@ -62,8 +62,8 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     <ListItem
       leftAvatar={<UserAvatar userName={item.userName || ''} />}
       item={item}
-      onPress={item.userID ? this._onListItemPress : undefined}
-      rightIcon={<PintCounter ounces={item.totalOunces} />}
+      onPress={item.userID ? this._onItemPress : undefined}
+      rightIcon={<PintCounter beverageID={null} ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
       title={`${index + 1}. ${item.userName || ''}`}
     />

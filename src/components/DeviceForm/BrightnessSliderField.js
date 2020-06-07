@@ -1,7 +1,8 @@
 // @flow
 
 import * as React from 'react';
-import { Slider, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import Slider from '@react-native-community/slider';
 import FormLabel from '../../common/form/FormLabel';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 

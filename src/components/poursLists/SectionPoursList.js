@@ -21,6 +21,7 @@ import UserAvatar from '../../common/avatars/UserAvatar';
 import LoadingListFooter from '../../common/LoadingListFooter';
 import KegSectionHeader from './KegSectionHeader';
 import SnackBarStore from '../../stores/SnackBarStore';
+import PintCounter from '../../components/PintCounter';
 
 type InjectedProps = {
   navigation: Navigation,
@@ -156,6 +157,9 @@ function PourListItem({
   return (
     <ListItem
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      rightIcon={
+        <PintCounter beverageID={pour?.beverage?.id} ounces={pour.ounces} />
+      }
       onPress={onItemPress}
       chevron={false}
       item={pour}

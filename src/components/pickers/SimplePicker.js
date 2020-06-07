@@ -92,7 +92,6 @@ class SimplePicker<TValue> extends React.Component<Props<TValue>> {
     } = this.props;
     const value = this._pickerStore.value;
     const { clear } = this._pickerStore;
-    console.log(pickerValues);
     return (
       <Fragment>
         <PickerTextInput

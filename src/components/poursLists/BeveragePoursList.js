@@ -31,17 +31,23 @@ const BeveragePoursList = observer(
   ),
 );
 
-const LoadedRow = ({ item: pour }: RowItemProps<Pour>): React.Node => (
+const LoadedRow = ({
+  item: pour,
+  onItemPress,
+}: RowItemProps<Pour>): React.Node => (
   <ListItem
     leftAvatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />
     }
     item={pour}
-    rightIcon={<PintCounter ounces={pour.ounces} />}
+    rightIcon={
+      <PintCounter beverageID={pour?.beverage?.id} ounces={pour.ounces} />
+    }
     title={`${
       pour.beverage ? pour.beverage.name : NULL_STRING_PLACEHOLDER
     } – ${pour.ounces.toFixed(1)} oz`}
     subtitle={moment(pour.pourDate).fromNow()}
+    onPress={onItemPress}
   />
 );
 export default BeveragePoursList;

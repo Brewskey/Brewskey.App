@@ -48,7 +48,7 @@ const LoaderComponent = <TValue, TExtraProps>({
     return <ErrorComponent {...rest} error={loader.getErrorEnforcing()} />;
   }
 
-  if (loader.isEmpty()) {
+  if (!loader.hasValue()) {
     return <EmptyComponent {...rest} />;
   }
 

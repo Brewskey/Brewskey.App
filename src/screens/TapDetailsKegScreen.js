@@ -55,9 +55,12 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     const {
       tap: { id },
     } = this.injectedProps;
-    return TapStore.getByID(id).map<Beverage>(({ currentKeg }) =>
-      BeverageStore.getByID(currentKeg.beverage.id),
-    );
+    return TapStore.getByID(id).map<Beverage>(({ currentKeg }) => {
+      if (currentKeg == null) {
+        return LoadObject.empty();
+      }
+      return BeverageStore.getByID(currentKeg.beverage.id);
+    });
   }
 
   @computed
@@ -65,9 +68,13 @@ class TapDetailsKegScreen extends InjectedComponent<InjectedProps> {
     const {
       tap: { id },
     } = this.injectedProps;
-    return TapStore.getByID(id).map<Keg>(({ currentKeg }) =>
-      KegStore.getByID(currentKeg.id),
-    );
+    return TapStore.getByID(id).map<Keg>(({ currentKeg }) => {
+      if (currentKeg == null) {
+        return LoadObject.empty();
+      }
+
+      return KegStore.getByID(currentKeg.id);
+    });
   }
 
   @action

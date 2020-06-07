@@ -45,7 +45,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Friend>): string => row.key;
 
-  _onListItemPress = (friend: Friend) =>
+  _onItemPress = (friend: Friend) =>
     this.injectedProps.navigation.navigate('profile', {
       id: friend.friendAccount.id,
     });
@@ -56,7 +56,7 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
     <LoaderRow
       loadedRow={LoadedRow}
       loader={item.loader}
-      onListItemPress={this._onListItemPress}
+      onItemPress={this._onItemPress}
     />
   );
 
@@ -81,13 +81,13 @@ class FriendsList extends InjectedComponent<InjectedProps, Props> {
 
 const LoadedRow = ({
   item: friend,
-  onListItemPress,
+  onItemPress,
 }: RowItemProps<Friend>): React.Node => (
   <ListItem
     leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
     chevron={false}
     item={friend}
-    onPress={onListItemPress}
+    onPress={onItemPress}
     title={friend.friendAccount.userName}
   />
 );

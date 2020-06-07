@@ -261,6 +261,19 @@ class $KegStore extends DAOStore<Keg> {
   }
 }
 
+class $PourStore extends DAOStore<Keg> {
+  constructor() {
+    super(DAOApi.PourDAO);
+  }
+
+  getPoursByBeverageIDs(
+    beverageIDs: Array<EntityID>,
+    userID?: EntityID,
+  ): LoadObject<Map<EntityID, number>> {
+    return this.__callDAOFunction('getPoursByBeverageIDs', beverageIDs, userID);
+  }
+}
+
 class $OrganizationStore extends DAOStore<Organization> {
   fetchSquareLocations(
     organizationID: EntityID,
@@ -326,7 +339,7 @@ export const OrganizationStore: $OrganizationStore = new $OrganizationStore(
 );
 export const PaymentsStore: $PaymentsStore = new $PaymentsStore();
 export const PermissionStore: $PermissionStore = new $PermissionStore();
-export const PourStore: DAOStore<Pour> = new DAOStore(DAOApi.PourDAO);
+export const PourStore: DAOStore<Pour> = new $PourStore();
 export const ReportStore: DAOStore<Report> = new DAOStore(DAOApi.ReportDAO);
 export const ScheduleStore: DAOStore<Schedule> = new DAOStore(
   DAOApi.ScheduleDAO,

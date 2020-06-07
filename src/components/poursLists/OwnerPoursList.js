@@ -33,7 +33,7 @@ type InjectedProps = {|
 @withNavigation
 @observer
 class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
-  _onListItemPress = (pour: Pour) => {
+  _onItemPress = (pour: Pour) => {
     if (!pour.owner) {
       return;
     }
@@ -87,7 +87,7 @@ class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
 }
 
 // todo add pour amount rendering
-const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour>) => {
+const LoadedRow = ({ item: pour, onItemPress }: RowItemProps<Pour>) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -99,7 +99,7 @@ const LoadedRow = ({ item: pour, onListItemPress }: RowItemProps<Pour>) => {
     <ListItem
       chevron={false}
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
-      onPress={onListItemPress}
+      onPress={onItemPress}
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}

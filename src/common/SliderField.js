@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { Slider } from 'react-native';
+import Slider from '@react-native-community/slider';
 
 export type Props<TRest> = {|
   // RN slider props

@@ -41,13 +41,14 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
 
     const resetRouteAction = StackActions.reset({
       actions: [
+        NavigationActions.navigate({ routeName: 'menu' }),
         NavigationActions.navigate({ routeName: 'taps' }),
         NavigationActions.navigate({
           params: { id: tapId },
           routeName: 'tapDetails',
         }),
       ],
-      index: 1,
+      index: 0,
     });
     navigation.dispatch(resetRouteAction);
   };

@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     ...TYPOGRAPHY.small,
     color: COLORS.textFaded,
   },
+  labelStyle: {
+    marginHorizontal: 20,
+  },
   placeholderText: {
     color: COLORS.textInputPlaceholder,
     fontSize: 17,
@@ -30,11 +33,12 @@ const styles = StyleSheet.create({
   underline: {
     backgroundColor: COLORS.secondary3,
     height: 1,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   valueContainer: {
+    color: COLORS.textFaded,
     justifyContent: 'center',
-    marginHorizontal: 20,
+    marginHorizontal: 16,
     minHeight: Platform.OS === 'ios' ? 36 : 46,
   },
 });
@@ -77,19 +81,25 @@ class PickerInput extends React.Component<Props> {
     }
 
     return (
-      <TouchableOpacity onPress={onPress}>
-        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-        <View style={styles.valueContainer}>
-          {!value || (Array.isArray(value) && !value.length) ? (
-            <Text style={styles.placeholderText}>{placeholder}</Text>
-          ) : (
-            children
-          )}
-        </View>
-        <View style={styles.underline} />
-        {renderedDescription}
-        <FormValidationMessage>{error}</FormValidationMessage>
-      </TouchableOpacity>
+      <View
+        style={{
+          marginHorizontal: 16,
+        }}
+      >
+        <TouchableOpacity onPress={onPress}>
+          <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
+          <View style={styles.valueContainer}>
+            {!value || (Array.isArray(value) && !value.length) ? (
+              <Text style={styles.placeholderText}>{placeholder}</Text>
+            ) : (
+              children
+            )}
+          </View>
+          <View style={styles.underline} />
+          {renderedDescription}
+          <FormValidationMessage>{error}</FormValidationMessage>
+        </TouchableOpacity>
+      </View>
     );
   }
 }

@@ -167,16 +167,17 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           label="Is Organic?"
           name="isOrganic"
         />
+        <FormField
+          component={SrmPicker}
+          disabled={submitting}
+          initialValue={beverage.srm}
+          key="srm"
+          label="Color"
+          name="srmId"
+          parseOnSubmit={(value: ?Srm): ?EntityID => value && value.id}
+        />
+        ,
         {values.beverageType === 'Beer' && [
-          <FormField
-            component={SrmPicker}
-            disabled={submitting}
-            initialValue={beverage.srm}
-            key="srm"
-            label="Srm"
-            name="srmId"
-            parseOnSubmit={(value: ?Srm): ?EntityID => value && value.id}
-          />,
           <FormField
             component={StylePicker}
             disabled={submitting}

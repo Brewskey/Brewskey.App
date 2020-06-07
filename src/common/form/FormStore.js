@@ -153,8 +153,11 @@ class FormStore<TValidate: {}> {
 
   @computed
   get invalid(): boolean {
-    return Array.from(this._fields.toJS().values()).some(
-      (field: Field): boolean => !!field.error,
+    const errors = Object.values(this._validate(this.values));
+    return (
+      Array.from(this._fields.toJS().values()).some(
+        (field: Field): boolean => !!field.error,
+      ) || errors.length !== 0
     );
   }
 

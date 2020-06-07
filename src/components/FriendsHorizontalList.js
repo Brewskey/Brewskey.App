@@ -61,7 +61,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
 
   _keyExtractor = (row: Row<Friend>): string => row.key;
 
-  _onListItemPress = (friend: Friend) => {
+  _onItemPress = (friend: Friend) => {
     this.injectedProps.navigation.navigate('profile', {
       id: friend.friendAccount.id,
       key: friend.friendAccount.id,
@@ -73,7 +73,7 @@ class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
       loadedRow={LoadedRow}
       loader={item.loader}
       loadingRow={LoadingRow}
-      onListItemPress={this._onListItemPress}
+      onItemPress={this._onItemPress}
     />
   );
 
@@ -106,13 +106,13 @@ const LoadingRow = () => (
 
 type LoadedRowProps = {
   item: Friend,
-  onListItemPress: (Friend) => void,
+  onItemPress: (Friend) => void,
 };
 
 class LoadedRow extends React.PureComponent<LoadedRowProps> {
   _onPress = () => {
-    const { item, onListItemPress } = this.props;
-    onListItemPress(item);
+    const { item, onItemPress } = this.props;
+    onItemPress(item);
   };
   render(): React.Node {
     const { item: friend } = this.props;

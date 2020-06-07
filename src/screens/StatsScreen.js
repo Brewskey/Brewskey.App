@@ -27,6 +27,7 @@ type InjectedProps = {
 @flatNavigationParamsAndScreenProps
 class StatsScreen extends InjectedComponent<InjectedProps> {
   _userBadges: ?UserBadges;
+  _allBeverages = React.createRef<AllBeveragesHScroll>();
 
   componentDidMount() {
     const { initialPopUpAchievementType } = this.injectedProps;
@@ -42,6 +43,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
 
   _onRefresh = () => {
     nullthrows(this._userBadges).refresh();
+    nullthrows(this._allBeverages.current).refresh();
   };
 
   render(): React.Node {
@@ -61,7 +63,7 @@ class StatsScreen extends InjectedComponent<InjectedProps> {
               </Section>
               <Section bottomPadded>
                 <SectionHeader title="Beverages Poured" />
-                <AllBeveragesHScroll userID={userID} />
+                <AllBeveragesHScroll ref={this._allBeverages} userID={userID} />
               </Section>
               <SectionHeader title="Recent Pours" />
             </Fragment>

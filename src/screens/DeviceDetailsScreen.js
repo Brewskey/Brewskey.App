@@ -78,7 +78,7 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
     const {
       value: { deviceStatus, id, name, particleId },
     } = this.props;
-
+    console.log(id);
     return (
       <Container>
         <Header
