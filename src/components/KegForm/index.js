@@ -136,7 +136,6 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
         )}
         <SectionContent paddedVertical>
           <Button
-            color={showReplaceButton ? COLORS.primary2 : undefined}
             disabled={pristine || invalid || submitting}
             loading={submitting}
             onPress={this._onSubmit}

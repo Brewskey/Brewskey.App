@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   slideoutContainer: {
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.secondary2,
     borderBottomWidth: 1,
     borderColor: COLORS.secondary3,
     flex: 1,
@@ -159,7 +159,12 @@ class NotificationListItem extends React.PureComponent<Props, State> {
 
 const SlideoutView = () => (
   <View style={styles.slideoutContainer}>
-    <Icon name="delete" color={COLORS.danger} />
+    <Icon
+      name="delete"
+      color={COLORS.danger}
+      size={32}
+      containerStyle={{ alignSelf: 'center' }}
+    />
   </View>
 );
 

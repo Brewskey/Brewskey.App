@@ -34,7 +34,13 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
 
   render(): React.Node {
     const { flowSensor = {}, tapId } = this.props;
-    const { formError, invalid, submitting, values } = this.injectedProps;
+    const {
+      formError,
+      invalid,
+      pristine,
+      submitting,
+      values,
+    } = this.injectedProps;
 
     const selectedFlowSensorItem =
       FLOW_SENSOR_ITEMS.find(
@@ -82,7 +88,7 @@ class FlowSensorForm extends InjectedComponent<InjectedProps, Props> {
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid}
+            disabled={pristine || submitting || invalid}
             onPress={this._onSubmit}
             title="Set Sensor"
             loading={submitting}

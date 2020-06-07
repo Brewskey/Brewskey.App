@@ -61,13 +61,16 @@ class TapDetailsScreen extends InjectedComponent<InjectedProps> {
   @computed
   get _tapDataLoader(): LoadObject<[Tap, ?Permission, FlowSensor]> {
     const { id } = this.injectedProps;
-    return LoadObject.merge([
-      TapStore.getByID(id),
-      PermissionStore.getForEntityByID('tap', id),
-      FlowSensorStore.getSingle({
-        filters: [DAOApi.createFilter('tap/id').equals(id)],
-      }),
-    ]);
+    return LoadObject.merge(
+      [
+        TapStore.getByID(id),
+        PermissionStore.getForEntityByID('tap', id),
+        FlowSensorStore.getSingle({
+          filters: [DAOApi.createFilter('tap/id').equals(id)],
+        }),
+      ],
+      true, // because flow sensor might not be set
+    );
   }
 
   render(): React.Node {
@@ -110,6 +113,11 @@ class LoadedComponent extends React.Component<LoadedComponentProps> {
   render(): React.Node {
     const { navigation, value } = this.props;
     const [tap, tapPermission, flowSensor] = value;
+
+    if (tap == null) {
+      return null;
+    }
+
     const { id } = tap;
 
     const noFlowSensorWarning =

@@ -32,7 +32,6 @@ class AllBeveragesHScroll extends React.Component<Props> {
 
   @computed
   get _beverages(): LoadObject<Array<LoadObject<Beverage>>> {
-    console.log(this.props.userID);
     return BeverageStore.getMany({
       filters: [
         DAOApi.createFilter('Pours').any(

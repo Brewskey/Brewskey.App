@@ -37,7 +37,13 @@ const validate = ({
 @observer
 class ForgotPasswordForm extends InjectedComponent<FormProps> {
   render(): React.Node {
-    const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
+    const {
+      formError,
+      handleSubmit,
+      invalid,
+      pristine,
+      submitting,
+    } = this.injectedProps;
 
     return (
       <View>
@@ -53,7 +59,7 @@ class ForgotPasswordForm extends InjectedComponent<FormProps> {
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid}
+            disabled={submitting || invalid || pristine}
             loading={submitting}
             onPress={handleSubmit}
             title="Request password reset"

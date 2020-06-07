@@ -49,6 +49,7 @@ class FormStore<TValidate: {}> {
     name,
     parseOnSubmit = <TEntity>(value: TEntity): TEntity => value,
   }: InitFieldProps): void => {
+    console.log(initialValue);
     this._fields.set(name, {
       error: null,
       initialValue,
@@ -164,7 +165,8 @@ class FormStore<TValidate: {}> {
   @computed
   get pristine(): boolean {
     return !Array.from(this._fields.toJS().values()).some(
-      (field: Field): boolean => field.value !== field.initialValue,
+      ({ value, initialValue, parseOnSubmit }: Field): boolean =>
+        parseOnSubmit(value) !== parseOnSubmit(initialValue),
     );
   }
 

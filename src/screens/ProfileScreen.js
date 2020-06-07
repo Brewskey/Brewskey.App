@@ -47,16 +47,21 @@ class ProfileScreen extends InjectedComponent<InjectedProps> {
     return (
       <LoaderComponent
         loadedComponent={LoadedComponent}
-        loader={LoadObject.merge([
-          AccountStore.getByID(id),
-          FriendStore.getSingle({
-            filters: [
-              DAOApi.createFilter('owningAccount/id').equals(AuthStore.userID),
-              DAOApi.createFilter('friendAccount/id').equals(id),
-            ],
-            limit: 1,
-          }),
-        ])}
+        loader={LoadObject.merge(
+          [
+            AccountStore.getByID(id),
+            FriendStore.getSingle({
+              filters: [
+                DAOApi.createFilter('owningAccount/id').equals(
+                  AuthStore.userID,
+                ),
+                DAOApi.createFilter('friendAccount/id').equals(id),
+              ],
+              limit: 1,
+            }),
+          ],
+          true,
+        )}
         loadingComponent={LoadingComponent}
       />
     );
@@ -76,53 +81,63 @@ type LoadedComponentProps = {|
 
 const LoadedComponent = ({
   value: [account, friend],
-}: LoadedComponentProps) => (
-  <Container>
-    <Header
-      rightComponent={<ProfileFriendStatus account={account} friend={friend} />}
-      showBackButton
-      title={account.userName}
-    />
-    <ScrollView>
-      <Section bottomPadded>
-        <SectionContent centered paddedVertical>
-          <UserAvatar userName={account.userName} size={200} />
-        </SectionContent>
-      </Section>
-      {AuthStore.userID !== account.id &&
-      (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
-        <Section>
-          <SectionHeader
-            title={`You aren't friends with ${account.userName}`}
-          />
+}: LoadedComponentProps) => {
+  if (account == null) {
+    return null;
+  }
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <ProfileFriendStatus account={account} friend={friend} />
+        }
+        showBackButton
+        title={account.userName}
+      />
+      <ScrollView>
+        <Section bottomPadded>
+          <SectionContent centered paddedVertical>
+            <UserAvatar userName={account.userName} size={200} />
+          </SectionContent>
         </Section>
-      ) : (
-        <React.Fragment>
-          <Section bottomPadded innerContainerStyle={styles.friendsListSection}>
-            <SectionHeader title="Friends" />
-            <FriendsHorizontalList
-              queryOptions={{
-                filters: [
-                  DAOApi.createFilter('owningAccount/id').equals(account.id),
-                  DAOApi.createFilter('friendStatus').equals(
-                    FRIEND_STATUSES.APPROVED,
-                  ),
-                ],
-              }}
+        {AuthStore.userID !== account.id &&
+        (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
+          <Section>
+            <SectionHeader
+              title={`You aren't friends with ${account.userName}`}
             />
           </Section>
-          <Section bottomPadded>
-            <SectionHeader title="Badges" />
-            <UserBadges userID={account.id} />
-          </Section>
-          <Section bottomPadded>
-            <SectionHeader title="Beverages Poured" />
-            <AllBeveragesHScroll userID={account.id} />
-          </Section>
-        </React.Fragment>
-      )}
-    </ScrollView>
-  </Container>
-);
+        ) : (
+          <React.Fragment>
+            <Section
+              bottomPadded
+              innerContainerStyle={styles.friendsListSection}
+            >
+              <SectionHeader title="Friends" />
+              <FriendsHorizontalList
+                queryOptions={{
+                  filters: [
+                    DAOApi.createFilter('owningAccount/id').equals(account.id),
+                    DAOApi.createFilter('friendStatus').equals(
+                      FRIEND_STATUSES.APPROVED,
+                    ),
+                  ],
+                }}
+              />
+            </Section>
+            <Section bottomPadded>
+              <SectionHeader title="Badges" />
+              <UserBadges userID={account.id} />
+            </Section>
+            <Section bottomPadded>
+              <SectionHeader title="Beverages Poured" />
+              <AllBeveragesHScroll userID={account.id} />
+            </Section>
+          </React.Fragment>
+        )}
+      </ScrollView>
+    </Container>
+  );
+};
 
 export default ProfileScreen;

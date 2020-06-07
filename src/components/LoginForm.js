@@ -52,7 +52,13 @@ class LoginForm extends InjectedComponent<InjectedProps> {
     this.injectedProps.handleSubmit(this.injectedProps.onSubmit);
 
   render(): React.Node {
-    const { formError, invalid, isInverse, submitting } = this.injectedProps;
+    const {
+      formError,
+      invalid,
+      isInverse,
+      pristine,
+      submitting,
+    } = this.injectedProps;
     return (
       <View>
         <FormField
@@ -89,7 +95,7 @@ class LoginForm extends InjectedComponent<InjectedProps> {
         </FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid}
+            disabled={submitting || invalid || pristine}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
             secondary={isInverse}

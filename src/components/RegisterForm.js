@@ -64,7 +64,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
     this.injectedProps.handleSubmit(this._onSubmit);
 
   render(): React.Node {
-    const { formError, invalid, submitting } = this.injectedProps;
+    const { formError, invalid, pristine, submitting } = this.injectedProps;
 
     return (
       <View>
@@ -99,7 +99,7 @@ class RegisterForm extends InjectedComponent<FormProps> {
         <FormValidationMessage>{formError}</FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid}
+            disabled={submitting || invalid || pristine}
             loading={submitting}
             onPress={this._onSubmitButtonPress}
             title="Register"

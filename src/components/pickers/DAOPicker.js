@@ -97,6 +97,8 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
     const { queryOptions, searchBy, shouldUseSearchQuery } = this.props;
     this._listStore.initialize(queryOptions);
 
+    this._onSelect();
+
     autorun(() => {
       this._listStore.setQueryOptions({
         ...queryOptions,

@@ -47,7 +47,13 @@ type InjectedProps = FormProps;
 @observer
 class FriendAddForm extends InjectedComponent<InjectedProps> {
   render(): React.Node {
-    const { formError, handleSubmit, invalid, submitting } = this.injectedProps;
+    const {
+      formError,
+      handleSubmit,
+      invalid,
+      pristine,
+      submitting,
+    } = this.injectedProps;
 
     return (
       <View>
@@ -74,7 +80,7 @@ class FriendAddForm extends InjectedComponent<InjectedProps> {
         </FormValidationMessage>
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid}
+            disabled={pristine || submitting || invalid}
             loading={submitting}
             onPress={handleSubmit}
             secondary
