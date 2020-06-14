@@ -35,6 +35,7 @@ class BeverageAvatar extends React.PureComponent<Props> {
     return (
       <BaseAvatar
         {...otherProps}
+        cached={cached}
         rounded={rounded}
         uri={
           uri ||

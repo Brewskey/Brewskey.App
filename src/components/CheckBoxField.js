@@ -25,6 +25,7 @@ class CheckBoxField extends React.PureComponent<Props> {
         checked={value}
         onPress={this._onCheckBoxValueChange}
         title={label}
+        containerStyle={{ marginLeft: 24, marginRight: 24 }}
         {...otherProps}
       />
     );

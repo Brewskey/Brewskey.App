@@ -5,7 +5,7 @@ import type CachedImage from '../common/CachedImage';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import nullthrows from 'nullthrows';
-import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import { observer } from 'mobx-react';
 import { computed, observable, runInAction, when } from 'mobx';
 import AuthStore from '../stores/AuthStore';

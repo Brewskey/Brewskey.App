@@ -4,7 +4,7 @@ import type { EntityID } from 'brewskey.js-api';
 import type { Style } from '../types';
 
 import * as React from 'react';
-import * as ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-picker';
 import { observer } from 'mobx-react';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 
@@ -14,6 +14,11 @@ const IMAGE_PICKER_OPTIONS = {
   maxWidth: 1024,
   mediaType: 'photo',
   rotation: 0,
+  storageOptions: {
+    cameraRoll: false,
+    skipBackup: true,
+    waitUntilSaved: true,
+  },
   title: 'Select beverage photo',
 };
 
@@ -28,16 +33,14 @@ type Props = {
 class BeverageImagePickerField extends React.Component<Props> {
   _onAvatarPress = () => {
     const { onChange } = this.props;
-    ImagePicker.showImagePicker(
-      IMAGE_PICKER_OPTIONS,
-      ({ data, didCancel, error }: Object): void => {
-        if (didCancel || error) {
-          return;
-        }
+    ImagePicker.showImagePicker(IMAGE_PICKER_OPTIONS, (result): void => {
+      const { didCancel, error } = result;
+      if (didCancel || error) {
+        return;
+      }
 
-        onChange(data);
-      },
-    );
+      onChange(result.data);
+    });
   };
 
   render(): React.Node {

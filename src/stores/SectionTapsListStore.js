@@ -41,7 +41,7 @@ class SectionTapsListStore {
       this._remoteCountLoader.isLoading() ||
       this._pageLoadObjects.some(
         (pageLoadObject: LoadObject<Array<Tap>>): boolean =>
-          pageLoadObject.isLoading(),
+          pageLoadObject.hasOperation(),
       )
     );
   }
@@ -92,9 +92,11 @@ class SectionTapsListStore {
             }
 
             return LoadObject.withValue(
-              itemLoadObjects.map((itemLoadObject: LoadObject<Tap>): Tap =>
-                itemLoadObject.getValueEnforcing(),
-              ),
+              itemLoadObjects
+                .filter((loader) => loader.hasValue())
+                .map((itemLoadObject: LoadObject<Tap>): Tap =>
+                  itemLoadObject.getValueEnforcing(),
+                ),
             );
           },
         ),

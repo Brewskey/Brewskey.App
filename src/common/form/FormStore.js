@@ -5,7 +5,7 @@ import type { Field, ValidationFunction } from './types';
 
 import * as React from 'react';
 import debounce from 'lodash.debounce';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, toJS } from 'mobx';
 
 const FIELD_VALIDATION_DEBOUNCE_TIMEOUT = 700;
 const FORM_ERROR_KEY = '_error';
@@ -49,7 +49,6 @@ class FormStore<TValidate: {}> {
     name,
     parseOnSubmit = <TEntity>(value: TEntity): TEntity => value,
   }: InitFieldProps): void => {
-    console.log(initialValue);
     this._fields.set(name, {
       error: null,
       initialValue,
@@ -154,7 +153,7 @@ class FormStore<TValidate: {}> {
 
   @computed
   get invalid(): boolean {
-    const errors = Object.values(this._validate(this.values));
+    const errors = Object.values(this._validate(this.values)).filter(Boolean);
     return (
       Array.from(this._fields.toJS().values()).some(
         (field: Field): boolean => !!field.error,
@@ -166,6 +165,8 @@ class FormStore<TValidate: {}> {
   get pristine(): boolean {
     return !Array.from(this._fields.toJS().values()).some(
       ({ value, initialValue, parseOnSubmit }: Field): boolean =>
+        value == null ||
+        initialValue == null || // When the form updates these will be undefined
         parseOnSubmit(value) !== parseOnSubmit(initialValue),
     );
   }

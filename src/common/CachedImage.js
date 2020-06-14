@@ -7,7 +7,8 @@ import {
 } from 'react-native-img-cache';
 
 export const flushImageCache = (uri: string): void => {
-  const uriWithoutBrewskeyApiParams = (uri.match(/=?(\/?.*\.jpg)/) || [])[0];
+  const uriWithoutBrewskeyApiParams =
+    (uri.match(/=?(\/?.*\.jpg)/) || [])[0] || uri;
 
   if (!uriWithoutBrewskeyApiParams) {
     return;

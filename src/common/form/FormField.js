@@ -59,11 +59,12 @@ class FormField<TProps> extends React.Component<Props<TProps>> {
 
   _onBlur = (): void => this.context.formStore.blurField(this.props.name);
 
-  _onChange = (value: any): void =>
+  _onChange = (value: any): void => {
     this.context.formStore.changeFieldValue(
       this.props.name,
       this.props.parse(value),
     );
+  };
 
   _setRefElement = (refElement) => {
     this.context.formStore.setFieldRefElement(this.props.name, refElement);

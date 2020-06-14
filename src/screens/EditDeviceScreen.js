@@ -41,9 +41,14 @@ class EditDeviceScreen extends InjectedComponent<InjectedProps> {
 
   _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     const id = nullthrows(values.id);
-    DAOApi.DeviceDAO.put(id, values);
-    await DAOApi.DeviceDAO.waitForLoaded((dao) => dao.fetchByID(id));
-
+    const clientID = DAOApi.DeviceDAO.put(id, values);
+    try {
+      await DAOApi.DeviceDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
+    } catch (_) {
+      throw new Error(
+        "There was an issue saving your device. We'll look into it!",
+      );
+    }
     this.injectedProps.navigation.goBack(null);
     SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };

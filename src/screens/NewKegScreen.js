@@ -16,6 +16,7 @@ import Container from '../common/Container';
 import Header from '../common/Header';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import NavigationService from '../NavigationService';
 
 type InjectedComponentProps = {
   navigation: Navigation,
@@ -30,7 +31,7 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
     const { navigation, onTapSetupFinish, tapId } = this.injectedProps;
     const clientID = DAOApi.KegDAO.post(values);
     await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    TapStore.flushCache();
+    TapStore.flushCacheForEntity(tapId);
 
     SnackBarStore.showMessage({ text: 'New keg added' });
 
@@ -39,18 +40,9 @@ class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
       return;
     }
 
-    const resetRouteAction = StackActions.reset({
-      actions: [
-        NavigationActions.navigate({ routeName: 'menu' }),
-        NavigationActions.navigate({ routeName: 'taps' }),
-        NavigationActions.navigate({
-          params: { id: tapId },
-          routeName: 'tapDetails',
-        }),
-      ],
-      index: 0,
-    });
-    navigation.dispatch(resetRouteAction);
+    NavigationService.reset('menu', 'menu');
+    NavigationService.navigate('taps');
+    NavigationService.navigate('tapDetails', { id: tapId });
   };
 
   render(): React.Node {

@@ -46,7 +46,7 @@ class DAOListStore<TEntity> {
 
   @computed
   get isFetchingRemoteCount(): boolean {
-    return this._remoteCountLoader.isLoading();
+    return this._remoteCountLoader.hasOperation();
   }
 
   @computed

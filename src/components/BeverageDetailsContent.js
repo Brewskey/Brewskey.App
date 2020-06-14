@@ -72,13 +72,12 @@ class BeverageDetailsContent extends React.Component<Props, State> {
 
   render(): React.Node {
     const {
-      beverage: { beverageType, description, glass, isOrganic, style },
+      beverage: { beverageType, description, glass, isOrganic, style, srm },
     } = this.props;
 
     const { height, width } = this.state;
 
     const imageSize = { height, width };
-
     return (
       <Fragment>
         <View style={[styles.imageContainer, styles.beverageImage, imageSize]}>
@@ -95,6 +94,21 @@ class BeverageDetailsContent extends React.Component<Props, State> {
         {style ? <OverviewItem title="Style" value={style.name} /> : null}
         {glass ? <OverviewItem title="Glass" value={glass.name} /> : null}
         <OverviewItem title="Organic?" value={isOrganic ? 'Yes' : 'No'} />
+        {srm ? (
+          <OverviewItem
+            title="SRM"
+            value={
+              <View
+                style={{
+                  backgroundColor: `#${srm.hex}`,
+                  borderRadius: 12,
+                  height: 24,
+                  width: 24,
+                }}
+              />
+            }
+          />
+        ) : null}
       </Fragment>
     );
   }

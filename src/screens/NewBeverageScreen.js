@@ -18,6 +18,7 @@ import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
 import SnackBarStore from '../stores/SnackBarStore';
 import CONFIG from '../config';
+import NavigationService from '../NavigationService';
 
 type InjectedProps = {|
   navigation: Navigation,
@@ -43,17 +44,9 @@ class NewBeverageScreen extends InjectedComponent<InjectedProps> {
       flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
     }
 
-    const resetRouteAction = StackActions.reset({
-      actions: [
-        NavigationActions.navigate({ routeName: 'myBeverages' }),
-        NavigationActions.navigate({
-          params: { id },
-          routeName: 'beverageDetails',
-        }),
-      ],
-      index: 1,
-    });
-    navigation.dispatch(resetRouteAction);
+    NavigationService.reset('menu', 'menu');
+    NavigationService.navigate('myBeverages');
+    NavigationService.navigate('beverageDetails', { id });
     SnackBarStore.showMessage({ text: 'New beverage created.' });
   };
 

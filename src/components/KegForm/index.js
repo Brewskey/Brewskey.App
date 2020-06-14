@@ -85,6 +85,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
     const currentPercentage = !keg ? 100 : calculateKegLevel(keg);
     const shouldShowFloatedButton =
       currentPercentage < 10 && keg && keg.floatedDate === null;
+    const shouldReplaceBeDisnabled = currentPercentage === 100;
 
     return (
       <View>
@@ -127,7 +128,7 @@ class KegForm extends InjectedComponent<InjectedProps, Props> {
               />
             )}
             <Button
-              disabled={pristine || invalid || submitting}
+              disabled={shouldReplaceBeDisnabled || invalid || submitting}
               loading={submitting}
               onPress={this._onReplaceSubmit}
               title="Replace keg"

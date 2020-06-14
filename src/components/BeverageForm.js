@@ -44,6 +44,7 @@ const validate: ValidationFunction<BeverageMutator> = (
   return {
     name: !values.name ? 'Name is required!' : null,
     beverageType: !values.beverageType ? 'Beverage type is required' : null,
+    srmId: !values.srmId ? 'SRM is required' : null,
   };
 };
 
@@ -79,7 +80,6 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           currentYear - YEARS_RANGE_LENGTH + index + 1,
       )
       .reverse();
-
     return (
       <View>
         <FormField
@@ -176,7 +176,6 @@ class BeverageForm extends InjectedComponent<InjectedProps, Props> {
           name="srmId"
           parseOnSubmit={(value: ?Srm): ?EntityID => value && value.id}
         />
-        ,
         {values.beverageType === 'Beer' && [
           <FormField
             component={StylePicker}

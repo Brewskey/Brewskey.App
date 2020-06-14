@@ -10,7 +10,7 @@ import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedLi
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { autorun, observable, action } from 'mobx';
+import { autorun, observable, action, runInAction } from 'mobx';
 import Header from '../../common/Header';
 import HeaderIconButton from '../../common/Header/HeaderIconButton';
 import HeaderSearchBar from '../../common/Header/HeaderSearchBar';
@@ -96,9 +96,10 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
   componentDidMount() {
     const { queryOptions, searchBy, shouldUseSearchQuery } = this.props;
     this._listStore.initialize(queryOptions);
-
-    this._onSelect();
-
+    runInAction(() => {
+      this._modalToggleStore.toggleOff();
+      this._value = this._pickerStore.value;
+    });
     autorun(() => {
       this._listStore.setQueryOptions({
         ...queryOptions,
@@ -106,10 +107,12 @@ class DAOPicker<TEntity, TMultiple: boolean> extends React.Component<
           ? {
               filters: [
                 ...(queryOptions.filters || []),
-                DAOApi.createFilter(searchBy).contains(
-                  this._searchTextStore.debouncedText,
-                ),
-              ],
+                this._searchTextStore.debouncedText
+                  ? DAOApi.createFilter(searchBy).contains(
+                      this._searchTextStore.debouncedText,
+                    )
+                  : null,
+              ].filter(Boolean),
             }
           : { search: this._searchTextStore.debouncedText }),
       });
