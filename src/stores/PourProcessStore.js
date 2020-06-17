@@ -4,7 +4,11 @@ import type { EntityID } from 'brewskey.js-api';
 
 import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
-import NfcManager, { NfcAdapter } from 'react-native-nfc-manager';
+import NfcManager, {
+  NfcAdapter,
+  NfcEvents,
+  NfcTech,
+} from 'react-native-nfc-manager';
 import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
@@ -46,6 +50,10 @@ class PourProcessStore {
     NfcManager.start().catch(() => {
       runInAction(() => (this.isNFCSupported = false));
     });
+    NfcManager.setEventListener(
+      NfcEvents.DiscoverTag,
+      this._onNFCTagDiscovered,
+    );
   }
 
   @action
@@ -83,9 +91,9 @@ class PourProcessStore {
       await NfcManager.registerTagEvent({
         alertMessage: 'Tap Brewskey Box',
         invalidateAfterFirstRead: true,
-        isReaderModeEnabled: true,
-        readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
-      }).then(this._onNFCTagDiscovered);
+        // isReaderModeEnabled: true,
+        // readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+      });
     }
 
     this._startTotpTimer();
@@ -116,6 +124,7 @@ class PourProcessStore {
 
     this._stopTotpTimer();
     this.setTotp('');
+    this._setErrorText('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
     this._didAuthorizePayment = false;
@@ -264,12 +273,14 @@ class PourProcessStore {
     );
 
     if (tagValue.indexOf(CONFIG.HOST) < 0) {
+      this._hasReadTag = false;
       return;
     }
 
     const index = tagValue.indexOf('d/');
 
     if (index < 0) {
+      this._hasReadTag = false;
       return;
     }
 
