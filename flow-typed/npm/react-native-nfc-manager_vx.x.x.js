@@ -177,7 +177,10 @@ declare module 'react-native-nfc-manager' {
       callback: OnNfcEvents | null,
     ): void;
 
-    static requestTechnology: (tech: NfcTechType) => Promise<NfcTechType>;
+    static requestTechnology: (
+      tech: NfcTechType,
+      options: Object,
+    ) => Promise<NfcTechType>;
 
     static cancelTechnologyRequest: () => Promise<void>;
 

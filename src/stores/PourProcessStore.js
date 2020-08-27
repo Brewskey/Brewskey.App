@@ -88,11 +88,12 @@ class PourProcessStore {
     }
 
     if (isNFCEnabled) {
+      console.log('ENABLED');
       await NfcManager.registerTagEvent({
         alertMessage: 'Tap Brewskey Box',
         invalidateAfterFirstRead: true,
-        // isReaderModeEnabled: true,
-        // readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+        isReaderModeEnabled: true,
+        readerModeFlags: NfcAdapter.FLAG_READER_NFC_A, // | NfcAdapter.FLAG_READER_NFC_B,
       });
     }
 
@@ -177,6 +178,7 @@ class PourProcessStore {
         );
       } else {
         this._setErrorText('An error during processing pour');
+        this._hasReadTag = false;
       }
     } finally {
       this._setIsLoading(false);
@@ -206,6 +208,8 @@ class PourProcessStore {
         );
       } else {
         this._setErrorText('An error during processing pour');
+        console.warn(error);
+        this._hasReadTag = false;
       }
     } finally {
       this._setIsLoading(false);
@@ -259,6 +263,10 @@ class PourProcessStore {
       // eslint-disable-next-line prefer-destructuring
       payload = tag.ndefMessage[1].payload;
     } else {
+      if (!Array.isArray(tag)) {
+        this._hasReadTag = false;
+        return;
+      }
       if (!tag[1].payload[0]) {
         tag[1].payload.shift();
       }
