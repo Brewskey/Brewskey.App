@@ -10,13 +10,12 @@ import WifiListError from './WifiListError';
 import List from '../../../common/List';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { WifiNetworksStore } from '../../../stores/ApiRequestStores/SoftApApiStores';
+import WifiSetupStore from '../../../stores/WifiSetupStore';
 import LoadingListFooter from '../../../common/LoadingListFooter';
 
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
-  wifiSetupLoader: LoadObject<void>,
 |};
 
 @observer
@@ -25,9 +24,7 @@ class WifiList extends React.Component<Props> {
 
   @computed
   get _rows(): Array<WifiNetwork> {
-    return WifiNetworksStore.get().hasValue()
-      ? WifiNetworksStore.get().getValueEnforcing()
-      : [];
+    return this.props.wifiSetupLoader.getValue() ?? [];
   }
 
   @action
@@ -61,8 +58,11 @@ class WifiList extends React.Component<Props> {
   };
 
   render(): React.Node {
-    const isLoading = WifiNetworksStore.get().isLoading();
-    const hasError = WifiNetworksStore.get().hasError();
+    const {wifiSetupLoader} = this.props;
+    const isLoading = wifiSetupLoader.isLoading();
+    const hasError = wifiSetupLoader.hasError();
+
+    console.log("list", this.props.wifiSetupLoader)
 
     let ListEmptyComponent = hasError ? <WifiListError /> : <WifiListEmpty />;
     ListEmptyComponent = isLoading ? null : ListEmptyComponent;
@@ -75,7 +75,7 @@ class WifiList extends React.Component<Props> {
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={this.props.ListHeaderComponent}
-        onRefresh={!isLoading ? WifiNetworksStore.flushCache : undefined}
+        onRefresh={!isLoading ? WifiSetupStore.loadWifiNetworks : undefined}
         renderItem={this._renderItem}
       />
     );

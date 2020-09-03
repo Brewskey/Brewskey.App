@@ -3,7 +3,7 @@
 import type { ObservableMap } from 'mobx';
 
 import nullthrows from 'nullthrows';
-import { action, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import { computedFn } from 'mobx-utils';
 import { LoadObject } from 'brewskey.js-api';
 
@@ -27,32 +27,39 @@ export const deepIdCast = (node: any): any => {
   return node;
 };
 
+let iter = 0;
 const getCacheKey = (requestArgs: Array<any>): string =>
   `_${JSON.stringify(requestArgs).toLowerCase()}`;
 
 class Store<TResult> {
-  @observable
   _requestLoaderByKey: ObservableMap<
     string,
     LoadObject<TResult>,
   > = observable.map();
 
+  @observable
+  _iterator = 0;
+
   _getRequestPromise: (...args: Array<any>) => Promise<TResult>;
+
+  _storeIndex = 0;
 
   constructor(getRequestPromise: (...args: Array<any>) => Promise<TResult>) {
     this._getRequestPromise = getRequestPromise;
+    this._storeIndex = iter++;
   }
 
   @action
   fetch(...requestArgs: Array<any>): string {
-    const cacheKey = getCacheKey(requestArgs);
+    const cacheKey = getCacheKey(requestArgs) + '__' + this._storeIndex;
 
     if (!this._requestLoaderByKey.has(cacheKey)) {
       this._setValue(cacheKey, LoadObject.loading());
+
       this._getRequestPromise(...requestArgs)
-        .then((result: TResult): void =>
-          this._setValue(cacheKey, LoadObject.withValue(result)),
-        )
+        .then((result: TResult): void => {
+          this._setValue(cacheKey, LoadObject.withValue(result));
+        })
         .catch((error: Error): void =>
           this._setValue(cacheKey, LoadObject.withError(error)),
         );
@@ -73,11 +80,16 @@ class Store<TResult> {
 
   @action
   getFromCache(cacheKey: string): LoadObject<TResult> {
+    const result = this._requestLoaderByKey.get(cacheKey);
+    console.log('GET', this._requestLoaderByKey.toJSON());
     return this._requestLoaderByKey.get(cacheKey) || LoadObject.empty();
   }
 
+  @action.bound
   _setValue(cacheKey: string, value: LoadObject<TResult>) {
-    runInAction(() => this._requestLoaderByKey.set(cacheKey, value));
+    this._requestLoaderByKey.delete(cacheKey);
+    this._requestLoaderByKey.set(cacheKey, value);
+    this._iterator += 1;
   }
 }
 

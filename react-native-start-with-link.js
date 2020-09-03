@@ -91,7 +91,7 @@ module.exports = config;
 
 function runBundlerWithConfig(configName) {
   exec(
-    `node node_modules/react-native/local-cli/cli.js start --config ${configName}`,
+    `node node_modules/react-native/local-cli/cli.js start --config ${configName} --reset-cache`,
     { stdio: [0, 1, 2] },
   );
 }

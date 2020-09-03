@@ -20,7 +20,7 @@ type InjectedProps = {
 class WifiSetupStep4Screen extends InjectedComponent<InjectedProps> {
   _onContinuePress = () => {
     const { onSetupFinish, wifiSetupStore } = this.injectedProps;
-    onSetupFinish(wifiSetupStore.particleIDLoader.getValueEnforcing());
+    onSetupFinish(wifiSetupStore.particleID);
   };
 
   render(): React.Node {

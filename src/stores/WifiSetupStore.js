@@ -1,102 +1,133 @@
 // @flow
 
 import type { Navigation, WifiNetwork } from '../types';
-import type { LoadObject } from 'brewskey.js-api';
 
-import { action, autorun, computed, observable, reaction, when } from 'mobx';
-import {
-  ParticleIDStore,
-  WifiConfigureStore,
-  WifiConnectStore,
-} from './ApiRequestStores/SoftApApiStores';
+import { action, autorun, computed, observable, reaction, when, runInAction } from 'mobx';
+import SoftApService from '../SoftApService';
 
 import { StackActions } from 'react-navigation';
+import { LoadObject } from 'brewskey.js-api';
+import promiseRetry from 'promise-retry';
 
 type WifiSetupStep = 1 | 2 | 3 | 4;
+
+
+// export const WifiNetworksStore = makeRequestApiStore<Array<WifiNetwork>>(() =>
+//   SoftApService.scanWifi(),
+// );
+
+// export const WifiConfigureStore = makeRequestApiStore<void>((wifiNetwork) =>
+//   SoftApService.configureWifi(wifiNetwork),
+// );
+
+// export const WifiConnectStore = makeRequestApiStore<void>((index) =>
+//   SoftApService.connectWifi(index),
+// );
+
+// export const ParticleIDStore = makeRequestApiStore<string>(() =>
+//   SoftApService.getParticleID(),
+// );
+
 
 class WifiSetupStore {
   @observable
   wifiSetupStep: WifiSetupStep = 1;
-  @observable
-  _particleIDLoaderCacheKey: string = '';
-  @observable
-  _wifiSetupLoaderCacheKey: string = '';
-  _disposers: Array<Function> = [];
 
+  @observable
+  particleID: string = [];
+
+  @observable
+  wifiSetupLoader: LoadObject<Array<WifiNetwork>> = LoadObject.empty();
+
+  navigation: Navigation;
+
+  _shouldStillFetchDeviceID: boolean = false;
+
+  @action
   initialize: (Navigation) => void = (navigation: Navigation): void => {
-    const navigationReaction = reaction(
-      () => this.wifiSetupStep,
-      (wifiSetupStep: WifiSetupStep) =>
-        // todo need to reset store state instead of pushing out of stack
-        // for that we need to implement custom back route behaviour
-        navigation.dispatch(
-          StackActions.replace({
-            routeName: `wifiSetupStep${wifiSetupStep}`,
-          }),
-        ),
-    );
-    this._disposers.push(navigationReaction);
-
-    const setupFinishReaction = when(
-      (): boolean => this.wifiSetupLoader.hasValue(),
-      (): void => this._setWifiSetupStep(4),
-    );
-
-    this._disposers.push(setupFinishReaction);
+    this.wifiSetupStep = 1;
+    this.navigation = navigation;
   };
 
   dispose: () => void = (): void => {
-    ParticleIDStore.flushCache();
-    this._flushWifiConfigurationCache();
-    this._disposers.forEach((disposer: Function) => disposer());
+    this._setupLoopPromise = null;
   };
 
-  @computed
-  get wifiSetupLoader(): LoadObject<void> {
-    return WifiConfigureStore.getFromCache(
-      this._wifiSetupLoaderCacheKey,
-    ).map(() => WifiConnectStore.get());
-  }
-
-  @computed
-  get particleIDLoader(): LoadObject<string> {
-    return ParticleIDStore.getFromCache(this._particleIDLoaderCacheKey);
-  }
-
   @action
-  onStep1Ready: () => void = (): void => {
+  onStep1Ready: () => void = async (): Promise<void> => {
     this._setWifiSetupStep(2);
-    const particleIDReaction = autorun((currentReaction) => {
-      if (this.particleIDLoader.hasValue()) {
-        this._setWifiSetupStep(3);
-        currentReaction.dispose();
-      }
-      if (this.particleIDLoader.hasError()) {
-        ParticleIDStore.flushCache();
-        ParticleIDStore.fetch();
-      }
-    });
 
-    this._disposers.push(particleIDReaction);
-    this._particleIDLoaderCacheKey = ParticleIDStore.fetch();
+    const TIME_BETWEEN_RUNS = 1000;
+    const MAX_RUNS = 10;
+    this._shouldStillFetchDeviceID = true;
+    const handleError = (retry) => (err) => {
+      console.log(err);
+      if (this._shouldStillFetchDeviceID) {
+        return retry(err);
+      }
+    };
+
+    try {
+      await promiseRetry((retry, number) => {
+        return this.loadParticleID().catch(handleError(retry));
+      });
+      console.log('loaded particle ID')
+      await promiseRetry((retry, number) => {
+        return this.loadWifiNetworks().catch(handleError(retry));
+      });
+      console.log('loaded wifi')
+
+      this._shouldStillFetchDeviceID = false;
+      this._setWifiSetupStep(3);
+    } catch (_) {
+      this._setWifiSetupStep(1);
+    }
   };
 
-  @action
-  _setWifiSetupStep: (WifiSetupStep) => void = (step: WifiSetupStep): void => {
-    this.wifiSetupStep = step;
+  @action.bound
+  loadParticleID = async () => {
+    const particleID = await SoftApService.getParticleID();
+    console.log(particleID)
+    runInAction(() => {
+      this.particleID = particleID;
+    });
+    return particleID;
+  };
+
+  @action.bound
+  loadWifiNetworks = async () => {
+    runInAction(() => {
+      this.wifiSetupLoader = LoadObject.loading();
+    });
+    const wifiList = await SoftApService.scanWifi();
+    console.log(wifiList);
+    runInAction(() => {
+      this.wifiSetupLoader = LoadObject.withValue(wifiList);
+    });
+    return wifiList;
   };
 
   @action
   setupWifi: (WifiNetwork) => Promise<void> = async (
     wifiNetwork: WifiNetwork,
   ): Promise<void> => {
-    this._flushWifiConfigurationCache();
-    this._wifiSetupLoaderCacheKey = WifiConfigureStore.fetch(wifiNetwork);
+    console.log('wifiNetwork', wifiNetwork)
+    const key = await SoftApService.configureWifi(wifiNetwork);
+    console.log('key', key)
+    await SoftApService.connectWifi();
+    this._setWifiSetupStep(4);
   };
 
-  _flushWifiConfigurationCache: () => void = (): void => {
-    WifiConfigureStore.flushCache();
-    WifiConnectStore.flushCache();
+  @action.bound
+  _setWifiSetupStep: (WifiSetupStep) => void = (step: WifiSetupStep): void => {
+    console.log('Step', step);
+    this.wifiSetupStep = step;
+
+    this.navigation.dispatch(
+      StackActions.replace({
+        routeName: `wifiSetupStep${step}`,
+      }),
+    )
   };
 }
 

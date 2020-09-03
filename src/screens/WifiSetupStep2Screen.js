@@ -1,6 +1,5 @@
 // @flow
 
-import type WifiSetupStore from '../stores/WifiSetupStore';
 
 import * as React from 'react';
 import { observer } from 'mobx-react';
@@ -11,6 +10,7 @@ import Container from '../common/Container';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
 import LoadingIndicator from '../common/LoadingIndicator';
+import WifiSetupStore from '../stores/WifiSetupStore';
 
 type InjectedProps = {
   wifiSetupStore: WifiSetupStore,
@@ -28,7 +28,7 @@ class WifiSetupStep2Screen extends InjectedComponent<InjectedProps> {
         <SectionContent paddedHorizontal paddedVertical>
           <PhoneConnectInstructions />
         </SectionContent>
-        {wifiSetupStore.particleIDLoader.isLoading() ? (
+        {wifiSetupStore.particleID == null ? (
           <LoadingIndicator />
         ) : null}
       </Container>
