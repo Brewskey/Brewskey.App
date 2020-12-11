@@ -47,7 +47,7 @@
     "promise-retry": "^2.0.1",
     "prop-types": "^15.6.0",
     "react": "16.13.1",
-    "react-native": "0.62.2",
+    "react-native": "0.63.2",
     "react-native-app-settings": "https://github.com/KrazyLabs/react-native-app-settings",
     "react-native-code-push": "^6.2.0",
     "react-native-crypto": "^2.1.2",
@@ -90,6 +90,7 @@
     "@babel/plugin-transform-flow-strip-types": "^7.9.0",
     "@babel/preset-env": "^7.9.6",
     "@babel/runtime": "^7.9.6",
+    "@react-native-community/eslint-config": "^1.1.0",
     "babel-eslint": "^11.0.0-beta.2",
     "babel-jest": "^25.5.1",
     "eslint": "^6.8.0",
@@ -110,7 +111,7 @@
     "lint-staged": "^10.2.1",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "^2.0.5",
-    "react-test-renderer": "^16.0.0",
+    "react-test-renderer": "16.13.1",
     "whatwg-fetch": "^3.0.0"
   },
   "lint-staged": {

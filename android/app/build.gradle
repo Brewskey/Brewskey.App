@@ -134,7 +134,7 @@ android {
         applicationId "com.brewskey.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 572
+        versionCode 573
         versionName "1.0"
         multiDexEnabled true
     }
@@ -166,13 +166,6 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
-
-//    packagingOptions {
-//        pickFirst "lib/armeabi-v7a/libc++_shared.so"
-//        pickFirst "lib/arm64-v8a/libc++_shared.so"
-//        pickFirst "lib/x86/libc++_shared.so"
-//        pickFirst "lib/x86_64/libc++_shared.so"
-//    }
 
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->

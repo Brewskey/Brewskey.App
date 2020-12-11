@@ -45,8 +45,8 @@ class WifiSetupStore {
 
   @action
   initialize: (Navigation) => void = (navigation: Navigation): void => {
-    this.wifiSetupStep = 1;
     this.navigation = navigation;
+    this._setWifiSetupStep(1);
   };
 
   dispose: () => void = (): void => {
