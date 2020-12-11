@@ -3,6 +3,7 @@
 import type { Tap } from 'brewskey.js-api';
 
 import * as React from 'react';
+import {Text} from 'react-native';
 import ListItem from '../common/ListItem';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import { calculateKegLevel } from '../utils';
@@ -36,8 +37,8 @@ const TapListItem = ({ onPress, tap }: Props): React.Node => {
       chevron={false}
       item={tap}
       onPress={onPress}
-      title={`${tapNumber} - ${beverageName}`}
-      subtitle={description || ''}
+      title={<Text>{`${tapNumber} - ${beverageName}`}</Text>}
+      subtitle={<Text>{description || ''}</Text>}
     />
   );
 };

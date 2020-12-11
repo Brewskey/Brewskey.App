@@ -6,10 +6,12 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UNUserNotificationCenter.h>
+#import <React/RCTBridgeDelegate.h>
 
 @import UserNotifications;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, RCTBridgeDelegate, UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 

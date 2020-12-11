@@ -8,15 +8,16 @@ import type { Navigation } from '../types';
 import {
   AppState,
   Platform,
-  PushNotificationIOS,
   Vibration,
 } from 'react-native';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {
   action,
   computed,
   observable,
   reaction,
   runInAction,
+  toJS,
   when,
 } from 'mobx';
 import PushNotification from 'react-native-push-notification';
@@ -63,10 +64,16 @@ export type NewFriendRequestNotification = {|
   type: 'newFriendRequest',
 |};
 
+export type TextNotification = {|
+  ...BaseNotificationProps,
+  type: 'text',
+|};
+
 export type Notification =
   | LowKegLevelNotification
   | NewAchievementNotification
-  | NewFriendRequestNotification;
+  | NewFriendRequestNotification
+  | TextNotification;
 
 class NotificationsStore {
   @observable
@@ -163,7 +170,7 @@ class NotificationsStore {
     return Array.from(this._notificationsByID.toJS().values()).sort(
       (a: Notification, b: Notification): number =>
         new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    ).map(item => toJS(item));
   }
 
   @computed
@@ -339,16 +346,28 @@ class NotificationsStore {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
 
+    console.log(rawNotification);
+
     let parsedNotification = null;
     if (Platform.OS === 'android') {
       parsedNotification = rawNotification.custom_notification
         ? JSON.parse(rawNotification.custom_notification)
         : rawNotification.data;
     } else {
+      if (typeof rawNotification.alert === 'string' || rawNotification.alert instanceof String) {
+        rawNotification.alert = {
+          date: new Date(),
+          id: Date.now(),
+          title: rawNotification.alert,
+          type: 'text',
+        }
+      }
+
       parsedNotification = {
         ...rawNotification.data,
         ...rawNotification.alert,
       };
+      rawNotification.finish(PushNotificationIOS.FetchResult.NoData);
     }
 
     const existingNotification = this._notificationsByID.get(
