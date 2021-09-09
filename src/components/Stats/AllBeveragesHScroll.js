@@ -1,12 +1,10 @@
 // @flow
 
-import type { Beverage, AchievementType, EntityID } from 'brewskey.js-api';
+import type { Beverage, EntityID } from 'brewskey.js-api';
 
 import * as React from 'react';
 import {
-  Image,
   ScrollView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -14,13 +12,12 @@ import {
 import { Card } from 'react-native-elements';
 import { observer } from 'mobx-react';
 import nullthrows from 'nullthrows';
-import { action, computed, observable, when } from 'mobx';
+import { computed, } from 'mobx';
 import DAOApi, { LoadObject } from 'brewskey.js-api';
 import { BeverageStore, PourStore } from '../../stores/DAOStores';
 import LoaderComponent from '../../common/LoaderComponent';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import BeverageModal from '../modals/BeverageModal';
-import { COLORS, TYPOGRAPHY } from '../../theme';
 
 type Props = {|
   userID: EntityID,
@@ -75,12 +72,12 @@ class AllBeveragesHScroll extends React.Component<Props> {
 export default AllBeveragesHScroll;
 
 type LoadedProps = {|
-  value: [Array<LoadObject<Beverage>>, LoadObject<Map<EntityID, number>>],
+  value: [Array < LoadObject < Beverage >>, LoadObject < Map < EntityID, number >>],
 |};
 
 @observer
 class AllBeveragesHScrollLoaded extends React.Component<LoadedProps> {
-  _modalRef = React.createRef<BeverageModal>();
+  _modalRef = React.createRef < BeverageModal > ();
 
   render(): React.Node {
     const [value, countsByID] = this.props.value;
