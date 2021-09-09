@@ -9,11 +9,11 @@ try {
 
 var config = {
   watchFolders: [
-    path.resolve('H://dev//mine//Brewskey//brewksey.js-api')
+    
   ],
   resolver: {
     blacklistRE: blacklist([
-      /H:[\/\\][\/\\]dev[\/\\][\/\\]mine[\/\\][\/\\]Brewskey[\/\\][\/\\]brewksey.js-api[\/\\]node_modules[\/\\]react-native[\/\\].*/
+      
     ]),
     extraNodeModules: {
       'assert': require.resolve('assert/'),

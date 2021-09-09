@@ -4,11 +4,7 @@ import type { EntityID } from 'brewskey.js-api';
 
 import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
-import NfcManager, {
-  NfcAdapter,
-  NfcEvents,
-  NfcTech,
-} from 'react-native-nfc-manager';
+import NfcManager, { NfcAdapter, NfcEvents } from 'react-native-nfc-manager';
 import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
@@ -50,10 +46,7 @@ class PourProcessStore {
     NfcManager.start().catch(() => {
       runInAction(() => (this.isNFCSupported = false));
     });
-    NfcManager.setEventListener(
-      NfcEvents.DiscoverTag,
-      this._onNFCTagDiscovered,
-    );
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, this._onNFCTagDiscovered);
   }
 
   @action
@@ -85,16 +78,21 @@ class PourProcessStore {
       });
     } else {
       isNFCEnabled = this.isNFCSupported;
+      this.isNFCEnabled = isNFCEnabled;
     }
 
     if (isNFCEnabled) {
-      console.log('ENABLED');
-      await NfcManager.registerTagEvent({
-        alertMessage: 'Tap Brewskey Box',
-        invalidateAfterFirstRead: true,
-        isReaderModeEnabled: true,
-        readerModeFlags: NfcAdapter.FLAG_READER_NFC_A, // | NfcAdapter.FLAG_READER_NFC_B,
-      });
+      try {
+        await NfcManager.registerTagEvent({
+          alertMessage: 'Tap Brewskey Box',
+          invalidateAfterFirstRead: true,
+          isReaderModeEnabled: true,
+          readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+        });
+      } catch (ex) {
+        console.warn('ex', ex);
+        await NfcManager.unregisterTagEvent();
+      }
     }
 
     this._startTotpTimer();
@@ -120,12 +118,11 @@ class PourProcessStore {
   onHideModal = (): void => {
     GPSCoordinatesStore.flushCache();
     if (this.isNFCEnabled) {
-      NfcManager.unregisterTagEvent();
+      NfcManager.unregisterTagEvent().catch (() => {});
     }
 
     this._stopTotpTimer();
     this.setTotp('');
-    this._setErrorText('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
     this._didAuthorizePayment = false;
@@ -178,7 +175,6 @@ class PourProcessStore {
         );
       } else {
         this._setErrorText('An error during processing pour');
-        this._hasReadTag = false;
       }
     } finally {
       this._setIsLoading(false);
@@ -208,8 +204,6 @@ class PourProcessStore {
         );
       } else {
         this._setErrorText('An error during processing pour');
-        console.warn(error);
-        this._hasReadTag = false;
       }
     } finally {
       this._setIsLoading(false);
@@ -263,10 +257,6 @@ class PourProcessStore {
       // eslint-disable-next-line prefer-destructuring
       payload = tag.ndefMessage[1].payload;
     } else {
-      if (!Array.isArray(tag)) {
-        this._hasReadTag = false;
-        return;
-      }
       if (!tag[1].payload[0]) {
         tag[1].payload.shift();
       }
@@ -281,14 +271,12 @@ class PourProcessStore {
     );
 
     if (tagValue.indexOf(CONFIG.HOST) < 0) {
-      this._hasReadTag = false;
       return;
     }
 
     const index = tagValue.indexOf('d/');
 
     if (index < 0) {
-      this._hasReadTag = false;
       return;
     }
 

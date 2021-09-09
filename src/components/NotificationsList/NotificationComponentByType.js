@@ -3,9 +3,11 @@
 import type { Props as NotificationListItemProps } from './NotificationListItem';
 
 import * as React from 'react';
+import {Text} from 'react-native';
 import LowKegLevelListItem from './LowKegLevelListItem';
 import AchievementListItem from './AchievementListItem';
 import FriendRequestListItem from './FriendRequestListItem';
+import TextListItem from './TextListItem';
 
 const NotificationComponentByType = (
   props: NotificationListItemProps,
@@ -52,6 +54,20 @@ const NotificationComponentByType = (
     case 'newFriendRequest': {
       return (
         <FriendRequestListItem
+          contentComponent={contentComponent}
+          isSwipeable={isSwipeable}
+          leftComponent={leftComponent}
+          notification={notification}
+          onOpen={onOpen}
+          onPress={onPress}
+          onReadEnd={onReadEnd}
+        />
+      );
+    }
+
+    case 'text': {
+      return (
+        <TextListItem
           contentComponent={contentComponent}
           isSwipeable={isSwipeable}
           leftComponent={leftComponent}
