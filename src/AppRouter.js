@@ -178,8 +178,8 @@ const AppRouter = createSwitchNavigator(
   },
 );
 
-export default (createAppContainer(AppRouter): NavigationContainer<
+export default (createAppContainer(AppRouter): NavigationContainer <
   NavigationState,
   {||},
-  NavigationContainerProps<{||}, NavigationState>,
+NavigationContainerProps < {||}, NavigationState >,
 >);

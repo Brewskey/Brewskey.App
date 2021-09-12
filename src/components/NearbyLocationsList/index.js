@@ -16,7 +16,7 @@ import { computed } from 'mobx';
 import { withNavigation } from 'react-navigation';
 import List from '../../common/List';
 import ListItem from '../../common/ListItem';
-import NearbyLocationListEmpty from './NearbyLocationsListEmpty';
+import NearbyLocationsListEmpty from './NearbyLocationsListEmpty';
 import LoadingListFooter from '../../common/LoadingListFooter';
 import ListSectionHeader from '../../common/ListSectionHeader';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
@@ -29,13 +29,13 @@ type InjectedProps = {|
 
 type Props = {|
   isLoading: boolean,
-  nearbyLocations: Array<NearbyLocation>,
-  onRefresh: () => void,
+    nearbyLocations: Array < NearbyLocation >,
+      onRefresh: () => void,
 |};
 
 @withNavigation
 @observer
-class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
+class NearbyLocationsList extends InjectedComponent<InjectedProps, Props> {
   @computed
   get _sections(): Array<Section<NearbyTap>> {
     return this.props.nearbyLocations.map(
@@ -91,9 +91,9 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
           badge={
             kegLevel !== null
               ? {
-                  badgeStyle: { backgroundColor: COLORS.accent },
-                  value: `${kegLevel}%`,
-                }
+                badgeStyle: { backgroundColor: COLORS.accent },
+                value: `${kegLevel}%`,
+              }
               : undefined
           }
           chevron={false}
@@ -118,7 +118,7 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
       <List
         keyExtractor={this._keyExtractor}
         ListEmptyComponent={
-          !this.props.isLoading ? <NearbyLocationListEmpty /> : null
+          !this.props.isLoading ? <NearbyLocationsListEmpty /> : null
         }
         ListFooterComponent={
           <LoadingListFooter isLoading={this.props.isLoading} />
@@ -133,4 +133,4 @@ class NearbyLocationList extends InjectedComponent<InjectedProps, Props> {
   }
 }
 
-export default NearbyLocationList;
+export default NearbyLocationsList;

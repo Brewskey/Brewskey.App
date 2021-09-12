@@ -57,3 +57,6 @@ buck-out/
 
 # Pods
 /ios/Pods/
+/metro.config.js
+/android/app/release/app-release.apk
+/android/app/release/output.json

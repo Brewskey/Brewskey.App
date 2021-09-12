@@ -10,7 +10,7 @@ import AuthStore from '../AuthStore';
 import CONFIG from '../../config';
 
 const makeNearbyLocationsStore = () => {
-  const store = makeApiRequestStore<Array<NearbyLocation>>(
+  const store = makeApiRequestStore < Array < NearbyLocation >> (
     ({ latitude, longitude }: Coordinates, radius?: number = 15000) =>
       fetchJSON(
         `${CONFIG.HOST}/api/v2/Locations/Default.nearby()/?longitude=${longitude}&latitude=${latitude}&radius=${radius}
@@ -32,21 +32,20 @@ const makeNearbyLocationsStore = () => {
 
 export const NearbyLocationsStore = makeNearbyLocationsStore();
 
-export const UpdateAvatarStore = makeApiRequestStore<void>(
-  (avatarData: string) =>
-    // eslint-disable-next-line no-undef
-    fetch(`${CONFIG.HOST}/api/profile/photo/`, {
-      body: JSON.stringify({ photo: avatarData }),
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'PUT',
-    }).then(() => {}),
-);
+let iter = 0;
+export const updateAvatar = (avatarData: string) =>
+  // eslint-disable-next-line no-undef
+  fetch(`${CONFIG.HOST}/api/profile/photo/`, {
+    body: JSON.stringify({ photo: avatarData }),
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+  });
 
-export const UpdateBeverageImageStore = makeApiRequestStore<void>(
+export const UpdateBeverageImageStore = makeApiRequestStore < void> (
   (beverageID: EntityID, beverageData: string) =>
     // eslint-disable-next-line no-undef
     fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
@@ -57,5 +56,5 @@ export const UpdateBeverageImageStore = makeApiRequestStore<void>(
         'Content-Type': 'application/json',
       },
       method: 'PUT',
-    }).then(() => {}),
+    }).then(() => { }),
 );

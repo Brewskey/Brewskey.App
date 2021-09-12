@@ -3,17 +3,18 @@
 import type CachedImage from '../common/CachedImage';
 
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import nullthrows from 'nullthrows';
-import ImagePicker from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { observer } from 'mobx-react';
-import { computed, observable, runInAction, when } from 'mobx';
+import { action, computed, observable, runInAction, when } from 'mobx';
 import AuthStore from '../stores/AuthStore';
 import SnackBarStore from '../stores/SnackBarStore';
-import { UpdateAvatarStore } from '../stores/ApiRequestStores/CommonApiStores';
+import { updateAvatar } from '../stores/ApiRequestStores/CommonApiStores';
 import UserAvatar from '../common/avatars/UserAvatar';
 import LoadingIndicator from '../common/LoadingIndicator';
 import { COLORS } from '../theme';
+import { Icon } from 'react-native-elements';
 
 const styles = StyleSheet.create({
   loadingIndicator: {
@@ -28,6 +29,7 @@ const styles = StyleSheet.create({
 
 const IMAGE_PICKER_OPTIONS = {
   allowsEditing: true,
+  includeBase64: true,
   maxHeight: 1024,
   maxWidth: 1024,
   mediaType: 'photo',
@@ -40,45 +42,60 @@ class AvatarPicker extends React.Component<{||}> {
   _cachedImageRef = React.createRef();
 
   @observable
-  _updateAvatarCacheKey = null;
+_isLoading = false;
 
-  @computed
-  get _isLoading(): boolean {
-    return this._updateAvatarCacheKey
-      ? UpdateAvatarStore.getFromCache(this._updateAvatarCacheKey).isLoading()
-      : false;
-  }
 
-  _onAvatarPress = () => {
-    ImagePicker.showImagePicker(
-      IMAGE_PICKER_OPTIONS,
-      async ({ data, didCancel, error }: Object): Promise<void> => {
-        if (didCancel || error) {
-          return;
-        }
+@action
+_onAvatarPress = () => {
+  const flushCache = this._cachedImageRef?.current.flushCache;
+  launchImageLibrary(
+    IMAGE_PICKER_OPTIONS,
+    async ({ base64, didCancel, error }: Object): Promise<void> => {
+      if (didCancel || error) {
+        return;
+      }
 
-        runInAction(async () => {
-          this._updateAvatarCacheKey = UpdateAvatarStore.fetch(data);
-          await when(() => !this._isLoading);
-          nullthrows(this._cachedImageRef.current).flushCache();
-          SnackBarStore.showMessage({ text: 'Avatar updated' });
-        });
-      },
-    );
-  };
+      runInAction(async () => {
+        this._isLoading = true;
+      });
+      await updateAvatar(base64);
 
-  render(): React.Node {
-    return this._isLoading ? (
-      <LoadingIndicator style={styles.loadingIndicator} />
-    ) : (
+      runInAction(async () => {
+        this._isLoading = false;
+        flushCache();
+        SnackBarStore.showMessage({ text: 'Avatar updated' });
+      });
+    },
+  );
+};
+
+render(): React.Node {
+  return this._isLoading ? (
+    <LoadingIndicator style={styles.loadingIndicator} />
+  ) : (
+    <TouchableOpacity onPress={this._onAvatarPress}>
       <UserAvatar
+        cached={true}
         imageRef={this._cachedImageRef}
-        onPress={this._onAvatarPress}
         size={200}
         userName={AuthStore.userName || ''}
       />
-    );
-  }
+      <Icon
+        color={COLORS.textInverse}
+        name="add-a-photo"
+        reverse
+        reverseColor={COLORS.primary3}
+        size={20}
+        raised={true}
+        containerStyle={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+        }}
+      />
+    </ TouchableOpacity>
+  );
+}
 }
 
 export default AvatarPicker;

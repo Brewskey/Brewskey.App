@@ -30,14 +30,16 @@ class CachedImage extends React.Component<
   React.ElementProps<typeof RNCachedImage>,
 > {
   static defaultProps: {| mutable: boolean |} = {
-    mutable: true,
+  mutable: true,
   };
 
-  flushCache: () => void = (): void => flushImageCache(this.props.source.uri);
+flushCache: () => void = (): void => {
+  flushImageCache(this.props.source.uri);
+}
 
-  render(): React.Node {
-    return <RNCachedImage {...this.props} />;
-  }
+render(): React.Node {
+  return <RNCachedImage {...this.props} />;
+}
 }
 
 export default CachedImage;

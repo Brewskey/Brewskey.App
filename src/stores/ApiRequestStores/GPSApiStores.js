@@ -7,13 +7,20 @@ import Geolocation from '@react-native-community/geolocation';
 const getGPSPosition = (): Promise<Position> =>
   new Promise((resolve, reject: (error: PositionError) => void) => {
     Geolocation.getCurrentPosition(
-      (position: Position): void => resolve(position),
-      (error: PositionError): void => reject(error),
+      (position: Position): void => {
+        resolve(position);
+        console.log(position);
+      },
+      (error: PositionError): void => {
+        console.error(error);
+        reject(error);
+      },
+      { enableHighAccuracy: true }
     );
   });
 
 export const createGPSCoordinatesStore = () =>
-  makeRequestApiStore<Coordinates>(() =>
+  makeRequestApiStore < Coordinates > (() =>
     getGPSPosition().then((position: Position): Coordinates => {
       return {
         latitude: position.coords.latitude,

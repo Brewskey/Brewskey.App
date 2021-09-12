@@ -2,8 +2,9 @@
 
 import type { Coordinates, NearbyLocation } from '../types';
 
-import { action, computed } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 import OpenAppSettings from 'react-native-app-settings';
+import { PermissionsAndroid, Platform } from 'react-native';
 import { AppState } from 'react-native';
 import { LoadObject } from 'brewskey.js-api';
 import DebouncedTextStore from './DebouncedTextStore';
@@ -11,9 +12,13 @@ import { GPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
 import { GoogleCoordinatesStore } from '../stores/ApiRequestStores/GoogleApiStores';
 import { NearbyLocationsStore } from '../stores/ApiRequestStores/CommonApiStores';
 import PermissionStore from '../stores/ApiRequestStores/PermissionStores';
+import {
+  RESULTS,
+} from 'react-native-permissions';
 
 class HomeScreenStore {
   searchTextStore: DebouncedTextStore = new DebouncedTextStore();
+  @observable _refresh = 0;
 
   @action
   onClearSearchBar: () => void = () => {
@@ -21,21 +26,24 @@ class HomeScreenStore {
   };
 
   @action
-  onAskLocationPermissionButtonPress: () => void = () => {
-    if (PermissionStore.hasLocationPermissions) {
-      PermissionStore.flushCache();
-    } else {
-      const onAppStateChange = action((appState) => {
-        if (appState !== 'active') {
-          return;
-        }
+  onAskLocationPermissionButtonPress: () => Promise<void> = async () => {
+    try {
+      const result = await PermissionStore.getLocationPermissions();
+      if (result === RESULTS.GRANTED) {
         PermissionStore.flushCache();
-        this.refresh();
-        AppState.removeEventListener('change', onAppStateChange);
-      });
-      AppState.addEventListener('change', onAppStateChange);
-
-      OpenAppSettings.open();
+        runInAction(() => this.refresh())
+      } else if (result === RESULTS.BLOCKED) {
+        const subscription = AppState.addEventListener('change', action((appState) => {
+          if (appState !== 'active') {
+            return;
+          }
+          runInAction(() => this.refresh())
+          subscription.remove();
+        }));
+        OpenAppSettings.open();
+      }
+    } catch (err) {
+      console.warn(err)
     }
   };
 
@@ -49,6 +57,8 @@ class HomeScreenStore {
     }
 
     NearbyLocationsStore.flushCache();
+    this.searchTextStore.setText('');
+    this._refresh += 1;
   };
 
   @computed
@@ -80,16 +90,20 @@ class HomeScreenStore {
     return this.searchTextStore.debouncedText
       ? GoogleCoordinatesStore.get(this.searchTextStore.debouncedText)
       : PermissionStore.hasLocationPermissions
-      ? GPSCoordinatesStore.get()
-      : LoadObject.empty();
+        ? GPSCoordinatesStore.get()
+        : LoadObject.empty();
   }
 
   @computed
   get _nearbyLocationsLoader(): LoadObject<Array<NearbyLocation>> {
     return this._coordinatesLoader.map((coordinates: Coordinates): LoadObject<
       Array<NearbyLocation>,
-    > => NearbyLocationsStore.get(coordinates));
+      > => {
+      return NearbyLocationsStore.get(coordinates);
+    });
   }
 }
+
+
 
 export default new HomeScreenStore();

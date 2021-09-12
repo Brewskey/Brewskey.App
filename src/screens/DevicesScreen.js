@@ -1,6 +1,7 @@
 // @flow
 
 import type { Navigation } from '../types';
+import type { EmitterSubscription } from 'react-native';
 
 import * as React from 'react';
 import { AppState } from 'react-native';
@@ -25,14 +26,15 @@ type InjectedProps = {|
 @errorBoundary(<ErrorScreen showBackButton />)
 @observer
 class DevicesScreen extends InjectedComponent<InjectedProps> {
+  _subscription: ?EmitterSubscription = null;
   componentDidMount() {
-    AppState.addEventListener('change', this._onAppStateChange);
+    this._subscription = AppState.addEventListener('change', this._onAppStateChange);
     DAOApi.CloudDeviceDAO.flushCache();
     DAOApi.CloudDeviceDAO.startOnlineStatusListener();
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._onAppStateChange);
+    this._subscription.remove();
     DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
   }
 

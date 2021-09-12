@@ -32,8 +32,6 @@
 	<string>$(PRODUCT_NAME) uses NFC so you can tap a Brewskey box to pour!</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>192.168.0.1</key>

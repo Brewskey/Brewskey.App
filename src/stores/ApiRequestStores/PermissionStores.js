@@ -15,7 +15,11 @@ const PERMISSION_TYPES = [
   PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
 ];
 
-const REQUEST_API = makeRequestApiStore(() => checkMultiple(PERMISSION_TYPES));
+const REQUEST_API = makeRequestApiStore(async () => {
+  const result = await checkMultiple(PERMISSION_TYPES);
+  console.log(result);
+  return result;
+});
 
 class PermissionStore {
   @computed
@@ -25,7 +29,7 @@ class PermissionStore {
 
   @computed
   get hasLocationPermissions(): boolean {
-    return (
+    const result = (
       REQUEST_API.get()
         .map((status) => {
           return PERMISSION_TYPES.some(
@@ -34,11 +38,22 @@ class PermissionStore {
         })
         .getValue() || false
     );
+    return result;
+  }
+
+  getLocationPermissions: () => Promise<$Values<typeof RESULTS>> = async () => {
+    return await request(
+      Platform.select({
+        android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      }),
+    );
   }
 
   @action
   flushCache(): void {
     REQUEST_API.flushCache();
+    REQUEST_API.get();
   }
 }
 

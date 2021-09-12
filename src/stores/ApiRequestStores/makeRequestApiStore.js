@@ -35,7 +35,7 @@ class Store<TResult> {
   _requestLoaderByKey: ObservableMap<
     string,
     LoadObject<TResult>,
-  > = observable.map();
+    > = observable.map();
 
   @observable
   _iterator = 0;
@@ -69,33 +69,32 @@ class Store<TResult> {
   }
 
   @action
-  flushCache() {
-    this._requestLoaderByKey = observable.map();
+  flushCache = () => {
+    this._requestLoaderByKey.clear();
   }
 
-  get(...requestArgs: Array<any>): LoadObject<TResult> {
+  get = (...requestArgs: Array<any>): LoadObject<TResult> => {
     const cacheKey = this.fetch(...requestArgs);
     return nullthrows(this._requestLoaderByKey.get(cacheKey));
   }
 
   @action
-  getFromCache(cacheKey: string): LoadObject<TResult> {
+  getFromCache = (cacheKey: string): LoadObject<TResult> => {
     const result = this._requestLoaderByKey.get(cacheKey);
-    console.log('GET', this._requestLoaderByKey.toJSON());
     return this._requestLoaderByKey.get(cacheKey) || LoadObject.empty();
   }
 
-  @action.bound
-  _setValue(cacheKey: string, value: LoadObject<TResult>) {
+  @action
+  _setValue = (cacheKey: string, value: LoadObject<TResult>) => {
     this._requestLoaderByKey.delete(cacheKey);
     this._requestLoaderByKey.set(cacheKey, value);
     this._iterator += 1;
   }
 }
 
-const makeRequestApiStore = <TResult>(
+const makeRequestApiStore: <TResult>(
   getRequestPromise: (...args: Array<any>) => Promise<TResult>,
-): Store<TResult> => {
+) => Store<TResult> = getRequestPromise => {
   const store = new Store(getRequestPromise);
   STORES.push(store);
 

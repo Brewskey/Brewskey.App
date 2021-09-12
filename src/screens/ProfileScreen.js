@@ -25,6 +25,7 @@ import AllBeveragesHScroll from '../components/Stats/AllBeveragesHScroll';
 import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import FriendsHorizontalList from '../components/FriendsHorizontalList';
 import DAOApi, { FRIEND_STATUSES, LoadObject } from 'brewskey.js-api';
+import AvatarPicker from '../components/AvatarPicker';
 
 const styles = StyleSheet.create({
   friendsListSection: {
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
 /* eslint-disable sorting/sort-object-props */
 type InjectedProps = {|
   id: EntityID,
-  navigation: Navigation,
+    navigation: Navigation,
 |};
 
 @errorBoundary(<ErrorScreen showBackButton />)
@@ -85,6 +86,7 @@ const LoadedComponent = ({
   if (account == null) {
     return null;
   }
+
   return (
     <Container>
       <Header
@@ -97,11 +99,14 @@ const LoadedComponent = ({
       <ScrollView>
         <Section bottomPadded>
           <SectionContent centered paddedVertical>
-            <UserAvatar userName={account.userName} size={200} />
+            {AuthStore.userID === account.id
+              ? <AvatarPicker />
+              : <UserAvatar userName={account.userName} size={200} />
+            }
           </SectionContent>
         </Section>
         {AuthStore.userID !== account.id &&
-        (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
+          (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
           <Section>
             <SectionHeader
               title={`You aren't friends with ${account.userName}`}

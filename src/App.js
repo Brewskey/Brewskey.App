@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react';
+import type { Node } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import nullthrows from 'nullthrows';
 import DAOApi from 'brewskey.js-api';
@@ -100,7 +101,7 @@ class App extends React.Component<{}> {
     }
   };
 
-  render(): React.Node {
+  render(): Node {
     return (
       <SafeAreaView style={styles.safeArea}>
         <SlotFillProvider>

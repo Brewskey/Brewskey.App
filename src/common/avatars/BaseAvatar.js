@@ -15,70 +15,70 @@ const styles = StyleSheet.create({
 
 export type BaseAvatarProps = {|
   cached?: boolean,
-  containerStyle?: Style,
-  imageRef?: React.Ref<typeof CachedImage>,
-  mutable?: boolean,
-  onPress?: () => void,
-  rounded: boolean,
-  size: number,
+    containerStyle ?: Style,
+    imageRef ?: React.Ref < typeof CachedImage >,
+    mutable ?: boolean,
+    onPress ?: () => void,
+    rounded: boolean,
+      size: number,
 |};
 
 type Props = {|
   ...BaseAvatarProps,
-  uri?: ?string,
+  uri ?: ? string,
 |};
 class BaseAvatar extends React.PureComponent<Props> {
   static defaultProps: {| cached: boolean, rounded: boolean, size: number |} = {
-    cached: true,
+  cached: true,
     rounded: true,
-    size: 45,
+      size: 45,
   };
 
-  render(): React.Node {
-    const {
-      cached,
-      containerStyle,
-      imageRef,
-      mutable,
-      onPress,
-      rounded,
-      size,
-      uri,
-    } = this.props;
+render(): React.Node {
+  const {
+    cached,
+    containerStyle,
+    imageRef,
+    mutable,
+    onPress,
+    rounded,
+    size,
+    uri,
+  } = this.props;
 
-    const baseContainerStyle = {
-      height: size,
-      width: size,
-      ...(rounded && { borderRadius: size / 2 }),
-    };
+  const baseContainerStyle = {
+    height: size,
+    width: size,
+    ...(rounded && { borderRadius: size / 2 }),
+  };
 
-    const imageElement = cached ? (
-      <CachedImage
-        mutable={mutable}
-        ref={cached ? imageRef : null}
-        source={{ uri: uri || '' }}
-        style={baseContainerStyle}
-      />
-    ) : (
-      <Image source={{ uri }} style={baseContainerStyle} />
-    );
+  const imageElement = cached ? (
+    <CachedImage
+      mutable={mutable}
+      ref={cached ? imageRef : null}
+      source={{ uri: uri || '' }}
+      style={baseContainerStyle}
+    />
+  ) : (
+    <Image source={{ uri }} style={baseContainerStyle} />
+  );
 
-    return (
-      <TouchableOpacity
-        disabled={!onPress}
-        onPress={onPress}
-        style={{
-          ...baseContainerStyle,
-          ...styles.avatar,
-          width: size,
-          height: size,
-          ...containerStyle,
-        }}
-      >
-        {uri ? imageElement : null}
-      </TouchableOpacity>
-    );
-  }
+  return (
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
+      style={{
+        ...baseContainerStyle,
+        ...styles.avatar,
+        width: size,
+        height: size,
+        ...containerStyle,
+      }}
+    >
+      {uri ? imageElement : null}
+    </TouchableOpacity>
+  );
+}
 }
 
 export default BaseAvatar;

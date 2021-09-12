@@ -68,9 +68,8 @@
             <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
         </intent-filter>
       </activity>
-      <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
-        <activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
-            android:exported="true"/>
+        <!--<activity android:name="com.facebook.flipper.android.diagnostics.FlipperDiagnosticActivity"
+            android:exported="true"/>-->
     </application>
 
 </manifest>

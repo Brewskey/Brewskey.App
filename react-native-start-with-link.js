@@ -9,7 +9,7 @@
 const packageJson = require('./package.json');
 const fs = require('fs');
 const exec = require('child_process').execSync;
-const RN_CLI_CONFIG_NAME = `rn-cli-config-with-links.js`;
+const RN_CLI_CONFIG_NAME = `metro.config.js`;
 
 main();
 
@@ -47,12 +47,20 @@ function generateRnCliConfig(symlinkPathes, configName) {
 var path = require('path');
 var blacklist;
 try {
-  blacklist = require('metro-config/src/defaults/blacklist');
+  blacklist = require('metro-config/src/defaults/exclusionList');
 } catch(e) {
   blacklist = require('metro/src/blacklist');
 }
 
 var config = {
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
+      },
+    }),
+  },
   watchFolders: [
     ${symlinkPathes
       .map((path) => `path.resolve('${path}')`)
@@ -61,14 +69,14 @@ var config = {
   resolver: {
     blacklistRE: blacklist([
       ${symlinkPathes
-        .map((path) => path.replace(/\\/g, '//'))
-        .map(
-          (path) =>
-            `/${path.replace(
-              /\//g,
-              '[\\/\\\\]',
-            )}[\\/\\\\]node_modules[\\/\\\\]react-native[\\/\\\\].*/`,
-        )}
+      .map((path) => path.replace(/\\/g, '//'))
+      .map(
+        (path) =>
+          `/${path.replace(
+            /\//g,
+            '[\\/\\\\]',
+          )}[\\/\\\\]node_modules[\\/\\\\]react-native[\\/\\\\].*/`,
+      )}
     ]),
     extraNodeModules: {
       'assert': require.resolve('assert/'),
