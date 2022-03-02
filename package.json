@@ -60,7 +60,7 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-picker": "^2.3.1",
     "react-native-img-cache": "https://github.com/Brewskey/react-native-img-cache",
-    "react-native-keyboard-aware-scroll-view": "^0.9.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "^0.27.1",
     "react-native-nfc-manager": "^3.13.2",
     "react-native-permissions": "^3.1.0",
