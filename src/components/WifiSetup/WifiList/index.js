@@ -16,6 +16,7 @@ import LoadingListFooter from '../../../common/LoadingListFooter';
 type Props = {|
   ListHeaderComponent?: ?(React.ComponentType<any> | React.Node),
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>,
+  isSettingUpWifi: boolean,
 |};
 
 @observer
@@ -32,7 +33,7 @@ class WifiList extends React.Component<Props> {
     this._expandedRowKey = rowKey;
   };
 
-  _keyExtractor = (item: WifiNetwork): string => item.ssid;
+  _keyExtractor = (item: WifiNetwork, index: number): string => item.ssid + index;
 
   _renderItem = ({
     index,
@@ -41,13 +42,13 @@ class WifiList extends React.Component<Props> {
     index: number,
     item: WifiNetwork,
   }): React.Node => {
-    const rowKey = this._keyExtractor(item);
+    const rowKey = this._keyExtractor(item, index);
     const isExpanded = rowKey === this._expandedRowKey;
     return (
       <WifiListItem
         error={this.props.wifiSetupLoader.getError()}
         index={index}
-        isConnecting={isExpanded && this.props.wifiSetupLoader.isLoading()}
+        isConnecting={isExpanded && (this.props.wifiSetupLoader.isLoading() || this.props.isSettingUpWifi)}
         isExpanded={isExpanded}
         item={item}
         onConnectPress={this.props.onConnectPress}

@@ -37,6 +37,9 @@ class WifiSetupStore {
   particleID: string = [];
 
   @observable
+  isSettingUpWifi: boolean = false;
+
+  @observable
   wifiSetupLoader: LoadObject<Array<WifiNetwork>> = LoadObject.empty();
 
   navigation: Navigation;
@@ -111,10 +114,11 @@ class WifiSetupStore {
   setupWifi: (WifiNetwork) => Promise<void> = async (
     wifiNetwork: WifiNetwork,
   ): Promise<void> => {
+    this.isSettingUpWifi = true;
     console.log('wifiNetwork', wifiNetwork)
     const key = await SoftApService.configureWifi(wifiNetwork);
     console.log('key', key)
-    await SoftApService.connectWifi();
+    await SoftApService.connectWifi().then(console.log).catch(console.error);
     this._setWifiSetupStep(4);
   };
 
@@ -122,6 +126,7 @@ class WifiSetupStore {
   _setWifiSetupStep: (WifiSetupStep) => void = (step: WifiSetupStep): void => {
     console.log('Step', step);
     this.wifiSetupStep = step;
+    this.isSettingUpWifi = false;
 
     this.navigation.dispatch(
       StackActions.replace({

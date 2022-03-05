@@ -56,7 +56,7 @@ class SoftAPService {
       ssid,
     });
 
-    const { r: responseCode } = await fetchJSON(`${BASE_URL}/configure-ap`, {
+    const { r: responseCode, ...otherData } = await fetchJSON(`${BASE_URL}/configure-ap`, {
       body,
       headers: {
         ...HEADERS,
@@ -64,6 +64,8 @@ class SoftAPService {
       },
       method: 'POST',
     });
+
+    console.log('Configure Wifi', responseCode, otherData)
 
     if (responseCode === INCORRECT_WIFI_PASSWORD_CODE) {
       throw new Error('Incorrect Wifi password!');
