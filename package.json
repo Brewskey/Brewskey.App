@@ -60,7 +60,7 @@
     "react-native-img-cache": "https://github.com/Brewskey/react-native-img-cache",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-maps": "^0.27.1",
-    "react-native-nfc-manager": "^3.10.0",
+    "react-native-nfc-manager": "^3.13.2",
     "react-native-permissions": "^2.1.4",
     "react-native-progress": "https://github.com/Brewskey/react-native-progress",
     "react-native-push-notification": "^3.1.1",
