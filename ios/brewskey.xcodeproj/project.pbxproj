@@ -12,8 +12,8 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		31B3273FF58E22A7752AB349 /* libPods-Brewskey.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 202E5C9927E8C4F8C013ACCC /* libPods-Brewskey.a */; };
-		523D8F292744AC0F000C1DEE /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 523D8F282744AC0F000C1DEE /* main.jsbundle */; };
 		523D8F2F2746B0BC000C1DEE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 523D8F2E2746B0BC000C1DEE /* LaunchScreen.storyboard */; };
+		52AA03C227D7BEE8005B683A /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 52AA03C127D7BEE8005B683A /* main.jsbundle */; };
 		CB0F3BF28D6BE3BD9A8DC44D /* libPods-Brewskey-BrewskeyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F640AEE8098E848F1462588 /* libPods-Brewskey-BrewskeyTests.a */; };
 /* End PBXBuildFile section */
 
@@ -40,8 +40,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Brewskey/main.m; sourceTree = "<group>"; };
 		202E5C9927E8C4F8C013ACCC /* libPods-Brewskey.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Brewskey.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		523D8F252744AB1F000C1DEE /* Brewskey.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Brewskey.entitlements; path = Brewskey/Brewskey.entitlements; sourceTree = "<group>"; };
-		523D8F282744AC0F000C1DEE /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = Brewskey/main.jsbundle; sourceTree = "<group>"; };
 		523D8F2E2746B0BC000C1DEE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		52AA03C127D7BEE8005B683A /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = main.jsbundle; path = Brewskey/main.jsbundle; sourceTree = "<group>"; };
 		5F640AEE8098E848F1462588 /* libPods-Brewskey-BrewskeyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Brewskey-BrewskeyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		72A30EEA2758F3C2A438ED2A /* Pods-Brewskey-BrewskeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Brewskey-BrewskeyTests.release.xcconfig"; path = "Target Support Files/Pods-Brewskey-BrewskeyTests/Pods-Brewskey-BrewskeyTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -89,7 +89,7 @@
 		13B07FAE1A68108700A75B9A /* Brewskey */ = {
 			isa = PBXGroup;
 			children = (
-				523D8F282744AC0F000C1DEE /* main.jsbundle */,
+				52AA03C127D7BEE8005B683A /* main.jsbundle */,
 				523D8F252744AB1F000C1DEE /* Brewskey.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -247,7 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				523D8F292744AC0F000C1DEE /* main.jsbundle in Resources */,
+				52AA03C227D7BEE8005B683A /* main.jsbundle in Resources */,
 				523D8F2F2746B0BC000C1DEE /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -490,7 +490,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Brewskey/Brewskey.entitlements;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = K3J4CQMPRF;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Brewskey/Info.plist;
@@ -519,7 +519,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Brewskey/Brewskey.entitlements;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = K3J4CQMPRF;
 				INFOPLIST_FILE = Brewskey/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
