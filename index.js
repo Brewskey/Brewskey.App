@@ -21,4 +21,4 @@ global.EventSource = RNEventSource;
 
 const App = require('./src/App').default;
 
-AppRegistry.registerComponent('brewskey', () => App);
+AppRegistry.registerComponent('Brewskey', () => App);

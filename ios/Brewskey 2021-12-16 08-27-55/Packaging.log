@@ -1,0 +1,1085 @@
+2021-12-16 16:26:39 +0000  Initial pipeline context: <IDEDistributionProcessingPipelineContext: 0x7fa0e46a15b0; archive(resolved)='<IDEArchive: 0x7fa0c9a42c40>', distributionTask(resolved)='2', distributionDestination(resolved)='1', distributionMethod(resolved)='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team(resolved)='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	Chain (12, self inclusive):
+	<IDEDistributionProcessingPipelineContext: 0x7fa0e46a15b0; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionProcessingPipelineContext: 0x7fa0e4698450; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0f39f4ac0; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0e53a3460; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0e53a1790; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0f283ae10; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0e253f650; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0e402f170; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0d933b0d0; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='<IDEProvisioningDisambiguatableBasicTeam: 0x7fa0cb43a600; teamID='K3J4CQMPRF', teamName='Tappt LLC', teamType='Company', username='jlkalberer@gmail.com', isFreeProvisioningTeam='0'>'>
+	<IDEDistributionContext: 0x7fa0f4ae99a0; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='(null)'>
+	<IDEDistributionContext: 0x7fa0de88f190; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='<IDEDistributionMethodiOSAppStoreDistribution: 0x7fa0c8fd88d0>', team='(null)'>
+	<IDEDistributionContext: 0x7fa0e98f83e0; archive = '<IDEArchive: 0x7fa0c9a42c40>', distributionMethod='(null)', team='(null)'>
+</IDEDistributionProcessingPipelineContext: 0x7fa0e46a15b0>
+2021-12-16 16:26:39 +0000  Processing step: IDEDistributionCreateDestRootStep
+2021-12-16 16:26:39 +0000  Processing step: IDEDistributionCopyItemStep
+2021-12-16 16:26:39 +0000  Running /usr/bin/ditto '-V' '/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app'
+2021-12-16 16:26:39 +0000  >>> Copying /Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app 
+2021-12-16 16:26:39 +0000  copying file ./_CodeSignature/CodeResources ... 
+2021-12-16 16:26:39 +0000  31036 bytes for ./_CodeSignature/CodeResources
+2021-12-16 16:26:39 +0000  copying file ./Fontisto.ttf ... 
+2021-12-16 16:26:39 +0000  313528 bytes for ./Fontisto.ttf
+copying file ./Octicons.ttf ... 
+2021-12-16 16:26:39 +0000  28364 bytes for ./Octicons.ttf
+2021-12-16 16:26:39 +0000  copying file ./Feather.ttf ... 
+2021-12-16 16:26:39 +0000  56024 bytes for ./Feather.ttf
+2021-12-16 16:26:39 +0000  copying file ./Entypo.ttf ... 
+2021-12-16 16:26:39 +0000  65584 bytes for ./Entypo.ttf
+2021-12-16 16:26:39 +0000  copying file ./FontAwesome5_Brands.ttf ... 
+2021-12-16 16:26:39 +0000  132728 bytes for ./FontAwesome5_Brands.ttf
+2021-12-16 16:26:39 +0000  copying file ./MaterialCommunityIcons.ttf ... 
+2021-12-16 16:26:39 +0000  899432 bytes for ./MaterialCommunityIcons.ttf
+2021-12-16 16:26:39 +0000  copying file ./AppIcon60x60@2x.png ... 
+9556 bytes for ./AppIcon60x60@2x.png
+copying file ./AntDesign.ttf ... 
+70344 bytes for ./AntDesign.ttf
+copying file ./Foundation.ttf ... 
+2021-12-16 16:26:39 +0000  56976 bytes for ./Foundation.ttf
+copying file ./Ionicons.ttf ... 
+2021-12-16 16:26:39 +0000  247192 bytes for ./Ionicons.ttf
+2021-12-16 16:26:39 +0000  copying file ./FontAwesome5_Solid.ttf ... 
+2021-12-16 16:26:39 +0000  202616 bytes for ./FontAwesome5_Solid.ttf
+2021-12-16 16:26:39 +0000  copying file ./FontAwesome5_Regular.ttf ... 
+2021-12-16 16:26:39 +0000  34092 bytes for ./FontAwesome5_Regular.ttf
+2021-12-16 16:26:39 +0000  copying file ./AccessibilityResources.bundle/en.lproj/Localizable.strings ... 
+2021-12-16 16:26:39 +0000  518 bytes for ./AccessibilityResources.bundle/en.lproj/Localizable.strings
+2021-12-16 16:26:39 +0000  copying file ./AccessibilityResources.bundle/Info.plist ... 
+2021-12-16 16:26:39 +0000  792 bytes for ./AccessibilityResources.bundle/Info.plist
+2021-12-16 16:26:39 +0000  copying file ./FontAwesome.ttf ... 
+2021-12-16 16:26:39 +0000  165548 bytes for ./FontAwesome.ttf
+2021-12-16 16:26:39 +0000  copying file ./Zocial.ttf ... 
+2021-12-16 16:26:39 +0000  25552 bytes for ./Zocial.ttf
+2021-12-16 16:26:39 +0000  copying file ./Assets.car ... 
+2021-12-16 16:26:39 +0000  61335119 bytes for ./Assets.car
+copying file ./EvilIcons.ttf ... 
+2021-12-16 16:26:39 +0000  13456 bytes for ./EvilIcons.ttf
+copying file ./AppIcon76x76@2x~ipad.png ... 
+12011 bytes for ./AppIcon76x76@2x~ipad.png
+copying file ./main.jsbundle ... 
+2021-12-16 16:26:39 +0000  3906068 bytes for ./main.jsbundle
+2021-12-16 16:26:39 +0000  copying file ./LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib ... 
+2836 bytes for ./LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib
+copying file ./LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib ... 
+896 bytes for ./LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib
+copying file ./LaunchScreen.storyboardc/Info.plist ... 
+258 bytes for ./LaunchScreen.storyboardc/Info.plist
+copying file ./Frameworks/libswiftCoreImage.dylib ... 
+466576 bytes for ./Frameworks/libswiftCoreImage.dylib
+copying file ./Frameworks/libswiftObjectiveC.dylib ... 
+679680 bytes for ./Frameworks/libswiftObjectiveC.dylib
+copying file ./Frameworks/libswiftCore.dylib ... 
+2021-12-16 16:26:40 +0000  95497584 bytes for ./Frameworks/libswiftCore.dylib
+copying file ./Frameworks/libswiftCoreGraphics.dylib ... 
+2021-12-16 16:26:40 +0000  2041040 bytes for ./Frameworks/libswiftCoreGraphics.dylib
+copying file ./Frameworks/OpenSSL.framework/_CodeSignature/CodeResources ... 
+1798 bytes for ./Frameworks/OpenSSL.framework/_CodeSignature/CodeResources
+copying file ./Frameworks/OpenSSL.framework/OpenSSL ... 
+2021-12-16 16:26:40 +0000  10657632 bytes for ./Frameworks/OpenSSL.framework/OpenSSL
+2021-12-16 16:26:40 +0000  copying file ./Frameworks/OpenSSL.framework/Info.plist ... 
+716 bytes for ./Frameworks/OpenSSL.framework/Info.plist
+copying file ./Frameworks/libswiftUIKit.dylib ... 
+1608800 bytes for ./Frameworks/libswiftUIKit.dylib
+copying file ./Frameworks/libswiftMetal.dylib ... 
+724416 bytes for ./Frameworks/libswiftMetal.dylib
+copying file ./Frameworks/libswiftDispatch.dylib ... 
+2021-12-16 16:26:40 +0000  4056912 bytes for ./Frameworks/libswiftDispatch.dylib
+copying file ./Frameworks/libswiftos.dylib ... 
+2021-12-16 16:26:40 +0000  857184 bytes for ./Frameworks/libswiftos.dylib
+copying file ./Frameworks/libswiftCoreFoundation.dylib ... 
+450384 bytes for ./Frameworks/libswiftCoreFoundation.dylib
+copying file ./Frameworks/libswiftDarwin.dylib ... 
+1091440 bytes for ./Frameworks/libswiftDarwin.dylib
+copying file ./Frameworks/libswiftQuartzCore.dylib ... 
+486352 bytes for ./Frameworks/libswiftQuartzCore.dylib
+copying file ./Frameworks/libswiftFoundation.dylib ... 
+2021-12-16 16:26:40 +0000  43094320 bytes for ./Frameworks/libswiftFoundation.dylib
+2021-12-16 16:26:40 +0000  copying file ./SimpleLineIcons.ttf ... 
+54056 bytes for ./SimpleLineIcons.ttf
+copying file ./embedded.mobileprovision ... 
+7867 bytes for ./embedded.mobileprovision
+copying file ./assets/node_modules/react-native-ratings/src/images/bell.png ... 
+2989 bytes for ./assets/node_modules/react-native-ratings/src/images/bell.png
+copying file ./assets/node_modules/react-native-ratings/src/images/airbnb-star-selected.png ... 
+934 bytes for ./assets/node_modules/react-native-ratings/src/images/airbnb-star-selected.png
+copying file ./assets/node_modules/react-native-ratings/src/images/heart.png ... 
+2021-12-16 16:26:40 +0000  1928 bytes for ./assets/node_modules/react-native-ratings/src/images/heart.png
+2021-12-16 16:26:40 +0000  copying file ./assets/node_modules/react-native-ratings/src/images/airbnb-star.png ... 
+2021-12-16 16:26:40 +0000  930 bytes for ./assets/node_modules/react-native-ratings/src/images/airbnb-star.png
+copying file ./assets/node_modules/react-native-ratings/src/images/rocket.png ... 
+2021-12-16 16:26:40 +0000  4050 bytes for ./assets/node_modules/react-native-ratings/src/images/rocket.png
+copying file ./assets/node_modules/react-native-ratings/src/images/star.png ... 
+2021-12-16 16:26:40 +0000  1961 bytes for ./assets/node_modules/react-native-ratings/src/images/star.png
+2021-12-16 16:26:40 +0000  copying file ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@3x.png ... 
+2021-12-16 16:26:40 +0000  761 bytes for ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@3x.png
+2021-12-16 16:26:40 +0000  copying file ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@2x.png ... 
+2021-12-16 16:26:40 +0000  405 bytes for ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@2x.png
+copying file ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon.png ... 
+2021-12-16 16:26:40 +0000  290 bytes for ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon.png
+copying file ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon-mask.png ... 
+2021-12-16 16:26:40 +0000  913 bytes for ./assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon-mask.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/sensors/yf-201.png ... 
+2021-12-16 16:26:40 +0000  34218 bytes for ./assets/src/resources/sensors/yf-201.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/sensors/ft330.png ... 
+2021-12-16 16:26:40 +0000  31389 bytes for ./assets/src/resources/sensors/ft330.png
+copying file ./assets/src/resources/sensors/sf800.png ... 
+2021-12-16 16:26:40 +0000  28321 bytes for ./assets/src/resources/sensors/sf800.png
+copying file ./assets/src/resources/sensors/titan.png ... 
+2021-12-16 16:26:40 +0000  21424 bytes for ./assets/src/resources/sensors/titan.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/empty-glass.png ... 
+2021-12-16 16:26:40 +0000  970 bytes for ./assets/src/resources/empty-glass.png
+copying file ./assets/src/resources/beer.png ... 
+2021-12-16 16:26:40 +0000  3054 bytes for ./assets/src/resources/beer.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/installation/5_attach-tower.png ... 
+2021-12-16 16:26:40 +0000  32739 bytes for ./assets/src/resources/installation/5_attach-tower.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/installation/1_cut-beer-line.png ... 
+2021-12-16 16:26:40 +0000  41079 bytes for ./assets/src/resources/installation/1_cut-beer-line.png
+copying file ./assets/src/resources/installation/4_sensor-cable-to-box.png ... 
+2021-12-16 16:26:40 +0000  41049 bytes for ./assets/src/resources/installation/4_sensor-cable-to-box.png
+copying file ./assets/src/resources/installation/7_finish-in-app.png ... 
+2021-12-16 16:26:40 +0000  57842 bytes for ./assets/src/resources/installation/7_finish-in-app.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/installation/2_install-sensor.png ... 
+2021-12-16 16:26:40 +0000  45263 bytes for ./assets/src/resources/installation/2_install-sensor.png
+copying file ./assets/src/resources/installation/3_detach-tower.png ... 
+2021-12-16 16:26:40 +0000  30191 bytes for ./assets/src/resources/installation/3_detach-tower.png
+copying file ./assets/src/resources/installation/6_plug-in.png ... 
+2021-12-16 16:26:40 +0000  33037 bytes for ./assets/src/resources/installation/6_plug-in.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/splash.png ... 
+2021-12-16 16:26:40 +0000  3288636 bytes for ./assets/src/resources/splash.png
+copying file ./assets/src/resources/beer-bottom.png ... 
+2021-12-16 16:26:40 +0000  3009 bytes for ./assets/src/resources/beer-bottom.png
+copying file ./assets/src/resources/powered_by_stripe.png ... 
+1477 bytes for ./assets/src/resources/powered_by_stripe.png
+copying file ./assets/src/resources/brewskey-large.png ... 
+78724 bytes for ./assets/src/resources/brewskey-large.png
+copying file ./assets/src/resources/badges/70x70/BeerConnoisseur-70x70.png ... 
+3649 bytes for ./assets/src/resources/badges/70x70/BeerConnoisseur-70x70.png
+copying file ./assets/src/resources/badges/70x70/BeerBuff-70x70.png ... 
+2329 bytes for ./assets/src/resources/badges/70x70/BeerBuff-70x70.png
+copying file ./assets/src/resources/badges/70x70/LastPourOfTheNight-70x70.png ... 
+1842 bytes for ./assets/src/resources/badges/70x70/LastPourOfTheNight-70x70.png
+copying file ./assets/src/resources/badges/70x70/DrankAKeg-70x70.png ... 
+2021-12-16 16:26:40 +0000  2265 bytes for ./assets/src/resources/badges/70x70/DrankAKeg-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/Edward40Hands-70x70.png ... 
+2021-12-16 16:26:40 +0000  4018 bytes for ./assets/src/resources/badges/70x70/Edward40Hands-70x70.png
+copying file ./assets/src/resources/badges/70x70/BackOnTheBus-70x70.png ... 
+2021-12-16 16:26:40 +0000  2228 bytes for ./assets/src/resources/badges/70x70/BackOnTheBus-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/DrankFiveKegs-70x70.png ... 
+2021-12-16 16:26:40 +0000  2259 bytes for ./assets/src/resources/badges/70x70/DrankFiveKegs-70x70.png
+copying file ./assets/src/resources/badges/70x70/HatTrick-70x70.png ... 
+2021-12-16 16:26:40 +0000  2760 bytes for ./assets/src/resources/badges/70x70/HatTrick-70x70.png
+copying file ./assets/src/resources/badges/70x70/BeerAuthority-70x70.png ... 
+2021-12-16 16:26:40 +0000  2861 bytes for ./assets/src/resources/badges/70x70/BeerAuthority-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/LightWeight-70x70.png ... 
+2021-12-16 16:26:40 +0000  2491 bytes for ./assets/src/resources/badges/70x70/LightWeight-70x70.png
+copying file ./assets/src/resources/badges/70x70/KingOfTheKeg-70x70.png ... 
+2021-12-16 16:26:40 +0000  2789 bytes for ./assets/src/resources/badges/70x70/KingOfTheKeg-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/SevenDaysStraight-70x70.png ... 
+2021-12-16 16:26:40 +0000  2374 bytes for ./assets/src/resources/badges/70x70/SevenDaysStraight-70x70.png
+copying file ./assets/src/resources/badges/70x70/FirstPourOfTheDay-70x70.png ... 
+2021-12-16 16:26:40 +0000  2275 bytes for ./assets/src/resources/badges/70x70/FirstPourOfTheDay-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/PowerHour-70x70.png ... 
+2021-12-16 16:26:40 +0000  2566 bytes for ./assets/src/resources/badges/70x70/PowerHour-70x70.png
+copying file ./assets/src/resources/badges/70x70/BeerBeforeNoon-70x70.png ... 
+2021-12-16 16:26:40 +0000  2185 bytes for ./assets/src/resources/badges/70x70/BeerBeforeNoon-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/DrankTenKegs-70x70.png ... 
+2021-12-16 16:26:40 +0000  2342 bytes for ./assets/src/resources/badges/70x70/DrankTenKegs-70x70.png
+copying file ./assets/src/resources/badges/70x70/Welcome-70x70.png ... 
+2021-12-16 16:26:40 +0000  2630 bytes for ./assets/src/resources/badges/70x70/Welcome-70x70.png
+copying file ./assets/src/resources/badges/70x70/LastPourOfTheKeg-70x70.png ... 
+2021-12-16 16:26:40 +0000  2511 bytes for ./assets/src/resources/badges/70x70/LastPourOfTheKeg-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/70x70/BeerAficionado-70x70.png ... 
+2021-12-16 16:26:40 +0000  3322 bytes for ./assets/src/resources/badges/70x70/BeerAficionado-70x70.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BeerAuthority.png ... 
+2021-12-16 16:26:40 +0000  5716 bytes for ./assets/src/resources/badges/150x150/BeerAuthority.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/FirstPourOfTheDay.png ... 
+2021-12-16 16:26:40 +0000  4679 bytes for ./assets/src/resources/badges/150x150/FirstPourOfTheDay.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/HatTrick.png ... 
+2021-12-16 16:26:40 +0000  5532 bytes for ./assets/src/resources/badges/150x150/HatTrick.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/DrankFiveKegs.png ... 
+2021-12-16 16:26:40 +0000  4664 bytes for ./assets/src/resources/badges/150x150/DrankFiveKegs.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/DrankAKeg.png ... 
+2021-12-16 16:26:40 +0000  4734 bytes for ./assets/src/resources/badges/150x150/DrankAKeg.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/LastPourOfTheNight.png ... 
+2021-12-16 16:26:40 +0000  3629 bytes for ./assets/src/resources/badges/150x150/LastPourOfTheNight.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/PowerHour.png ... 
+2021-12-16 16:26:40 +0000  5214 bytes for ./assets/src/resources/badges/150x150/PowerHour.png
+copying file ./assets/src/resources/badges/150x150/SevenDaysStraight.png ... 
+2021-12-16 16:26:40 +0000  4628 bytes for ./assets/src/resources/badges/150x150/SevenDaysStraight.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BeerBeforeNoon.png ... 
+2021-12-16 16:26:40 +0000  4487 bytes for ./assets/src/resources/badges/150x150/BeerBeforeNoon.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/Edward40Hands.png ... 
+2021-12-16 16:26:40 +0000  8756 bytes for ./assets/src/resources/badges/150x150/Edward40Hands.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BeerConnoisseur.png ... 
+2021-12-16 16:26:40 +0000  7345 bytes for ./assets/src/resources/badges/150x150/BeerConnoisseur.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BackOnTheBus.png ... 
+2021-12-16 16:26:40 +0000  4482 bytes for ./assets/src/resources/badges/150x150/BackOnTheBus.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/KingOfTheKeg.png ... 
+2021-12-16 16:26:40 +0000  5458 bytes for ./assets/src/resources/badges/150x150/KingOfTheKeg.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/LastPourOfTheKeg.png ... 
+2021-12-16 16:26:40 +0000  5022 bytes for ./assets/src/resources/badges/150x150/LastPourOfTheKeg.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BeerBuff.png ... 
+2021-12-16 16:26:40 +0000  4779 bytes for ./assets/src/resources/badges/150x150/BeerBuff.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/LightWeight.png ... 
+2021-12-16 16:26:40 +0000  5045 bytes for ./assets/src/resources/badges/150x150/LightWeight.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/DrankTenKegs.png ... 
+2021-12-16 16:26:40 +0000  4758 bytes for ./assets/src/resources/badges/150x150/DrankTenKegs.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/BeerAficionado.png ... 
+2021-12-16 16:26:40 +0000  6580 bytes for ./assets/src/resources/badges/150x150/BeerAficionado.png
+2021-12-16 16:26:40 +0000  copying file ./assets/src/resources/badges/150x150/Welcome.png ... 
+2021-12-16 16:26:40 +0000  5211 bytes for ./assets/src/resources/badges/150x150/Welcome.png
+2021-12-16 16:26:40 +0000  copying file ./Brewskey ... 
+2021-12-16 16:26:40 +0000  34731488 bytes for ./Brewskey
+copying file ./Info.plist ... 
+2021-12-16 16:26:40 +0000  /usr/bin/ditto exited with 0
+2021-12-16 16:26:40 +0000  2901 bytes for ./Info.plist
+copying file ./PkgInfo ... 
+8 bytes for ./PkgInfo
+copying file ./MaterialIcons.ttf ... 
+230384 bytes for ./MaterialIcons.ttf
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionEmbedProfileStep
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0deb13430; bundleID='com.github.krzyzanowskim.OpenSSL', path='<DVTFilePath:0x7fa0c8fd7ce0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0db264870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1093e10; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3b68780>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.github.krzyzanowskim.OpenSSL', executablePath='<DVTFilePath:0x7fa0c994a6e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0f68b6ed0; bundleID='com.apple.dt.runtime.swiftCore', path='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e6707f90; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1093e10; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3b6c730>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCore', executablePath='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0df354770; bundleID='com.apple.dt.runtime.swiftCoreFoundation', path='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0de14b020; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0efc29910>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreFoundation', executablePath='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0f3362040; bundleID='com.apple.dt.runtime.swiftCoreGraphics', path='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f691fd30; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee82790>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreGraphics', executablePath='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0e16a0160; bundleID='com.apple.dt.runtime.swiftCoreImage', path='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3fd6310; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0efc29910>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreImage', executablePath='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0dcaf2500; bundleID='com.apple.dt.runtime.swiftDarwin', path='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e98f95f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee70100>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDarwin', executablePath='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0deb3e930; bundleID='com.apple.dt.runtime.swiftDispatch', path='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e49a5490; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee70100>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDispatch', executablePath='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0df5c9ae0; bundleID='com.apple.dt.runtime.swiftFoundation', path='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f309bf10; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1093e10; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3b6c730>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftFoundation', executablePath='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0e6f83c40; bundleID='com.apple.dt.runtime.swiftMetal', path='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f2fd5c50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1093e10; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3b9b720>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftMetal', executablePath='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0f4d47260; bundleID='com.apple.dt.runtime.swiftObjectiveC', path='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e65f7dc0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1093e10; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3b6c730>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftObjectiveC', executablePath='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0e108d660; bundleID='com.apple.dt.runtime.swiftQuartzCore', path='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e2f58800; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee24ba0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftQuartzCore', executablePath='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0e2aa24b0; bundleID='com.apple.dt.runtime.swiftUIKit', path='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0ee122e70; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee70100>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftUIKit', executablePath='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Skipping profile for item: <IDEDistributionItem: 0x7fa0c8fef800; bundleID='com.apple.dt.runtime.swiftos', path='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3208870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0c8e65500; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee24ba0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftos', executablePath='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionInfoPlistStep
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionInfoPlistStep because it said so
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionItemRemovalStep
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionAppThinningPlistStep
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionAppThinningPlistStep because it said so
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionCompileBitcodeStep
+2021-12-16 16:26:40 +0000  Skipping step: IDEDistributionCompileBitcodeStep because it said so
+2021-12-16 16:26:40 +0000  Processing step: IDEDistributionCodeSlimmingStep
+2021-12-16 16:26:40 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL' '-l' '-o' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'
+2021-12-16 16:26:40 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip exited with 0
+2021-12-16 16:26:41 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Brewskey' '-l' '-o' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Brewskey'
+2021-12-16 16:26:41 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip exited with 0
+2021-12-16 16:26:41 +0000  Processing step: IDEDistributionCopyBCSymbolMapsStep
+2021-12-16 16:26:41 +0000  The archive did not contain /Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/BCSymbolMaps/F8B1B40E-0301-3F0D-A724-8BA55DB574D2.bcsymbolmap as expected.
+2021-12-16 16:26:41 +0000  Running /usr/bin/ditto '-V' '/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/BCSymbolMaps/68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/BCSymbolMaps/68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap'
+2021-12-16 16:26:41 +0000  >>> Copying /Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/BCSymbolMaps/68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap 
+2021-12-16 16:26:41 +0000  copying file ./68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap ... 
+2021-12-16 16:26:41 +0000  2281315 bytes for ./68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap
+2021-12-16 16:26:41 +0000  /usr/bin/ditto exited with 0
+2021-12-16 16:26:41 +0000  Processing step: IDEDistributionSymbolsStep
+2021-12-16 16:26:42 +0000  Excluding symbols for OpenSSL.framework
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftCore.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftCoreFoundation.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftCoreGraphics.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftCoreImage.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftDarwin.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftDispatch.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftFoundation.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftMetal.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftObjectiveC.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftQuartzCore.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftUIKit.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for libswiftos.dylib
+2021-12-16 16:26:42 +0000  Excluding symbols for Brewskey.app
+2021-12-16 16:26:42 +0000  Processing step: IDEDistributionCopyAppleProvidedContentStep
+2021-12-16 16:26:42 +0000  Running /usr/bin/ditto '-V' '/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/SwiftSupport' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/SwiftSupport'
+2021-12-16 16:26:42 +0000  >>> Copying /Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/SwiftSupport 
+2021-12-16 16:26:42 +0000  copying file ./iphoneos/libswiftCoreImage.dylib ... 
+2021-12-16 16:26:42 +0000  533860 bytes for ./iphoneos/libswiftCoreImage.dylib
+copying file ./iphoneos/libswiftObjectiveC.dylib ... 
+2021-12-16 16:26:42 +0000  853551 bytes for ./iphoneos/libswiftObjectiveC.dylib
+2021-12-16 16:26:42 +0000  copying file ./iphoneos/libswiftCore.dylib ... 
+2021-12-16 16:26:43 +0000  140528485 bytes for ./iphoneos/libswiftCore.dylib
+copying file ./iphoneos/libswiftCoreGraphics.dylib ... 
+2021-12-16 16:26:43 +0000  2727342 bytes for ./iphoneos/libswiftCoreGraphics.dylib
+copying file ./iphoneos/libswiftUIKit.dylib ... 
+2211578 bytes for ./iphoneos/libswiftUIKit.dylib
+copying file ./iphoneos/libswiftMetal.dylib ... 
+2021-12-16 16:26:43 +0000  897158 bytes for ./iphoneos/libswiftMetal.dylib
+copying file ./iphoneos/libswiftDispatch.dylib ... 
+5501326 bytes for ./iphoneos/libswiftDispatch.dylib
+copying file ./iphoneos/libswiftos.dylib ... 
+1136720 bytes for ./iphoneos/libswiftos.dylib
+copying file ./iphoneos/libswiftCoreFoundation.dylib ... 
+503572 bytes for ./iphoneos/libswiftCoreFoundation.dylib
+copying file ./iphoneos/libswiftDarwin.dylib ... 
+2021-12-16 16:26:43 +0000  1412282 bytes for ./iphoneos/libswiftDarwin.dylib
+copying file ./iphoneos/libswiftQuartzCore.dylib ... 
+580069 bytes for ./iphoneos/libswiftQuartzCore.dylib
+copying file ./iphoneos/libswiftFoundation.dylib ... 
+2021-12-16 16:26:43 +0000  62290314 bytes for ./iphoneos/libswiftFoundation.dylib
+2021-12-16 16:26:43 +0000  /usr/bin/ditto exited with 0
+2021-12-16 16:26:43 +0000  Processing step: IDEDistributionAppThinningStep
+2021-12-16 16:26:43 +0000  Skipping step: IDEDistributionAppThinningStep because it said so
+2021-12-16 16:26:43 +0000  Processing step: IDEDistributionArchThinningStep
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
+2021-12-16 16:26:43 +0000  Skipping architecture thinning for item "OpenSSL" because arch "arm64e" wasn't found
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftCore.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftCoreFoundation.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftCoreGraphics.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftCoreImage.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftDarwin.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftDispatch.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftFoundation.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftMetal.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftObjectiveC.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftQuartzCore.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftUIKit.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib' '-remove' 'arm64e' '-output' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 0
+2021-12-16 16:26:43 +0000  Successfully thinned item "libswiftos.dylib", arch "arm64e"
+2021-12-16 16:26:43 +0000  Running /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Brewskey' '-verify_arch' 'arm64e'
+2021-12-16 16:26:43 +0000  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/lipo exited with 1
+2021-12-16 16:26:43 +0000  Skipping architecture thinning for item "Brewskey" because arch "arm64e" wasn't found
+2021-12-16 16:26:43 +0000  Processing step: IDEDistributionODRStep
+2021-12-16 16:26:43 +0000  Processing step: IDEDistributionStripXattrsStep
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0deb13430; bundleID='com.github.krzyzanowskim.OpenSSL', path='<DVTFilePath:0x7fa0c8fd7ce0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0db264870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee7b7a0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.github.krzyzanowskim.OpenSSL', executablePath='<DVTFilePath:0x7fa0c994a6e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0f68b6ed0; bundleID='com.apple.dt.runtime.swiftCore', path='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e6707f90; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e6031050>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCore', executablePath='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0df354770; bundleID='com.apple.dt.runtime.swiftCoreFoundation', path='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0de14b020; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f6bf8590; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e604c5e0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreFoundation', executablePath='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0f3362040; bundleID='com.apple.dt.runtime.swiftCoreGraphics', path='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f691fd30; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b7c3c0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3bcc760>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreGraphics', executablePath='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0e16a0160; bundleID='com.apple.dt.runtime.swiftCoreImage', path='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3fd6310; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee7b7a0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreImage', executablePath='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0dcaf2500; bundleID='com.apple.dt.runtime.swiftDarwin', path='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e98f95f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0deef6e70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDarwin', executablePath='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0deb3e930; bundleID='com.apple.dt.runtime.swiftDispatch', path='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e49a5490; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f0a94f60; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3bcc760>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDispatch', executablePath='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0df5c9ae0; bundleID='com.apple.dt.runtime.swiftFoundation', path='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f309bf10; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f680dc80; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e6d5c0b0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftFoundation', executablePath='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0e6f83c40; bundleID='com.apple.dt.runtime.swiftMetal', path='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f2fd5c50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0deef6e70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftMetal', executablePath='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0f4d47260; bundleID='com.apple.dt.runtime.swiftObjectiveC', path='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e65f7dc0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee7b7a0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftObjectiveC', executablePath='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0e108d660; bundleID='com.apple.dt.runtime.swiftQuartzCore', path='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e2f58800; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b7c3c0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0edcdd020>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftQuartzCore', executablePath='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0e2aa24b0; bundleID='com.apple.dt.runtime.swiftUIKit', path='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0ee122e70; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e2007d40; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3bcc760>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftUIKit', executablePath='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Skipping stripping extended attributes of item: <IDEDistributionItem: 0x7fa0c8fef800; bundleID='com.apple.dt.runtime.swiftos', path='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3208870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e70fdd50; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0edcdd020>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftos', executablePath='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', hardenedRuntime='0'>'>
+2021-12-16 16:26:43 +0000  Running /usr/bin/xattr '-crs' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app'
+2021-12-16 16:26:44 +0000  /usr/bin/xattr exited with 0
+2021-12-16 16:26:44 +0000  Processing step: IDEDistributionCodesignStep
+2021-12-16 16:26:44 +0000  Entitlements for <IDEDistributionItem: 0x7fa0deb13430; bundleID='com.github.krzyzanowskim.OpenSSL', path='<DVTFilePath:0x7fa0c8fd7ce0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0db264870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21e04d0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.github.krzyzanowskim.OpenSSL', executablePath='<DVTFilePath:0x7fa0c994a6e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:44 +0000  Entitlements for <IDEDistributionItem: 0x7fa0deb13430; bundleID='com.github.krzyzanowskim.OpenSSL', path='<DVTFilePath:0x7fa0c8fd7ce0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0db264870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3121060>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.github.krzyzanowskim.OpenSSL', executablePath='<DVTFilePath:0x7fa0c994a6e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:44 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0deb13430; bundleID='com.github.krzyzanowskim.OpenSSL', path='<DVTFilePath:0x7fa0c8fd7ce0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0db264870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e172bb60; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3115fe0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.github.krzyzanowskim.OpenSSL', executablePath='<DVTFilePath:0x7fa0c994a6e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~94u6tc
+2021-12-16 16:26:44 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~94u6tc' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework'
+2021-12-16 16:26:49 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework: signed bundle with Mach-O universal (arm64) [com.github.krzyzanowskim.OpenSSL]
+2021-12-16 16:26:49 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:49 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f68b6ed0; bundleID='com.apple.dt.runtime.swiftCore', path='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e6707f90; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21e04d0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCore', executablePath='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:49 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f68b6ed0; bundleID='com.apple.dt.runtime.swiftCore', path='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e6707f90; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3134f70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCore', executablePath='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:49 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0f68b6ed0; bundleID='com.apple.dt.runtime.swiftCore', path='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e6707f90; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b2e4b0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dadbcd10>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCore', executablePath='<DVTFilePath:0x7fa0c9a10840:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCore.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~NDAiKr
+2021-12-16 16:26:49 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~NDAiKr' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib'
+2021-12-16 16:26:49 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib: replacing existing signature
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftCore]
+2021-12-16 16:26:54 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0df354770; bundleID='com.apple.dt.runtime.swiftCoreFoundation', path='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0de14b020; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2a9f270>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreFoundation', executablePath='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0df354770; bundleID='com.apple.dt.runtime.swiftCoreFoundation', path='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0de14b020; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21e70d0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreFoundation', executablePath='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:54 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0df354770; bundleID='com.apple.dt.runtime.swiftCoreFoundation', path='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0de14b020; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0de3a8010; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21ee040>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreFoundation', executablePath='<DVTFilePath:0x7fa0cb436220:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~ajCQz8
+2021-12-16 16:26:54 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~ajCQz8' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib: replacing existing signature
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftCoreFoundation]
+2021-12-16 16:26:54 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f3362040; bundleID='com.apple.dt.runtime.swiftCoreGraphics', path='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f691fd30; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2a9fca0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreGraphics', executablePath='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f3362040; bundleID='com.apple.dt.runtime.swiftCoreGraphics', path='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f691fd30; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0deef6e70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreGraphics', executablePath='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:54 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0f3362040; bundleID='com.apple.dt.runtime.swiftCoreGraphics', path='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f691fd30; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0de3a8010; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee72d10>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreGraphics', executablePath='<DVTFilePath:0x7fa0cb443550:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~4ifyRV
+2021-12-16 16:26:54 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~4ifyRV' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib: replacing existing signature
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftCoreGraphics]
+2021-12-16 16:26:54 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e16a0160; bundleID='com.apple.dt.runtime.swiftCoreImage', path='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3fd6310; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e98c83c0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreImage', executablePath='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:54 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e16a0160; bundleID='com.apple.dt.runtime.swiftCoreImage', path='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3fd6310; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e468a1f0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dad32f80>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreImage', executablePath='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:54 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0e16a0160; bundleID='com.apple.dt.runtime.swiftCoreImage', path='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3fd6310; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f6c5b320; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e7c4cb20>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftCoreImage', executablePath='<DVTFilePath:0x7fa0cb111510:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~Iqd8uk
+2021-12-16 16:26:54 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~Iqd8uk' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib'
+2021-12-16 16:26:54 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib: replacing existing signature
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftCoreImage]
+2021-12-16 16:26:55 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0dcaf2500; bundleID='com.apple.dt.runtime.swiftDarwin', path='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e98f95f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2a93f40>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDarwin', executablePath='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0dcaf2500; bundleID='com.apple.dt.runtime.swiftDarwin', path='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e98f95f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0be8fb0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dad4d390>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDarwin', executablePath='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:55 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0dcaf2500; bundleID='com.apple.dt.runtime.swiftDarwin', path='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e98f95f0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21f4360>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDarwin', executablePath='<DVTFilePath:0x7fa0cb4680c0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDarwin.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~ZgmGgm
+2021-12-16 16:26:55 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~ZgmGgm' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib'
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib: replacing existing signature
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftDarwin]
+2021-12-16 16:26:55 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0deb3e930; bundleID='com.apple.dt.runtime.swiftDispatch', path='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e49a5490; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2a93f40>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDispatch', executablePath='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0deb3e930; bundleID='com.apple.dt.runtime.swiftDispatch', path='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e49a5490; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21f4360>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDispatch', executablePath='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:55 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0deb3e930; bundleID='com.apple.dt.runtime.swiftDispatch', path='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e49a5490; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21dba90>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftDispatch', executablePath='<DVTFilePath:0x7fa0cb0096a0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftDispatch.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~qbCq0r
+2021-12-16 16:26:55 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~qbCq0r' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib'
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib: replacing existing signature
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftDispatch]
+2021-12-16 16:26:55 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0df5c9ae0; bundleID='com.apple.dt.runtime.swiftFoundation', path='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f309bf10; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2aeee20>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftFoundation', executablePath='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:55 +0000  Entitlements for <IDEDistributionItem: 0x7fa0df5c9ae0; bundleID='com.apple.dt.runtime.swiftFoundation', path='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f309bf10; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21ea4b0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftFoundation', executablePath='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:55 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0df5c9ae0; bundleID='com.apple.dt.runtime.swiftFoundation', path='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f309bf10; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1774430; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21e04d0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftFoundation', executablePath='<DVTFilePath:0x7fa0cb431e40:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftFoundation.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~tPKvYj
+2021-12-16 16:26:55 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~tPKvYj' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib'
+2021-12-16 16:26:55 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftFoundation]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e6f83c40; bundleID='com.apple.dt.runtime.swiftMetal', path='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f2fd5c50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f71d8120; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0f71d3f70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftMetal', executablePath='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e6f83c40; bundleID='com.apple.dt.runtime.swiftMetal', path='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f2fd5c50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b27640; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3bb7c60>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftMetal', executablePath='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0e6f83c40; bundleID='com.apple.dt.runtime.swiftMetal', path='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f2fd5c50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e7c4cb20>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftMetal', executablePath='<DVTFilePath:0x7fa0c9c25a20:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftMetal.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~4xk8P1
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~4xk8P1' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib'
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftMetal]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f4d47260; bundleID='com.apple.dt.runtime.swiftObjectiveC', path='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e65f7dc0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0deea74d0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftObjectiveC', executablePath='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0f4d47260; bundleID='com.apple.dt.runtime.swiftObjectiveC', path='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e65f7dc0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f6c5b320; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee72d10>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftObjectiveC', executablePath='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0f4d47260; bundleID='com.apple.dt.runtime.swiftObjectiveC', path='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e65f7dc0; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1774430; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2147460>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftObjectiveC', executablePath='<DVTFilePath:0x7fa0c9e3c4e0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~dRbhQ6
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~dRbhQ6' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftObjectiveC]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e108d660; bundleID='com.apple.dt.runtime.swiftQuartzCore', path='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e2f58800; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e74a7230; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2afae90>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftQuartzCore', executablePath='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e108d660; bundleID='com.apple.dt.runtime.swiftQuartzCore', path='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e2f58800; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e21e9400>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftQuartzCore', executablePath='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0e108d660; bundleID='com.apple.dt.runtime.swiftQuartzCore', path='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0e2f58800; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f6c5b320; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e218c800>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftQuartzCore', executablePath='<DVTFilePath:0x7fa0cb4461d0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~oAmS91
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~oAmS91' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftQuartzCore]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e2aa24b0; bundleID='com.apple.dt.runtime.swiftUIKit', path='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0ee122e70; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e11980e0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee6e140>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftUIKit', executablePath='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e2aa24b0; bundleID='com.apple.dt.runtime.swiftUIKit', path='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0ee122e70; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0f6c5b320; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2177020>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftUIKit', executablePath='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0e2aa24b0; bundleID='com.apple.dt.runtime.swiftUIKit', path='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0ee122e70; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e1774430; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e3134f70>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftUIKit', executablePath='<DVTFilePath:0x7fa0cb44ddd0:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftUIKit.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~kBiABt
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~kBiABt' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib'
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftUIKit]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0c8fef800; bundleID='com.apple.dt.runtime.swiftos', path='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3208870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b27640; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2afae90>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftos', executablePath='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', hardenedRuntime='0'>'>: {
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0c8fef800; bundleID='com.apple.dt.runtime.swiftos', path='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3208870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e4006420; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dee90f90>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftos', executablePath='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', hardenedRuntime='0'>'> are: {
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0c8fef800; bundleID='com.apple.dt.runtime.swiftos', path='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0f3208870; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0bdec80; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dad0cca0>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='(null)', teamID='K3J4CQMPRF', identifier='com.apple.dt.runtime.swiftos', executablePath='<DVTFilePath:0x7fa0cb41ab10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Frameworks/libswiftos.dylib'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~inDo8X
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~inDo8X' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib'
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib: replacing existing signature
+2021-12-16 16:26:56 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib: signed Mach-O universal (armv7 armv7s arm64) [com.apple.dt.runtime.swiftos]
+2021-12-16 16:26:56 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e6d07c40; bundleID='com.brewskey.app', path='<DVTFilePath:0x7fa0c94dee80:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0dc98cd50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0b27640; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0e2a13380>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='{
+    "application-identifier" = "K3J4CQMPRF.com.brewskey.app";
+    "aps-environment" = development;
+    "com.apple.developer.nfc.readersession.formats" =     (
+        NDEF,
+        TAG
+    );
+    "com.apple.developer.team-identifier" = K3J4CQMPRF;
+    "get-task-allow" = 1;
+}', teamID='K3J4CQMPRF', identifier='com.brewskey.app', executablePath='<DVTFilePath:0x7fa0c99a1b10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Brewskey'>', hardenedRuntime='0'>'>: {
+    "application-identifier" = "K3J4CQMPRF.com.brewskey.app";
+    "aps-environment" = production;
+    "beta-reports-active" = 1;
+    "com.apple.developer.nfc.readersession.formats" =     (
+        NDEF,
+        TAG
+    );
+    "com.apple.developer.team-identifier" = K3J4CQMPRF;
+    "get-task-allow" = 0;
+}
+2021-12-16 16:26:56 +0000  Entitlements for <IDEDistributionItem: 0x7fa0e6d07c40; bundleID='com.brewskey.app', path='<DVTFilePath:0x7fa0c94dee80:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0dc98cd50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0bde920; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dad2d330>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='{
+    "application-identifier" = "K3J4CQMPRF.com.brewskey.app";
+    "aps-environment" = development;
+    "com.apple.developer.nfc.readersession.formats" =     (
+        NDEF,
+        TAG
+    );
+    "com.apple.developer.team-identifier" = K3J4CQMPRF;
+    "get-task-allow" = 1;
+}', teamID='K3J4CQMPRF', identifier='com.brewskey.app', executablePath='<DVTFilePath:0x7fa0c99a1b10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Brewskey'>', hardenedRuntime='0'>'> are: {
+    "application-identifier" = "K3J4CQMPRF.com.brewskey.app";
+    "aps-environment" = production;
+    "beta-reports-active" = 1;
+    "com.apple.developer.nfc.readersession.formats" =     (
+        NDEF,
+        TAG
+    );
+    "com.apple.developer.team-identifier" = K3J4CQMPRF;
+    "get-task-allow" = 0;
+}
+2021-12-16 16:26:56 +0000  Writing entitlements for <IDEDistributionItem: 0x7fa0e6d07c40; bundleID='com.brewskey.app', path='<DVTFilePath:0x7fa0c94dee80:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app'>', codeSigningInfo='<_DVTCodeSigningInformation_Path: 0x7fa0dc98cd50; isSigned='1', isAdHocSigned='0', signingCertificate='<DVTSigningCertificate: 0x7fa0e0be15c0; name='Apple Development: John Kalberer (DT3979QQHQ)', hash='E592B3CF79A81FF3516D6D83D18AD25D6EB58139', serialNumber='<DVTSigningCertificateSerialNumber: 0x7fa0dad20190>', certificateKinds='(
+    "1.2.840.113635.100.6.1.12",
+    "1.2.840.113635.100.6.1.2"
+), issueDate='2020-11-23 22:02:58 +0000''>', entitlements='{
+    "application-identifier" = "K3J4CQMPRF.com.brewskey.app";
+    "aps-environment" = development;
+    "com.apple.developer.nfc.readersession.formats" =     (
+        NDEF,
+        TAG
+    );
+    "com.apple.developer.team-identifier" = K3J4CQMPRF;
+    "get-task-allow" = 1;
+}', teamID='K3J4CQMPRF', identifier='com.brewskey.app', executablePath='<DVTFilePath:0x7fa0c99a1b10:'/Users/john/Library/Developer/Xcode/Archives/2021-11-21/Brewskey 11-21-21, 11.20 AM.xcarchive/Products/Applications/Brewskey.app/Brewskey'>', hardenedRuntime='0'>'> to: /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~CnwwvM
+2021-12-16 16:26:56 +0000  Running /usr/bin/codesign '-vvv' '--force' '--sign' '82C3A080549A8CB623DB54E5A51C3AE4A28BA389' '--entitlements' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/entitlements~~~CnwwvM' '--preserve-metadata=identifier,flags,runtime' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app'
+2021-12-16 16:26:58 +0000  /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app: signed app bundle with Mach-O thin (arm64) [com.brewskey.app]
+2021-12-16 16:26:58 +0000  /usr/bin/codesign exited with 0
+2021-12-16 16:26:58 +0000  Processing step: IDEDistributionZipODRItemStep
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Skipping step: IDEDistributionZipODRItemStep because it said so
+2021-12-16 16:26:58 +0000  Processing step: IDEDistributionCreateIPAStep
+2021-12-16 16:26:58 +0000  Running /usr/bin/ditto '-V' '-c' '-k' '--norsrc' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root' '/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Packages/Brewskey.ipa'
+2021-12-16 16:26:58 +0000  >>> Copying /var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root 
+2021-12-16 16:26:58 +0000  copying file ./BCSymbolMaps/68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap ... 
+2021-12-16 16:26:58 +0000  2281315 bytes for ./BCSymbolMaps/68805080-E69E-3620-97AF-52DE672020EC.bcsymbolmap
+2021-12-16 16:26:58 +0000  copying file ./Payload/Brewskey.app/_CodeSignature/CodeResources ... 
+2021-12-16 16:26:58 +0000  31036 bytes for ./Payload/Brewskey.app/_CodeSignature/CodeResources
+2021-12-16 16:26:58 +0000  copying file ./Payload/Brewskey.app/Fontisto.ttf ... 
+2021-12-16 16:26:58 +0000  313528 bytes for ./Payload/Brewskey.app/Fontisto.ttf
+copying file ./Payload/Brewskey.app/Octicons.ttf ... 
+2021-12-16 16:26:58 +0000  28364 bytes for ./Payload/Brewskey.app/Octicons.ttf
+copying file ./Payload/Brewskey.app/Feather.ttf ... 
+2021-12-16 16:26:58 +0000  56024 bytes for ./Payload/Brewskey.app/Feather.ttf
+copying file ./Payload/Brewskey.app/Entypo.ttf ... 
+2021-12-16 16:26:58 +0000  65584 bytes for ./Payload/Brewskey.app/Entypo.ttf
+copying file ./Payload/Brewskey.app/FontAwesome5_Brands.ttf ... 
+2021-12-16 16:26:58 +0000  132728 bytes for ./Payload/Brewskey.app/FontAwesome5_Brands.ttf
+copying file ./Payload/Brewskey.app/MaterialCommunityIcons.ttf ... 
+2021-12-16 16:26:58 +0000  899432 bytes for ./Payload/Brewskey.app/MaterialCommunityIcons.ttf
+copying file ./Payload/Brewskey.app/AppIcon60x60@2x.png ... 
+2021-12-16 16:26:58 +0000  9556 bytes for ./Payload/Brewskey.app/AppIcon60x60@2x.png
+copying file ./Payload/Brewskey.app/AntDesign.ttf ... 
+2021-12-16 16:26:58 +0000  70344 bytes for ./Payload/Brewskey.app/AntDesign.ttf
+copying file ./Payload/Brewskey.app/Foundation.ttf ... 
+2021-12-16 16:26:58 +0000  56976 bytes for ./Payload/Brewskey.app/Foundation.ttf
+copying file ./Payload/Brewskey.app/Ionicons.ttf ... 
+2021-12-16 16:26:58 +0000  247192 bytes for ./Payload/Brewskey.app/Ionicons.ttf
+copying file ./Payload/Brewskey.app/FontAwesome5_Solid.ttf ... 
+2021-12-16 16:26:58 +0000  202616 bytes for ./Payload/Brewskey.app/FontAwesome5_Solid.ttf
+copying file ./Payload/Brewskey.app/FontAwesome5_Regular.ttf ... 
+2021-12-16 16:26:58 +0000  34092 bytes for ./Payload/Brewskey.app/FontAwesome5_Regular.ttf
+2021-12-16 16:26:58 +0000  copying file ./Payload/Brewskey.app/AccessibilityResources.bundle/en.lproj/Localizable.strings ... 
+2021-12-16 16:26:58 +0000  518 bytes for ./Payload/Brewskey.app/AccessibilityResources.bundle/en.lproj/Localizable.strings
+2021-12-16 16:26:58 +0000  copying file ./Payload/Brewskey.app/AccessibilityResources.bundle/Info.plist ... 
+2021-12-16 16:26:58 +0000  792 bytes for ./Payload/Brewskey.app/AccessibilityResources.bundle/Info.plist
+2021-12-16 16:26:58 +0000  copying file ./Payload/Brewskey.app/FontAwesome.ttf ... 
+2021-12-16 16:26:58 +0000  165548 bytes for ./Payload/Brewskey.app/FontAwesome.ttf
+copying file ./Payload/Brewskey.app/Zocial.ttf ... 
+2021-12-16 16:26:58 +0000  25552 bytes for ./Payload/Brewskey.app/Zocial.ttf
+copying file ./Payload/Brewskey.app/Assets.car ... 
+2021-12-16 16:27:01 +0000  61335119 bytes for ./Payload/Brewskey.app/Assets.car
+copying file ./Payload/Brewskey.app/EvilIcons.ttf ... 
+2021-12-16 16:27:01 +0000  13456 bytes for ./Payload/Brewskey.app/EvilIcons.ttf
+2021-12-16 16:27:01 +0000  copying file ./Payload/Brewskey.app/AppIcon76x76@2x~ipad.png ... 
+2021-12-16 16:27:01 +0000  12011 bytes for ./Payload/Brewskey.app/AppIcon76x76@2x~ipad.png
+2021-12-16 16:27:01 +0000  copying file ./Payload/Brewskey.app/main.jsbundle ... 
+2021-12-16 16:27:01 +0000  3906068 bytes for ./Payload/Brewskey.app/main.jsbundle
+2021-12-16 16:27:01 +0000  copying file ./Payload/Brewskey.app/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib ... 
+2836 bytes for ./Payload/Brewskey.app/LaunchScreen.storyboardc/01J-lp-oVM-view-Ze5-6b-2t3.nib
+copying file ./Payload/Brewskey.app/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib ... 
+896 bytes for ./Payload/Brewskey.app/LaunchScreen.storyboardc/UIViewController-01J-lp-oVM.nib
+copying file ./Payload/Brewskey.app/LaunchScreen.storyboardc/Info.plist ... 
+258 bytes for ./Payload/Brewskey.app/LaunchScreen.storyboardc/Info.plist
+copying file ./Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib ... 
+2021-12-16 16:27:01 +0000  352352 bytes for ./Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib
+copying file ./Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib ... 
+2021-12-16 16:27:01 +0000  500080 bytes for ./Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib
+copying file ./Payload/Brewskey.app/Frameworks/libswiftCore.dylib ... 
+2021-12-16 16:27:04 +0000  69852784 bytes for ./Payload/Brewskey.app/Frameworks/libswiftCore.dylib
+copying file ./Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib ... 
+2021-12-16 16:27:04 +0000  1535328 bytes for ./Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib
+2021-12-16 16:27:04 +0000  copying file ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/_CodeSignature/CodeResources ... 
+2021-12-16 16:27:04 +0000  1798 bytes for ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/_CodeSignature/CodeResources
+2021-12-16 16:27:04 +0000  copying file ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL ... 
+2021-12-16 16:27:04 +0000  8164016 bytes for ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/OpenSSL
+2021-12-16 16:27:04 +0000  copying file ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/Info.plist ... 
+2021-12-16 16:27:04 +0000  716 bytes for ./Payload/Brewskey.app/Frameworks/OpenSSL.framework/Info.plist
+copying file ./Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib ... 
+2021-12-16 16:27:04 +0000  1200960 bytes for ./Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib
+2021-12-16 16:27:04 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftMetal.dylib ... 
+2021-12-16 16:27:04 +0000  544896 bytes for ./Payload/Brewskey.app/Frameworks/libswiftMetal.dylib
+2021-12-16 16:27:04 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib ... 
+2021-12-16 16:27:05 +0000  2993312 bytes for ./Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib
+2021-12-16 16:27:05 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftos.dylib ... 
+2021-12-16 16:27:05 +0000  644944 bytes for ./Payload/Brewskey.app/Frameworks/libswiftos.dylib
+2021-12-16 16:27:05 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib ... 
+2021-12-16 16:27:05 +0000  335904 bytes for ./Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib
+2021-12-16 16:27:05 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib ... 
+2021-12-16 16:27:05 +0000  813968 bytes for ./Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib
+2021-12-16 16:27:05 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib ... 
+2021-12-16 16:27:05 +0000  355584 bytes for ./Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib
+2021-12-16 16:27:05 +0000  copying file ./Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib ... 
+2021-12-16 16:27:06 +0000  31957056 bytes for ./Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/SimpleLineIcons.ttf ... 
+2021-12-16 16:27:06 +0000  54056 bytes for ./Payload/Brewskey.app/SimpleLineIcons.ttf
+copying file ./Payload/Brewskey.app/embedded.mobileprovision ... 
+2021-12-16 16:27:06 +0000  12249 bytes for ./Payload/Brewskey.app/embedded.mobileprovision
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/bell.png ... 
+2021-12-16 16:27:06 +0000  2989 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/bell.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/airbnb-star-selected.png ... 
+2021-12-16 16:27:06 +0000  934 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/airbnb-star-selected.png
+copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/heart.png ... 
+2021-12-16 16:27:06 +0000  1928 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/heart.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/airbnb-star.png ... 
+2021-12-16 16:27:06 +0000  930 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/airbnb-star.png
+copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/rocket.png ... 
+2021-12-16 16:27:06 +0000  4050 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/rocket.png
+copying file ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/star.png ... 
+2021-12-16 16:27:06 +0000  1961 bytes for ./Payload/Brewskey.app/assets/node_modules/react-native-ratings/src/images/star.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@3x.png ... 
+2021-12-16 16:27:06 +0000  761 bytes for ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@3x.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@2x.png ... 
+2021-12-16 16:27:06 +0000  405 bytes for ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon@2x.png
+copying file ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon.png ... 
+2021-12-16 16:27:06 +0000  290 bytes for ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon-mask.png ... 
+2021-12-16 16:27:06 +0000  913 bytes for ./Payload/Brewskey.app/assets/node_modules/react-navigation-stack/lib/module/vendor/views/assets/back-icon-mask.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/sensors/yf-201.png ... 
+2021-12-16 16:27:06 +0000  34218 bytes for ./Payload/Brewskey.app/assets/src/resources/sensors/yf-201.png
+copying file ./Payload/Brewskey.app/assets/src/resources/sensors/ft330.png ... 
+2021-12-16 16:27:06 +0000  31389 bytes for ./Payload/Brewskey.app/assets/src/resources/sensors/ft330.png
+copying file ./Payload/Brewskey.app/assets/src/resources/sensors/sf800.png ... 
+2021-12-16 16:27:06 +0000  28321 bytes for ./Payload/Brewskey.app/assets/src/resources/sensors/sf800.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/sensors/titan.png ... 
+2021-12-16 16:27:06 +0000  21424 bytes for ./Payload/Brewskey.app/assets/src/resources/sensors/titan.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/empty-glass.png ... 
+2021-12-16 16:27:06 +0000  970 bytes for ./Payload/Brewskey.app/assets/src/resources/empty-glass.png
+copying file ./Payload/Brewskey.app/assets/src/resources/beer.png ... 
+2021-12-16 16:27:06 +0000  3054 bytes for ./Payload/Brewskey.app/assets/src/resources/beer.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/installation/5_attach-tower.png ... 
+2021-12-16 16:27:06 +0000  32739 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/5_attach-tower.png
+copying file ./Payload/Brewskey.app/assets/src/resources/installation/1_cut-beer-line.png ... 
+2021-12-16 16:27:06 +0000  41079 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/1_cut-beer-line.png
+copying file ./Payload/Brewskey.app/assets/src/resources/installation/4_sensor-cable-to-box.png ... 
+2021-12-16 16:27:06 +0000  41049 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/4_sensor-cable-to-box.png
+copying file ./Payload/Brewskey.app/assets/src/resources/installation/7_finish-in-app.png ... 
+2021-12-16 16:27:06 +0000  57842 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/7_finish-in-app.png
+copying file ./Payload/Brewskey.app/assets/src/resources/installation/2_install-sensor.png ... 
+2021-12-16 16:27:06 +0000  45263 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/2_install-sensor.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/installation/3_detach-tower.png ... 
+2021-12-16 16:27:06 +0000  30191 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/3_detach-tower.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/installation/6_plug-in.png ... 
+2021-12-16 16:27:06 +0000  33037 bytes for ./Payload/Brewskey.app/assets/src/resources/installation/6_plug-in.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/splash.png ... 
+2021-12-16 16:27:06 +0000  3288636 bytes for ./Payload/Brewskey.app/assets/src/resources/splash.png
+copying file ./Payload/Brewskey.app/assets/src/resources/beer-bottom.png ... 
+2021-12-16 16:27:06 +0000  3009 bytes for ./Payload/Brewskey.app/assets/src/resources/beer-bottom.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/powered_by_stripe.png ... 
+2021-12-16 16:27:06 +0000  1477 bytes for ./Payload/Brewskey.app/assets/src/resources/powered_by_stripe.png
+copying file ./Payload/Brewskey.app/assets/src/resources/brewskey-large.png ... 
+2021-12-16 16:27:06 +0000  78724 bytes for ./Payload/Brewskey.app/assets/src/resources/brewskey-large.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerConnoisseur-70x70.png ... 
+3649 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerConnoisseur-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerBuff-70x70.png ... 
+2329 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerBuff-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LastPourOfTheNight-70x70.png ... 
+1842 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LastPourOfTheNight-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankAKeg-70x70.png ... 
+2265 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankAKeg-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/Edward40Hands-70x70.png ... 
+4018 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/Edward40Hands-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BackOnTheBus-70x70.png ... 
+2228 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BackOnTheBus-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankFiveKegs-70x70.png ... 
+2259 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankFiveKegs-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/HatTrick-70x70.png ... 
+2021-12-16 16:27:06 +0000  2760 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/HatTrick-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerAuthority-70x70.png ... 
+2021-12-16 16:27:06 +0000  2861 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerAuthority-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LightWeight-70x70.png ... 
+2021-12-16 16:27:06 +0000  2491 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LightWeight-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/KingOfTheKeg-70x70.png ... 
+2021-12-16 16:27:06 +0000  2789 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/KingOfTheKeg-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/SevenDaysStraight-70x70.png ... 
+2374 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/SevenDaysStraight-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/FirstPourOfTheDay-70x70.png ... 
+2021-12-16 16:27:06 +0000  2275 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/FirstPourOfTheDay-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/PowerHour-70x70.png ... 
+2566 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/PowerHour-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerBeforeNoon-70x70.png ... 
+2021-12-16 16:27:06 +0000  2185 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerBeforeNoon-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankTenKegs-70x70.png ... 
+2021-12-16 16:27:06 +0000  2342 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/DrankTenKegs-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/Welcome-70x70.png ... 
+2630 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/Welcome-70x70.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LastPourOfTheKeg-70x70.png ... 
+2021-12-16 16:27:06 +0000  2511 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/LastPourOfTheKeg-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerAficionado-70x70.png ... 
+3322 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/70x70/BeerAficionado-70x70.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerAuthority.png ... 
+2021-12-16 16:27:06 +0000  5716 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerAuthority.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/FirstPourOfTheDay.png ... 
+2021-12-16 16:27:06 +0000  4679 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/FirstPourOfTheDay.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/HatTrick.png ... 
+2021-12-16 16:27:06 +0000  5532 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/HatTrick.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankFiveKegs.png ... 
+2021-12-16 16:27:06 +0000  4664 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankFiveKegs.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankAKeg.png ... 
+2021-12-16 16:27:06 +0000  4734 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankAKeg.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LastPourOfTheNight.png ... 
+2021-12-16 16:27:06 +0000  3629 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LastPourOfTheNight.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/PowerHour.png ... 
+2021-12-16 16:27:06 +0000  5214 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/PowerHour.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/SevenDaysStraight.png ... 
+2021-12-16 16:27:06 +0000  4628 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/SevenDaysStraight.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerBeforeNoon.png ... 
+2021-12-16 16:27:06 +0000  4487 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerBeforeNoon.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/Edward40Hands.png ... 
+2021-12-16 16:27:06 +0000  8756 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/Edward40Hands.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerConnoisseur.png ... 
+2021-12-16 16:27:06 +0000  7345 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerConnoisseur.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BackOnTheBus.png ... 
+2021-12-16 16:27:06 +0000  4482 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BackOnTheBus.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/KingOfTheKeg.png ... 
+2021-12-16 16:27:06 +0000  5458 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/KingOfTheKeg.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LastPourOfTheKeg.png ... 
+2021-12-16 16:27:06 +0000  5022 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LastPourOfTheKeg.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerBuff.png ... 
+2021-12-16 16:27:06 +0000  4779 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerBuff.png
+copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LightWeight.png ... 
+5045 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/LightWeight.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankTenKegs.png ... 
+2021-12-16 16:27:06 +0000  4758 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/DrankTenKegs.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerAficionado.png ... 
+2021-12-16 16:27:06 +0000  6580 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/BeerAficionado.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/assets/src/resources/badges/150x150/Welcome.png ... 
+2021-12-16 16:27:06 +0000  5211 bytes for ./Payload/Brewskey.app/assets/src/resources/badges/150x150/Welcome.png
+2021-12-16 16:27:06 +0000  copying file ./Payload/Brewskey.app/Brewskey ... 
+2021-12-16 16:27:07 +0000  30073488 bytes for ./Payload/Brewskey.app/Brewskey
+2021-12-16 16:27:07 +0000  copying file ./Payload/Brewskey.app/Info.plist ... 
+2901 bytes for ./Payload/Brewskey.app/Info.plist
+copying file ./Payload/Brewskey.app/PkgInfo ... 
+8 bytes for ./Payload/Brewskey.app/PkgInfo
+copying file ./Payload/Brewskey.app/MaterialIcons.ttf ... 
+2021-12-16 16:27:07 +0000  230384 bytes for ./Payload/Brewskey.app/MaterialIcons.ttf
+2021-12-16 16:27:07 +0000  copying file ./SwiftSupport/iphoneos/libswiftCoreImage.dylib ... 
+2021-12-16 16:27:07 +0000  466448 bytes for ./SwiftSupport/iphoneos/libswiftCoreImage.dylib
+2021-12-16 16:27:07 +0000  copying file ./SwiftSupport/iphoneos/libswiftObjectiveC.dylib ... 
+2021-12-16 16:27:07 +0000  679568 bytes for ./SwiftSupport/iphoneos/libswiftObjectiveC.dylib
+copying file ./SwiftSupport/iphoneos/libswiftCore.dylib ... 
+2021-12-16 16:27:12 +0000  95497472 bytes for ./SwiftSupport/iphoneos/libswiftCore.dylib
+2021-12-16 16:27:12 +0000  copying file ./SwiftSupport/iphoneos/libswiftCoreGraphics.dylib ... 
+2021-12-16 16:27:12 +0000  2040928 bytes for ./SwiftSupport/iphoneos/libswiftCoreGraphics.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftUIKit.dylib ... 
+2021-12-16 16:27:13 +0000  1608688 bytes for ./SwiftSupport/iphoneos/libswiftUIKit.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftMetal.dylib ... 
+2021-12-16 16:27:13 +0000  724304 bytes for ./SwiftSupport/iphoneos/libswiftMetal.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftDispatch.dylib ... 
+2021-12-16 16:27:13 +0000  4056784 bytes for ./SwiftSupport/iphoneos/libswiftDispatch.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftos.dylib ... 
+2021-12-16 16:27:13 +0000  857072 bytes for ./SwiftSupport/iphoneos/libswiftos.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftCoreFoundation.dylib ... 
+2021-12-16 16:27:13 +0000  450272 bytes for ./SwiftSupport/iphoneos/libswiftCoreFoundation.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftDarwin.dylib ... 
+2021-12-16 16:27:13 +0000  1091328 bytes for ./SwiftSupport/iphoneos/libswiftDarwin.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftQuartzCore.dylib ... 
+2021-12-16 16:27:13 +0000  486224 bytes for ./SwiftSupport/iphoneos/libswiftQuartzCore.dylib
+2021-12-16 16:27:13 +0000  copying file ./SwiftSupport/iphoneos/libswiftFoundation.dylib ... 
+2021-12-16 16:27:15 +0000  43094208 bytes for ./SwiftSupport/iphoneos/libswiftFoundation.dylib
+2021-12-16 16:27:15 +0000  /usr/bin/ditto exited with 0
+2021-12-16 16:27:15 +0000  Processing step: IDEDistributionAppStoreInformationStep
+2021-12-16 16:27:15 +0000  Skipping step: IDEDistributionAppStoreInformationStep because it said so
+2021-12-16 16:27:15 +0000  Processing step: IDEDistributionGenerateProcessedDistributionItems
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e117d510:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/OpenSSL.framework'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0de266bc0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0de266bc0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftObjectiveC.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e647e000:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0e647e000:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftMetal.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0df3c4750:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0df3c4750:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCore.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e1142ab0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0e1142ab0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftUIKit.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e20ce590:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0e20ce590:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftQuartzCore.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0dc980c70:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0dc980c70:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDarwin.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0dc93f5b0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib'>
+2021-12-16 16:27:15 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0dc93f5b0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftos.dylib'>
+2021-12-16 16:27:15 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0f6e1a1b0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib'>
+2021-12-16 16:27:16 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0f6e1a1b0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftFoundation.dylib'>
+2021-12-16 16:27:16 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0de29c350:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>
+2021-12-16 16:27:16 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0de29c350:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreImage.dylib'>
+2021-12-16 16:27:16 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e6444670:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib'>
+2021-12-16 16:27:16 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0e6444670:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftDispatch.dylib'>
+2021-12-16 16:27:16 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0e1184010:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>
+2021-12-16 16:27:16 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0e1184010:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreGraphics.dylib'>
+2021-12-16 16:27:16 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0dc91b0e0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>
+2021-12-16 16:27:16 +0000  [OPTIONAL] Can't have a profile, not a bundle at <DVTFilePath:0x7fa0dc91b0e0:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app/Frameworks/libswiftCoreFoundation.dylib'>
+2021-12-16 16:27:16 +0000  IDEDistributionItem init <DVTFilePath:0x7fa0dcb7b480:'/var/folders/vp/v0dx4hpd61s5x2w4k0t8r0500000gn/T/XcodeDistPipeline.~~~FXFX5N/Root/Payload/Brewskey.app'>
+2021-12-16 16:27:16 +0000  Processing step: IDEDistributionCreateManifestStep
+2021-12-16 16:27:16 +0000  Skipping step: IDEDistributionCreateManifestStep because it said so

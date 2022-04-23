@@ -4,7 +4,7 @@ import type { EntityID } from 'brewskey.js-api';
 
 import { Platform } from 'react-native';
 import { action, observable, runInAction } from 'mobx';
-import NfcManager, { NfcAdapter, NfcEvents } from 'react-native-nfc-manager';
+import NfcManager, { NfcAdapter, NfcEvents, NfcTech } from 'react-native-nfc-manager';
 import nullthrows from 'nullthrows';
 import AuthStore from './AuthStore';
 import { createGPSCoordinatesStore } from '../stores/ApiRequestStores/GPSApiStores';
@@ -46,7 +46,7 @@ class PourProcessStore {
     NfcManager.start().catch(() => {
       runInAction(() => (this.isNFCSupported = false));
     });
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, this._onNFCTagDiscovered);
+   // NfcManager.setEventListener(NfcEvents.DiscoverTag, this._onNFCTagDiscovered);
   }
 
   @action
@@ -83,15 +83,18 @@ class PourProcessStore {
 
     if (isNFCEnabled) {
       try {
-        await NfcManager.registerTagEvent({
+        NfcManager.requestTechnology(NfcTech.Ndef, {
           alertMessage: 'Tap Brewskey Box',
           invalidateAfterFirstRead: true,
           isReaderModeEnabled: true,
           readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
-        });
+        })
+          .then(() => NfcManager.getTag())
+          .then(this._onNFCTagDiscovered);
       } catch (ex) {
         console.warn('ex', ex);
-        await NfcManager.unregisterTagEvent();
+        // await NfcManager.unregisterTagEvent();
+        NfcManager.cancelTechnologyRequest();
       }
     }
 
@@ -118,11 +121,13 @@ class PourProcessStore {
   onHideModal = (): void => {
     GPSCoordinatesStore.flushCache();
     if (this.isNFCEnabled) {
-      NfcManager.unregisterTagEvent().catch (() => {});
+      NfcManager.cancelTechnologyRequest();
+      //NfcManager.unregisterTagEvent().catch (() => {});
     }
 
     this._stopTotpTimer();
     this.setTotp('');
+    this._setErrorText('');
     this.isVisible = false;
     this.shouldShowPaymentScreen = false;
     this._didAuthorizePayment = false;
@@ -174,7 +179,7 @@ class PourProcessStore {
           'The passcode you entered was incorrect or expired.  Please try a new code.',
         );
       } else {
-        this._setErrorText('An error during processing pour');
+        this._showBadScan('An error happenend while processing your pour');
       }
     } finally {
       this._setIsLoading(false);
@@ -198,12 +203,17 @@ class PourProcessStore {
         text: 'You can start pouring now!',
       });
     } catch (error) {
+      console.error({
+        error,
+        uri: `${CONFIG.HOST}/api/authorizations/pour/`, 
+        payload
+      })
       if (!this.deviceID) {
         this._setErrorText(
           'The passcode you entered was incorrect or expired.  Please try a new code.',
         );
       } else {
-        this._setErrorText('An error during processing pour');
+        this._showBadScan('An error occurred while processing pour');
       }
     } finally {
       this._setIsLoading(false);
@@ -246,23 +256,37 @@ class PourProcessStore {
     this.isVisible = isVisible;
   };
 
+  _showBadScan = (error) => {
+    SnackBarStore.showMessage({
+      duration: 2000, 
+      style: 'danger',
+      text: error || 'Android didn\'t read the full NFC message.\nTry Again!',
+    });
+
+    this.onHideModal();
+    //this.onShowModal();
+  }
+
   _onNFCTagDiscovered = (tag: Object): void => {
     if (this._hasReadTag) {
       return;
     }
-
+console.log(tag)
     this._hasReadTag = true;
     let payload;
     if (tag.ndefMessage) {
       // eslint-disable-next-line prefer-destructuring
       payload = tag.ndefMessage[1].payload;
-    } else {
+    } else if (tag.length) {
       if (!tag[1].payload[0]) {
         tag[1].payload.shift();
       }
 
       // eslint-disable-next-line prefer-destructuring
       payload = tag[1].payload;
+    } else {
+      this._showBadScan();
+      return;
     }
 
     const tagValue = String.fromCharCode.apply(
@@ -271,12 +295,14 @@ class PourProcessStore {
     );
 
     if (tagValue.indexOf(CONFIG.HOST) < 0) {
+      this._showBadScan();
       return;
     }
 
     const index = tagValue.indexOf('d/');
 
     if (index < 0) {
+      this._showBadScan();
       return;
     }
 
