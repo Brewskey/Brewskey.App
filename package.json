@@ -19,7 +19,7 @@
     "release:ios": "code-push release-react Brewskey.iOS.v2 ios -d Production && npm run ls:ios"
   },
   "dependencies": {
-    "@react-native-community/art": "https://github.com/Brewskey/art",
+    "@react-native-community/art": "github:Brewskey/art",
     "@react-native-community/async-storage": "^1.10.3",
     "@react-native-community/cli": "^6.1.0",
     "@react-native-community/geolocation": "^2.0.2",
