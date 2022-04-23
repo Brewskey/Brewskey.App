@@ -60,3 +60,5 @@ buck-out/
 /metro.config.js
 /android/app/release/app-release.apk
 /android/app/release/output.json
+/.vscode/extensions.json
+/.vscode/settings.json
