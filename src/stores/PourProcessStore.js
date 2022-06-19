@@ -87,10 +87,18 @@ class PourProcessStore {
           alertMessage: 'Tap Brewskey Box',
           invalidateAfterFirstRead: true,
           isReaderModeEnabled: true,
-          readerModeFlags: NfcAdapter.FLAG_READER_NFC_A,
+          readerModeFlags: NfcAdapter.FLAG_READER_NFC_A, // & NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
         })
           .then(() => NfcManager.getTag())
-          .then(this._onNFCTagDiscovered);
+          .then(this._onNFCTagDiscovered)
+          .catch(error  => {
+            console.error({
+              name: error.constructor.name,
+              error
+            });
+            // await NfcManager.unregisterTagEvent();
+            NfcManager.cancelTechnologyRequest();
+          });
       } catch (ex) {
         console.warn('ex', ex);
         // await NfcManager.unregisterTagEvent();
@@ -276,14 +284,14 @@ console.log(tag)
     let payload;
     if (tag.ndefMessage) {
       // eslint-disable-next-line prefer-destructuring
-      payload = tag.ndefMessage[1].payload;
+      payload = tag.ndefMessage[0].payload;
     } else if (tag.length) {
-      if (!tag[1].payload[0]) {
-        tag[1].payload.shift();
+      if (!tag[0].payload[0]) {
+        tag[0].payload.shift();
       }
 
       // eslint-disable-next-line prefer-destructuring
-      payload = tag[1].payload;
+      payload = tag[0].payload;
     } else {
       this._showBadScan();
       return;
