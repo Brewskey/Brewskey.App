@@ -34,6 +34,12 @@
 	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses NFC so you can tap a Brewskey box to pour!</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+		<string>D4100000030001</string>
+		<string>D2760000850100</string>
+		<string>D2760000850101</string>
+	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
