@@ -279,19 +279,19 @@ class PourProcessStore {
     if (this._hasReadTag) {
       return;
     }
-console.log(tag)
+
     this._hasReadTag = true;
     let payload;
     if (tag.ndefMessage) {
       // eslint-disable-next-line prefer-destructuring
-      payload = tag.ndefMessage[0].payload;
+      payload = tag.ndefMessage[1].payload;
     } else if (tag.length) {
-      if (!tag[0].payload[0]) {
-        tag[0].payload.shift();
+      if (!tag[1].payload[0]) {
+        tag[1].payload.shift();
       }
 
       // eslint-disable-next-line prefer-destructuring
-      payload = tag[0].payload;
+      payload = tag[1].payload;
     } else {
       this._showBadScan();
       return;

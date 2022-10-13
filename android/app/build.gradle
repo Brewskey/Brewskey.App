@@ -131,7 +131,7 @@ android {
         applicationId "com.brewskey.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 574
+        versionCode 576
         versionName "1.0"
         multiDexEnabled true
     }
