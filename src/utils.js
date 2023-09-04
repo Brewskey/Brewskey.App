@@ -77,6 +77,10 @@ export const fetchJSON = async (...fetchArgs: Array<any>): Promise<any> => {
 };
 
 export const parseError = (error: Object): string => {
+  if (typeof error === 'string') {
+    return error;
+  }
+
   if (error.ModelState) {
     let resultErrorMessage = '';
     Array.from(Object.values(error.ModelState)).forEach(

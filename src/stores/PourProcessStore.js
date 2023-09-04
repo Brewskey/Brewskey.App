@@ -92,11 +92,6 @@ class PourProcessStore {
           .then(() => NfcManager.getTag())
           .then(this._onNFCTagDiscovered)
           .catch(error  => {
-            console.error({
-              name: error.constructor.name,
-              error
-            });
-            // await NfcManager.unregisterTagEvent();
             NfcManager.cancelTechnologyRequest();
           });
       } catch (ex) {
@@ -195,11 +190,12 @@ class PourProcessStore {
   };
 
   _sendPourAuthorization = async (): Promise<void> => {
-    try {
-      this._setIsLoading(true);
-      this._setErrorText('');
+    this._setIsLoading(true);
+    this._setErrorText('');
 
-      const payload = await this._getAuthPayload();
+    const payload = await this._getAuthPayload();
+
+    try {
 
       await fetchJSON(`${CONFIG.HOST}/api/authorizations/pour/`, payload);
       this.setTotp('');
@@ -211,15 +207,12 @@ class PourProcessStore {
         text: 'You can start pouring now!',
       });
     } catch (error) {
-      console.error({
-        error,
-        uri: `${CONFIG.HOST}/api/authorizations/pour/`, 
-        payload
-      })
       if (!this.deviceID) {
         this._setErrorText(
           'The passcode you entered was incorrect or expired.  Please try a new code.',
         );
+      } else if (error.message.indexOf('API calls quota exceeded') >= 0) {
+        this._showBadScan('Too many pour requests. Try again in a minute');
       } else {
         this._showBadScan('An error occurred while processing pour');
       }
