@@ -1,0 +1,79 @@
+import type { FriendAddFormValues } from '../components/FriendAddForm';
+
+import * as React from 'react';
+
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import DAOApi from '@brewskey/js-api';
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import HeaderIconButton from '../common/Header/HeaderIconButton';
+import MyFriendsMainScreen from './MyFriendsMainScreen';
+import MyFriendsRequestScreen from './MyFriendsRequestScreen';
+import FriendAddCustomModal from '../components/modals/FriendAddCustomModal';
+import theme from '../theme';
+import ToggleStore from '../stores/ToggleStore';
+import SnackBarStore from '../hooks/context/SnackBarContext';
+import { FriendStore } from '../stores/DAOStores';
+
+/* eslint-disable sorting/sort-object-props */
+const MyFriendsNavigator = createMaterialTopTabNavigator(
+  {
+    myFriendsMain: { screen: MyFriendsMainScreen as any },
+    myFriendsRequest: { screen: MyFriendsRequestScreen as any },
+  },
+  /* eslint-enable */
+  {
+    ...theme.tabBar,
+    backBehavior: 'none',
+    lazy: true,
+  },
+);
+
+type InjectedProps = {
+  navigation: Navigation;
+};
+
+@errorBoundary(<ErrorScreen showBackButton />)
+class MyFriendsScreen extends InjectedComponent<InjectedProps> {
+  static router = MyFriendsNavigator.router;
+
+  _friendModalToggleStore = new ToggleStore();
+
+  _onFriendAddFormSubmit = async ({ userName }: FriendAddFormValues) => {
+    await DAOApi.FriendDAO.addFriend(userName);
+    this._friendModalToggleStore.toggleOff();
+    FriendStore.flushQueryCaches();
+    this.injectedProps.navigation.navigate('myFriendsRequest');
+    SnackBarStore.showMessage({
+      text: `You requested a friendship with ${userName}`,
+    });
+  };
+
+  render(): React.ReactElement {
+    return (
+      <Container>
+        <Header
+          rightComponent={
+            <HeaderIconButton
+              name="person-add"
+              onPress={this._friendModalToggleStore.toggleOn}
+              type="material-icons"
+            />
+          }
+          showBackButton
+          title="Friends"
+        />
+        <MyFriendsNavigator navigation={this.injectedProps.navigation} />
+        <FriendAddCustomModal
+          isVisible={this._friendModalToggleStore.isToggled}
+          onFriendAddFormSubmit={this._onFriendAddFormSubmit}
+          onHideModal={this._friendModalToggleStore.toggleOff}
+        />
+      </Container>
+    );
+  }
+}
+
+export default MyFriendsScreen;

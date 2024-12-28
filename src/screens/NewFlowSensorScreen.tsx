@@ -1,0 +1,103 @@
+import type { EntityID } from '@brewskey/js-api';
+
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { NavigationActions, StackActions } from 'react-navigation';
+import DAOApi from '@brewskey/js-api';
+
+import ErrorScreen from '../common/ErrorScreen';
+import { errorBoundary } from '../common/ErrorBoundary';
+import Button from '../common/buttons/Button';
+import Container from '../common/Container';
+import Header from '../common/Header';
+import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import SnackBarStore from '../hooks/context/SnackBarContext';
+
+const DEFAULT_FLOW_SENSOR = {
+  flowSensorType: 'Titan',
+  pulsesPerGallon: 5375,
+} as const;
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    marginBottom: 30,
+  },
+  container: {
+    paddingVertical: 30,
+  },
+});
+
+type InjectedProps = {
+  navigation: Navigation;
+  onTapSetupFinish?: (tapID: EntityID) => undefined | Promise<any>;
+  returnOnFinish?: boolean;
+  showBackButton?: boolean;
+  tapId: EntityID;
+};
+
+@errorBoundary(<ErrorScreen showBackButton />)
+@flatNavigationParamsAndScreenProps
+class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
+  _onDefaultButtonPress = async () => {
+    const { tapId } = this.injectedProps;
+
+    const clientID = DAOApi.FlowSensorDAO.post({
+      ...DEFAULT_FLOW_SENSOR,
+      tapId,
+    });
+    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
+
+    this._onFlowSensorCreated();
+  };
+
+  _onCustomButtonPress = () => {
+    const { navigation, tapId } = this.injectedProps;
+    navigation.navigate('newFlowSensorCustom', {
+      onFlowSensorCreated: this._onFlowSensorCreated,
+      tapId,
+    });
+  };
+
+  _onFlowSensorCreated = () => {
+    const { navigation, onTapSetupFinish, returnOnFinish, tapId } =
+      this.injectedProps;
+    SnackBarStore.showMessage({ text: 'Flow sensor set' });
+
+    if (returnOnFinish) {
+      const resetRouteAction = StackActions.reset({
+        actions: [
+          NavigationActions.navigate({ routeName: 'taps' }),
+          NavigationActions.navigate({
+            params: { id: tapId },
+            routeName: 'tapDetails',
+          }),
+        ],
+        index: 1,
+      });
+      navigation.dispatch(resetRouteAction);
+    } else {
+      navigation.navigate('newKeg', { onTapSetupFinish, tapId });
+    }
+  };
+
+  render(): React.ReactElement {
+    return (
+      <Container>
+        <Header title="Setup flow sensor" />
+        <View style={styles.container}>
+          <Button
+            containerStyle={styles.buttonContainer}
+            onPress={this._onDefaultButtonPress}
+            title="I got my sensor from Brewskey"
+          />
+          <Button
+            onPress={this._onCustomButtonPress}
+            title="I'd like to setup a different sensor"
+          />
+        </View>
+      </Container>
+    );
+  }
+}
+
+export default NewFlowSensorScreen;

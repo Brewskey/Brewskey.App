@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AppRouter } from './src/AppRouter';
+import BrewskeyJSApi from '@brewskey/js-api';
+import { AuthProvider } from './src/hooks/context/AuthContext';
+import { SnackBar } from './src/common/SnackBar';
+import { SnackBarProvider } from './src/hooks/context/SnackBarContext';
+import { PourProcessProvider } from './src/hooks/context/PourProcessContext';
+
+BrewskeyJSApi.initialize('https://brewskey.com');
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <AuthProvider>
+      <SnackBarProvider>
+        <PourProcessProvider>
+          <QueryClientProvider client={queryClient}>
+            <AppRouter />
+            <SnackBar />
+          </QueryClientProvider>
+        </PourProcessProvider>
+      </SnackBarProvider>
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

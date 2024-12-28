@@ -1,0 +1,69 @@
+import * as React from 'react';
+import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
+import Button from '../common/buttons/Button';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { LoginForm } from '../components/LoginForm';
+import { COLORS } from '../theme';
+import AuthStore from '../stores/AuthStore';
+import { useNavigation } from '@react-navigation/native';
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLORS.primary2,
+    flex: 1,
+  },
+  image: {
+    height: 100,
+    width: 100,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 40,
+    paddingBottom: 60,
+  },
+});
+
+export const LoginScreen: React.FC = () => {
+  const navigation = useNavigation();
+  const onRegisterPress = () => {
+    // navigation.navigate('register');
+  };
+
+  const onForgotPasswordPress = () => navigation.navigate('resetPassword');
+
+  const dimensions = Dimensions.get('window');
+  const imageHeight = Math.round(dimensions.width * 0.234);
+  const imageWidth =
+    dimensions.width - styles.imageContainer.paddingHorizontal * 2;
+
+  return (
+    <KeyboardAwareScrollView
+      keyboardShouldPersistTaps="handled"
+      style={styles.container}
+    >
+      <StatusBar backgroundColor={COLORS.primary3} />
+      <View style={styles.imageContainer}>
+        <Image
+          resizeMode="contain"
+          source={require('../resources/brewskey-large.png')}
+          style={{
+            height: imageHeight,
+            width: imageWidth,
+          }}
+        />
+      </View>
+      <LoginForm isInverse />
+      <View style={{ paddingTop: 20 }}>
+        <Button onPress={onRegisterPress} title="Register" type="clear" />
+        <Button
+          onPress={onForgotPasswordPress}
+          title="Forgot password"
+          type="clear"
+        />
+      </View>
+    </KeyboardAwareScrollView>
+  );
+};
+
+export default LoginScreen;

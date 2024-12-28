@@ -1,0 +1,133 @@
+import type {
+  Device,
+  EntityID,
+  Organization,
+  Tap,
+  TapMutator,
+} from '@brewskey/js-api';
+import type { FormProps } from '../common/form/types';
+
+import * as React from 'react';
+import { View } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
+
+import FormValidationMessage from '../common/form/FormValidationMessage';
+import Button from '../common/buttons/Button';
+import CheckBoxField from './CheckBoxField';
+import { AdvancedTextField } from '../common/form/TextField';
+import DevicePicker from './pickers/DevicePicker';
+import { form, FormField } from '../common/form';
+import { Fill } from 'react-slot-fill';
+import { DeviceStore, OrganizationStore } from '../stores/DAOStores';
+
+const validate = (
+  values: TapMutator,
+): {
+  [key: string]: string;
+} => {
+  const errors: Record<string, any> = {};
+
+  if (!values.deviceId) {
+    errors.deviceId = 'Brewskey box is required';
+  }
+
+  return errors;
+};
+
+type Props = {
+  isFocused?: boolean;
+  onSubmit: (values: TapMutator) => undefined | Promise<any>;
+  submitButtonLabel: string;
+  tap?: Tap;
+};
+
+type InjectedProps = FormProps;
+
+@form({ validate })
+@withNavigationFocus
+class TapForm extends InjectedComponent<InjectedProps, Props> {
+  get _organizationLoader(): LoadObject<Organization> {
+    const {
+      values: { deviceId },
+    } = this.injectedProps;
+
+    if (deviceId == null) {
+      return LoadObject.empty();
+    }
+
+    return DeviceStore.getByID(deviceId.id).map((device) =>
+      OrganizationStore.getByID(device.organization.id),
+    );
+  }
+
+  render(): React.ReactElement {
+    const { isFocused, submitButtonLabel, tap = {} } = this.props;
+    const { formError, handleSubmit, invalid, pristine, submitting } =
+      this.injectedProps;
+
+    const organization = this._organizationLoader.getValue();
+
+    return (
+      <View>
+        <FormField initialValue={tap.id} name="id" />
+        <FormField
+          component={AdvancedTextField}
+          initialValue={tap.description}
+          name="description"
+          label="Description"
+        />
+        <FormField
+          component={DevicePicker}
+          initialValue={tap.device}
+          name="deviceId"
+          parseOnSubmit={(value: Device): EntityID => value.id}
+        />
+        {organization == null || !organization.canEnablePayments ? null : (
+          <FormField
+            component={CheckBoxField}
+            disabled={submitting}
+            initialValue={tap.isPaymentEnabled}
+            label="Enable Payments for this tap"
+            name="isPaymentEnabled"
+          />
+        )}
+        <FormField
+          component={CheckBoxField}
+          disabled={submitting}
+          initialValue={tap.hideLeaderboard}
+          label="Hide leaderboard"
+          name="hideLeaderboard"
+        />
+        <FormField
+          component={CheckBoxField}
+          disabled={submitting}
+          initialValue={tap.hideStats}
+          label="Hide Stats tab"
+          name="hideStats"
+        />
+        <FormField
+          component={CheckBoxField}
+          disabled={submitting}
+          initialValue={tap.disableBadges}
+          label="Disable Badges for tap"
+          name="disableBadges"
+        />
+
+        {!isFocused ? null : (
+          <Fill name="MainTabBar">
+            <FormValidationMessage>{formError}</FormValidationMessage>
+            <Button
+              disabled={submitting || invalid || pristine}
+              loading={submitting}
+              onPress={handleSubmit}
+              style={{ marginVertical: 12 }}
+              title={submitButtonLabel}
+            />
+          </Fill>
+        )}
+      </View>
+    );
+  }
+}
+
+export default TapForm;

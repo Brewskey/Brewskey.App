@@ -1,0 +1,87 @@
+import type { FormProps } from '../common/form/types';
+
+import * as React from 'react';
+
+import { StyleSheet, View } from 'react-native';
+
+import FormValidationMessage from '../common/form/FormValidationMessage';
+import SectionContent from '../common/SectionContent';
+import Button from '../common/buttons/Button';
+import { FormField, form } from '../common/form';
+import { COLORS } from '../theme';
+import { AdvancedTextField } from '../common/form/TextField';
+
+const styles = StyleSheet.create({
+  input: {
+    color: COLORS.textInverse,
+  },
+  label: {
+    color: COLORS.textInverse,
+    textAlign: 'center',
+  },
+  validationText: {
+    color: COLORS.danger2,
+  },
+});
+
+export type FriendAddFormValues = {
+  userName: string;
+};
+
+const validate = (
+  values: FriendAddFormValues,
+): Partial<Record<keyof FriendAddFormValues, string>> => {
+  const errors: Record<string, any> = {};
+  if (!values.userName) {
+    errors.userName = 'User name or email is required';
+  }
+
+  return errors;
+};
+
+type InjectedProps = FormProps;
+
+@form({ validate })
+class FriendAddForm extends InjectedComponent<InjectedProps> {
+  render(): React.ReactElement {
+    const { formError, handleSubmit, invalid, pristine, submitting } =
+      this.injectedProps;
+
+    return (
+      <View>
+        <FormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus
+          clearButtonMode="always"
+          component={AdvancedTextField}
+          editable={!submitting}
+          enablesReturnKeyAutomatically={false}
+          inputStyle={styles.input}
+          label="Enter user name or email"
+          labelStyle={styles.label}
+          name="userName"
+          onSubmitEditing={handleSubmit}
+          selectionColor={COLORS.textInverse}
+          style={styles.input}
+          underlineColorAndroid={COLORS.secondary}
+          validationTextStyle={styles.validationText}
+        />
+        <FormValidationMessage labelStyle={styles.validationText}>
+          {formError}
+        </FormValidationMessage>
+        <SectionContent paddedVertical>
+          <Button
+            disabled={pristine || submitting || invalid}
+            loading={submitting}
+            onPress={handleSubmit}
+            secondary
+            title="Add Friend"
+          />
+        </SectionContent>
+      </View>
+    );
+  }
+}
+
+export default FriendAddForm;

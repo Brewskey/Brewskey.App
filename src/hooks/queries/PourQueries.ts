@@ -1,0 +1,52 @@
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
+import { EntityID, Pour, PourDAO, QueryOptions } from '@brewskey/js-api';
+
+enum PourQueryKeys {
+  PoursByBeverageIds = 'pours_by_beverage_ids',
+  PoursList = 'pours_list',
+}
+
+export const useGetPoursByBeverageIds = (
+  beverageIds: EntityID[] | undefined,
+  userId?: EntityID,
+): UseQueryResult<Map<EntityID, number>, Error> =>
+  useQuery({
+    queryKey: [PourQueryKeys.PoursByBeverageIds, beverageIds],
+    queryFn: () => PourDAO.getPoursByBeverageIDs(beverageIds!, userId),
+    enabled: beverageIds != null,
+  });
+
+export const useGetPours = (
+  queryOptions: QueryOptions,
+): UseInfiniteQueryResult<InfiniteData<Pour[]>, Error> =>
+  useInfiniteQuery({
+    queryKey: [PourQueryKeys.PoursList, queryOptions],
+    initialPageParam: 0,
+    queryFn: ({ pageParam = 1 }) =>
+      PourDAO.fetchMany({
+        ...queryOptions,
+        orderBy: [
+          {
+            column: 'id',
+            direction: 'desc',
+          },
+        ],
+        skip: pageParam * 20,
+        take: 20,
+      }),
+    getNextPageParam: (_, pages) => pages.length + 1,
+    getPreviousPageParam: (_, pages) => pages.length,
+  });
+
+export const useDeletePour = () => {
+  return useMutation({
+    mutationFn: (pourId: EntityID) => PourDAO.deleteByID(pourId),
+  });
+};
