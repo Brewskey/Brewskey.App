@@ -3,26 +3,23 @@ import type { Beverage, Keg, Permission, Tap } from '@brewskey/js-api';
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import DAOApi, { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
-import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import BeverageDetailsLoader from '../components/BeverageDetailsLoader';
-import KegLevelBar from '../components/KegLevelBar';
-import TapDetailsNoKeg from '../components/TapDetailsNoKeg';
+import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import KegsList from '../components/KegsList';
 import Section from '../common/Section';
 import Fragment from '../common/Fragment';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
 import { checkCanEdit } from '../permissionHelpers';
-import { useGetBeverageById } from '../hooks/queries/BeverageQueries';
 import { useGetKegById } from '../hooks/queries/KegQueries';
+import { KegLevelBar } from '../components/KegLevelBar';
+import { BeverageDetailsLoader } from '../components/BeverageDetailsLoader';
+import { TapDetailsNoKeg } from '../components/TapDetailsNoKeg';
 
 type Props = {
   noFlowSensorWarning: React.ReactNode;
   tap: Tap;
   tapPermission: Permission | undefined;
-  navigator: any; // this is untyped in the library... :/
 };
 
 const styles = StyleSheet.create({
@@ -39,14 +36,10 @@ export const TapDetailsKegScreen: React.FC<Props> = ({
   noFlowSensorWarning,
   tapPermission,
 }) => {
-  const tabBarLabel = 'On Tap';
-
-  const { data: beverage } = useGetBeverageById(tap.currentKeg.beverage.id);
-  const { data: currentKeg } = useGetKegById(tap.currentKeg.id);
-  const kegLevelBar = React.useRef<KegLevelBar>(null);
+  const { data: currentKeg, refetch } = useGetKegById(tap.currentKeg.id);
 
   const _onRefresh = () => {
-    kegLevelBar.current?.refresh();
+    refetch();
   };
 
   return (
@@ -59,7 +52,7 @@ export const TapDetailsKegScreen: React.FC<Props> = ({
               <Section bottomPadded>
                 <SectionHeader title="Keg level" />
                 <SectionContent paddedHorizontal>
-                  <KegLevelBar kegID={tap.currentKeg.id} ref={kegLevelBar} />
+                  <KegLevelBar kegID={tap.currentKeg.id} />
                   <Text style={styles.text}>
                     {Math.max(
                       0,
@@ -90,7 +83,7 @@ export const TapDetailsKegScreen: React.FC<Props> = ({
       }
       onRefresh={_onRefresh}
       queryOptions={{
-        filters: [DAOApi.createFilter('tap/id').equals(tap.id)],
+        filters: [createFilter('tap/id').equals(tap.id)],
         orderBy: [{ column: 'id', direction: 'desc' }],
         skip: 1,
       }}

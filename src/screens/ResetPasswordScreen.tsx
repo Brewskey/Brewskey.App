@@ -11,7 +11,7 @@ import ResetPasswordModal from '../components/modals/ResetPasswordModal';
 import { ResetPasswordForm } from '../components/ResetPasswordForm';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import { useResetPassword } from '../hooks/queries/AuthQueries';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   text: {
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 export const ResetPasswordScreen: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = React.useState<boolean>(false);
   const resetPassword = useResetPassword();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
   const onFormSubmit = async (
     formFields: ResetPasswordFormValues,

@@ -1,22 +1,19 @@
 import type { Friend, QueryOptions } from '@brewskey/js-api';
 
-import type { Row } from '../stores/DAOListStore';
-import type { RowItemProps } from '../common/SwipeableRow';
-import type { RenderItemProps } from 'react-native/Libraries/Lists/VirtualizedList';
-
 import * as React from 'react';
+import { useMemo } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import DAOListStore from '../stores/DAOListStore';
-import { FriendStore } from '../stores/DAOStores';
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
-import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
+import { useGetFriends } from '../hooks/queries/FriendQueries';
 
 type Props = {
   ListHeaderComponent?:
+     
     | React.ComponentType<any>
     | React.ReactNode
     | null
@@ -24,65 +21,13 @@ type Props = {
   queryOptions?: QueryOptions;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
-};
-
-@withNavigation
-class FriendsList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps: {
-    queryOptions: QueryOptions;
-  } = {
-    queryOptions: {},
-  };
-
-  _listStore: DAOListStore<Friend> = new DAOListStore(FriendStore);
-
-  componentDidMount() {
-    this._listStore.initialize({
-      ...this.props.queryOptions,
-    });
-  }
-
-  _keyExtractor = (row: Row<Friend>): string => row.key;
-
-  _onItemPress = (friend: Friend) =>
-    this.injectedProps.navigation.navigate('profile', {
-      id: friend.friendAccount.id,
-    });
-
-  _renderRow: (arg1: RenderItemProps<Row<Friend>>) => React.ReactElement<any> =
-    ({ item }) => (
-      <LoaderRow
-        loadedRow={LoadedRow}
-        loader={item.loader}
-        onItemPress={this._onItemPress}
-      />
-    );
-
-  render(): React.ReactElement {
-    const isLoading = this._listStore.isFetchingRemoteCount;
-    return (
-      <List
-        data={this._listStore.rows}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmpty message="No friends" /> : null
-        }
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={this.props.ListHeaderComponent}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        renderItem={this._renderRow}
-      />
-    );
-  }
-}
-
 const LoadedRow = ({
   item: friend,
   onItemPress,
-}: RowItemProps<Friend>): React.ReactElement => (
+}: {
+  item: Friend;
+  onItemPress: (friend: Friend) => void;
+}): React.ReactElement => (
   <ListItem
     leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
     chevron={false}
@@ -91,5 +36,60 @@ const LoadedRow = ({
     title={friend.friendAccount.userName}
   />
 );
+
+const FriendsList: React.FC<Props> = ({
+  ListHeaderComponent,
+  queryOptions = {},
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+
+  const {
+    data: friendsData,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetFriends(queryOptions);
+
+  const onItemPress = (friend: Friend) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: friend.friendAccount.id,
+        },
+      },
+    });
+  };
+
+  const onRefreshList = () => {
+    refetch();
+  };
+
+  const keyExtractor = (item: Friend): string => item.id.toString();
+
+  const renderRow = ({ item: friend }: { item: Friend }): React.ReactElement => (
+    <LoadedRow item={friend} onItemPress={onItemPress} />
+  );
+
+  return (
+    <List
+      data={friendsData}
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
+      ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
+      ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
+        }
+      }}
+      onRefresh={onRefreshList}
+      renderItem={renderRow}
+    />
+  );
+};
 
 export default FriendsList;

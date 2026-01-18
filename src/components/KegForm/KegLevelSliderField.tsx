@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Slider from '@react-native-community/slider';
 import { TYPOGRAPHY } from '../../theme';
+import { SliderInput } from '../../common/form/SliderInput';
+import { useFormContext } from 'react-hook-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,21 +17,19 @@ const styles = StyleSheet.create({
   valueText: { ...TYPOGRAPHY.heading, textAlign: 'center' },
 });
 
-type Props<RNSliderProps> = (RNSliderProps) & {
-  maxOunces: number,
-  onChange: (value: number) => void,
-  value: number
-  // other RNSlider props
+type Props = Omit<
+  React.ComponentProps<typeof SliderInput>,
+  'minimumValue' | 'maximumValue'
+> & {
+  maxOunces: number;
 };
 
-const KegLevelSliderField = <RNSliderProps extends unknown>(
-  {
-    maxOunces,
-    onChange,
-    value,
-    ...rest
-  }: Props<RNSliderProps>,
-): React.ReactElement => {
+const KegLevelSliderField = ({
+  maxOunces,
+  ...rest
+}: Props): React.ReactElement => {
+  const { watch } = useFormContext();
+  const value: number = watch(rest.name);
   const ozValue = value === 0 ? 0 : (maxOunces * value) / 100;
 
   return (
@@ -40,13 +39,7 @@ const KegLevelSliderField = <RNSliderProps extends unknown>(
         Here you can manually set the level on your keg.
       </Text>
       <View>
-        <Slider
-          {...rest}
-          maximumValue={100}
-          minimumValue={0}
-          onValueChange={onChange}
-          value={value}
-        />
+        <SliderInput {...rest} maximumValue={100} minimumValue={0} />
         <View style={styles.sliderLabelContainer}>
           <Text>0%</Text>
           <Text>100%</Text>

@@ -2,16 +2,23 @@ import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { NavigationActions, StackActions } from 'react-navigation';
-import DAOApi from '@brewskey/js-api';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { errorBoundary, withErrorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import {
+  StaticScreenProps,
+  useNavigation,
+  NavigationProp,
+} from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useCreateFlowSensor } from '../hooks/queries/FlowSensorQueries';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { HomeStackParamList } from '../AppRouter';
+
+type Navigation = NativeStackNavigationProp<HomeStackParamList>;
 
 const DEFAULT_FLOW_SENSOR = {
   flowSensorType: 'Titan',
@@ -27,77 +34,64 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  navigation: Navigation;
-  onTapSetupFinish?: (tapID: EntityID) => undefined | Promise<any>;
-  returnOnFinish?: boolean;
+type Props = StaticScreenProps<{
+  onTapSetupFinish?: (tapID: EntityID) => void | Promise<void>;
   showBackButton?: boolean;
   tapId: EntityID;
-};
+  returnOnFinish: boolean;
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewFlowSensorScreen extends InjectedComponent<InjectedProps> {
-  _onDefaultButtonPress = async () => {
-    const { tapId } = this.injectedProps;
+export const NewFlowSensorScreen: React.FC<Props> = withErrorBoundary(
+  ({
+    route: {
+      params: { tapId, returnOnFinish, onTapSetupFinish },
+    },
+  }: Props) => {
+    const navigation = useNavigation<Navigation>();
+    const createFlowSensor = useCreateFlowSensor();
+    const addSnackBarMessage = useAddSnackBarMessage();
 
-    const clientID = DAOApi.FlowSensorDAO.post({
-      ...DEFAULT_FLOW_SENSOR,
-      tapId,
-    });
-    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
+    const _onFlowSensorCreated = () => {
+      addSnackBarMessage({ content: 'Flow sensor set' });
 
-    this._onFlowSensorCreated();
-  };
+      if (returnOnFinish && navigation.canGoBack()) {
+        navigation.goBack();
+      } else {
+        navigation.navigate('newKeg', { tapId });
+      }
+    };
 
-  _onCustomButtonPress = () => {
-    const { navigation, tapId } = this.injectedProps;
-    navigation.navigate('newFlowSensorCustom', {
-      onFlowSensorCreated: this._onFlowSensorCreated,
-      tapId,
-    });
-  };
-
-  _onFlowSensorCreated = () => {
-    const { navigation, onTapSetupFinish, returnOnFinish, tapId } =
-      this.injectedProps;
-    SnackBarStore.showMessage({ text: 'Flow sensor set' });
-
-    if (returnOnFinish) {
-      const resetRouteAction = StackActions.reset({
-        actions: [
-          NavigationActions.navigate({ routeName: 'taps' }),
-          NavigationActions.navigate({
-            params: { id: tapId },
-            routeName: 'tapDetails',
-          }),
-        ],
-        index: 1,
+    const _onDefaultButtonPress = async () => {
+      await createFlowSensor.mutateAsync({
+        ...DEFAULT_FLOW_SENSOR,
+        tapId,
       });
-      navigation.dispatch(resetRouteAction);
-    } else {
-      navigation.navigate('newKeg', { onTapSetupFinish, tapId });
-    }
-  };
+      _onFlowSensorCreated();
+    };
 
-  render(): React.ReactElement {
+    const _onCustomButtonPress = () => {
+      navigation.navigate('newFlowSensorCustom', {
+        tapId,
+        onFlowSensorCreated: _onFlowSensorCreated,
+      });
+    };
+
     return (
       <Container>
         <Header title="Setup flow sensor" />
         <View style={styles.container}>
           <Button
             containerStyle={styles.buttonContainer}
-            onPress={this._onDefaultButtonPress}
+            onPress={_onDefaultButtonPress}
             title="I got my sensor from Brewskey"
           />
           <Button
-            onPress={this._onCustomButtonPress}
+            onPress={_onCustomButtonPress}
             title="I'd like to setup a different sensor"
           />
         </View>
       </Container>
     );
-  }
-}
-
-export default NewFlowSensorScreen;
+  },
+  <ErrorScreen showBackButton />,
+);

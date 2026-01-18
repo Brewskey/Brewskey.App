@@ -21,21 +21,18 @@ type Props = LoaderErrorRowProps<{
   containerStyle?: StyleProp<ViewStyle>;
 }>;
 
-class ErrorListItem extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    const { error: _, ...otherProps } = this.props;
-    return (
-      <ListItem
-        {...otherProps}
-        containerStyle={[styles.container, this.props.containerStyle]}
-      >
-        <Icon name="error" />
-        <ListItem.Content>
-          <ListItem.Title style={styles.titleStyle}>Error</ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
-    );
-  }
-}
+const ErrorListItem: React.FC<Props> = ({ error: _, containerStyle, ...otherProps }) => {
+  return (
+    <ListItem
+      {...otherProps}
+      containerStyle={[styles.container, containerStyle]}
+    >
+      <Icon name="error" />
+      <ListItem.Content>
+        <ListItem.Title style={styles.titleStyle}>Error</ListItem.Title>
+      </ListItem.Content>
+    </ListItem>
+  );
+};
 
 export default ErrorListItem;

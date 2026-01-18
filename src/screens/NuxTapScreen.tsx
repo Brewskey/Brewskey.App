@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { StaticScreenProps } from '@react-navigation/native';
 import Button from '../common/buttons/Button';
 
 import Header from '../common/Header';
 import Container from '../common/Container';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -28,31 +28,32 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  onContinuePress: () => undefined | Promise<any>;
+type Props = StaticScreenProps<{
+  onContinuePress?: () => undefined | Promise<any>;
+}>;
+
+const NuxTapScreen: React.FC<Props> = ({
+  route: {
+    params: { onContinuePress },
+  },
+}: Props) => {
+
+  return (
+    <Container>
+      <Header title="4. Create a tap" />
+      <View style={styles.container}>
+        <Text style={styles.descriptionText}>
+          Almost done. You'll need to set up at least on tap on your Brewskey
+          box.
+        </Text>
+        <Button
+          onPress={onContinuePress}
+          secondary
+          title="Next"
+        />
+      </View>
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NuxTapScreen extends InjectedComponent<InjectedProps> {
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header title="4. Create a tap" />
-        <View style={styles.container}>
-          <Text style={styles.descriptionText}>
-            Almost done. You'll need to set up at least on tap on your Brewskey
-            box.
-          </Text>
-          <Button
-            onPress={this.injectedProps.onContinuePress}
-            secondary
-            title="Next"
-          />
-        </View>
-      </Container>
-    );
-  }
-}
-
-export default NuxTapScreen;
+export default withErrorBoundary(NuxTapScreen, <ErrorScreen showBackButton />);

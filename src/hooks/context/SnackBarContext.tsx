@@ -36,14 +36,55 @@ export type SnackBarMessage =
       type: 'notification';
     };
 
-type ContextType = [SnackBarMessage[], (messages: SnackBarMessage[]) => void];
+type ContextType = [
+  SnackBarMessage[],
+  React.Dispatch<React.SetStateAction<SnackBarMessage[]>>,
+];
 
-const SnackBarContext = React.createContext<ContextType>(
-  [] as unknown as ContextType,
-);
+const SnackBarContext = React.createContext<ContextType>([
+  [],
+  () => {},
+] as ContextType);
 
 export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [messages, setMessages] = React.useState<SnackBarMessage[]>([]);
+
+  // Initialize global function for legacy stores
+  React.useEffect(() => {
+    const addMessage = (messageParameters: SnackBarMessageParameters) => {
+      let message: SnackBarMessage;
+
+      if (typeof messageParameters.content === 'string') {
+        message = {
+          duration: 2000,
+          position: 'bottom',
+          style: 'default',
+          type: 'text',
+          ...messageParameters,
+          text: messageParameters.content,
+        };
+      } else if (isJSX(messageParameters.content)) {
+        message = {
+          content: messageParameters.content,
+          duration: 2000,
+          position: 'top',
+          type: 'content',
+        };
+      } else {
+        message = {
+          duration: 2000,
+          notification: messageParameters.content,
+          position: 'top',
+          type: 'notification',
+        };
+      }
+      setMessages((msgs) => [...msgs, message]);
+    };
+    setGlobalSnackBarMessage(addMessage);
+    return () => {
+      setGlobalSnackBarMessage(null);
+    };
+  }, []);
 
   return (
     <SnackBarContext.Provider value={[messages, setMessages]}>
@@ -58,7 +99,7 @@ const isJSX = (value: unknown): value is JSX.Element =>
 export const useAddSnackBarMessage = (): ((
   messageParameters: SnackBarMessageParameters,
 ) => void) => {
-  const [messages, setMessages] = useContext(SnackBarContext);
+  const [_, setMessages] = useContext(SnackBarContext);
 
   return useCallback(
     (messageParameters: SnackBarMessageParameters) => {
@@ -88,23 +129,44 @@ export const useAddSnackBarMessage = (): ((
           type: 'notification',
         };
       }
-
-      setMessages([...messages, message]);
+      setMessages((messages) => [...messages, message]);
     },
-    [messages, setMessages],
+    [setMessages],
   );
 };
 
 export const useRemoveSnackBarMessage = (): (() => void) => {
-  const [messages, setMessages] = useContext(SnackBarContext);
+  const [_, setMessages] = useContext(SnackBarContext);
 
   return useCallback(() => {
-    messages.shift();
-    setMessages([...messages]);
-  }, [messages, setMessages]);
+    setMessages((messages) => {
+      messages.shift();
+      return [...messages];
+    });
+  }, [setMessages]);
 };
 
 export const useGetCurrentSnackBarMessage = (): SnackBarMessage | null => {
   const [messages] = useContext(SnackBarContext);
   return messages[0] ?? null;
 };
+
+// Compatibility layer for legacy stores that can't use hooks
+// This is a temporary solution - stores should be migrated to use React hooks
+let globalAddSnackBarMessage: ((messageParameters: SnackBarMessageParameters) => void) | null = null;
+
+export const setGlobalSnackBarMessage = (fn: ((messageParameters: SnackBarMessageParameters) => void) | null): void => {
+  globalAddSnackBarMessage = fn;
+};
+
+const SnackBarStore = {
+  showMessage: (messageParameters: SnackBarMessageParameters): void => {
+    if (globalAddSnackBarMessage) {
+      globalAddSnackBarMessage(messageParameters);
+    } else {
+      console.warn('SnackBarStore.showMessage called before SnackBarProvider is initialized');
+    }
+  },
+};
+
+export default SnackBarStore;

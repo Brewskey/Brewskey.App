@@ -43,38 +43,32 @@ type Props = {
   width?: DimensionValue;
 };
 
-class CenteredModal extends React.Component<Props> {
-  _onPress = () => {};
-
-  render(): React.ReactElement {
-    const {
-      children,
-      contentContainerStyle,
-      header,
-      isVisible,
-      onHideModal,
-      width,
-    } = this.props;
-
-    return (
-      <Modal
-        visible={isVisible}
-        onRequestClose={onHideModal}
-        transparent={true}
-      >
-        <TouchableOpacity style={styles.container} onPressOut={onHideModal}>
-          <TouchableWithoutFeedback style={{ maxHeight: '80%', width }}>
-            <View style={styles.modal}>
-              {!header ? null : <View style={styles.header}>{header}</View>}
-              <View style={[styles.content, contentContainerStyle]}>
-                {children}
-              </View>
+const CenteredModal: React.FC<Props> = ({
+  children,
+  contentContainerStyle,
+  header,
+  isVisible,
+  onHideModal,
+  width,
+}) => {
+  return (
+    <Modal
+      visible={isVisible}
+      onRequestClose={onHideModal}
+      transparent={true}
+    >
+      <TouchableOpacity style={styles.container} onPressOut={onHideModal}>
+        <TouchableWithoutFeedback style={{ maxHeight: '80%', width }}>
+          <View style={styles.modal}>
+            {!header ? null : <View style={styles.header}>{header}</View>}
+            <View style={[styles.content, contentContainerStyle]}>
+              {children}
             </View>
-          </TouchableWithoutFeedback>
-        </TouchableOpacity>
-      </Modal>
-    );
-  }
-}
+          </View>
+        </TouchableWithoutFeedback>
+      </TouchableOpacity>
+    </Modal>
+  );
+};
 
 export default CenteredModal;

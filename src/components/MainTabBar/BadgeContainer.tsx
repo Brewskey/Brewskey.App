@@ -27,27 +27,23 @@ type Props = React.ComponentProps<typeof TouchableItem> & {
   badgeCount: number;
 };
 
-class BadgeContainer extends React.Component<Props> {
-  render(): React.ReactElement {
-    const { children, badgeCount, ...props } = this.props;
-
-    return (
-      <TouchableItem {...props}>
-        <View>
-          {children}
-          {badgeCount === 0 ? null : (
-            <View style={styles.container}>
-              <Badge
-                badgeStyle={styles.badge}
-                textStyle={styles.badgeText}
-                value={badgeCount > 99 ? '99+' : badgeCount}
-              />
-            </View>
-          )}
-        </View>
-      </TouchableItem>
-    );
-  }
-}
+const BadgeContainer: React.FC<Props> = ({ children, badgeCount, ...props }) => {
+  return (
+    <TouchableItem {...props}>
+      <View>
+        {children}
+        {badgeCount === 0 ? null : (
+          <View style={styles.container}>
+            <Badge
+              badgeStyle={styles.badge}
+              textStyle={styles.badgeText}
+              value={badgeCount > 99 ? '99+' : badgeCount}
+            />
+          </View>
+        )}
+      </View>
+    </TouchableItem>
+  );
+};
 
 export default BadgeContainer;

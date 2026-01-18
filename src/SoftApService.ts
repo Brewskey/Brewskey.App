@@ -20,7 +20,7 @@ export const WIFI_SECURITIES = {
   WPA_AES_PSK: 2097156,
   WPA_TKIP_PSK: 2097154,
 } as const;
-/* eslint-enable */
+ 
 
 type WifiResult = {
   ch: number;
@@ -106,7 +106,7 @@ class SoftAPService {
     return id;
   };
 
-  static scanWifi = async (): Promise<Array<WifiNetwork>> => {
+  static scanWifi = async (): Promise<WifiNetwork[]> => {
     const { scans } = await fetchJSON<{ scans: WifiResult[] }>(
       `${BASE_URL}/scan-ap`,
     );

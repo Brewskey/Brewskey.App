@@ -1,73 +1,78 @@
-import type { Location, LocationMutator } from '@brewskey/js-api';
+import type { Location, LocationMutator, EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
-import { NavigationActions, StackActions } from 'react-navigation';
-import DAOApi from '@brewskey/js-api';
+import { useNavigation, StaticScreenProps, NavigationProp } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import LocationForm from '../components/LocationForm/LocationForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useCreateLocation } from '../hooks/queries/LocationQueries';
 
-type InjectedProps = {
-  navigation: Navigation;
+type Props = StaticScreenProps<{
   onLocationCreated?: (location: Location) => undefined | Promise<any>;
   showBackButton?: boolean;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewLocationScreen extends InjectedComponent<InjectedProps> {
-  static defaultProps = {
-    showBackButton: true,
+const NewLocationScreen: React.FC<Props> = ({
+  route: {
+    params: {
+      onLocationCreated,
+      showBackButton = true,
+    },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+
+  const mergedProps = {
+    onLocationCreated,
+    showBackButton: showBackButton ?? true,
   };
 
-  _onFormSubmit = async (values: LocationMutator): Promise<void> => {
-    const { navigation, onLocationCreated } = this.injectedProps;
-    const clientID = DAOApi.LocationDAO.post(values);
-    const location = await DAOApi.LocationDAO.waitForLoaded((dao) =>
-      dao.fetchByID(clientID),
-    );
-    SnackBarStore.showMessage({ text: 'New location created' });
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const createMutation = useCreateLocation();
 
-    if (onLocationCreated) {
-      onLocationCreated(location);
+  const onFormSubmit = async (values: LocationMutator): Promise<void> => {
+    const location = await createMutation.mutateAsync(values);
+    addSnackBarMessage({ content: 'New location created' });
+
+    if (mergedProps.onLocationCreated) {
+      await mergedProps.onLocationCreated(location);
       return;
     }
 
-    const resetRouteAction = StackActions.reset({
-      actions: [
-        NavigationActions.navigate({ routeName: 'locations' }),
-        NavigationActions.navigate({
-          params: { id: location.id },
-          routeName: 'locationDetails',
-        }),
-      ],
-      index: 1,
+    // Navigate to location details
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'locations',
+        params: {
+          screen: 'locationDetails',
+          params: {
+            id: location.id,
+          },
+        },
+      },
     });
-    navigation.dispatch(resetRouteAction);
   };
 
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header
-          showBackButton={this.injectedProps.showBackButton}
-          title="New location"
+  return (
+    <Container>
+      <Header
+        showBackButton={mergedProps.showBackButton}
+        title="New location"
+      />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <LocationForm
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Create location"
         />
-        <KeyboardAwareScrollView>
-          <LocationForm
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Create location"
-          />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
 
-export default NewLocationScreen;
+export default withErrorBoundary(NewLocationScreen, <ErrorScreen showBackButton />);

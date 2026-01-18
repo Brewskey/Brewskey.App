@@ -1,11 +1,11 @@
 import * as React from 'react';
-import SimplePicker from '../../components/pickers/SimplePicker';
+import { SimplePicker } from '../../components/pickers/SimplePicker';
 
 type Props = {
   error?: string,
-  onChange: (value?: any) => void,
+  onChange: (value?: number) => void,
   placeholder?: string,
-  value: any
+  value: number | undefined
 };
 
 const SECONDS_PER_MINUTE = 60;

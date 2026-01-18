@@ -14,10 +14,8 @@ type Props = {
   title: string
 };
 
-class ListSectionHeader extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    return <Text style={styles.container}>{this.props.title}</Text>;
-  }
-}
+const ListSectionHeader: React.FC<Props> = ({ title }) => {
+  return <Text style={styles.container}>{title}</Text>;
+};
 
 export default ListSectionHeader;

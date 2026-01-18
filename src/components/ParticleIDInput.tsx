@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { action, observable } from 'mobx';
 
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useFormContext, useWatch } from 'react-hook-form';
 import TextBlock from '../common/TextBlock';
 import Button from '../common/buttons/Button';
-import { AdvancedTextField } from '../common/form/TextField';
 import { TYPOGRAPHY } from '../theme';
+import { FormField } from '../common/form/FormField';
+import { TextInput } from '../common/form/TextInput';
 
 const styles = StyleSheet.create({
   descriptionText: {
@@ -23,57 +24,46 @@ type Props = {
   onContinuePress: (particleID: string) => void;
 };
 
-class ParticleIDInput extends React.Component<Props> {
-  _isExpanded: boolean = false;
+const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const formContext = useFormContext();
+  const particleID = useWatch({ control: formContext?.control, name: 'particleIDInput' }) || '';
 
-  _particleID: string = '';
-
-  _setParticleID = (particleID: string) => {
-    this._particleID = particleID;
+  const handleContinuePress = () => {
+    onContinuePress(particleID);
   };
 
-  _expand = () => {
-    this._isExpanded = true;
-  };
-
-  _onContinuePress = () => this.props.onContinuePress(this._particleID);
-
-  render(): React.ReactElement {
-    return (
-      <View>
-        {!this._isExpanded ? (
-          <TouchableOpacity onPress={this._expand}>
-            <Text style={styles.expandText}>
-              I know my internal Brewskey box ID
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          [
-            <TextBlock
-              key="descriptionText"
-              textStyle={styles.descriptionText}
-              paddedBottom
-            >
-              Enter the hardware ID of your Brewskey box. We'll skip the WiFi
-              setup for now but you'll still be able to setup your taps.
-            </TextBlock>,
-            <TextField
-              key="particleIDInput"
-              label="Internal ID"
-              onChange={this._setParticleID}
-              onSubmitEditing={this._onContinuePress}
-              value={this._particleID}
-            />,
-            <Button
-              key="continueButton"
-              onPress={this._onContinuePress}
-              title="Continue"
-            />,
-          ]
-        )}
-      </View>
-    );
-  }
-}
+  return (
+    <View>
+      {!isExpanded ? (
+        <TouchableOpacity onPress={() => setIsExpanded(true)}>
+          <Text style={styles.expandText}>
+            I know my internal Brewskey box ID
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <>
+          <TextBlock
+            textStyle={styles.descriptionText}
+            paddedBottom
+          >
+            Enter the hardware ID of your Brewskey box. We'll skip the WiFi
+            setup for now but you'll still be able to setup your taps.
+          </TextBlock>
+          <FormField
+            component={TextInput}
+            name="particleIDInput"
+            label="Internal ID"
+            defaultValue=""
+          />
+          <Button
+            onPress={handleContinuePress}
+            title="Continue"
+          />
+        </>
+      )}
+    </View>
+  );
+};
 
 export default ParticleIDInput;

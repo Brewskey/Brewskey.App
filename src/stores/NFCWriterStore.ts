@@ -35,7 +35,7 @@ class NFCWriterStore {
 
     try {
       // Use token to grab auth for NFC
-      // eslint-disable-next-line no-undef
+       
       const response = await fetch(
         `${CONFIG.HOST}/api/authorizations/nfc-tag/`,
         {

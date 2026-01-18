@@ -1,24 +1,25 @@
-import type { Device, QueryOptions } from '@brewskey/js-api';
+import type { Device, EntityID, QueryOptions } from '@brewskey/js-api';
 
-import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
+import type { RenderProps } from '../common/SwipeableList';
+import type { ListComponentTypes } from '../common/List';
 
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useMemo } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
-import SwipeableList from '../common/SwipeableList';
+import { SwipeableList } from '../common/SwipeableList';
 import QuickActions from '../common/QuickActions';
-import DAOApi from '@brewskey/js-api';
-import DAOListStore from '../stores/DAOListStore';
-import LoaderRow from '../common/LoaderRow';
-import ListEmpty from '../common/ListEmpty';
 import SwipeableRow from '../common/SwipeableRow';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { DeviceStore } from '../stores/DAOStores';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
 import DeviceOnlineIndicator from './DeviceOnlineIndicator';
+import { useGetDevices, useDeleteDevice } from '../hooks/queries/DeviceQueries';
+import ListEmpty from '../common/ListEmpty';
 
 const styles = StyleSheet.create({
   onlineIndicatorWrapper: {
@@ -32,140 +33,178 @@ type Props = {
     isEmpty: boolean;
     isLoading: boolean;
   }) => React.ReactElement;
-  ListEmptyComponent?:
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
-  ListHeaderComponent?:
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
+  ListEmptyComponent?: ListComponentTypes;
+  ListHeaderComponent?: ListComponentTypes;
   queryOptions?: QueryOptions;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const DevicesList: React.FC<Props> = ({
+  renderListHeader,
+  ListEmptyComponent = <ListEmpty message="No Brewskey boxes" />,
+  ListHeaderComponent,
+  queryOptions = {},
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const queryClient = useQueryClient();
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const swipeableListRef = React.useRef<SwipeableList<Device>>(null);
 
-@withNavigation
-class DevicesList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps: {
-    ListEmptyComponent: React.ReactNode;
-    queryOptions: QueryOptions;
-  } = {
-    ListEmptyComponent: <ListEmpty message="No Brewskey boxes" />,
-    queryOptions: {},
-  };
-
-  _listStore: DAOListStore<Device> = new DAOListStore(DeviceStore);
-  _swipeableListRef = React.createRef<SwipeableList<Row<Device>>>();
-
-  componentDidMount() {
-    this._listStore.initialize({
+  const mergedQueryOptions = useMemo(
+    () => ({
       orderBy: [
         {
           column: 'id',
-          direction: 'desc',
+          direction: 'desc' as const,
         },
       ],
-      ...this.props.queryOptions,
-    });
-  }
+      ...queryOptions,
+    }),
+    [queryOptions],
+  );
 
-  _keyExtractor = (row: Row<Device>): string => row.key;
+  const {
+    data: devicesData,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetDevices(mergedQueryOptions);
 
-  _onDeleteItemPress = async (item: Device): Promise<void> => {
-    const clientID = DAOApi.DeviceDAO.deleteByID(item.id);
-    await DAOApi.DeviceDAO.waitForLoadedNullable((dao) =>
-      dao.fetchByID(clientID),
-    );
-    SnackBarStore.showMessage({ text: 'The Brewskey box was deleted' });
+  const devicesDataFormatted = useMemo(() => {
+    if (!devicesData) return undefined;
+    return devicesData;
+  }, [devicesData]);
+
+  const deleteDeviceMutation = useDeleteDevice();
+
+  const onDeleteItemPress = async (item: Device): Promise<void> => {
+    await deleteDeviceMutation.mutateAsync(item.id);
+    addSnackBarMessage({ content: 'The Brewskey box was deleted' });
   };
 
-  _onEditItemPress = ({ id }: Device) => {
-    this.injectedProps.navigation.navigate('editDevice', { id });
-    nullthrows(this._swipeableListRef.current).resetOpenRow();
+  const onEditItemPress = ({ id }: Device) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'devices',
+        params: {
+          screen: 'editDevice',
+          params: { id },
+        },
+      },
+    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
-  _onItemPress = (item: Device): void =>
-    this.injectedProps.navigation.navigate('deviceDetails', {
-      id: item.id,
+  const onItemPress = (item: Device): void => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'devices',
+        params: {
+          screen: 'deviceDetails',
+          params: {
+            id: item.id,
+          },
+        },
+      },
     });
+  };
 
-  _renderRow = ({
-    info: { item: row, index, separators },
-    ...swipeableStateProps
-  }): React.ReactElement => (
-    <LoaderRow
-      index={index}
-      loadedRow={SwipeableRow}
-      loader={row.loader}
-      onDeleteItemPress={this._onDeleteItemPress}
-      onEditItemPress={this._onEditItemPress}
-      onItemPress={this._onItemPress}
-      rowItemComponent={SwipeableRowItem}
-      separators={separators}
-      slideoutComponent={Slideout}
-      {...swipeableStateProps}
+  const keyExtractor = (item: Device): string => item.id.toString();
+
+  const SwipeableRowItem = ({
+    item,
+    onItemPress,
+  }: RowItemProps<Device>): React.ReactElement => (
+    <ListItem
+      item={item}
+      onPress={onItemPress}
+      rightIcon={
+        <View style={styles.onlineIndicatorWrapper}>
+          <DeviceOnlineIndicator particleID={item.particleId} />
+        </View>
+      }
+      title={item.name}
     />
   );
 
-  render(): React.ReactElement {
-    const { ListEmptyComponent, renderListHeader } = this.props;
-    const isLoading = this._listStore.isFetchingRemoteCount;
+  const Slideout = ({
+    item,
+    onDeleteItemPress,
+    onEditItemPress,
+  }: RowItemProps<Device>): React.ReactElement => (
+    <QuickActions
+      deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
+      deleteModalTitle="Delete Brewskey box"
+      item={item}
+      onDeleteItemPress={onDeleteItemPress}
+      onEditItemPress={onEditItemPress}
+    />
+  );
 
+  const renderRow = ({
+    info: { item, index, separators },
+    ...swipeableStateProps
+  }: RenderProps<Device>): React.ReactElement => {
+    // Since we already have the device from the list query, we can render directly
+    // If individual device loading is needed, we can add useGetDeviceById here
     return (
-      <SwipeableList
-        data={this._listStore.rows}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={!isLoading ? ListEmptyComponent : null}
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={
-          renderListHeader &&
-          renderListHeader({
-            isEmpty: this._listStore.rows.length === 0,
-            isLoading,
-          })
-        }
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        ref={this._swipeableListRef}
-        renderItem={this._renderRow}
+      <SwipeableRow
+        index={index}
+        item={item}
+        onDeleteItemPress={onDeleteItemPress}
+        onEditItemPress={onEditItemPress}
+        onItemPress={onItemPress}
+        rowItemComponent={SwipeableRowItem}
+        separators={separators}
+        slideoutComponent={Slideout}
+        {...swipeableStateProps}
       />
     );
-  }
-}
+  };
 
-const SwipeableRowItem = ({
-  item,
-  onItemPress,
-}: RowItemProps<Device>): React.ReactElement => (
-  <ListItem
-    item={item}
-    onPress={onItemPress}
-    rightIcon={
-      <View style={styles.onlineIndicatorWrapper}>
-        <DeviceOnlineIndicator particleID={item.particleId} />
-      </View>
+  const headerComponent = React.useMemo((): ListComponentTypes => {
+    if (ListHeaderComponent) {
+      // Ensure ListHeaderComponent is a valid ListComponentTypes
+      if (typeof ListHeaderComponent === 'string' || typeof ListHeaderComponent === 'number' || typeof ListHeaderComponent === 'boolean') {
+        return null;
+      }
+      return ListHeaderComponent as ListComponentTypes;
     }
-    title={item.name}
-  />
-);
+    if (renderListHeader) {
+      const rendered = renderListHeader({
+        isEmpty: !devicesDataFormatted?.pages?.[0]?.length,
+        isLoading,
+      });
+      // Ensure rendered is a valid ListComponentTypes
+      if (typeof rendered === 'string' || typeof rendered === 'number' || typeof rendered === 'boolean') {
+        return null;
+      }
+      return rendered as ListComponentTypes;
+    }
+    return null;
+  }, [ListHeaderComponent, renderListHeader, devicesDataFormatted, isLoading]);
 
-const Slideout = ({
-  item,
-  onDeleteItemPress,
-  onEditItemPress,
-}: RowItemProps<Device>): React.ReactElement => (
-  <QuickActions
-    deleteModalMessage={`Are you sure you want to delete ${item.name}?`}
-    deleteModalTitle="Delete Brewskey box"
-    item={item}
-    onDeleteItemPress={onDeleteItemPress}
-    onEditItemPress={onEditItemPress}
-  />
-);
+  return (
+    <SwipeableList
+      data={devicesDataFormatted}
+      keyExtractor={keyExtractor}
+      listType="flatList"
+      ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
+      ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
+      ListHeaderComponent={headerComponent}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
+        }
+      }}
+      onRefresh={() => refetch()}
+      ref={swipeableListRef}
+      renderItem={renderRow}
+    />
+  );
+};
 
 export default DevicesList;

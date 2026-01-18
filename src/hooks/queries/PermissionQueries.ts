@@ -3,7 +3,7 @@ import {
   EntityID,
   Permission,
   PermissionDAO,
-  PermissionEntityType,
+  PermissionEntityKeysType,
 } from '@brewskey/js-api';
 
 enum PermissionQueries {
@@ -11,7 +11,7 @@ enum PermissionQueries {
 }
 
 export const useGetPermissionForEntityById = (
-  permissionEntityType: PermissionEntityType,
+  permissionEntityType: PermissionEntityKeysType,
   entityID: EntityID,
 ): UseQueryResult<Permission, Error> =>
   useQuery({

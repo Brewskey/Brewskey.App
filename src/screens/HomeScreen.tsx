@@ -4,7 +4,6 @@ import { COLORS, TYPOGRAPHY } from '../theme';
 import Button from '../common/buttons/Button';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import HomeScreenStore from '../stores/HomeScreenStore';
 import NearbyLocationsList from '../components/NearbyLocationsList/NearbyLocationsList';
 import ErrorScreen from '../common/ErrorScreen';
 import { withErrorBoundary } from '../common/ErrorBoundary';
@@ -57,13 +56,13 @@ export const HomeScreen = withErrorBoundary(() => {
           <Text style={styles.permissionText}>
             In order to see nearby taps, we need location permissions
           </Text>
-          <Button onPress={requestPermission} title="Provide permissions" />
+          <Button onPress={() => { void requestPermission(); }} title="Provide permissions" />
         </Container>
       ) : (
         <NearbyLocationsList
           isLoading={nearbyLocations.isLoading}
           nearbyLocations={nearbyLocations.data}
-          onRefresh={HomeScreenStore.refresh}
+          onRefresh={() => nearbyLocations.refetch()}
         />
       )}
     </Container>

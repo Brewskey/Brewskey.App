@@ -6,6 +6,8 @@ export type TextInputProps = Omit<
   InputProps,
   'onBlur' | 'onChangeText' | 'value'
 > & {
+  inputStyle?: StyleProp<TextStyle>;
+  underlineColorAndroid?: string;
   name: string;
   defaultValue?: string;
   nextFocusTo?: string;
@@ -14,9 +16,11 @@ export type TextInputProps = Omit<
   validate?: Validate<string, Record<string, unknown>>;
 };
 
-export const TextInput = ({
+export const TextInput: React.FC<TextInputProps> = ({
   nextFocusTo,
   defaultValue,
+  inputStyle,
+  underlineColorAndroid,
   required = false,
   ...props
 }: TextInputProps) => {
@@ -30,9 +34,15 @@ export const TextInput = ({
       render={({ field: { onChange, onBlur, value } }) => (
         <Input
           {...props}
+          inputStyle={[
+            inputStyle,
+            {
+              borderColor: underlineColorAndroid,
+            },
+          ]}
           onBlur={onBlur}
           onChangeText={onChange}
-          value={value}
+          value={value ?? ''}
           onSubmitEditing={
             nextFocusTo ? () => setFocus(nextFocusTo) : undefined
           }

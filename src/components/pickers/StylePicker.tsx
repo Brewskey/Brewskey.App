@@ -1,12 +1,10 @@
 import type { Style, QueryOptions } from '@brewskey/js-api';
-import type { PickerValue } from '../../stores/PickerStore';
-import type { RenderRowProps } from './DAOPicker';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { StyleStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
+import { useGetStyles } from '../../hooks/queries/StyleQueries';
 
 type Props = {
   error?: string | null | undefined;
@@ -15,44 +13,35 @@ type Props = {
   value: PickerValue<Style, false>;
 };
 
-class StylePicker extends React.Component<Props> {
-  _renderRow = ({
-    item: row,
+const StylePicker: React.FC<Props> = (props) => {
+  const renderRow = ({
+    item: style,
     isSelected,
     toggleItem,
   }: RenderRowProps<Style>): React.ReactElement => (
-    <LoaderRow
+    <SelectableListItem
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={style}
+      title={style.name}
+      onPress={() => toggleItem(style)}
     />
   );
 
-  render(): React.ReactElement {
-    return (
-      <DAOPicker
-        {...this.props}
-        daoStore={StyleStore}
-        headerTitle="Select Style"
-        label="Style"
-        multiple={false}
-        renderRow={this._renderRow}
-        stringValueExtractor={(style: Style): string => style.name}
-      />
-    );
-  }
-}
-
-// todo annotate better
-const LoadedRow = ({ item: style, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    chevron={false}
-    isSelected={isSelected}
-    item={style}
-    title={style.name}
-    onPress={toggleItem}
-  />
-);
+  return (
+    <DAOPicker
+      {...props}
+      useQueryHook={useGetStyles}
+      headerTitle="Select Style"
+      label="Style"
+      multiple={false}
+      queryOptions={props.queryOptions ?? {}}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={false}
+      stringValueExtractor={(style: Style): string => style.name}
+    />
+  );
+};
 
 export default StylePicker;

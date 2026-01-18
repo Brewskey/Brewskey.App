@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 
 import { Button as RNEButton } from '@rneui/themed';
 import ToggleStore from '../../stores/ToggleStore';
@@ -19,75 +19,67 @@ type Props = React.ComponentProps<typeof RNEButton> & {
   color?: string;
   disabled?: boolean;
   loading?: boolean;
-  onPress?: (...args: Array<any>) => any;
+  onPress?: () => void | Promise<void>;
   secondary?: boolean;
-  style?: any;
+  style?: ViewStyle;
   title: string;
   type?: 'solid' | 'clear' | 'outline';
   // react-native-elemenets button porps
 };
 
-class Button extends React.Component<Props> {
-  static defaultProps: {
-    backgroundColor: string;
-    color: string;
-  } = {
-    backgroundColor: COLORS.primary2,
-    color: COLORS.textInverse,
-  };
+type State = {
+  isLoading: boolean;
+};
 
-  _isLoadingToggleStore: ToggleStore = new ToggleStore();
+const Button: React.FC<Props> = ({
+  backgroundColor = COLORS.primary2,
+  color = COLORS.textInverse,
+  disabled,
+  loading,
+  onPress,
+  secondary,
+  style,
+  type,
+  ...rest
+}) => {
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  _onPress = async (): Promise<void> => {
-    const { onPress } = this.props;
+  const handlePress = async (): Promise<void> => {
     if (!onPress) {
       return;
     }
 
-    this._isLoadingToggleStore.toggleOn();
+    setIsLoading(true);
     try {
       await onPress();
     } finally {
-      this._isLoadingToggleStore.toggleOff();
+      setIsLoading(false);
     }
   };
 
-  render(): React.ReactElement {
-    const {
-      backgroundColor,
-      color,
-      disabled,
-      loading,
-      secondary,
-      style,
-      type,
-      ...rest
-    } = this.props;
-
-    return (
-      <RNEButton
-        buttonStyle={{
-          marginHorizontal: 20,
-          ...(type === 'solid' || type == null
-            ? {
-                backgroundColor: secondary ? COLORS.secondary : backgroundColor,
-              }
-            : null),
-          ...style,
-        }}
-        disabledStyle={secondary && styles.secondaryDisabledButton}
-        disabledTitleStyle={secondary && styles.secondaryDisabledText}
-        {...rest}
-        disabled={disabled || this._isLoadingToggleStore.isToggled}
-        loading={loading || this._isLoadingToggleStore.isToggled}
-        onPress={this._onPress}
-        titleStyle={{
-          color: secondary ? COLORS.text : color,
-        }}
-        type={type}
-      />
-    );
-  }
-}
+  return (
+    <RNEButton
+      buttonStyle={{
+        marginHorizontal: 20,
+        ...(type === 'solid' || type == null
+          ? {
+              backgroundColor: secondary ? COLORS.secondary : backgroundColor,
+            }
+          : null),
+        ...(style || {}),
+      }}
+      disabledStyle={secondary && styles.secondaryDisabledButton}
+      disabledTitleStyle={secondary && styles.secondaryDisabledText}
+      {...rest}
+      disabled={disabled || isLoading}
+      loading={loading || isLoading}
+      onPress={handlePress}
+      titleStyle={{
+        color: secondary ? COLORS.text : color,
+      }}
+      type={type}
+    />
+  );
+};
 
 export default Button;

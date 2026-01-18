@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import hoistNonReactStatic from 'hoist-non-react-statics';
+import type { NavigationState, Route } from '@react-navigation/native';
 import theme from '../../theme';
 
+type TabConfig = Record<string, { getShouldShowTab?: (screenProps: unknown) => boolean }>;
+
 type ExportType<TConfig> = React.ComponentType<TConfig> & {
-  router: any;
+  router: unknown;
 };
 
 export default function createTopTabNavigator<TConfig>(
-  config: any,
+  config: TabConfig,
 ): ExportType<TConfig> {
   const TopTab = createMaterialTopTabNavigator({
     screens: {},
@@ -20,48 +22,52 @@ export default function createTopTabNavigator<TConfig>(
     },
   });
 
-  class NavigatorWrapper extends React.Component<TConfig> {
-    render(): React.ReactElement {
-      // workaround for dynamically hiding tabs
-      // todo change it when they implement the feature
-      // https://github.com/react-navigation/react-navigation/issues/717
-      // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
-      const { navigation, ...otherProps } = this.props;
-      const navState = navigation.state;
-      const filteredTabRoutes = navState.routes.filter(
-        (route: any): boolean => {
-          const { getShouldShowTab } = config[route.routeName];
-          return (
-            getShouldShowTab == null || getShouldShowTab(otherProps.screenProps)
-          );
-        },
-      );
+  const NavigatorWrapper: React.FC<TConfig & { navigation?: { state?: NavigationState }; screenProps?: unknown; children?: React.ReactNode }> = (props) => {
+    // workaround for dynamically hiding tabs
+    // todo change it when they implement the feature
+    // https://github.com/react-navigation/react-navigation/issues/717
+    // https://react-navigation.canny.io/feature-requests/p/hiding-tab-from-the-tabbar
+    const { navigation, screenProps, children, ...otherProps } = props as TConfig & { navigation?: { state?: NavigationState }; screenProps?: unknown; children?: React.ReactNode };
+    const navState = navigation?.state;
+    const filteredTabRoutes = (navState?.routes?.filter(
+      (route: Route<string, object | undefined>): boolean => {
+        const routeName = 'name' in route ? route.name : (route as { routeName?: string }).routeName;
+        const { getShouldShowTab } = config[routeName ?? ''];
+        return (
+          getShouldShowTab == null || getShouldShowTab(screenProps)
+        );
+      },
+    ) || []) as Route<string, object | undefined>[];
 
-      const activeIndex = filteredTabRoutes.findIndex(
-        (route: any): boolean =>
-          route.routeName === navState.routes[navState.index].routeName,
-      );
+    const activeIndex = filteredTabRoutes.findIndex(
+      (route: Route<string, object | undefined>): boolean => {
+        const routeName = 'name' in route ? route.name : (route as { routeName?: string }).routeName;
+        const activeRouteName = navState?.routes?.[navState?.index ?? 0];
+        const activeName = activeRouteName && ('name' in activeRouteName ? activeRouteName.name : (activeRouteName as { routeName?: string }).routeName);
+        return routeName === activeName;
+      },
+    );
 
-      return (
-        <TopTab.Navigator
-          screenOptions={{
-            lazy: true,
-            swipeEnabled: false,
-          }}
-          {...otherProps}
-          navigation={{
-            ...navigation,
-            state: {
-              ...navigation.state,
-              index: activeIndex,
-              routes: filteredTabRoutes,
-            },
-          }}
-        />
-      );
-    }
-  }
+    return (
+      <TopTab.Navigator
+        screenOptions={{
+          lazy: true,
+          swipeEnabled: false,
+        }}
+        {...(otherProps as TConfig)}
+        navigation={navigation ? {
+          ...navigation,
+          state: {
+            ...navigation.state,
+            index: activeIndex,
+            routes: filteredTabRoutes,
+          },
+        } : undefined}
+      >
+        {children}
+      </TopTab.Navigator>
+    );
+  };
 
-  hoistNonReactStatic(NavigatorWrapper, Navigator);
   return NavigatorWrapper as ExportType<TConfig>;
 }

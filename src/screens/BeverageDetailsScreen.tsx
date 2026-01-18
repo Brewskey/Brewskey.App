@@ -1,75 +1,78 @@
-import type { Beverage, EntityID, LoadObject } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { ScrollView } from 'react-native';
-
-import { BeverageStore } from '../stores/DAOStores';
-import { computed } from 'mobx';
+import { StaticScreenProps } from '@react-navigation/native';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import BeverageDetailsContent from '../components/BeverageDetailsContent';
 import Container from '../common/Container';
 import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
-import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
-import LoaderComponent from '../common/LoaderComponent';
+import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import LoadingIndicator from '../common/LoadingIndicator';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { useGetBeverageById } from '../hooks/queries/BeverageQueries';
 
-type InjectedProps = {
+type Props = StaticScreenProps<{
   id: EntityID;
-  navigation: Navigation;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class BeverageDetailsScreen extends InjectedComponent<InjectedProps> {
-  get _beverageLoader(): LoadObject<Beverage> {
-    return BeverageStore.getByID(this.injectedProps.id);
-  }
+const BeverageDetailsScreen: React.FC<Props> = ({
+  route: {
+    params: { id },
+  },
+}: Props) => {
 
-  render(): React.ReactElement {
+  const { data: beverage, isLoading, error } = useGetBeverageById(id);
+
+  if (isLoading) {
     return (
-      <LoaderComponent
-        loadedComponent={LoadedComponent}
-        loader={this._beverageLoader}
-        loadingComponent={LoadingComponent}
-      />
+      <Container>
+        <Header showBackButton />
+        <LoadingIndicator />
+      </Container>
     );
   }
-}
 
-const LoadingComponent = () => (
-  <Container>
-    <Header showBackButton />
-    <LoadingIndicator />
-  </Container>
-);
+  if (error || !beverage) {
+    return (
+      <Container>
+        <Header showBackButton />
+        <LoadingIndicator />
+      </Container>
+    );
+  }
 
-type LoadedComponentProps = {
-  value: Beverage;
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+              params: {
+                screen: 'myBeverages',
+                params: {
+                  screen: 'editBeverage',
+                  params: { id: beverage.id },
+                },
+              },
+            }}
+          />
+        }
+        showBackButton
+        title={beverage.name}
+      />
+      <ScrollView>
+        <SectionContent>
+          <BeverageDetailsContent beverage={beverage} />
+        </SectionContent>
+      </ScrollView>
+    </Container>
+  );
 };
 
-const LoadedComponent = ({ value: beverage }: LoadedComponentProps) => (
-  <Container>
-    <Header
-      rightComponent={
-        <HeaderNavigationButton
-          name="edit"
-          params={{ id: beverage.id }}
-          toRoute="editBeverage"
-        />
-      }
-      showBackButton
-      title={beverage.name}
-    />
-    <ScrollView>
-      <SectionContent>
-        <BeverageDetailsContent beverage={beverage} />
-      </SectionContent>
-    </ScrollView>
-  </Container>
-);
-
-export default BeverageDetailsScreen;
+export default withErrorBoundary(BeverageDetailsScreen, <ErrorScreen showBackButton />);

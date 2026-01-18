@@ -2,7 +2,9 @@ import type { Coordinates } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+
+import { GOOGLE_MAPS_API_KEY } from '../constants';
 
 type Region = {
   latitude: number;
@@ -50,6 +52,8 @@ const LocationMap = ({
   zoomDistance = 2000,
 }: Props): React.ReactElement => (
   <MapView
+    provider="google"
+    googleMapsApiKey={GOOGLE_MAPS_API_KEY}
     style={styles.map}
     initialRegion={getRegion(
       {
@@ -59,7 +63,7 @@ const LocationMap = ({
       zoomDistance,
     )}
   >
-    <MapView.Marker
+    <Marker
       coordinate={{
         latitude,
         longitude,

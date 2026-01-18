@@ -71,10 +71,10 @@ const theme = {
   },
   tabBar: {
     tabBarOptions: {
-      activeTintColor: COLORS.secondary,
-      inactiveTintColor: COLORS.textInverseFaded,
-      indicatorStyle: { backgroundColor: COLORS.secondary },
-      style: { backgroundColor: COLORS.primary2 },
+      tabBarActiveTintColor: COLORS.secondary,
+      tabBarInactiveTintColor: COLORS.textInverseFaded,
+      tabBarIndicatorStyle: { backgroundColor: COLORS.secondary },
+      tabBarStyle: { backgroundColor: COLORS.primary2 },
     },
   },
 } as const;

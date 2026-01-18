@@ -1,89 +1,29 @@
 import type { QueryOptions, Pour } from '@brewskey/js-api';
-import type { Navigation } from '../../types';
-import type { RowItemProps } from '../../common/SwipeableRow';
 
 import * as React from 'react';
 import moment from 'moment';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import DAOApi from '@brewskey/js-api';
-import InjectedComponent from '../../common/InjectedComponent';
 import ListEmpty from '../../common/ListEmpty';
 import ListItem from '../../common/ListItem';
-import QuickActions from '../../common/QuickActions';
-import SwipeableRow from '../../common/SwipeableRow';
 import UserAvatar from '../../common/avatars/UserAvatar';
+import QuickActions from '../../common/QuickActions';
 import BasePoursList from './BasePoursList';
-import SnackBarStore from '../../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useDeletePour } from '../../hooks/queries/PourQueries';
+
+import { ListComponentTypes } from '../../common/List';
 
 type Props = {
   canDeletePours: boolean;
-  ListHeaderComponent?:
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
+  ListHeaderComponent?: ListComponentTypes;
   onRefresh?: () => void;
   queryOptions?: QueryOptions;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
-};
-
-@withNavigation
-class OwnerPoursList extends InjectedComponent<InjectedProps, Props> {
-  _onItemPress = (pour: Pour) => {
-    if (!pour.owner) {
-      return;
-    }
-
-    this.injectedProps.navigation.navigate('profile', {
-      id: pour.owner.id,
-    });
-  };
-
-  _onDeleteItemPress = async (item: Pour): Promise<void> => {
-    const clientID = DAOApi.PourDAO.deleteByID(item.id);
-    await DAOApi.PourDAO.waitForLoadedNullable((dao) =>
-      dao.fetchByID(clientID),
-    );
-    SnackBarStore.showMessage({ text: 'The pour was deleted' });
-  };
-
-  render(): React.ReactElement {
-    const { canDeletePours, ListHeaderComponent, onRefresh, queryOptions } =
-      this.props;
-
-    if (!canDeletePours) {
-      return (
-        <BasePoursList
-          ListEmptyComponent={<ListEmpty message="No pours" />}
-          ListHeaderComponent={ListHeaderComponent}
-          loadedRow={LoadedRow}
-          onRefresh={onRefresh}
-          queryOptions={queryOptions}
-        />
-      );
-    }
-
-    return (
-      <BasePoursList
-        ListEmptyComponent={<ListEmpty message="No pours" />}
-        ListHeaderComponent={ListHeaderComponent}
-        loadedRow={SwipeableRow}
-        onDeleteItemPress={this._onDeleteItemPress}
-        onRefresh={onRefresh}
-        queryOptions={queryOptions}
-        rowItemComponent={LoadedRow}
-        slideoutComponent={Slideout}
-      />
-    );
-  }
-}
-
 // todo add pour amount rendering
-const LoadedRow = ({ item: pour, onItemPress }: RowItemProps<Pour>) => {
+const LoadedRow = ({ value: pour, onItemPress }: { value: Pour; onItemPress: (pour: Pour) => void }) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -95,7 +35,7 @@ const LoadedRow = ({ item: pour, onItemPress }: RowItemProps<Pour>) => {
     <ListItem
       chevron={false}
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
-      onPress={onItemPress}
+      onPress={() => onItemPress(pour)}
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}
@@ -103,16 +43,82 @@ const LoadedRow = ({ item: pour, onItemPress }: RowItemProps<Pour>) => {
   );
 };
 
-const Slideout = ({
-  item,
-  onDeleteItemPress,
-}: RowItemProps<Pour>): React.ReactElement => (
+const SwipeableRowItem = ({ item: pour, onItemPress, slideoutComponent }: { item: Pour; onItemPress: (pour: Pour) => void; slideoutComponent: React.ReactNode }) => {
+  const pourOwnerUserName = pour.owner
+    ? pour.owner.userName
+    : NULL_STRING_PLACEHOLDER;
+  const title = pour.owner
+    ? `${pourOwnerUserName} – ${pour.ounces.toFixed(1)} oz`
+    : `${pour.ounces.toFixed(1)} oz`;
+
+  return (
+    <ListItem
+      swipeable={true}
+      slideoutComponent={slideoutComponent}
+      chevron={false}
+      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      onPress={() => onItemPress(pour)}
+      item={pour}
+      title={title}
+      subtitle={moment(pour.pourDate).fromNow()}
+    />
+  );
+};
+
+const Slideout = ({ item: pour, onDeleteItemPress }: { item: Pour; onDeleteItemPress: (item: Pour) => Promise<void> }) => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"
-    item={item}
+    item={pour}
     onDeleteItemPress={onDeleteItemPress}
   />
 );
+
+const OwnerPoursList: React.FC<Props> = ({
+  canDeletePours,
+  ListHeaderComponent,
+  onRefresh,
+  queryOptions,
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const deletePourMutation = useDeletePour();
+  const addSnackBarMessage = useAddSnackBarMessage();
+
+  const handleItemPress = (pour: Pour) => {
+    if (!pour.owner) {
+      return;
+    }
+
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: pour.owner.id,
+        },
+         
+      } as any,
+    });
+  };
+
+  const onDeleteItemPress = async (item: Pour): Promise<void> => {
+    await deletePourMutation.mutateAsync(item.id);
+    addSnackBarMessage({ content: 'The pour was deleted' });
+  };
+
+  return (
+    <BasePoursList
+      ListEmptyComponent={<ListEmpty message="No pours" />}
+      ListHeaderComponent={ListHeaderComponent}
+      loadedRow={LoadedRow}
+      onDeleteItemPress={canDeletePours ? onDeleteItemPress : undefined}
+      onItemPress={handleItemPress}
+      onRefresh={onRefresh}
+      queryOptions={queryOptions}
+      rowItemComponent={canDeletePours ? SwipeableRowItem : undefined}
+      slideoutComponent={canDeletePours ? Slideout : undefined}
+    />
+  );
+};
 
 export default OwnerPoursList;

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useState } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 import Button from '../common/buttons/Button';
 import TextBlock from '../common/TextBlock';
@@ -6,8 +8,7 @@ import TextBlock from '../common/TextBlock';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import HardwareSetupModal from './modals/HardwareSetupModal';
-import ToggleStore from '../stores/ToggleStore';
-import NuxSoftwareSetupStore from '../stores/NuxSoftwareSetupStore';
+import { useGetLocations } from '../hooks/queries/LocationQueries';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,57 +37,67 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const NuxNoEntity: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const [isHardwareSetupVisible, setIsHardwareSetupVisible] = useState(false);
+  
+  // Get locations count for navigation logic
+  const locationsQuery = useGetLocations({ take: 1 });
+  const locationsCount = locationsQuery.data?.pages[0]?.length ?? 0;
 
-class NuxNoEntity extends InjectedComponent<InjectedProps> {
-  _hardwareSetupToggleStore = new ToggleStore();
-
-  _onGetStartedButtonPress = () => {
-    this.injectedProps.navigation.navigate('nuxSoftwareSetup');
+  const onGetStartedButtonPress = () => {
+    // Navigate to nuxLocation screen with locations count
+    // Note: The original NuxSoftwareSetupStore.onGetStartedPress logic is commented out
+    // The navigation flow will be handled by the screens themselves through their callbacks
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'nuxLocation',
+        params: {
+          locationsCount,
+        },
+      },
+    });
   };
 
-  render(): React.ReactElement {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.headingText}>
-          In order to use Brewskey you need to install the Brewskey hardware
-        </Text>
-        <Button
-          onPress={this._hardwareSetupToggleStore.toggleOn}
-          secondary
-          title="See instructions"
-        />
-        <Text style={styles.headingText}>and set up the Brewskey box by:</Text>
-        <View style={styles.stepsContainer}>
-          <TextBlock index={1} textStyle={styles.stepsText}>
-            Create a location and set up the address
-          </TextBlock>
-          <TextBlock index={2} textStyle={styles.stepsText}>
-            Connect the box to you local Wifi
-          </TextBlock>
-          <TextBlock index={3} textStyle={styles.stepsText}>
-            Set up your taps
-          </TextBlock>
-          <TextBlock index={4} textStyle={styles.stepsText}>
-            Assign a beverage to your tap
-          </TextBlock>
-        </View>
-        <Button
-          backgroundColor={COLORS.accent}
-          color="white"
-          containerStyle={styles.getStartedButtonContainer}
-          onPress={NuxSoftwareSetupStore.onGetStartedPress}
-          title="Get started"
-        />
-        <HardwareSetupModal
-          isVisible={this._hardwareSetupToggleStore.isToggled}
-          onHideModal={this._hardwareSetupToggleStore.toggleOff}
-        />
+  return (
+    <View style={styles.container}>
+      <Text style={styles.headingText}>
+        In order to use Brewskey you need to install the Brewskey hardware
+      </Text>
+      <Button
+        onPress={() => setIsHardwareSetupVisible(true)}
+        secondary
+        title="See instructions"
+      />
+      <Text style={styles.headingText}>and set up the Brewskey box by:</Text>
+      <View style={styles.stepsContainer}>
+        <TextBlock index={1} textStyle={styles.stepsText}>
+          Create a location and set up the address
+        </TextBlock>
+        <TextBlock index={2} textStyle={styles.stepsText}>
+          Connect the box to you local Wifi
+        </TextBlock>
+        <TextBlock index={3} textStyle={styles.stepsText}>
+          Set up your taps
+        </TextBlock>
+        <TextBlock index={4} textStyle={styles.stepsText}>
+          Assign a beverage to your tap
+        </TextBlock>
       </View>
-    );
-  }
-}
+      <Button
+        backgroundColor={COLORS.accent}
+        color="white"
+        containerStyle={styles.getStartedButtonContainer}
+        onPress={onGetStartedButtonPress}
+        title="Get started"
+      />
+      <HardwareSetupModal
+        isVisible={isHardwareSetupVisible}
+        onHideModal={() => setIsHardwareSetupVisible(false)}
+      />
+    </View>
+  );
+};
 
 export default NuxNoEntity;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { COLORS } from '../../theme';
+import { Icon } from '@rneui/themed';
 
 // import PourProcessStore from '../../stores/PourProcessStore';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import LoadingIndicator from '../../common/LoadingIndicator';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { PourProcessModal } from '../modals/PourProcessModal';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
 
@@ -26,17 +26,14 @@ export const PourButton: React.FC = (_) => {
   return (
     <>
       {!isLoading ? (
-        <View style={styles.container}>
-          <Ionicons
+        <TouchableItem onPress={() => setVisibility(true)} style={styles.container}>
+          <Icon
             color={COLORS.secondary}
-            Component={TouchableItem}
-            containerStyle={styles.container}
             name="beer-outline"
-            onPress={() => setVisibility(true)}
             size={32}
             type="ionicon"
           />
-        </View>
+        </TouchableItem>
       ) : (
         <LoadingIndicator color="white" style={styles.container} />
       )}

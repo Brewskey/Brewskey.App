@@ -1,121 +1,168 @@
 import type { Friend } from '@brewskey/js-api';
-import type { Row } from '../stores/DAOListStore';
-import type { Navigation, Section } from '../types';
+import type { Section } from '../types';
 
 import * as React from 'react';
-
-import { computed } from 'mobx';
-
-import DAOApi, { FRIEND_STATUSES } from '@brewskey/js-api';
+import { useMemo } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { FRIEND_STATUSES } from '@brewskey/js-api';
 
 import LoadingListFooter from '../common/LoadingListFooter';
 import List from '../common/List';
-import LoaderRow from '../common/LoaderRow';
 import ListSectionHeader from '../common/ListSectionHeader';
 import FriendPendingRequestListItem from './FriendPendingRequestListItem';
 import FriendMyRequestListItem from './FriendMyRequestListItem';
-import FriendRequestsListStore from '../stores/FriendRequestsListStore';
 import ListEmpty from '../common/ListEmpty';
+import { useUserID } from '../stores/AuthStore';
+import { useGetManyFriends, useUpdateFriend, useDeleteFriend } from '../hooks/queries/FriendQueries';
+import { useQueryClient } from '@tanstack/react-query';
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const FriendRequestsList: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const queryClient = useQueryClient();
+  const userID = useUserID();
 
-@withNavigation
-class FriendRequestsList extends InjectedComponent<InjectedProps> {
-  get _sections(): Array<Section<Row<Friend>>> {
-    return FriendRequestsListStore.isLoading
-      ? []
-      : [
-          {
-            data: FriendRequestsListStore.pendingRequestsLoaderRows,
-            renderItem: ({ item }): React.ReactElement => (
-              <LoaderRow
-                loadedRow={FriendPendingRequestListItem}
-                loader={item.loader}
-                onFriendAcceptPress={this._onFriendAcceptPress}
-                onFriendDeclinePress={this._onFriendDeclinePress}
-                onPress={this._onPendingRequestRowPress}
-              />
-            ),
-            title: 'Pending requests',
-          },
-          {
-            data: FriendRequestsListStore.myRequestsLoaderRows,
-            renderItem: ({ item }) => (
-              <LoaderRow
-                loadedRow={FriendMyRequestListItem}
-                loader={item.loader}
-                onFriendCancelMyRequestPress={
-                  this._onFriendCancelMyRequestPress
-                }
-                onPress={this._onMyRequestRowPress}
-              />
-            ),
-            title: 'My requests',
-          },
-        ];
-  }
+  // Query for pending requests (requests sent to me)
+  const pendingRequestsQuery = useGetManyFriends({
+    filters: [
+      createFilter('friendAccount').notEquals(null),
+      createFilter('owningAccount/id').equals(userID),
+      createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
+    ],
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
 
-  _onPendingRequestRowPress = (friend: Friend) =>
-    this.injectedProps.navigation.navigate('profile', {
-      id: friend.owningAccount.id,
+  // Query for my requests (requests I sent)
+  const myRequestsQuery = useGetManyFriends({
+    filters: [
+      createFilter('friendAccount').notEquals(null),
+      createFilter('friendStatus').equals(FRIEND_STATUSES.AWAITING_APPROVAL),
+      createFilter('owningAccount/id').equals(userID),
+    ],
+    orderBy: [
+      {
+        column: 'id',
+        direction: 'desc',
+      },
+    ],
+  });
+
+  const updateFriendMutation = useUpdateFriend();
+  const deleteFriendMutation = useDeleteFriend();
+
+  const isLoading = pendingRequestsQuery.isLoading || myRequestsQuery.isLoading;
+
+  const onPendingRequestRowPress = (friend: Friend) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: friend.owningAccount.id,
+        },
+      },
     });
+  };
 
-  _onMyRequestRowPress = (friend: Friend) =>
-    this.injectedProps.navigation.navigate('profile', {
-      id: friend.friendAccount.id,
+  const onMyRequestRowPress = (friend: Friend) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: friend.friendAccount.id,
+        },
+      },
     });
+  };
 
-  _onFriendAcceptPress = async (friend: Friend) => {
-    const clientID = DAOApi.FriendDAO.put(friend.id, {
+  const onFriendAcceptPress = async (friend: Friend) => {
+    await updateFriendMutation.mutateAsync({
       ...friend,
+      id: friend.id,
       friendStatus: FRIEND_STATUSES.APPROVED,
     });
-    await DAOApi.FriendDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    FriendRequestsListStore.reload();
+    pendingRequestsQuery.refetch();
+    myRequestsQuery.refetch();
   };
 
-  _onFriendDeclinePress = async ({ id }: Friend) => {
-    const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoadedNullable((dao) =>
-      dao.fetchByID(clientID),
-    );
-    FriendRequestsListStore.reload();
+  const onFriendDeclinePress = async ({ id }: Friend) => {
+    await deleteFriendMutation.mutateAsync(typeof id === 'string' ? parseInt(id, 10) : id);
+    pendingRequestsQuery.refetch();
+    myRequestsQuery.refetch();
   };
 
-  _onFriendCancelMyRequestPress = async ({ id }: Friend) => {
-    const clientID = DAOApi.FriendDAO.deleteByID(id);
-    await DAOApi.FriendDAO.waitForLoadedNullable((dao) =>
-      dao.fetchByID(clientID),
-    );
-    FriendRequestsListStore.reload();
+  const onFriendCancelMyRequestPress = async ({ id }: Friend) => {
+    await deleteFriendMutation.mutateAsync(typeof id === 'string' ? parseInt(id, 10) : id);
+    pendingRequestsQuery.refetch();
+    myRequestsQuery.refetch();
   };
 
-  _keyExtractor = ({ key }: Row<Friend>): string => key.toString();
+  const onRefresh = () => {
+    pendingRequestsQuery.refetch();
+    myRequestsQuery.refetch();
+  };
 
-  _renderSectionHeader = ({ section }): React.ReactElement => (
+  const sections = useMemo((): Section<Friend>[] => {
+    if (isLoading) {
+      return [];
+    }
+
+    const pendingRequests = pendingRequestsQuery.data || [];
+    const myRequests = myRequestsQuery.data || [];
+
+    return [
+      {
+        data: pendingRequests,
+        renderItem: ({ item: friend }): React.ReactElement => (
+          <FriendPendingRequestListItem
+            item={friend}
+            onFriendAcceptPress={onFriendAcceptPress}
+            onFriendDeclinePress={onFriendDeclinePress}
+            onPress={onPendingRequestRowPress}
+          />
+        ),
+        title: 'Pending requests',
+      },
+      {
+        data: myRequests,
+        renderItem: ({ item: friend }): React.ReactElement => (
+          <FriendMyRequestListItem
+            item={friend}
+            onFriendCancelMyRequestPress={onFriendCancelMyRequestPress}
+            onPress={onMyRequestRowPress}
+          />
+        ),
+        title: 'My requests',
+      },
+    ];
+  }, [pendingRequestsQuery.data, myRequestsQuery.data, isLoading]);
+
+  const keyExtractor = (friend: Friend): string => friend.id.toString();
+
+  const renderSectionHeader = ({ section }: { section: Section<Friend> }): React.ReactElement => (
     <ListSectionHeader title={section.title} />
   );
 
-  _renderSectionFooter = ({ section: { data } }): React.ReactElement =>
+  const renderSectionFooter = ({ section: { data } }: { section: Section<Friend> }): React.ReactElement | null =>
     !data.length ? <ListEmpty message="No requests" /> : null;
 
-  render(): React.ReactElement {
-    return (
-      <List
-        keyExtractor={this._keyExtractor}
-        ListFooterComponent={
-          <LoadingListFooter isLoading={FriendRequestsListStore.isLoading} />
-        }
-        listType="sectionList"
-        onRefresh={FriendRequestsListStore.reload}
-        renderSectionHeader={this._renderSectionHeader}
-        renderSectionFooter={this._renderSectionFooter}
-        sections={this._sections}
-      />
-    );
-  }
-}
+  return (
+    <List
+      keyExtractor={keyExtractor}
+      ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+      listType="sectionList"
+      onRefresh={onRefresh}
+      renderSectionHeader={renderSectionHeader}
+      renderSectionFooter={renderSectionFooter}
+      sections={sections}
+    />
+  );
+};
 
 export default FriendRequestsList;

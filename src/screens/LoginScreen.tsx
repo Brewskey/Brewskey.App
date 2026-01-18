@@ -4,8 +4,7 @@ import Button from '../common/buttons/Button';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { LoginForm } from '../components/LoginForm';
 import { COLORS } from '../theme';
-import AuthStore from '../stores/AuthStore';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,9 +24,9 @@ const styles = StyleSheet.create({
 });
 
 export const LoginScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const onRegisterPress = () => {
-    // navigation.navigate('register');
+    navigation.navigate('register');
   };
 
   const onForgotPasswordPress = () => navigation.navigate('resetPassword');

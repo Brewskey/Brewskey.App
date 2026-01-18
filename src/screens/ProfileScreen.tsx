@@ -1,28 +1,29 @@
-import type { Account, EntityID, Friend } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
+import { StaticScreenProps } from '@react-navigation/native';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { FRIEND_STATUSES } from '@brewskey/js-api';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import UserAvatar from '../common/avatars/UserAvatar';
 import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
-import UserBadges from '../components/UserBadges/UserBadges';
+import { UserBadges } from '../components/UserBadges/UserBadges';
 import Container from '../common/Container';
 
-import { AccountStore, FriendStore } from '../stores/DAOStores';
-import AuthStore from '../stores/AuthStore';
-import LoaderComponent from '../common/LoaderComponent';
+import { useUserID } from '../stores/AuthStore';
 import LoadingIndicator from '../common/LoadingIndicator';
 import SectionContent from '../common/SectionContent';
 import Header from '../common/Header';
 import ProfileFriendStatus from '../components/ProfileFriendStatus';
-import AllBeveragesHScroll from '../components/Stats/AllBeveragesHScroll';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { AllBeveragesHScroll } from '../components/Stats/AllBeveragesHScroll';
 import FriendsHorizontalList from '../components/FriendsHorizontalList';
-import DAOApi, { FRIEND_STATUSES, LoadObject } from '@brewskey/js-api';
 import AvatarPicker from '../components/AvatarPicker';
+import { useGetAccountById } from '../hooks/queries/AccountQueries';
+import { useGetFriendSingle } from '../hooks/queries/FriendQueries';
 
 const styles = StyleSheet.create({
   friendsListSection: {
@@ -30,55 +31,37 @@ const styles = StyleSheet.create({
   },
 });
 
-/* eslint-disable sorting/sort-object-props */
-type InjectedProps = {
+type Props = StaticScreenProps<{
   id: EntityID;
-  navigation: Navigation;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class ProfileScreen extends InjectedComponent<InjectedProps> {
-  render(): React.ReactElement {
-    const { id } = this.injectedProps;
+const ProfileScreen: React.FC<Props> = ({
+  route: {
+    params: { id },
+  },
+}: Props) => {
+  const userID = useUserID();
+
+  const { data: account, isLoading: accountLoading } = useGetAccountById(id);
+  const { data: friend, isLoading: friendLoading } = useGetFriendSingle({
+    filters: [
+      createFilter('owningAccount/id').equals(userID),
+      createFilter('friendAccount/id').equals(id),
+    ],
+    take: 1,
+  });
+
+  const isLoading = accountLoading || friendLoading;
+
+  if (isLoading) {
     return (
-      <LoaderComponent
-        loadedComponent={LoadedComponent}
-        loader={LoadObject.merge(
-          [
-            AccountStore.getByID(id),
-            FriendStore.getSingle({
-              filters: [
-                DAOApi.createFilter('owningAccount/id').equals(
-                  AuthStore.userID,
-                ),
-                DAOApi.createFilter('friendAccount/id').equals(id),
-              ],
-              limit: 1,
-            }),
-          ],
-          true,
-        )}
-        loadingComponent={LoadingComponent}
-      />
+      <Container>
+        <Header showBackButton />
+        <LoadingIndicator />
+      </Container>
     );
   }
-}
 
-const LoadingComponent = () => (
-  <Container>
-    <Header showBackButton />
-    <LoadingIndicator />
-  </Container>
-);
-
-type LoadedComponentProps = {
-  value: [Account, Friend];
-};
-
-const LoadedComponent = ({
-  value: [account, friend],
-}: LoadedComponentProps) => {
   if (account == null) {
     return null;
   }
@@ -87,7 +70,7 @@ const LoadedComponent = ({
     <Container>
       <Header
         rightComponent={
-          <ProfileFriendStatus account={account} friend={friend} />
+          <ProfileFriendStatus account={account} friend={friend ?? null} />
         }
         showBackButton
         title={account.userName}
@@ -95,14 +78,14 @@ const LoadedComponent = ({
       <ScrollView>
         <Section bottomPadded>
           <SectionContent centered paddedVertical>
-            {AuthStore.userID === account.id ? (
+            {userID === account.id ? (
               <AvatarPicker />
             ) : (
               <UserAvatar userName={account.userName} size={200} />
             )}
           </SectionContent>
         </Section>
-        {AuthStore.userID !== account.id &&
+        {userID !== account.id &&
         (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
           <Section>
             <SectionHeader
@@ -119,8 +102,8 @@ const LoadedComponent = ({
               <FriendsHorizontalList
                 queryOptions={{
                   filters: [
-                    DAOApi.createFilter('owningAccount/id').equals(account.id),
-                    DAOApi.createFilter('friendStatus').equals(
+                    createFilter('owningAccount/id').equals(account.id),
+                    createFilter('friendStatus').equals(
                       FRIEND_STATUSES.APPROVED,
                     ),
                   ],
@@ -142,4 +125,4 @@ const LoadedComponent = ({
   );
 };
 
-export default ProfileScreen;
+export default withErrorBoundary(ProfileScreen, <ErrorScreen showBackButton />);

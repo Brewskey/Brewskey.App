@@ -1,31 +1,39 @@
-import type {Navigation} from '../types';
-
 import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import NuxNoEntity from '../components/NuxNoEntity';
-import {SectionTapsList} from '../components/SectionTapsList';
+import { SectionTapsList } from '../components/SectionTapsList';
 
-type Props = {
-  navigation: Navigation
+export const TapsScreen: React.FC = () => {
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="add"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+            params: {
+              screen: 'taps',
+              params: {
+                screen: 'newTap',
+                params: {},
+              },
+            },
+            }}
+          />
+        }
+        showBackButton
+        title="Taps"
+      />
+      <SectionTapsList ListEmptyComponent={NuxNoEntity} />
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-export const TapsScreen: React.FC<Props> = () => {
-    return (
-      <Container>
-        <Header
-          rightComponent={
-            <HeaderNavigationButton name="add" toRoute="newTap" />
-          }
-          showBackButton
-          title="Taps"
-        />
-        <SectionTapsList ListEmptyComponent={NuxNoEntity} />
-      </Container>
-    );
-}
+export default withErrorBoundary(TapsScreen, <ErrorScreen showBackButton />);
 

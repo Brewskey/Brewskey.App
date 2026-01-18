@@ -1,23 +1,20 @@
-import type { EntityID, Location, LoadObject } from '@brewskey/js-api';
+import type { EntityID, Location } from '@brewskey/js-api';
 
 import * as React from 'react';
-
-import { computed } from 'mobx';
-
-import { LocationStore } from '../stores/DAOStores';
+import { StaticScreenProps } from '@react-navigation/native';
 import { ScrollView, StyleSheet, Text } from 'react-native';
+
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
-import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import SectionContent from '../common/SectionContent';
 import SectionHeader from '../common/SectionHeader';
 import LoadingIndicator from '../common/LoadingIndicator';
-import LoaderComponent from '../common/LoaderComponent';
 import Header from '../common/Header';
 import LocationAddress from '../components/LocationAddress';
 import { TYPOGRAPHY } from '../theme';
+import { useGetLocationById } from '../hooks/queries/LocationQueries';
 
 const styles = StyleSheet.create({
   description: {
@@ -25,44 +22,37 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
+type Props = StaticScreenProps<{
   id: EntityID;
-  navigation: Navigation;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class LocationDetailsScreen extends InjectedComponent<InjectedProps> {
-  get _locationLoader(): LoadObject<Location> {
-    return LocationStore.getByID(this.injectedProps.id);
-  }
+const LocationDetailsScreen: React.FC<Props> = ({
+  route: {
+    params: { id },
+  },
+}: Props) => {
 
-  render(): React.ReactElement {
+  const { data: location, isLoading, error } = useGetLocationById(id);
+
+  if (isLoading) {
     return (
-      <LoaderComponent
-        loadedComponent={LoadedLocationDetails}
-        loader={this._locationLoader}
-        loadingComponent={LoadingLocationDetails}
-      />
+      <Container>
+        <Header showBackButton />
+        <LoadingIndicator />
+      </Container>
     );
   }
-}
 
-const LoadingLocationDetails = () => (
-  <Container>
-    <Header showBackButton />
-    <LoadingIndicator />
-  </Container>
-);
+  if (error || !location) {
+    return (
+      <Container>
+        <Header showBackButton />
+        <LoadingIndicator />
+      </Container>
+    );
+  }
 
-type LoadedLocationDetailsProps = {
-  value: Location;
-};
-
-const LoadedLocationDetails = ({
-  value: location,
-}: LoadedLocationDetailsProps): React.ReactElement => {
-  const { description, id, name } = location;
+  const { description, id: locationId, name } = location;
 
   return (
     <Container>
@@ -70,8 +60,17 @@ const LoadedLocationDetails = ({
         rightComponent={
           <HeaderNavigationButton
             name="edit"
-            params={{ id }}
-            toRoute="editLocation"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+              params: {
+                screen: 'locations',
+                params: {
+                  screen: 'editLocation',
+                  params: { id: locationId },
+                },
+              },
+            }}
           />
         }
         showBackButton
@@ -95,4 +94,4 @@ const LoadedLocationDetails = ({
   );
 };
 
-export default LocationDetailsScreen;
+export default withErrorBoundary(LocationDetailsScreen, <ErrorScreen showBackButton />);

@@ -72,102 +72,93 @@ const SlideoutView = () => (
   </View>
 );
 
-class NotificationListItem extends React.PureComponent<Props, State> {
-  _readAnimation!: Animated.CompositeAnimation;
+const NotificationListItem: React.FC<Props> = ({
+  contentComponent: ContentComponent,
+  isSwipeable = true,
+  leftComponent: LeftComponent,
+  notification,
+  onOpen,
+  onPress,
+  onReadEnd,
+}) => {
+  const readAnimationValue = React.useRef(new Animated.Value(0)).current;
+  const readAnimationRef = React.useRef<Animated.CompositeAnimation | null>(null);
 
-  static defaultProps: {
-    isSwipeable: boolean;
-  } = {
-    isSwipeable: true,
-  };
-
-  state: State = {
-    readAnimationValue: new Animated.Value(0),
-  };
-
-  componentDidMount() {
-    const { readAnimationValue } = this.state;
-    const {
-      notification: { isRead },
-    } = this.props;
-
-    this._readAnimation = Animated.timing(readAnimationValue, {
+  React.useEffect(() => {
+    const animation = Animated.timing(readAnimationValue, {
       duration: READ_TIMEOUT,
       toValue: 1,
       useNativeDriver: false,
     });
+    readAnimationRef.current = animation;
 
-    if (!isRead) {
-      this._readAnimation.start(this._onReadEnd);
+    if (!notification.isRead) {
+      animation.start(() => {
+        onReadEnd(notification);
+      });
     }
-  }
 
-  _onReadEnd = () => {
-    const { notification, onReadEnd } = this.props;
+    return () => {
+      animation.stop();
+    };
+  }, [notification.isRead, notification, onReadEnd, readAnimationValue]);
+
+  const handleReadEnd = React.useCallback(() => {
     onReadEnd(notification);
-  };
+  }, [notification, onReadEnd]);
 
-  _onPress = () => {
-    const { notification, onPress } = this.props;
-    this._onReadEnd();
-    this._readAnimation.stop();
+  const handlePress = React.useCallback(() => {
+    handleReadEnd();
+    readAnimationRef.current?.stop();
     onPress(notification);
-  };
+  }, [notification, onPress, handleReadEnd]);
 
-  _onOpen = () => this.props.onOpen(this.props.notification);
+  const handleOpen = React.useCallback(() => {
+    onOpen(notification);
+  }, [notification, onOpen]);
 
-  render(): React.ReactElement {
-    const { readAnimationValue } = this.state;
-    const {
-      contentComponent: ContentComponent,
-      isSwipeable,
-      leftComponent: LeftComponent,
-      notification: { body, date, isRead, title },
-    } = this.props;
+  const backgroundColor = notification.isRead
+    ? COLORS.secondary
+    : readAnimationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [COLORS.primary4, COLORS.secondary],
+      });
 
-    const backgroundColor = isRead
-      ? COLORS.secondary
-      : readAnimationValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: [COLORS.primary4, COLORS.secondary],
-        });
+  const contentElement =
+    ContentComponent == null ? null : (
+      <View>
+        <Text>{notification.body}</Text>
+      </View>
+    );
 
-    const contentElement =
-      ContentComponent == null ? null : (
-        <View>
-          <Text>{body}</Text>
+  const content = (
+    <TouchableItem onPress={handlePress}>
+      <Animated.View style={[styles.container, { backgroundColor }]}>
+        {LeftComponent}
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleText}>{notification.title}</Text>
+          <Text style={styles.dateText}>{moment(notification.date).fromNow()}</Text>
+          <View style={styles.contentContainer}>{contentElement}</View>
         </View>
-      );
+      </Animated.View>
+    </TouchableItem>
+  );
 
-    const content = (
-      <TouchableItem onPress={this._onPress}>
-        <Animated.View style={[styles.container, { backgroundColor }]}>
-          {LeftComponent}
-          <View style={styles.mainContainer}>
-            <Text style={styles.titleText}>{title}</Text>
-            <Text style={styles.dateText}>{moment(date).fromNow()}</Text>
-            <View style={styles.contentContainer}>{contentElement}</View>
-          </View>
-        </Animated.View>
-      </TouchableItem>
-    );
-
-    if (!isSwipeable) {
-      return content;
-    }
-
-    return (
-      <ListItem.Swipeable
-        //maxSwipeDistance={250}
-        onSwipeBegin={this._onOpen}
-        //preventSwipeRight
-        rightContent={<SlideoutView />}
-        //swipeThreshold={250}
-      >
-        {content}
-      </ListItem.Swipeable>
-    );
+  if (!isSwipeable) {
+    return content;
   }
-}
 
-export default NotificationListItem;
+  return (
+    <ListItem.Swipeable
+      //maxSwipeDistance={250}
+      onSwipeBegin={handleOpen}
+      //preventSwipeRight
+      rightContent={<SlideoutView />}
+      //swipeThreshold={250}
+    >
+      {content}
+    </ListItem.Swipeable>
+  );
+};
+
+export default React.memo(NotificationListItem);

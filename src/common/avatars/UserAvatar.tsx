@@ -4,28 +4,26 @@ import * as React from 'react';
 import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
-type Props = (BaseAvatarProps) & {
-  userName: string
+type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
+  rounded?: boolean;
+  size?: number;
+  userName: string;
 };
 
-class UserAvatar extends React.PureComponent<Props> {
-  static defaultProps: {
-    rounded: boolean,
-    size: number
-  } = {
-    rounded: true,
-    size: 45,
-  };
+const UserAvatar: React.FC<Props> = ({
+  userName,
+  rounded = true,
+  size = 45,
+  ...otherProps
+}) => {
+  return (
+    <BaseAvatar
+      {...otherProps}
+      rounded={rounded}
+      size={size}
+      uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${size}&h=${size}&mode=crop`}
+    />
+  );
+};
 
-  render(): React.ReactElement {
-    const { userName, ...otherProps } = this.props;
-    return (
-      <BaseAvatar
-        {...otherProps}
-        uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${this.props.size}&h=${this.props.size}&mode=crop`}
-      />
-    );
-  }
-}
-
-export default UserAvatar;
+export default React.memo(UserAvatar);

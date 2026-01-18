@@ -1,59 +1,32 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
-import { FormLabel } from './FormLabel';
-import { COLORS, TYPOGRAPHY } from '../../theme';
 import { TextInput, TextInputProps } from './TextInput';
-import { FormValidationMessage } from './FormValidationMessage';
+import { FormField } from './FormField';
 
-export type Props = TextInputProps & {
+export type Props = Omit<TextInputProps, 'label'> & {
+  label: string;
   description?: string;
-  inputStyle?: StyleProp<TextStyle>;
-  label?: string;
-  labelStyle?: StyleProp<TextStyle>;
-  underlineColorAndroid?: string;
-  defaultValue?: string;
-  required?: boolean;
-  // other react-native textInput props
+  containerStyle?: React.ComponentProps<typeof FormField>['containerStyle'];
+  labelStyle?: React.ComponentProps<typeof FormField>['labelStyle'];
+  descriptionStyle?: React.ComponentProps<typeof FormField>['descriptionStyle'];
 };
 
-const styles = StyleSheet.create({
-  description: {
-    ...TYPOGRAPHY.small,
-    color: COLORS.textFaded,
-    marginHorizontal: 20,
-  },
-});
-
 export const TextField: React.FC<Props> = ({
-  description,
-  inputStyle,
   label,
+  description,
+  containerStyle,
   labelStyle,
-  underlineColorAndroid,
-  required = false,
-  ...props
+  descriptionStyle,
+  ...textInputProps
 }) => {
   return (
-    <View
-      style={{
-        marginHorizontal: 16,
-      }}
-    >
-      <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-      <TextInput
-        inputStyle={[
-          inputStyle,
-          {
-            borderColor: underlineColorAndroid,
-          },
-        ]}
-        required={required}
-        {...props}
-      />
-      {description == null ? null : (
-        <Text style={styles.description}>{description}</Text>
-      )}
-      <FormValidationMessage fieldName={props.name} />
-    </View>
+    <FormField
+      component={TextInput}
+      label={label}
+      description={description}
+      containerStyle={containerStyle}
+      labelStyle={labelStyle}
+      descriptionStyle={descriptionStyle}
+      {...textInputProps}
+    />
   );
 };

@@ -1,62 +1,81 @@
 import type { EntityID, Tap, TapMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import DAOApi from '@brewskey/js-api';
+import { useNavigation, StaticScreenProps, NavigationProp } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
+
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import TapForm from '../components/TapForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { TapForm } from '../components/TapForm';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useCreateTap } from '../hooks/queries/TapQueries';
 
-type InjectedProps = {
+type Props = StaticScreenProps<{
   initialValues?: Partial<Tap>;
-  navigation: Navigation;
-  onTapSetupFinish?: (tapID: EntityID) => undefined | Promise<any>;
+  onTapSetupFinish?: (tapID: EntityID) => undefined | Promise<void>;
+  organizationId?: EntityID;
   showBackButton?: boolean;
+}>;
+
+const NewTapScreen: React.FC<Props> = ({
+  route: {
+    params: {
+      initialValues,
+      onTapSetupFinish,
+      organizationId,
+      showBackButton = true,
+    },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+
+  const mergedProps = {
+    initialValues,
+    onTapSetupFinish,
+    organizationId,
+    showBackButton: showBackButton ?? true,
+  };
+
+  const queryClient = useQueryClient();
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const createTap = useCreateTap();
+
+  const onFormSubmit = async (values: TapMutator): Promise<void> => {
+    const tap = await createTap.mutateAsync(values);
+    queryClient.invalidateQueries({ queryKey: ['taps'] });
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'newFlowSensor',
+        params: {
+          onTapSetupFinish: mergedProps.onTapSetupFinish,
+          showBackButton: mergedProps.showBackButton,
+          tapId: tap.id,
+          returnOnFinish: false,
+        },
+      },
+    });
+    addSnackBarMessage({ content: 'New tap created' });
+  };
+
+  return (
+    <Container>
+      <Header showBackButton={mergedProps.showBackButton} title="New tap" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        {mergedProps.organizationId && (
+          <TapForm
+            onSubmit={onFormSubmit}
+            submitButtonLabel="Create tap"
+            tap={mergedProps.initialValues as Tap | undefined}
+            organizationId={mergedProps.organizationId}
+          />
+        )}
+      </KeyboardAwareScrollView>
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewTapScreen extends InjectedComponent<InjectedProps> {
-  static defaultProps = {
-    showBackButton: true,
-  };
-
-  _onFormSubmit = async (values: TapMutator): Promise<void> => {
-    const { navigation, onTapSetupFinish, showBackButton } = this.injectedProps;
-    const clientID = DAOApi.TapDAO.post(values);
-    const { id } = await DAOApi.TapDAO.waitForLoaded((dao) =>
-      dao.fetchByID(clientID),
-    );
-
-    navigation.navigate('newFlowSensor', {
-      onTapSetupFinish,
-      showBackButton,
-      tapId: id,
-    });
-    SnackBarStore.showMessage({ text: 'New tap created' });
-  };
-
-  render(): React.ReactElement {
-    const { initialValues, showBackButton } = this.injectedProps;
-
-    return (
-      <Container>
-        <Header showBackButton={showBackButton} title="New tap" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <TapForm
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Create tap"
-            tap={initialValues}
-          />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
-
-export default NewTapScreen;
+export default withErrorBoundary(NewTapScreen, <ErrorScreen showBackButton />);

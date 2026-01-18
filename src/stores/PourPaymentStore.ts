@@ -19,7 +19,7 @@ class PourPaymentStore {
     };
   }
 
-  get tapsWithPaymentEnabled(): Promise<Array<Tap>> {
+  get tapsWithPaymentEnabled(): Promise<Tap[]> {
     return TapDAO.fetchMany(this._queryOptions);
   }
 

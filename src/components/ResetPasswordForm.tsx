@@ -6,6 +6,7 @@ import Button from '../common/buttons/Button';
 import { validateEmail } from '../utils';
 import { TextInput } from '../common/form/TextInput';
 import { Form, useForm } from 'react-hook-form';
+import { SubmitButton } from '../common/form/SubmitButton';
 
 export type ResetPasswordFormValues = {
   email: string;
@@ -24,12 +25,9 @@ const validate = (email: string) => {
 export const ForgotPasswordForm: React.FC<{
   onSubmit: (values: ResetPasswordFormValues) => void;
 }> = ({ onSubmit }) => {
-  const form = useForm<ResetPasswordFormValues>();
-  const { isSubmitting, isValid, isDirty } = form.formState;
-
   return (
     <View>
-      <Form {...form}>
+      <Form>
         <TextInput
           name="email"
           label="Email"
@@ -39,14 +37,11 @@ export const ForgotPasswordForm: React.FC<{
           validate={validate}
         />
         <SectionContent paddedVertical>
-          <Button
-            disabled={isSubmitting || !isValid || !isDirty}
-            loading={isSubmitting}
-            onPress={form.handleSubmit(onSubmit)}
-            title="Request password reset"
-          />
+          <SubmitButton onSubmit={onSubmit} title="Request password reset" />
         </SectionContent>
       </Form>
     </View>
   );
 };
+
+export const ResetPasswordForm = ForgotPasswordForm;

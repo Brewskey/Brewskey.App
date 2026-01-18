@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { StaticScreenProps } from '@react-navigation/native';
 
 import Button from '../common/buttons/Button';
 import Header from '../common/Header';
 import Container from '../common/Container';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -28,31 +28,32 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  onContinuePress: () => undefined | Promise<undefined>;
+type Props = StaticScreenProps<{
+  onContinuePress?: () => undefined | Promise<undefined>;
+}>;
+
+const NuxDeviceScreen: React.FC<Props> = ({
+  route: {
+    params: { onContinuePress },
+  },
+}: Props) => {
+
+  return (
+    <Container>
+      <Header title="3. Name your device" />
+      <View style={styles.container}>
+        <Text style={styles.descriptionText}>
+          Great! Your Brewskey box is now connected to WiFi and have white
+          lights. Next, finish setting up your box.
+        </Text>
+        <Button
+          onPress={onContinuePress}
+          secondary
+          title="Next"
+        />
+      </View>
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NuxDeviceScreen extends InjectedComponent<InjectedProps> {
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header title="3. Name your device" />
-        <View style={styles.container}>
-          <Text style={styles.descriptionText}>
-            Great! Your Brewskey box is now connected to WiFi and have white
-            lights. Next, finish setting up your box.
-          </Text>
-          <Button
-            onPress={this.injectedProps.onContinuePress}
-            secondary
-            title="Next"
-          />
-        </View>
-      </Container>
-    );
-  }
-}
-
-export default NuxDeviceScreen;
+export default withErrorBoundary(NuxDeviceScreen, <ErrorScreen showBackButton />);

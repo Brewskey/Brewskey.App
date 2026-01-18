@@ -4,23 +4,26 @@ import type {
   LocationMutator,
   Organization,
 } from '@brewskey/js-api';
-import type { FormProps } from '../../common/form/types';
 
 import * as React from 'react';
-import { withNavigationFocus } from 'react-navigation';
-import { Fill } from 'react-slot-fill';
-import InjectedComponent from '../../common/InjectedComponent';
-import { computed } from 'mobx';
+import { useMemo } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { useForm, useWatch } from 'react-hook-form';
+import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
 
 import { StyleSheet, View } from 'react-native';
-import FormValidationMessage from '../../common/form/FormValidationMessage';
+import { FormValidationMessage } from '../../common/form/FormValidationMessage';
 import STATE_LIST from './stateList';
-import { form, FormField } from '../../common/form';
-import TextField from '../../common/form/TextField';
+import { Form } from '../../common/form/Form';
+import { FormField } from '../../common/form/FormField';
+import { TextInput } from '../../common/form/TextInput';
 import Button from '../../common/buttons/Button';
-import SimplePicker from '../pickers/SimplePicker';
-import { OrganizationStore } from '../../stores/DAOStores';
+import { SimplePicker } from '../pickers/SimplePicker';
 import OrganizationPicker from '../pickers/OrganizationPicker';
+import {
+  useGetOrganizations,
+  useGetSquareLocations,
+} from '../../hooks/queries/OrganizationQueries';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -39,11 +42,12 @@ const validate = (
 ): {
   [key: string]: string;
 } => {
-  const errors: Record<string, any> = {};
+  const errors: Partial<Record<keyof LocationMutator, string>> = {};
 
   REQUIRED_FIELDS.forEach((fieldName: string) => {
-    if (!values[fieldName]) {
-      errors[fieldName] = isRequiredMessage(fieldName);
+    const value = values[fieldName as keyof LocationMutator];
+    if (!value) {
+      errors[fieldName as keyof LocationMutator] = isRequiredMessage(fieldName);
     }
   });
 
@@ -59,89 +63,124 @@ const styles = StyleSheet.create({
 type Props = {
   isFocused?: boolean;
   location?: Location;
-  onSubmit: (values: LocationMutator) => undefined | Promise<any>;
+  onSubmit: (values: LocationMutator) => undefined | Promise<unknown>;
   submitButtonLabel: string;
 };
 
-type InjectedProps = FormProps;
+const LocationForm: React.FC<Props> = ({
+  isFocused: isFocusedProp,
+  location = {
+    squareLocationID: '',
+  },
+  submitButtonLabel,
+  onSubmit,
+}) => {
+  const isFocusedNavigation = useIsFocused();
+  const isFocused = isFocusedProp ?? isFocusedNavigation;
 
-@form({ validate })
-class LocationForm extends InjectedComponent<InjectedProps, Props> {
-  get _organizationCount(): number {
-    return OrganizationStore.count().getValue() || 0;
-  }
+  const form = useForm<LocationMutator>({
+    defaultValues: {
+      id: location.id,
+      organizationId: location.organization?.id,
+      name: location.name,
+      description: location.description,
+      locationType: location.locationType,
+      street: location.street,
+      suite: location.suite,
+      city: location.city,
+      state: location.state,
+      zipCode: location.zipCode,
+      squareLocationID: location.squareLocationID,
+    },
+  });
 
-  get _organization(): Organization | null | undefined {
-    const {
-      values: { organizationId },
-    } = this.injectedProps;
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting, isValid },
+  } = form;
+
+  const values = useWatch({ control: form.control });
+  const organizationId = values.organizationId;
+
+  // Get organizations list
+  const { data: organizationsData } = useGetOrganizations();
+  const organizations = useMemo(() => {
+    if (!organizationsData?.pages) return [];
+    return organizationsData.pages.flatMap((page) => page);
+  }, [organizationsData]);
+
+  const organizationCount = organizations.length;
+
+  const organization = useMemo((): Organization | null | undefined => {
     if (organizationId) {
-      return OrganizationStore.getByID(
-        organizationId.id || organizationId,
-      ).getValue();
+      const orgId = typeof organizationId === 'object' && 'id' in organizationId
+        ? (organizationId as Organization).id
+        : (organizationId as EntityID);
+      return organizations.find((org) => org.id === orgId);
     }
 
-    return OrganizationStore.getMany()
-      .map((result) => (result[0] != null ? result[0].getValue() : null))
-      .getValue();
+    return organizations[0] || null;
+  }, [organizationId, organizations]);
+
+  // Get square locations if organization supports payments
+  const { data: squareLocations } = useGetSquareLocations(organization?.id);
+
+  let organizationField = null;
+  if (organizationCount === 1 && organization != null) {
+    organizationField = (
+      <FormField
+        component={TextInput}
+        label="Organization"
+        name="organizationId"
+        initialValue={organization.id}
+      />
+    );
+  } else if (organizationCount > 1) {
+    organizationField = (
+      <FormField
+        component={OrganizationPicker}
+        label="Organization"
+        initialValue={location.organization}
+        name="organizationId"
+        _parseOnSubmit={(value: unknown): EntityID => {
+          const org = value as Organization;
+          return org.id;
+        }}
+      />
+    );
   }
 
-  get _squareLocationLoader(): LoadObject<
-    Array<{
-      locationID: string;
-      name: string;
-    }>
-  > {
-    if (this._organization == null || !this._organization.canEnablePayments) {
-      return LoadObject.empty();
-    }
+  const onSubmitForm = async (formValues: LocationMutator) => {
+    await onSubmit(formValues);
+  };
 
-    return OrganizationStore.fetchSquareLocations(this._organization.id);
-  }
-
-  render(): React.ReactElement {
-    const { isFocused, location = {}, submitButtonLabel } = this.props;
-    const { formError, handleSubmit, invalid, pristine, submitting } =
-      this.injectedProps;
-
-    let organizationField = null;
-    if (this._organizationCount === 1 && this._organization != null) {
-      organizationField = (
-        <FormField name="organizationId" initialValue={this._organization.id} />
-      );
-    } else if (this._organizationCount > 1) {
-      organizationField = (
-        <FormField
-          component={OrganizationPicker}
-          initialValue={location.organization}
-          name="organizationId"
-          parseOnSubmit={(value: Organization): EntityID => value.id}
-        />
-      );
-    }
-
-    return (
+  return (
+    <Form form={form}>
       <View style={styles.container}>
-        <FormField name="id" initialValue={location.id} />
+        <FormField
+          component={TextInput}
+          label="ID"
+          name="id"
+          initialValue={location.id}
+        />
         {organizationField}
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.name}
           label="Name"
           name="name"
           nextFocusTo="description"
         />
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.description}
           label="Description"
           name="description"
         />
         <FormField
           component={SimplePicker}
-          disabled={submitting}
           doesRequireConfirmation={false}
           headerTitle="Select Location Type"
           initialValue={location.locationType}
@@ -153,31 +192,31 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           ]}
         />
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.street}
           label="Street"
           name="street"
           nextFocusTo="suite"
         />
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.suite}
           label="Apt./Suite"
           name="suite"
           nextFocusTo="city"
         />
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.city}
           label="City"
           name="city"
         />
         <FormField
           component={SimplePicker}
-          disabled={submitting}
+          disabled={isSubmitting}
           doesRequireConfirmation={false}
           headerTitle="Select State"
           initialValue={location.state}
@@ -186,47 +225,44 @@ class LocationForm extends InjectedComponent<InjectedProps, Props> {
           pickerValues={STATE_LIST}
         />
         <FormField
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           initialValue={location.zipCode}
           keyboardType="numeric"
           label="Zip"
           name="zipCode"
         />
-        {this._organization == null ||
-        !this._organization.canEnablePayments ||
-        !this._squareLocationLoader.hasValue() ? null : (
+        {organization == null ||
+        !organization.canEnablePayments ||
+        !squareLocations ||
+        squareLocations.length === 0 ? null : (
           <FormField
             component={SimplePicker}
-            disabled={submitting}
+            disabled={isSubmitting}
             doesRequireConfirmation={false}
             headerTitle="Select Square Location"
             initialValue={location.squareLocationID}
             label="Square Location"
             name="squareLocationID"
-            pickerValues={this._squareLocationLoader
-              .getValueEnforcing()
-              .map((item) => ({
-                label: item.name,
-                value: item.locationID,
-              }))}
+            pickerValues={squareLocations.map((item) => ({
+              label: item.name,
+              value: item.locationID,
+            }))}
           />
         )}
-        {!isFocused ? null : (
-          <Fill name="MainTabBar">
-            <FormValidationMessage>{formError}</FormValidationMessage>
-            <Button
-              disabled={submitting || invalid || pristine}
-              loading={submitting}
-              onPress={handleSubmit}
-              style={{ marginVertical: 12 }}
-              title={submitButtonLabel}
-            />
-          </Fill>
-        )}
+        <MainTabBarFill>
+          <FormValidationMessage />
+          <Button
+            disabled={!isValid || !isDirty || isSubmitting || !isFocused}
+            loading={isSubmitting}
+            onPress={handleSubmit(onSubmitForm)}
+            style={{ marginVertical: 12 }}
+            title={submitButtonLabel}
+          />
+        </MainTabBarFill>
       </View>
-    );
-  }
-}
+    </Form>
+  );
+};
 
 export default LocationForm;

@@ -7,7 +7,6 @@ import BeverageModal, { BeverageModalHandle } from '../modals/BeverageModal';
 import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
 import { useGetPoursByBeverageIds } from '../../hooks/queries/PourQueries';
 import { Card } from '@rneui/themed';
-import { LoaderComponent } from '../../common/LoaderComponent';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { InfiniteData } from '@tanstack/react-query';
 import { useAuthContext } from '../../hooks/context/AuthContext';
@@ -16,26 +15,30 @@ type Props = {
   userID: EntityID;
 };
 
-type LoadedProps = {
-  value: {
-    beverages: InfiniteData<Beverage[]>;
-    beverageTotals: Map<EntityID, number>;
-  };
-};
-
-const AllBeveragesHScrollLoaded: React.FC<LoadedProps> = (props) => {
+const AllBeveragesHScrollContent: React.FC<{
+  beverages: InfiniteData<Beverage[]>;
+  beverageTotals: Map<EntityID, number> | undefined;
+}> = ({ beverages, beverageTotals }) => {
   const [currentBeverageId, setCurrentBeverageId] =
     React.useState<EntityID | null>(null);
 
   const modalRef = React.useRef<BeverageModalHandle>(null);
 
-  const { beverages, beverageTotals } = props.value;
   const allBeverages = beverages.pages.flat();
   if (allBeverages.length === 0 || beverageTotals == null) {
     return null;
   }
 
-  const sortedBeverages = allBeverages.sort(
+  // Deduplicate beverages by ID to avoid duplicate keys
+  const uniqueBeveragesMap = new Map<EntityID, Beverage>();
+  allBeverages.forEach((beverage) => {
+    if (!uniqueBeveragesMap.has(beverage.id)) {
+      uniqueBeveragesMap.set(beverage.id, beverage);
+    }
+  });
+  const uniqueBeverages = Array.from(uniqueBeveragesMap.values());
+
+  const sortedBeverages = uniqueBeverages.sort(
     (a, b) => (beverageTotals.get(b.id) ?? 0) - (beverageTotals.get(a.id) ?? 0),
   );
 
@@ -107,7 +110,13 @@ export const AllBeveragesHScroll = React.forwardRef<
     ],
   });
   const beverageTotals = useGetPoursByBeverageIds(
-    beverages.data?.pages.flat().map((beverage) => beverage.id),
+    beverages.data
+      ? Array.from(
+          new Set(
+            beverages.data.pages.flat().map((beverage) => beverage.id),
+          ),
+        )
+      : undefined,
     session?.id,
   );
 
@@ -122,12 +131,14 @@ export const AllBeveragesHScroll = React.forwardRef<
     [beverages, beverageTotals],
   );
 
-  const queries = { beverages, beverageTotals };
+  if (beverages.isLoading || beverageTotals.isLoading || !beverages.data) {
+    return null; // Or return a loading component if needed
+  }
 
   return (
-    <LoaderComponent
-      loadedComponent={AllBeveragesHScrollLoaded}
-      queries={queries}
+    <AllBeveragesHScrollContent
+      beverages={beverages.data}
+      beverageTotals={beverageTotals.data}
     />
   );
 });

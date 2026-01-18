@@ -96,7 +96,7 @@ export const WriteNFCScreen = withErrorBoundary(
               </Text>
             </Section>
             <Section bottomPadded>
-              <LoginForm />
+              <LoginForm isInverse={false} />
             </Section>
           </>
         );

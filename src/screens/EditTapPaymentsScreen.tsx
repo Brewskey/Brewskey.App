@@ -1,144 +1,54 @@
 import type {
   EntityID,
   Location,
+  LocationMutator,
   Organization,
   PriceVariant,
   PriceVariantMutator,
-  Tap,
 } from '@brewskey/js-api';
 
-import type { FormProps } from '../common/form/types';
-
 import * as React from 'react';
-import FormValidationMessage from '../common/form/FormValidationMessage';
+import { useMemo } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import { useFormContext } from 'react-hook-form';
+import { FormValidationText } from '../common/form/FormValidationMessage';
 import nullthrows from 'nullthrows';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import DAOApi from '@brewskey/js-api';
+import { LocationDAO } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
-import LoaderComponent from '../common/LoaderComponent';
 import Button from '../common/buttons/Button';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import TextField from '../common/form/TextField';
-import { form, FormField } from '../common/form';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { Fill } from 'react-slot-fill';
-import SimplePicker from '../components/pickers/SimplePicker';
+import LoadingIndicator from '../common/LoadingIndicator';
+import { FormField } from '../common/form/FormField';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
+import { SimplePicker } from '../components/pickers/SimplePicker';
+import { TextInput } from '../common/form/TextInput';
+import { useGetTapById } from '../hooks/queries/TapQueries';
+import { useGetLocationById, useUpdateLocation } from '../hooks/queries/LocationQueries';
+import { useGetOrganizationById, useGetSquareLocations } from '../hooks/queries/OrganizationQueries';
+import {
+  useGetPriceVariantSingle,
+  useCreatePriceVariant,
+  useUpdatePriceVariant,
+} from '../hooks/queries/PriceVariantQueries';
+import { Form } from '../common/form/Form';
 
-type InjectedProps = {
-  isFocused: boolean;
-  tapId: EntityID;
-  navigation: Navigation;
+// Type that works with both StaticScreenProps and MaterialTopTabScreenProps
+// We only use route.params.tapId, so this minimal type works for both navigation types
+// Making route optional to satisfy ScreenComponentType which can accept ComponentType<{}>
+type Props = {
+  route?: {
+    params: { tapId: EntityID };
+  } & Record<string, unknown>;
+  navigation?: unknown;
 };
-
-@errorBoundary(<ErrorScreen />)
-@flatNavigationParamsAndScreenProps
-class EditTapPaymentsScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    tabBarLabel: 'Prices',
-  };
-
-  get _priceVariants(): LoadObject<PriceVariant> {
-    return PriceVariantStore.getSingle({
-      filters: [DAOApi.createFilter('tap/id').equals(this.injectedProps.tapId)],
-    });
-  }
-
-  get _location(): LoadObject<Location> {
-    return TapStore.getByID(this.injectedProps.tapId).map<Location>((tap) =>
-      LocationStore.getByID(nullthrows(tap.location).id),
-    );
-  }
-
-  get _organization(): LoadObject<Organization> {
-    return TapStore.getByID(this.injectedProps.tapId).map<Organization>((tap) =>
-      OrganizationStore.getByID(nullthrows(tap.organization).id),
-    );
-  }
-
-  get _squareLocationLoader(): LoadObject<
-    Array<{
-      locationID: string;
-      name: string;
-    }>
-  > {
-    return LoadObject.merge([this._organization, this._location]).map(
-      ([organization, location]: [any, any]) => {
-        if (
-          !organization.canEnablePayments ||
-          location.squareLocationID != null
-        ) {
-          return [];
-        }
-
-        return OrganizationStore.fetchSquareLocations(organization.id);
-      },
-    );
-  }
-
-  _onFormSubmit = async (values: PriceVariantMutator): Promise<void> => {
-    const squareLocationID = null;
-
-    if (squareLocationID != null) {
-      const organization = this._organization.getValueEnforcing();
-      const {
-        createdDate: _,
-        geolocation: _1,
-        isDeleted: _2,
-        organization: _3,
-        timeZone: _4,
-        ...otherProps
-      } = this._location.getValueEnforcing();
-
-      const clientID = DAOApi.LocationDAO.put(otherProps.id, {
-        ...otherProps,
-        organizationId: nullthrows(organization).id,
-        squareLocationID,
-      });
-      await DAOApi.LocationDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    }
-
-    if (values.id != null) {
-      const clientID = DAOApi.PriceVariantDAO.put(values.id, values);
-      await DAOApi.PriceVariantDAO.waitForLoaded((dao) =>
-        dao.fetchByID(clientID),
-      );
-      SnackBarStore.showMessage({ text: 'The price was edited' });
-    } else {
-      DAOApi.PriceVariantDAO.post(values);
-      SnackBarStore.showMessage({ text: 'The price was created' });
-    }
-  };
-
-  render(): React.ReactElement {
-    return (
-      <LoaderComponent
-        emptyComponent={LoadedComponent}
-        loadedComponent={LoadedComponent}
-        loader={LoadObject.merge([
-          this._priceVariants,
-          this._organization,
-          this._location,
-          this._squareLocationLoader,
-        ])}
-        onSubmit={this._onFormSubmit}
-        tapId={this.injectedProps.tapId}
-        updatingComponent={LoadedComponent}
-      />
-    );
-  }
-}
-
-// type LoadedComponentProps = {
-//   onTapFormSubmit: (values: TapMutator) => Promise<void>,
-//   onToggleNotifications: () => void,
-//   value: Tap,
-// };
 
 const validate = (
   values: PriceVariantMutator,
@@ -147,115 +57,210 @@ const validate = (
 } => {
   const errors: Record<string, any> = {};
 
-  if (!values.ounces || !parseFloat(values.ounces)) {
+  if (!values.ounces || !parseFloat(String(values.ounces))) {
     errors.ounces = 'Ounces is required';
   }
 
-  if (!values.price || !parseFloat(values.price)) {
+  if (!values.price || !parseFloat(String(values.price))) {
     errors.price = 'Price is required';
   }
 
   return errors;
 };
 
-type Props = {
-  isFocused: boolean;
-  tapId: EntityID;
-  value: PriceVariant;
-};
+const EditTapPaymentsScreenContent: React.FC<Props> = (props: Props) => {
+  const tapId = props.route?.params?.tapId;
+  if (!tapId) {
+    return null;
+  }
+  const isFocused = useIsFocused();
+  const {
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid, isDirty },
+  } = useFormContext<PriceVariantMutator>();
 
-@form({ validate })
-@withNavigationFocus
-class LoadedComponent extends InjectedComponent<FormProps, Props> {
-  render(): React.ReactElement | null {
-    const { isFocused, tapId, value } = this.props;
+  const addSnackBarMessage = useAddSnackBarMessage();
 
-    const { formError, handleSubmit, invalid, pristine, submitting } =
-      this.injectedProps;
+  // Fetch tap to get location and organization IDs
+  const { data: tap, isLoading: tapLoading } = useGetTapById(tapId);
 
-    if (value == null) {
-      return null;
+  // Fetch location
+  const locationId = tap?.location?.id;
+  const { data: location, isLoading: locationLoading } = useGetLocationById(locationId);
+
+  // Fetch organization
+  const organizationId = tap?.organization?.id;
+  const { data: organization, isLoading: organizationLoading } =
+    useGetOrganizationById(organizationId);
+
+  // Fetch price variant
+  const priceVariantQueryOptions = useMemo(
+    () => ({
+      filters: [createFilter('tap/id').equals(tapId)],
+    }),
+    [tapId],
+  );
+  const { data: priceVariant, isLoading: priceVariantLoading } =
+    useGetPriceVariantSingle(priceVariantQueryOptions);
+
+  // Fetch square locations conditionally
+  const { data: squareLocations = [], isLoading: squareLocationsLoading } =
+    useGetSquareLocations(organizationId ?? undefined);
+
+  // Mutations
+  const createPriceVariantMutation = useCreatePriceVariant();
+  const updatePriceVariantMutation = useUpdatePriceVariant();
+  const updateLocationMutation = useUpdateLocation();
+
+  const isLoading =
+    tapLoading ||
+    locationLoading ||
+    organizationLoading ||
+    priceVariantLoading ||
+    squareLocationsLoading;
+
+  const onFormSubmit = async (values: PriceVariantMutator): Promise<PriceVariantMutator> => {
+    const squareLocationID = null;
+
+    if (squareLocationID != null && location) {
+      const {
+        createdDate: _,
+        geolocation: _1,
+        isDeleted: _2,
+        organization: _3,
+        timeZone: _4,
+        ...otherProps
+      } = location;
+
+      await updateLocationMutation.mutateAsync({
+        locationId: location.id,
+        mutator: {
+          ...otherProps,
+          organizationId: nullthrows(organization).id,
+          squareLocationID,
+        } as LocationMutator,
+      });
     }
 
-    const [formValue, organization, location, squareLocations] = value;
-
-    if (!organization.canEnablePayments) {
-      return (
-        <Container>
-          <Section bottomPadded>
-            <SectionHeader title="Payments are disabled for this organization" />
-          </Section>
-        </Container>
-      );
+    if (values.id != null) {
+      await updatePriceVariantMutation.mutateAsync(values);
+      addSnackBarMessage({ content: 'The price was edited' });
+    } else {
+      await createPriceVariantMutation.mutateAsync(values);
+      addSnackBarMessage({ content: 'The price was created' });
     }
+    return values;
+  };
 
+  if (isLoading || !tap || !location || !organization) {
     return (
       <Container>
-        <KeyboardAwareScrollView>
-          {location == null || location.squareLocationID != null ? null : (
-            <Section bottomPadded>
-              <SectionHeader title="Set Square Location" />
-              {squareLocations.length === 0 ? null : (
-                <FormField
-                  component={SimplePicker}
-                  disabled={submitting}
-                  doesRequireConfirmation={false}
-                  headerTitle="Select Square Location"
-                  initialValue={location.squareLocationID}
-                  label="Square Location"
-                  name="squareLocationID"
-                  pickerValues={squareLocations.map((item) => ({
-                    label: item.name,
-                    value: item.locationID,
-                  }))}
-                />
-              )}
-            </Section>
-          )}
-          <Section bottomPadded>
-            <SectionHeader title="Set Price and Ounces" />
-            {formValue == null ? null : (
-              <FormField initialValue={formValue.id} name="id" />
-            )}
-            <FormField initialValue={tapId} name="tapID" />
-
-            <FormField
-              component={AdvancedTextField}
-              initialValue={(formValue != null ? formValue.ounces : 0).toFixed(
-                1,
-              )}
-              name="ounces"
-              keyboardType="numeric"
-              label="Ounces"
-            />
-            <FormField
-              component={AdvancedTextField}
-              initialValue={(formValue != null
-                ? formValue.price / 100
-                : 0
-              ).toFixed(2)}
-              name="price"
-              keyboardType="numeric"
-              label="Price"
-              parseOnSubmit={(price) => (price * 100).toFixed(0)}
-            />
-          </Section>
-        </KeyboardAwareScrollView>
-        {!isFocused ? null : (
-          <Fill name="MainTabBar">
-            <FormValidationMessage>{formError}</FormValidationMessage>
-            <Button
-              disabled={submitting || invalid || pristine}
-              loading={submitting}
-              onPress={handleSubmit}
-              style={{ marginVertical: 12 }}
-              title={formValue == null ? 'Create Price' : 'Update Price'}
-            />
-          </Fill>
-        )}
+        <LoadingIndicator />
       </Container>
     );
   }
-}
 
-export default EditTapPaymentsScreen;
+  const formValue = priceVariant;
+
+  if (!organization.canEnablePayments) {
+    return (
+      <Container>
+        <Section bottomPadded>
+          <SectionHeader title="Payments are disabled for this organization" />
+        </Section>
+      </Container>
+    );
+  }
+
+  const formError = errors.root?.message;
+
+  return (
+    <Container>
+      <KeyboardAwareScrollView>
+        {location.squareLocationID == null && squareLocations.length > 0 && (
+          <Section bottomPadded>
+            <SectionHeader title="Set Square Location" />
+            <FormField
+              component={SimplePicker}
+              disabled={isSubmitting}
+              doesRequireConfirmation={false}
+              headerTitle="Select Square Location"
+              initialValue={location.squareLocationID}
+              label="Square Location"
+              name="squareLocationID"
+              pickerValues={squareLocations.map((item) => ({
+                label: item.name,
+                value: item.locationID,
+              }))}
+            />
+          </Section>
+        )}
+        <Section bottomPadded>
+          <SectionHeader title="Set Price and Ounces" />
+          {formValue != null && <FormField component={TextInput} initialValue={formValue.id} label="ID" name="id" />}
+          <FormField component={TextInput} initialValue={tapId} label="Tap ID" name="tapID" />
+
+          <FormField
+            component={TextInput}
+            initialValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
+            name="ounces"
+            keyboardType="numeric"
+            label="Ounces"
+          />
+          <FormField
+            component={TextInput}
+            initialValue={(formValue != null ? formValue.price / 100 : 0).toFixed(2)}
+            name="price"
+            keyboardType="numeric"
+            label="Price"
+            _parseOnSubmit={(price: unknown) => {
+              const priceNum = typeof price === 'string' ? parseFloat(price) : typeof price === 'number' ? price : 0;
+              return (priceNum * 100).toFixed(0);
+            }}
+          />
+        </Section>
+      </KeyboardAwareScrollView>
+      {isFocused && (
+        <MainTabBarFill>
+          {formError && <FormValidationText>{formError}</FormValidationText>}
+          <Button
+            disabled={isSubmitting || !isValid || !isDirty}
+            loading={isSubmitting}
+            onPress={handleSubmit(onFormSubmit)}
+            style={{ marginVertical: 12 }}
+            title={formValue == null ? 'Create Price' : 'Update Price'}
+          />
+        </MainTabBarFill>
+      )}
+    </Container>
+  );
+};
+
+const EditTapPaymentsScreen: React.FC<Props> = (props) => {
+  const tapId = props.route?.params?.tapId;
+  if (!tapId) {
+    return null;
+  }
+
+  const { data: priceVariant } = useGetPriceVariantSingle({
+    filters: [createFilter('tap/id').equals(tapId)],
+  });
+
+  const defaultValues = useMemo<Partial<PriceVariantMutator>>(
+    () => ({
+      tapID: tapId,
+      id: priceVariant?.id,
+      ounces: priceVariant?.ounces ?? 0,
+      price: priceVariant ? priceVariant.price / 100 : 0,
+    }),
+    [tapId, priceVariant],
+  );
+
+  return (
+    <Form<PriceVariantMutator> defaultValues={defaultValues}>
+      <EditTapPaymentsScreenContent {...props} />
+    </Form>
+  );
+};
+
+export default withErrorBoundary(EditTapPaymentsScreen, <ErrorScreen />);

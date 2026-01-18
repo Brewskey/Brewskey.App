@@ -1,40 +1,58 @@
-import type {
-  EntityID,
-  LoadObject,
-  ParticleAttributes,
-} from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
-import { computed } from 'mobx';
 
-import { CloudDeviceStore } from '../stores/DAOStores';
 import OverviewItem from '../common/OverviewItem2';
-import LoaderComponent from '../common/LoaderComponent';
 import DeviceOnlineIndicator from './DeviceOnlineIndicator';
+import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
 
 type Props = {
   particleID: EntityID;
 };
 
-class DeviceOnlineOverviewItem extends React.Component<Props> {
-  get _onlineStatusLoader(): LoadObject<boolean> {
-    return CloudDeviceStore.getOne(this.props.particleID).map(
-      ({ connected }: ParticleAttributes): boolean => !!connected,
-    );
-  }
+const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
+  const { data: cloudDevice, isLoading, error } = useGetParticleAttributes(particleID);
 
-  render(): React.ReactElement {
+  if (isLoading) {
     return (
-      <LoaderComponent
-        particleID={this.props.particleID}
-        errorComponent={ErrorComponent}
-        loadedComponent={LoadedComponent}
-        loader={this._onlineStatusLoader}
-        loadingComponent={LoadingComponent}
+      <OverviewItem
+        leftComponent={undefined}
+        particleID={particleID}
+        rightComponent={DeviceOnlineIndicator}
+        title="Online Status"
+        value="Loading..."
       />
     );
   }
-}
+
+  if (error) {
+    return (
+      <OverviewItem
+        description="Oops! There was an error on checking online status."
+        leftComponent={undefined}
+        particleID={particleID}
+        rightComponent={DeviceOnlineIndicator}
+        title="Online Status"
+        value="Error!"
+      />
+    );
+  }
+
+  const connected = cloudDevice?.connected ?? false;
+
+  return (
+    <OverviewItem
+      description={
+        !connected ? 'Check that your device is powerd on and connected to WiFi' : undefined
+      }
+      leftComponent={undefined}
+      particleID={particleID}
+      rightComponent={DeviceOnlineIndicator}
+      title="Online Status"
+      value={connected ? 'Connected' : 'Disconnected'}
+    />
+  );
+};
 
 type LoadingComponentProps = {
   particleID: EntityID;
@@ -76,7 +94,7 @@ const LoadedComponent = ({
   <OverviewItem
     particleID={particleID}
     description={
-      !connected && 'Check that your device is powerd on and connected to WiFi'
+      !connected ? 'Check that your device is powerd on and connected to WiFi' : undefined
     }
     rightComponent={DeviceOnlineIndicator}
     title="Online Status"

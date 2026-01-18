@@ -27,25 +27,22 @@ type Props = {
   onHideModal: () => void
 };
 
-class ResetPasswordModal extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    const { isVisible, onHideModal } = this.props;
-    return (
-      <CenteredModal
-        header={<Text style={styles.titleText}>Email sent!</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-      >
-        <View style={styles.container}>
-          <Text style={styles.messageText}>
-            We've sent a email to the address you provided with instructions on
-            how to reset your password.
-          </Text>
-          <Button secondary title="OK" onPress={onHideModal} />
-        </View>
-      </CenteredModal>
-    );
-  }
-}
+const ResetPasswordModal: React.FC<Props> = ({ isVisible, onHideModal }) => {
+  return (
+    <CenteredModal
+      header={<Text style={styles.titleText}>Email sent!</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+    >
+      <View style={styles.container}>
+        <Text style={styles.messageText}>
+          We've sent a email to the address you provided with instructions on
+          how to reset your password.
+        </Text>
+        <Button secondary title="OK" onPress={onHideModal} />
+      </View>
+    </CenteredModal>
+  );
+};
 
-export default ResetPasswordModal;
+export default React.memo(ResetPasswordModal);

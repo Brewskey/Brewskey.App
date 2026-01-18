@@ -1,16 +1,17 @@
 import * as React from 'react';
-import ToggleStore from '../../stores/ToggleStore';
+import { useState, useMemo, useEffect } from 'react';
+import type { ListRenderItemInfo } from 'react-native';
+
 import List from '../../common/List';
 import Container from '../../common/Container';
 import Fragment from '../../common/Fragment';
 import PickerTextInput from './PickerTextInput';
 import Header from '../../common/Header';
-import HeaderIconButton from '../../common/Header/HeaderIconButton';
+import { HeaderIconButton } from '../../common/Header/HeaderIconButton';
 import Modal from '../../components/modals/Modal';
 import SelectableListItem from '../../common/SelectableListItem';
 import PickerControl from './PickerControl';
 import { useFormContext } from 'react-hook-form';
-import { useState } from 'react';
 
 export type SimplePickerValue<TValue> = {
   label: string;
@@ -19,105 +20,138 @@ export type SimplePickerValue<TValue> = {
 
 type Props<TValue> = {
   description?: React.ReactNode;
+  disabled?: boolean;
   doesRequireConfirmation: boolean;
   error?: string;
   headerTitle: string;
   label: string;
   onChange: (value: TValue) => void;
-  pickerValues: Array<SimplePickerValue<TValue>>;
+  pickerValues: SimplePickerValue<TValue>[];
   placeholder?: string;
   value: TValue;
 };
 
 export const SimplePicker = <TValue,>({
   description,
+  disabled,
   doesRequireConfirmation,
   error,
   label,
   headerTitle,
   pickerValues,
   placeholder,
+  onChange,
+  value: propValue,
 }: Props<TValue>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const context = useFormContext();
-  // _pickerStore: PickerStore<SimplePickerValue<TValue>, false> = new PickerStore<
-  //   SimplePickerValue<TValue>,
-  //   false
-  // >({
-  //   initialValue: this.props.pickerValues.find(
-  //     (pickerValue) => pickerValue.value === this.props.value,
-  //   ),
-  //   keyExtractor: (pickerValue) => (pickerValue.value as any).toString(),
-  //   multiple: false,
-  //   onChange: (pickerValue) => {
-  //     if (!pickerValue) {
-  //       return;
-  //     }
+  
+  // Get the current value - prefer propValue, fallback to form context
+  const currentValue = propValue !== undefined ? propValue : (context ? (context.getValues() as Record<string, TValue>)[label] : undefined);
+  
+  const [selectedValue, setSelectedValue] = useState<SimplePickerValue<TValue> | null>(
+    () => {
+      if (currentValue === undefined || currentValue === null) return null;
+      return pickerValues.find((pv) => JSON.stringify(pv.value) === JSON.stringify(currentValue)) || null;
+    }
+  );
 
-  //     this.props.onChange(pickerValue.value);
-  //     if (!this.props.doesRequireConfirmation) {
-  //       this._modalToggleStore.toggleOff();
-  //     }
-  //   },
-  // });
-
-  // _modalToggleStore: ToggleStore = new ToggleStore();
+  // Update selectedValue when currentValue changes
+  useEffect(() => {
+    if (currentValue === undefined || currentValue === null) {
+      setSelectedValue(null);
+      return;
+    }
+    const found = pickerValues.find(
+      (pv) => JSON.stringify(pv.value) === JSON.stringify(currentValue)
+    );
+    setSelectedValue(found || null);
+  }, [currentValue, pickerValues]);
 
   const stringValueExtractor = (
     pickerValue: SimplePickerValue<TValue>,
   ): string => pickerValue.label;
 
-  const listKeyExtractor = (textPickerValue) =>
-    JSON.stringify(textPickerValue.value) || '';
+  const listKeyExtractor = (pickerValue: SimplePickerValue<TValue>) =>
+    JSON.stringify(pickerValue.value) || '';
+
+  const checkIsSelected = (pickerValue: SimplePickerValue<TValue>): boolean => {
+    if (!selectedValue) return false;
+    return JSON.stringify(selectedValue.value) === JSON.stringify(pickerValue.value);
+  };
+
+  const toggleItem = (pickerValue: SimplePickerValue<TValue>) => {
+    if (checkIsSelected(pickerValue)) {
+      setSelectedValue(null);
+      onChange(undefined as TValue);
+    } else {
+      setSelectedValue(pickerValue);
+      onChange(pickerValue.value);
+      if (!doesRequireConfirmation) {
+        setIsModalOpen(false);
+      }
+    }
+  };
+
+  const clear = () => {
+    setSelectedValue(null);
+    onChange(undefined as TValue);
+  };
+
+  const handleSelectPress = () => {
+    setIsModalOpen(false);
+  };
+
+  const displayValue = selectedValue || currentValue;
 
   const renderItem: (
-    arg1: RenderItemProps<SimplePickerValue<TValue>>,
+    arg1: ListRenderItemInfo<SimplePickerValue<TValue>>,
   ) => React.ReactElement = ({ item: pickerValue }) => {
     return (
       <SelectableListItem
         chevron={false}
-        isSelected={this._pickerStore.checkIsSelected(pickerValue)}
+        isSelected={checkIsSelected(pickerValue)}
         item={pickerValue}
         title={pickerValue.label}
-        onPress={this._pickerStore.toggleItem}
+        onPress={() => toggleItem(pickerValue)}
       />
     );
   };
 
-  const value = context.getValues();
   return (
     <Fragment>
       <PickerTextInput
         description={description}
+        disabled={disabled}
         error={error}
         label={label}
         onPress={() => setIsModalOpen(true)}
         placeholder={placeholder}
         stringValueExtractor={stringValueExtractor}
-        value={value as any}
+        value={displayValue as SimplePickerValue<TValue> | null | undefined}
       />
-      <Modal isVisible={isModalOpen} onHideModal={() => setIsModalOpen(true)}>
+      <Modal isVisible={isModalOpen} onHideModal={() => setIsModalOpen(false)}>
         <Container>
           <Header
             leftComponent={
               <HeaderIconButton
                 name="arrow-back"
-                onPress={() => setIsModalOpen(true)}
+                onPress={() => setIsModalOpen(false)}
               />
             }
             title={headerTitle}
           />
           <List
-            data={pickerValues}
-            extraData={Array.isArray(value) ? value.length : value}
+            data={{ pages: [pickerValues], pageParams: [0] } as { pages: SimplePickerValue<TValue>[][]; pageParams: number[] }}
+            extraData={selectedValue ? { value: JSON.stringify(selectedValue.value) } : undefined}
             keyExtractor={listKeyExtractor}
             renderItem={renderItem}
           />
           {!doesRequireConfirmation ? null : (
             <PickerControl
               onClearPress={clear}
-              onSelectPress={this._modalToggleStore.toggleOff}
-              value={value}
+              onSelectPress={handleSelectPress}
+              value={displayValue}
             />
           )}
         </Container>

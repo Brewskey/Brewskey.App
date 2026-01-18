@@ -26,46 +26,38 @@ export type BaseAvatarProps = {
 type Props = BaseAvatarProps & {
   uri: string;
 };
-class BaseAvatar extends React.PureComponent<Props> {
-  static defaultProps: {
-    cached: boolean;
-    rounded: boolean;
-    size: number;
-  } = {
-    cached: true,
-    rounded: true,
-    size: 45,
-  };
+const BaseAvatar: React.FC<Props> = ({
+  containerStyle,
+  onPress,
+  rounded = true,
+  size = 45,
+  uri,
+}) => {
+  const baseContainerStyle = {
+    height: size,
+    width: size,
+    ...(rounded && { borderRadius: size / 2 }),
+  } as const;
 
-  render(): React.ReactElement {
-    const { containerStyle, onPress, rounded, size, uri } = this.props;
+  const imageElement = <Image source={{ uri }} style={baseContainerStyle} />;
 
-    const baseContainerStyle = {
-      height: size,
-      width: size,
-      ...(rounded && { borderRadius: size / 2 }),
-    } as const;
+  return (
+    <TouchableOpacity
+      disabled={!onPress}
+      onPress={onPress}
+      style={[
+        {
+          ...baseContainerStyle,
+          ...styles.avatar,
+          width: size,
+          height: size,
+        },
+        containerStyle,
+      ]}
+    >
+      {uri ? imageElement : null}
+    </TouchableOpacity>
+  );
+};
 
-    const imageElement = <Image source={{ uri }} style={baseContainerStyle} />;
-
-    return (
-      <TouchableOpacity
-        disabled={!onPress}
-        onPress={onPress}
-        style={[
-          {
-            ...baseContainerStyle,
-            ...styles.avatar,
-            width: size,
-            height: size,
-          },
-          containerStyle,
-        ]}
-      >
-        {uri ? imageElement : null}
-      </TouchableOpacity>
-    );
-  }
-}
-
-export default BaseAvatar;
+export default React.memo(BaseAvatar);

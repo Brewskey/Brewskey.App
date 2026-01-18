@@ -1,17 +1,10 @@
 import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import ContactsList from '../components/ContactsList';
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class MyFriendsContactScreen extends React.Component<Record<any, any>> {
-  static navigationOptions = {
-    tabBarLabel: 'Contacts',
-  };
+const MyFriendsContactScreen: React.FC = () => {
+  return <ContactsList />;
+};
 
-  render(): React.ReactElement {
-    return <ContactsList />;
-  }
-}
-
-export default MyFriendsContactScreen;
+export default withErrorBoundary(MyFriendsContactScreen, <ErrorScreen showBackButton />);

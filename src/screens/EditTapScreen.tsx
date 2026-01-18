@@ -1,69 +1,93 @@
-import type { EntityID, LoadObject, Tap } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
+import { Dimensions } from 'react-native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import type { StaticScreenProps } from '@react-navigation/native';
+import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
-import { Dimensions } from 'react-native';
 import Header from '../common/Header';
-import EditBasicTapScreen from './EditBasicTapScreen';
+import LoadingIndicator from '../common/LoadingIndicator';
+import { EditTapScreen as EditBasicTapScreen } from './EditBasicTapScreen';
 import EditFlowSensorScreen from './EditFlowSensorScreen';
 import EditTapPaymentsScreen from './EditTapPaymentsScreen';
 import EditKegScreen from './EditKegScreen';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import theme from '../theme';
+import { useGetTapById } from '../hooks/queries/TapQueries';
 
-const EditTapRouter = createMaterialTopTabNavigator();
-
-// {
-//   screens: {
-//     editKegScreen: EditKegScreen,
-//     editFlowSensor: EditFlowSensorScreen,
-//     editTap: EditBasicTapScreen,
-//     editTapPayments: {
-//       getShouldShowTab: ({ tap }) => tap != null && tap.isPaymentEnabled,
-//       screen: EditTapPaymentsScreen,
-//     },
-//   },
-// }
-
-type InjectedProps = {
-  id: EntityID;
+type EditTapRouterParamList = {
+  Feed: { tapId: EntityID };
+  Basic: { tapId: EntityID };
+  FlowSensor: { tapId: EntityID };
+  Payments: { tapId: EntityID };
 };
 
-@errorBoundary(<ErrorScreen />)
-class EditTapScreen extends React.Component<InjectedProps> {
-  get _tapLoader(): LoadObject<Tap> {
-    const { id } = this.injectedProps;
-    return TapStore.getByID(id);
-  }
+const EditTapRouter = createMaterialTopTabNavigator<EditTapRouterParamList>();
 
-  render(): React.ReactElement {
-    const { id, navigation } = this.injectedProps;
-    const tap = this._tapLoader.getValue();
+// EditTapScreen receives props from Stack Navigator
+// Using StaticScreenProps for React Navigation static navigation type inference
+type Props = StaticScreenProps<{
+  tapId: EntityID;
+}>;
+
+const EditTapScreen: React.FC<Props> = ({
+  route: {
+    params: { tapId },
+  },
+}) => {
+  const id = tapId;
+
+  const { data: tap, isLoading } = useGetTapById(id);
+
+  if (isLoading || !tap) {
     return (
       <Container>
         <Header showBackButton title="Edit Tap" />
-        <EditTapRouter.Navigator
-          initialLayout={{
-            height: 0,
-            width: Dimensions.get('window').width,
-          }}
-        >
-          <EditTapRouter.Screen
-            name="Feed"
-            component={EditKegScreen}
-            options={{ tabBarLabel: 'Home' }}
-          />
-        </EditTapRouter.Navigator>
-        <EditTapRouter
-          screenProps={{ tap, tapId: id }}
-          navigation={navigation}
-        />
+        <LoadingIndicator />
       </Container>
     );
   }
-}
 
-export default EditTapScreen;
+  return (
+    <Container>
+      <Header showBackButton title="Edit Tap" />
+      <EditTapRouter.Navigator
+        initialLayout={{
+          height: 0,
+          width: Dimensions.get('window').width,
+        }}
+      >
+        <EditTapRouter.Screen
+          name="Feed"
+          component={EditKegScreen}
+          initialParams={{ tapId: id }}
+          options={{ tabBarLabel: 'Home' }}
+        />
+        <EditTapRouter.Screen
+          name="Basic"
+          component={EditBasicTapScreen}
+          initialParams={{ tapId: id }}
+          options={{ tabBarLabel: 'Basic' }}
+        />
+        <EditTapRouter.Screen
+          name="FlowSensor"
+          component={EditFlowSensorScreen}
+          initialParams={{ tapId: id }}
+          options={{ tabBarLabel: 'Flow Sensor' }}
+        />
+        {tap.isPaymentEnabled && (
+          <EditTapRouter.Screen
+            name="Payments"
+            component={EditTapPaymentsScreen}
+            initialParams={{ tapId: id }}
+            options={{ tabBarLabel: 'Payments' }}
+          />
+        )}
+      </EditTapRouter.Navigator>
+    </Container>
+  );
+};
+
+export default withErrorBoundary(EditTapScreen, <ErrorScreen />);

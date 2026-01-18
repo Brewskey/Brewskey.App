@@ -1,16 +1,16 @@
 import * as React from 'react';
-import SimplePicker from '../components/pickers/SimplePicker';
+import { SimplePicker } from '../components/pickers/SimplePicker';
 import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
 
 type Props = {
   error?: string,
-  onChange: (value?: any) => void,
+  onChange: (value?: string) => void,
   placeholder?: string,
-  value: any
+  value: string | undefined
 };
 
 const DeviceStatePicker = (props: Props): React.ReactElement => <SimplePicker
-  description={DESCRIPTION_BY_DEVICE_STATE[props.value]}
+  description={props.value ? DESCRIPTION_BY_DEVICE_STATE[props.value as keyof typeof DESCRIPTION_BY_DEVICE_STATE] : undefined}
   doesRequireConfirmation={false}
   headerTitle="Select State"
   label="State"

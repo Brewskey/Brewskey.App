@@ -1,86 +1,130 @@
 import type { QueryOptions, Tap } from '@brewskey/js-api';
 
-import type { Row } from '../stores/DAOListStore';
 import type { RowItemProps } from '../common/SwipeableRow';
+import type { RenderProps } from '../common/SwipeableList';
 
 import * as React from 'react';
+import { useMemo } from 'react';
 import nullthrows from 'nullthrows';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import { TapStore } from '../stores/DAOStores';
-import DAOApi from '@brewskey/js-api';
-import DAOListStore from '../stores/DAOListStore';
-import LoaderRow from '../common/LoaderRow';
+import { TapDAO } from '@brewskey/js-api';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import SwipeableList from '../common/SwipeableList';
+import { SwipeableList } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
 import DeviceTapListEmpty from './DeviceTapListEmpty';
+import { useGetTaps, useDeleteTap } from '../hooks/queries/TapQueries';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
-  ListHeaderComponent?:
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
+  ListHeaderComponent?: React.ReactNode;
   onAddTapPress: () => void;
   onRefresh?: () => void;
   queryOptions?: QueryOptions;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const TapsList: React.FC<Props> = ({
+  ListHeaderComponent,
+  onAddTapPress,
+  onRefresh,
+  queryOptions = {},
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const queryClient = useQueryClient();
+  const swipeableListRef = React.useRef<SwipeableList<Tap>>(null);
 
-@withNavigation
-class TapsList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps = {
-    queryOptions: {},
+  const mergedQueryOptions = useMemo(
+    () => ({
+      orderBy: [
+        {
+          column: 'id',
+          direction: 'desc' as const,
+        },
+      ],
+      ...queryOptions,
+    }),
+    [queryOptions],
+  );
+
+  const {
+    data: tapsData,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetTaps(mergedQueryOptions);
+
+  const deleteTapMutation = useDeleteTap();
+
+  const onDeleteItemPress = async (item: Tap): Promise<void> => {
+    await deleteTapMutation.mutateAsync(item.id);
   };
 
-  _listStore: DAOListStore<Tap> = new DAOListStore(TapStore);
-  _swipeableListRef = React.createRef<SwipeableList<Row<Tap>>>();
-
-  componentDidMount() {
-    this._listStore.initialize(this.props.queryOptions);
-  }
-
-  _keyExtractor = (row: Row<Tap>): string => row.key;
-
-  _onDeleteItemPress = async (item: Tap): Promise<void> => {
-    DAOApi.TapDAO.flushQueryCaches();
-    const clientID = DAOApi.TapDAO.deleteByID(item.id);
-    await DAOApi.TapDAO.waitForLoadedNullable((dao) => dao.fetchByID(clientID));
-  };
-
-  _onEditItemPress = ({ id }: Tap) => {
-    this.injectedProps.navigation.navigate('editTap', { id });
-    nullthrows(this._swipeableListRef.current).resetOpenRow();
-  };
-
-  _onItemPress = (item: Tap): void =>
-    this.injectedProps.navigation.navigate('tapDetails', {
-      id: item.id,
+  const onEditItemPress = ({ id }: Tap) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'editTap',
+        params: { tapId: id },
+      },
     });
-
-  _onRefresh = () => {
-    this._listStore.reload();
-    const { onRefresh } = this.props;
-    if (onRefresh != null) {
-      onRefresh();
-    }
+    nullthrows(swipeableListRef.current).resetOpenRow();
   };
-  _renderRow = ({
-    info: { item: row, index, separators },
+
+  const onItemPress = (item: Tap): void => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'tapDetails',
+        params: {
+          tapId: item.id,
+        },
+      },
+    });
+  };
+
+  const onRefreshList = () => {
+    refetch();
+    onRefresh?.();
+  };
+
+  const keyExtractor = (item: Tap): string => item.id.toString();
+
+  const SwipeableRowItem = ({
+    index,
+    item,
+    onItemPress,
+  }: RowItemProps<Tap>): React.ReactElement => (
+    <TapListItem index={index} onPress={onItemPress} tap={item} />
+  );
+
+  const Slideout = ({
+    item,
+    onDeleteItemPress,
+    onEditItemPress,
+  }: RowItemProps<Tap>): React.ReactElement => (
+    <QuickActions
+      deleteModalMessage="Are you sure you want to delete the Tap?"
+      deleteModalTitle="Delete tap"
+      item={item}
+      onDeleteItemPress={onDeleteItemPress}
+      onEditItemPress={onEditItemPress}
+    />
+  );
+
+  const renderRow = ({
+    info: { item, index, separators },
     ...swipeableStateProps
-  }): React.ReactElement => (
-    <LoaderRow
+  }: RenderProps<Tap>): React.ReactElement => (
+    <SwipeableRow
       index={index}
-      loadedRow={SwipeableRow}
-      loader={row.loader}
-      onDeleteItemPress={this._onDeleteItemPress}
-      onEditItemPress={this._onEditItemPress}
-      onItemPress={this._onItemPress}
+      item={item}
+      onDeleteItemPress={onDeleteItemPress}
+      onEditItemPress={onEditItemPress}
+      onItemPress={onItemPress}
       rowItemComponent={SwipeableRowItem}
       separators={separators}
       slideoutComponent={Slideout}
@@ -88,50 +132,25 @@ class TapsList extends InjectedComponent<InjectedProps, Props> {
     />
   );
 
-  render(): React.ReactElement {
-    const { ListHeaderComponent, onAddTapPress } = this.props;
-
-    const isLoading = this._listStore.isFetchingRemoteCount;
-    return (
-      <SwipeableList
-        data={this._listStore.rows}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? (
-            <DeviceTapListEmpty onAddTapPress={onAddTapPress} />
-          ) : null
+  return (
+    <SwipeableList
+      data={tapsData}
+      keyExtractor={keyExtractor}
+      listType="flatList"
+      ListEmptyComponent={!isLoading ? <DeviceTapListEmpty onAddTapPress={onAddTapPress} /> : undefined}
+      ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
+       
+      ListHeaderComponent={ListHeaderComponent as React.ComponentType<any> | React.ReactElement | null | undefined}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
         }
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={ListHeaderComponent}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._onRefresh}
-        ref={this._swipeableListRef}
-        renderItem={this._renderRow}
-      />
-    );
-  }
-}
-
-const SwipeableRowItem = ({
-  index,
-  item,
-  onItemPress,
-}: RowItemProps<Tap>): React.ReactElement => (
-  <TapListItem index={index} onPress={onItemPress} tap={item} />
-);
-
-const Slideout = ({
-  item,
-  onDeleteItemPress,
-  onEditItemPress,
-}: RowItemProps<Tap>): React.ReactElement => (
-  <QuickActions
-    deleteModalMessage="Are you sure you want to delete the Tap?"
-    deleteModalTitle="Delete tap"
-    item={item}
-    onDeleteItemPress={onDeleteItemPress}
-    onEditItemPress={onEditItemPress}
-  />
-);
+      }}
+      onRefresh={onRefreshList}
+      ref={swipeableListRef}
+      renderItem={renderRow}
+    />
+  );
+};
 
 export default TapsList;

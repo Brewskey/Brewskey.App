@@ -1,63 +1,47 @@
 import type { Availability, QueryOptions } from '@brewskey/js-api';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { AvailabilityStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
+import { useGetAvailabilities } from '../../hooks/queries/AvailabilityQueries';
 
-type Props<TMultiple extends boolean> = {
+type Props = {
   error?: string | null | undefined;
-  multiple: TMultiple;
-  onChange: (value: PickerValue<Availability, TMultiple>) => void;
+  onChange: (value: PickerValue<Availability, false>) => void;
   queryOptions?: QueryOptions;
-  value: PickerValue<Availability, TMultiple>;
+  value: PickerValue<Availability, false>;
 };
 
-class AvailabilityPicker<TMultiple extends boolean> extends React.Component<
-  Props<TMultiple>
-> {
-  static defaultProps: {
-    multiple: boolean;
-  } = {
-    multiple: false,
-  };
-
-  _renderRow = ({ item: row, isSelected, toggleItem }) => (
-    <LoaderRow
+const AvailabilityPicker: React.FC<Props> = (props) => {
+  const renderRow = ({
+    item: availability,
+    isSelected,
+    toggleItem,
+  }: RenderRowProps<Availability>): React.ReactElement => (
+    <SelectableListItem
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={availability}
+      title={availability.name}
+      onPress={() => toggleItem(availability)}
     />
   );
 
-  render(): React.ReactElement {
-    return (
-      <DAOPicker
-        {...this.props}
-        daoStore={AvailabilityStore}
-        headerTitle="Select Availability"
-        label="Availability"
-        renderRow={this._renderRow}
-        stringValueExtractor={(availability: Availability): string =>
-          availability.name
-        }
-      />
-    );
-  }
-}
-
-// todo annotate better
-const LoadedRow = ({ item: availability, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    chevron={false}
-    isSelected={isSelected}
-    item={availability}
-    title={availability.name}
-    onPress={toggleItem}
-  />
-);
+  return (
+    <DAOPicker
+      {...props}
+      useQueryHook={useGetAvailabilities}
+      headerTitle="Select Availability"
+      label="Availability"
+      multiple={false}
+      queryOptions={props.queryOptions ?? {}}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={false}
+      stringValueExtractor={(availability: Availability): string => availability.name}
+    />
+  );
+};
 
 export default AvailabilityPicker;

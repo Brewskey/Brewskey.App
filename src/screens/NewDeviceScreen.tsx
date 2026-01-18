@@ -1,77 +1,83 @@
-import type { Device, DeviceMutator } from '@brewskey/js-api';
+import type { Device, DeviceMutator, EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
-
-import { NavigationActions, StackActions } from 'react-navigation';
+import { useNavigation, StaticScreenProps, NavigationProp } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import DAOApi from '@brewskey/js-api';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import DeviceForm from '../components/DeviceForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useCreateDevice } from '../hooks/queries/DeviceQueries';
 
-type InjectedProps = {
+type Props = StaticScreenProps<{
   hideLocation?: boolean;
   initialValues?: Device;
-  navigation: Navigation;
   onDeviceCreated?: (device: Device) => undefined | Promise<any>;
   showBackButton?: boolean;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewDeviceScreen extends InjectedComponent<InjectedProps> {
-  static defaultProps = {
-    showBackButton: true,
+const NewDeviceScreen: React.FC<Props> = ({
+  route: {
+    params: {
+      hideLocation,
+      initialValues,
+      onDeviceCreated,
+      showBackButton = true,
+    },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+
+  const mergedProps = {
+    hideLocation,
+    initialValues,
+    onDeviceCreated,
+    showBackButton: showBackButton ?? true,
   };
 
-  _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
-    const { navigation, onDeviceCreated } = this.injectedProps;
-    const clientID = DAOApi.DeviceDAO.post(values);
-    const device = await DAOApi.DeviceDAO.waitForLoaded((dao) =>
-      dao.fetchByID(clientID),
-    );
-    SnackBarStore.showMessage({ text: 'New Brewskey box created' });
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const createMutation = useCreateDevice();
 
-    if (onDeviceCreated) {
-      onDeviceCreated(device);
+  const onFormSubmit = async (values: DeviceMutator): Promise<void> => {
+    const device = await createMutation.mutateAsync(values);
+    addSnackBarMessage({ content: 'New Brewskey box created' });
+
+    if (mergedProps.onDeviceCreated) {
+      await mergedProps.onDeviceCreated(device);
       return;
     }
 
-    const resetRouteAction = StackActions.reset({
-      actions: [
-        NavigationActions.navigate({ routeName: 'devices' }),
-        NavigationActions.navigate({
-          params: { id: device.id },
-          routeName: 'deviceDetails',
-        }),
-      ],
-      index: 1,
+    // Navigate to device details
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'devices',
+        params: {
+          screen: 'deviceDetails',
+          params: {
+            id: device.id,
+          },
+        },
+      },
     });
-    navigation.dispatch(resetRouteAction);
   };
 
-  render(): React.ReactElement {
-    const { hideLocation, initialValues, showBackButton } = this.injectedProps;
+  return (
+    <Container>
+      <Header showBackButton={mergedProps.showBackButton} title="New Brewskey box" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <DeviceForm
+          device={mergedProps.initialValues ?? {}}
+          hideLocation={mergedProps.hideLocation}
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Create Device"
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
 
-    return (
-      <Container>
-        <Header showBackButton={showBackButton} title="New Brewskey box" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <DeviceForm
-            device={initialValues ?? {}}
-            hideLocation={hideLocation}
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Create Device"
-          />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
-
-export default NewDeviceScreen;
+export default withErrorBoundary(NewDeviceScreen, <ErrorScreen showBackButton />);

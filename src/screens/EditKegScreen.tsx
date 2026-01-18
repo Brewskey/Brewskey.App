@@ -1,32 +1,36 @@
 import type { EntityID, Keg, KegMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
-import DAOApi from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary, withErrorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 
 import KegForm from '../components/KegForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { StaticScreenProps } from '@react-navigation/native';
 import {
   useCreateKeg,
   useFloatKeg,
   useGetKegByQuery,
   useUpdateKeg,
 } from '../hooks/queries/KegQueries';
-import { LoaderComponent } from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 
-type Props = StaticScreenProps<{
-  tapId: EntityID;
-}>;
+// Type that works with both StaticScreenProps and MaterialTopTabScreenProps
+// We only use route.params.tapId, so this minimal type works for both navigation types
+// Making route optional to satisfy ScreenComponentType which can accept ComponentType<{}>
+type Props = {
+  route?: {
+    params: { tapId: EntityID };
+  } & Record<string, unknown>;
+  navigation?: unknown;
+};
 
 type ExtraProps = {
-  onEditSubmit: (values: KegMutator) => Promise<void>;
-  onFloatedSubmit: (values: KegMutator) => Promise<void>;
-  onReplaceSubmit: (values: KegMutator) => Promise<void>;
+  onEditSubmit: (values: KegMutator) => KegMutator | Promise<KegMutator>;
+  onFloatedSubmit: (values: KegMutator) => KegMutator | Promise<KegMutator>;
+  onReplaceSubmit: (values: KegMutator) => KegMutator | Promise<KegMutator>;
   tapId: EntityID;
 };
 
@@ -53,57 +57,80 @@ const LoadedComponent = ({
 );
 
 const EmptyComponent = ({
+  onEditSubmit,
   onFloatedSubmit,
   onReplaceSubmit,
   tapId,
 }: ExtraProps) => (
   <KegForm
     onFloatedSubmit={onFloatedSubmit}
-    onSubmit={onReplaceSubmit}
+    onSubmit={onReplaceSubmit || onEditSubmit}
     submitButtonLabel="Create keg"
     tapId={tapId}
   />
 );
 
 export const EditKegScreen: React.FC<Props> = withErrorBoundary(
-  ({
-    route: {
-      params: { tapId },
-    },
-  }: Props) => {
+  (props: Props) => {
+    const tapId = props.route?.params?.tapId;
+    if (!tapId) {
+      return null;
+    }
     const createKeg = useCreateKeg();
     const updateKeg = useUpdateKeg();
     const floatKeg = useFloatKeg();
-    const keg = useGetKegByQuery({
-      filters: [DAOApi.createFilter('tap/id').equals(tapId)],
+    const addSnackBarMessage = useAddSnackBarMessage();
+    const { data: keg, isLoading } = useGetKegByQuery({
+      filters: [createFilter('tap/id').equals(tapId)],
     });
 
-    const onReplaceSubmit = async (values: KegMutator): Promise<void> => {
+    const onReplaceSubmit = async (values: KegMutator): Promise<KegMutator> => {
       await createKeg.mutateAsync(values);
-      SnackBarStore.showMessage({ content: 'Keg replaced' });
+      addSnackBarMessage({ content: 'Keg replaced' });
+      return values;
     };
 
-    const onEditSubmit = async (values: KegMutator): Promise<void> => {
+    const onEditSubmit = async (values: KegMutator): Promise<KegMutator> => {
       await updateKeg.mutateAsync(values);
-      SnackBarStore.showMessage({ content: 'Current keg updated' });
+      addSnackBarMessage({ content: 'Current keg updated' });
+      return values;
     };
 
-    const onFloatKegSubmit = async (values: KegMutator): Promise<void> => {
+    const onFloatKegSubmit = async (values: KegMutator): Promise<KegMutator> => {
       await floatKeg.mutateAsync(values);
-      SnackBarStore.showMessage({ content: 'Current keg floated' });
+      addSnackBarMessage({ content: 'Current keg floated' });
+      return values;
     };
+
+    if (isLoading) {
+      return (
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+          <LoadingIndicator />
+        </KeyboardAwareScrollView>
+      );
+    }
+
+    if (!keg) {
+      return (
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <EmptyComponent
+          onEditSubmit={onReplaceSubmit}
+          onFloatedSubmit={onFloatKegSubmit}
+          onReplaceSubmit={onReplaceSubmit}
+          tapId={tapId}
+        />
+        </KeyboardAwareScrollView>
+      );
+    }
 
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <LoaderComponent
-          emptyComponent={EmptyComponent}
-          loadedComponent={LoadedComponent}
-          loader={this._kegLoader}
-          onEditSubmit={this._onEditSubmit}
-          onFloatedSubmit={this._onFloatKegSubmit}
-          onReplaceSubmit={this._onReplaceSubmit}
-          tapId={this.injectedProps.tapId}
-          updatingComponent={LoadedComponent}
+        <LoadedComponent
+          onEditSubmit={onEditSubmit}
+          onFloatedSubmit={onFloatKegSubmit}
+          onReplaceSubmit={onReplaceSubmit}
+          tapId={tapId}
+          value={keg}
         />
       </KeyboardAwareScrollView>
     );

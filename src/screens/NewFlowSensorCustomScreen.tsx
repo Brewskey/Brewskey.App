@@ -1,43 +1,51 @@
 import type { EntityID, FlowSensorMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
-import DAOApi from '@brewskey/js-api';
+import { StaticScreenProps, useRoute } from '@react-navigation/native';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { errorBoundary, withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import FlowSensorForm from '../components/FlowSensorForm';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import FlowSensorForm from '../components/FlowSensorForm/FlowSensorForm';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useCreateFlowSensor } from '../hooks/queries/FlowSensorQueries';
 
-type InjectedProps = {
-  navigation: Navigation;
-  onFlowSensorCreated: () => undefined | Promise<any>;
+type Props = StaticScreenProps<{
   tapId: EntityID;
-};
+  onFlowSensorCreated?: () => void | Promise<void>;
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewFlowSensorCustomScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
-    const { onFlowSensorCreated } = this.injectedProps;
-    const clientID = DAOApi.FlowSensorDAO.post(values);
-    await DAOApi.FlowSensorDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    onFlowSensorCreated();
-  };
+export const NewFlowSensorCustomScreen: React.FC<Props> =
+  withErrorBoundary(
+    ({
+      route: {
+        params: { tapId, onFlowSensorCreated },
+      },
+    }: Props) => {
+      const createFlowSensor = useCreateFlowSensor();
 
-  render(): React.ReactElement {
-    const { tapId } = this.injectedProps;
-    return (
-      <Container>
-        <Header showBackButton title="Set tap sensor" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <FlowSensorForm tapId={tapId} onSubmit={this._onFormSubmit} />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
+      const _onFormSubmit = async (
+        values: FlowSensorMutator,
+      ): Promise<void> => {
+        await createFlowSensor.mutateAsync(values);
+        if (onFlowSensorCreated) {
+          onFlowSensorCreated();
+        }
+      };
 
-export default NewFlowSensorCustomScreen;
+      if (!tapId) {
+        return null;
+      }
+
+      return (
+        <Container>
+          <Header showBackButton title="Set tap sensor" />
+          <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+            <FlowSensorForm tapId={tapId} onSubmit={_onFormSubmit} />
+          </KeyboardAwareScrollView>
+        </Container>
+      );
+    },
+    <ErrorScreen showBackButton />,
+  );

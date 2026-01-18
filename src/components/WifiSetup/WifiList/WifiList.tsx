@@ -66,7 +66,7 @@ export const WifiList: React.FC<Props> = ({
   return (
     <Form>
       <List
-        data={wifiNetworks}
+        data={{ pages: [wifiNetworks ?? []], pageParams: [{}] }}
         extraData={{ expandedRowKey }}
         keyExtractor={keyExtractor}
         ListEmptyComponent={ListEmptyComponent}

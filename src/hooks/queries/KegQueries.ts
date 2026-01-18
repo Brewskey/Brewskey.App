@@ -18,16 +18,19 @@ import {
 } from '@brewskey/js-api';
 import nullthrows from 'nullthrows';
 
-enum KegQueryKeys {
+export enum KegQueryKeys {
   KeyById = 'keg_by_id',
   KeyByQuery = 'keg_by_query',
   KegsList = 'kegs_by_query',
 }
 
-export const useGetKegById = (id: EntityID): UseQueryResult<Keg, Error> =>
+export const useGetKegById = (
+  id: EntityID | null | undefined,
+): UseQueryResult<Keg, Error> =>
   useQuery({
     queryKey: [KegQueryKeys.KeyById, id],
-    queryFn: () => KegDAO.fetchByID(id),
+    queryFn: () => KegDAO.fetchByID(id!),
+    enabled: id != null,
   });
 
 export const useGetKegByQuery = (
@@ -44,7 +47,7 @@ export const useGetKegs = (
   useInfiniteQuery({
     queryKey: [KegQueryKeys.KegsList, queryOptions],
     initialPageParam: 0,
-    queryFn: ({ pageParam = 1 }) =>
+    queryFn: ({ pageParam = 0 }) =>
       KegDAO.fetchMany({
         ...queryOptions,
         orderBy: [
@@ -56,7 +59,8 @@ export const useGetKegs = (
         skip: pageParam * 20,
         take: 20,
       }),
-    getNextPageParam: (_, pages) => pages.length + 1,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.length === 20 ? pages.length : undefined,
     getPreviousPageParam: (_, pages) => pages.length,
   });
 

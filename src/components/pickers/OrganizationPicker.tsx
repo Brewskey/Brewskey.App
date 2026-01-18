@@ -1,11 +1,10 @@
-import type { PickerValue } from '../../stores/PickerStore';
 import type { QueryOptions, Organization } from '@brewskey/js-api';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { OrganizationStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
+import { useGetOrganizations } from '../../hooks/queries/OrganizationQueries';
 
 type Props = {
   error?: string | null | undefined;
@@ -14,45 +13,38 @@ type Props = {
   value: Organization | null | undefined;
 };
 
-class OrganizaionPicker extends React.Component<Props> {
-  _renderRow = ({ item: row, isSelected, toggleItem }) => (
-    <LoaderRow
+const OrganizationPicker: React.FC<Props> = (props) => {
+  const renderRow = ({
+    item: organization,
+    isSelected,
+    toggleItem,
+  }: RenderRowProps<Organization>): React.ReactElement => (
+    <SelectableListItem
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={organization}
+      title={`${organization.id} - ${organization.name}`}
+      onPress={() => toggleItem(organization)}
     />
   );
 
-  render(): React.ReactElement {
-    const { onChange, value } = this.props;
-    return (
-      <DAOPicker
-        daoStore={OrganizationStore}
-        headerTitle="Select Organization"
-        label="Organization"
-        multiple={false}
-        onChange={onChange}
-        placeholder="None"
-        renderRow={this._renderRow}
-        stringValueExtractor={({ id, name }: Organization): string =>
-          `${id} - ${name}`
-        }
-        value={value}
-      />
-    );
-  }
-}
+  return (
+    <DAOPicker
+      {...props}
+      useQueryHook={useGetOrganizations}
+      headerTitle="Select Organization"
+      label="Organization"
+      multiple={false}
+      placeholder="None"
+      queryOptions={props.queryOptions ?? {}}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={false}
+      stringValueExtractor={({ id, name }: Organization): string =>
+        `${id} - ${name}`
+      }
+    />
+  );
+};
 
-// todo annotate better
-const LoadedRow = ({ item: organization, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    chevron={false}
-    isSelected={isSelected}
-    item={organization}
-    title={`${organization.id} - ${organization.name}`}
-    onPress={toggleItem}
-  />
-);
-
-export default OrganizaionPicker;
+export default OrganizationPicker;

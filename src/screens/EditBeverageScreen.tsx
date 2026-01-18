@@ -1,92 +1,100 @@
 import type {
-  Beverage,
   BeverageMutator,
   EntityID,
-  LoadObject,
 } from '@brewskey/js-api';
 
 import * as React from 'react';
 import nullthrows from 'nullthrows';
-
-import { computed } from 'mobx';
-
-import DAOApi from '@brewskey/js-api';
+import { useNavigation, StaticScreenProps, NavigationProp } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { BeverageStore, waitForLoaded } from '../stores/DAOStores';
-import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
+
 import { flushImageCache } from '../common/CachedImage';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import LoaderComponent from '../common/LoaderComponent';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import LoadingIndicator from '../common/LoadingIndicator';
 import BeverageForm from '../components/BeverageForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import CONFIG from '../config';
+import { useGetBeverageById, useUpdateBeverage } from '../hooks/queries/BeverageQueries';
+import { useAccessToken } from '../stores/AuthStore';
 
-type InjectedProps = {
-  id: EntityID;
-  navigation: Navigation;
+const updateBeverageImage = async (beverageID: string, beverageData: string, accessToken: string | null): Promise<void> => {
+  await fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
+    body: JSON.stringify({ photo: beverageData }),
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken || ''}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+  });
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class EditBeverageScreen extends InjectedComponent<InjectedProps> {
-  get _beverageLoader(): LoadObject<Beverage> {
-    return BeverageStore.getByID(this.injectedProps.id);
-  }
+type Props = StaticScreenProps<{
+  id: EntityID;
+}>;
 
-  _onFormSubmit = async (
+const EditBeverageScreen: React.FC<Props> = ({
+  route: {
+    params: { id },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+
+  const { data: beverage, isLoading } = useGetBeverageById(id);
+  const updateMutation = useUpdateBeverage();
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const accessToken = useAccessToken();
+
+  const onFormSubmit = async (
     values: BeverageMutator & {
       beverageImage?: string;
     },
   ): Promise<void> => {
     const { beverageImage, ...beverageMutator } = values;
-    const id = nullthrows(values.id);
+    const beverageId = nullthrows(values.id);
 
-    const clientID = DAOApi.BeverageDAO.put(id, beverageMutator);
-    await DAOApi.BeverageDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    if (beverageImage) {
-      await waitForLoaded(() =>
-        UpdateBeverageImageStore.get(id, beverageImage),
-      );
-      UpdateBeverageImageStore.flushCache();
-      flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
+    try {
+      await updateMutation.mutateAsync(beverageMutator);
+      
+      if (beverageImage) {
+        await updateBeverageImage(beverageId.toString(), beverageImage, accessToken);
+        flushImageCache(`${CONFIG.CDN}beverages/${beverageId.toString()}`);
+      }
+
+      navigation.goBack();
+      addSnackBarMessage({ content: 'The beverage edited.' });
+    } catch (error) {
+      // Error handling is done by the mutation
+      throw error;
     }
-
-    this.injectedProps.navigation.goBack(null);
-    SnackBarStore.showMessage({ text: 'The beverage edited.' });
   };
 
-  render(): React.ReactElement {
+  if (isLoading || !beverage) {
     return (
       <Container>
         <Header showBackButton title="Edit beverage" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <LoaderComponent
-            loadedComponent={LoadedComponent}
-            loader={this._beverageLoader}
-            onFormSubmit={this._onFormSubmit}
-            updatingComponent={LoadedComponent}
-          />
+          <LoadingIndicator />
         </KeyboardAwareScrollView>
       </Container>
     );
   }
-}
 
-type LoadedComponentProps = {
-  onFormSubmit: (values: BeverageMutator) => void;
-  value: Beverage;
+  return (
+    <Container>
+      <Header showBackButton title="Edit beverage" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <BeverageForm
+          beverage={beverage}
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Edit beverage"
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
 };
 
-const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
-  <BeverageForm
-    beverage={value}
-    onSubmit={onFormSubmit}
-    submitButtonLabel="Edit beverage"
-  />
-);
-
-export default EditBeverageScreen;
+export default withErrorBoundary(EditBeverageScreen, <ErrorScreen showBackButton />);

@@ -136,6 +136,8 @@ const Content = ({
 
 export const SnackBar: React.FC = () => {
   const [height, setHeight] = React.useState<number>(0);
+  const [isAnimating, setIsAnimating] = React.useState<boolean>(false);
+  const [shouldAnimate, setShouldAnimate] = React.useState<boolean>(false);
   const animationValue = React.useRef(new Animated.Value(-OFFSET)).current;
   const dropCurrentMessage = useRemoveSnackBarMessage();
   const currentMessage = useGetCurrentSnackBarMessage();
@@ -145,7 +147,13 @@ export const SnackBar: React.FC = () => {
       duration: EXIT_ANIMATION_DURATION,
       toValue: -height,
       useNativeDriver: false,
-    }).start(dropCurrentMessage);
+    }).start(({ finished }: Animated.EndResult) => {
+      if (finished) {
+        setIsAnimating(false);
+        animationValue.setValue(-OFFSET);
+        dropCurrentMessage();
+      }
+    });
   };
 
   const _onLayout = (event: LayoutChangeEvent): void => {
@@ -157,7 +165,20 @@ export const SnackBar: React.FC = () => {
 
     setHeight(layoutHeight);
     animationValue.setValue(-layoutHeight);
+  };
 
+  React.useEffect(() => {
+    if (!currentMessage) {
+      return;
+    }
+    setShouldAnimate(true);
+  }, [currentMessage, setShouldAnimate]);
+
+  React.useEffect(() => {
+    if (!shouldAnimate || isAnimating || height === 0) {
+      return;
+    }
+    setShouldAnimate(false);
     Animated.sequence([
       Animated.timing(animationValue, {
         duration: ENTER_ANIMATION_DURATION,
@@ -172,11 +193,12 @@ export const SnackBar: React.FC = () => {
       }),
     ]).start(({ finished }: Animated.EndResult) => {
       if (finished) {
+        setIsAnimating(false);
+        animationValue.setValue(-height);
         dropCurrentMessage();
       }
-      setHeight(0);
     });
-  };
+  }, [shouldAnimate, isAnimating, height]);
 
   if (!currentMessage) {
     return null;
@@ -184,10 +206,10 @@ export const SnackBar: React.FC = () => {
 
   return (
     <Animated.View
-      onLayout={height === 0 ? _onLayout : undefined}
-      pointerEvents="box-none"
+      onLayout={_onLayout}
       style={[
         styles.container,
+        { pointerEvents: 'box-none' },
         currentMessage.position === 'bottom'
           ? { bottom: animationValue, top: undefined }
           : { bottom: undefined, top: animationValue },

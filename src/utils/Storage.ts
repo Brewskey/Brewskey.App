@@ -2,7 +2,14 @@ import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export class Storage {
+class Storage {
+  static _getUserID: () => Promise<string> = async () => '';
+
+  static setGetUserID = (getUserID: () => Promise<string>) => {
+    this._getUserID = getUserID;
+  };
+
+  // Basic storage methods (use SecureStore on native, AsyncStorage on web)
   static async setItem<TResult>(key: string, value: TResult): Promise<void> {
     if (Platform.OS === 'web') {
       await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -33,4 +40,41 @@ export class Storage {
       return SecureStore.deleteItemAsync(key);
     }
   }
+
+  // Legacy methods for backward compatibility (always use AsyncStorage)
+  static set = <TValue>(key: string, value: TValue): Promise<void> =>
+    AsyncStorage.setItem(key, JSON.stringify(value));
+
+  static get = async <TValue>(key: string): Promise<TValue> => {
+    const stringValue = await AsyncStorage.getItem(key);
+    return stringValue ? JSON.parse(stringValue) : null;
+  };
+
+  static remove = AsyncStorage.removeItem;
+
+  // User-scoped storage methods
+  static setForCurrentUser = async <TValue>(
+    key: string,
+    value: TValue,
+  ): Promise<void> => {
+    const keyForCurrentUser = await Storage._getKeyForCurrentUser(key);
+    await Storage.set(keyForCurrentUser, value);
+  };
+
+  static getForCurrentUser = async <TResult>(key: string): Promise<TResult> => {
+    const keyForCurrentUser = await Storage._getKeyForCurrentUser(key);
+    return Storage.get(keyForCurrentUser);
+  };
+
+  static removeForCurrentUser = async (key: string): Promise<void> => {
+    const keyForCurrentUser = await Storage._getKeyForCurrentUser(key);
+    return Storage.remove(keyForCurrentUser);
+  };
+
+  static _getKeyForCurrentUser = async (key: string): Promise<string> => {
+    const userID = await Storage._getUserID();
+    return `${userID}/${key}`;
+  };
 }
+
+export default Storage;

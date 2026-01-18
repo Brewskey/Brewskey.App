@@ -3,7 +3,7 @@ export type StateConfig = {
   value: string
 };
 
-const STATE_LIST: Array<StateConfig> = [
+const STATE_LIST: StateConfig[] = [
   {
     label: 'Alabama',
     value: 'AL',

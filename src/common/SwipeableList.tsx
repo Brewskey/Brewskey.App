@@ -7,6 +7,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from 'react-native';
+import { InfiniteData } from '@tanstack/react-query';
 
 export type RenderProps<TEntity> = {
   info: ListRenderItemInfo<TEntity>;
@@ -23,7 +24,13 @@ export type RenderProps<TEntity> = {
 };
 
 type Props<TEntity> = ListProps<TEntity> & {
+  listType?: 'flatList' | 'sectionList';
   renderItem: (arg1: RenderProps<TEntity>) => React.ReactElement;
+  renderSectionHeader?: (info: {
+    section: import('react-native').SectionListData<TEntity>;
+  }) => React.ReactElement | null;
+  sections?: readonly import('react-native').SectionListData<TEntity>[];
+  data?: InfiniteData<TEntity[]> | undefined;
 };
 
 type State = {
@@ -92,14 +99,30 @@ export class SwipeableList<TEntity> extends React.Component<
   };
 
   render(): React.ReactElement {
-    const { renderItem: _, ...otherProps } = this.props;
+    const { renderItem: _, listType = 'flatList', renderSectionHeader, sections, data, ...otherProps } = this.props;
+    if (listType === 'sectionList' && sections) {
+      return (
+        <List
+          {...otherProps}
+          extraData={{ openRowKey: this.state.openRowKey }}
+          listType="sectionList"
+          renderSectionHeader={renderSectionHeader}
+          sections={sections}
+          onScroll={this._onScroll}
+          renderItem={this._renderItem}
+          innerRef={undefined}
+        />
+      );
+    }
     return (
       <List
         {...otherProps}
-        extraData={this.state}
-        // innerRef={this._innerListRef}
+        data={data}
+        extraData={{ openRowKey: this.state.openRowKey }}
+        listType="flatList"
         onScroll={this._onScroll}
         renderItem={this._renderItem}
+        innerRef={undefined}
       />
     );
   }

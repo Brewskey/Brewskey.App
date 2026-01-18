@@ -1,81 +1,190 @@
 import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
 import * as React from 'react';
-import { Storage } from '../../utils/Storage';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import Storage from '../../utils/Storage';
 
-type AuthContextValues = [
-  AuthResponse | undefined,
-  (response: AuthResponse | undefined) => Promise<void>,
-];
 export const SESSION_DATA = 'session_data';
+export const AUTH_QUERY_KEY = ['auth', 'session'] as const;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const AuthContext = React.createContext<AuthContextValues>([] as any);
+/**
+ * Load auth state from Storage for hydration
+ */
+export const loadAuthStateFromStorage = async (): Promise<
+  AuthResponse | null
+> => {
+  try {
+    return await Storage.getItem<AuthResponse>(SESSION_DATA);
+  } catch (error) {
+    return null;
+  }
+};
 
-export const AuthProvider: React.FC<React.PropsWithChildren> = ({
-  children,
-}) => {
-  const [authResponse, setAuthResponseState] = React.useState<
-    AuthResponse | undefined
-  >();
-
-  const setAuthResponse = React.useCallback(
-    async (response: AuthResponse | undefined) => {
-      if (response != null) {
-        await Storage.setItem(SESSION_DATA, response);
-
-        BrewskeyJSApi.setToken(response.accessToken);
-        BrewskeyJSApi.setRefreshToken(response.refreshToken);
-      } else {
-        await Storage.removeItem(SESSION_DATA);
-      }
-      setAuthResponseState(response);
-    },
-    [Storage, setAuthResponseState],
-  );
-
-  React.useEffect(() => {
-    const bootstrapAsync = async () => {
-      try {
-        const sessionData = await Storage.getItem<AuthResponse>(SESSION_DATA);
-        if (!sessionData) {
-          return;
-        }
-
-        setAuthResponse(sessionData);
-      } catch (error) {
-        /* intentionally ignore */
-      }
-    };
-    bootstrapAsync();
-  }, []);
-
-  React.useEffect(() => {
-    if (authResponse?.accessToken == null) {
-      return;
+/**
+ * Save auth state to Storage
+ */
+export const saveAuthStateToStorage = async (
+  authResponse: AuthResponse | null,
+): Promise<void> => {
+  try {
+    if (authResponse) {
+      await Storage.setItem(SESSION_DATA, authResponse);
+    } else {
+      await Storage.removeItem(SESSION_DATA);
     }
-    BrewskeyJSApi.setToken(authResponse.accessToken);
-    BrewskeyJSApi.setRefreshToken(authResponse.refreshToken);
+  } catch (error) {
+    // Ignore storage errors
+  }
+};
+
+/**
+ * Refresh auth token if refresh token is available
+ */
+const refreshAuthToken = async (
+  sessionData: AuthResponse,
+): Promise<AuthResponse | null> => {
+  if (!sessionData.refreshToken) {
+    return sessionData;
+  }
+
+  try {
+    const { Auth } = await import('@brewskey/js-api');
+    const newAuthResponse = await Auth.refreshToken(sessionData.refreshToken);
+    // Merge the refreshed token data with the existing session data
+    return { ...sessionData, ...newAuthResponse };
+  } catch (refreshError) {
+    // If refresh fails, return null to clear session
+    return null;
+  }
+};
+
+/**
+ * Hook to access the current auth state using react-query
+ * @returns The current AuthResponse or undefined if not authenticated
+ */
+export const useAuthSession = () => {
+  const queryClient = useQueryClient();
+
+  const query = useQuery<AuthResponse | null>({
+    queryKey: AUTH_QUERY_KEY,
+    queryFn: async () => {
+      const stored = await loadAuthStateFromStorage();
+      if (!stored) {
+        return null;
+      }
+
+      // Try to refresh the token if we have a refresh token
+      const refreshed = await refreshAuthToken(stored);
+      if (refreshed) {
+        // Save refreshed token
+        await saveAuthStateToStorage(refreshed);
+        return refreshed;
+      }
+
+      // Refresh failed, clear storage
+      await saveAuthStateToStorage(null);
+      return null;
+    },
+    staleTime: Infinity, // Auth state doesn't become stale
+    gcTime: Infinity, // Never garbage collect auth state
+    retry: false,
+  });
+
+  const authResponse = query.data || undefined;
+
+  // Setup Storage.getUserID callback
+  React.useEffect(() => {
+    const userID = authResponse?.id
+      ? authResponse.id === ''
+        ? null
+        : authResponse.id.toString()
+      : null;
+    Storage.setGetUserID(async () => {
+      return userID || '';
+    });
+  }, [authResponse?.id]);
+
+  // Update Brewskey API tokens when auth state changes
+  React.useEffect(() => {
+    if (authResponse?.accessToken) {
+      BrewskeyJSApi.setToken(authResponse.accessToken);
+      BrewskeyJSApi.setRefreshToken(authResponse.refreshToken);
+    }
   }, [authResponse]);
 
+  // Setup session update listener
   React.useEffect(() => {
-    BrewskeyJSApi.setOnSessionUpdated(setAuthResponse);
-  }, [setAuthResponse]);
+    const setAuthResponse = async (response: AuthResponse | undefined) => {
+      const value = response || null;
 
-  return (
-    <AuthContext.Provider value={[authResponse, setAuthResponse]}>
-      {children}
-    </AuthContext.Provider>
+      // Update query cache
+      queryClient.setQueryData<AuthResponse | null>(AUTH_QUERY_KEY, value);
+
+      // Save to Storage
+      await saveAuthStateToStorage(value);
+
+      // Update Brewskey API tokens
+      if (response) {
+        BrewskeyJSApi.setToken(response.accessToken);
+        BrewskeyJSApi.setRefreshToken(response.refreshToken);
+      }
+    };
+
+    BrewskeyJSApi.setOnSessionUpdated((session, error) => {
+      if (error) {
+        console.error(error);
+      }
+      setAuthResponse(session ?? undefined);
+    });
+  }, [queryClient]);
+
+  return {
+    authResponse,
+    isLoading: query.isLoading,
+  };
+};
+
+/**
+ * Hook to set auth response (for login/logout)
+ */
+export const useSetAuthSession = () => {
+  const queryClient = useQueryClient();
+
+  return React.useCallback(
+    async (response: AuthResponse | undefined) => {
+      const value = response || null;
+
+      // Update query cache
+      queryClient.setQueryData<AuthResponse | null>(AUTH_QUERY_KEY, value);
+
+      // Save to Storage
+      await saveAuthStateToStorage(value);
+
+      // Update Brewskey API tokens
+      if (response) {
+        BrewskeyJSApi.setToken(response.accessToken);
+        BrewskeyJSApi.setRefreshToken(response.refreshToken);
+      }
+    },
+    [queryClient],
   );
 };
 
-export const useAuthContext = () => React.useContext(AuthContext);
+/**
+ * Backward compatibility hook - returns tuple like the old useAuthContext
+ */
+export const useAuthContext = () => {
+  const { authResponse, isLoading } = useAuthSession();
+  const setAuthResponse = useSetAuthSession();
+
+  return [authResponse, setAuthResponse] as const;
+};
 
 export const useIsSignedIn = () => {
-  const [session] = useAuthContext();
-  return session != null;
+  const { authResponse } = useAuthSession();
+  return authResponse != null;
 };
 
 export const useIsSignedOut = () => {
-  const [session] = useAuthContext();
-  return session == null;
+  const { authResponse } = useAuthSession();
+  return authResponse == null;
 };

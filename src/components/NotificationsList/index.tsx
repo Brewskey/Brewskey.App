@@ -3,44 +3,44 @@ import type { Notification } from '../../stores/NotificationsStore';
 import * as React from 'react';
 
 import List from '../../common/List';
-import ErrorBoundary from '../../common/ErrorBoundary';
+import { ErrorBoundary } from '../../common/ErrorBoundary';
 import ErrorListItem from '../../common/ErrorListItem';
 import ListEmpty from '../../common/ListEmpty';
 import NotificationsStore from '../../stores/NotificationsStore';
 import NotificationComponentByType from './NotificationComponentByType';
 
-class NotificationsList extends React.Component<Record<any, any>> {
-  _keyExtractor = (notification) => notification.id;
+const NotificationsList: React.FC = () => {
+  const keyExtractor = React.useCallback((notification: Notification) => notification.id, []);
 
-  _onItemOpen = (notification: Notification) => {
+  const handleItemOpen = React.useCallback((notification: Notification) => {
     NotificationsStore.deleteByID(notification.id);
-  };
+  }, []);
 
-  _onNotificationReadEnd = (notification: Notification) =>
+  const handleNotificationReadEnd = React.useCallback((notification: Notification) => {
     NotificationsStore.setRead(notification.id);
+  }, []);
 
-  _renderItem = ({ item }: { item: Notification }): React.ReactElement => (
-    <ErrorBoundary fallbackComponent={ErrorListItem}>
-      <NotificationComponentByType
-        isSwipeable
-        notification={item}
-        onOpen={this._onItemOpen}
-        onPress={NotificationsStore.onNotificationPress}
-        onReadEnd={this._onNotificationReadEnd}
-      />
+  const renderItem = React.useCallback(({ item }: { item: Notification }): React.ReactElement => (
+    <ErrorBoundary fallbackComponent={<ErrorListItem error={new Error('Component error')} />}>
+      {React.createElement(NotificationComponentByType, {
+        isSwipeable: true,
+        notification: item,
+        onOpen: handleItemOpen,
+        onPress: NotificationsStore.onNotificationPress,
+        onReadEnd: handleNotificationReadEnd,
+      })}
     </ErrorBoundary>
-  );
+  ), [handleItemOpen, handleNotificationReadEnd]);
 
-  render(): React.ReactElement {
-    return (
-      <List
-        data={NotificationsStore.notifications}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={<ListEmpty message="No new notifications!" />}
-        renderItem={this._renderItem}
-      />
-    );
-  }
-}
+  return (
+    <List
+       
+      data={{ pages: [NotificationsStore.notifications], pageParams: [0] } as any}
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={<ListEmpty message="No new notifications!" />}
+      renderItem={renderItem}
+    />
+  );
+};
 
 export default NotificationsList;

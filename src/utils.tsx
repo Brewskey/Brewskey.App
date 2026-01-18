@@ -4,11 +4,11 @@ import * as React from 'react';
 import { Dimensions, Platform, StatusBar } from 'react-native';
 import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
 
-// eslint-disable-next-line
+ 
 const EMAIL_REGEXP =
   /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
-export const createRange = (start: number, end: number): Array<number> =>
+export const createRange = (start: number, end: number): number[] =>
   Array(end - start)
     .fill(start)
     .map((x: number, y: number): number => x + y);
@@ -62,31 +62,41 @@ export const getElementFromComponentProp = <
   return <CastedComponent />;
 };
 
-export const parseError = (error: any): string => {
+type ErrorWithModelState = {
+  ModelState?: Record<string, string[]>;
+  error_description?: string;
+  Message?: string;
+};
+
+export const parseError = (error: unknown): string => {
   if (typeof error === 'string') {
     return error;
   }
 
-  if (error.ModelState) {
-    let resultErrorMessage = '';
-    Array.from(Object.values(error.ModelState)).forEach((fieldErrorArray) => {
-      const castedFieldErrorArray = fieldErrorArray as Array<string>;
+  if (typeof error === 'object' && error !== null) {
+    const errorObj = error as ErrorWithModelState;
 
-      new Set(castedFieldErrorArray).forEach(
-        (fieldError: string): string =>
-          (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
-      );
-    });
+    if (errorObj.ModelState) {
+      let resultErrorMessage = '';
+      Array.from(Object.values(errorObj.ModelState)).forEach((fieldErrorArray) => {
+        if (Array.isArray(fieldErrorArray)) {
+          new Set(fieldErrorArray).forEach(
+            (fieldError: string): string =>
+              (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
+          );
+        }
+      });
 
-    return resultErrorMessage;
-  }
+      return resultErrorMessage;
+    }
 
-  if (error.error_description) {
-    return error.error_description;
-  }
+    if (errorObj.error_description) {
+      return errorObj.error_description;
+    }
 
-  if (error.Message) {
-    return error.Message;
+    if (errorObj.Message) {
+      return errorObj.Message;
+    }
   }
 
   return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
@@ -95,7 +105,7 @@ export const parseError = (error: any): string => {
 export const fetchJSON = async <TResult extends Record<string, unknown>>(
   ...fetchArgs: Parameters<typeof fetch>
 ): Promise<TResult> => {
-  // eslint-disable-next-line no-undef
+   
   const response = await fetch(...fetchArgs);
 
   let responseJson;

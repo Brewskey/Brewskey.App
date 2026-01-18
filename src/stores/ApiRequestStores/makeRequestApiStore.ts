@@ -2,8 +2,8 @@ import nullthrows from 'nullthrows';
 
 // Collection of all the API stores. This is used for flushing when
 // logging out.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const STORES: Array<Store<any>> = [];
+ 
+const STORES: Store<any>[] = [];
 
 export const flushAPIStoreCaches = () =>
   STORES.forEach((store) => store.flushCache());
@@ -57,8 +57,7 @@ class Store<TResult> {
 }
 
 const makeRequestApiStore: <TResult>(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getRequestPromise: (...args: any[]) => Promise<TResult>,
+  getRequestPromise: (...args: unknown[]) => Promise<TResult>,
 ) => Store<TResult> = (getRequestPromise) => {
   const store = new Store(getRequestPromise);
   STORES.push(store);

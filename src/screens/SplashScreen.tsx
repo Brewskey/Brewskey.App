@@ -1,20 +1,18 @@
 import * as React from 'react';
-import RNSplashScreen from 'react-native-splash-screen';
+import * as SplashScreen from 'expo-splash-screen';
 import Container from '../common/Container';
 import AppLoading from '../components/AppLoading';
 
-class SplashScreen extends React.Component<Record<any, any>> {
-  componentDidMount() {
-    RNSplashScreen.hide();
-  }
+const SplashScreenComponent: React.FC = () => {
+  React.useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
 
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <AppLoading />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <AppLoading />
+    </Container>
+  );
+};
 
-export default SplashScreen;
+export default SplashScreenComponent;

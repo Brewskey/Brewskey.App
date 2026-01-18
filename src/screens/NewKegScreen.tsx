@@ -1,63 +1,100 @@
 import type { EntityID, KegMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
+import { useNavigation, StaticScreenProps, NavigationProp, CommonActions } from '@react-navigation/native';
 
-import { NavigationActions, StackActions } from 'react-navigation';
-import DAOApi from '@brewskey/js-api';
-import { TapStore } from '../stores/DAOStores';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
 import KegForm from '../components/KegForm';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import NavigationService from '../NavigationService';
+import { useCreateKeg } from '../hooks/queries/KegQueries';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 
-type InjectedComponentProps = {
-  navigation: Navigation;
-  onTapSetupFinish?: (tapID: EntityID) => undefined | Promise<any>;
+type Props = StaticScreenProps<{
   tapId: EntityID;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NewKegScreen extends InjectedComponent<InjectedComponentProps> {
-  _onFormSubmit = async (values: KegMutator): Promise<void> => {
-    const { navigation, onTapSetupFinish, tapId } = this.injectedProps;
-    const clientID = DAOApi.KegDAO.post(values);
-    await DAOApi.KegDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    TapStore.flushCacheForEntity(tapId);
+export const NewKegScreen: React.FC<Props> = ({
+  route: {
+    params: { tapId },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-    SnackBarStore.showMessage({ text: 'New keg added' });
+  const createKeg = useCreateKeg();
+  const addSnackBarMessage = useAddSnackBarMessage();
 
-    if (onTapSetupFinish) {
-      onTapSetupFinish(tapId);
-      return;
+  const onFormSubmit = async (values: KegMutator): Promise<KegMutator> => {
+    await createKeg.mutateAsync(values);
+    addSnackBarMessage({ content: 'New keg added' });
+    
+    // Navigate back or to tap details
+    if (navigation.canGoBack()) {
+      navigation.goBack();
+    } else if (tapId) {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            {
+              name: 'LoggedInStack',
+              params: {
+                screen: 'menu',
+                params: {
+                  screen: 'taps',
+                },
+              },
+            },
+            {
+              name: 'LoggedInStack',
+              params: {
+                screen: 'menu',
+                params: {
+                  screen: 'taps',
+                  params: {
+                    screen: 'tapDetails',
+                    params: { tapId },
+                  },
+                },
+              },
+            },
+          ],
+        }),
+      );
+    } else {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'LoggedInStack',
+              params: {
+                screen: 'menu',
+                params: {
+                  screen: 'taps',
+                },
+              },
+            },
+          ],
+        }),
+      );
     }
-
-    NavigationService.reset('menu', 'menu');
-    NavigationService.navigate('taps');
-    NavigationService.navigate('tapDetails', { id: tapId });
+    return values;
   };
 
-  render(): React.ReactElement {
-    const { tapId } = this.injectedProps;
-    return (
-      <Container>
-        <Header showBackButton title="Add keg" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <KegForm
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Add keg"
-            tapId={tapId}
-            onFloatedSubmit={() => {}}
-          />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Header showBackButton title="Add keg" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <KegForm
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Add keg"
+          tapId={tapId}
+          onFloatedSubmit={async (values) => values}
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
 
 export default NewKegScreen;

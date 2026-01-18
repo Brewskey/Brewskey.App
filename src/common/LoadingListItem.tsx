@@ -28,36 +28,24 @@ type Props = React.ComponentProps<typeof ListItem> & {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-class LoadingListItem extends React.PureComponent<Props> {
-  _subtitleContainerWidth = `${getRandomInt(60, 80)}%`;
-
-  _titleContainerWidth = `${getRandomInt(30, 50)}%`;
-
-  render(): React.ReactElement {
-    const { containerStyle: _, ...otherProps } = this.props;
-    return (
-      <ListItem
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        {...(otherProps as any)}
-        chevron={false}
-        subtitle="none"
-        subtitleStyle={[
-          styles.subtitleContainerStyle,
-          styles.subtitleStyle,
-          // { width: this._subtitleContainerWidth },
-        ]}
-        title="none"
-        titleStyle={[
-          styles.titleContainerStyle,
-          // {
-          //   width: this._titleContainerWidth,
-          // },
-          styles.titleStyle,
-        ]}
-        containerStyle={[styles.container, this.props.containerStyle]}
-      />
-    );
-  }
-}
+const LoadingListItem: React.FC<Props> = ({ containerStyle, ...otherProps }) => {
+  return (
+    <ListItem
+      {...otherProps}
+      chevron={false}
+      subtitle="none"
+      subtitleStyle={[
+        styles.subtitleContainerStyle,
+        styles.subtitleStyle,
+      ]}
+      title="none"
+      titleStyle={[
+        styles.titleContainerStyle,
+        styles.titleStyle,
+      ]}
+      containerStyle={[styles.container, containerStyle]}
+    />
+  );
+};
 
 export default LoadingListItem;

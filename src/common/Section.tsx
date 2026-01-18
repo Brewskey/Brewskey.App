@@ -1,7 +1,5 @@
-import type {Style} from '../types';
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { COLORS, getElevationStyle } from '../theme';
 
 const styles = StyleSheet.create({
@@ -22,30 +20,27 @@ const styles = StyleSheet.create({
 type Props = {
   bottomPadded?: boolean,
   children?: React.ReactNode,
-  innerContainerStyle?: Style
+  innerContainerStyle?: StyleProp<ViewStyle>
 };
 
-class Section extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    const { bottomPadded, children, innerContainerStyle } = this.props;
-    const innerElement = (
-      <View
-        style={[
-          styles.innerContainer,
-          bottomPadded && styles.innerContainerPadded,
-          innerContainerStyle,
-        ]}
-      >
-        {children}
-      </View>
-    );
+const Section: React.FC<Props> = ({ bottomPadded, children, innerContainerStyle }) => {
+  const innerElement = (
+    <View
+      style={[
+        styles.innerContainer,
+        bottomPadded && styles.innerContainerPadded,
+        innerContainerStyle,
+      ]}
+    >
+      {children}
+    </View>
+  );
 
-    return bottomPadded ? (
-      <View style={styles.outerContainerPadded}>{innerElement}</View>
-    ) : (
-      innerElement
-    );
-  }
-}
+  return bottomPadded ? (
+    <View style={styles.outerContainerPadded}>{innerElement}</View>
+  ) : (
+    innerElement
+  );
+};
 
 export default Section;

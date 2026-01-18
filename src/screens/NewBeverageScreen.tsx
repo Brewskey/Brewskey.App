@@ -1,67 +1,96 @@
 import type { BeverageMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
-import { NavigationActions, StackActions } from 'react-navigation';
-
-import DAOApi from '@brewskey/js-api';
+import { useNavigation, NavigationProp, CommonActions } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { waitForLoaded } from '../stores/DAOStores';
-import { UpdateBeverageImageStore } from '../stores/ApiRequestStores/CommonApiStores';
+
 import { flushImageCache } from '../common/CachedImage';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import BeverageForm from '../components/BeverageForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import CONFIG from '../config';
-import NavigationService from '../NavigationService';
+import { useCreateBeverage } from '../hooks/queries/BeverageQueries';
+import { useAccessToken } from '../stores/AuthStore';
 
-type InjectedProps = {
-  navigation: Navigation;
+const updateBeverageImage = async (beverageID: string, beverageData: string, accessToken: string | null): Promise<void> => {
+  await fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
+    body: JSON.stringify({ photo: beverageData }),
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${accessToken || ''}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'PUT',
+  });
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class NewBeverageScreen extends InjectedComponent<InjectedProps> {
-  _onFormSubmit = async (
+const NewBeverageScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const createMutation = useCreateBeverage();
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const accessToken = useAccessToken();
+
+  const onFormSubmit = async (
     values: BeverageMutator & {
       beverageImage?: string;
     },
   ): Promise<void> => {
-    const { navigation } = this.injectedProps;
     const { beverageImage, ...beverageMutator } = values;
-    const clientID = DAOApi.BeverageDAO.post(beverageMutator);
-    const { id } = await DAOApi.BeverageDAO.waitForLoaded((dao) =>
-      dao.fetchByID(clientID),
-    );
+    
+    const beverage = await createMutation.mutateAsync(beverageMutator);
+    const id = beverage.id;
 
     if (beverageImage) {
-      await waitForLoaded(() =>
-        UpdateBeverageImageStore.get(id, beverageImage),
-      );
-      UpdateBeverageImageStore.flushCache();
-      flushImageCache(`${CONFIG.CDN}beverages/${id.toString()}`);
+      await updateBeverageImage(String(id), beverageImage, accessToken);
+      flushImageCache(`${CONFIG.CDN}beverages/${String(id)}`);
     }
 
-    NavigationService.reset('menu', 'menu');
-    NavigationService.navigate('myBeverages');
-    NavigationService.navigate('beverageDetails', { id });
-    SnackBarStore.showMessage({ text: 'New beverage created.' });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          {
+            name: 'LoggedInStack',
+            params: {
+              screen: 'menu',
+              params: {
+                screen: 'myBeverages',
+              },
+            },
+          },
+          {
+            name: 'LoggedInStack',
+            params: {
+              screen: 'menu',
+              params: {
+                screen: 'myBeverages',
+                params: {
+                  screen: 'beverageDetails',
+                  params: { id },
+                },
+              },
+            },
+          },
+        ],
+      }),
+    );
+    addSnackBarMessage({ content: 'New beverage created.' });
   };
 
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header showBackButton title="New beverage" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <BeverageForm
-            onSubmit={this._onFormSubmit}
-            submitButtonLabel="Create beverage"
-          />
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Header showBackButton title="New beverage" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <BeverageForm
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Create beverage"
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
 
-export default NewBeverageScreen;
+export default withErrorBoundary(NewBeverageScreen, <ErrorScreen showBackButton />);

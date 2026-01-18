@@ -7,7 +7,7 @@ import * as React from 'react';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import QuickActions from '../common/QuickActions';
 import { SwipeableList } from '../common/SwipeableList';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
 import ListItem from '../common/ListItem';
@@ -15,7 +15,7 @@ import {
   useDeleteBeverageById,
   useGetBeverages,
 } from '../hooks/queries/BeverageQueries';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 type Props = {
   ListHeaderComponent?:
@@ -27,14 +27,24 @@ type Props = {
 };
 
 const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const deleteBeverage = useDeleteBeverageById();
+  const addSnackBarMessage = useAddSnackBarMessage();
   const onDeleteItemPress = async (deleteItem: Beverage): Promise<void> => {
     await deleteBeverage.mutate(deleteItem.id);
-    SnackBarStore.showMessage({ content: 'The beverage was deleted' });
+    addSnackBarMessage({ content: 'The beverage was deleted' });
   };
   const onEditItemPress = ({ id }: Beverage) => {
-    navigation.navigate('editBeverage', { id });
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'myBeverages',
+        params: {
+          screen: 'editBeverage',
+          params: { id },
+        },
+      },
+    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
   };
 
   return (
@@ -52,29 +62,39 @@ export const BeveragesList: React.FC<Props> = ({
   queryOptions,
   ListHeaderComponent,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const beverages = useGetBeverages({
+    ...queryOptions,
     orderBy: [
       {
         column: 'id',
         direction: 'desc',
       },
     ],
-    ...queryOptions,
   });
 
   const keyExtractor = (row: Beverage): string => row.id.toString();
 
   const onItemPress = (item: Beverage): void =>
-    navigation.navigate('beverageDetails', {
-      id: item.id,
-    });
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'myBeverages',
+        params: {
+          screen: 'beverageDetails',
+          params: {
+            id: item.id,
+          },
+        },
+      },
+    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
 
   const renderRow = ({
     info: { item },
   }: RenderProps<Beverage>): React.ReactElement => (
     <ListItem
-      slideoutComponent={Slideout}
+      swipeable
+      slideoutComponent={<Slideout item={item} />}
       leftAvatar={<BeverageAvatar beverageId={item.id} />}
       chevron={false}
       item={item}
@@ -88,7 +108,7 @@ export const BeveragesList: React.FC<Props> = ({
   return (
     <SwipeableList<Beverage>
       listType="flatList"
-      data={beverages.data ?? []}
+      data={beverages.data}
       ListHeaderComponent={ListHeaderComponent}
       ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
       keyExtractor={keyExtractor}

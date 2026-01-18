@@ -36,3 +36,10 @@ export const DESCRIPTION_BY_DEVICE_STATE = {
     'Your Brewskey Box will open the valve ' +
     'and allow users to pour without authentication.',
 } as const;
+
+// todo move to secure please when it will be real key
+// Supports both environment variable (EXPO_PUBLIC_GOOGLE_MAPS_API_KEY) and fallback
+export const GOOGLE_MAPS_API_KEY =
+  (typeof process !== 'undefined' &&
+    process.env?.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY) ||
+  'AIzaSyBPqEEbjnIVv-NYTuxMUGoSStG4U1h0-8s';

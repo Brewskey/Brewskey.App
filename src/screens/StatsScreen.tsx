@@ -1,9 +1,8 @@
 import type { AchievementType } from '@brewskey/js-api';
 
 import * as React from 'react';
-import DAOApi from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import nullthrows from 'nullthrows';
-import AuthStore from '../stores/AuthStore';
 import ErrorScreen from '../common/ErrorScreen';
 import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
@@ -72,7 +71,7 @@ export const StatsScreen: React.FC<Props> = withErrorBoundary(
           }
           onRefresh={onRefresh}
           queryOptions={{
-            filters: [DAOApi.createFilter('owner/id').equals(`'${userID}'`)],
+            filters: [createFilter('owner/id').equals(`'${userID}'`)],
             orderBy: [{ column: 'id', direction: 'desc' }],
           }}
         />

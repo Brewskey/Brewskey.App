@@ -9,16 +9,16 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = (React.ComponentProps<typeof ListItem>) & {
-  isSelected: boolean,
-  item: TEntity
+type Props<TEntity> = React.ComponentProps<typeof ListItem> & {
+  isSelected: boolean;
+  item: TEntity;
 };
 
-const SelectableListItem = <TEntity extends unknown>(
-  {
-    isSelected,
-    ...rest
-  }: Props<TEntity>,
-): React.ReactElement => <ListItem {...rest} containerStyle={isSelected && styles.selected} />;
+const SelectableListItem = <TEntity,>({
+  isSelected,
+  ...rest
+}: Props<TEntity>): React.ReactElement => (
+  <ListItem {...rest} containerStyle={isSelected && styles.selected} />
+);
 
 export default SelectableListItem;

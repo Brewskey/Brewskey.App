@@ -7,6 +7,7 @@ import {
   Icon,
   IconProps,
   ListItem as RNEListItem,
+  Switch,
 } from '@rneui/themed';
 
 const styles = StyleSheet.create({
@@ -20,28 +21,46 @@ const styles = StyleSheet.create({
 type Props<TItem> = (
   | ({
       swipeable: true;
-      slideoutComponent: React.ComponentType<{ item: TItem | undefined }>;
+      slideoutComponent: React.ReactNode;
+      item: TItem;
+      onPress?: ((item: TItem) => void) | undefined;
     } & Omit<React.ComponentProps<typeof RNEListItem.Swipeable>, 'onPress'>)
-  | ({ swipeable?: false } & Omit<
-      React.ComponentProps<typeof RNEListItem>,
-      'onPress'
-    >)
+  | ({ swipeable?: false } & (
+      | {
+          item: TItem;
+          onPress?: ((item: TItem) => void) | undefined;
+        }
+      | { item?: never; onPress?: (() => void) | undefined }
+    ) &
+      Omit<React.ComponentProps<typeof RNEListItem>, 'onPress'>)
 ) & {
   containerStyle?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   subtitleStyle?: StyleProp<TextStyle>;
-  item?: TItem;
-  onPress?: (item: TItem | undefined) => void;
   leftAvatar?: React.ReactNode;
   title: React.ReactNode;
   subtitle?: React.ReactNode;
   rightIcon?: IconProps | React.ReactElement;
   chevron?: boolean;
   badge?: BadgeProps | undefined;
+  switch?: {
+    onValueChange: (value: boolean) => void;
+    value: boolean;
+  };
 };
 
 class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
-  _onPress = (): void => this.props.onPress?.(this.props.item);
+  _onPress = (): void => {
+    if (this.props.swipeable) {
+      this.props.onPress?.(this.props.item);
+    } else if (this.props.item != null) {
+      this.props.onPress?.(this.props.item);
+    } else {
+      // For non-swipeable items without an item, onPress should be () => void
+      const onPress = this.props.onPress as (() => void) | undefined;
+      onPress?.();
+    }
+  };
 
   render(): React.ReactElement {
     const {
@@ -49,6 +68,7 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
       onPress: _2,
       rightIcon,
       swipeable,
+      switch: switchParams,
       ...otherProps
     } = this.props;
 
@@ -67,22 +87,33 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
 
           {this.props.chevron === true ? <RNEListItem.Chevron /> : null}
         </RNEListItem.Content>
-        {rightIcon != null ? (
-          React.isValidElement(rightIcon) ? (
-            rightIcon
-          ) : (
-            <Icon {...(rightIcon as IconProps)} />
-          )
-        ) : null}
+        <>
+          {rightIcon != null ? (
+            React.isValidElement(rightIcon) ? (
+              rightIcon
+            ) : (
+              <Icon {...(rightIcon as IconProps)} />
+            )
+          ) : null}
+          {switchParams != null ? (
+            <Switch
+              value={switchParams.value}
+              onValueChange={switchParams.onValueChange}
+            />
+          ) : null}
+        </>
         {this.props.badge ? <Badge {...this.props.badge} /> : null}
       </>
     );
 
     if (swipeable) {
-      const SlideoutComponent = this.props.slideoutComponent;
       return (
         <RNEListItem.Swipeable
-          rightContent={() => <SlideoutComponent item={item} />}
+          rightContent={this.props.slideoutComponent}
+          {...otherProps}
+          containerStyle={[styles.container, this.props.containerStyle]}
+          onPress={this._onPress}
+          bottomDivider
         >
           {content}
         </RNEListItem.Swipeable>

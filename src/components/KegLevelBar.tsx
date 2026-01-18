@@ -60,68 +60,51 @@ type LoadedProps = {
   value: Keg;
 };
 
-class LoadedKegLevelBar extends React.Component<LoadedProps> {
-  _animationValue: Animated.Value;
+const LoadedKegLevelBar: React.FC<LoadedProps> = ({ value }) => {
+  const animationValue = React.useRef(new Animated.Value(0)).current;
 
-  constructor(props: LoadedProps) {
-    super(props);
-    this._animationValue = new Animated.Value(0);
-    this._animate();
-  }
-
-  componentWillMount() {}
-
-  componentDidUpdate(prevProps: LoadedProps) {
-    if (this.props.value !== prevProps.value) {
-      this._animationValue.setValue(0);
-      this._animate();
-    }
-  }
-
-  _animate = () => {
-    Animated.timing(this._animationValue, {
+  React.useEffect(() => {
+    animationValue.setValue(0);
+    Animated.timing(animationValue, {
       delay: 300,
       duration: 500,
       toValue: 1,
       useNativeDriver: false,
     }).start();
-  };
+  }, [value, animationValue]);
 
-  render(): React.ReactElement {
-    const { value } = this.props;
-    const kegLevel = calculateKegLevel(value);
-    const isLowLevel = kegLevel <= LOW_KEG_LEVEL;
-    const levelText = isLowLevel
-      ? `Low keg level: ${kegLevel.toFixed(0)}%`
-      : `${kegLevel.toFixed(0)}%`;
+  const kegLevel = calculateKegLevel(value);
+  const isLowLevel = kegLevel <= LOW_KEG_LEVEL;
+  const levelText = isLowLevel
+    ? `Low keg level: ${kegLevel.toFixed(0)}%`
+    : `${kegLevel.toFixed(0)}%`;
 
-    return (
-      <View style={styles.container}>
-        <Animated.View
-          style={[
-            styles.filledBar,
-            {
-              width: this._animationValue.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0%', `${kegLevel}%`],
-              }),
-            },
-            isLowLevel && styles.filledBarDanger,
-          ]}
-        />
-        <Text
-          style={[
-            styles.text,
-            kegLevel > 50 ? styles.textLeft : styles.textRight,
-            isLowLevel && styles.textDanger,
-          ]}
-        >
-          {levelText}
-        </Text>
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.filledBar,
+          {
+            width: animationValue.interpolate({
+              inputRange: [0, 1],
+              outputRange: ['0%', `${kegLevel}%`],
+            }),
+          },
+          isLowLevel && styles.filledBarDanger,
+        ]}
+      />
+      <Text
+        style={[
+          styles.text,
+          kegLevel > 50 ? styles.textLeft : styles.textRight,
+          isLowLevel && styles.textDanger,
+        ]}
+      >
+        {levelText}
+      </Text>
+    </View>
+  );
+};
 
 export const KegLevelBar: React.FC<Props> = ({ kegID }) => {
   const keg = useGetKegById(kegID);

@@ -1,5 +1,4 @@
 import * as Location from 'expo-location';
-import { useForegroundPermissions } from 'expo-location';
 import React from 'react';
 
 export const useGetLocation = (): {
@@ -7,9 +6,19 @@ export const useGetLocation = (): {
   permission: Location.LocationPermissionResponse | null;
   requestPermission: () => Promise<Location.LocationPermissionResponse>;
 } => {
-  const [locationPermission, requestPermission] = useForegroundPermissions();
+  const [locationPermission, setLocationPermission] =
+    React.useState<Location.LocationPermissionResponse | null>(null);
   const [location, setLocation] =
     React.useState<Location.LocationObject | null>(null);
+
+  // Check permissions on mount
+  React.useEffect(() => {
+    const checkPermission = async () => {
+      const permission = await Location.getForegroundPermissionsAsync();
+      setLocationPermission(permission);
+    };
+    void checkPermission();
+  }, []);
 
   React.useEffect(() => {
     if (locationPermission == null || locationPermission.status !== 'granted') {
@@ -22,6 +31,13 @@ export const useGetLocation = (): {
     };
     void updateLocation();
   }, [locationPermission]);
+
+  const requestPermission = React.useCallback(async () => {
+    const result = await Location.requestForegroundPermissionsAsync();
+    // Update state after requesting to ensure UI reflects the new permission status
+    setLocationPermission(result);
+    return result;
+  }, []);
 
   return {
     location,

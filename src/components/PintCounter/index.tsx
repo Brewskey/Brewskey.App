@@ -27,7 +27,7 @@ type Props = {
 };
 
 const PintCounter = ({ beverageID, ounces }: Props): React.ReactElement => {
-  const pints = translateToPints(ounces.toFixed(1));
+  const pints = translateToPints(ounces);
   const wholePints = createRange(0, Math.floor(pints));
   const partialPintLevel = (pints % 1) * 100;
 

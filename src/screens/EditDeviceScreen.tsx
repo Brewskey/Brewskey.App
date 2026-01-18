@@ -1,81 +1,71 @@
 import type {
-  Device,
   DeviceMutator,
   EntityID,
-  LoadObject,
 } from '@brewskey/js-api';
 
 import * as React from 'react';
-import DAOApi from '@brewskey/js-api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { computed } from 'mobx';
-
-import { DeviceStore } from '../stores/DAOStores';
+import { useNavigation, StaticScreenProps, NavigationProp } from '@react-navigation/native';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
-import LoaderComponent from '../common/LoaderComponent';
+import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
-import nullthrows from 'nullthrows';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
 import DeviceForm from '../components/DeviceForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useGetDeviceById, useUpdateDevice } from '../hooks/queries/DeviceQueries';
 
-type InjectedProps = {
+type Props = StaticScreenProps<{
   id: EntityID;
-  navigation: Navigation;
-};
+}>;
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class EditDeviceScreen extends InjectedComponent<InjectedProps> {
-  get _deviceLoader(): LoadObject<Device> {
-    return DeviceStore.getByID(this.injectedProps.id);
-  }
+const EditDeviceScreen: React.FC<Props> = ({
+  route: {
+    params: { id },
+  },
+}: Props) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-  _onFormSubmit = async (values: DeviceMutator): Promise<void> => {
-    const id = nullthrows(values.id);
-    const clientID = DAOApi.DeviceDAO.put(id, values);
+  const { data: device, isLoading } = useGetDeviceById(id);
+  const updateMutation = useUpdateDevice();
+  const addSnackBarMessage = useAddSnackBarMessage();
+
+  const onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     try {
-      await DAOApi.DeviceDAO.waitForLoaded((dao) => dao.fetchByID(clientID));
-    } catch (_: any) {
+      await updateMutation.mutateAsync(values);
+      navigation.goBack();
+      addSnackBarMessage({ content: 'The Brewskey box was edited' });
+    } catch (error: unknown) {
       throw new Error(
         "There was an issue saving your device. We'll look into it!",
       );
     }
-    this.injectedProps.navigation.goBack(null);
-    SnackBarStore.showMessage({ text: 'The Brewskey box was edited' });
   };
 
-  render(): React.ReactElement {
+  if (isLoading || !device) {
     return (
       <Container>
         <Header showBackButton title="Edit Brewskey box" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <LoaderComponent
-            loadedComponent={LoadedComponent}
-            loader={this._deviceLoader}
-            onFormSubmit={this._onFormSubmit}
-            updatingComponent={LoadedComponent}
-          />
+          <LoadingIndicator />
         </KeyboardAwareScrollView>
       </Container>
     );
   }
-}
 
-type LoadedComponentProps = {
-  onFormSubmit: (values: DeviceMutator) => Promise<void>;
-  value: Device;
+  return (
+    <Container>
+      <Header showBackButton title="Edit Brewskey box" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <DeviceForm
+          device={device}
+          onSubmit={onFormSubmit}
+          submitButtonLabel="Edit Device"
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
 };
 
-const LoadedComponent = ({ onFormSubmit, value }: LoadedComponentProps) => (
-  <DeviceForm
-    device={value}
-    onSubmit={onFormSubmit}
-    submitButtonLabel="Edit Device"
-  />
-);
-
-export default EditDeviceScreen;
+export default withErrorBoundary(EditDeviceScreen, <ErrorScreen showBackButton />);

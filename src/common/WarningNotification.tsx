@@ -26,26 +26,23 @@ type Props = {
   onPress: () => void;
 };
 
-class WarningNotification extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    const { message, onPress } = this.props;
-    return (
-      <TouchableItem onPress={onPress}>
-        <View style={styles.container}>
-          <Icon
-            color={COLORS.secondary2}
-            name="priority-high"
-            reverse
-            reverseColor={COLORS.accent}
-            size={15}
-          />
-          <View style={styles.messageContainer}>
-            <Text style={styles.messageText}>{message}</Text>
-          </View>
+const WarningNotification: React.FC<Props> = ({ message, onPress }) => {
+  return (
+    <TouchableItem onPress={onPress}>
+      <View style={styles.container}>
+        <Icon
+          color={COLORS.secondary2}
+          name="priority-high"
+          reverse
+          reverseColor={COLORS.accent}
+          size={15}
+        />
+        <View style={styles.messageContainer}>
+          <Text style={styles.messageText}>{message}</Text>
         </View>
-      </TouchableItem>
-    );
-  }
-}
+      </View>
+    </TouchableItem>
+  );
+};
 
 export default WarningNotification;

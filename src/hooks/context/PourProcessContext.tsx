@@ -9,7 +9,10 @@ import { useGetLocation } from '../useGetLocation';
 import { useAddSnackBarMessage } from './SnackBarContext';
 import NfcManager, {
   NfcAdapter,
+  NfcError,
+  NfcEvents,
   NfcTech,
+  RegisterTagEventOpts,
   TagEvent,
 } from 'react-native-nfc-manager';
 import { useAuthContext } from './AuthContext';
@@ -181,6 +184,35 @@ export const sendPourAuthorization = async (
   }
 };
 
+const listenForTagOnce = (
+  options?: RegisterTagEventOpts,
+): Promise<TagEvent> => {
+  const cleanUp = () => {
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+    NfcManager.setEventListener(NfcEvents.SessionClosed, null);
+  };
+
+  return new Promise((resolve, reject) => {
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag: TagEvent) => {
+      console.log(tag);
+      NfcManager.unregisterTagEvent();
+      cleanUp();
+      resolve(tag);
+    });
+
+    NfcManager.setEventListener(
+      NfcEvents.SessionClosed,
+      (error?: NfcError.NfcErrorBase) => {
+        console.log('closed');
+        cleanUp();
+        reject(error);
+      },
+    );
+
+    NfcManager.registerTagEvent(options);
+  });
+};
+
 export const usePourModalContext = (): PourProcessData & {
   setVisibility: (isVisible: boolean) => void;
   startPourAuthorization: (totp: string) => void;
@@ -196,8 +228,9 @@ export const usePourModalContext = (): PourProcessData & {
       if (isVisible) {
         setContextData({
           ...contextData,
+          isVisible: true,
           pourErrorText: null,
-          isLoading: true,
+          isLoading: false,
         });
         if (contextData.isNFCEnabled) {
           const sendPourAuthorizationParams = {
@@ -207,11 +240,15 @@ export const usePourModalContext = (): PourProcessData & {
             didAuthorizePayment: false,
             totp: '',
           };
-          await NfcManager.requestTechnology(NfcTech.Ndef, {
+          await listenForTagOnce({
             alertMessage: 'Tap Brewskey Box',
             invalidateAfterFirstRead: true,
-            isReaderModeEnabled: true,
-            readerModeFlags: NfcAdapter.FLAG_READER_NFC_A, // & NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+            // isReaderModeEnabled: true,
+            // readerModeFlags:
+            //   NfcAdapter.FLAG_READER_NFC_A |
+            //   NfcAdapter.FLAG_READER_NFC_B |
+            //   NfcAdapter.FLAG_READER_NFC_F |
+            //   NfcAdapter.FLAG_READER_NFC_V, // & NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
           })
             .then(() => NfcManager.getTag())
             .then(async (tag) => {
@@ -266,6 +303,7 @@ export const usePourModalContext = (): PourProcessData & {
       }
 
       if (contextData.isNFCEnabled) {
+        await NfcManager.unregisterTagEvent();
         await NfcManager.cancelTechnologyRequest();
       }
 

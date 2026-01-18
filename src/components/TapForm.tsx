@@ -1,31 +1,34 @@
-import type {
-  Device,
-  EntityID,
-  Organization,
-  Tap,
-  TapMutator,
-} from '@brewskey/js-api';
-import type { FormProps } from '../common/form/types';
+import type { Device, EntityID, Tap, TapMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { View } from 'react-native';
-import { withNavigationFocus } from 'react-navigation';
+import { useIsFocused } from '@react-navigation/native';
 
-import FormValidationMessage from '../common/form/FormValidationMessage';
-import Button from '../common/buttons/Button';
-import CheckBoxField from './CheckBoxField';
-import { AdvancedTextField } from '../common/form/TextField';
 import DevicePicker from './pickers/DevicePicker';
-import { form, FormField } from '../common/form';
-import { Fill } from 'react-slot-fill';
-import { DeviceStore, OrganizationStore } from '../stores/DAOStores';
+import { useGetOrganizationById } from '../hooks/queries/OrganizationQueries';
+import {
+  useGetDeviceById,
+  useGetDevices,
+} from '../hooks/queries/DeviceQueries';
+import { useForm } from 'react-hook-form';
+import { SubmitButton } from '../common/form/SubmitButton';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import SectionContent from '../common/SectionContent';
+import { Form } from '../common/form/Form';
+import { CheckBoxInput } from '../common/form/CheckBoxInput';
+import { TextField } from '../common/form/TextField';
+import { DropdownInput } from '../common/form/DropdownInput';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { TextInput } from '../common/form/TextInput';
+import { FormField } from '../common/form/FormField';
+import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
 
 const validate = (
   values: TapMutator,
 ): {
   [key: string]: string;
 } => {
-  const errors: Record<string, any> = {};
+  const errors: Record<string, string> = {};
 
   if (!values.deviceId) {
     errors.deviceId = 'Brewskey box is required';
@@ -36,98 +39,79 @@ const validate = (
 
 type Props = {
   isFocused?: boolean;
-  onSubmit: (values: TapMutator) => undefined | Promise<any>;
+  onSubmit: (values: TapMutator) => void | Promise<void>;
   submitButtonLabel: string;
+  organizationId: EntityID;
   tap?: Tap;
 };
 
-type InjectedProps = FormProps;
+export const TapForm: React.FC<Props> = ({
+  organizationId,
+  tap,
+  onSubmit,
+  submitButtonLabel,
+  isFocused: isFocusedProp,
+}) => {
+  const isFocusedNavigation = useIsFocused();
+  const isFocused = isFocusedProp ?? isFocusedNavigation;
+  const form = useForm<TapMutator>({
+    defaultValues: {
+      ...tap,
+      deviceId: tap?.device.id,
+      locationId: tap?.location?.id,
+    },
+  });
+  const [deviceSearchFilter, setDeviceSearch] = React.useState('');
+  const { data: organization } = useGetOrganizationById(organizationId);
+  const { data: devices } = useGetDevices({
+    filters:
+      deviceSearchFilter != null && deviceSearchFilter != ''
+        ? [createFilter('name').contains(deviceSearchFilter)]
+        : undefined,
+  });
 
-@form({ validate })
-@withNavigationFocus
-class TapForm extends InjectedComponent<InjectedProps, Props> {
-  get _organizationLoader(): LoadObject<Organization> {
-    const {
-      values: { deviceId },
-    } = this.injectedProps;
-
-    if (deviceId == null) {
-      return LoadObject.empty();
-    }
-
-    return DeviceStore.getByID(deviceId.id).map((device) =>
-      OrganizationStore.getByID(device.organization.id),
-    );
+  if (!organization) {
+    return null;
   }
 
-  render(): React.ReactElement {
-    const { isFocused, submitButtonLabel, tap = {} } = this.props;
-    const { formError, handleSubmit, invalid, pristine, submitting } =
-      this.injectedProps;
-
-    const organization = this._organizationLoader.getValue();
-
-    return (
+  return (
+    <Form form={form}>
       <View>
-        <FormField initialValue={tap.id} name="id" />
         <FormField
-          component={AdvancedTextField}
-          initialValue={tap.description}
+          component={TextInput}
           name="description"
           label="Description"
         />
-        <FormField
-          component={DevicePicker}
-          initialValue={tap.device}
+        <DropdownInput<Device>
+          data={devices?.pages.flat() ?? []}
+          labelField={'name'}
+          valueField={'id'}
           name="deviceId"
-          parseOnSubmit={(value: Device): EntityID => value.id}
+          required="Brewskey box is required"
+          search
+          searchQuery={(keyword) => {
+            setDeviceSearch(keyword);
+            return true;
+          }}
         />
         {organization == null || !organization.canEnablePayments ? null : (
-          <FormField
-            component={CheckBoxField}
-            disabled={submitting}
-            initialValue={tap.isPaymentEnabled}
+          <CheckBoxInput
             label="Enable Payments for this tap"
             name="isPaymentEnabled"
           />
         )}
-        <FormField
-          component={CheckBoxField}
-          disabled={submitting}
-          initialValue={tap.hideLeaderboard}
-          label="Hide leaderboard"
-          name="hideLeaderboard"
-        />
-        <FormField
-          component={CheckBoxField}
-          disabled={submitting}
-          initialValue={tap.hideStats}
-          label="Hide Stats tab"
-          name="hideStats"
-        />
-        <FormField
-          component={CheckBoxField}
-          disabled={submitting}
-          initialValue={tap.disableBadges}
-          label="Disable Badges for tap"
-          name="disableBadges"
-        />
-
+        <CheckBoxInput label="Hide leaderboard" name="hideLeaderboard" />
+        <CheckBoxInput label="Hide Stats tab" name="hideStats" />
+        <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
         {!isFocused ? null : (
-          <Fill name="MainTabBar">
-            <FormValidationMessage>{formError}</FormValidationMessage>
-            <Button
-              disabled={submitting || invalid || pristine}
-              loading={submitting}
-              onPress={handleSubmit}
-              style={{ marginVertical: 12 }}
-              title={submitButtonLabel}
-            />
-          </Fill>
+          <MainTabBarFill>
+            <FormValidationMessage />
+            <SectionContent paddedVertical>
+              <SubmitButton onSubmit={onSubmit} title={submitButtonLabel} />
+            </SectionContent>
+          </MainTabBarFill>
         )}
       </View>
-    );
-  }
-}
-
-export default TapForm;
+    </Form>
+  );
+};

@@ -1,7 +1,7 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 import { AchievementCounter, AchievementDAO, EntityID } from '@brewskey/js-api';
 
-enum AchievementQueryKeys {
+export enum AchievementQueryKeys {
   CountsByUserId = 'achievement_counts_by_user_id',
 }
 

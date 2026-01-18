@@ -1,12 +1,11 @@
 import type { Beverage, QueryOptions } from '@brewskey/js-api';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { BeverageStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import SelectableListItem from '../../common/SelectableListItem';
+import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
 
 type Props<TMultiple extends boolean> = {
   error?: string | null | undefined;
@@ -16,60 +15,49 @@ type Props<TMultiple extends boolean> = {
   value: PickerValue<Beverage, TMultiple>;
 };
 
-class BeveragePicker<TMultiple extends boolean> extends React.Component<
-  Props<TMultiple>
-> {
-  static defaultProps: {
-    multiple: boolean;
-  } = {
-    multiple: false,
-  };
-
-  _renderRow = ({ item: row, isSelected, toggleItem }) => (
-    <LoaderRow
+function BeveragePicker<TMultiple extends boolean>({
+  multiple = false as TMultiple,
+  ...props
+}: Props<TMultiple>): React.ReactElement {
+  const renderRow = ({
+    item: beverage,
+    isSelected,
+    toggleItem,
+  }: RenderRowProps<Beverage>): React.ReactElement => (
+    <SelectableListItem
+      leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={beverage}
+      subtitle={beverage.beverageType}
+      title={beverage.name}
+      onPress={() => toggleItem(beverage)}
     />
   );
 
-  render(): React.ReactElement {
-    const { multiple } = this.props;
-    return (
-      <DAOPicker
-        {...this.props}
-        daoStore={BeverageStore}
-        headerTitle={`Select Beverage${multiple ? 's' : ''}`}
-        label={`Beverage${multiple ? 's' : ''}`}
-        queryOptions={{
-          // order by ID so homebrew shows up first
-          orderBy: [
-            {
-              column: 'id',
-              direction: 'desc',
-            },
-          ],
-        }}
-        renderRow={this._renderRow}
-        shouldUseSearchQuery
-        stringValueExtractor={(beverage: Beverage): string => beverage.name}
-      />
-    );
-  }
+  return (
+    <DAOPicker
+      {...props}
+      useQueryHook={useGetBeverages}
+      headerTitle={`Select Beverage${multiple ? 's' : ''}`}
+      label={`Beverage${multiple ? 's' : ''}`}
+      multiple={multiple}
+      queryOptions={{
+        // order by ID so homebrew shows up first
+        orderBy: [
+          {
+            column: 'id',
+            direction: 'desc',
+          },
+        ],
+        ...props.queryOptions,
+      }}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={true}
+      stringValueExtractor={(beverage: Beverage): string => beverage.name}
+    />
+  );
 }
-
-// todo annotate better
-const LoadedRow = ({ item: beverage, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
-    chevron={false}
-    isSelected={isSelected}
-    item={beverage}
-    subtitle={beverage.beverageType}
-    title={beverage.name}
-    onPress={toggleItem}
-  />
-);
 
 export default BeveragePicker;

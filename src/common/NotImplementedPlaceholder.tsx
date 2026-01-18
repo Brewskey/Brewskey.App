@@ -11,14 +11,12 @@ const styles = StyleSheet.create({
   },
 });
 
-class NotImplementedPlaceholder extends React.PureComponent<Record<any, any>> {
-  render(): React.ReactElement {
-    return (
-      <Container centered>
-        <Text style={styles.text}>Coming soon...</Text>
-      </Container>
-    );
-  }
-}
+const NotImplementedPlaceholder: React.FC = () => {
+  return (
+    <Container centered>
+      <Text style={styles.text}>Coming soon...</Text>
+    </Container>
+  );
+};
 
 export default NotImplementedPlaceholder;

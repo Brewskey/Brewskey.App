@@ -92,7 +92,7 @@ export const LoaderComponent = <
 
   if (results.status === 'success') {
     return (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       <LoadedComponent {...(componentProps as any)} value={results.data} />
     );
   }

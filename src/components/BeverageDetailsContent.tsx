@@ -48,72 +48,62 @@ type State = {
   width: number;
 };
 
-class BeverageDetailsContent extends React.Component<Props, State> {
-  state: State = {
+const BeverageDetailsContent: React.FC<Props> = ({ beverage }) => {
+  const [imageSize, setImageSize] = React.useState<State>({
     height: 0,
     width: BEVERAGE_IMAGE_SIZE,
-  };
+  });
 
-  constructor(props: Props) {
-    super(props);
-    this._getSize();
-  }
-
-  _getURI = () =>
-    `${
+  const getURI = React.useCallback(() => {
+    return `${
       CONFIG.CDN
-    }beverages/${this.props.beverage.id.toString()}-large.jpg?w=${BEVERAGE_IMAGE_SIZE}&trim.threshold=80&mode=crop`;
+    }beverages/${beverage.id.toString()}-large.jpg?w=${BEVERAGE_IMAGE_SIZE}&trim.threshold=80&mode=crop`;
+  }, [beverage.id]);
 
-  _getSize = () => {
-    RNImage.getSize(this._getURI(), (width, height) => {
+  React.useEffect(() => {
+    RNImage.getSize(getURI(), (width, height) => {
       const calculatedHeight = (BEVERAGE_IMAGE_SIZE / width) * height;
-      this.setState({
+      setImageSize({
         height: Math.min(calculatedHeight, BEVERAGE_IMAGE_SIZE * 1.5),
+        width: BEVERAGE_IMAGE_SIZE,
       });
     });
-  };
+  }, [getURI]);
 
-  render(): React.ReactElement {
-    const {
-      beverage: { beverageType, description, glass, isOrganic, style, srm },
-    } = this.props;
+  const { beverageType, description, glass, isOrganic, style, srm } = beverage;
 
-    const { height, width } = this.state;
-
-    const imageSize = { height, width } as const;
-    return (
-      <Fragment>
-        <View style={[styles.imageContainer, styles.beverageImage, imageSize]}>
-          <Image
-            style={[styles.beverageImage, imageSize]}
-            source={{
-              uri: this._getURI(),
-            }}
-          />
-        </View>
-        <Text style={styles.descriptionText}>{description}</Text>
-        <OverviewItem title="Type" value={beverageType} />
-        {style ? <OverviewItem title="Style" value={style.name} /> : null}
-        {glass ? <OverviewItem title="Glass" value={glass.name} /> : null}
-        <OverviewItem title="Organic?" value={isOrganic ? 'Yes' : 'No'} />
-        {srm ? (
-          <OverviewItem
-            title="SRM"
-            value={
-              <View
-                style={{
-                  backgroundColor: `#${srm.hex}`,
-                  borderRadius: 12,
-                  height: 24,
-                  width: 24,
-                }}
-              />
-            }
-          />
-        ) : null}
-      </Fragment>
-    );
-  }
-}
+  return (
+    <Fragment>
+      <View style={[styles.imageContainer, styles.beverageImage, imageSize]}>
+        <Image
+          style={[styles.beverageImage, imageSize]}
+          source={{
+            uri: getURI(),
+          }}
+        />
+      </View>
+      <Text style={styles.descriptionText}>{description}</Text>
+      <OverviewItem title="Type" value={beverageType} />
+      {style ? <OverviewItem title="Style" value={style.name} /> : null}
+      {glass ? <OverviewItem title="Glass" value={glass.name} /> : null}
+      <OverviewItem title="Organic?" value={isOrganic ? 'Yes' : 'No'} />
+      {srm ? (
+        <OverviewItem
+          title="SRM"
+          value={
+            <View
+              style={{
+                backgroundColor: `#${srm.hex}`,
+                borderRadius: 12,
+                height: 24,
+                width: 24,
+              }}
+            />
+          }
+        />
+      ) : null}
+    </Fragment>
+  );
+};
 
 export default BeverageDetailsContent;

@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -13,21 +19,21 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  description: string,
-  image: number | null | undefined,
-  title: string
+  description: string;
+  image: ImageSourcePropType | undefined;
+  title: string;
 };
 
-const FlowSensorSwiperItem = (
-  {
-    description,
-    image,
-    title,
-  }: Props,
-): React.ReactElement => <View style={styles.container}>
-  <Text style={styles.title}>{title}</Text>
-  <Image source={image} style={styles.image} resizeMode="contain" />
-  <Text style={styles.description}>{description}</Text>
-</View>;
+const FlowSensorSwiperItem = ({
+  description,
+  image,
+  title,
+}: Props): React.ReactElement => (
+  <View style={styles.container}>
+    <Text style={styles.title}>{title}</Text>
+    <Image source={image} style={styles.image} resizeMode="contain" />
+    <Text style={styles.description}>{description}</Text>
+  </View>
+);
 
 export default FlowSensorSwiperItem;

@@ -1,35 +1,34 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import Fragment from '../common/Fragment';
 import LogoutModal from './modals/LogoutModal';
-import ToggleStore from '../stores/ToggleStore';
-import AuthStore from '../stores/AuthStore';
+import { useAuthActions } from '../stores/AuthStore';
 import MenuButton from './MenuButton';
 
-class MenuLogoutButton extends React.Component<Record<any, any>> {
-  _modalToggleStore = new ToggleStore();
+const MenuLogoutButton: React.FC = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { logout } = useAuthActions();
 
-  _onLogoutConform = () => {
-    this._modalToggleStore.toggleOff();
-    AuthStore.logout();
+  const onLogoutConfirm = async () => {
+    setIsModalVisible(false);
+    await logout();
   };
 
-  render(): React.ReactElement {
-    return (
-      <Fragment>
-        <MenuButton
-          icon={{ name: 'logout', type: 'material-community' }}
-          onPress={this._modalToggleStore.toggleOn}
-          title="Log Out"
-        />
-        <LogoutModal
-          isVisible={this._modalToggleStore.isToggled}
-          onCancelButtonPress={this._modalToggleStore.toggleOff}
-          onLogoutButtonPress={this._onLogoutConform}
-        />
-      </Fragment>
-    );
-  }
-}
+  return (
+    <Fragment>
+      <MenuButton
+        icon={{ name: 'logout', type: 'material-community' }}
+        onPress={() => setIsModalVisible(true)}
+        title="Log Out"
+      />
+      <LogoutModal
+        isVisible={isModalVisible}
+        onCancelButtonPress={() => setIsModalVisible(false)}
+        onLogoutButtonPress={onLogoutConfirm}
+      />
+    </Fragment>
+  );
+};
 
 export default MenuLogoutButton;

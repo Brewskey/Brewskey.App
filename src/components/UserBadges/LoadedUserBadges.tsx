@@ -62,6 +62,7 @@ const LoadedUserBadges = React.forwardRef<LoadedUserBadgesHandle, Props>(
                 achievementType={achievementType}
                 count={total}
                 onPress={selectAchievementCounterByType}
+                size="small"
               />
             </View>
           ),

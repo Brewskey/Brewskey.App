@@ -1,17 +1,11 @@
-import type {
-  EntityID,
-  LoadObject,
-  ParticleAttributes,
-} from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { computed } from 'mobx';
 
-import { CloudDeviceStore } from '../stores/DAOStores';
-import { Icon } from 'react-native-elements';
-import LoaderComponent from '../common/LoaderComponent';
+import { Icon } from '@rneui/themed';
 import theme, { COLORS } from '../theme';
+import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
 
 const ICON_SIZE_SUBSTRACT = 6;
 
@@ -31,47 +25,51 @@ const styles = StyleSheet.create({
 
 type Props = {
   particleID: EntityID;
-  size: number;
+  size?: number;
 };
 
-class DeviceOnlineIndicator extends React.Component<Props> {
-  static defaultProps: {
-    size: number;
-  } = {
-    size: 25,
-  };
+const DeviceOnlineIndicator: React.FC<Props> = ({ particleID, size = 25 }) => {
+  const { data: cloudDevice, isLoading, error } = useGetParticleAttributes(particleID);
+  
+  const sizeStyle = {
+    borderRadius: size / 2,
+    height: size,
+    width: size,
+  } as const;
+  const iconSize = size - ICON_SIZE_SUBSTRACT;
 
-  get _onlineStatusLoader(): LoadObject<boolean> {
-    return CloudDeviceStore.getOne(this.props.particleID).map(
-      ({ connected }: ParticleAttributes): boolean => connected,
-    );
-  }
-
-  render(): React.ReactElement {
-    const { size } = this.props;
-    const sizeStyle = {
-      borderRadius: size / 2,
-      height: size,
-      width: size,
-    } as const;
-    const iconSize = size - ICON_SIZE_SUBSTRACT;
-
+  if (isLoading) {
     return (
-      <LoaderComponent
-        errorComponent={ErrorComponent}
-        iconSize={iconSize}
-        loadedComponent={LoadedComponent}
-        loader={this._onlineStatusLoader}
-        loadingComponent={LoadingComponent}
-        sizeStyle={sizeStyle}
-      />
+      <View style={[styles.container, sizeStyle]}>
+        <ActivityIndicator size="small" />
+      </View>
     );
   }
-}
+
+  if (error) {
+    return (
+      <View style={[styles.container, sizeStyle]}>
+        <Icon color={COLORS.accent} name="priority-high" size={iconSize} />
+      </View>
+    );
+  }
+
+  const connected = cloudDevice?.connected ?? false;
+
+  return (
+    <View
+      style={[
+        styles.container,
+        sizeStyle,
+        connected ? styles.connected : styles.disconnected,
+      ]}
+    />
+  );
+};
 
 type ExtraProps = {
   iconSize: number;
-  sizeStyle: any;
+  sizeStyle: { borderRadius: number; height: number; width: number };
 };
 
 const LoadingComponent = ({ sizeStyle }: ExtraProps) => (

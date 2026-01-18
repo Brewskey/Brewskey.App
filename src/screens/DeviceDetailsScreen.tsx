@@ -1,10 +1,10 @@
-import type { Device, EntityID } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import DAOApi from '@brewskey/js-api';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary, withErrorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import TapsList from '../components/TapsList';
 import OverviewItem from '../common/OverviewItem2';
 import DeviceStateOverviewItem from '../components/DeviceStateOverviewItem';
@@ -14,65 +14,13 @@ import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import LoadingIndicator from '../common/LoadingIndicator';
 import Header from '../common/Header';
-import { StaticScreenProps, useNavigation } from '@react-navigation/native';
+import { StaticScreenProps, useNavigation, NavigationProp } from '@react-navigation/native';
 import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
-import { LoaderComponent } from '../common/LoaderComponent';
 import { useGetDeviceById } from '../hooks/queries/DeviceQueries';
 
 type Props = StaticScreenProps<{
   id: EntityID;
 }>;
-
-const LoadingComponent: React.FC = () => (
-  <Container>
-    <Header showBackButton />
-    <LoadingIndicator />
-  </Container>
-);
-
-type LoadedComponentProps = {
-  value: { device: Device };
-  onRefresh: () => Promise<unknown>;
-};
-const LoadedComponent: React.FC<LoadedComponentProps> = ({ value }) => {
-  const navigation = useNavigation();
-
-  const onAddTapPress = () => {
-    navigation.navigate('newTap', { initialValues: { device: value } });
-  };
-
-  return (
-    <Container>
-      <Header
-        rightComponent={
-          <HeaderNavigationButton
-            params={{ id: value.id }}
-            toRoute="loggedIn"
-          />
-        }
-        showBackButton
-        title={name}
-      />
-      <TapsList
-        ListHeaderComponent={
-          <Container>
-            <Section bottomPadded>
-              <OverviewItem title="Box ID" value={particleId} />
-              <DeviceStateOverviewItem deviceState={deviceStatus} />
-              <DeviceOnlineOverviewItem particleID={particleId} />
-            </Section>
-            <SectionHeader title="Taps" />
-          </Container>
-        }
-        onAddTapPress={this._onAddTapPress}
-        onRefresh={this._onRefresh}
-        queryOptions={{
-          filters: [DAOApi.createFilter('device/id').equals(id)],
-        }}
-      />
-    </Container>
-  );
-};
 
 export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
   ({
@@ -80,15 +28,72 @@ export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
       params: { id: deviceId },
     },
   }: Props) => {
-    const deviceQuery = useGetDeviceById(deviceId);
-    const queries = { device: deviceQuery };
+    const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+    const { data: device, isLoading, refetch } = useGetDeviceById(deviceId);
+
+    const onAddTapPress = () => {
+      if (device) {
+        navigation.navigate('LoggedInStack', {
+          screen: 'home',
+          params: {
+            screen: 'newTap',
+            params: {
+              initialValues: { device },
+            },
+          },
+        });
+      }
+    };
+
+    if (isLoading || !device) {
+      return (
+        <Container>
+          <Header showBackButton />
+          <LoadingIndicator />
+        </Container>
+      );
+    }
+
     return (
-      <LoaderComponent
-        loadedComponent={LoadedComponent}
-        queries={queries}
-        loadingComponent={LoadingComponent}
-        componentProps={{ onRefresh: deviceQuery.refetch }}
-      />
+      <Container>
+        <Header
+          rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+              params: {
+                screen: 'devices',
+                params: {
+                  screen: 'editDevice',
+                  params: { id: device.id },
+                },
+              },
+            }}
+          />
+          }
+          showBackButton
+          title={device.name}
+        />
+        <TapsList
+          ListHeaderComponent={
+            <Container>
+              <Section bottomPadded>
+                <OverviewItem title="Box ID" value={device.particleId} />
+                <DeviceStateOverviewItem deviceState={device.deviceStatus} />
+                <DeviceOnlineOverviewItem particleID={device.particleId} />
+              </Section>
+              <SectionHeader title="Taps" />
+            </Container>
+          }
+          onAddTapPress={onAddTapPress}
+          onRefresh={refetch}
+          queryOptions={{
+            filters: [createFilter('device/id').equals(deviceId)],
+          }}
+        />
+      </Container>
     );
   },
   <ErrorScreen showBackButton />,

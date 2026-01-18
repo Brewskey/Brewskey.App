@@ -34,7 +34,7 @@ const AchievementListItem = (props: Props): React.ReactElement => {
           <Text>{badge.description}</Text>
         </View>
       }
-      leftComponent={<BadgeIcon achievementType={achievementType} />}
+      leftComponent={<BadgeIcon achievementType={achievementType} size="small" />}
     />
   );
 };

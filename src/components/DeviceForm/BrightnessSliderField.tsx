@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Slider from '@react-native-community/slider';
-import FormLabel from '../../common/form/FormLabel';
+import { Slider, SliderProps } from '@rneui/themed';
+import { FormLabel } from '../../common/form/FormLabel';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -16,19 +16,16 @@ const styles = StyleSheet.create({
   subtitleText: { ...TYPOGRAPHY.small, color: COLORS.textFaded, marginTop: 8 },
 });
 
-type Props<RNSliderProps> = (RNSliderProps) & {
-  onChange: (value: number) => void,
-  value: number
-  // other RNSlider props
+type Props = SliderProps & {
+  onChange: (value: number) => void;
+  value: number;
 };
 
-const BrightnessSliderField = <RNSliderProps extends unknown>(
-  {
-    onChange,
-    value,
-    ...rest
-  }: Props<RNSliderProps>,
-): React.ReactElement => <View>
+const BrightnessSliderField = ({
+  onChange,
+  value,
+  ...rest
+}: Props): React.ReactElement => <View>
   <FormLabel>LED Brightness</FormLabel>
   <View style={styles.container}>
     <Slider

@@ -1,16 +1,18 @@
-import type { Tap } from '@brewskey/js-api';
+import type { EntityID, Tap } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { StyleSheet, ScrollView, Text, View } from 'react-native';
 
 import Button from '../../common/buttons/Button';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import NavigationService from '../../NavigationService';
-import PourPaymentStore from '../../stores/PourPaymentStore';
+import { useNavigation } from '@react-navigation/native';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
-import nullthrows from 'nullthrows';
+import ListItem from '../../common/ListItem';
+import { usePourModalContext } from '../../hooks/context/PourProcessContext';
+import { useGetTaps } from '../../hooks/queries/TapQueries';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 
 const styles = StyleSheet.create({
   content: {
@@ -45,82 +47,6 @@ const styles = StyleSheet.create({
   },
 });
 
-class PourProcessPaymentModal extends React.Component<Record<any, any>> {
-  _store = new PourPaymentStore(nullthrows(PourProcessStore.deviceID));
-
-  _onContinuePress = () => {
-    if (this._store.hasCreditCardDetails) {
-      // continue normal payment
-      PourProcessStore.startPaymentPour();
-    } else {
-      PourProcessStore.onHideModal();
-      NavigationService.navigate('payments');
-    }
-  };
-
-  render(): React.ReactElement {
-    const { isVisible, onHideModal } = PourProcessStore;
-
-    const tapsLoader = this._store.tapsWithPaymentEnabled;
-    const isLoading = tapsLoader.isLoading();
-    const taps = tapsLoader.getValue() || [];
-
-    const { hasCreditCardDetails } = this._store;
-    const buttonText = hasCreditCardDetails ? 'Continue' : 'Add Payment Info';
-
-    return (
-      <CenteredModal
-        contentContainerStyle={{ padding: 0 }}
-        header={<Text style={styles.headerText}>Brewskey Payments</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-        width="90%"
-      >
-        {isLoading ? (
-          <LoadingIndicator
-            activitySize="large"
-            color="white"
-            style={styles.loadingIndicator}
-          />
-        ) : (
-          <View style={styles.content}>
-            <View style={{ marginBottom: 16 }}>
-              <Text style={styles.copy}>
-                {taps.length > 1 ? 'These taps have' : 'This tap has'} payments
-                enabled.
-              </Text>
-              {!hasCreditCardDetails ? null : (
-                <Text style={styles.copy}>
-                  Click Continue to start pouring.
-                </Text>
-              )}
-            </View>
-            <ScrollView
-              contentContainerStyle={{ padding: 8 }}
-              style={styles.scrollView}
-            >
-              <View style={{ flex: 1 }}>
-                {taps.map((tap) => (
-                  <TapPayment key={tap.id} tap={tap} />
-                ))}
-              </View>
-            </ScrollView>
-            <View style={styles.footer}>
-              <Button
-                containerStyle={{ marginLeft: 0, width: '100%' }}
-                onPress={this._onContinuePress}
-                raised
-                secondary
-                title={buttonText}
-              />
-            </View>
-          </View>
-        )}
-      </CenteredModal>
-    );
-  }
-}
-
 type TapPaymentProps = {
   tap: Tap;
 };
@@ -133,37 +59,116 @@ const tapStyles = StyleSheet.create({
   title: { color: COLORS.text },
 });
 
-class TapPayment extends React.Component<TapPaymentProps> {
-  render(): React.ReactElement {
-    const pricePerOunce = 0;
-    const { currentKeg, id, tapNumber } = this.props.tap;
-    const { beverage } = currentKeg;
-    return (
-      <RNEListItem
-        leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
-        containerStyle={tapStyles.container}
-        chevron={false}
-        key={id}
-        title={`Tap ${tapNumber} - ${beverage.name}`}
-        titleStyle={tapStyles.title}
-        subtitle={`$${(pricePerOunce * 12).toFixed(
-          2,
-        )} for 12 ounces — $${pricePerOunce.toFixed(2)} per ounce`}
-        subtitleStyle={tapStyles.subtitle}
-      />
-      // <View>
-      //   <Text style={styles.smallText}>
-      //     Tap {tapNumber} - {currentKeg.beverage.name}
-      //   </Text>
-      //   <Text style={styles.smallText}>
-      //     ${pricePerOunce.toFixed(2)} per ounce
-      //   </Text>
-      //   <Text style={styles.smallText}>
-      //     ${(pricePerOunce * 12).toFixed(2)} for a 12 ounce cup.
-      //   </Text>
-      // </View>
-    );
-  }
-}
+const TapPayment: React.FC<TapPaymentProps> = ({ tap }: TapPaymentProps) => {
+  const pricePerOunce = 0;
+  const { currentKeg, tapNumber } = tap;
+  const { beverage } = currentKeg;
+  return (
+    <ListItem
+      leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
+      containerStyle={tapStyles.container}
+      chevron={false}
+      title={`Tap ${tapNumber} - ${beverage.name}`}
+      titleStyle={tapStyles.title}
+      subtitle={`$${(pricePerOunce * 12).toFixed(
+        2,
+      )} for 12 ounces — $${pricePerOunce.toFixed(2)} per ounce`}
+      subtitleStyle={tapStyles.subtitle}
+    />
+  );
+};
+
+const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
+  const { setVisibility, shouldShowPaymentScreen } = usePourModalContext();
+  const navigation = useNavigation();
+  const [deviceID] = React.useState<EntityID | null>(null);
+  
+  const queryOptions = React.useMemo(() => {
+    if (!deviceID) return undefined;
+    return {
+      filters: [
+        createFilter('device/id').equals(deviceID),
+        createFilter('isPaymentEnabled').equals(true),
+      ],
+    };
+  }, [deviceID]);
+
+  const { data: tapsData, isLoading } = useGetTaps(queryOptions);
+  const taps = tapsData?.pages.flat() ?? [];
+
+  const hasCreditCardDetails = false; // TODO: Implement credit card details check
+  const buttonText = hasCreditCardDetails ? 'Continue' : 'Add Payment Info';
+
+  const handleContinuePress = React.useCallback(() => {
+    if (hasCreditCardDetails) {
+      // continue normal payment - this needs to be implemented
+      // PourProcessStore.startPaymentPour();
+    } else {
+      setVisibility(false);
+      navigation.navigate('LoggedInStack', {
+        screen: 'menu',
+        params: {
+          screen: 'payments',
+        },
+      });
+    }
+  }, [hasCreditCardDetails, setVisibility, navigation]);
+
+  const isVisible = shouldShowPaymentScreen;
+  const onHideModal = () => setVisibility(false);
+
+  if (!deviceID) return null;
+
+  return (
+    <CenteredModal
+      contentContainerStyle={{ padding: 0 }}
+      header={<Text style={styles.headerText}>Brewskey Payments</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+      width="90%"
+    >
+      {isLoading ? (
+        <LoadingIndicator
+          activitySize="large"
+          color="white"
+          style={styles.loadingIndicator}
+        />
+      ) : (
+        <View style={styles.content}>
+          <View style={{ marginBottom: 16 }}>
+            <Text style={styles.copy}>
+              {taps.length > 1 ? 'These taps have' : 'This tap has'} payments
+              enabled.
+            </Text>
+            {!hasCreditCardDetails ? null : (
+              <Text style={styles.copy}>
+                Click Continue to start pouring.
+              </Text>
+            )}
+          </View>
+          <ScrollView
+            contentContainerStyle={{ padding: 8 }}
+            style={styles.scrollView}
+          >
+            <View style={{ flex: 1 }}>
+              {taps.map((tap) => (
+                <TapPayment key={tap.id} tap={tap} />
+              ))}
+            </View>
+          </ScrollView>
+          <View style={styles.footer}>
+            <Button
+              containerStyle={{ marginLeft: 0, width: '100%' }}
+              onPress={handleContinuePress}
+              raised
+              secondary
+              title={buttonText}
+            />
+          </View>
+        </View>
+      )}
+    </CenteredModal>
+  );
+};
 
 export default PourProcessPaymentModal;

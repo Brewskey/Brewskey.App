@@ -2,56 +2,49 @@ import type { EntityID, LeaderboardItem } from '@brewskey/js-api';
 
 import * as React from 'react';
 
-import List from '../common/List';
+import List, { ListComponentTypes } from '../common/List';
 
-import LeaderboardListStore from '../stores/LeaderboardListStore';
 import LoadingListFooter from '../common/LoadingListFooter';
 import PintCounter from '../components/PintCounter';
 import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import ListEmpty from '../common/ListEmpty';
+import { useGetTapLeaderboard } from '../hooks/queries/TapQueries';
+import { LeaderboardDurationValue } from './LeaderboardDurationPicker';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 type Props = {
-  duration: string;
-  ListHeaderComponent?:
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
+  duration: LeaderboardDurationValue;
+  ListHeaderComponent?: ListComponentTypes;
   tapID: EntityID;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+export const LeaderboardList: React.FC<Props> = ({
+  tapID,
+  duration,
+  ListHeaderComponent,
+}) => {
+  const leaderboard = useGetTapLeaderboard(tapID, duration);
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-@withNavigation
-class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
-  _listStore: LeaderboardListStore = new LeaderboardListStore();
-  iterator: number = 1;
-
-  componentDidMount() {
-    const { duration, tapID } = this.props;
-    this._listStore.initialize({ duration, tapID });
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.duration !== prevProps.duration) {
-      this._listStore.setDuration(this.props.duration);
-    }
-  }
-
-  _keyExtractor = (item: LeaderboardItem): string => {
-    this.iterator += 1;
-    return item.userName || this.iterator.toString();
+  const _keyExtractor = (item: LeaderboardItem): string => {
+    return item.userName || item.lastPourDate.toString();
   };
 
-  _onItemPress = ({ userID }: LeaderboardItem) =>
-    this.injectedProps.navigation.navigate('profile', {
-      id: userID,
-    });
+  const _onItemPress = ({ userID }: LeaderboardItem) => {
+    if (!userID) return;
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: userID,
+        },
+      },
+    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+  };
 
-  _renderRow = ({
+  const _renderRow = ({
     item,
     index,
   }: {
@@ -61,33 +54,31 @@ class LeaderboardList extends InjectedComponent<InjectedProps, Props> {
     <ListItem
       leftAvatar={<UserAvatar userName={item.userName || ''} />}
       item={item}
-      onPress={item.userID ? this._onItemPress : undefined}
+      onPress={item.userID ? _onItemPress : undefined}
       rightIcon={<PintCounter beverageID={null} ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
       title={`${index + 1}. ${item.userName || ''}`}
     />
   );
 
-  render(): React.ReactElement {
-    return (
-      <List
-        data={this._listStore.rows}
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !this._listStore.isLoading ? (
-            <ListEmpty message="There is nobody on the leaderboard for selected period!" />
-          ) : null
-        }
-        ListFooterComponent={
-          <LoadingListFooter isLoading={this._listStore.isLoading} />
-        }
-        ListHeaderComponent={this.props.ListHeaderComponent}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        renderItem={this._renderRow}
-      />
-    );
-  }
-}
+  return (
+    <List
+      data={leaderboard.data}
+      keyExtractor={_keyExtractor}
+      ListEmptyComponent={
+        !leaderboard.isLoading ? (
+          <ListEmpty message="There is nobody on the leaderboard for selected period!" />
+        ) : null
+      }
+      ListFooterComponent={
+        <LoadingListFooter isLoading={leaderboard.isLoading} />
+      }
+      ListHeaderComponent={ListHeaderComponent}
+      onEndReached={leaderboard.fetchNextPage}
+      onRefresh={leaderboard.refetch}
+      renderItem={_renderRow}
+    />
+  );
+};
 
 export default LeaderboardList;

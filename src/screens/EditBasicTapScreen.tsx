@@ -1,95 +1,96 @@
-import type { EntityID, LoadObject, Tap, TapMutator } from '@brewskey/js-api';
+import type { EntityID, Tap, TapMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
 
-import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { computed } from 'mobx';
 
-import DAOApi from '@brewskey/js-api';
-import { TapStore } from '../stores/DAOStores';
-import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
-import NotificationsStore from '../stores/NotificationsStore';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Section from '../common/Section';
-import { ListItem } from 'react-native-elements';
-import LoaderComponent from '../common/LoaderComponent';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
-import TapForm from '../components/TapForm';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { TapForm } from '../components/TapForm';
+import {
+  useCreateTap,
+  useGetTapById,
+  useUpdateTap,
+} from '../hooks/queries/TapQueries';
+import Header from '../common/Header';
+import LoadingIndicator from '../common/LoadingIndicator';
+import ListItem from '../common/ListItem';
+import ErrorScreen from '../common/ErrorScreen';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 
-type InjectedProps = {
-  tapId: EntityID;
-  navigation: Navigation;
+// Type that works with both StaticScreenProps and MaterialTopTabScreenProps
+// We only use route.params.tapId, so this minimal type works for both navigation types
+// Making route optional to satisfy ScreenComponentType which can accept ComponentType<{}>
+type Props = {
+  route?: {
+    params: { tapId: EntityID };
+  }
 };
 
-@errorBoundary(<ErrorScreen />)
-@flatNavigationParamsAndScreenProps
-class EditTapScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    tabBarLabel: 'tap',
-  };
+export const EditTapScreen: React.FC<Props> = withErrorBoundary(
+  (props: Props) => {
+    const tapId = props.route?.params?.tapId;
+    if (!tapId) {
+      return null;
+    }
+    const tap = useGetTapById(tapId);
+    const createTap = useCreateTap();
+    const updateTap = useUpdateTap();
 
-  get _tapLoader(): LoadObject<Tap> {
-    return TapStore.getByID(this.injectedProps.tapId);
-  }
+    const [areNotificationEnabled, setAreNotificationsEnabled] =
+      React.useState<boolean>(true);
+    const addSnackbarMessage = useAddSnackBarMessage();
 
-  _onFormSubmit = async (values: TapMutator): Promise<void> => {
-    const id = nullthrows(values.id);
-    DAOApi.TapDAO.put(id, values);
-    await DAOApi.TapDAO.waitForLoaded((dao) => dao.fetchByID(id));
-    SnackBarStore.showMessage({ text: 'The tap edited' });
-  };
+    const onTapFormSubmit = async (values: TapMutator): Promise<void> => {
+      if (tap.data?.id) {
+        await updateTap.mutateAsync(values);
+      } else {
+        await createTap.mutateAsync(values);
+      }
+      addSnackbarMessage({
+        content: 'Successfully edited tap',
+      });
+    };
 
-  render(): React.ReactElement {
-    return (
-      <LoaderComponent
-        loadedComponent={LoadedTapComponent}
-        loader={this._tapLoader}
-        onTapFormSubmit={this._onFormSubmit}
-        updatingComponent={LoadedTapComponent}
-      />
-    );
-  }
-}
+    if (tap.isLoading) {
+      return (
+        <Container>
+          <Header showBackButton title="Edit Tap" />
+          <LoadingIndicator />
+        </Container>
+      );
+    }
+    if (tap.status !== 'success' || tap.data == null) {
+      return null;
+    }
 
-type LoadedTapComponentProps = {
-  onTapFormSubmit: (values: TapMutator) => Promise<void>;
-  onToggleNotifications: () => void;
-  value: Tap;
-};
-
-class LoadedTapComponent extends React.Component<LoadedTapComponentProps> {
-  _onToggleNotifications = () =>
-    NotificationsStore.toggleNotificationsForTap(this.props.value.id);
-
-  render(): React.ReactElement {
-    const { onTapFormSubmit, value } = this.props;
     return (
       <Container>
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+          <Header showBackButton title="Edit Tap" />
           <Section bottomPadded>
             <ListItem
               chevron={false}
               switch={{
-                onValueChange: this._onToggleNotifications,
-                value: NotificationsStore.getIsNotificationsEnabledForTap(
-                  value.id,
-                ),
+                onValueChange: (value) => {
+                  console.error('Notifications have not been configured yet');
+                  setAreNotificationsEnabled(value);
+                },
+                value: areNotificationEnabled,
               }}
-              title="Notifications"
+              title="Notifications For Tap"
             />
           </Section>
           <TapForm
             onSubmit={onTapFormSubmit}
             submitButtonLabel="Edit tap"
-            tap={value}
+            tap={tap.data}
+            organizationId={tap.data.organization.id}
           />
         </KeyboardAwareScrollView>
       </Container>
     );
-  }
-}
-
-export default EditTapScreen;
+  },
+  <ErrorScreen showBackButton />,
+);

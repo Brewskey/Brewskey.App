@@ -2,33 +2,30 @@ import type {
   Device,
   DeviceMutator,
   EntityID,
-  LoadObject,
   Location,
 } from '@brewskey/js-api';
-import type { FormProps } from '../common/form/types';
-
 import * as React from 'react';
 import { View } from 'react-native';
+import { useForm, useWatch } from 'react-hook-form';
+import { useIsFocused } from '@react-navigation/native';
 
-import { computed } from 'mobx';
-
-import FormValidationMessage from '../common/form/FormValidationMessage';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import Button from '../common/buttons/Button';
-import { LocationStore } from '../stores/DAOStores';
-import { form, FormField } from '../common/form';
-import { AdvancedTextField } from '../common/form/TextField';
+import { Form } from '../common/form/Form';
+import { FormField } from '../common/form/FormField';
+import { TextInput } from '../common/form/TextInput';
 import LocationPicker from './pickers/LocationPicker';
 import DeviceStatePicker from './DeviceStatePicker';
 import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
-import CheckBoxField from './CheckBoxField';
+import { CheckBoxField } from '../common/form/CheckBoxField';
 import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
-import { Fill } from 'react-slot-fill';
+import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
 
 export const validate = (
   values: DeviceMutator,
 ): Partial<Record<keyof DeviceMutator, string>> => {
-  const errors: Record<string, any> = {};
+  const errors: Record<string, string> = {};
 
   if (!values.deviceStatus) {
     errors.deviceStatus = 'Status is required!';
@@ -56,72 +53,124 @@ type Props = {
   submitButtonLabel: string;
 };
 
-@form({ validate })
-class DeviceForm extends InjectedComponent<FormProps, Props> {
-  get _locationsLoader(): LoadObject<Array<LoadObject<Location>>> {
-    return LocationStore.getMany();
-  }
+const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, onSubmit }) => {
+  const isFocused = useIsFocused();
+  const form = useForm<DeviceMutator>({
+    defaultValues: {
+      id: device.id,
+      particleId: device.particleId,
+      name: device.name,
+      deviceType: 'BrewskeyBox',
+      locationId: device.location?.id,
+      deviceStatus: device.id ? device.deviceStatus : 'Active',
+      secondsToStayOpen: device.secondsToStayOpen || 3600,
+      timeForValveOpen: device.timeForValveOpen,
+      ledBrightness: device.ledBrightness,
+      nfcStatus: device.nfcStatus,
+      isScreenDisabled: device.isScreenDisabled,
+      isTotpDisabled: device.isTotpDisabled,
+      shouldInvertScreen: device.shouldInvertScreen,
+    },
+  });
 
-  render(): React.ReactElement {
-    const { device, hideLocation, submitButtonLabel } = this.props;
-    const { formError, handleSubmit, invalid, pristine, submitting, values } =
-      this.injectedProps;
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting, isValid },
+  } = form;
 
-    return (
+  const values = useWatch({ control: form.control });
+  const deviceStatus = values.deviceStatus;
+
+  const validateForm = (formValues: DeviceMutator): boolean => {
+    const errors = validate(formValues);
+    Object.keys(errors).forEach((key) => {
+      const errorKey = key as keyof DeviceMutator;
+      const errorMessage = errors[errorKey];
+      if (errorMessage) {
+        form.setError(errorKey, {
+          type: 'manual',
+          message: errorMessage,
+        });
+      }
+    });
+    return Object.keys(errors).length === 0;
+  };
+
+  const onSubmitForm = async (formValues: DeviceMutator) => {
+    if (validateForm(formValues)) {
+      await onSubmit(formValues);
+    }
+  };
+
+  return (
+    <Form form={form}>
       <View>
-        <FormField initialValue={device.id} name="id" />
-        <FormField initialValue={device.particleId} name="particleId" />
         <FormField
-          component={AdvancedTextField}
+          component={TextInput}
           initialValue={device.name}
-          label="name"
+          label="Name"
           name="name"
         />
-        <FormField initialValue="BrewskeyBox" name="deviceType" />
-        <FormField
-          component={hideLocation ? null : LocationPicker}
-          initialValue={device.location}
-          name="locationId"
-          parseOnSubmit={(value: Location): EntityID => value.id}
-        />
-        <FormField
-          component={device.id ? DeviceStatePicker : null}
-          initialValue={device.id ? device.deviceStatus : 'Active'}
-          name="deviceStatus"
-        />
-        {['Active', 'Inactive'].includes(values.deviceStatus) ? (
-          <FormField initialValue={3600} name="secondsToStayOpen" />
+        {!hideLocation && (
+          <FormField
+            component={LocationPicker}
+            initialValue={device.location}
+            label="Location"
+            name="locationId"
+            _parseOnSubmit={(value: unknown): EntityID | undefined => {
+              const loc = value as Location | null | undefined;
+              return loc?.id;
+            }}
+            multiple={false}
+          />
+        )}
+        {device.id && (
+          <FormField
+            component={DeviceStatePicker}
+            initialValue={device.deviceStatus}
+            label="Device Status"
+            name="deviceStatus"
+          />
+        )}
+        {['Active', 'Inactive'].includes(deviceStatus || '') ? (
+          <FormField
+            component={TextInput}
+            initialValue="3600"
+            label="Seconds To Stay Open"
+            name="secondsToStayOpen"
+          />
         ) : (
           <FormField
             component={DeviceTimeOpenPicker}
             initialValue={device.secondsToStayOpen}
+            label="Seconds To Stay Open"
             name="secondsToStayOpen"
           />
         )}
         <FormField
-          component={AdvancedTextField}
+          component={TextInput}
           description="Time in seconds before and after a pour that the pour remains authorized and the LEDs are green."
-          disabled={submitting}
-          initialValue={device.timeForValveOpen}
+          initialValue={device.timeForValveOpen?.toString()}
           keyboardType="number-pad"
           label="Pour Time Buffer"
           name="timeForValveOpen"
-          parseOnSubmit={(value: number): number => Math.max(value, 5)}
+          _parseOnSubmit={(value: unknown): number => Math.max(Number(value as string) || 0, 5)}
         />
         <FormField
           component={BrightnessSliderField}
           initialValue={device.ledBrightness}
+          label="LED Brightness"
           name="ledBrightness"
-          parseOnSubmit={(value: number): string => value.toFixed(0)}
+          _parseOnSubmit={(value: unknown): string => (value as number).toFixed(0)}
         />
         <FormField
           component={DeviceNFCStatusPicker}
           initialValue={device.nfcStatus}
+          label="NFC Status"
           name="nfcStatus"
         />
         <FormField
           component={CheckBoxField}
-          disabled={submitting}
           initialValue={device.isScreenDisabled}
           label="Is Screen Disabled"
           name="isScreenDisabled"
@@ -142,33 +191,33 @@ class DeviceForm extends InjectedComponent<FormProps, Props> {
             <FormField
               component={CheckBoxField}
               description="Disable the passcode shown on the Brewskey box"
-              disabled={submitting}
               initialValue={device.isTotpDisabled}
               label="Is Passcode Disabled"
               name="isTotpDisabled"
             />
             <FormField
               component={CheckBoxField}
-              disabled={submitting}
               initialValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
             />
           </>
         )}
-        <Fill name="MainTabBar">
-          <FormValidationMessage>{formError}</FormValidationMessage>
-          <Button
-            disabled={invalid || pristine || submitting}
-            loading={submitting}
-            onPress={handleSubmit}
-            style={{ marginVertical: 12 }}
-            title={submitButtonLabel}
-          />
-        </Fill>
+        {!isFocused ? null : (
+          <MainTabBarFill>
+            <FormValidationMessage />
+            <Button
+              disabled={!isValid || !isDirty || isSubmitting}
+              loading={isSubmitting}
+              onPress={handleSubmit(onSubmitForm)}
+              style={{ marginVertical: 12 }}
+              title={submitButtonLabel}
+            />
+          </MainTabBarFill>
+        )}
       </View>
-    );
-  }
-}
+    </Form>
+  );
+};
 
 export default DeviceForm;

@@ -1,6 +1,7 @@
 import type { Account } from '@brewskey/js-api';
 
 import * as React from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import Button from '../../common/buttons/Button';
@@ -8,7 +9,6 @@ import Fragment from '../../common/Fragment';
 import CenteredModal from './CenteredModal';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 import DeleteModal from './DeleteModal';
-import ToggleStore from '../../stores/ToggleStore';
 
 const styles = StyleSheet.create({
   headerText: {
@@ -32,46 +32,46 @@ type Props = {
   onHideModal: () => void;
 };
 
-class FriendApprovedModal extends React.Component<Props> {
-  _deleteModalToggleStore = new ToggleStore();
+const FriendApprovedModal: React.FC<Props> = ({
+  account,
+  isVisible,
+  onFriendDeletePress,
+  onHideModal,
+}) => {
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
-  _onFriendDeletePress = () => {
-    this._deleteModalToggleStore.toggleOff();
-    this.props.onFriendDeletePress();
+  const onFriendDeletePressHandler = () => {
+    setIsDeleteModalVisible(false);
+    onFriendDeletePress();
   };
 
-  render(): React.ReactElement {
-    const { account, isVisible, onHideModal } = this.props;
-    const { isToggled } = this._deleteModalToggleStore;
-
-    return (
-      <Fragment>
-        <CenteredModal
-          header={<Text style={styles.headerText}>You are friends!</Text>}
-          isVisible={isVisible && !isToggled}
-          onHideModal={onHideModal}
-        >
-          <View style={styles.root}>
-            <Text style={styles.messageText}>
-              You're friends with {account.userName}
-            </Text>
-            <Button secondary title="okay" onPress={onHideModal} />
-            <Button
-              title="remove friend"
-              onPress={this._deleteModalToggleStore.toggleOn}
-            />
-          </View>
-        </CenteredModal>
-        <DeleteModal
-          isVisible={isToggled}
-          message={`Are you sure you want to delete ${account.userName} from friends?`}
-          onCancelButtonPress={this._deleteModalToggleStore.toggleOff}
-          onDeleteButtonPress={this._onFriendDeletePress}
-          title="Remove friend"
-        />
-      </Fragment>
-    );
-  }
-}
+  return (
+    <Fragment>
+      <CenteredModal
+        header={<Text style={styles.headerText}>You are friends!</Text>}
+        isVisible={isVisible && !isDeleteModalVisible}
+        onHideModal={onHideModal}
+      >
+        <View style={styles.root}>
+          <Text style={styles.messageText}>
+            You're friends with {account.userName}
+          </Text>
+          <Button secondary title="okay" onPress={onHideModal} />
+          <Button
+            title="remove friend"
+            onPress={() => setIsDeleteModalVisible(true)}
+          />
+        </View>
+      </CenteredModal>
+      <DeleteModal
+        isVisible={isDeleteModalVisible}
+        message={`Are you sure you want to delete ${account.userName} from friends?`}
+        onCancelButtonPress={() => setIsDeleteModalVisible(false)}
+        onDeleteButtonPress={onFriendDeletePressHandler}
+        title="Remove friend"
+      />
+    </Fragment>
+  );
+};
 
 export default FriendApprovedModal;

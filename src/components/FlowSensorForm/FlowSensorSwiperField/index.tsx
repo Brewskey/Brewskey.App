@@ -3,9 +3,12 @@ import type { FlowSensorType } from '@brewskey/js-api';
 import * as React from 'react';
 // import Swiper from '../../../common/Swiper';
 import Swiper from 'react-native-swiper';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import FlowSensorSwiperItem from './FlowSensorSwiperItem';
-import FLOW_SENSOR_ITEMS from '../flowSensorItems';
+import FLOW_SENSOR_ITEMS, { FlowSensorItem } from '../flowSensorItems';
+import { useFormContext, Controller } from 'react-hook-form';
+import Button from '../../../common/buttons/Button';
+import { ButtonGroup } from '@rneui/themed';
 
 const styles = StyleSheet.create({
   swiper: {
@@ -14,47 +17,88 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  value: FlowSensorType;
   onChange: (value: FlowSensorType) => void;
+  required?: boolean;
+  name: string;
 };
 
-class FlowSensorSwiperField extends React.Component<Props> {
-  get _index(): number {
-    const { value } = this.props;
-    const index = FLOW_SENSOR_ITEMS.findIndex(
-      (flowSensorItem): boolean => flowSensorItem.value === value,
-    );
+export const FlowSensorSwiperField: React.FC<Props> = ({
+  onChange,
+  required,
+  name,
+}) => {
+  const { control } = useFormContext();
 
-    return index !== -1 ? index : 0;
-  }
+  return (
+    <Controller
+      control={control}
+      name={name}
+      rules={{ required }}
+      defaultValue={FLOW_SENSOR_ITEMS[0].value}
+      render={({ field: { onChange: onChangeController, value } }) => {
+        const currentIndex = FLOW_SENSOR_ITEMS.findIndex(
+          (item) => item.value === value,
+        );
 
-  _onIndexChanged = (index: number) => {
-    const { onChange } = this.props;
-    onChange(FLOW_SENSOR_ITEMS[index].value);
-  };
-
-  render(): React.ReactElement {
-    return (
-      <Swiper
-        index={this._index}
-        loop={false}
-        onIndexChanged={this._onIndexChanged}
-        style={styles.swiper}
-      >
-        {FLOW_SENSOR_ITEMS.map(
-          ({ description, image, name, value }): React.ReactElement => (
-            <View key={value}>
+        const items = FLOW_SENSOR_ITEMS.map(
+          ({
+            description,
+            image,
+            name: title,
+            value: itemValue,
+          }): React.ReactElement => (
+            <View key={itemValue}>
               <FlowSensorSwiperItem
                 description={description}
                 image={image}
-                title={name}
+                title={title}
               />
             </View>
           ),
-        )}
-      </Swiper>
-    );
-  }
-}
+        );
+
+        const onChangeCallback = (index: number) => {
+          const item = FLOW_SENSOR_ITEMS[index];
+          console.log('onChange', item.value);
+          onChange(item.value);
+          onChangeController(item.value);
+        };
+
+        if (Platform.OS === 'web') {
+          return (
+            <View>
+              {items[currentIndex]}
+              <View style={{ flexDirection: 'row', marginVertical: 12 }}>
+                <Button
+                  title="Previous"
+                  containerStyle={{ flex: 1 }}
+                  disabled={currentIndex === 0}
+                  onPress={() => onChangeCallback(currentIndex - 1)}
+                />
+                <Button
+                  title="Next"
+                  containerStyle={{ flex: 1 }}
+                  disabled={currentIndex === FLOW_SENSOR_ITEMS.length - 1}
+                  onPress={() => onChangeCallback(currentIndex + 1)}
+                />
+              </View>
+            </View>
+          );
+        }
+
+        return (
+          <Swiper
+            index={currentIndex}
+            loop={false}
+            onIndexChanged={onChangeCallback}
+            style={styles.swiper}
+          >
+            {items}
+          </Swiper>
+        );
+      }}
+    />
+  );
+};
 
 export default FlowSensorSwiperField;

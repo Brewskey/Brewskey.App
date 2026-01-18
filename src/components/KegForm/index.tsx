@@ -5,37 +5,26 @@ import type {
   KegMutator,
   KegType,
 } from '@brewskey/js-api';
-import type { FormProps, ValidationFunction } from '../../common/form/types';
+import type { ValidationFunction } from '../../common/form/types';
 
 import * as React from 'react';
 import { View } from 'react-native';
-import nullthrows from 'nullthrows';
 import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
 
 import Button from '../../common/buttons/Button';
 import SectionContent from '../../common/SectionContent';
-import SimplePicker from '../../components/pickers/SimplePicker';
-import BeveragePicker from '../pickers/BeveragePicker';
 import KegLevelSliderField from './KegLevelSliderField';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { COLORS } from '../../theme';
 import { calculateKegLevel } from '../../utils';
 import { Form } from '../../common/form/Form';
 import { useForm } from 'react-hook-form';
-import { Dropdown } from '../../common/form/Dropdown';
-
-const validate: ValidationFunction<KegMutator> = (values) => {
-  const errors: Record<string, any> = {};
-
-  if (!values.beverageId) {
-    errors.beverageId = 'Beverage is required';
-  }
-
-  if (!values.kegType) {
-    errors.kegType = 'Keg type is required';
-  }
-  return errors;
-};
+import { DropdownInput } from '../../common/form/DropdownInput';
+import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
+import SelectableListItem from '../../common/SelectableListItem';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import nullthrows from 'nullthrows';
+import { FormField } from '../../common/form/FormField';
 
 const KEG_VALUES = (Object.keys(KEG_NAME_BY_KEG_TYPE) as KegType[])
   .sort((a, b) =>
@@ -57,19 +46,26 @@ type FormFields = KegMutator;
 
 export const KegForm: React.FC<Props> = ({
   keg,
+  onFloatedSubmit,
+  onReplaceSubmit,
+  onSubmit,
   showReplaceButton,
   submitButtonLabel,
   tapId,
 }) => {
-  // _onSubmit = () => this.props.handleSubmit(this.props.onSubmit);
+  const { data: beverages } = useGetBeverages();
+  const form = useForm<FormFields>({
+    defaultValues: {
+      tapId,
+      id: keg?.id,
+    },
+  });
 
-  // _onReplaceSubmit = () =>
-  //   this.props.handleSubmit(nullthrows(this.props.onReplaceSubmit));
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting, isValid },
+  } = form;
 
-  // _onFloatKeg = () =>
-  //   this.props.handleSubmit(nullthrows(this.props.onFloatedSubmit));
-
-  const form = useForm<FormFields>();
   const kegType = form.watch('kegType');
 
   const selectedKegTypeMaxOunces = MAX_OUNCES_BY_KEG_TYPE[kegType] || 0;
@@ -85,67 +81,79 @@ export const KegForm: React.FC<Props> = ({
     currentPercentage < 10 && keg && keg.floatedDate === null;
   const shouldReplaceBeDisnabled = currentPercentage === 100;
 
+  const onSubmitForm = handleSubmit(onSubmit);
+  const onReplaceSubmitForm = onReplaceSubmit
+    ? handleSubmit(nullthrows(onReplaceSubmit))
+    : undefined;
+  const onFloatKegForm = handleSubmit(nullthrows(onFloatedSubmit));
+
   return (
-    <Form {...form} defaultValues={{ tapId, id: keg?.id }}>
+    <Form form={form}>
       <View>
-        {/* <FormField
-          component={BeveragePicker}
-          disabled={submitting}
-          initialValue={keg && keg.beverage}
+        <FormField
+          component={DropdownInput<Beverage>}
           name="beverageId"
-          parseOnSubmit={(value: Beverage): EntityID => value.id}
-        /> */}
-        <Dropdown
-          name="beverageId"
-          data={[]}
-          labelField={[]}
-          valueField={[]}
-          onChangeText={() => {}}
-          onBlur={() => {}}
+          label="Select Beverage"
+          required="Beverage is required"
+          data={beverages?.pages[0] ?? []}
+          labelField="name"
+          valueField="id"
+          renderItem={(beverage, isSelected) => (
+            <SelectableListItem
+              leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
+              chevron={false}
+              isSelected={isSelected ?? false}
+              item={beverage}
+              subtitle={beverage.beverageType}
+              title={beverage.name}
+            />
+          )}
         />
         <FormField
-          component={SimplePicker}
-          disabled={submitting}
-          doesRequireConfirmation={false}
-          headerTitle="Select Keg Type"
-          initialValue={keg && keg.kegType}
-          label="Keg type"
+          component={
+            DropdownInput<{
+              label: (typeof KEG_NAME_BY_KEG_TYPE)[KegType];
+              value: KegType;
+            }>
+          }
           name="kegType"
-          pickerValues={KEG_VALUES}
+          label="Select Keg Type"
+          required="Keg type is required"
+          data={KEG_VALUES}
+          labelField="label"
+          valueField="value"
         />
         <FormField
           component={KegLevelSliderField}
-          initialValue={initialStartingPercentage}
+          label="Keg Level"
           maxOunces={selectedKegTypeMaxOunces}
           name="startingPercentage"
         />
-        <FormField initialValue={tapId} name="tapId" />
-        <FormField initialValue={keg && keg.id} name="id" />
         {!showReplaceButton ? null : (
           <SectionContent paddedVertical>
             {!shouldShowFloatedButton ? null : (
               <Button
                 backgroundColor={COLORS.accent}
-                disabled={submitting}
-                loading={submitting}
-                onPress={this._onFloatKeg}
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                onPress={onFloatKegForm}
                 style={{ marginBottom: 4 }}
                 title="Keg Floated"
               />
             )}
             <Button
-              disabled={shouldReplaceBeDisnabled || invalid || submitting}
-              loading={submitting}
-              onPress={this._onReplaceSubmit}
+              disabled={shouldReplaceBeDisnabled || !isValid || isSubmitting}
+              loading={isSubmitting}
+              onPress={onReplaceSubmitForm}
               title="Replace keg"
             />
           </SectionContent>
         )}
         <SectionContent paddedVertical>
           <Button
-            disabled={pristine || invalid || submitting}
-            loading={submitting}
-            onPress={this._onSubmit}
+            disabled={!isDirty || !isValid || isSubmitting}
+            loading={isSubmitting}
+            onPress={onSubmitForm}
             title={submitButtonLabel}
           />
         </SectionContent>

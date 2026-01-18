@@ -1,27 +1,27 @@
 export type Contact = {
   company: string | null | undefined;
   department: string | null | undefined;
-  emailAddresses: Array<{
+  emailAddresses: {
     label: string;
     email: string;
-  }>;
+  }[];
   familyName: string | null | undefined;
   givenName: string | null | undefined;
   hasThumbnail: boolean;
   jobTitle: string | null | undefined;
   middleName: string | null | undefined;
-  phoneNumbers: Array<{
+  phoneNumbers: {
     label: string;
     number: string;
-  }>;
-  postalAddresses: Array<{
+  }[];
+  postalAddresses: {
     city: string | null | undefined;
     country: string | null | undefined;
     label: string;
     postCode: number;
     region: string | null | undefined;
     state: string | null | undefined;
-  }>;
+  }[];
   prefix: string | null | undefined;
   recordID: string;
   suffix: string | null | undefined;
@@ -29,9 +29,9 @@ export type Contact = {
 };
 
 class ContactsStore {
-  contacts: Array<Contact> = [];
+  contacts: Contact[] = [];
 
-  setContacts = (contacts: Array<Contact>) => {
+  setContacts = (contacts: Contact[]) => {
     this.contacts = contacts;
   };
 }

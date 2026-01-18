@@ -47,52 +47,47 @@ type Props = {
   size: SizeType;
 };
 
-class BadgeIcon extends React.PureComponent<Props> {
-  static defaultProps: {
-    size: SizeType;
-  } = {
-    size: 'small',
-  };
+const BadgeIcon: React.FC<Props> = ({
+  achievementType,
+  count,
+  onPress,
+  size = 'small',
+}) => {
+  const handlePress = () => onPress && onPress(achievementType);
 
-  _onPress = () =>
-    this.props.onPress && this.props.onPress(this.props.achievementType);
+  const badge = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
+  const isLarge = size === 'large';
 
-  render(): React.ReactElement {
-    const { achievementType, count, size } = this.props;
-    const badge = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
-    const isLarge = size === 'large';
-
-    return (
-      <TouchableOpacity disabled={!this.props.onPress} onPress={this._onPress}>
-        <Image
-          source={badge.image[size]}
-          style={{
-            height: BADGE_IMAGE_SIZES[size],
-            width: BADGE_IMAGE_SIZES[size],
-          }}
-        />
-        {count && (
-          <View
+  return (
+    <TouchableOpacity disabled={!onPress} onPress={handlePress}>
+      <Image
+        source={badge.image[size]}
+        style={{
+          height: BADGE_IMAGE_SIZES[size],
+          width: BADGE_IMAGE_SIZES[size],
+        }}
+      />
+      {count && (
+        <View
+          style={[
+            styles.counterContainer,
+            isLarge
+              ? styles.counterContainerLarge
+              : styles.counterContainerSmall,
+          ]}
+        >
+          <Text
             style={[
-              styles.counterContainer,
-              isLarge
-                ? styles.counterContainerLarge
-                : styles.counterContainerSmall,
+              styles.counterText,
+              isLarge ? styles.counterTextLarge : styles.counterTextSmall,
             ]}
           >
-            <Text
-              style={[
-                styles.counterText,
-                isLarge ? styles.counterTextLarge : styles.counterTextSmall,
-              ]}
-            >
-              x{count}
-            </Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  }
-}
+            x{count}
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
 
-export default BadgeIcon;
+export default React.memo(BadgeIcon);

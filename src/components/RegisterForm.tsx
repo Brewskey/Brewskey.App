@@ -1,14 +1,17 @@
-import type { FormProps } from '../common/form/types';
-
 import * as React from 'react';
 import { View } from 'react-native';
+import { useForm } from 'react-hook-form';
 
-import DAOApi from '@brewskey/js-api';
-import AuthStore from '../stores/AuthStore';
+import { useAuthActions } from '../stores/AuthStore';
+import { useRegister } from '../hooks/queries/AuthQueries';
 
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
 import { validateEmail } from '../utils';
+import { Form } from '../common/form/Form';
+import { FormField } from '../common/form/FormField';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { TextInput } from '../common/form/TextInput';
 
 export type RegisterFormFields = {
   email: string;
@@ -16,58 +19,73 @@ export type RegisterFormFields = {
   userName: string;
 };
 
-const validate = ({
-  email,
-  password,
-  userName,
-}: RegisterFormFields): {
-  [key: string]: string;
-} => {
-  const errors: Record<string, any> = {};
+const RegisterForm: React.FC = () => {
+  const registerMutation = useRegister();
+  const { login } = useAuthActions();
+  const form = useForm<RegisterFormFields>({
+    defaultValues: {
+      email: '',
+      password: '',
+      userName: '',
+    },
+  });
 
-  if (!userName) {
-    errors.userName = 'User name is required';
-  }
+  const {
+    handleSubmit,
+    formState: { isDirty, isSubmitting, isValid },
+  } = form;
 
-  if (!email) {
-    errors.email = 'Email name is required';
-  }
+  const validate = (values: RegisterFormFields): boolean => {
+    const errors: Record<string, string> = {};
 
-  if (email && !validateEmail(email)) {
-    errors.email = 'Email is not valid';
-  }
+    if (!values.userName) {
+      errors.userName = 'User name is required';
+    }
 
-  if (!password) {
-    errors.password = 'password is required';
-  }
+    if (!values.email) {
+      errors.email = 'Email name is required';
+    }
 
-  if (password && password.length < 6) {
-    errors.password = 'password should be at least 6 characters long';
-  }
+    if (values.email && !validateEmail(values.email)) {
+      errors.email = 'Email is not valid';
+    }
 
-  return errors;
-};
+    if (!values.password) {
+      errors.password = 'password is required';
+    }
 
-class RegisterForm extends InjectedComponent<FormProps> {
-  _onSubmit = async (values: RegisterFormFields): Promise<void> => {
-    await DAOApi.Auth.register(values);
-    const { password, userName } = values;
-    await AuthStore.login({ password, userName });
+    if (values.password && values.password.length < 6) {
+      errors.password = 'password should be at least 6 characters long';
+    }
+
+    Object.keys(errors).forEach((key) => {
+      form.setError(key as keyof RegisterFormFields, {
+        type: 'manual',
+        message: errors[key],
+      });
+    });
+
+    return Object.keys(errors).length === 0;
   };
 
-  _onSubmitButtonPress = (): Promise<void> =>
-    this.injectedProps.handleSubmit(this._onSubmit);
+  const onSubmit = async (values: RegisterFormFields): Promise<void> => {
+    if (validate(values)) {
+      await registerMutation.mutateAsync(values);
+      const { password, userName } = values;
+      await login({ password, userName });
+    }
+  };
 
-  render(): React.ReactElement {
-    const { formError, invalid, pristine, submitting } = this.injectedProps;
+  const onSubmitButtonPress = handleSubmit(onSubmit);
 
-    return (
+  return (
+    <Form form={form}>
       <View>
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           label="User name"
           name="userName"
           nextFocusTo="email"
@@ -75,8 +93,8 @@ class RegisterForm extends InjectedComponent<FormProps> {
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           label="Email"
           name="email"
           nextFocusTo="password"
@@ -84,25 +102,25 @@ class RegisterForm extends InjectedComponent<FormProps> {
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
-          component={AdvancedTextField}
-          disabled={submitting}
+          component={TextInput}
+          disabled={isSubmitting}
           label="Password"
           name="password"
-          onSubmitEditing={this._onSubmitButtonPress}
+          onSubmitEditing={onSubmitButtonPress}
           secureTextEntry
         />
-        <FormValidationMessage>{formError}</FormValidationMessage>
+        <FormValidationMessage />
         <SectionContent paddedVertical>
           <Button
-            disabled={submitting || invalid || pristine}
-            loading={submitting}
-            onPress={this._onSubmitButtonPress}
+            disabled={isSubmitting || !isValid || !isDirty}
+            loading={isSubmitting}
+            onPress={onSubmitButtonPress}
             title="Register"
           />
         </SectionContent>
       </View>
-    );
-  }
-}
+    </Form>
+  );
+};
 
 export default RegisterForm;

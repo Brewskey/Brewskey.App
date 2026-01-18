@@ -30,44 +30,42 @@ export type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export default class TouchableItem extends React.Component<Props> {
-  static defaultProps: {
-    borderless: boolean;
-    pressColor: string;
-  } = {
-    borderless: false,
-    pressColor: 'rgba(0, 0, 0, .32)',
-  };
-
-  render(): React.ReactElement {
-    /*
-     * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
-     * therefore only enable it on Android Lollipop and above.
-     *
-     * All touchables on Android should have the ripple effect according to
-     * platform design guidelines.
-     * We need to pass the background prop to specify a borderless ripple effect.
-     */
-    if (
-      Platform.OS === 'android' &&
-      Platform.Version >= ANDROID_VERSION_LOLLIPOP
-    ) {
-      const { borderless, pressColor, style, ...rest } = this.props;
-      return (
-        <TouchableNativeFeedback
-          {...rest}
-          background={TouchableNativeFeedback.Ripple(
-            pressColor || '',
-            borderless || false,
-          )}
-        >
-          <View style={style}>{React.Children.only(this.props.children)}</View>
-        </TouchableNativeFeedback>
-      );
-    }
-    const { borderless: _, pressColor: _1, ...otherProps } = this.props;
+const TouchableItem: React.FC<Props> = ({
+  borderless = false,
+  children,
+  pressColor = 'rgba(0, 0, 0, .32)',
+  style,
+  ...rest
+}) => {
+  const { pointerEvents, ...restProps } = rest;
+  const combinedStyle = [style, pointerEvents && { pointerEvents }];
+  /*
+   * TouchableNativeFeedback.Ripple causes a crash on old Android versions,
+   * therefore only enable it on Android Lollipop and above.
+   *
+   * All touchables on Android should have the ripple effect according to
+   * platform design guidelines.
+   * We need to pass the background prop to specify a borderless ripple effect.
+   */
+  if (
+    Platform.OS === 'android' &&
+    Platform.Version >= ANDROID_VERSION_LOLLIPOP
+  ) {
     return (
-      <TouchableOpacity {...otherProps}>{this.props.children}</TouchableOpacity>
+      <TouchableNativeFeedback
+        {...restProps}
+        background={TouchableNativeFeedback.Ripple(
+          pressColor,
+          borderless,
+        )}
+      >
+        <View style={combinedStyle}>{React.Children.only(children)}</View>
+      </TouchableNativeFeedback>
     );
   }
-}
+  return (
+    <TouchableOpacity {...restProps} style={combinedStyle}>{children}</TouchableOpacity>
+  );
+};
+
+export default TouchableItem;

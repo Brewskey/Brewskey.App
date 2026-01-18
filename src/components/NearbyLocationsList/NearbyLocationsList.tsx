@@ -12,12 +12,12 @@ import ListSectionHeader from '../../common/ListSectionHeader';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import { calculateKegLevel } from '../../utils';
 import { COLORS } from '../../theme';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { SectionListData } from 'react-native';
 
 type Props = {
   isLoading: boolean;
-  nearbyLocations: Array<NearbyLocation> | undefined;
+  nearbyLocations: NearbyLocation[] | undefined;
   onRefresh: () => void;
 };
 
@@ -26,7 +26,7 @@ export const NearbyLocationsList: React.FC<Props> = ({
   isLoading,
   onRefresh,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const sections = (nearbyLocations ?? []).map(
     ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
       data: taps
@@ -44,12 +44,9 @@ export const NearbyLocationsList: React.FC<Props> = ({
     navigation.navigate('LoggedInStack', {
       screen: 'home',
       params: {
-        screen: 'TapStack',
+        screen: 'tapDetails',
         params: {
-          screen: 'tapDetails',
-          params: {
-            tapId: id,
-          },
+          tapId: id,
         },
       },
     });

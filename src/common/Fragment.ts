@@ -4,10 +4,8 @@ type Props = {
   children?: React.ReactNode
 };
 
-class Fragment extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    return this.props.children ?? null;
-  }
-}
+const Fragment: React.FC<Props> = ({ children }) => {
+  return children ?? null;
+};
 
-export default Fragment;
+export default React.memo(Fragment);

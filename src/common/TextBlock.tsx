@@ -1,7 +1,5 @@
-import type {Style} from '../types';
-
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, type StyleProp, type ViewStyle, type TextStyle } from 'react-native';
 import { TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -15,10 +13,10 @@ const styles = StyleSheet.create({
 
 type Props = {
   children?: string,
-  containerStyle?: Style,
+  containerStyle?: StyleProp<ViewStyle>,
   index?: number,
   paddedBottom?: boolean,
-  textStyle?: Style
+  textStyle?: StyleProp<TextStyle>
 };
 
 const OrderedText = (

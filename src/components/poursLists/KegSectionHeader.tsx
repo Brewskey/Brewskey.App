@@ -39,9 +39,7 @@ type Props = {
   section: SectionListData<Pour>;
 };
 
-export const KegSectionHeader: React.FC<Props> = ({
-  section: { key: kegId },
-}) => {
+export const KegSectionHeader: React.FC<Props> = ({ section: { kegId } }) => {
   const keg = useGetKegById(kegId as unknown as EntityID);
 
   if (keg.isLoading) {

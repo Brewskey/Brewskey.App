@@ -5,7 +5,7 @@ import { WifiSetupStep1Screen } from './WifiSetupStep1Screen';
 import { WifiSetupStep2Screen } from './WifiSetupStep2Screen';
 import { WifiSetupStep3Screen } from './WifiSetupStep3Screen';
 import { WifiSetupStep4Screen } from './WifiSetupStep4Screen';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp, StaticScreenProps } from '@react-navigation/native';
 import {
   WifiSetupScreenContextProvider,
   WifiSetupSteps,
@@ -14,7 +14,7 @@ import {
 
 const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
   const [value, setValue] = useWifiSetupScreenContext();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const onFinish = (particleID: string) => {
     const { forNewDevice, onSetupFinish } = props;
 
@@ -24,11 +24,20 @@ const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
     }
 
     if (forNewDevice) {
-      navigation.navigate('newDevice', {
-        initialValues: {
-          particleId: particleID,
+      navigation.navigate('LoggedInStack', {
+        screen: 'menu',
+        params: {
+          screen: 'devices',
+          params: {
+            screen: 'newDevice',
+            params: {
+              initialValues: {
+                particleId: particleID,
+              } as any,
+            },
+          },
         },
-      });
+      } satisfies ReactNavigation.RootParamList['LoggedInStack']);
     } else {
       navigation.goBack();
     }
@@ -71,17 +80,23 @@ type InjectedProps = {
   onSetupFinish?: (particleID: string) => undefined | Promise<void>;
 };
 
-export const WifiSetupScreen: React.FC<InjectedProps> = ({
-  forNewDevice,
-  onSetupFinish,
-}) => {
+type Props = StaticScreenProps<{
+  forNewDevice?: boolean;
+  onSetupFinish?: (particleID: string) => undefined | Promise<void>;
+}>;
+
+export const WifiSetupScreen: React.FC<Props> = ({
+  route: {
+    params: { forNewDevice, onSetupFinish },
+  },
+}: Props) => {
   return (
     <Container>
       <Header showBackButton title="WiFi Setup" />
       <WifiSetupScreenContextProvider>
         <WifiSetupScreenContent
-          forNewDevice={forNewDevice}
-          onSetupFinish={onSetupFinish}
+          forNewDevice={forNewDevice ?? undefined}
+          onSetupFinish={onSetupFinish ?? undefined}
         />
       </WifiSetupScreenContextProvider>
     </Container>

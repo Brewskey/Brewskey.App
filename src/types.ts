@@ -29,7 +29,7 @@ export type NearbyLocation = {
   id: EntityID;
   name: string;
   summary: string | null | undefined;
-  taps: Array<NearbyTap>;
+  taps: NearbyTap[];
 };
 
 export type WifiNetwork = {

@@ -1,5 +1,4 @@
 import type {
-  Achievement,
   AchievementCounter,
   AchievementType,
   EntityID,
@@ -8,7 +7,6 @@ import type {
 import * as React from 'react';
 import LoadedUserBadges, { LoadedUserBadgesHandle } from './LoadedUserBadges';
 import EmptyUserBadges from './EmptyUserBadges';
-import { LoaderComponent } from '../../common/LoaderComponent';
 import { useImperativeHandle } from 'react';
 import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
 
@@ -23,8 +21,8 @@ export type UserBadgesHandle = {
 
 export const UserBadges = React.forwardRef<UserBadgesHandle, Props>(
   ({ userID }, ref) => {
-    const achievementCounter = useGetAchievementCountsByUserId(userID);
-    const loadedUserBadgesRef = React.useRef<LoadedUserBadgesHandle>();
+    const { data: achievementCounters, isLoading, refetch } = useGetAchievementCountsByUserId(userID);
+    const loadedUserBadgesRef = React.useRef<LoadedUserBadgesHandle | null>(null);
 
     useImperativeHandle(
       ref,
@@ -35,19 +33,24 @@ export const UserBadges = React.forwardRef<UserBadgesHandle, Props>(
           );
         },
         refresh() {
-          achievementCounter.refetch();
+          refetch();
         },
       }),
-      [loadedUserBadgesRef, achievementCounter],
+      [loadedUserBadgesRef, refetch],
     );
 
+    if (isLoading) {
+      return null; // Or return a loading component if needed
+    }
+
+    if (!achievementCounters || achievementCounters.length === 0) {
+      return <EmptyUserBadges />;
+    }
+
     return (
-      <LoaderComponent
-        emptyComponent={EmptyUserBadges}
-        loadedComponent={LoadedUserBadges}
-        queries={{
-          achievementCounter,
-        }}
+      <LoadedUserBadges
+        ref={loadedUserBadgesRef}
+        value={{ achievementCounter: achievementCounters }}
       />
     );
   },

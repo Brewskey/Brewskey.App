@@ -16,7 +16,7 @@ type Props<RNModalProps> = RNModalProps & {
   // other RN modal props,
 };
 
-const Modal = <RNModalProps extends unknown>({
+const Modal = <RNModalProps extends object>({
   animationType = 'slide',
   children,
   isTouchable = true,

@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'expo-image-picker';
+import { useState } from 'react';
+import { Icon } from '@rneui/themed';
 
-import AuthStore from '../stores/AuthStore';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { updateAvatar } from '../stores/ApiRequestStores/CommonApiStores';
+import { useAccessToken, useUserName } from '../stores/AuthStore';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import UserAvatar from '../common/avatars/UserAvatar';
+import CONFIG from '../config';
 import LoadingIndicator from '../common/LoadingIndicator';
 import { COLORS } from '../theme';
 
@@ -20,71 +22,91 @@ const styles = StyleSheet.create({
   },
 });
 
-const IMAGE_PICKER_OPTIONS = {
+const IMAGE_PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
   allowsEditing: true,
-  includeBase64: true,
-  maxHeight: 1024,
-  maxWidth: 1024,
-  mediaType: 'photo',
-  rotation: 0,
-  title: 'Select Avatar',
+  base64: true,
+  aspect: [1, 1],
+  quality: 1,
+  mediaTypes: ['images'],
 } as const;
 
-class AvatarPicker extends React.Component<Record<any, any>> {
-  _cachedImageRef = React.createRef();
+const AvatarPicker: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const accessToken = useAccessToken();
+  const userName = useUserName();
 
-  _isLoading = false;
+  const onAvatarPress = async () => {
+    // Request permissions
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      addSnackBarMessage({
+        content: 'Permission to access media library is required.',
+        style: 'danger',
+      });
+      return;
+    }
 
-  _onAvatarPress = () => {
-    const flushCache = this._cachedImageRef?.current.flushCache;
-    launchImageLibrary(
-      IMAGE_PICKER_OPTIONS,
-      async ({ base64, didCancel, error }: any): Promise<void> => {
-        if (didCancel || error) {
-          return;
-        }
+    const result = await ImagePicker.launchImageLibraryAsync(IMAGE_PICKER_OPTIONS);
 
-        runInAction(async () => {
-          this._isLoading = true;
-        });
-        await updateAvatar(base64);
+    if (result.canceled || !result.assets || !result.assets[0]) {
+      return;
+    }
 
-        runInAction(async () => {
-          this._isLoading = false;
-          flushCache();
-          SnackBarStore.showMessage({ text: 'Avatar updated' });
-        });
-      },
-    );
+    const base64 = result.assets[0].base64;
+    if (!base64) {
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Update avatar using direct fetch call
+      await fetch(`${CONFIG.HOST}/api/profile/photo/`, {
+        body: JSON.stringify({ photo: base64 }),
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${accessToken || ''}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'PUT',
+      });
+      // Force re-render by updating key or state
+      addSnackBarMessage({ content: 'Avatar updated' });
+    } catch (fetchError) {
+      addSnackBarMessage({
+        content: fetchError instanceof Error ? fetchError.message : 'Failed to update avatar',
+        style: 'danger',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  render(): React.ReactElement {
-    return this._isLoading ? (
-      <LoadingIndicator style={styles.loadingIndicator} />
-    ) : (
-      <TouchableOpacity onPress={this._onAvatarPress}>
-        <UserAvatar
-          cached={true}
-          imageRef={this._cachedImageRef}
-          size={200}
-          userName={AuthStore.userName || ''}
-        />
-        <Icon
-          color={COLORS.textInverse}
-          name="add-a-photo"
-          reverse
-          reverseColor={COLORS.primary3}
-          size={20}
-          raised={true}
-          containerStyle={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-          }}
-        />
-      </TouchableOpacity>
-    );
+  if (isLoading) {
+    return <LoadingIndicator style={styles.loadingIndicator} />;
   }
-}
+
+  return (
+    <TouchableOpacity onPress={onAvatarPress}>
+      <UserAvatar
+        size={200}
+        userName={userName || ''}
+      />
+      <Icon
+        color={COLORS.textInverse}
+        name="add-a-photo"
+        reverse
+        reverseColor={COLORS.primary3}
+        size={20}
+        raised={true}
+        containerStyle={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+        }}
+      />
+    </TouchableOpacity>
+  );
+};
 
 export default AvatarPicker;

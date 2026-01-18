@@ -1,7 +1,5 @@
-import type {Style} from '../types';
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -18,7 +16,7 @@ const styles = StyleSheet.create({
 type Props = {
   centered?: boolean,
   children?: React.ReactNode,
-  style?: Style
+  style?: StyleProp<ViewStyle>
 };
 
 const Container = (

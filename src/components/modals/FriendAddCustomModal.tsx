@@ -23,22 +23,22 @@ type Props = {
   onHideModal: () => void;
 };
 
-class FriendAddCustomModal extends React.Component<Props> {
-  render(): React.ReactElement {
-    const { isVisible, onHideModal, onFriendAddFormSubmit } = this.props;
-
-    return (
-      <CenteredModal
-        header={<Text style={styles.headerText}>Request Friendship</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-      >
-        <View style={styles.root}>
-          <FriendAddForm onSubmit={onFriendAddFormSubmit} />
-        </View>
-      </CenteredModal>
-    );
-  }
-}
+const FriendAddCustomModal: React.FC<Props> = ({
+  isVisible,
+  onHideModal,
+  onFriendAddFormSubmit,
+}) => {
+  return (
+    <CenteredModal
+      header={<Text style={styles.headerText}>Request Friendship</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+    >
+      <View style={styles.root}>
+        <FriendAddForm onSubmit={onFriendAddFormSubmit} />
+      </View>
+    </CenteredModal>
+  );
+};
 
 export default FriendAddCustomModal;

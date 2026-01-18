@@ -14,6 +14,13 @@ export const FormValidationText = ({ children }: PropsWithChildren) => (
   </Text>
 );
 
-export const FormValidationMessage: React.FC<{ fieldName: string }> = ({
+export const FormValidationMessage: React.FC<{ fieldName?: string }> = ({
   fieldName,
-}) => <ErrorMessage name={fieldName} as={FormValidationText} />;
+}) => {
+  if (fieldName) {
+    return <ErrorMessage name={fieldName} as={FormValidationText} />;
+  }
+  // For form-level errors, we can use a different approach
+  // For now, return null if no fieldName is provided
+  return null;
+};

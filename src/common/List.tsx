@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
 });
 
 export type ListComponentTypes =
-  | React.ComponentType
+   
+  | React.ComponentType<any>
   | React.ReactElement
   | null
   | undefined;
@@ -57,7 +58,7 @@ export type ListProps<TEntity> = {
       renderSectionFooter?: (info: {
         section: SectionListData<TEntity>;
       }) => React.ReactElement | null;
-      sections: ReadonlyArray<SectionListData<TEntity>>;
+      sections: readonly SectionListData<TEntity>[];
     }
 );
 
@@ -120,7 +121,8 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
           renderSectionFooter={this.props.renderSectionFooter}
           renderSectionHeader={this.props.renderSectionHeader}
           contentContainerStyle={styles.contentContainerStyle}
-          // {...rest}
+          stickySectionHeadersEnabled={true}
+          {...rest}
           // ref={innerRef}
           onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
           onRefresh={onRefresh ? this._onRefresh : null}

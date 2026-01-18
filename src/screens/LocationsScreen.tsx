@@ -1,34 +1,38 @@
-import type {Navigation} from '../types';
-
 import * as React from 'react';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import LocationsList from '../components/LocationsList';
 import NuxNoEntity from '../components/NuxNoEntity';
 
-type Props = {
-  navigation: Navigation
+const LocationsScreen: React.FC = () => {
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="add"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+            params: {
+              screen: 'locations',
+              params: {
+                screen: 'newLocation',
+                params: {},
+              },
+            },
+            }}
+          />
+        }
+        showBackButton
+        title="Locations"
+      />
+      <LocationsList ListEmptyComponent={NuxNoEntity} />
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class LocationsScreen extends React.Component<Props> {
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header
-          rightComponent={
-            <HeaderNavigationButton name="add" toRoute="newLocation" />
-          }
-          showBackButton
-          title="Locations"
-        />
-        <LocationsList ListEmptyComponent={NuxNoEntity} />
-      </Container>
-    );
-  }
-}
-
-export default LocationsScreen;
+export default withErrorBoundary(LocationsScreen, <ErrorScreen showBackButton />);

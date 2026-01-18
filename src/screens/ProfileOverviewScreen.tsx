@@ -1,16 +1,18 @@
-import type { Account } from '@brewskey/js-api';
+import type { Account, EntityID } from '@brewskey/js-api';
 
 import * as React from 'react';
-import DAOApi from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import { StyleSheet, View } from 'react-native';
+import { StaticScreenProps } from '@react-navigation/native';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 
 import UserAvatar from '../common/avatars/UserAvatar';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
-import UserBadges from '../components/UserBadges/UserBadges';
+import { UserBadges } from '../components/UserBadges/UserBadges';
 import SectionHeader from '../common/SectionHeader';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { useGetAccountById } from '../hooks/queries/AccountQueries';
+import LoadingIndicator from '../common/LoadingIndicator';
 
 const styles = StyleSheet.create({
   // todo make separate components for such things
@@ -20,38 +22,47 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  account: Account;
+type Props = StaticScreenProps<{
+  account?: Account;
+  accountId?: EntityID;
+}>;
+
+const ProfileOverviewScreen: React.FC<Props> = ({
+  route: {
+    params: { account: accountFromParams, accountId: accountIdParam },
+  },
+}: Props) => {
+  // Get account from route params or fetch by ID
+  const accountId = accountIdParam || accountFromParams?.id;
+  
+  const { data: accountFromQuery, isLoading } = useGetAccountById(
+    accountId && !accountFromParams ? accountId : undefined,
+  );
+  
+  const account = accountFromParams || accountFromQuery;
+
+  if (isLoading || !account) {
+    return <LoadingIndicator />;
+  }
+
+  return (
+    <BeveragePoursList
+      ListHeaderComponent={
+        <View>
+          <View style={styles.avatarContainer}>
+            <UserAvatar userName={account.userName} size={200} />
+          </View>
+          <SectionHeader title="Badges" />
+          <UserBadges userID={account.id} />
+          <SectionHeader title="Recent Pours" />
+        </View>
+      }
+      queryOptions={{
+        filters: [createFilter('owner/id').equals(account.id)],
+        orderBy: [{ column: 'id', direction: 'desc' }],
+      }}
+    />
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class ProfileOverviewScreen extends InjectedComponent<InjectedProps> {
-  static navigationOptions = {
-    tabBarLabel: 'Overview',
-  };
-
-  render(): React.ReactElement {
-    const { account } = this.injectedProps;
-    return (
-      <BeveragePoursList
-        ListHeaderComponent={
-          <View>
-            <View style={styles.avatarContainer}>
-              <UserAvatar userName={account.userName} size={200} />
-            </View>
-            <SectionHeader title="Badges" />
-            <UserBadges userID={account.id} />
-            <SectionHeader title="Recent Pours" />
-          </View>
-        }
-        queryOptions={{
-          filters: [DAOApi.createFilter('owner/id').equals(account.id)],
-          orderBy: [{ column: 'id', direction: 'desc' }],
-        }}
-      />
-    );
-  }
-}
-
-export default ProfileOverviewScreen;
+export default withErrorBoundary(ProfileOverviewScreen, <ErrorScreen showBackButton />);

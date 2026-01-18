@@ -2,7 +2,6 @@ import type { Location } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { action, observable } from 'mobx';
 
 import { COLORS, TYPOGRAPHY } from '../theme';
 import IconButton from '../common/buttons/IconButton';
@@ -26,48 +25,45 @@ type Props = {
   location: Location;
 };
 
-class LocationAddress extends React.Component<Props> {
-  _isMapVisible = false;
+const LocationAddress: React.FC<Props> = ({ location }) => {
+  const [isMapVisible, setIsMapVisible] = React.useState(false);
 
-  _toggleMapModal = () => {
-    this._isMapVisible = !this._isMapVisible;
+  const toggleMapModal = () => {
+    setIsMapVisible(!isMapVisible);
   };
 
-  render(): React.ReactElement {
-    const { city, geolocation, state, street, suite, zipCode } =
-      this.props.location;
+  const { city, geolocation, state, street, suite, zipCode } = location;
 
-    return (
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          {`${street.toUpperCase()} ${(suite || '').toUpperCase()}`}
-        </Text>
-        <Text style={styles.text}>
-          {`${city.toUpperCase()} ${(
-            state || ''
-          ).toUpperCase()} ${zipCode.toString().toUpperCase()}`}
-        </Text>
-        <Text style={styles.text}>USA</Text>
-        {geolocation && [
-          <View key="mapButton" style={styles.mapButtonContainer}>
-            <IconButton
-              color={COLORS.primary2}
-              onPress={this._toggleMapModal}
-              name="earth"
-              size={40}
-              type="material-community"
-            />
-          </View>,
-          <LocationMapModal
-            key="mapModal"
-            isVisible={this._isMapVisible}
-            onHideModal={this._toggleMapModal}
-            coordinates={geolocation.coordinates}
-          />,
-        ]}
-      </View>
-    );
-  }
-}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>
+        {`${street.toUpperCase()} ${(suite || '').toUpperCase()}`}
+      </Text>
+      <Text style={styles.text}>
+        {`${city.toUpperCase()} ${(
+          state || ''
+        ).toUpperCase()} ${zipCode.toString().toUpperCase()}`}
+      </Text>
+      <Text style={styles.text}>USA</Text>
+      {geolocation && [
+        <View key="mapButton" style={styles.mapButtonContainer}>
+          <IconButton
+            color={COLORS.primary2}
+            onPress={toggleMapModal}
+            name="earth"
+            size={40}
+            type="material-community"
+          />
+        </View>,
+        <LocationMapModal
+          key="mapModal"
+          isVisible={isMapVisible}
+          onHideModal={toggleMapModal}
+          coordinates={geolocation.coordinates}
+        />,
+      ]}
+    </View>
+  );
+};
 
 export default LocationAddress;

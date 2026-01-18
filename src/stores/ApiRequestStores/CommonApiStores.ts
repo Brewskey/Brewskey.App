@@ -3,7 +3,6 @@ import type { Coordinates, NearbyLocation } from '../../types';
 
 import makeApiRequestStore from './makeRequestApiStore';
 import { fetchJSON } from '../../utils';
-import AuthStore from '../AuthStore';
 import CONFIG from '../../config';
 
 // const makeNearbyLocationsStore = () => {
@@ -30,28 +29,32 @@ import CONFIG from '../../config';
 // export const NearbyLocationsStore = makeNearbyLocationsStore();
 
 let iter = 0;
-export const updateAvatar = (avatarData: string) =>
-  // eslint-disable-next-line no-undef
+export const updateAvatar = (avatarData: string, accessToken: string | null) =>
+   
   fetch(`${CONFIG.HOST}/api/profile/photo/`, {
     body: JSON.stringify({ photo: avatarData }),
     headers: {
       Accept: 'application/json',
-      Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+      Authorization: `Bearer ${accessToken || ''}`,
       'Content-Type': 'application/json',
     },
     method: 'PUT',
   });
 
 export const UpdateBeverageImageStore = makeApiRequestStore<void>(
-  (beverageID: EntityID, beverageData: string) =>
-    // eslint-disable-next-line no-undef
-    fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
+  (...args: unknown[]) => {
+    const beverageID = args[0] as EntityID;
+    const beverageData = args[1] as string;
+    const accessToken = args[2] as string | null;
+     
+    return fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
       body: JSON.stringify({ photo: beverageData }),
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+        Authorization: `Bearer ${accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',
-    }).then(() => {}),
+    }).then(() => {});
+  },
 );

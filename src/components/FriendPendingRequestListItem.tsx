@@ -19,38 +19,35 @@ type Props = {
   onPress: (friend: Friend) => void;
 };
 
-class FriendPendingRequestListItem extends React.PureComponent<Props> {
-  _onFriendDeclinePress = () =>
-    this.props.onFriendDeclinePress(this.props.item);
+const FriendPendingRequestListItem: React.FC<Props> = ({
+  item: friend,
+  onFriendAcceptPress,
+  onFriendDeclinePress,
+  onPress,
+}) => {
+  const handleFriendDeclinePress = () => onFriendDeclinePress(friend);
+  const handleFriendAcceptPress = () => onFriendAcceptPress(friend);
 
-  _onFriendAcceptPress = () => this.props.onFriendAcceptPress(this.props.item);
+  return (
+    <ListItem
+      leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
+      item={friend}
+      onPress={onPress}
+      rightIcon={
+        <View style={styles.iconsContainer}>
+          <IconButton
+            onPress={handleFriendAcceptPress}
+            name="check"
+          />
+          <IconButton
+            onPress={handleFriendDeclinePress}
+            name="close"
+          />
+        </View>
+      }
+      title={friend.friendAccount.userName}
+    />
+  );
+};
 
-  render(): React.ReactElement {
-    const { item: friend, onPress } = this.props;
-
-    return (
-      <ListItem
-        leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
-        item={friend}
-        onPress={onPress}
-        rightIcon={
-          <View style={styles.iconsContainer}>
-            <IconButton
-              onPress={this._onFriendAcceptPress}
-              name="md-checkmark"
-              type="ionicon"
-            />
-            <IconButton
-              onPress={this._onFriendDeclinePress}
-              name="md-close"
-              type="ionicon"
-            />
-          </View>
-        }
-        title={friend.friendAccount.userName}
-      />
-    );
-  }
-}
-
-export default FriendPendingRequestListItem;
+export default React.memo(FriendPendingRequestListItem);

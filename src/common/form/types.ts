@@ -1,12 +1,10 @@
-// todo figure out how we can use generic TValue for
-// value and initialValue props
-export type Field = {
+export type Field<TValue = unknown> = {
   error: string | null | undefined;
-  initialValue: any;
-  parseOnSubmit: (value?: any) => any;
-  refElement?: any;
+  initialValue: TValue;
+  parseOnSubmit: (value?: TValue) => TValue;
+  refElement?: React.RefObject<unknown>;
   touched: boolean;
-  value: any;
+  value: TValue;
 };
 
 export type FormProps<TFormFields> = {
@@ -22,12 +20,12 @@ export type FormProps<TFormFields> = {
   values: TFormFields;
 };
 
-export type FormFieldChildProps = {
+export type FormFieldChildProps<TValue = unknown> = {
   error: string | null | undefined;
   onBlur: () => void;
-  onChange: (value?: any) => void;
+  onChange: (value?: TValue) => void;
   touched: boolean;
-  value: any;
+  value: TValue;
 };
 
 export type ValidationFunction<TObject> = (

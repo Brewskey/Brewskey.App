@@ -1,7 +1,5 @@
-import type {Style} from '../types';
-
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 import IconButton from './buttons/IconButton';
 
 const styles = StyleSheet.create({
@@ -14,12 +12,12 @@ const styles = StyleSheet.create({
 });
 
 type Props<TIconProps> = (TIconProps) & {
-  containerStyle?: Style,
+  containerStyle?: StyleProp<ViewStyle>,
   iconName: string,
   onPress?: () => void
 };
 
-const SwipeableActionButton = <TIconProps extends unknown>(
+const SwipeableActionButton = <TIconProps extends object>(
   {
     containerStyle,
     iconName,

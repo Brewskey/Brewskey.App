@@ -1,20 +1,25 @@
 import * as React from 'react';
 
-import DAOApi from '@brewskey/js-api';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useAppSettings } from '../hooks/context/AppSettingsContext';
+import { useChangePassword } from '../hooks/queries/AuthQueries';
+import { useGetOrganizations } from '../hooks/queries/OrganizationQueries';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
-import AppSettingsStore from '../stores/AppSettingsStore';
 import Section from '../common/Section';
+import SectionContent from '../common/SectionContent';
 import SectionHeader from '../common/SectionHeader';
-import OrganizationPicker from '../components/pickers/OrganizationPicker';
 import ListItem from '../common/ListItem';
+import ChangePasswordForm, {
+  type ChangePasswordFormFields,
+} from '../components/ChangePasswordForm';
+import OrganizationPicker from '../components/pickers/OrganizationPicker';
 
 const styles = StyleSheet.create({
   versionText: {
@@ -25,66 +30,80 @@ const styles = StyleSheet.create({
   },
 });
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class SettingsScreen extends React.Component {
-  get _hasOrganizations(): boolean {
-    // const organizationsLoader = OrganizationStore.count();
-    // return (organizationsLoader.getValue() || 0) > 1;
+const SettingsScreen: React.FC = () => {
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const {
+    isManageTapsEnabled,
+    onOrganizationChange,
+    onToggleManageTaps,
+    selectedOrganization,
+    updateMetadata,
+  } = useAppSettings();
+  const changePasswordMutation = useChangePassword();
+  const { data: organizationsData } = useGetOrganizations();
 
-    return false;
-  }
+  const hasOrganizations =
+    organizationsData?.pages?.[0] != null &&
+    organizationsData.pages[0].length > 0;
 
-  _onChangePasswordSubmit = async () => {
-    // await DAOApi.Auth.changePassword(values);
-    SnackBarStore.showMessage({ content: 'Password changed!' });
+  const onChangePasswordSubmit = async (values: ChangePasswordFormFields) => {
+    try {
+      await changePasswordMutation.mutateAsync({
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      });
+      addSnackBarMessage({ content: 'Password changed!' });
+    } catch (error) {
+      addSnackBarMessage({
+        content: error instanceof Error ? error.message : 'Failed to change password',
+      });
+    }
   };
 
-  render(): React.ReactElement {
-    const {
-      isManageTapsEnabled,
-      onOrganizationChange,
-      onToggleManageTaps,
-      selectedOrganization,
-      updateMetadata,
-    } = AppSettingsStore;
-
-    return (
-      <Container>
-        <Header showBackButton title="Settings" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <Section bottomPadded>
-            <SectionHeader title="Change password" />
-            {/* <ChangePasswordForm onSubmit={this._onChangePasswordSubmit} /> */}
-          </Section>
-          <Section bottomPadded={this._hasOrganizations}>
+  return (
+    <Container>
+      <Header showBackButton title="Settings" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <Section bottomPadded>
+          <SectionHeader title="Change password" />
+          <SectionContent>
+            <ChangePasswordForm onSubmit={onChangePasswordSubmit} />
+          </SectionContent>
+        </Section>
+        <Section bottomPadded={hasOrganizations}>
+          <SectionContent>
             <ListItem
               chevron={false}
-              // switch={{
-              //   onValueChange: onToggleManageTaps,
-              //   value: isManageTapsEnabled,
-              // }}
+              switch={{
+                onValueChange: onToggleManageTaps,
+                value: isManageTapsEnabled,
+              }}
               title="Manage taps"
             />
-          </Section>
-          {!this._hasOrganizations ? null : (
-            <Section bottomPadded={updateMetadata !== null}>
-              {/* <OrganizationPicker
+          </SectionContent>
+        </Section>
+        {hasOrganizations && (
+          <Section bottomPadded={updateMetadata != null}>
+            <SectionContent>
+              <OrganizationPicker
                 onChange={onOrganizationChange}
                 value={selectedOrganization}
-              /> */}
-            </Section>
-          )}
-          {!updateMetadata ? null : (
-            <Section>
+              />
+            </SectionContent>
+          </Section>
+        )}
+        {updateMetadata != null && (
+          <Section>
+            <SectionContent>
               <Text style={styles.versionText}>
                 {updateMetadata.appVersion} - {updateMetadata.label}
               </Text>
-            </Section>
-          )}
-        </KeyboardAwareScrollView>
-      </Container>
-    );
-  }
-}
+            </SectionContent>
+          </Section>
+        )}
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
 
-export default SettingsScreen;
+export default withErrorBoundary(SettingsScreen, <ErrorScreen showBackButton />);

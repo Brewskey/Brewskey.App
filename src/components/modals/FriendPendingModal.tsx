@@ -28,26 +28,26 @@ type Props = {
   isVisible: boolean;
 };
 
-class FriendPendingModal extends React.Component<Props> {
-  render(): React.ReactElement {
-    const { account, isVisible, onHideModal } = this.props;
-
-    return (
-      <CenteredModal
-        header={<Text style={styles.headerText}>Pending friendship</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-      >
-        <View style={styles.root}>
-          <Text style={styles.messageText}>
-            You're requested a friendship with {account.userName}. The user
-            should accept or decline your request.
-          </Text>
-          <Button secondary title="okay" onPress={onHideModal} />
-        </View>
-      </CenteredModal>
-    );
-  }
-}
+const FriendPendingModal: React.FC<Props> = ({
+  account,
+  isVisible,
+  onHideModal,
+}) => {
+  return (
+    <CenteredModal
+      header={<Text style={styles.headerText}>Pending friendship</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+    >
+      <View style={styles.root}>
+        <Text style={styles.messageText}>
+          You're requested a friendship with {account.userName}. The user
+          should accept or decline your request.
+        </Text>
+        <Button secondary title="okay" onPress={onHideModal} />
+      </View>
+    </CenteredModal>
+  );
+};
 
 export default FriendPendingModal;

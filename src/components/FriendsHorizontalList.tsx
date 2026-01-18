@@ -1,20 +1,17 @@
 import type { Friend, QueryOptions } from '@brewskey/js-api';
 
-import type { Row } from '../stores/DAOListStore';
-
 import * as React from 'react';
-
+import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
-import DAOListStore from '../stores/DAOListStore';
-import { FriendStore } from '../stores/DAOStores';
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
-import LoaderRow from '../common/LoaderRow';
 import UserAvatar from '../common/avatars/UserAvatar';
 import LoadingListFooter from '../common/LoadingListFooter';
 import BaseAvatar from '../common/avatars/BaseAvatar';
 import { COLORS } from '../theme';
+import { useGetFriends } from '../hooks/queries/FriendQueries';
 
 const styles = StyleSheet.create({
   friendContainer: {
@@ -36,6 +33,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   ListHeaderComponent?:
+     
     | React.ComponentType<any>
     | React.ReactNode
     | null
@@ -43,88 +41,85 @@ type Props = {
   queryOptions?: QueryOptions;
 };
 
-type InjectedProps = {
-  navigation: Navigation;
+type LoadedRowProps = {
+  item: Friend;
+  onItemPress: (friend: Friend) => void;
 };
 
-@withNavigation
-class FriendsHorizontalList extends InjectedComponent<InjectedProps, Props> {
-  static defaultProps: {
-    queryOptions: QueryOptions;
-  } = {
-    queryOptions: {},
+const LoadedRow: React.FC<LoadedRowProps> = ({ item: friend, onItemPress }) => {
+  const handlePress = () => {
+    onItemPress(friend);
   };
 
-  _listStore: DAOListStore<Friend> = new DAOListStore(FriendStore);
+  return (
+    <TouchableOpacity onPress={handlePress} style={styles.friendContainer}>
+      <UserAvatar size={100} rounded={true} userName={friend.friendAccount.userName} />
+      <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
+    </TouchableOpacity>
+  );
+};
 
-  componentDidMount() {
-    this._listStore.initialize(this.props.queryOptions);
-  }
+const FriendsHorizontalList: React.FC<Props> = ({
+  ListHeaderComponent,
+  queryOptions = {},
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-  _keyExtractor = (row: Row<Friend>): string => row.key;
+  const {
+    data: friendsData,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetFriends(queryOptions);
 
-  _onItemPress = (friend: Friend) => {
-    this.injectedProps.navigation.navigate('profile', {
-      id: friend.friendAccount.id,
-      key: friend.friendAccount.id,
+  const onItemPress = (friend: Friend) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'profile',
+        params: {
+          id: friend.friendAccount.id,
+        },
+      },
     });
   };
 
-  _renderRow = ({ item }: { item: Row<Friend> }): React.ReactElement => (
-    <LoaderRow
-      loadedRow={LoadedRow}
-      loader={item.loader}
-      loadingRow={LoadingRow}
-      onItemPress={this._onItemPress}
-    />
+  const onRefreshList = () => {
+    refetch();
+  };
+
+  const keyExtractor = (item: Friend): string => item.id.toString();
+
+  const renderRow = ({ item: friend }: { item: Friend }): React.ReactElement => (
+    <LoadedRow item={friend} onItemPress={onItemPress} />
   );
 
-  render(): React.ReactElement {
-    const isLoading = this._listStore.isFetchingRemoteCount;
-    return (
-      <List
-        data={this._listStore.rows}
-        horizontal
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmpty message="No friends" /> : null
+  return (
+    <List
+      data={friendsData}
+      horizontal
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
+      ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
+      ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
+      onEndReached={() => {
+        if (hasNextPage) {
+          fetchNextPage();
         }
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={this.props.ListHeaderComponent}
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        renderItem={this._renderRow}
-      />
-    );
-  }
-}
+      }}
+      onRefresh={onRefreshList}
+      renderItem={renderRow}
+    />
+  );
+};
 
 const LoadingRow = () => (
   <View style={styles.friendContainer}>
-    <BaseAvatar size={100} />
+    <BaseAvatar size={100} rounded={true} uri="" />
     <View style={styles.userNameLoadingPlaceholder} />
   </View>
 );
-
-type LoadedRowProps = {
-  item: Friend;
-  onItemPress: (arg1: Friend) => void;
-};
-
-class LoadedRow extends React.PureComponent<LoadedRowProps> {
-  _onPress = () => {
-    const { item, onItemPress } = this.props;
-    onItemPress(item);
-  };
-  render(): React.ReactElement {
-    const { item: friend } = this.props;
-    return (
-      <TouchableOpacity onPress={this._onPress} style={styles.friendContainer}>
-        <UserAvatar size={100} userName={friend.friendAccount.userName} />
-        <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
-      </TouchableOpacity>
-    );
-  }
-}
 
 export default FriendsHorizontalList;

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import DAOApi, { FRIEND_STATUSES } from '@brewskey/js-api';
+import { FRIEND_STATUSES } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import AppSettingsStore from '../stores/AppSettingsStore';
-import { errorBoundary, withErrorBoundary } from '../common/ErrorBoundary';
+import { useAppSettings } from '../hooks/context/AppSettingsContext';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Section from '../common/Section';
 import Header from '../common/Header';
@@ -12,15 +13,11 @@ import MenuSeparator from '../components/MenuSeparator';
 import MenuLogoutButton from '../components/MenuLogoutButton';
 import MenuNavigationButton from '../components/MenuNavigationButton';
 import { COLORS } from '../theme';
-import FriendRequestsListStore from '../stores/FriendRequestsListStore';
 import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import { MenuUserBlock } from '../components/MenuUserBlock';
 import ErrorScreen from '../common/ErrorScreen';
-import { useNavigation } from '@react-navigation/native';
-import {
-  useGetFriendsCount,
-  useGetManyFriends,
-} from '../hooks/queries/FriendQueries';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useGetFriendsCount } from '../hooks/queries/FriendQueries';
 import { useAuthContext } from '../hooks/context/AuthContext';
 import { Badge } from '@rneui/themed';
 
@@ -43,13 +40,14 @@ const styles = StyleSheet.create({
 
 export const MenuScreen: React.FC = withErrorBoundary(
   () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
     const [session] = useAuthContext();
+    const { isManageTapsEnabled } = useAppSettings();
     const queryOptions = {
       filters: [
-        DAOApi.createFilter('friendAccount').notEquals(null),
-        DAOApi.createFilter('owningAccount/id').equals(session?.id),
-        DAOApi.createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
+        createFilter('friendAccount').notEquals(null),
+        createFilter('owningAccount/id').equals(session?.id),
+        createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
       ],
     };
     const pendingRequestCount = useGetFriendsCount(queryOptions, {
@@ -62,12 +60,13 @@ export const MenuScreen: React.FC = withErrorBoundary(
           rightComponent={
             <HeaderNavigationButton
               name="settings"
-              onPress={() =>
-                navigation.navigate('LoggedInStack', {
-                  screen: 'menu',
-                  params: { screen: 'settings' },
-                })
-              }
+              screen="LoggedInStack"
+              params={{
+                screen: 'menu',
+                params: {
+                  screen: 'settings',
+                },
+              }}
             />
           }
         />
@@ -79,14 +78,10 @@ export const MenuScreen: React.FC = withErrorBoundary(
             <View>
               <MenuNavigationButton
                 onPress={() => {
-                  if ((pendingRequestCount.data ?? 0) === 0) {
-                    return;
-                  }
-
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'myFriends',
                     },
                   });
                 }}
@@ -104,7 +99,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 </View>
               )}
             </View>
-            {AppSettingsStore.isManageTapsEnabled && [
+            {isManageTapsEnabled && [
               <MenuSeparator key="separator1" />,
               <MenuNavigationButton
                 icon={{ name: 'map-marker', type: 'material-community' }}
@@ -115,7 +110,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'locations',
                     },
                   });
                 }}
@@ -129,7 +124,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'taps',
                     },
                   });
                 }}
@@ -143,7 +138,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'devices',
                     },
                   });
                 }}
@@ -157,7 +152,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'myBeverages',
                     },
                   });
                 }}
@@ -173,7 +168,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                   navigation.navigate('LoggedInStack', {
                     screen: 'menu',
                     params: {
-                      screen: 'settings',
+                      screen: 'writeNFC',
                     },
                   });
                 }}
@@ -192,7 +187,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 navigation.navigate('LoggedInStack', {
                   screen: 'menu',
                   params: {
-                    screen: 'settings',
+                    screen: 'help',
                   },
                 });
               }}

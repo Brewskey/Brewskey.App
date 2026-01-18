@@ -6,7 +6,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import Fragment from '../common/Fragment';
 import Container from '../common/Container';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,17 +26,19 @@ const styles = StyleSheet.create({
 type Props = {
   canEdit: boolean;
   tapId: EntityID;
-  navigation: any;
 };
 
-export const TapDetailsNoKeg: React.FC<Props> = ({
-  navigation,
-  tapId,
-  canEdit,
-}) => {
+export const TapDetailsNoKeg: React.FC<Props> = ({ tapId, canEdit }) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   const _onSetupPress = () =>
-    navigation.navigate('newKeg', {
-      tapId,
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'newKeg',
+        params: {
+          tapId,
+        },
+      },
     });
 
   return (

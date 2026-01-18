@@ -8,7 +8,7 @@ import { WIFI_SECURITIES } from '../../../SoftApService';
 import { Icon } from '@rneui/themed';
 import { TextField } from '../../../common/form/TextField';
 import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
-import { Form } from '../../../common/form/Form';
+import { useFormContext } from 'react-hook-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,67 +42,66 @@ type Props = {
   rowKey: string;
 };
 
-class WifiListItem extends React.Component<Props> {
-  _password = '';
+const WifiListItem: React.FC<Props> = ({
+  index,
+  isConnecting,
+  isExpanded,
+  item,
+  onConnectPress,
+  onPress,
+  rowKey,
+}) => {
+  const form = useFormContext();
+  const password = form.watch(`password_${rowKey}`) || '';
 
-  _onPasswordChange = (password: string) => {
-    this._password = password;
-  };
-
-  _onConnectPress = () => {
-    const { index, item, onConnectPress } = this.props;
+  const handleConnectPress = React.useCallback(() => {
     onConnectPress({
       ...item,
       index,
-      password: this._password,
+      password,
     });
-  };
+  }, [index, item, onConnectPress, password, rowKey]);
 
-  _onPress = () => this.props.onPress(this.props.rowKey);
+  const handlePress = React.useCallback(() => {
+    onPress(rowKey);
+  }, [onPress, rowKey]);
 
-  render(): React.ReactElement {
-    const {
-      isConnecting,
-      isExpanded,
-      item: { ssid, security },
-    } = this.props;
+  const { ssid, security } = item;
+  const isPasswordRequired = security !== WIFI_SECURITIES.OPEN;
 
-    const isPasswordRequired = security !== WIFI_SECURITIES.OPEN;
-
-    return (
-      <TouchableOpacity
-        disabled={isExpanded}
-        onPress={this._onPress}
-        style={styles.container}
-      >
-        <View style={styles.labelContainer}>
-          <Text style={styles.title}>{ssid}</Text>
-          {isPasswordRequired && (
-            <Icon containerStyle={styles.iconStyle} name="lock" />
-          )}
-        </View>
-        {isExpanded && [
-          isPasswordRequired && (
-            <TextField
-              editable={!isConnecting}
-              key="password"
-              label="Password"
-              onSubmitEditing={this._onConnectPress}
-              secureTextEntry
-              name="password"
-            />
-          ),
-          <FormValidationMessage fieldName="wifiSetupError" />,
-          <Button
-            disabled={isConnecting}
-            key="connectButton"
-            onPress={this._onConnectPress}
-            title="Connect"
-          />,
-        ]}
-      </TouchableOpacity>
-    );
-  }
-}
+  return (
+    <TouchableOpacity
+      disabled={isExpanded}
+      onPress={handlePress}
+      style={styles.container}
+    >
+      <View style={styles.labelContainer}>
+        <Text style={styles.title}>{ssid}</Text>
+        {isPasswordRequired && (
+          <Icon containerStyle={styles.iconStyle} name="lock" />
+        )}
+      </View>
+      {isExpanded && [
+        isPasswordRequired && (
+          <TextField
+            editable={!isConnecting}
+            key="password"
+            label="Password"
+            onSubmitEditing={handleConnectPress}
+            secureTextEntry
+            name={`password_${rowKey}`}
+          />
+        ),
+        <FormValidationMessage fieldName="wifiSetupError" />,
+        <Button
+          disabled={isConnecting}
+          key="connectButton"
+          onPress={handleConnectPress}
+          title="Connect"
+        />,
+      ]}
+    </TouchableOpacity>
+  );
+};
 
 export default WifiListItem;

@@ -14,14 +14,16 @@ type Props = {
   isLoading: boolean;
 };
 
-class LoadingListFooter extends React.PureComponent<Props> {
-  render(): React.ReactElement | null {
-    return !this.props.isLoading ? null : (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+const LoadingListFooter: React.FC<Props> = ({ isLoading }) => {
+  if (!isLoading) {
+    return null;
   }
-}
+
+  return (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" />
+    </View>
+  );
+};
 
 export default LoadingListFooter;

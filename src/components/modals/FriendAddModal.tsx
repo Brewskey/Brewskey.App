@@ -37,39 +37,40 @@ type Props = {
   onHideModal: () => void;
 };
 
-class FriendApprovedModal extends React.Component<Props> {
-  render(): React.ReactElement {
-    const { account, isVisible, onHideModal, onFriendAddPress } = this.props;
-
-    return (
-      <CenteredModal
-        header={<Text style={styles.headerText}>Request friendship!</Text>}
-        isVisible={isVisible}
-        onHideModal={onHideModal}
-      >
-        <View style={styles.root}>
-          <Text style={styles.messageText}>
-            Do you want to add{' '}
-            <Text style={styles.userNameText}>{account.userName}</Text> to your
-            friends?
-          </Text>
-          <View style={styles.buttonsContainer}>
-            <Button
-              buttonStyle={styles.buttonStyle}
-              onPress={onHideModal}
-              title="no"
-            />
-            <Button
-              buttonStyle={styles.buttonStyle}
-              onPress={onFriendAddPress}
-              secondary
-              title="yes"
-            />
-          </View>
+const FriendApprovedModal: React.FC<Props> = ({
+  account,
+  isVisible,
+  onHideModal,
+  onFriendAddPress,
+}) => {
+  return (
+    <CenteredModal
+      header={<Text style={styles.headerText}>Request friendship!</Text>}
+      isVisible={isVisible}
+      onHideModal={onHideModal}
+    >
+      <View style={styles.root}>
+        <Text style={styles.messageText}>
+          Do you want to add{' '}
+          <Text style={styles.userNameText}>{account.userName}</Text> to your
+          friends?
+        </Text>
+        <View style={styles.buttonsContainer}>
+          <Button
+            buttonStyle={styles.buttonStyle}
+            onPress={onHideModal}
+            title="no"
+          />
+          <Button
+            buttonStyle={styles.buttonStyle}
+            onPress={onFriendAddPress}
+            secondary
+            title="yes"
+          />
         </View>
-      </CenteredModal>
-    );
-  }
-}
+      </View>
+    </CenteredModal>
+  );
+};
 
 export default FriendApprovedModal;

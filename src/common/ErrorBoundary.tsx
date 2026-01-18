@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { getElementFromComponentProp } from '../utils';
-import hoistNonReactStatic from 'hoist-non-react-statics';
 
 type Props = {
   children: React.ReactNode;
@@ -47,15 +46,13 @@ export const withErrorBoundary = <
     }
   }
 
-  hoistNonReactStatic(WithErrorBoundary, Component);
   return WithErrorBoundary as unknown as TComponent;
 };
 
 export const errorBoundary =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-    <TComponent extends React.ComponentClass<any, any>>(
-      fallbackComponent?: React.ReactNode | React.ComponentType,
-    ): ((c: TComponent) => TComponent) =>
-    (Component: TComponent): TComponent =>
-      withErrorBoundary(Component, fallbackComponent);
+   
+  <TComponent extends React.ComponentClass<any, any>>(
+    fallbackComponent?: React.ReactNode | React.ComponentType,
+  ): ((c: TComponent) => TComponent) =>
+  (Component: TComponent): TComponent =>
+    withErrorBoundary(Component, fallbackComponent);

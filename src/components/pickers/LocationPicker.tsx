@@ -1,72 +1,62 @@
 import type { Location, QueryOptions } from '@brewskey/js-api';
-import type { Style } from '../../types';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
+import type { TextStyle, ViewStyle, StyleProp } from 'react-native';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { LocationStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useGetLocations } from '../../hooks/queries/LocationQueries';
 
 type Props<TMultiple extends boolean> = {
   error?: string | null | undefined;
-  inputStyle?: Style;
-  labelStyle?: Style;
+  inputStyle?: StyleProp<ViewStyle> | StyleProp<TextStyle>;
+  labelStyle?: TextStyle;
   multiple: TMultiple;
   onChange: (value: PickerValue<Location, TMultiple>) => void;
   placeholderTextColor?: string;
   queryOptions?: QueryOptions;
   selectionColor?: string;
   underlineColorAndroid?: string;
-  validationTextStyle?: Style;
+  validationTextStyle?: TextStyle;
   value: PickerValue<Location, TMultiple>;
-  // react-native textInput props
 };
 
-class LocationPicker<TMultiple extends boolean> extends React.PureComponent<
-  Props<TMultiple>
-> {
-  static defaultProps: {
-    multiple: boolean;
-  } = {
-    multiple: false,
-  };
-
-  _renderRow = ({ item: row, isSelected, toggleItem }) => (
-    <LoaderRow
+function LocationPicker<TMultiple extends boolean>({
+  multiple = false as TMultiple,
+  ...props
+}: Props<TMultiple>): React.ReactElement {
+  const renderRow = ({
+    item: location,
+    isSelected,
+    toggleItem,
+  }: RenderRowProps<Location>): React.ReactElement => (
+    <SelectableListItem
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={location}
+      subtitle={location.description || NULL_STRING_PLACEHOLDER}
+      title={location.name}
+      onPress={() => toggleItem(location)}
     />
   );
 
-  render(): React.ReactElement {
-    const { multiple } = this.props;
-    return (
-      <DAOPicker
-        {...this.props}
-        daoStore={LocationStore}
-        headerTitle={`Select Location${multiple ? 's' : ''}`}
-        label={`Location${multiple ? 's' : ''}`}
-        renderRow={this._renderRow}
-        stringValueExtractor={(location: Location): string => location.name}
-      />
-    );
-  }
+  const { inputStyle, ...restProps } = props;
+  return (
+    <DAOPicker
+      {...restProps}
+      inputStyle={inputStyle as StyleProp<ViewStyle>}
+      useQueryHook={useGetLocations}
+      headerTitle={`Select Location${multiple ? 's' : ''}`}
+      label={`Location${multiple ? 's' : ''}`}
+      multiple={multiple}
+      queryOptions={props.queryOptions ?? {}}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={false}
+      stringValueExtractor={(location: Location): string => location.name}
+    />
+  );
 }
-
-// todo annotate better
-const LoadedRow = ({ item: location, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    chevron={false}
-    isSelected={isSelected}
-    item={location}
-    subtitle={location.summary || NULL_STRING_PLACEHOLDER}
-    title={location.name}
-    onPress={toggleItem}
-  />
-);
 
 export default LocationPicker;

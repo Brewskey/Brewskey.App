@@ -1,13 +1,10 @@
 import type { Srm, QueryOptions } from '@brewskey/js-api';
-import type { PickerValue } from '../../stores/PickerStore';
+import type { PickerValue, RenderRowProps } from './DAOPicker';
 
 import * as React from 'react';
 import DAOPicker from './DAOPicker';
-import { SrmStore } from '../../stores/DAOStores';
-import LoaderRow from '../../common/LoaderRow';
 import SelectableListItem from '../../common/SelectableListItem';
-import ColorIcon from '../../common/ColorIcon';
-import PickerSrmInput from './PickerSrmInput';
+import { useGetSrms } from '../../hooks/queries/SrmQueries';
 
 type Props = {
   error?: string | null | undefined;
@@ -16,41 +13,35 @@ type Props = {
   value: PickerValue<Srm, false>;
 };
 
-class SrmPicker extends React.Component<Props> {
-  _renderRow = ({ item: row, isSelected, toggleItem }) => (
-    <LoaderRow
+const SrmPicker: React.FC<Props> = (props) => {
+  const renderRow = ({
+    item: srm,
+    isSelected,
+    toggleItem,
+  }: RenderRowProps<Srm>): React.ReactElement => (
+    <SelectableListItem
+      chevron={false}
       isSelected={isSelected}
-      loadedRow={LoadedRow}
-      loader={row.loader}
-      toggleItem={toggleItem}
+      item={srm}
+      title={srm.name}
+      onPress={() => toggleItem(srm)}
     />
   );
 
-  render(): React.ReactElement {
-    return (
-      <DAOPicker
-        {...this.props}
-        daoStore={SrmStore}
-        headerTitle="Select Srm"
-        multiple={false}
-        label="Srm"
-        pickerInputComponent={PickerSrmInput}
-        renderRow={this._renderRow}
-        stringValueExtractor={(srm: Srm): string => srm.name}
-      />
-    );
-  }
-}
-
-// todo annotate better
-const LoadedRow = ({ item: srm, isSelected, toggleItem }: any) => (
-  <SelectableListItem
-    leftAvatar={<ColorIcon color={`#${srm.hex}`} />}
-    chevron={false}
-    isSelected={isSelected}
-    item={srm}
-    onPress={toggleItem}
-  />
-);
+  return (
+    <DAOPicker
+      {...props}
+      useQueryHook={useGetSrms}
+      headerTitle="Select SRM"
+      label="SRM"
+      multiple={false}
+      queryOptions={props.queryOptions ?? {}}
+      renderRow={renderRow}
+      searchBy="name"
+      shouldUseSearchQuery={false}
+      stringValueExtractor={(srm: Srm): string => srm.name}
+    />
+  );
+};
 
 export default SrmPicker;

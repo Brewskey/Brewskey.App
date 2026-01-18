@@ -5,12 +5,16 @@ import { Platform, Vibration } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import AuthStore from './AuthStore';
-import Storage from '../Storage';
+import Storage from '../utils/Storage';
 import CONFIG from '../config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { queryClient } from '../../App';
+import SnackBarStore from '../hooks/context/SnackBarContext';
+import { KegQueryKeys } from '../hooks/queries/KegQueries';
+import { FriendKeys } from '../hooks/queries/FriendQueries';
+import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 
@@ -151,28 +155,29 @@ const useNotifications = () => {
 };
 
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
   return useCallback((notification: Notification): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
-        const { tapId } = notification;
-        // KegStore.flushCacheForEntity(kegId);
+        const { tapId, kegId } = notification;
+        queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
         navigation.navigate('LoggedInStack', {
           screen: 'home',
           params: {
-            screen: 'TapStack',
+            screen: 'tapDetails',
             params: {
-              screen: 'tapDetails',
-              params: {
-                tapId,
-              },
+              tapId,
             },
           },
         });
         break;
       }
       case 'newAchievement': {
-        // AchievementStore.flushCustomCache();
+        if (userId) {
+          queryClient.invalidateQueries({
+            queryKey: [AchievementQueryKeys.CountsByUserId, userId],
+          });
+        }
         navigation.navigate('LoggedInStack', {
           screen: 'stats',
           params: {
@@ -182,7 +187,8 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
         break;
       }
       case 'newFriendRequest': {
-        // FriendStore.flushCache();
+        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
+        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
         // NavigationService.navigate('myFriendsRequest');
         break;
       }
@@ -190,7 +196,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
         break;
       }
     }
-  }, []);
+  }, [userId]);
 };
 
 class NotificationsStore {
@@ -277,7 +283,7 @@ class NotificationsStore {
   //   // });
   // }
 
-  get notifications(): Array<Notification> {
+  get notifications(): Notification[] {
     return Array.from(this._notificationsByID.values()).sort(
       (a: Notification, b: Notification): number =>
         new Date(b.date).getTime() - new Date(a.date).getTime(),
@@ -294,14 +300,15 @@ class NotificationsStore {
     return this.unreadCount > 0;
   }
 
-  get _disabledTapIDs(): Array<EntityID> {
+  get _disabledTapIDs(): EntityID[] {
     return Array.from(this._notificationsDisabledByTapID.keys());
   }
 
-  onNotificationPress: (arg1: Notification) => Promise<void> = async (
+  onNotificationPress: (arg1: Notification, userId?: string | null) => Promise<void> = async (
     notification: Notification,
+    userId?: string | null,
   ): Promise<void> => {
-    this._handleNotificationPressByType(notification);
+    this._handleNotificationPressByType(notification, userId ?? null);
   };
 
   getIsNotificationsEnabledForTap: (arg1: EntityID) => boolean = (
@@ -345,7 +352,8 @@ class NotificationsStore {
     notification: Notification,
   ): void => {
     if (notification.type === 'newFriendRequest') {
-      // FriendStore.flushCache();
+      queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
+      queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
     }
     this._notificationsByID.set(notification.id, notification);
   };
@@ -406,7 +414,7 @@ class NotificationsStore {
     // }
   };
 
-  _registerToken: () => Promise<void> = async (): Promise<void> => {
+  _registerToken: (accessToken: string | null) => Promise<void> = async (accessToken: string | null): Promise<void> => {
     const deviceUniqueID = await getUniqueDeviceId();
 
     const body = JSON.stringify({
@@ -416,12 +424,12 @@ class NotificationsStore {
       removeTapIDs: this._disabledTapIDs,
     });
 
-    // eslint-disable-next-line
+     
     await fetch(`${BASE_PUSH_URL}/`, {
       body,
       headers: {
         Accept: 'application/json',
-        Authorization: `Bearer ${AuthStore.accessToken || ''}`,
+        Authorization: `Bearer ${accessToken || ''}`,
         'Content-Type': 'application/json',
       },
       method: 'PUT',
@@ -499,13 +507,14 @@ class NotificationsStore {
     }
   };
 
-  _handleNotificationPressByType: (arg1: Notification) => void = (
+  _handleNotificationPressByType: (arg1: Notification, userId: string | null) => void = (
     notification: Notification,
+    userId: string | null,
   ): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
         const { kegId, tapId } = notification;
-        // KegStore.flushCacheForEntity(kegId);
+        queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
         // NavigationService.navigate('tapDetails', {
         //   backToRouteName: 'notifications',
         //   id: tapId,
@@ -513,14 +522,19 @@ class NotificationsStore {
         break;
       }
       case 'newAchievement': {
-        // AchievementStore.flushCustomCache();
+        if (userId) {
+          queryClient.invalidateQueries({
+            queryKey: [AchievementQueryKeys.CountsByUserId, userId],
+          });
+        }
         // NavigationService.navigate('stats', {
         //   initialPopUpAchievementType: notification.achievementType,
         // });
         break;
       }
       case 'newFriendRequest': {
-        // FriendStore.flushCache();
+        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
+        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
         // NavigationService.navigate('myFriendsRequest');
         break;
       }
@@ -531,4 +545,17 @@ class NotificationsStore {
   };
 }
 
-export default new NotificationsStore();
+const notificationsStore = new NotificationsStore();
+
+// Hook wrapper for React components to use onNotificationPress with userId
+export const useNotificationPress = () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { useUserID } = require('./AuthStore');
+  const userId = useUserID();
+  
+  return useCallback((notification: Notification): Promise<void> => {
+    return notificationsStore.onNotificationPress(notification, userId);
+  }, [userId]);
+};
+
+export default notificationsStore;

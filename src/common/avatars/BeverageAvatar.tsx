@@ -5,45 +5,43 @@ import * as React from 'react';
 import CONFIG from '../../config';
 import BaseAvatar from './BaseAvatar';
 
-type Props = BaseAvatarProps & {
+type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
   beverageId: EntityID | null | undefined;
   cached?: boolean;
+  rounded?: boolean;
+  size?: number;
   uri?: string | null | undefined;
 };
 
-class BeverageAvatar extends React.PureComponent<Props> {
-  static defaultProps: {
-    cached: boolean;
-    rounded: boolean;
-    size: number;
-  } = {
-    cached: true,
-    rounded: true,
-    size: 45,
-  };
+const BeverageAvatar: React.FC<Props> = ({
+  beverageId,
+  cached = true,
+  rounded = true,
+  size = 45,
+  uri,
+  ...otherProps
+}) => {
+  const beverageIdString = beverageId != null ? beverageId.toString() : '';
 
-  render(): React.ReactElement {
-    const { beverageId, cached, rounded, size, uri, ...otherProps } =
-      this.props;
-    const beverageIdString = beverageId != null ? beverageId.toString() : '';
-
-    return (
-      <BaseAvatar
-        {...otherProps}
-        cached={cached}
-        rounded={rounded}
-        uri={
-          uri ||
-          `${
-            CONFIG.CDN
-          }beverages/${beverageIdString}-icon.jpg?w=${size}&h=${size}&trim.threshold=80&mode=crop&${
-            cached ? '' : new Date().toString()
-          }`
-        }
-        size={size}
-      />
-    );
+  if (beverageIdString == '') {
+    return null;
   }
-}
 
-export default BeverageAvatar;
+  return (
+    <BaseAvatar
+      {...otherProps}
+      rounded={rounded}
+      uri={
+        uri ||
+        `${
+          CONFIG.CDN
+        }beverages/${beverageIdString}-icon.jpg?w=${size}&h=${size}&trim.threshold=80&mode=crop&${
+          cached ? '' : new Date().toString()
+        }`
+      }
+      size={size}
+    />
+  );
+};
+
+export default React.memo(BeverageAvatar);

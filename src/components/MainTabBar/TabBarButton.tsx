@@ -18,7 +18,7 @@ type Props = {
     name: string;
     type?: string;
   };
-  iconContainerComponent?: React.ComponentType<TouchableItem['props']>;
+  iconContainerComponent?: React.ComponentType<React.ComponentProps<typeof TouchableItem>>;
   isFocused: boolean;
   onPress: (
     route: NavigationRoute<ParamListBase, string>,
@@ -39,7 +39,7 @@ export const TabBarButton = (props: Props) => {
   return (
     <Icon
       color={isFocused ? COLORS.primary2 : COLORS.secondary3}
-      Component={iconContainerComponent}
+      Component={iconContainerComponent as typeof React.Component}
       containerStyle={styles.container}
       name={name}
       onPress={_onPress}

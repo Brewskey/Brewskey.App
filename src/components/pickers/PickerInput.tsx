@@ -1,15 +1,14 @@
-import type {Style} from '../../types';
-
 import * as React from 'react';
 import {
   Platform,
   StyleSheet,
+  StyleProp,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
-import FormLabel from '../../common/form/FormLabel';
-import FormValidationMessage from '../../common/form/FormValidationMessage';
+import { FormLabel } from '../../common/form/FormLabel';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -44,62 +43,64 @@ const styles = StyleSheet.create({
 export type Props = {
   children?: React.ReactNode,
   description?: React.ReactNode,
+  disabled?: boolean,
   error?: string | null | undefined,
   label?: string,
-  labelStyle: Style,
+  labelStyle: StyleProp<TextStyle>,
   onPress: () => void,
   placeholder?: string | null | undefined,
-  value: any
+  value: unknown
 };
 
-class PickerInput extends React.Component<Props> {
-  render(): React.ReactElement {
-    const {
-      children,
-      description,
-      error,
-      label,
-      labelStyle,
-      onPress,
-      placeholder,
-      value,
-    } = this.props;
-
-    let renderedDescription = null;
-    if (description != null) {
-      renderedDescription = (
-        <View style={styles.descriptionContainer}>
-          {typeof description === 'string' ? (
-            <Text style={styles.descriptionText}>{description}</Text>
-          ) : (
-            description
-          )}
-        </View>
-      );
-    }
-
-    return (
-      <View
-        style={{
-          marginHorizontal: 16,
-        }}
-      >
-        <TouchableOpacity onPress={onPress}>
-          <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
-          <View style={styles.valueContainer}>
-            {!value || (Array.isArray(value) && !value.length) ? (
-              <Text style={styles.placeholderText}>{placeholder}</Text>
-            ) : (
-              children
-            )}
-          </View>
-          <View style={styles.underline} />
-          {renderedDescription}
-          <FormValidationMessage>{error}</FormValidationMessage>
-        </TouchableOpacity>
+const PickerInput: React.FC<Props> = ({
+  children,
+  description,
+  disabled,
+  error,
+  label,
+  labelStyle,
+  onPress,
+  placeholder,
+  value,
+}) => {
+  let renderedDescription = null;
+  if (description != null) {
+    renderedDescription = (
+      <View style={styles.descriptionContainer}>
+        {typeof description === 'string' ? (
+          <Text style={styles.descriptionText}>{description}</Text>
+        ) : (
+          description
+        )}
       </View>
     );
   }
-}
+
+  return (
+    <View
+      style={{
+        marginHorizontal: 16,
+      }}
+    >
+      <TouchableOpacity disabled={disabled} onPress={onPress}>
+        <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
+        <View style={styles.valueContainer}>
+          {!value || (Array.isArray(value) && !value.length) ? (
+            <Text style={styles.placeholderText}>{placeholder}</Text>
+          ) : (
+            children
+          )}
+        </View>
+        <View style={styles.underline} />
+        {renderedDescription}
+        {error ? (
+          <Text style={{ color: COLORS.danger2, marginHorizontal: 20, marginTop: 4 }}>
+            {error}
+          </Text>
+        ) : null}
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export default PickerInput;

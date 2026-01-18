@@ -1,11 +1,12 @@
 import * as React from 'react';
+import type { CreditCardDetails } from '@brewskey/js-api';
 
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Container from '../common/Container';
 import Header from '../common/Header';
 import PaymentsScreenStore from '../stores/PaymentsScreenStore';
@@ -39,70 +40,71 @@ const styles = StyleSheet.create({
   stripeImageStyle: { alignSelf: 'flex-end', marginRight: 16, marginTop: 16 },
 });
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const PaymentsScreen: React.FC = () => {
+  // TODO: PaymentsScreenStore is currently broken/incomplete
+  // creditCardDetailsLoader returns a rejected Promise
+  // Most functionality is commented out
+  // This needs to be migrated to use a proper query hook when PaymentsDAO is available
+  const { isLoading } = PaymentsScreenStore;
+  const [creditCardDetails, setCreditCardDetails] = React.useState<CreditCardDetails | null>(null);
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class PaymentsScreen extends InjectedComponent<InjectedProps> {
-  _onDeletePaymentPress = () => {};
+  React.useEffect(() => {
+    // Try to load credit card details, but handle rejection gracefully
+    PaymentsScreenStore.creditCardDetailsLoader
+      .then((details) => setCreditCardDetails(details))
+      .catch(() => setCreditCardDetails(null));
+  }, []);
 
-  render(): React.ReactElement {
-    const { creditCardDetailsLoader, isLoading } = PaymentsScreenStore;
-    const creditCardDetails = creditCardDetailsLoader.getValue();
+  let content = null;
+  const header = <SectionHeader title="Payment default" />;
 
-    let content = null;
-    const header = <SectionHeader title="Payment default" />;
-
-    if (isLoading) {
-      content = (
-        <Section>
-          <LoadingIndicator />
-        </Section>
-      );
-    } else if (creditCardDetails) {
-      const { brand, expirationMonth, expirationYear, last4 } =
-        creditCardDetails;
-      content = (
-        <>
-          {header}
-          <View style={styles.cardContainer}>
-            <Text style={styles.cardText}>
-              {brand} {last4}
-            </Text>
-            <Text style={styles.cardExpirationText}>
-              {expirationMonth}/{expirationYear}
-            </Text>
-            <IconButton
-              color={COLORS.text}
-              name="md-close"
-              onPress={PaymentsScreenStore.removeCard}
-              type="ionicon"
-            />
-          </View>
-        </>
-      );
-    } else {
-      content = (
-        <>
-          {header}
-          <CardForm style={styles.cardForm} />
-        </>
-      );
-    }
-
-    return (
-      <Container>
-        <Header showBackButton title="Payment" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <Section bottomPadded>{content}</Section>
-          <Section>
-            <Image source={StripeImage} style={styles.stripeImageStyle} />
-          </Section>
-        </KeyboardAwareScrollView>
-      </Container>
+  if (isLoading) {
+    content = (
+      <Section>
+        <LoadingIndicator />
+      </Section>
+    );
+  } else if (creditCardDetails) {
+    const { brand, expirationMonth, expirationYear, last4 } =
+      creditCardDetails;
+    content = (
+      <>
+        {header}
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardText}>
+            {brand} {last4}
+          </Text>
+          <Text style={styles.cardExpirationText}>
+            {expirationMonth}/{expirationYear}
+          </Text>
+          <IconButton
+            color={COLORS.text}
+            name="close"
+            onPress={PaymentsScreenStore.removeCard}
+          />
+        </View>
+      </>
+    );
+  } else {
+    content = (
+      <>
+        {header}
+        <CardForm style={styles.cardForm} />
+      </>
     );
   }
-}
 
-export default PaymentsScreen;
+  return (
+    <Container>
+      <Header showBackButton title="Payment" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <Section bottomPadded>{content}</Section>
+        <Section>
+          <Image source={StripeImage} style={styles.stripeImageStyle} />
+        </Section>
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
+
+export default withErrorBoundary(PaymentsScreen, <ErrorScreen showBackButton />);

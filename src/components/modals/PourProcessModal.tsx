@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Input } from '@rneui/themed';
-import TouchableItem from '../../common/buttons/TouchableItem';
 
 import * as Progress from 'react-native-progress';
-import LoadingIndicator from '../../common/LoadingIndicator';
-import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
 import { useInterval } from 'usehooks-ts';
 import NfcManager from 'react-native-nfc-manager';
+import TouchableItem from '../../common/buttons/TouchableItem';
+import LoadingIndicator from '../../common/LoadingIndicator';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
+import CenteredModal from './CenteredModal';
 
 const styles = StyleSheet.create({
   enableNFCContainer: {
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     textAlign: 'center',
     width: '85%',
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none' } as any) : {}),
   },
   loadingIndicator: {
@@ -158,9 +158,7 @@ const PourProcessInputModal: React.FC = () => {
           style={styles.input}
           value={totp}
         />
-        {pourErrorText != null ? (
-          <Text style={styles.errorText}>{pourErrorText}</Text>
-        ) : null}
+        <Text style={styles.errorText}>{pourErrorText ?? ''}</Text>
       </View>
     </CenteredModal>
   );

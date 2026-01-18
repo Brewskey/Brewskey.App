@@ -11,28 +11,29 @@ type Props = {
   onFriendCancelMyRequestPress: (friend: Friend) => Promise<void>;
 };
 
-class FriendMyRequestListItem extends React.Component<Props> {
-  _onFriendCancelMyRequestPress = () =>
-    this.props.onFriendCancelMyRequestPress(this.props.item);
+const FriendMyRequestListItem: React.FC<Props> = ({
+  item: friend,
+  onFriendCancelMyRequestPress,
+  onPress,
+}) => {
+  const handleFriendCancelMyRequestPress = React.useCallback(() => {
+    onFriendCancelMyRequestPress(friend);
+  }, [friend, onFriendCancelMyRequestPress]);
 
-  render(): React.ReactElement {
-    const { item: friend, onPress } = this.props;
-    return (
-      <ListItem
-        leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
-        item={friend}
-        onPress={onPress}
-        rightIcon={
-          <IconButton
-            onPress={this._onFriendCancelMyRequestPress}
-            name="md-close"
-            type="ionicon"
-          />
-        }
-        title={friend.friendAccount.userName}
-      />
-    );
-  }
-}
+  return (
+    <ListItem
+      leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
+      item={friend}
+      onPress={onPress}
+      rightIcon={
+        <IconButton
+          onPress={handleFriendCancelMyRequestPress}
+          name="close"
+        />
+      }
+      title={friend.friendAccount.userName}
+    />
+  );
+};
 
 export default FriendMyRequestListItem;

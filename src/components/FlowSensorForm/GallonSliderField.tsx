@@ -1,9 +1,8 @@
-import type {Props as SliderFieldProps} from '../../common/SliderField';
-
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import SliderField from '../../common/SliderField';
 import { TYPOGRAPHY } from '../../theme';
+import { SliderInput } from '../../common/form/SliderInput';
+import { useWatch } from 'react-hook-form';
 
 const BOUNDARIES_PERCENT = 10;
 
@@ -22,21 +21,21 @@ const styles = StyleSheet.create({
   textValuePulses: { ...TYPOGRAPHY.secondary, textAlign: 'center' },
 });
 
-type Props = SliderFieldProps<{
-  defaultPulses: number
-}>;
+type Props = {
+  defaultPulses: number;
+  name: string;
+};
 
-const GallonSliderField = (
-  {
-    defaultPulses,
-    onChange,
-    value,
-    ...rest
-  }: Props,
-): React.ReactElement => {
+const GallonSliderField = ({
+  defaultPulses,
+  name,
+}: Props): React.ReactElement => {
+  const values = useWatch();
+  const value = (values[name] as number) ?? 0;
   const minValue = (defaultPulses * (100 - BOUNDARIES_PERCENT)) / 100;
   const maxValue = (defaultPulses * (100 + BOUNDARIES_PERCENT)) / 100;
-  const valuePercent = ((value - defaultPulses) / defaultPulses) * 100;
+  const valuePercent =
+    (((values[name] ?? 0) - defaultPulses) / defaultPulses) * 100;
 
   return (
     <View style={styles.container}>
@@ -46,12 +45,10 @@ const GallonSliderField = (
         more pulses if your sensor is over-reporting the amount of beer poured
       </Text>
       <View>
-        <SliderField
-          {...rest}
+        <SliderInput
           maximumValue={maxValue}
           minimumValue={minValue}
-          onChange={onChange}
-          value={value}
+          name={name}
         />
         <View style={styles.sliderLabelContainer}>
           <Text style={styles.textSlider}>-{BOUNDARIES_PERCENT}%</Text>

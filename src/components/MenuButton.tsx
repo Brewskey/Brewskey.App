@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, Pressable, PressableProps } from 'react-native';
 import { COLORS } from '../theme';
-import { Button } from '@rneui/themed';
+import { Icon } from '@rneui/themed';
 
 const styles = StyleSheet.create({
   active: {
@@ -9,40 +9,51 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: COLORS.secondary,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
-  },
-  container: {
-    marginLeft: 0,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     width: '100%',
   },
-  textStyle: {
+  iconContainer: {
+    marginRight: 20,
+  },
+  text: {
     color: COLORS.text,
-    marginLeft: 20,
+    fontSize: 16,
   },
 });
 
-export type Props = Omit<React.ComponentProps<typeof Button>, 'icon'> & {
+export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
   icon: {
     name: string;
     type?: string;
   };
   isActive?: boolean;
-  // other RNEButton Props
+  onPress?: () => void;
+  title?: string;
 };
 
-class MenuButton extends React.PureComponent<Props> {
-  render(): React.ReactElement {
-    const { icon, isActive, ...rest } = this.props;
-    return (
-      <Button
-        icon={{ ...icon, color: COLORS.textFaded, size: 20 }}
-        containerStyle={styles.container}
-        buttonStyle={[styles.button, isActive && styles.active]}
-        {...rest}
-        titleStyle={styles.textStyle}
-      />
-    );
-  }
-}
+const MenuButton: React.FC<Props> = ({ icon, isActive, onPress, title, ...pressableProps }) => {
+  const { pointerEvents, ...restProps } = pressableProps;
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.button, isActive && styles.active, pointerEvents && { pointerEvents }]}
+      {...restProps}
+    >
+      <View style={[styles.iconContainer, { pointerEvents: 'none' }]}>
+        <Icon
+          name={icon.name}
+          type={icon.type}
+          color={COLORS.textFaded}
+          size={20}
+        />
+      </View>
+      {title && <Text style={styles.text}>{title}</Text>}
+    </Pressable>
+  );
+};
 
-export default MenuButton;
+export default React.memo(MenuButton);

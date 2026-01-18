@@ -1,92 +1,105 @@
-import type { EmitterSubscription } from 'react-native';
-
 import * as React from 'react';
-import { AppState } from 'react-native';
+import { useEffect } from 'react';
+import { AppState, View } from 'react-native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 import ErrorScreen from '../common/ErrorScreen';
-import DAOApi from '@brewskey/js-api';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { CloudDeviceDAO } from '@brewskey/js-api';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import Button from '../common/buttons/Button';
 import SectionContent from '../common/SectionContent';
 
 import Container from '../common/Container';
 import Section from '../common/Section';
 import Header from '../common/Header';
-import HeaderNavigationButton from '../common/Header/HeaderNavigationButton';
+import { HeaderNavigationButton } from '../common/Header/HeaderNavigationButton';
 import NuxNoEntity from '../components/NuxNoEntity';
 import DevicesList from '../components/DevicesList';
 
-type InjectedProps = {
-  navigation: Navigation;
-};
+const DevicesScreen: React.FC = () => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
 
-@errorBoundary(<ErrorScreen showBackButton />)
-class DevicesScreen extends InjectedComponent<InjectedProps> {
-  _subscription: EmitterSubscription | null | undefined = null;
-  componentDidMount() {
-    this._subscription = AppState.addEventListener(
-      'change',
-      this._onAppStateChange,
-    );
-    DAOApi.CloudDeviceDAO.flushCache();
-    DAOApi.CloudDeviceDAO.startOnlineStatusListener();
-  }
-
-  componentWillUnmount() {
-    this._subscription.remove();
-    DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
-  }
-
-  _onAppStateChange = (appState) => {
+  const onAppStateChange = (appState: string) => {
     if (appState === 'active') {
-      DAOApi.CloudDeviceDAO.startOnlineStatusListener();
+      CloudDeviceDAO.startOnlineStatusListener();
     } else {
-      DAOApi.CloudDeviceDAO.stopOnlineStatusListener();
+      CloudDeviceDAO.stopOnlineStatusListener();
     }
   };
 
-  _onWifiSetupButtonPress = () =>
-    this.injectedProps.navigation.navigate('wifiSetup');
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', onAppStateChange);
+    CloudDeviceDAO.startOnlineStatusListener();
 
-  _renderListHeader = ({
+    return () => {
+      subscription.remove();
+      CloudDeviceDAO.stopOnlineStatusListener();
+    };
+  }, []);
+
+  const onWifiSetupButtonPress = () => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'menu',
+      params: {
+        screen: 'devices',
+        params: {
+          screen: 'wifiSetup',
+          params: {},
+        },
+      },
+    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+  };
+
+  const renderListHeader = ({
     isEmpty,
     isLoading,
   }: {
     isEmpty: boolean;
     isLoading: boolean;
-  }): React.ReactElement =>
-    isEmpty || isLoading ? null : (
+  }): React.ReactElement => {
+    if (isEmpty || isLoading) {
+      return <View />;
+    }
+    return (
       <Section bottomPadded>
         <SectionContent paddedHorizontal paddedVertical>
           <Button
-            onPress={this._onWifiSetupButtonPress}
+            onPress={onWifiSetupButtonPress}
             title="Setup WiFi on Brewskey box"
           />
         </SectionContent>
       </Section>
     );
+  };
 
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header
-          rightComponent={
-            <HeaderNavigationButton
-              name="add"
-              params={{ forNewDevice: true }}
-              toRoute="wifiSetup"
-            />
-          }
-          showBackButton
-          title="Devices"
-        />
-        <DevicesList
-          ListEmptyComponent={NuxNoEntity}
-          renderListHeader={this._renderListHeader}
-        />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Header
+        rightComponent={
+          <HeaderNavigationButton
+            name="add"
+            screen="LoggedInStack"
+            params={{
+              screen: 'menu',
+              params: {
+                screen: 'devices',
+                params: {
+                  screen: 'wifiSetup',
+                  params: { forNewDevice: true },
+                },
+              },
+            }}
+          />
+        }
+        showBackButton
+        title="Devices"
+      />
+      <DevicesList
+        ListEmptyComponent={NuxNoEntity}
+        renderListHeader={renderListHeader}
+      />
+    </Container>
+  );
+};
 
-export default DevicesScreen;
+export default withErrorBoundary(DevicesScreen, <ErrorScreen showBackButton />);

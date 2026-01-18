@@ -9,26 +9,16 @@ import WarningNotification from '../common/WarningNotification';
 import LoadingIndicator from '../common/LoadingIndicator';
 import TapDetailsKegScreen from './TapDetailsKegScreen';
 import TapDetailsStatsScreen from './TapDetailsStatsScreen';
-import TapDetailsLeaderboardScreen from './TapDetailsLeaderboardScreen';
 import { checkCanEdit } from '../permissionHelpers';
 import { useGetTapById } from '../hooks/queries/TapQueries';
 import { useGetPermissionForEntityById } from '../hooks/queries/PermissionQueries';
 import { useGetFlowSensorByTapId } from '../hooks/queries/FlowSensorQueries';
-import { StaticScreenProps, useNavigation } from '@react-navigation/native';
+import { StaticScreenProps, useNavigation, NavigationProp } from '@react-navigation/native';
 import ErrorScreen from '../common/ErrorScreen';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
-const tabScreens = {
-  tapDetailsKeg: { screen: TapDetailsKegScreen },
-  tapDetailsStats: {
-    getShouldShowTab: ({ tap }) => !tap.hideStats,
-    screen: TapDetailsStatsScreen,
-  },
-  tapDetailsLeaderboard: {
-    getShouldShowTab: ({ tap }) => !tap.hideLeaderboard,
-    screen: TapDetailsLeaderboardScreen,
-  },
-} as const;
+import theme from '../theme';
+import { TapDetailsLeaderboardScreen } from './TapDetailsLeaderboardScreen';
+import { HomeStackParamList } from '../AppRouter';
 
 const TapDetailsTab = createMaterialTopTabNavigator();
 
@@ -43,12 +33,9 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
     },
   }: Props) => {
     const tap = useGetTapById(tapId);
-    const { data: tapPermission } = useGetPermissionForEntityById(
-      'taps',
-      tapId,
-    );
+    const { data: tapPermission } = useGetPermissionForEntityById('tap', tapId);
     const { data: flowSensor } = useGetFlowSensorByTapId(tapId);
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
     if (tap.isLoading) {
       return (
@@ -91,10 +78,13 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
             !checkCanEdit(tapPermission) ? null : (
               <HeaderNavigationButton
                 name="edit"
-                params={{ id: tapId }}
-                toRoute="editTap"
-                onPress={function (): void {
-                  throw new Error('Function not implemented.');
+                screen="LoggedInStack"
+                params={{
+                  screen: 'home',
+                  params: {
+                    screen: 'editTap',
+                    params: { tapId: tapId },
+                  },
                 }}
               />
             )
@@ -102,12 +92,26 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
           showBackButton
           title="Tap"
         />
-        <TapDetailsTab.Navigator>
-          <TapDetailsTab.Screen name="tapDetailsKeg">
-            {({ navigator }) => (
-              <TapDetailsKegScreen {...screenProps} navigator={navigator} />
-            )}
+        <TapDetailsTab.Navigator
+          screenOptions={{
+            lazy: true,
+            swipeEnabled: false,
+            ...theme.tabBar.tabBarOptions,
+          }}
+        >
+          <TapDetailsTab.Screen name="On Tap">
+            {() => <TapDetailsKegScreen {...screenProps} />}
           </TapDetailsTab.Screen>
+          {tap.data.hideStats ? null : (
+            <TapDetailsTab.Screen name="Stats">
+              {() => <TapDetailsStatsScreen {...screenProps} />}
+            </TapDetailsTab.Screen>
+          )}
+          {tap.data.hideLeaderboard ? null : (
+            <TapDetailsTab.Screen name="Leaderboard">
+              {() => <TapDetailsLeaderboardScreen {...screenProps} />}
+            </TapDetailsTab.Screen>
+          )}
         </TapDetailsTab.Navigator>
       </Container>
     );

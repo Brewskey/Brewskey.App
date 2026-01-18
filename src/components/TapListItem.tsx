@@ -18,7 +18,11 @@ const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
   const beverage = currentKeg ? currentKeg.beverage : null;
   const beverageName = beverage ? beverage.name : 'No Beer on Tap';
   const kegLevel = currentKeg
-    ? calculateKegLevel(currentKeg as any).toFixed(0)
+    ? calculateKegLevel({
+        kegType: currentKeg.kegType,
+        maxOunces: currentKeg.maxOunces,
+        ounces: currentKeg.ounces,
+      }).toFixed(0)
     : null;
 
   return (

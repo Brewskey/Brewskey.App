@@ -3,14 +3,15 @@ import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { COLORS, TYPOGRAPHY, getElevationStyle } from '../../theme';
 import HeaderBackButton from './HeaderBackButton';
 import { getElementFromComponentProp } from '../../utils';
+import { ListComponentTypes } from '../List';
 
 // todo title have slight offset to the left when there are more than one
 // button in the right component. Need to figure better solution to position
 // components inside header, to be able to keep title in the center always.
 const styles = StyleSheet.create({
   fakeHeaderButton: {
-    height: 31,
-    width: 31,
+    height: 24,
+    width: 44,
   },
   innerContainer: {
     alignItems: 'center',
@@ -38,47 +39,40 @@ const styles = StyleSheet.create({
 const FakeHeaderButton = () => <View style={styles.fakeHeaderButton} />;
 
 type Props = {
-  leftComponent?: React.ReactNode | null | undefined | React.ComponentType<any>,
-  rightComponent?: React.ReactNode | null | undefined | React.ComponentType<any>,
-  showBackButton?: boolean,
-  title?: string | null | undefined
+  leftComponent?: ListComponentTypes;
+  rightComponent?: ListComponentTypes;
+  showBackButton?: boolean;
+  title?: string | null | undefined;
 };
 
-class Header extends React.PureComponent<Props> {
-  static defaultProps: {
-    leftComponent: React.ReactNode,
-    rightComponent: React.ReactNode
-  } = {
-    leftComponent: <FakeHeaderButton />,
-    rightComponent: <FakeHeaderButton />,
-  };
+const Header: React.FC<Props> = ({
+  leftComponent = <FakeHeaderButton />,
+  rightComponent = <FakeHeaderButton />,
+  showBackButton,
+  title,
+}) => {
+  const leftElement = showBackButton ? (
+    <HeaderBackButton />
+  ) : (
+    getElementFromComponentProp(leftComponent)
+  );
 
-  render(): React.ReactElement {
-    const { leftComponent, rightComponent, showBackButton, title } = this.props;
+  const rightElement = getElementFromComponentProp(rightComponent);
 
-    const leftElement = showBackButton ? (
-      <HeaderBackButton />
-    ) : (
-      getElementFromComponentProp(leftComponent)
-    );
-
-    const rightElement = getElementFromComponentProp(rightComponent);
-
-    return (
-      <View style={styles.outerContainer}>
-        <StatusBar backgroundColor={COLORS.primary3} />
-        <View style={styles.innerContainer}>
-          {leftElement}
-          <View style={styles.titleContainer}>
-            <Text numberOfLines={1} style={styles.title}>
-              {title}
-            </Text>
-          </View>
-          {rightElement}
+  return (
+    <View style={styles.outerContainer}>
+      <StatusBar backgroundColor={COLORS.primary3} />
+      <View style={styles.innerContainer}>
+        {leftElement}
+        <View style={styles.titleContainer}>
+          <Text numberOfLines={1} style={styles.title}>
+            {title}
+          </Text>
         </View>
+        {rightElement}
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
-export default Header;
+export default React.memo(Header);

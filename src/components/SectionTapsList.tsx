@@ -1,21 +1,20 @@
 import type { Tap } from '@brewskey/js-api';
 import type { RowItemProps } from '../common/SwipeableRow';
+import type { Section } from '../types';
 
 import * as React from 'react';
+import { useMemo, useRef } from 'react';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 import nullthrows from 'nullthrows';
-import DAOApi from '@brewskey/js-api';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import SectionTapsListStore from '../stores/SectionTapsListStore';
-import SwipeableList, { RenderProps } from '../common/SwipeableList';
+import { SwipeableList, RenderProps } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { useDeleteTap } from '../hooks/queries/TapQueries';
-import { SectionListData } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { useDeleteTap, useGetTaps } from '../hooks/queries/TapQueries';
 
 type Props = {
   ListEmptyComponent?:
@@ -53,91 +52,154 @@ const Slideout = ({
   />
 );
 
-export class SectionTapsList extends React.Component<Props> {
-  _listStore = new SectionTapsListStore();
-
-  _swipeableListRef: SwipeableList<Tap> | null | undefined;
-
-  componentDidMount() {
-    this._listStore.initialize();
+// Helper component to use hooks properly
+const SwipeableRowWithDelete: React.FC<
+  RenderProps<Tap> & {
+    onEditItemPress: (tap: Tap) => void;
+    onItemPress: (tap: Tap) => void;
+    rowItemComponent: React.ComponentType<RowItemProps<Tap>>;
+    slideoutComponent: React.ComponentType<RowItemProps<Tap>>;
   }
+> = ({
+  info: { item, index, separators },
+  onEditItemPress,
+  onItemPress,
+  rowItemComponent,
+  slideoutComponent,
+  ...swipeableStateProps
+}) => {
+  const deleteTap = useDeleteTap();
+  const addSnackBarMessage = useAddSnackBarMessage();
 
-  _getSwipeableListRef = (ref: SwipeableList<Tap> | null | undefined) => {
-    this._swipeableListRef = ref;
-  };
+  return (
+    <SwipeableRow
+      {...swipeableStateProps}
+      index={index}
+      item={item}
+      onDeleteItemPress={async (tap): Promise<void> => {
+        await deleteTap.mutateAsync(tap.id);
+        addSnackBarMessage({ content: 'The tap was deleted' });
+      }}
+      onEditItemPress={onEditItemPress}
+      onItemPress={onItemPress}
+      rowItemComponent={rowItemComponent}
+      separators={separators}
+      slideoutComponent={slideoutComponent}
+    />
+  );
+};
 
-  _keyExtractor = ({ id }: Tap): string => id.toString();
+export const SectionTapsList: React.FC<Props> = ({
+  ListEmptyComponent,
+  ListHeaderComponent,
+}) => {
+  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const swipeableListRef = useRef<SwipeableList<Tap>>(null);
 
-  _onItemPress = (item: Tap): void => {
-    const navigation = useNavigation();
-    navigation.navigate('tapDetails', {
-      id: item.id,
+  const tapsQuery = useGetTaps({
+    orderBy: [
+      {
+        column: 'device/id',
+        direction: 'desc',
+      } as const,
+    ],
+  });
+
+  const sections = useMemo<Section<Tap>[]>(() => {
+    const flatTaps = tapsQuery.data?.pages.flatMap((page) => page) ?? [];
+    if (flatTaps.length === 0) {
+      return [];
+    }
+
+    // Group taps by device ID, preserving order of first appearance (matching old store behavior)
+    // Get unique device IDs in order of first appearance
+    const uniqueDeviceIds = Array.from(
+      new Set(flatTaps.map((tap) => tap.device.id)),
+    );
+
+    // Create sections for each device ID
+    return uniqueDeviceIds.map((deviceID) => {
+      const deviceTaps = flatTaps.filter((tap) => tap.device.id === deviceID);
+      return {
+        data: deviceTaps,
+        title: nullthrows(deviceTaps[0]).device.name,
+      };
+    });
+  }, [tapsQuery.data]);
+
+  const keyExtractor = ({ id }: Tap): string => id.toString();
+
+  const onItemPress = (item: Tap): void => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'tapDetails',
+        params: {
+          tapId: item.id,
+        },
+      },
     });
   };
 
-  // _onDeleteItemPress = (item: Tap): void => {
-  //   (async () => {
-  //     const clientID = DAOApi.TapDAO.deleteByID(item.id);
-  //     await DAOApi.TapDAO.waitForLoadedNullable((dao) =>
-  //       dao.fetchByID(clientID),
-  //     );
-  //     SnackBarStore.showMessage({ text: 'The tap was deleted' });
-  //   })();
-  // };
-
-  _onEditItemPress = ({ id }: Tap) => {
-    this.injectedProps.navigation.navigate('editTap', { id });
-    nullthrows(this._swipeableListRef).resetOpenRow();
+  const onEditItemPress = ({ id }: Tap) => {
+    navigation.navigate('LoggedInStack', {
+      screen: 'home',
+      params: {
+        screen: 'editTap',
+        params: { tapId: id },
+      },
+    });
+    nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
-  _renderSectionHeader = ({
+  const renderSectionHeader = ({
     section,
   }: {
-    section: SectionListData<Tap>;
+    section: Section<Tap>;
   }): React.ReactElement => <ListSectionHeader title={section.title} />;
 
-  _renderRow = ({
-    info: { item, index, separators },
-    ...swipeableStateProps
-  }: RenderProps<Tap>): React.ReactElement => {
-    const deleteTap = useDeleteTap();
+  const renderRow = (props: RenderProps<Tap>): React.ReactElement => {
     return (
-      <SwipeableRow
-        {...swipeableStateProps}
-        index={index}
-        item={item}
-        onDeleteItemPress={async (tap): Promise<void> => {
-          await deleteTap.mutateAsync(tap.id);
-          SnackBarStore.showMessage({ content: 'The tap was deleted' });
-        }}
-        onEditItemPress={this._onEditItemPress}
-        onItemPress={this._onItemPress}
+      <SwipeableRowWithDelete
+        {...props}
+        onEditItemPress={onEditItemPress}
+        onItemPress={onItemPress}
         rowItemComponent={SwipeableRowItem}
-        separators={separators}
         slideoutComponent={Slideout}
       />
     );
   };
 
-  render(): React.ReactElement {
-    return (
-      <SwipeableList
-        keyExtractor={this._keyExtractor}
-        ListEmptyComponent={
-          this._listStore.isLoading ? undefined : this.props.ListEmptyComponent
-        }
-        ListFooterComponent={
-          <LoadingListFooter isLoading={this._listStore.isLoading} />
-        }
-        listType="sectionList"
-        onEndReached={this._listStore.fetchNextPage}
-        onRefresh={this._listStore.reload}
-        ref={this._getSwipeableListRef}
-        renderItem={this._renderRow}
-        renderSectionHeader={this._renderSectionHeader}
-        sections={this._listStore.sections}
-        stickySectionHeadersEnabled
-      />
-    );
-  }
-}
+  const handleEndReached = () => {
+    if (tapsQuery.hasNextPage && !tapsQuery.isFetchingNextPage) {
+      tapsQuery.fetchNextPage();
+    }
+  };
+
+  const handleRefresh = () => {
+    tapsQuery.refetch();
+  };
+
+  return (
+    <SwipeableList
+      keyExtractor={keyExtractor}
+      ListEmptyComponent={
+        tapsQuery.isLoading ? undefined : ListEmptyComponent
+      }
+      ListFooterComponent={
+        <LoadingListFooter
+          isLoading={tapsQuery.isFetchingNextPage || tapsQuery.isLoading}
+        />
+      }
+      ListHeaderComponent={ListHeaderComponent}
+      listType="sectionList"
+      onEndReached={handleEndReached}
+      onRefresh={handleRefresh}
+      ref={swipeableListRef}
+      renderItem={renderRow}
+      renderSectionHeader={renderSectionHeader}
+      sections={sections}
+      stickySectionHeadersEnabled
+    />
+  );
+};

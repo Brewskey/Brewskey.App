@@ -31,60 +31,65 @@ const styles = StyleSheet.create({
 
 type BaseProps<TExtraProps> = (TExtraProps) & {
   description?: string,
-  paddedHorizontal: boolean,
+  paddedHorizontal?: boolean,
   title: string,
   value: string
 };
 
 type Props<TExtraProps> = (BaseProps<TExtraProps>) & {
-  leftComponent: React.ComponentType<BaseProps<TExtraProps>>,
-  rightComponent: React.ComponentType<BaseProps<TExtraProps>>
+  leftComponent?: React.ComponentType<BaseProps<TExtraProps>> | null | undefined,
+  rightComponent?: React.ComponentType<BaseProps<TExtraProps>> | null | undefined
 };
 
-class OverviewItem<TExtraProps> extends React.PureComponent<Props<TExtraProps>> {
-  static defaultProps: {
-    paddedHorizontal: boolean
-  } = {
-    paddedHorizontal: true,
-  };
-
-  render(): React.ReactElement {
-    const {
-      description,
-      leftComponent: LeftComponent,
-      paddedHorizontal,
-      rightComponent: RightComponent,
-      title,
-      value,
-    } = this.props;
-
-    const { leftComponent: _, rightComponent: _2, ...otherProps } = this.props;
-
-    return (
-      <SectionContent
-        containerStyle={styles.container}
-        paddedHorizontal={paddedHorizontal}
-      >
-        {LeftComponent == null ? null : (
-          <View style={styles.leftComponentContainer}>
-            <LeftComponent {...otherProps} />
-          </View>
-        )}
-        <View>
-          <Text style={styles.title}>{title}</Text>
-          {value ? <Text style={styles.value}>{value}</Text> : null}
-          {description ? (
-            <Text style={styles.description}>{description}</Text>
-          ) : null}
+const OverviewItem = <TExtraProps,>({
+  description,
+  leftComponent: LeftComponent,
+  paddedHorizontal = true,
+  rightComponent: RightComponent,
+  title,
+  value,
+  ...otherProps
+}: Props<TExtraProps>): React.ReactElement => {
+  return (
+    <SectionContent
+      containerStyle={styles.container}
+      paddedHorizontal={paddedHorizontal}
+    >
+      {LeftComponent == null ? null : (
+        <View style={styles.leftComponentContainer}>
+          <LeftComponent
+            {...({
+              description,
+              paddedHorizontal,
+              title,
+              value,
+              ...otherProps,
+            } as BaseProps<TExtraProps>)}
+          />
         </View>
-        {RightComponent == null ? null : (
-          <View style={styles.rightComponentContainer}>
-            <RightComponent {...otherProps} />
-          </View>
-        )}
-      </SectionContent>
-    );
-  }
-}
+      )}
+      <View>
+        <Text style={styles.title}>{title}</Text>
+        {value ? <Text style={styles.value}>{value}</Text> : null}
+        {description ? (
+          <Text style={styles.description}>{description}</Text>
+        ) : null}
+      </View>
+      {RightComponent == null ? null : (
+        <View style={styles.rightComponentContainer}>
+          <RightComponent
+            {...({
+              description,
+              paddedHorizontal,
+              title,
+              value,
+              ...otherProps,
+            } as BaseProps<TExtraProps>)}
+          />
+        </View>
+      )}
+    </SectionContent>
+  );
+};
 
-export default OverviewItem;
+export default React.memo(OverviewItem) as typeof OverviewItem;

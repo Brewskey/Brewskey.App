@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import flatNavigationParamsAndScreenProps from '../common/flatNavigationParamsAndScreenProps';
+import { StaticScreenProps } from '@react-navigation/native';
 import Button from '../common/buttons/Button';
 
 import Header from '../common/Header';
 import Container from '../common/Container';
 import ErrorScreen from '../common/ErrorScreen';
-import { errorBoundary } from '../common/ErrorBoundary';
+import { withErrorBoundary } from '../common/ErrorBoundary';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -28,30 +28,31 @@ const styles = StyleSheet.create({
   },
 });
 
-type InjectedProps = {
-  onContinuePress: () => undefined | Promise<undefined>;
+type Props = StaticScreenProps<{
+  onContinuePress?: () => undefined | Promise<undefined>;
+}>;
+
+const NuxFinishScreen: React.FC<Props> = ({
+  route: {
+    params: { onContinuePress },
+  },
+}: Props) => {
+
+  return (
+    <Container>
+      <Header title="Setup completed" />
+      <View style={styles.container}>
+        <Text style={styles.descriptionText}>
+          You've completed setting up Brewskey. Have fun!
+        </Text>
+        <Button
+          onPress={onContinuePress}
+          secondary
+          title="Finish"
+        />
+      </View>
+    </Container>
+  );
 };
 
-@errorBoundary(<ErrorScreen showBackButton />)
-@flatNavigationParamsAndScreenProps
-class NuxFinishPress extends InjectedComponent<InjectedProps> {
-  render(): React.ReactElement {
-    return (
-      <Container>
-        <Header title="Setup completed" />
-        <View style={styles.container}>
-          <Text style={styles.descriptionText}>
-            You've completed setting up Brewskey. Have fun!
-          </Text>
-          <Button
-            onPress={this.injectedProps.onContinuePress}
-            secondary
-            title="Finish"
-          />
-        </View>
-      </Container>
-    );
-  }
-}
-
-export default NuxFinishPress;
+export default withErrorBoundary(NuxFinishScreen, <ErrorScreen showBackButton />);

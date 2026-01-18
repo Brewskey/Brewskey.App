@@ -1,8 +1,7 @@
 import type { Organization } from '@brewskey/js-api';
 
 import DAOApi from '@brewskey/js-api';
-import AuthStore from './AuthStore';
-import Storage from '../Storage';
+import Storage from '../utils/Storage';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 
