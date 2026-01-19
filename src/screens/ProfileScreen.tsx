@@ -56,7 +56,7 @@ const ProfileScreen: React.FC<Props> = ({
   if (isLoading) {
     return (
       <Container>
-        <Header showBackButton />
+        <Header shouldShowBackButton />
         <LoadingIndicator />
       </Container>
     );
@@ -72,7 +72,7 @@ const ProfileScreen: React.FC<Props> = ({
         rightComponent={
           <ProfileFriendStatus account={account} friend={friend ?? null} />
         }
-        showBackButton
+        shouldShowBackButton
         title={account.userName}
       />
       <ScrollView>
@@ -125,4 +125,4 @@ const ProfileScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(ProfileScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(ProfileScreen, <ErrorScreen shouldShowBackButton />);

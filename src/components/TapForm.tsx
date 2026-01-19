@@ -23,20 +23,6 @@ import { TextInput } from '../common/form/TextInput';
 import { FormField } from '../common/form/FormField';
 import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
 
-const validate = (
-  values: TapMutator,
-): {
-  [key: string]: string;
-} => {
-  const errors: Record<string, string> = {};
-
-  if (!values.deviceId) {
-    errors.deviceId = 'Brewskey box is required';
-  }
-
-  return errors;
-};
-
 type Props = {
   isFocused?: boolean;
   onSubmit: (values: TapMutator) => void | Promise<void>;

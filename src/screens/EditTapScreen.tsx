@@ -44,7 +44,7 @@ const EditTapScreen: React.FC<Props> = ({
   if (isLoading || !tap) {
     return (
       <Container>
-        <Header showBackButton title="Edit Tap" />
+        <Header shouldShowBackButton title="Edit Tap" />
         <LoadingIndicator />
       </Container>
     );
@@ -52,7 +52,7 @@ const EditTapScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="Edit Tap" />
+      <Header shouldShowBackButton title="Edit Tap" />
       <EditTapRouter.Navigator
         initialLayout={{
           height: 0,

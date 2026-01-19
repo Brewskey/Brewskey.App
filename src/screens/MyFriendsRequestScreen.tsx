@@ -66,4 +66,4 @@ const MyFriendsRequestScreen: React.FC = () => {
   return <FriendRequestsList />;
 };
 
-export default withErrorBoundary(MyFriendsRequestScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyFriendsRequestScreen, <ErrorScreen shouldShowBackButton />);

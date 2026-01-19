@@ -29,7 +29,12 @@ export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
     },
   }: Props) => {
     const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
-    const { data: device, isLoading, refetch } = useGetDeviceById(deviceId);
+    // Normalize ID: React Navigation may serialize numbers as strings
+    const normalizedDeviceId: EntityID =
+      typeof deviceId === 'string' && !isNaN(Number(deviceId))
+        ? Number(deviceId)
+        : deviceId;
+    const { data: device, isLoading, refetch } = useGetDeviceById(normalizedDeviceId);
 
     const onAddTapPress = () => {
       if (device) {
@@ -48,7 +53,7 @@ export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
     if (isLoading || !device) {
       return (
         <Container>
-          <Header showBackButton />
+          <Header shouldShowBackButton />
           <LoadingIndicator />
         </Container>
       );
@@ -73,7 +78,7 @@ export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
             }}
           />
           }
-          showBackButton
+          shouldShowBackButton
           title={device.name}
         />
         <TapsList
@@ -90,13 +95,13 @@ export const DeviceDetailsScreen: React.FC<Props> = withErrorBoundary(
           onAddTapPress={onAddTapPress}
           onRefresh={refetch}
           queryOptions={{
-            filters: [createFilter('device/id').equals(deviceId)],
+            filters: [createFilter('device/id').equals(normalizedDeviceId)],
           }}
         />
       </Container>
     );
   },
-  <ErrorScreen showBackButton />,
+  <ErrorScreen shouldShowBackButton />,
 );
 
 export default DeviceDetailsScreen;

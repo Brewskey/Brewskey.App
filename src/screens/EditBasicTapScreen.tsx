@@ -56,7 +56,7 @@ export const EditTapScreen: React.FC<Props> = withErrorBoundary(
     if (tap.isLoading) {
       return (
         <Container>
-          <Header showBackButton title="Edit Tap" />
+          <Header shouldShowBackButton title="Edit Tap" />
           <LoadingIndicator />
         </Container>
       );
@@ -68,7 +68,7 @@ export const EditTapScreen: React.FC<Props> = withErrorBoundary(
     return (
       <Container>
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <Header showBackButton title="Edit Tap" />
+          <Header shouldShowBackButton title="Edit Tap" />
           <Section bottomPadded>
             <ListItem
               chevron={false}
@@ -92,5 +92,5 @@ export const EditTapScreen: React.FC<Props> = withErrorBoundary(
       </Container>
     );
   },
-  <ErrorScreen showBackButton />,
+  <ErrorScreen shouldShowBackButton />,
 );

@@ -6,7 +6,7 @@ import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import ListItem from '../common/ListItem';
 import ListEmpty from '../common/ListEmpty';
 import LoadingListFooter from '../common/LoadingListFooter';
-import BeverageModal from '../components/modals/BeverageModal';
+import KegModal from '../components/modals/KegModal';
 import { useGetKegs } from '../hooks/queries/KegQueries';
 import { ListRenderItemInfo } from 'react-native';
 
@@ -46,7 +46,7 @@ const KegsList: React.FC<Props> = ({
     ],
     ...queryOptions,
   });
-  const [selectedBeverageId, setSelectedBeverageId] =
+  const [selectedKegId, setSelectedKegId] =
     React.useState<EntityID | null>(null);
 
   const _keyExtractor = (row: Keg): string => row.id.toString();
@@ -62,7 +62,7 @@ const KegsList: React.FC<Props> = ({
     return (
       <LoadedRow
         onPress={(keg: Keg) => {
-          setSelectedBeverageId(keg.beverage.id);
+          setSelectedKegId(keg.id);
         }}
         item={item}
       />
@@ -82,7 +82,10 @@ const KegsList: React.FC<Props> = ({
         onRefresh={_onRefresh}
         renderItem={_renderRow}
       />
-      <BeverageModal beverageID={selectedBeverageId} />
+      <KegModal
+        kegID={selectedKegId}
+        onClose={() => setSelectedKegId(null)}
+      />
     </>
   );
 };

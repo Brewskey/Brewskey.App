@@ -9,7 +9,7 @@ import RegisterForm from '../components/RegisterForm';
 const RegisterScreen: React.FC = () => {
   return (
     <Container>
-      <Header showBackButton title="Register account" />
+      <Header shouldShowBackButton title="Register account" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <RegisterForm />
       </KeyboardAwareScrollView>
@@ -17,4 +17,4 @@ const RegisterScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(RegisterScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(RegisterScreen, <ErrorScreen shouldShowBackButton />);

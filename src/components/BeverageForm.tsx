@@ -1,11 +1,9 @@
 import type {
-  Availability,
   Beverage,
   BeverageMutator,
   EntityID,
-  Glass,
+  ShortenedEntity,
   Srm,
-  Style,
 } from '@brewskey/js-api';
 import type { SimplePickerValue } from '../components/pickers/SimplePicker';
 
@@ -26,6 +24,7 @@ import GlassPicker from './pickers/GlassPicker';
 import StylePicker from './pickers/StylePicker';
 import { SimplePicker } from './pickers/SimplePicker';
 import SrmPicker from './pickers/SrmPicker';
+import { extractShortenedEntityId } from '../utils';
 
 const styles = StyleSheet.create({
   imagePickerContainer: {
@@ -36,9 +35,17 @@ const styles = StyleSheet.create({
 
 const YEARS_RANGE_LENGTH = 10;
 
+type FormProps = Omit<BeverageMutator, 'availableId' | 'glasswareId' | 'srmId' | 'styleId'> & {
+  availability: ShortenedEntity | null | undefined;
+  glass: ShortenedEntity | null | undefined;
+  srm: Srm | null | undefined;
+  style: ShortenedEntity | null | undefined;
+  beverageImage?: string;
+};
+
 const validate = (
-  values: BeverageMutator & { beverageImage?: string },
-): Partial<Record<keyof (BeverageMutator & { beverageImage?: string }), string>> => {
+  values: FormProps,
+): Partial<Record<keyof FormProps, string>> => {
   const errors: Record<string, string> = {};
 
   if (!values.name) {
@@ -49,8 +56,8 @@ const validate = (
     errors.beverageType = 'Beverage type is required';
   }
 
-  if (!values.srmId) {
-    errors.srmId = 'SRM is required';
+  if (!values.srm) {
+    errors.srm = 'SRM is required';
   }
 
   return errors;
@@ -67,7 +74,7 @@ type Props = {
 };
 
 const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }) => {
-  const form = useForm<BeverageMutator & { beverageImage?: string }>({
+  const form = useForm<FormProps>({
     defaultValues: {
       id: beverage?.id,
       name: beverage?.name,
@@ -75,11 +82,11 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
       beverageType: beverage?.beverageType,
       servingTemperature: beverage?.servingTemperature,
       year: beverage?.year,
-      availableId: beverage?.availability?.id,
-      glasswareId: beverage?.glass?.id,
+      availability: beverage?.availability,
+      glass: beverage?.glass,
       isOrganic: beverage?.isOrganic,
-      srmId: beverage?.srm?.id,
-      styleId: beverage?.style?.id,
+      srm: beverage?.srm,
+      style: beverage?.style,
       abv: beverage?.abv,
       originalGravity: beverage?.originalGravity,
       ibu: beverage?.ibu,
@@ -102,13 +109,13 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
     )
     .reverse();
 
-  const onSubmitForm = async (formValues: BeverageMutator & { beverageImage?: string }) => {
+  const onSubmitForm = async (formValues: FormProps) => {
     const errors = validate(formValues);
     const hasErrors = Object.keys(errors).length > 0;
 
     if (hasErrors) {
       Object.keys(errors).forEach((key) => {
-        const errorKey = key as keyof (BeverageMutator & { beverageImage?: string });
+        const errorKey = key as keyof FormProps;
         const errorMessage = errors[errorKey];
         if (errorMessage) {
           form.setError(errorKey, {
@@ -120,7 +127,13 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
       return;
     }
 
-    await onSubmit(formValues);
+    await onSubmit({
+      ...formValues,
+      availableId: extractShortenedEntityId(formValues.availability),
+      glasswareId: extractShortenedEntityId(formValues.glass),
+      srmId: extractShortenedEntityId(formValues.srm),
+      styleId: extractShortenedEntityId(formValues.style),
+    });
   };
 
   return (
@@ -196,23 +209,13 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
           component={AvailabilityPicker}
           initialValue={beverage?.availability}
           label="Availability"
-          name="availableId"
-          _parseOnSubmit={(
-            value: unknown,
-          ): EntityID | null | undefined => {
-            const avail = value as Availability | null | undefined;
-            return avail && avail.id;
-          }}
+          name="availability"
         />
         <FormField
           component={GlassPicker}
           initialValue={beverage?.glass}
           label="Glass"
-          name="glasswareId"
-          _parseOnSubmit={(value: unknown): EntityID | null | undefined => {
-            const glass = value as Glass | null | undefined;
-            return glass && glass.id;
-          }}
+          name="glass"
         />
         <FormField
           component={CheckBoxField}
@@ -225,12 +228,8 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
           initialValue={beverage?.srm}
           key="srm"
           label="Color"
-          name="srmId"
+          name="srm"
           required="SRM is required"
-          _parseOnSubmit={(value: unknown): EntityID | null | undefined => {
-            const srm = value as Srm | null | undefined;
-            return srm && srm.id;
-          }}
         />
         {beverageType === 'Beer' && [
           <FormField
@@ -238,11 +237,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             initialValue={beverage?.style}
             key="style"
             label="Style"
-            name="styleId"
-            _parseOnSubmit={(value: unknown): EntityID | null | undefined => {
-              const style = value as Style | null | undefined;
-              return style && style.id;
-            }}
+            name="style"
           />,
           <FormField
             component={TextInput}

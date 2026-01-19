@@ -11,4 +11,4 @@ const ProfileStatsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(ProfileStatsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(ProfileStatsScreen, <ErrorScreen shouldShowBackButton />);

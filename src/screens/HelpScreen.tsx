@@ -52,7 +52,7 @@ const HelpScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header showBackButton title="Help" />
+      <Header shouldShowBackButton title="Help" />
       <Section innerContainerStyle={styles.section}>
         <Text
           style={[
@@ -99,4 +99,4 @@ const HelpScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(HelpScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(HelpScreen, <ErrorScreen shouldShowBackButton />);

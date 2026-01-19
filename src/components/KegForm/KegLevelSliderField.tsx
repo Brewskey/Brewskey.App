@@ -29,8 +29,9 @@ const KegLevelSliderField = ({
   ...rest
 }: Props): React.ReactElement => {
   const { watch } = useFormContext();
-  const value: number = watch(rest.name);
-  const ozValue = value === 0 ? 0 : (maxOunces * value) / 100;
+  const value: number | undefined = watch(rest.name);
+  const numericValue = typeof value === 'number' ? value : 0;
+  const ozValue = numericValue === 0 ? 0 : (maxOunces * numericValue) / 100;
 
   return (
     <View style={styles.container}>
@@ -46,7 +47,7 @@ const KegLevelSliderField = ({
         </View>
       </View>
       <Text style={styles.valueText}>
-        {value.toFixed(0)}% – {ozValue.toFixed(0)} oz
+        {numericValue.toFixed(0)}% – {ozValue.toFixed(0)} oz
       </Text>
     </View>
   );

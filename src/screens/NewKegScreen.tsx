@@ -84,7 +84,7 @@ export const NewKegScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="Add keg" />
+      <Header shouldShowBackButton title="Add keg" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <KegForm
           onSubmit={onFormSubmit}

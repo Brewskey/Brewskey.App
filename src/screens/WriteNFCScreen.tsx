@@ -131,12 +131,12 @@ export const WriteNFCScreen = withErrorBoundary(
 
     return (
       <Container>
-        <Header showBackButton title="NFC Card Setup" />
+        <Header shouldShowBackButton title="NFC Card Setup" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           {content}
         </KeyboardAwareScrollView>
       </Container>
     );
   },
-  <ErrorScreen showBackButton />,
+  <ErrorScreen shouldShowBackButton />,
 );

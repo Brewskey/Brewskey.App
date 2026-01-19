@@ -38,13 +38,13 @@ type Props = StaticScreenProps<{
   onTapSetupFinish?: (tapID: EntityID) => void | Promise<void>;
   showBackButton?: boolean;
   tapId: EntityID;
-  returnOnFinish: boolean;
+  shouldReturnOnFinish: boolean;
 }>;
 
 export const NewFlowSensorScreen: React.FC<Props> = withErrorBoundary(
   ({
     route: {
-      params: { tapId, returnOnFinish, onTapSetupFinish },
+      params: { tapId, shouldReturnOnFinish, onTapSetupFinish },
     },
   }: Props) => {
     const navigation = useNavigation<Navigation>();
@@ -54,7 +54,7 @@ export const NewFlowSensorScreen: React.FC<Props> = withErrorBoundary(
     const _onFlowSensorCreated = () => {
       addSnackBarMessage({ content: 'Flow sensor set' });
 
-      if (returnOnFinish && navigation.canGoBack()) {
+      if (shouldReturnOnFinish && navigation.canGoBack()) {
         navigation.goBack();
       } else {
         navigation.navigate('newKeg', { tapId });

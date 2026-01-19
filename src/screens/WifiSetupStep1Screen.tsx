@@ -9,7 +9,7 @@ import ParticleIDInput from '../components/ParticleIDInput';
 import { useClearAllQueryCaches } from '../hooks/queries/SoftApQueries';
 
 type Props = {
-  forNewDevice?: boolean;
+  isForNewDevice?: boolean;
   onSetupFinish: (particleID: string) => void;
   onReadyClick: () => void;
 };

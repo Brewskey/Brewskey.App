@@ -18,12 +18,12 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  showBackButton?: boolean;
+  shouldShowBackButton?: boolean;
 };
 
-const ErrorScreen = ({ showBackButton }: Props): React.ReactElement => (
+const ErrorScreen = ({ shouldShowBackButton }: Props): React.ReactElement => (
   <Fragment>
-    <Header showBackButton={showBackButton} title="Whoops! Error!" />
+    <Header shouldShowBackButton={shouldShowBackButton} title="Whoops! Error!" />
     <Container centered style={styles.container}>
       <Icon
         reverse

@@ -15,18 +15,27 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  subtitle: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+    textAlign: 'center',
+    marginTop: 4,
+  },
 });
 
 type Props = {
-  title: string
+  title: string;
+  subtitle?: string;
 };
 
 const SectionHeader = (
   {
     title,
+    subtitle,
   }: Props,
 ): React.ReactElement => <View style={styles.container}>
   <Text style={styles.title}>{title}</Text>
+  {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
 </View>;
 
 export default SectionHeader;

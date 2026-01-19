@@ -46,5 +46,5 @@ export const TapDetailsLeaderboardScreen: React.FC<InjectedProps> =
         />
       );
     },
-    <ErrorScreen showBackButton />,
+    <ErrorScreen shouldShowBackButton />,
   );

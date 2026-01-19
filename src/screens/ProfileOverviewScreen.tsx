@@ -65,4 +65,4 @@ const ProfileOverviewScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(ProfileOverviewScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(ProfileOverviewScreen, <ErrorScreen shouldShowBackButton />);

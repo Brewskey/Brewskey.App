@@ -24,7 +24,7 @@ export enum LocationQueryKeys {
   NearbyLocations = 'nearby_locations',
 }
 
-const QUERY_KEY_BASE = 'GET_COORDINATES_FROM_ADDRESS';
+export const NEARBY_LOCATIONS_QUERY_KEY_BASE = 'GET_COORDINATES_FROM_ADDRESS';
 
 export const useGetLocationById = (
   id: EntityID | undefined | null,
@@ -67,7 +67,7 @@ export const useGetNearbyLocations = (
   },
 ) => {
   return useQuery({
-    queryKey: [QUERY_KEY_BASE, parameters],
+    queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE, parameters],
     queryFn: () =>
       LocationDAO.getNearbyLocations({
         radius: 15_000,

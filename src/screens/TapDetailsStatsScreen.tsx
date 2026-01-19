@@ -40,4 +40,4 @@ const TapDetailsStatsScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(TapDetailsStatsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(TapDetailsStatsScreen, <ErrorScreen shouldShowBackButton />);

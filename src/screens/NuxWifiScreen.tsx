@@ -62,4 +62,4 @@ const NuxWifiScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NuxWifiScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NuxWifiScreen, <ErrorScreen shouldShowBackButton />);

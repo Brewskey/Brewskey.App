@@ -62,7 +62,7 @@ const SettingsScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header showBackButton title="Settings" />
+      <Header shouldShowBackButton title="Settings" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>
           <SectionHeader title="Change password" />
@@ -106,4 +106,4 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(SettingsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(SettingsScreen, <ErrorScreen shouldShowBackButton />);

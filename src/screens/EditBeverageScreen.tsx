@@ -75,7 +75,7 @@ const EditBeverageScreen: React.FC<Props> = ({
   if (isLoading || !beverage) {
     return (
       <Container>
-        <Header showBackButton title="Edit beverage" />
+        <Header shouldShowBackButton title="Edit beverage" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoadingIndicator />
         </KeyboardAwareScrollView>
@@ -85,7 +85,7 @@ const EditBeverageScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="Edit beverage" />
+      <Header shouldShowBackButton title="Edit beverage" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <BeverageForm
           beverage={beverage}
@@ -97,4 +97,4 @@ const EditBeverageScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(EditBeverageScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(EditBeverageScreen, <ErrorScreen shouldShowBackButton />);

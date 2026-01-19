@@ -7,4 +7,4 @@ const MyFriendsContactScreen: React.FC = () => {
   return <ContactsList />;
 };
 
-export default withErrorBoundary(MyFriendsContactScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyFriendsContactScreen, <ErrorScreen shouldShowBackButton />);

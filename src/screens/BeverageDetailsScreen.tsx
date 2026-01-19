@@ -29,7 +29,7 @@ const BeverageDetailsScreen: React.FC<Props> = ({
   if (isLoading) {
     return (
       <Container>
-        <Header showBackButton />
+        <Header shouldShowBackButton />
         <LoadingIndicator />
       </Container>
     );
@@ -38,7 +38,7 @@ const BeverageDetailsScreen: React.FC<Props> = ({
   if (error || !beverage) {
     return (
       <Container>
-        <Header showBackButton />
+        <Header shouldShowBackButton />
         <LoadingIndicator />
       </Container>
     );
@@ -63,7 +63,7 @@ const BeverageDetailsScreen: React.FC<Props> = ({
             }}
           />
         }
-        showBackButton
+        shouldShowBackButton
         title={beverage.name}
       />
       <ScrollView>
@@ -75,4 +75,4 @@ const BeverageDetailsScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(BeverageDetailsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(BeverageDetailsScreen, <ErrorScreen shouldShowBackButton />);

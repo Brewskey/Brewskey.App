@@ -3,6 +3,7 @@ import type {
   DeviceMutator,
   EntityID,
   Location,
+  ShortenedEntity,
 } from '@brewskey/js-api';
 import * as React from 'react';
 import { View } from 'react-native';
@@ -21,17 +22,18 @@ import { CheckBoxField } from '../common/form/CheckBoxField';
 import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
 import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
+import { extractShortenedEntityId } from '../utils';
 
 export const validate = (
-  values: DeviceMutator,
-): Partial<Record<keyof DeviceMutator, string>> => {
+  values: FormProps,
+): Partial<Record<keyof FormProps, string>> => {
   const errors: Record<string, string> = {};
 
   if (!values.deviceStatus) {
     errors.deviceStatus = 'Status is required!';
   }
 
-  if (!values.locationId) {
+  if (!values.location) {
     errors.locationId = 'Location is required!';
   }
 
@@ -53,15 +55,19 @@ type Props = {
   submitButtonLabel: string;
 };
 
+type FormProps = Omit<DeviceMutator, 'locationId'> & {
+  location: ShortenedEntity | null | undefined;
+};
+
 const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, onSubmit }) => {
   const isFocused = useIsFocused();
-  const form = useForm<DeviceMutator>({
+  const form = useForm<FormProps>({
     defaultValues: {
       id: device.id,
       particleId: device.particleId,
       name: device.name,
       deviceType: 'BrewskeyBox',
-      locationId: device.location?.id,
+      location: device.location,
       deviceStatus: device.id ? device.deviceStatus : 'Active',
       secondsToStayOpen: device.secondsToStayOpen || 3600,
       timeForValveOpen: device.timeForValveOpen,
@@ -81,10 +87,10 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
   const values = useWatch({ control: form.control });
   const deviceStatus = values.deviceStatus;
 
-  const validateForm = (formValues: DeviceMutator): boolean => {
+  const validateForm = (formValues: FormProps): boolean => {
     const errors = validate(formValues);
     Object.keys(errors).forEach((key) => {
-      const errorKey = key as keyof DeviceMutator;
+      const errorKey = key as keyof FormProps;
       const errorMessage = errors[errorKey];
       if (errorMessage) {
         form.setError(errorKey, {
@@ -96,9 +102,12 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
     return Object.keys(errors).length === 0;
   };
 
-  const onSubmitForm = async (formValues: DeviceMutator) => {
+  const onSubmitForm = async (formValues: FormProps) => {
     if (validateForm(formValues)) {
-      await onSubmit(formValues);
+      await onSubmit({
+        ...formValues,
+        locationId: extractShortenedEntityId(formValues.location),
+      });
     }
   };
 
@@ -116,11 +125,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
             component={LocationPicker}
             initialValue={device.location}
             label="Location"
-            name="locationId"
-            _parseOnSubmit={(value: unknown): EntityID | undefined => {
-              const loc = value as Location | null | undefined;
-              return loc?.id;
-            }}
+            name="location"
             multiple={false}
           />
         )}

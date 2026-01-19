@@ -26,4 +26,4 @@ const MyFriendsMainScreen: React.FC = () => {
 
 // Note: navigationOptions (tabBarLabel: 'Friends') should be set in the navigator configuration
 
-export default withErrorBoundary(MyFriendsMainScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyFriendsMainScreen, <ErrorScreen shouldShowBackButton />);

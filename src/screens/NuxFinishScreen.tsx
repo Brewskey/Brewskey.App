@@ -55,4 +55,4 @@ const NuxFinishScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NuxFinishScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NuxFinishScreen, <ErrorScreen shouldShowBackButton />);

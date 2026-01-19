@@ -3,10 +3,10 @@ import type {
   Location,
   LocationMutator,
   Organization,
+  ShortenedEntity,
 } from '@brewskey/js-api';
 
 import * as React from 'react';
-import { useMemo } from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import { useForm, useWatch } from 'react-hook-form';
 import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
@@ -21,9 +21,11 @@ import Button from '../../common/buttons/Button';
 import { SimplePicker } from '../pickers/SimplePicker';
 import OrganizationPicker from '../pickers/OrganizationPicker';
 import {
+  useGetOrganizationById,
   useGetOrganizations,
   useGetSquareLocations,
 } from '../../hooks/queries/OrganizationQueries';
+import { extractShortenedEntityId } from '../../utils';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -37,17 +39,17 @@ const REQUIRED_FIELDS = [
 const isRequiredMessage = (fieldName: string): string =>
   `${fieldName} is required`;
 
-const validate = (
-  values: LocationMutator,
+const validateForm = (
+  values: FormProps,
 ): {
   [key: string]: string;
 } => {
-  const errors: Partial<Record<keyof LocationMutator, string>> = {};
+  const errors: Partial<Record<keyof FormProps, string>> = {};
 
   REQUIRED_FIELDS.forEach((fieldName: string) => {
-    const value = values[fieldName as keyof LocationMutator];
+    const value = values[fieldName as keyof FormProps];
     if (!value) {
-      errors[fieldName as keyof LocationMutator] = isRequiredMessage(fieldName);
+      errors[fieldName as keyof FormProps] = isRequiredMessage(fieldName);
     }
   });
 
@@ -67,21 +69,25 @@ type Props = {
   submitButtonLabel: string;
 };
 
+type FormProps = Omit<LocationMutator, 'organizationId'> & {
+  organization: ShortenedEntity | null | undefined;
+};
+
 const LocationForm: React.FC<Props> = ({
   isFocused: isFocusedProp,
   location = {
     squareLocationID: '',
-  },
+  } as Location,
   submitButtonLabel,
   onSubmit,
 }) => {
   const isFocusedNavigation = useIsFocused();
   const isFocused = isFocusedProp ?? isFocusedNavigation;
 
-  const form = useForm<LocationMutator>({
+  const form = useForm<FormProps>({
     defaultValues: {
       id: location.id,
-      organizationId: location.organization?.id,
+      organization: location.organization,
       name: location.name,
       description: location.description,
       locationType: location.locationType,
@@ -97,72 +103,44 @@ const LocationForm: React.FC<Props> = ({
   const {
     handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
+    getValues,
   } = form;
 
-  const values = useWatch({ control: form.control });
-  const organizationId = values.organizationId;
+  const organizationShort = getValues('organization')
 
-  // Get organizations list
-  const { data: organizationsData } = useGetOrganizations();
-  const organizations = useMemo(() => {
-    if (!organizationsData?.pages) return [];
-    return organizationsData.pages.flatMap((page) => page);
-  }, [organizationsData]);
-
-  const organizationCount = organizations.length;
-
-  const organization = useMemo((): Organization | null | undefined => {
-    if (organizationId) {
-      const orgId = typeof organizationId === 'object' && 'id' in organizationId
-        ? (organizationId as Organization).id
-        : (organizationId as EntityID);
-      return organizations.find((org) => org.id === orgId);
-    }
-
-    return organizations[0] || null;
-  }, [organizationId, organizations]);
+  const { data: organization } = useGetOrganizationById(organizationShort?.id);
 
   // Get square locations if organization supports payments
-  const { data: squareLocations } = useGetSquareLocations(organization?.id);
+  const { data: squareLocations } = useGetSquareLocations(organizationShort?.id);
 
-  let organizationField = null;
-  if (organizationCount === 1 && organization != null) {
-    organizationField = (
-      <FormField
-        component={TextInput}
-        label="Organization"
-        name="organizationId"
-        initialValue={organization.id}
-      />
-    );
-  } else if (organizationCount > 1) {
-    organizationField = (
+  // Only show the organizationField if the user can fetch more than one organization
+  const { data: organizationsPages } = useGetOrganizations();
+  const organizations =
+    organizationsPages?.pages?.flat() ?? [];
+
+  const organizationField =
+    organizations.length > 1 ? (
       <FormField
         component={OrganizationPicker}
         label="Organization"
         initialValue={location.organization}
-        name="organizationId"
-        _parseOnSubmit={(value: unknown): EntityID => {
-          const org = value as Organization;
-          return org.id;
-        }}
+        name="organization"
       />
-    );
-  }
+    ) : null;
 
-  const onSubmitForm = async (formValues: LocationMutator) => {
-    await onSubmit(formValues);
+
+  const onSubmitForm = async (formValues: FormProps) => {
+    if (validateForm(formValues)) {
+      await onSubmit({
+        ...formValues,
+        organizationId: extractShortenedEntityId(formValues.organization),
+      });
+    }
   };
 
   return (
     <Form form={form}>
       <View style={styles.container}>
-        <FormField
-          component={TextInput}
-          label="ID"
-          name="id"
-          initialValue={location.id}
-        />
         {organizationField}
         <FormField
           component={TextInput}

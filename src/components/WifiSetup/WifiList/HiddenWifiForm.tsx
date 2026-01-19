@@ -15,7 +15,7 @@ type Props = {
 
 type FormProps = {
   ssid: string;
-  security: { label: string; value: number };
+  security: number;
   password?: string;
 };
 
@@ -26,7 +26,7 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
 
   const handleSubmit = React.useCallback((formProps: FormProps) => {
     onSubmit({
-      security: formProps.security.value,
+      security: formProps.security,
       ssid: formProps.ssid,
       password: formProps.password,
     });
@@ -46,7 +46,7 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
         valueField="value"
         name={'security'}
       />
-      {security.value !== WIFI_SECURITIES.OPEN && (
+      {security !== WIFI_SECURITIES.OPEN && (
         <TextField label="Password" name="password" secureTextEntry />
       )}
       <Button

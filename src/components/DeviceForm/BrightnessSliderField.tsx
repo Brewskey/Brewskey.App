@@ -26,7 +26,6 @@ const BrightnessSliderField = ({
   value,
   ...rest
 }: Props): React.ReactElement => <View>
-  <FormLabel>LED Brightness</FormLabel>
   <View style={styles.container}>
     <Slider
       {...rest}

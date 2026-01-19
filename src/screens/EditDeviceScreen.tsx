@@ -46,7 +46,7 @@ const EditDeviceScreen: React.FC<Props> = ({
   if (isLoading || !device) {
     return (
       <Container>
-        <Header showBackButton title="Edit Brewskey box" />
+        <Header shouldShowBackButton title="Edit Brewskey box" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoadingIndicator />
         </KeyboardAwareScrollView>
@@ -56,7 +56,7 @@ const EditDeviceScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="Edit Brewskey box" />
+      <Header shouldShowBackButton title="Edit Brewskey box" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <DeviceForm
           device={device}
@@ -68,4 +68,4 @@ const EditDeviceScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(EditDeviceScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(EditDeviceScreen, <ErrorScreen shouldShowBackButton />);

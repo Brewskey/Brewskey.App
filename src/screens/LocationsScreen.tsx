@@ -27,7 +27,7 @@ const LocationsScreen: React.FC = () => {
             }}
           />
         }
-        showBackButton
+        shouldShowBackButton
         title="Locations"
       />
       <LocationsList ListEmptyComponent={NuxNoEntity} />
@@ -35,4 +35,4 @@ const LocationsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(LocationsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(LocationsScreen, <ErrorScreen shouldShowBackButton />);

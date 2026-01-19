@@ -127,4 +127,4 @@ const EmptyComponent: React.FC<EmptyComponentProps> = ({
   return <FlowSensorForm onSubmit={onFormSubmit} tapId={tapId} />;
 };
 
-export default withErrorBoundary(EditFlowSensorScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(EditFlowSensorScreen, <ErrorScreen shouldShowBackButton />);

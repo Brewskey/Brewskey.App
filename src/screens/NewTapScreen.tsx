@@ -54,7 +54,7 @@ const NewTapScreen: React.FC<Props> = ({
           onTapSetupFinish: mergedProps.onTapSetupFinish,
           showBackButton: mergedProps.showBackButton,
           tapId: tap.id,
-          returnOnFinish: false,
+          shouldReturnOnFinish: false,
         },
       },
     });

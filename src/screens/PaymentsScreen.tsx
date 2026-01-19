@@ -96,7 +96,7 @@ const PaymentsScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header showBackButton title="Payment" />
+      <Header shouldShowBackButton title="Payment" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>{content}</Section>
         <Section>
@@ -107,4 +107,4 @@ const PaymentsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(PaymentsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(PaymentsScreen, <ErrorScreen shouldShowBackButton />);

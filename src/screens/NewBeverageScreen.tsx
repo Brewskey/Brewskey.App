@@ -82,7 +82,7 @@ const NewBeverageScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header showBackButton title="New beverage" />
+      <Header shouldShowBackButton title="New beverage" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <BeverageForm
           onSubmit={onFormSubmit}
@@ -93,4 +93,4 @@ const NewBeverageScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NewBeverageScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NewBeverageScreen, <ErrorScreen shouldShowBackButton />);

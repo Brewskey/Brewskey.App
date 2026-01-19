@@ -37,7 +37,7 @@ const LocationDetailsScreen: React.FC<Props> = ({
   if (isLoading) {
     return (
       <Container>
-        <Header showBackButton />
+        <Header shouldShowBackButton />
         <LoadingIndicator />
       </Container>
     );
@@ -46,7 +46,7 @@ const LocationDetailsScreen: React.FC<Props> = ({
   if (error || !location) {
     return (
       <Container>
-        <Header showBackButton />
+        <Header shouldShowBackButton />
         <LoadingIndicator />
       </Container>
     );
@@ -73,7 +73,7 @@ const LocationDetailsScreen: React.FC<Props> = ({
             }}
           />
         }
-        showBackButton
+        shouldShowBackButton
         title={name}
       />
       <ScrollView>
@@ -94,4 +94,4 @@ const LocationDetailsScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(LocationDetailsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(LocationDetailsScreen, <ErrorScreen shouldShowBackButton />);

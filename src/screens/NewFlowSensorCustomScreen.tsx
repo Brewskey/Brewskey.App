@@ -40,12 +40,12 @@ export const NewFlowSensorCustomScreen: React.FC<Props> =
 
       return (
         <Container>
-          <Header showBackButton title="Set tap sensor" />
+          <Header shouldShowBackButton title="Set tap sensor" />
           <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
             <FlowSensorForm tapId={tapId} onSubmit={_onFormSubmit} />
           </KeyboardAwareScrollView>
         </Container>
       );
     },
-    <ErrorScreen showBackButton />,
+    <ErrorScreen shouldShowBackButton />,
   );

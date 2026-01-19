@@ -31,7 +31,7 @@ const MyBeveragesScreen: React.FC = () => {
             }}
           />
         }
-        showBackButton
+        shouldShowBackButton
         title="Homebrew"
       />
       <BeveragesList
@@ -45,4 +45,4 @@ const MyBeveragesScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(MyBeveragesScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyBeveragesScreen, <ErrorScreen shouldShowBackButton />);

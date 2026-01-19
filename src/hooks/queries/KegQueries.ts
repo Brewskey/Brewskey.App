@@ -17,6 +17,8 @@ import {
   QueryOptions,
 } from '@brewskey/js-api';
 import nullthrows from 'nullthrows';
+import { TapQueryKeys } from './TapQueries';
+import { NEARBY_LOCATIONS_QUERY_KEY_BASE } from './LocationQueries';
 
 export enum KegQueryKeys {
   KeyById = 'keg_by_id',
@@ -65,9 +67,39 @@ export const useGetKegs = (
   });
 
 export const useCreateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (mutator) => KegDAO.post(mutator),
-    onSuccess: () => {},
+    onSuccess: async () => {
+      // Invalidate all keg queries - this will match all queries that start with these keys
+      // Using refetchType: 'active' ensures active queries refetch immediately
+      await queryClient.invalidateQueries({
+        queryKey: [KegQueryKeys.KeyById],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [KegQueryKeys.KeyByQuery],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [KegQueryKeys.KegsList],
+        refetchType: 'active',
+      });
+      // Clear cache for tap values since taps include keg information
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.TapById],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.Taps],
+        refetchType: 'active',
+      });
+      // Clear cache for nearby locations since they display keg information
+      await queryClient.invalidateQueries({
+        queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE],
+        refetchType: 'active',
+      });
+    },
   });
 };
 
@@ -77,11 +109,33 @@ export const useUpdateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
     mutationFn: (mutator) =>
       KegDAO.put(nullthrows(mutator.id, 'keg ID was not defined'), mutator),
     onSuccess: async (keg) => {
+      // Invalidate all keg queries - this will match all queries that start with these keys
+      // Using refetchType: 'active' ensures active queries refetch immediately
       await queryClient.invalidateQueries({
-        queryKey: [KegQueryKeys.KeyById, keg.id],
+        queryKey: [KegQueryKeys.KeyById],
+        refetchType: 'active',
       });
       await queryClient.invalidateQueries({
         queryKey: [KegQueryKeys.KeyByQuery],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [KegQueryKeys.KegsList],
+        refetchType: 'active',
+      });
+      // Clear cache for tap values since taps include keg information
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.TapById],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.Taps],
+        refetchType: 'active',
+      });
+      // Clear cache for nearby locations since they display keg information
+      await queryClient.invalidateQueries({
+        queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE],
+        refetchType: 'active',
       });
     },
   });
@@ -95,12 +149,34 @@ export const useFloatKeg = (): UseMutationResult<void, Error, KegMutator> => {
         nullthrows(mutator.tapId, 'tap ID was not defined'),
       );
     },
-    onSuccess: async (_, keg) => {
+    onSuccess: async () => {
+      // Invalidate all keg queries - this will match all queries that start with these keys
+      // Using refetchType: 'active' ensures active queries refetch immediately
       await queryClient.invalidateQueries({
-        queryKey: [KegQueryKeys.KeyById, keg.id],
+        queryKey: [KegQueryKeys.KeyById],
+        refetchType: 'active',
       });
       await queryClient.invalidateQueries({
         queryKey: [KegQueryKeys.KeyByQuery],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [KegQueryKeys.KegsList],
+        refetchType: 'active',
+      });
+      // Clear cache for tap values since taps include keg information
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.TapById],
+        refetchType: 'active',
+      });
+      await queryClient.invalidateQueries({
+        queryKey: [TapQueryKeys.Taps],
+        refetchType: 'active',
+      });
+      // Clear cache for nearby locations since they display keg information
+      await queryClient.invalidateQueries({
+        queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE],
+        refetchType: 'active',
       });
     },
   });

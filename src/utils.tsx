@@ -1,4 +1,4 @@
-import type { KegType } from '@brewskey/js-api';
+import type { EntityID, KegType, ShortenedEntity } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { Dimensions, Platform, StatusBar } from 'react-native';
@@ -146,4 +146,30 @@ export const getStatusBarHeight = ({
   }
 
   return StatusBar.currentHeight ?? 0;
+};
+
+/**
+ * Extracts and parses the ID from a ShortenedEntity or any object with an id property.
+ * Converts string IDs to numbers when possible.
+ * Returns undefined if the entity is null or undefined.
+ */
+export const extractShortenedEntityId = (
+  entity: { id: EntityID } | null | undefined,
+): EntityID | undefined => {
+  if (entity == null) {
+    return undefined;
+  }
+
+  const id = entity.id;
+  if (id == null) {
+    return undefined;
+  }
+
+  // Parse string IDs to numbers when possible
+  if (typeof id === 'string') {
+    const numId = Number(id);
+    return !isNaN(numId) && id.trim() !== '' ? numId : id;
+  }
+
+  return id;
 };

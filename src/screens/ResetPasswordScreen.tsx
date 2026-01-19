@@ -40,7 +40,7 @@ export const ResetPasswordScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header showBackButton title="Reset password" />
+      <Header shouldShowBackButton title="Reset password" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <SectionContent paddedHorizontal paddedVertical>
           <Text style={styles.text}>

@@ -22,7 +22,7 @@ import {
 const ANDROID_VERSION_LOLLIPOP = 21;
 
 export type Props = {
-  borderless?: boolean;
+  shouldBeBorderless?: boolean;
   children?: React.ReactNode;
   delayPressIn?: number;
   onPress?: () => void | Promise<void>;
@@ -31,7 +31,7 @@ export type Props = {
 };
 
 const TouchableItem: React.FC<Props> = ({
-  borderless = false,
+  shouldBeBorderless = false,
   children,
   pressColor = 'rgba(0, 0, 0, .32)',
   style,
@@ -56,7 +56,7 @@ const TouchableItem: React.FC<Props> = ({
         {...restProps}
         background={TouchableNativeFeedback.Ripple(
           pressColor,
-          borderless,
+          shouldBeBorderless,
         )}
       >
         <View style={combinedStyle}>{React.Children.only(children)}</View>

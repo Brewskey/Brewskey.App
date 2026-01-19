@@ -27,7 +27,7 @@ export const TapsScreen: React.FC = () => {
             }}
           />
         }
-        showBackButton
+        shouldShowBackButton
         title="Taps"
       />
       <SectionTapsList ListEmptyComponent={NuxNoEntity} />
@@ -35,5 +35,5 @@ export const TapsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(TapsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(TapsScreen, <ErrorScreen shouldShowBackButton />);
 

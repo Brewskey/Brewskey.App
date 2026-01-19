@@ -53,7 +53,7 @@ const EditLocationScreen: React.FC<Props> = ({
   if (isLoading || !location) {
     return (
       <Container>
-        <Header showBackButton title="Edit location" />
+        <Header shouldShowBackButton title="Edit location" />
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <LoadingIndicator />
         </KeyboardAwareScrollView>
@@ -63,7 +63,7 @@ const EditLocationScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="Edit location" />
+      <Header shouldShowBackButton title="Edit location" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <LocationForm
           location={location}
@@ -75,4 +75,4 @@ const EditLocationScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(EditLocationScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(EditLocationScreen, <ErrorScreen shouldShowBackButton />);

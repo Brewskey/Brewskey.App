@@ -18,7 +18,7 @@ import {
 import { LeaderboardDurationValue } from '../../components/LeaderboardDurationPicker';
 import nullthrows from 'nullthrows';
 
-enum TapQueryKeys {
+export enum TapQueryKeys {
   TapById = 'tap_by_id',
   Taps = 'taps',
   LeaderboardQuery = 'leaderboard_query',

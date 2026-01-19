@@ -24,7 +24,7 @@ const IconButton = ({
   onPress,
   ...rest
 }: Props): React.ReactElement => (
-  <TouchableItem borderless onPress={onPress} style={containerStyle}>
+  <TouchableItem shouldBeBorderless onPress={onPress} style={containerStyle}>
     <Icon {...rest} containerStyle={styles.container} />
   </TouchableItem>
 );

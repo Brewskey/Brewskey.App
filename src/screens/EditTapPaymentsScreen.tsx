@@ -16,7 +16,6 @@ import nullthrows from 'nullthrows';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { LocationDAO } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import ErrorScreen from '../common/ErrorScreen';
 import { withErrorBoundary } from '../common/ErrorBoundary';
@@ -46,8 +45,7 @@ import { Form } from '../common/form/Form';
 type Props = {
   route?: {
     params: { tapId: EntityID };
-  } & Record<string, unknown>;
-  navigation?: unknown;
+  }
 };
 
 const validate = (

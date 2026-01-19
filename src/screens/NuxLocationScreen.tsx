@@ -87,7 +87,7 @@ const NuxLocationScreen: React.FC<Props> = ({
 
   return (
     <Container>
-      <Header showBackButton title="1. Setup location" />
+      <Header shouldShowBackButton title="1. Setup location" />
       <View style={styles.container}>
         <Icon
           color={COLORS.textInverse}
@@ -136,4 +136,4 @@ const NuxLocationScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NuxLocationScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NuxLocationScreen, <ErrorScreen shouldShowBackButton />);

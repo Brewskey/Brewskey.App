@@ -1,6 +1,7 @@
 import { Input, InputProps } from '@rneui/themed';
 import { Controller, Validate, useFormContext } from 'react-hook-form';
 import { StyleProp, TextStyle } from 'react-native';
+import nullthrows from 'nullthrows';
 
 export type TextInputProps = Omit<
   InputProps,
@@ -22,6 +23,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   inputStyle,
   underlineColorAndroid,
   required = false,
+  name,
   ...props
 }: TextInputProps) => {
   const { control, setFocus } = useFormContext();
@@ -29,6 +31,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   return (
     <Controller
       control={control}
+      name={nullthrows(name, 'TextInput: name prop is required and must be a non-empty string')}
       defaultValue={defaultValue ?? ''}
       rules={{ required }}
       render={({ field: { onChange, onBlur, value } }) => (
@@ -48,7 +51,6 @@ export const TextInput: React.FC<TextInputProps> = ({
           }
         />
       )}
-      name={props.name}
     />
   );
 };

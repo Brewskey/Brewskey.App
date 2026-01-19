@@ -56,4 +56,4 @@ const NuxTapScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NuxTapScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NuxTapScreen, <ErrorScreen shouldShowBackButton />);

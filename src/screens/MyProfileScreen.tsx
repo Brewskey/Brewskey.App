@@ -14,7 +14,7 @@ import SectionHeader from '../common/SectionHeader';
 const MyProfileScreen: React.FC = () => {
   return (
     <Container>
-      <Header showBackButton title="My profile" />
+      <Header shouldShowBackButton title="My profile" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>
           <SectionContent centered>
@@ -30,4 +30,4 @@ const MyProfileScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(MyProfileScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyProfileScreen, <ErrorScreen shouldShowBackButton />);

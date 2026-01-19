@@ -67,7 +67,7 @@ const MyFriendsScreen: React.FC = () => {
             type="material-icons"
           />
         }
-        showBackButton
+        shouldShowBackButton
         title="Friends"
       />
       <MyFriendsNavigatorScreen />
@@ -80,4 +80,4 @@ const MyFriendsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(MyFriendsScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(MyFriendsScreen, <ErrorScreen shouldShowBackButton />);
