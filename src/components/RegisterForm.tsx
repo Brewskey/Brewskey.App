@@ -70,9 +70,14 @@ const RegisterForm: React.FC = () => {
 
   const onSubmit = async (values: RegisterFormFields): Promise<void> => {
     if (validate(values)) {
-      await registerMutation.mutateAsync(values);
-      const { password, userName } = values;
-      await login({ password, userName });
+      try {
+        await registerMutation.mutateAsync(values);
+        const { password, userName } = values;
+        await login({ password, userName });
+      } catch (error) {
+        // Error is handled by FormValidationMessage via registerMutation.error
+        // Don't rethrow - let the form display the error
+      }
     }
   };
 
@@ -80,7 +85,7 @@ const RegisterForm: React.FC = () => {
 
   return (
     <Form form={form}>
-      <View>
+      <View testID="register-form">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -89,6 +94,7 @@ const RegisterForm: React.FC = () => {
           label="User name"
           name="userName"
           nextFocusTo="email"
+          testID="input-userName"
         />
         <FormField
           autoCapitalize="none"
@@ -98,6 +104,7 @@ const RegisterForm: React.FC = () => {
           label="Email"
           name="email"
           nextFocusTo="password"
+          testID="input-email"
         />
         <FormField
           autoCapitalize="none"
@@ -108,13 +115,18 @@ const RegisterForm: React.FC = () => {
           name="password"
           onSubmitEditing={onSubmitButtonPress}
           secureTextEntry
+          testID="input-password"
         />
-        <FormValidationMessage />
+        <FormValidationMessage 
+          testID="register-error-message" 
+          error={registerMutation.error?.message}
+        />
         <SectionContent paddedVertical>
           <Button
             disabled={isSubmitting || !isValid || !isDirty}
             loading={isSubmitting}
             onPress={onSubmitButtonPress}
+            testID="register-submit-button"
             title="Register"
           />
         </SectionContent>

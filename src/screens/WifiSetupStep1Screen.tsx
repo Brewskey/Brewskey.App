@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const WifiSetupStep1Screen: React.FC<Props> = ({
-  forNewDevice,
+  isForNewDevice,
   onSetupFinish,
   onReadyClick,
 }) => {
@@ -29,7 +29,7 @@ export const WifiSetupStep1Screen: React.FC<Props> = ({
         <DeviceSetupInstructions />
       </SectionContent>
       <Button onPress={onReadyClick} title="Ready" />
-      {forNewDevice && (
+      {isForNewDevice && (
         <SectionContent paddedHorizontal paddedVertical>
           <ParticleIDInput onContinuePress={onSetupFinish} />
         </SectionContent>

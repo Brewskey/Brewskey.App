@@ -62,11 +62,12 @@ export const TapForm: React.FC<Props> = ({
 
   return (
     <Form form={form}>
-      <View>
+      <View testID="tap-form">
         <FormField
           component={TextInput}
           name="description"
           label="Description"
+          testID="input-description"
         />
         <DropdownInput<Device>
           data={devices?.pages.flat() ?? []}
@@ -91,7 +92,7 @@ export const TapForm: React.FC<Props> = ({
         <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
         {!isFocused ? null : (
           <MainTabBarFill>
-            <FormValidationMessage />
+            <FormValidationMessage testID="tap-form-error-message" />
             <SectionContent paddedVertical>
               <SubmitButton onSubmit={onSubmit} title={submitButtonLabel} />
             </SectionContent>

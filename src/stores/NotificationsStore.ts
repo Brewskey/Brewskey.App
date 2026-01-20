@@ -63,6 +63,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: false,
     shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 });
 
@@ -100,6 +102,7 @@ async function registerForPushNotificationsAsync() {
       Constants?.easConfig?.projectId;
     if (!projectId) {
       handleRegistrationError('Project ID not found');
+      return;
     }
     try {
       const pushTokenString = (
@@ -122,8 +125,8 @@ const useNotifications = () => {
   const [_notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
+  const notificationListener = useRef<Notifications.Subscription | undefined>(undefined);
+  const responseListener = useRef<Notifications.Subscription | undefined>(undefined);
 
   useEffect(() => {
     registerForPushNotificationsAsync()
@@ -142,13 +145,11 @@ const useNotifications = () => {
 
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(
-          notificationListener.current,
-        );
+        notificationListener.current.remove();
       }
 
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        responseListener.current.remove();
       }
     };
   }, []);
@@ -156,6 +157,9 @@ const useNotifications = () => {
 
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
   const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { useUserID } = require('./AuthStore');
+  const userId = useUserID();
   return useCallback((notification: Notification): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
@@ -196,7 +200,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
         break;
       }
     }
-  }, [userId]);
+  }, [userId, navigation]);
 };
 
 class NotificationsStore {

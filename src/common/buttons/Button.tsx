@@ -24,6 +24,7 @@ type Props = React.ComponentProps<typeof RNEButton> & {
   style?: ViewStyle;
   title: string;
   type?: 'solid' | 'clear' | 'outline';
+  testID?: string;
   // react-native-elemenets button porps
 };
 
@@ -39,6 +40,8 @@ const Button: React.FC<Props> = ({
   onPress,
   secondary,
   style,
+  testID,
+  title,
   type,
   ...rest
 }) => {
@@ -74,6 +77,8 @@ const Button: React.FC<Props> = ({
       disabled={disabled || isLoading}
       loading={loading || isLoading}
       onPress={handlePress}
+      testID={testID}
+      title={title}
       titleStyle={{
         color: secondary ? COLORS.text : color,
       }}

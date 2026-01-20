@@ -140,7 +140,7 @@ const LocationForm: React.FC<Props> = ({
 
   return (
     <Form form={form}>
-      <View style={styles.container}>
+      <View style={styles.container} testID="location-form">
         {organizationField}
         <FormField
           component={TextInput}
@@ -149,6 +149,7 @@ const LocationForm: React.FC<Props> = ({
           label="Name"
           name="name"
           nextFocusTo="description"
+          testID="input-name"
         />
         <FormField
           component={TextInput}
@@ -176,6 +177,7 @@ const LocationForm: React.FC<Props> = ({
           label="Street"
           name="street"
           nextFocusTo="suite"
+          testID="input-street"
         />
         <FormField
           component={TextInput}
@@ -191,6 +193,7 @@ const LocationForm: React.FC<Props> = ({
           initialValue={location.city}
           label="City"
           name="city"
+          testID="input-city"
         />
         <FormField
           component={SimplePicker}
@@ -209,6 +212,7 @@ const LocationForm: React.FC<Props> = ({
           keyboardType="numeric"
           label="Zip"
           name="zipCode"
+          testID="input-zipCode"
         />
         {organization == null ||
         !organization.canEnablePayments ||
@@ -229,7 +233,7 @@ const LocationForm: React.FC<Props> = ({
           />
         )}
         <MainTabBarFill>
-          <FormValidationMessage />
+          <FormValidationMessage testID="location-form-error-message" />
           <Button
             disabled={!isValid || !isDirty || isSubmitting || !isFocused}
             loading={isSubmitting}

@@ -45,7 +45,7 @@ class Storage {
   static set = <TValue>(key: string, value: TValue): Promise<void> =>
     AsyncStorage.setItem(key, JSON.stringify(value));
 
-  static get = async <TValue>(key: string): Promise<TValue> => {
+  static get = async <TValue>(key: string): Promise<TValue | null> => {
     const stringValue = await AsyncStorage.getItem(key);
     return stringValue ? JSON.parse(stringValue) : null;
   };
@@ -61,9 +61,9 @@ class Storage {
     await Storage.set(keyForCurrentUser, value);
   };
 
-  static getForCurrentUser = async <TResult>(key: string): Promise<TResult> => {
+  static getForCurrentUser = async <TResult>(key: string): Promise<TResult | null> => {
     const keyForCurrentUser = await Storage._getKeyForCurrentUser(key);
-    return Storage.get(keyForCurrentUser);
+    return Storage.get<TResult>(keyForCurrentUser);
   };
 
   static removeForCurrentUser = async (key: string): Promise<void> => {
@@ -75,6 +75,11 @@ class Storage {
     const userID = await Storage._getUserID();
     return `${userID}/${key}`;
   };
+}
+
+// Expose Storage on window object for web/e2e environments
+if (Platform.OS === 'web' && typeof window !== 'undefined') {
+  (window as any).Storage = Storage;
 }
 
 export default Storage;

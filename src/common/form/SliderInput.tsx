@@ -7,15 +7,18 @@ export type SliderInputProps = Omit<SliderProps, 'value'> & {
   name: string;
   defaultValue?: number;
   required?: boolean;
+  testID?: string;
 };
 
 export const SliderInput = ({
   defaultValue,
   required = false,
   name,
+  testID,
   ...props
 }: SliderInputProps) => {
   const { control } = useFormContext();
+  
   return (
     <Controller
       control={control}

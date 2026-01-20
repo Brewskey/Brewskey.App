@@ -69,7 +69,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
 
   return (
     <Form form={form}>
-      <View>
+      <View testID="change-password-form">
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -90,12 +90,13 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           onSubmitEditing={handleSubmit(onSubmitForm)}
           secureTextEntry
         />
-        <FormValidationMessage />
+        <FormValidationMessage testID="change-password-error-message" />
         <SectionContent paddedVertical>
           <Button
             disabled={isSubmitting || !isValid}
             loading={isSubmitting}
             onPress={handleSubmit(onSubmitForm)}
+            testID="button-change-password"
             title="Change password"
           />
         </SectionContent>

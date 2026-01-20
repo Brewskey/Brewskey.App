@@ -53,7 +53,6 @@ const LocationMap = ({
 }: Props): React.ReactElement => (
   <MapView
     provider="google"
-    googleMapsApiKey={GOOGLE_MAPS_API_KEY}
     style={styles.map}
     initialRegion={getRegion(
       {

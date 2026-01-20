@@ -62,7 +62,7 @@ const SettingsScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header shouldShowBackButton title="Settings" />
+      <Header shouldShowBackButton title="Settings" testID="header-settings" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>
           <SectionHeader title="Change password" />

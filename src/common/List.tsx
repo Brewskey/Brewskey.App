@@ -64,6 +64,7 @@ export type ListProps<TEntity> = {
 
 type Props<TEntity> = ListProps<TEntity> & {
   renderItem?: (arg1: ListRenderItemInfo<TEntity>) => React.ReactElement;
+  testID?: string;
 };
 
 type State = {
@@ -110,6 +111,7 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
       ListEmptyComponent,
       ListFooterComponent,
       ListHeaderComponent,
+      testID,
       ...rest
     } = this.props;
     if (this.props.listType === 'sectionList') {
@@ -129,6 +131,7 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
           refreshing={this.state.isRefreshing}
           sections={this.props.sections}
           renderItem={this.props.renderItem}
+          testID={testID}
         />
       );
     }
@@ -153,6 +156,7 @@ class List<TEntity> extends React.Component<Props<TEntity>, State> {
         }
         onScroll={this.props.onScroll}
         renderItem={this._renderFlatList}
+        testID={testID}
       />
     );
   }

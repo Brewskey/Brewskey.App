@@ -53,7 +53,7 @@ export const MenuUserBlock: React.FC = () => {
   }
 
   return (
-    <TouchableItem borderless onPress={_onPress}>
+    <TouchableItem shouldBeBorderless onPress={_onPress}>
       <View style={styles.container}>
         <UserAvatar userName={nullthrows(userName)} />
         <View style={styles.content}>

@@ -56,7 +56,7 @@ export const HomeScreen = withErrorBoundary(() => {
           <Text style={styles.permissionText}>
             In order to see nearby taps, we need location permissions
           </Text>
-          <Button onPress={() => { void requestPermission(); }} title="Provide permissions" />
+          <Button onPress={() => { void requestPermission(); }} testID="button-provide-permissions" title="Provide permissions" />
         </Container>
       ) : (
         <NearbyLocationsList

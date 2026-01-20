@@ -5,6 +5,7 @@ import type { RenderProps } from '../common/SwipeableList';
 import type { ListComponentTypes } from '../common/List';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import { useMemo } from 'react';
 import nullthrows from 'nullthrows';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
@@ -147,23 +148,31 @@ const LocationsList: React.FC<Props> = ({
     />
   );
 
+  // Flatten the InfiniteData pages into a single array for SwipeableList
+  const flatData = useMemo(() => {
+    if (!locationsData?.pages) return undefined;
+    return locationsData;
+  }, [locationsData]);
+
   return (
-    <SwipeableList
-      data={locationsData}
-      keyExtractor={keyExtractor}
-      listType="flatList"
-      ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
-      ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
-      ListHeaderComponent={ListHeaderComponent as ListComponentTypes}
-      onEndReached={() => {
-        if (hasNextPage) {
-          fetchNextPage();
-        }
-      }}
-      onRefresh={onRefreshList}
-      ref={swipeableListRef}
-      renderItem={renderRow}
-    />
+    <View testID="locations-list" style={{ flex: 1 }}>
+      <SwipeableList
+        data={flatData}
+        keyExtractor={keyExtractor}
+        listType="flatList"
+        ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
+        ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
+        ListHeaderComponent={ListHeaderComponent as ListComponentTypes}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onRefresh={onRefreshList}
+        ref={swipeableListRef}
+        renderItem={renderRow}
+      />
+    </View>
   );
 };
 

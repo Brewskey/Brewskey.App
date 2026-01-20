@@ -20,6 +20,7 @@ const MenuLogoutButton: React.FC = () => {
       <MenuButton
         icon={{ name: 'logout', type: 'material-community' }}
         onPress={() => setIsModalVisible(true)}
+        testID="menu-item-logout"
         title="Log Out"
       />
       <LogoutModal

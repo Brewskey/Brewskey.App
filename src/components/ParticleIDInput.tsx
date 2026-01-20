@@ -55,6 +55,7 @@ const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
             name="particleIDInput"
             label="Internal ID"
             defaultValue=""
+            testID="input-particleId"
           />
           <Button
             onPress={handleContinuePress}

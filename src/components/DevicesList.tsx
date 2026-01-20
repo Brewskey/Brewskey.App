@@ -203,6 +203,7 @@ const DevicesList: React.FC<Props> = ({
       onRefresh={() => refetch()}
       ref={swipeableListRef}
       renderItem={renderRow}
+      testID="devices-list"
     />
   );
 };

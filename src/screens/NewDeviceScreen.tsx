@@ -80,4 +80,4 @@ const NewDeviceScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NewDeviceScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NewDeviceScreen, <ErrorScreen shouldShowBackButton />);

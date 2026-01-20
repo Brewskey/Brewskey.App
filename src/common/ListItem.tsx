@@ -47,6 +47,7 @@ type Props<TItem> = (
     onValueChange: (value: boolean) => void;
     value: boolean;
   };
+  testID?: string;
 };
 
 class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
@@ -69,6 +70,8 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
       rightIcon,
       swipeable,
       switch: switchParams,
+      testID,
+      title,
       ...otherProps
     } = this.props;
 
@@ -113,6 +116,7 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
           {...otherProps}
           containerStyle={[styles.container, this.props.containerStyle]}
           onPress={this._onPress}
+          testID={testID}
           bottomDivider
         >
           {content}
@@ -125,6 +129,7 @@ class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
         {...otherProps}
         containerStyle={[styles.container, this.props.containerStyle]}
         onPress={this._onPress}
+        testID={testID}
         bottomDivider
       >
         {content}

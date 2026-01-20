@@ -3,6 +3,7 @@ import type { Beverage, QueryOptions } from '@brewskey/js-api';
 import type { RenderProps } from '../common/SwipeableList';
 
 import * as React from 'react';
+import { View } from 'react-native';
 
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import QuickActions from '../common/QuickActions';
@@ -106,19 +107,21 @@ export const BeveragesList: React.FC<Props> = ({
 
   const isLoading = beverages.isLoading;
   return (
-    <SwipeableList<Beverage>
-      listType="flatList"
-      data={beverages.data}
-      ListHeaderComponent={ListHeaderComponent}
-      ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={
-        !isLoading ? <ListEmpty message="No beverages" /> : null
-      }
-      onEndReached={beverages.fetchNextPage}
-      onRefresh={beverages.refetch}
-      renderItem={renderRow}
-    />
+    <View testID="beverages-list" style={{ flex: 1 }}>
+      <SwipeableList<Beverage>
+        listType="flatList"
+        data={beverages.data}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={
+          !isLoading ? <ListEmpty message="No beverages" /> : null
+        }
+        onEndReached={beverages.fetchNextPage}
+        onRefresh={beverages.refetch}
+        renderItem={renderRow}
+      />
+    </View>
   );
 };
 

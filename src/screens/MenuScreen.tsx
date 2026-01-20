@@ -57,10 +57,12 @@ export const MenuScreen: React.FC = withErrorBoundary(
       <Container>
         <Header
           title="Brewskey"
+          testID="header-brewskey"
           rightComponent={
             <HeaderNavigationButton
               name="settings"
               screen="LoggedInStack"
+              testID="header-settings-button"
               params={{
                 screen: 'menu',
                 params: {
@@ -87,6 +89,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 }}
                 icon={{ name: 'people' }}
                 routeName="myFriends"
+                testID="menu-item-friends"
                 title="Friends"
               />
               {(pendingRequestCount.data ?? 0) === 0 ? null : (
@@ -105,6 +108,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 icon={{ name: 'map-marker', type: 'material-community' }}
                 key="locations"
                 routeName="locations"
+                testID="menu-item-locations"
                 title="Locations"
                 onPress={() => {
                   navigation.navigate('LoggedInStack', {
@@ -119,6 +123,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 icon={{ name: 'stocking', type: 'material-community' }}
                 key="taps"
                 routeName="taps"
+                testID="menu-item-taps"
                 title="Taps"
                 onPress={() => {
                   navigation.navigate('LoggedInStack', {
@@ -133,6 +138,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 icon={{ name: 'cube', type: 'material-community' }}
                 key="devices"
                 routeName="devices"
+                testID="menu-item-devices"
                 title="Brewskey boxes"
                 onPress={() => {
                   navigation.navigate('LoggedInStack', {
@@ -147,6 +153,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
                 icon={{ name: 'beer', type: 'material-community' }}
                 key="myBeverages"
                 routeName="myBeverages"
+                testID="menu-item-beverages"
                 title="Homebrew"
                 onPress={() => {
                   navigation.navigate('LoggedInStack', {
@@ -163,6 +170,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
               <MenuNavigationButton
                 icon={{ name: 'nfc' }}
                 routeName="writeNFC"
+                testID="menu-item-write-nfc"
                 title="Setup NFC Cards"
                 onPress={() => {
                   navigation.navigate('LoggedInStack', {
@@ -182,6 +190,7 @@ export const MenuScreen: React.FC = withErrorBoundary(
             <MenuNavigationButton
               icon={{ name: 'help' }}
               routeName="help"
+              testID="menu-item-help"
               title="Help"
               onPress={() => {
                 navigation.navigate('LoggedInStack', {

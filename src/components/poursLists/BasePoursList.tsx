@@ -29,6 +29,7 @@ type Props = {
     item: Pour;
     onDeleteItemPress: (item: Pour) => Promise<void>;
   }>;
+  testID?: string;
 };
 
 export const BasePoursList = ({
@@ -41,6 +42,7 @@ export const BasePoursList = ({
   onItemPress: customOnItemPress,
   rowItemComponent: RowItemComponent,
   slideoutComponent: SlideoutComponent,
+  testID,
 }: Props) => {
   const beverageModal = React.useRef<BeverageModalHandle>(null);
   const keyExtractor = (row: Pour): string => row.id.toString();
@@ -98,6 +100,7 @@ export const BasePoursList = ({
         }}
         onRefresh={onRefreshList}
         renderItem={renderRow}
+        testID={testID}
       />
       <BeverageModal ref={beverageModal} beverageID={selectedBeverageId} />
     </>

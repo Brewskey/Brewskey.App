@@ -15,6 +15,7 @@ export type TextInputProps = Omit<
   validationTextStyle?: StyleProp<TextStyle>;
   required?: boolean;
   validate?: Validate<string, Record<string, unknown>>;
+  testID?: string;
 };
 
 export const TextInput: React.FC<TextInputProps> = ({
@@ -24,6 +25,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   underlineColorAndroid,
   required = false,
   name,
+  testID,
   ...props
 }: TextInputProps) => {
   const { control, setFocus } = useFormContext();
@@ -45,6 +47,7 @@ export const TextInput: React.FC<TextInputProps> = ({
           ]}
           onBlur={onBlur}
           onChangeText={onChange}
+          testID={testID}
           value={value ?? ''}
           onSubmitEditing={
             nextFocusTo ? () => setFocus(nextFocusTo) : undefined

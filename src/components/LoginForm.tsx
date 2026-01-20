@@ -45,7 +45,7 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
   const { isSubmitting, isDirty, isValid } = methods.formState;
   return (
     <FormProvider {...methods}>
-      <View>
+      <View testID="login-form">
         <TextInput
           required
           autoCapitalize="none"
@@ -57,6 +57,7 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
           name="userName"
           nextFocusTo="password"
           selectionColor={isInverse ? COLORS.textInverse : undefined}
+          testID="login-username-input"
           underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
@@ -71,11 +72,12 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
           name="password"
           secureTextEntry
           selectionColor={isInverse ? COLORS.textInverse : undefined}
+          testID="login-password-input"
           underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
         {loginMutator.error != null ? (
-          <FormValidationText>{loginMutator.error.message}</FormValidationText>
+          <FormValidationText testID="login-error-message">{loginMutator.error.message}</FormValidationText>
         ) : null}
         <SectionContent paddedVertical>
           <Button
@@ -83,6 +85,7 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
             loading={isSubmitting}
             onPress={onSubmit}
             secondary={isInverse}
+            testID="login-submit-button"
             title="Log in"
           />
         </SectionContent>

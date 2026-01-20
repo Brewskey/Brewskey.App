@@ -26,18 +26,18 @@ type Props = StaticScreenProps<{
   tapId: EntityID;
 }>;
 
-export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
+export const TapDetailsScreen: React.FC<Props> =
   ({
     route: {
       params: { tapId },
     },
   }: Props) => {
-    const tap = useGetTapById(tapId);
+    const {data: tap, isLoading, status} = useGetTapById(tapId);
     const { data: tapPermission } = useGetPermissionForEntityById('tap', tapId);
     const { data: flowSensor } = useGetFlowSensorByTapId(tapId);
     const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
 
-    if (tap.isLoading) {
+    if (isLoading) {
       return (
         <Container>
           <Header showBackButton title="Tap" />
@@ -45,15 +45,16 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
         </Container>
       );
     }
-    if (tap.status !== 'success') {
+
+    if (!tap) {
       return null;
     }
 
     const onWarningPress = () => {
       navigation.navigate('newFlowSensor', {
-        returnOnFinish: true,
+        shouldReturnOnFinish: true,
         showBackButton: true,
-        tapId: tap.data!.id,
+        tapId: tap!.id,
       });
     };
 
@@ -67,7 +68,7 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
 
     const screenProps = {
       noFlowSensorWarning,
-      tap: tap.data,
+      tap: tap!,
       tapPermission,
     };
 
@@ -86,35 +87,36 @@ export const TapDetailsScreen: React.FC<Props> = withErrorBoundary(
                     params: { tapId: tapId },
                   },
                 }}
+                testID="button-edit-tap"
               />
             )
           }
           showBackButton
           title="Tap"
+          testID="header-tap-details"
         />
         <TapDetailsTab.Navigator
+          initialRouteName="on_tap"
           screenOptions={{
             lazy: true,
             swipeEnabled: false,
             ...theme.tabBar.tabBarOptions,
           }}
         >
-          <TapDetailsTab.Screen name="On Tap">
+          <TapDetailsTab.Screen name="on_tap" options={{ title: 'On Tap' }}>
             {() => <TapDetailsKegScreen {...screenProps} />}
           </TapDetailsTab.Screen>
-          {tap.data.hideStats ? null : (
-            <TapDetailsTab.Screen name="Stats">
+          {tap!.hideStats ? null : (
+            <TapDetailsTab.Screen name="stats" options={{ title: 'Stats' }}>
               {() => <TapDetailsStatsScreen {...screenProps} />}
             </TapDetailsTab.Screen>
           )}
-          {tap.data.hideLeaderboard ? null : (
-            <TapDetailsTab.Screen name="Leaderboard">
+          {tap!.hideLeaderboard ? null : (
+            <TapDetailsTab.Screen name="leaderboard" options={{ title: 'Leaderboard' }}>
               {() => <TapDetailsLeaderboardScreen {...screenProps} />}
             </TapDetailsTab.Screen>
           )}
         </TapDetailsTab.Navigator>
       </Container>
     );
-  },
-  <ErrorScreen showBackButton />,
-);
+  }

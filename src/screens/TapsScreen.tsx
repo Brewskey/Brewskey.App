@@ -14,6 +14,7 @@ export const TapsScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="add"
+            testID="header-add-button"
             screen="LoggedInStack"
             params={{
               screen: 'menu',
@@ -29,6 +30,7 @@ export const TapsScreen: React.FC = () => {
         }
         shouldShowBackButton
         title="Taps"
+        testID="header-taps"
       />
       <SectionTapsList ListEmptyComponent={NuxNoEntity} />
     </Container>

@@ -54,9 +54,10 @@ export const LoginScreen: React.FC = () => {
       </View>
       <LoginForm isInverse />
       <View style={{ paddingTop: 20 }}>
-        <Button onPress={onRegisterPress} title="Register" type="clear" />
+        <Button onPress={onRegisterPress} testID="button-register" title="Register" type="clear" />
         <Button
           onPress={onForgotPasswordPress}
+          testID="button-forgot-password"
           title="Forgot password"
           type="clear"
         />

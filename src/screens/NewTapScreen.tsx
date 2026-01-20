@@ -78,4 +78,4 @@ const NewTapScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NewTapScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NewTapScreen, <ErrorScreen shouldShowBackButton />);

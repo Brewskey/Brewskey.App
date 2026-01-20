@@ -27,20 +27,19 @@ type Props = StaticScreenProps<{
   initialPopUpAchievementType?: AchievementType;
 }>;
 
-export const StatsScreen: React.FC<Props> = withErrorBoundary(
-  ({ route }: Props) => {
+const StatsScreenComponent: React.FC<Props> = ({ route }: Props) => {
     const [session] = useAuthContext();
     const userBadges = React.useRef<UserBadgesHandle>(null);
     const initialPopUpAchievementType =
       route.params?.initialPopUpAchievementType;
 
-    const allBeverages = React.useRef<AllBeveragesHScrollHandle>();
+    const allBeverages = React.useRef<AllBeveragesHScrollHandle | undefined>(undefined);
 
     useEffect(() => {
       if (userBadges.current && initialPopUpAchievementType != null) {
         userBadges.current.openBadgeModal(initialPopUpAchievementType);
       }
-    }, [initialPopUpAchievementType, userBadges.current]);
+    }, [initialPopUpAchievementType]);
 
     const onRefresh = () => {
       userBadges.current?.refresh();
@@ -58,11 +57,11 @@ export const StatsScreen: React.FC<Props> = withErrorBoundary(
         <BeveragePoursList
           ListHeaderComponent={
             <Fragment>
-              <Section bottomPadded>
+              <Section bottomPadded testID="badges-section">
                 <SectionHeader title="Badges" />
                 <UserBadges ref={userBadges} userID={userID} />
               </Section>
-              <Section bottomPadded>
+              <Section bottomPadded testID="beverages-section">
                 <SectionHeader title="Beverages Poured" />
                 <AllBeveragesHScroll userID={userID} />
               </Section>
@@ -74,9 +73,10 @@ export const StatsScreen: React.FC<Props> = withErrorBoundary(
             filters: [createFilter('owner/id').equals(`'${userID}'`)],
             orderBy: [{ column: 'id', direction: 'desc' }],
           }}
+          testID="recent-pours-list"
         />
       </Container>
     );
-  },
-  ErrorScreen,
-);
+};
+
+export const StatsScreen = withErrorBoundary(StatsScreenComponent, ErrorScreen);

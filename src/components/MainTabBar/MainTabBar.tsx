@@ -75,7 +75,7 @@ export const MainTabBar: React.FC<BottomTabBarProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="main-tab-bar">
       <View style={styles.navContainer}>
         <TabBarButton
           icon={{ name: 'home' }}

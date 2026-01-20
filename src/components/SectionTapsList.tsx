@@ -3,6 +3,7 @@ import type { RowItemProps } from '../common/SwipeableRow';
 import type { Section } from '../types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import { useMemo, useRef } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 
@@ -181,25 +182,27 @@ export const SectionTapsList: React.FC<Props> = ({
   };
 
   return (
-    <SwipeableList
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={
-        tapsQuery.isLoading ? undefined : ListEmptyComponent
-      }
-      ListFooterComponent={
-        <LoadingListFooter
-          isLoading={tapsQuery.isFetchingNextPage || tapsQuery.isLoading}
-        />
-      }
-      ListHeaderComponent={ListHeaderComponent}
-      listType="sectionList"
-      onEndReached={handleEndReached}
-      onRefresh={handleRefresh}
-      ref={swipeableListRef}
-      renderItem={renderRow}
-      renderSectionHeader={renderSectionHeader}
-      sections={sections}
-      stickySectionHeadersEnabled
-    />
+    <View testID="taps-list" style={{ flex: 1 }}>
+      <SwipeableList
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={
+          tapsQuery.isLoading ? undefined : ListEmptyComponent
+        }
+        ListFooterComponent={
+          <LoadingListFooter
+            isLoading={tapsQuery.isFetchingNextPage || tapsQuery.isLoading}
+          />
+        }
+        ListHeaderComponent={ListHeaderComponent}
+        listType="sectionList"
+        onEndReached={handleEndReached}
+        onRefresh={handleRefresh}
+        ref={swipeableListRef}
+        renderItem={renderRow}
+        renderSectionHeader={renderSectionHeader}
+        sections={sections}
+        stickySectionHeadersEnabled
+      />
+    </View>
   );
 };

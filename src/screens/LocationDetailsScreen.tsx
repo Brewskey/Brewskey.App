@@ -71,10 +71,12 @@ const LocationDetailsScreen: React.FC<Props> = ({
                 },
               },
             }}
+            testID="button-edit-location"
           />
         }
         shouldShowBackButton
         title={name}
+        testID="header-location-details"
       />
       <ScrollView>
         <SectionHeader title="Address" />

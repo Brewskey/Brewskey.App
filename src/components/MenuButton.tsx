@@ -33,14 +33,18 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
   isActive?: boolean;
   onPress?: () => void;
   title?: string;
+  testID?: string;
+  routeName?: string;
 };
 
-const MenuButton: React.FC<Props> = ({ icon, isActive, onPress, title, ...pressableProps }) => {
+const MenuButton: React.FC<Props> = ({ icon, isActive, onPress, title, testID, routeName, ...pressableProps }) => {
   const { pointerEvents, ...restProps } = pressableProps;
+  
   return (
     <Pressable
       onPress={onPress}
       style={[styles.button, isActive && styles.active, pointerEvents && { pointerEvents }]}
+      testID={testID}
       {...restProps}
     >
       <View style={[styles.iconContainer, { pointerEvents: 'none' }]}>

@@ -115,6 +115,7 @@ export const FormField = <
           defaultValue={initialValue} 
           required={typeof required === 'boolean' ? required : required ? true : false}
           rules={rules || (required && typeof required === 'string' ? { required } : undefined)}
+          testID={(props as any).testID}
         />
       ) : formContext ? (
         // Other components get wrapped in Controller

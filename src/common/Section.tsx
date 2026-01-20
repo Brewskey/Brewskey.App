@@ -20,10 +20,11 @@ const styles = StyleSheet.create({
 type Props = {
   bottomPadded?: boolean,
   children?: React.ReactNode,
-  innerContainerStyle?: StyleProp<ViewStyle>
+  innerContainerStyle?: StyleProp<ViewStyle>,
+  testID?: string,
 };
 
-const Section: React.FC<Props> = ({ bottomPadded, children, innerContainerStyle }) => {
+const Section: React.FC<Props> = ({ bottomPadded, children, innerContainerStyle, testID }) => {
   const innerElement = (
     <View
       style={[
@@ -31,6 +32,7 @@ const Section: React.FC<Props> = ({ bottomPadded, children, innerContainerStyle 
         bottomPadded && styles.innerContainerPadded,
         innerContainerStyle,
       ]}
+      testID={testID}
     >
       {children}
     </View>

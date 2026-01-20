@@ -1,0 +1,39 @@
+# Cursor AI Rules for Brewskey App v3
+
+**IMPORTANT**: Read `PROJECT_CONSTITUTION.md` for complete guidelines. This file contains critical rules that must be followed.
+
+## Critical Rules
+
+### TestID Requirement (MANDATORY)
+- **ALWAYS** use `testID` props for components when creating locators in tests
+- **NEVER** use text-based locators (`has-text`, `text=`, etc.) or DOM-specific attributes unless absolutely necessary
+- When modifying components, ensure they accept and use `testID` props
+- When writing tests, use `page.getByTestId('test-id')` instead of `page.locator('text=...')` or `page.locator('button:has-text(...)')`
+
+### TestID Naming Convention
+- Use kebab-case: `submit-button`, `login-form`
+- Be descriptive: `submit-button-create-location` not just `submit-button`
+- Include context: `input-name` not just `name`
+
+## Code Style
+- Use TypeScript with strict types
+- Use functional components with hooks
+- Follow existing patterns in `src/common/` for reusable components
+- Use React Query for data fetching
+- Use React Hook Form for forms
+
+## File Organization
+- Components: `src/components/` (feature-specific) or `src/common/` (reusable)
+- Screens: `src/screens/`
+- Hooks: `src/hooks/queries/` (React Query) or `src/hooks/context/` (Context)
+- Tests: `tests/e2e/` organized by feature
+
+## Testing
+- Use Page Object Model pattern (see `tests/fixtures/page-objects.ts`)
+- Mock API calls using fixtures in `tests/fixtures/api-mocks.ts`
+- Use `autoAuthenticate: true` when auth is not the focus
+
+## When in Doubt
+- Check `PROJECT_CONSTITUTION.md` for detailed guidelines
+- Follow existing patterns in the codebase
+- Prefer consistency over personal preference

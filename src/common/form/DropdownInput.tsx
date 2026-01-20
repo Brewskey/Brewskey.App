@@ -13,9 +13,10 @@ export type DropdownInputProps<TValueType> = Omit<
   name: string;
   required?: boolean | string;
   onChange?: DropdownProps<TValueType>['onChange'];
+  testID?: string;
 };
 
-const Dropdown = <TValueType,>(props: DropdownProps<TValueType>) => {
+const Dropdown = <TValueType,>(props: DropdownProps<TValueType> & { testID?: string }) => {
   if (Platform.OS === 'web') {
     const onChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
       const foundItem = props.data.find(
@@ -33,7 +34,7 @@ const Dropdown = <TValueType,>(props: DropdownProps<TValueType>) => {
       : props.value?.toString();
     
     return (
-      <select onChange={onChange} value={selectValue}>
+      <select onChange={onChange} value={selectValue} data-testid={props.testID}>
         {props.data.map((item) => {
            
           const value = (item[props.valueField] as unknown as any).toString();
@@ -59,6 +60,7 @@ export const DropdownInput = <TValueType,>({
   required = false,
   onChange: onChangeOuter,
   valueField,
+  testID,
   ...props
 }: DropdownInputProps<TValueType>) => {
   const { control } = useFormContext();
@@ -95,6 +97,7 @@ export const DropdownInput = <TValueType,>({
             valueField={valueField}
             value={displayValue}
             onBlur={onBlur}
+            testID={testID}
             onChange={(item) => {
               // Extract the value if valueField is provided
               const valueToStore = valueField && item != null

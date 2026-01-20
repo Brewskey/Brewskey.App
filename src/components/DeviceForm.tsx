@@ -119,7 +119,17 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
           initialValue={device.name}
           label="Name"
           name="name"
+          testID="input-name"
         />
+        {!device.id && (
+          <FormField
+            component={TextInput}
+            initialValue={device.particleId}
+            label="Particle ID"
+            name="particleId"
+            testID="input-particleId"
+          />
+        )}
         {!hideLocation && (
           <FormField
             component={LocationPicker}
@@ -210,12 +220,13 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
         )}
         {!isFocused ? null : (
           <MainTabBarFill>
-            <FormValidationMessage />
+            <FormValidationMessage testID="device-form-error-message" />
             <Button
               disabled={!isValid || !isDirty || isSubmitting}
               loading={isSubmitting}
               onPress={handleSubmit(onSubmitForm)}
               style={{ marginVertical: 12 }}
+              testID={device.id ? 'submit-button-edit-device' : 'submit-button-create-device'}
               title={submitButtonLabel}
             />
           </MainTabBarFill>

@@ -31,6 +31,7 @@ type Props<TEntity> = ListProps<TEntity> & {
   }) => React.ReactElement | null;
   sections?: readonly import('react-native').SectionListData<TEntity>[];
   data?: InfiniteData<TEntity[]> | undefined;
+  testID?: string;
 };
 
 type State = {
@@ -99,7 +100,7 @@ export class SwipeableList<TEntity> extends React.Component<
   };
 
   render(): React.ReactElement {
-    const { renderItem: _, listType = 'flatList', renderSectionHeader, sections, data, ...otherProps } = this.props;
+    const { renderItem: _, listType = 'flatList', renderSectionHeader, sections, data, testID, ...otherProps } = this.props;
     if (listType === 'sectionList' && sections) {
       return (
         <List
@@ -111,6 +112,7 @@ export class SwipeableList<TEntity> extends React.Component<
           onScroll={this._onScroll}
           renderItem={this._renderItem}
           innerRef={undefined}
+          testID={testID}
         />
       );
     }
@@ -123,6 +125,7 @@ export class SwipeableList<TEntity> extends React.Component<
         onScroll={this._onScroll}
         renderItem={this._renderItem}
         innerRef={undefined}
+        testID={testID}
       />
     );
   }

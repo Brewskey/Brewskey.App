@@ -42,16 +42,21 @@ type Props = {
   leftComponent?: ListComponentTypes;
   rightComponent?: ListComponentTypes;
   showBackButton?: boolean;
+  shouldShowBackButton?: boolean;
   title?: string | null | undefined;
+  testID?: string;
 };
 
 const Header: React.FC<Props> = ({
   leftComponent = <FakeHeaderButton />,
   rightComponent = <FakeHeaderButton />,
   showBackButton,
+  shouldShowBackButton,
   title,
+  testID,
 }) => {
-  const leftElement = showBackButton ? (
+  const shouldShow = showBackButton || shouldShowBackButton;
+  const leftElement = shouldShow ? (
     <HeaderBackButton />
   ) : (
     getElementFromComponentProp(leftComponent)
@@ -60,11 +65,11 @@ const Header: React.FC<Props> = ({
   const rightElement = getElementFromComponentProp(rightComponent);
 
   return (
-    <View style={styles.outerContainer}>
+    <View style={styles.outerContainer} testID={testID}>
       <StatusBar backgroundColor={COLORS.primary3} />
       <View style={styles.innerContainer}>
         {leftElement}
-        <View style={styles.titleContainer}>
+        <View style={styles.titleContainer} testID={`${testID}-title`}>
           <Text numberOfLines={1} style={styles.title}>
             {title}
           </Text>

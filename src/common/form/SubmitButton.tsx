@@ -3,14 +3,19 @@ import { FieldValues, SubmitHandler, useFormContext } from 'react-hook-form';
 
 export const SubmitButton = <TFieldValues extends FieldValues>({
   onSubmit,
+  testID,
+  title,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'disabled' | 'loading'> & {
   onSubmit: SubmitHandler<TFieldValues>;
+  testID?: string;
 }) => {
   const {
     handleSubmit,
     formState: { isSubmitting, isValid },
   } = useFormContext<TFieldValues>();
+
+
 
   return (
     <Button
@@ -18,6 +23,8 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
       disabled={isSubmitting || !isValid}
       loading={isSubmitting}
       onPress={handleSubmit(onSubmit)}
+      testID={testID}
+      title={title}
     />
   );
 };

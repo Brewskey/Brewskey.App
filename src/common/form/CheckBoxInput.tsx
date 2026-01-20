@@ -12,6 +12,7 @@ export type TextInputProps = Omit<
   defaultValue?: boolean;
   // validationTextStyle?: StyleProp<TextStyle>;
   required?: boolean;
+  testID?: string;
 };
 
 export const CheckBoxInput = ({
@@ -19,6 +20,7 @@ export const CheckBoxInput = ({
   required = false,
   name,
   label,
+  testID,
   ...props
 }: TextInputProps) => {
   const { control } = useFormContext();
@@ -38,6 +40,7 @@ export const CheckBoxInput = ({
           onBlur={onBlur}
           onPress={() => onChange(!value)}
           checked={value}
+          testID={testID}
         />
       )}
     />

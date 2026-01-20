@@ -19,16 +19,8 @@ const MyBeveragesScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="add"
-            screen="LoggedInStack"
-            params={{
-              screen: 'menu',
-              params: {
-                screen: 'myBeverages',
-                params: {
-                  screen: 'newBeverage',
-                },
-              },
-            }}
+            testID="header-add-button"
+            screen="newBeverage"
           />
         }
         shouldShowBackButton

@@ -28,6 +28,8 @@ export type Props = {
   onPress?: () => void | Promise<void>;
   pressColor?: string;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
+  pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only';
 };
 
 const TouchableItem: React.FC<Props> = ({
@@ -35,6 +37,7 @@ const TouchableItem: React.FC<Props> = ({
   children,
   pressColor = 'rgba(0, 0, 0, .32)',
   style,
+  testID,
   ...rest
 }) => {
   const { pointerEvents, ...restProps } = rest;
@@ -58,13 +61,14 @@ const TouchableItem: React.FC<Props> = ({
           pressColor,
           shouldBeBorderless,
         )}
+        testID={testID}
       >
         <View style={combinedStyle}>{React.Children.only(children)}</View>
       </TouchableNativeFeedback>
     );
   }
   return (
-    <TouchableOpacity {...restProps} style={combinedStyle}>{children}</TouchableOpacity>
+    <TouchableOpacity {...restProps} style={combinedStyle} testID={testID}>{children}</TouchableOpacity>
   );
 };
 

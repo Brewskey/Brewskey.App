@@ -1,6 +1,7 @@
 import type { NearbyLocation, NearbyTap, Section } from '../../types';
 
 import * as React from 'react';
+import { View } from 'react-native';
 import Fragment from '../../common/Fragment';
 import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
 
@@ -112,16 +113,18 @@ export const NearbyLocationsList: React.FC<Props> = ({
   }): React.ReactElement => <ListSectionHeader title={section.title} />;
 
   return (
-    <List
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={!isLoading ? <NearbyLocationsListEmpty /> : null}
-      ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-      listType="sectionList"
-      onRefresh={onRefresh}
-      renderItem={renderItem}
-      renderSectionHeader={renderSectionHeader}
-      sections={sections}
-    />
+    <View testID="nearby-locations-list" style={{ flex: 1 }}>
+      <List
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={!isLoading ? <NearbyLocationsListEmpty /> : undefined}
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+        listType="sectionList"
+        onRefresh={onRefresh}
+        renderItem={renderItem}
+        renderSectionHeader={renderSectionHeader}
+        sections={sections}
+      />
+    </View>
   );
 };
 

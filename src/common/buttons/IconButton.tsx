@@ -16,15 +16,17 @@ type Props = React.ComponentProps<typeof Icon> & {
   containerStyle?: StyleProp<ViewStyle>;
   name: string;
   onPress?: () => void | Promise<void>;
+  testID?: string;
 };
 
 // todo fix ripple out of boundaries on raised buttons
 const IconButton = ({
   containerStyle,
   onPress,
+  testID,
   ...rest
 }: Props): React.ReactElement => (
-  <TouchableItem shouldBeBorderless onPress={onPress} style={containerStyle}>
+  <TouchableItem shouldBeBorderless onPress={onPress} style={containerStyle} testID={testID}>
     <Icon {...rest} containerStyle={styles.container} />
   </TouchableItem>
 );

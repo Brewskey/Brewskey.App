@@ -38,8 +38,10 @@ import {
   NavigationProp,
   StaticParamList,
   createStaticNavigation,
+  LinkingOptions,
 } from '@react-navigation/native';
 import { useIsSignedIn, useIsSignedOut } from './hooks/context/AuthContext';
+import { Platform } from 'react-native';
 import { MainTabBar } from './components/MainTabBar/MainTabBar';
 import { StatsScreen } from './screens/StatsScreen';
 import { MenuScreen } from './screens/MenuScreen';
@@ -61,16 +63,67 @@ const HomeStack = createNativeStackNavigator({
     headerShown: false,
   },
   screens: {
-    homeMain: HomeScreen,
-    tapDetails: TapDetailsScreen,
-    editTap: EditTapScreen,
-    newKeg: NewKegScreen,
-    newTap: NewTapScreen,
-    editFlowSensor: EditFlowSensorScreen,
-    profile: ProfileScreen,
-    tapDetailsKeg: TapDetailsKegScreen,
-    tapDetailsStats: TapDetailsStatsScreen,
-    tapDetailsLeaderboard: TapDetailsLeaderboardScreen,
+    homeMain: {
+      screen: HomeScreen,
+      linking: { path: '', exact: false },
+    },
+    tapDetails: {
+      screen: TapDetailsScreen,
+      linking: {
+        path: 'tap/:tapId',
+        exact: false,
+      },
+    },
+    editTap: {
+      screen: EditTapScreen,
+      linking: {
+        path: 'tap/:tapId/edit',
+        exact: false,
+      },
+    },
+    newKeg: {
+      screen: NewKegScreen,
+      linking: {
+        path: 'tap/:tapId/keg/new',
+        exact: false,
+      },
+    },
+    newTap: {
+      screen: NewTapScreen,
+      linking: { path: 'tap/new', exact: false },
+    },
+    editFlowSensor: {
+      screen: EditFlowSensorScreen,
+      linking: {
+        path: 'flow-sensor/:tapId/edit',
+        exact: false,
+      },
+    },
+    profile: {
+      screen: ProfileScreen,
+      linking: { path: 'profile/:id', exact: false },
+    },
+    tapDetailsKeg: {
+      screen: TapDetailsKegScreen,
+      linking: {
+        path: 'tap/:tapId/keg',
+        exact: false,
+      },
+    },
+    tapDetailsStats: {
+      screen: TapDetailsStatsScreen,
+      linking: {
+        path: 'tap/:tapId/stats',
+        exact: false,
+      },
+    },
+    tapDetailsLeaderboard: {
+      screen: TapDetailsLeaderboardScreen,
+      linking: {
+        path: 'tap/:tapId/leaderboard',
+        exact: false,
+      },
+    },
     newFlowSensor: NewFlowSensorScreen,
     newFlowSensorCustom: NewFlowSensorCustomScreen,
   },
@@ -86,6 +139,8 @@ const NotificationStack = createNativeStackNavigator({
   screens: {
     notificationsMain: NotificationsScreen,
     myFriends: MyFriendsScreen,
+    // Linking paths are defined in HomeStack to avoid conflicts
+    // These screens share the same canonical paths regardless of which stack they're accessed from
     tapDetails: TapDetailsScreen,
     editTap: EditTapScreen,
     newKeg: NewKegScreen,
@@ -104,7 +159,10 @@ const LocationsStack = createNativeStackNavigator({
     headerShown: false,
   },
   screens: {
-    locationsMain: LocationsScreen,
+    locationsMain: {
+      screen: LocationsScreen,
+      linking: { path: 'locations', exact: false },
+    },
     editLocation: EditLocationScreen,
     locationDetails: LocationDetailsScreen,
     newLocation: NewLocationScreen,
@@ -117,7 +175,10 @@ const TapsStack = createNativeStackNavigator({
     headerShown: false,
   },
   screens: {
-    tapsMain: TapsScreen,
+    tapsMain: {
+      screen: TapsScreen,
+      linking: { path: 'taps', exact: false },
+    },
     tapDetails: TapDetailsScreen,
     editTap: EditTapScreen,
     newKeg: NewKegScreen,
@@ -136,7 +197,10 @@ const DevicesStack = createNativeStackNavigator({
     headerShown: false,
   },
   screens: {
-    devicesMain: DevicesScreen,
+    devicesMain: {
+      screen: DevicesScreen,
+      linking: { path: 'devices', exact: false },
+    },
     deviceDetails: DeviceDetailsScreen,
     editDevice: EditDeviceScreen,
     newDevice: NewDeviceScreen,
@@ -159,10 +223,16 @@ const MyBeveragesStack = createNativeStackNavigator({
     headerShown: false,
   },
   screens: {
-    myBeveragesMain: MyBeveragesScreen,
+    myBeveragesMain: {
+      screen: MyBeveragesScreen,
+      linking: { path: 'beverages', exact: false },
+    },
     beverageDetails: BeverageDetailsScreen,
     editBeverage: EditBeverageScreen,
-    newBeverage: NewBeverageScreen,
+    newBeverage: {
+      screen: NewBeverageScreen,
+      linking: { path: 'beverages/new', exact: false },
+    },
   },
 });
 
@@ -178,6 +248,7 @@ const MenuStack = createNativeStackNavigator({
     nuxDevice: NuxDeviceScreen,
     nuxTap: NuxTapScreen,
     nuxFinish: NuxFinishScreen,
+    // Linking path for profile is defined in HomeStack to avoid conflicts
     profile: ProfileScreen,
     myProfile: MyProfileScreen,
     myFriends: MyFriendsScreen,
@@ -201,10 +272,22 @@ const LoggedInStack = createBottomTabNavigator({
   },
   initialRouteName: 'home',
   screens: {
-    home: HomeStack,
-    stats: StatsScreen,
-    notifications: NotificationStack,
-    menu: MenuStack,
+    home: {
+      screen: HomeStack,
+      linking: { path: '', exact: false },
+    },
+    stats: {
+      screen: StatsScreen,
+      linking: { path: 'stats', exact: false },
+    },
+    notifications: {
+      screen: NotificationStack,
+      linking: { path: 'notifications', exact: false },
+    },
+    menu: {
+      screen: MenuStack,
+      linking: { path: 'menu', exact: false },
+    },
   },
 });
 
@@ -220,9 +303,18 @@ const RootStack = createNativeStackNavigator({
       if: useIsSignedOut,
       initialRouteName: 'login',
       screens: {
-        login: LoginScreen,
-        register: RegisterScreen,
-        resetPassword: ResetPasswordScreen,
+        login: {
+          screen: LoginScreen,
+          linking: { path: 'login', exact: false },
+        },
+        register: {
+          screen: RegisterScreen,
+          linking: { path: 'register', exact: false },
+        },
+        resetPassword: {
+          screen: ResetPasswordScreen,
+          linking: { path: 'resetPassword', exact: false },
+        },
       },
     },
   },
@@ -239,7 +331,25 @@ declare global {
   }
 }
 
-export const AppRouter = createStaticNavigation(RootStack);
+const Navigation = createStaticNavigation(RootStack);
+
+// Linking configuration for web browser navigation
+// We use explicit linking paths for duplicate screens to avoid conflicts while enabling URL syncing.
+// The 'exact: false' option allows these screens to share the same canonical path regardless of which stack they're accessed from.
+const linking = Platform.OS === 'web' 
+  ? {
+      enabled: true,
+      prefixes: ['/'],
+    }
+  : {
+      enabled: false,
+      prefixes: [],
+    };
+
+// Wrapper component that passes linking prop for web browser navigation
+export const AppRouter = () => {
+  return <Navigation linking={linking} />;
+};
 
 // return (
 //   <Stack.Navigator>

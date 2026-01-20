@@ -13,6 +13,22 @@ export const loadAuthStateFromStorage = async (): Promise<
   AuthResponse | null
 > => {
   try {
+    // Check for Playwright test data first (for e2e tests)
+    // This needs to be checked synchronously if possible, or we need to ensure
+    // it's set before React Query runs
+    if (typeof window !== 'undefined') {
+      const playwrightAuth = (window as any).__PLAYWRIGHT_AUTH_DATA__;
+      if (playwrightAuth) {
+        // Store it in Storage for consistency
+        try {
+          await Storage.setItem(SESSION_DATA, playwrightAuth);
+        } catch (e) {
+          // Storage might not be ready yet, but we can still return the auth data
+        }
+        return playwrightAuth;
+      }
+    }
+    
     return await Storage.getItem<AuthResponse>(SESSION_DATA);
   } catch (error) {
     return null;
@@ -106,8 +122,7 @@ export const useAuthSession = () => {
   // Update Brewskey API tokens when auth state changes
   React.useEffect(() => {
     if (authResponse?.accessToken) {
-      BrewskeyJSApi.setToken(authResponse.accessToken);
-      BrewskeyJSApi.setRefreshToken(authResponse.refreshToken);
+      BrewskeyJSApi.initializeForSession(authResponse);
     }
   }, [authResponse]);
 
@@ -121,12 +136,6 @@ export const useAuthSession = () => {
 
       // Save to Storage
       await saveAuthStateToStorage(value);
-
-      // Update Brewskey API tokens
-      if (response) {
-        BrewskeyJSApi.setToken(response.accessToken);
-        BrewskeyJSApi.setRefreshToken(response.refreshToken);
-      }
     };
 
     BrewskeyJSApi.setOnSessionUpdated((session, error) => {
@@ -161,8 +170,7 @@ export const useSetAuthSession = () => {
 
       // Update Brewskey API tokens
       if (response) {
-        BrewskeyJSApi.setToken(response.accessToken);
-        BrewskeyJSApi.setRefreshToken(response.refreshToken);
+        BrewskeyJSApi.initializeForSession(response);
       }
     },
     [queryClient],

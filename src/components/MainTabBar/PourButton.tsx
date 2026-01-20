@@ -26,7 +26,11 @@ export const PourButton: React.FC = (_) => {
   return (
     <>
       {!isLoading ? (
-        <TouchableItem onPress={() => setVisibility(true)} style={styles.container}>
+        <TouchableItem 
+          onPress={() => setVisibility(true)} 
+          style={styles.container}
+          testID="pour-button"
+        >
           <Icon
             color={COLORS.secondary}
             name="beer-outline"
@@ -35,7 +39,7 @@ export const PourButton: React.FC = (_) => {
           />
         </TouchableItem>
       ) : (
-        <LoadingIndicator color="white" style={styles.container} />
+        <LoadingIndicator color="white" style={styles.container} testID="pour-button-loading" />
       )}
       <PourProcessModal />
     </>

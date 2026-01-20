@@ -14,6 +14,7 @@ const LocationsScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="add"
+            testID="header-add-button"
             screen="LoggedInStack"
             params={{
               screen: 'menu',
@@ -29,6 +30,7 @@ const LocationsScreen: React.FC = () => {
         }
         shouldShowBackButton
         title="Locations"
+        testID="header-locations"
       />
       <LocationsList ListEmptyComponent={NuxNoEntity} />
     </Container>

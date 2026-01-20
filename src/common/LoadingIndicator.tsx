@@ -19,14 +19,16 @@ type Props = {
   activitySize?: 'small' | 'large';
   color?: string;
   style?: StyleProp<ViewStyle>;
+  testID?: string;
 };
 
 const LoadingContainer = ({
   activitySize = 'large',
   color,
   style,
+  testID,
 }: Props): React.ReactElement => (
-  <View style={style || styles.container}>
+  <View style={style || styles.container} testID={testID}>
     <ActivityIndicator color={color} size={activitySize} />
   </View>
 );

@@ -4,12 +4,18 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "build:tsc": "tsc --noEmit",
+    "build": "tsc --noEmit",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web --go",
-    "test": "jest --watchAll",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:expo": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test\"",
+    "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\"",
     "lint": "expo lint"
   },
   "dependencies": {
@@ -74,6 +80,8 @@
     "@babel/core": "^7.28.6",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
+    "@faker-js/faker": "^10.2.0",
+    "@playwright/test": "^1.57.0",
     "@react-native-community/cli": "^20.1.0",
     "@react-native-community/cli-platform-android": "^20.1.0",
     "@types/node-rsa": "^1.1.4",
@@ -83,12 +91,14 @@
     "@typescript-eslint/eslint-plugin": "^8.53.0",
     "@typescript-eslint/parser": "^8.53.0",
     "babel-plugin-module-resolver": "^5.0.2",
+    "concurrently": "^9.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "wait-on": "^8.0.1"
   },
   "overrides": {
     "@rneui/base": "4.0.0-rc.8"

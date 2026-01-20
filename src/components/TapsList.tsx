@@ -149,6 +149,7 @@ const TapsList: React.FC<Props> = ({
       onRefresh={onRefreshList}
       ref={swipeableListRef}
       renderItem={renderRow}
+      testID="taps-list"
     />
   );
 };

@@ -93,5 +93,5 @@ export const NewFlowSensorScreen: React.FC<Props> = withErrorBoundary(
       </Container>
     );
   },
-  <ErrorScreen showBackButton />,
+  <ErrorScreen shouldShowBackButton />,
 );

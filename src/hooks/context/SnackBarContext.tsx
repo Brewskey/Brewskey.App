@@ -65,7 +65,7 @@ export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
         };
       } else if (isJSX(messageParameters.content)) {
         message = {
-          content: messageParameters.content,
+          content: messageParameters.content as ReactElement,
           duration: 2000,
           position: 'top',
           type: 'content',
@@ -73,7 +73,7 @@ export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
       } else {
         message = {
           duration: 2000,
-          notification: messageParameters.content,
+          notification: messageParameters.content as Notification,
           position: 'top',
           type: 'notification',
         };
@@ -93,7 +93,7 @@ export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-const isJSX = (value: unknown): value is JSX.Element =>
+const isJSX = (value: unknown): value is React.ReactElement =>
   React.isValidElement(value);
 
 export const useAddSnackBarMessage = (): ((
@@ -116,7 +116,7 @@ export const useAddSnackBarMessage = (): ((
         };
       } else if (isJSX(messageParameters.content)) {
         message = {
-          content: messageParameters.content,
+          content: messageParameters.content as ReactElement,
           duration: 2000,
           position: 'top',
           type: 'content',
@@ -124,7 +124,7 @@ export const useAddSnackBarMessage = (): ((
       } else {
         message = {
           duration: 2000,
-          notification: messageParameters.content,
+          notification: messageParameters.content as Notification,
           position: 'top',
           type: 'notification',
         };

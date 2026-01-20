@@ -14,6 +14,7 @@ type Props = {
   ListHeaderComponent?: ListComponentTypes;
   onRefresh?: () => void;
   queryOptions?: QueryOptions;
+  testID?: string;
 };
 
 const LoadedRow: React.FC<{
@@ -40,6 +41,7 @@ const BeveragePoursList = ({
   ListHeaderComponent,
   onRefresh,
   queryOptions,
+  testID,
 }: Props): React.ReactElement => (
   <BasePoursList
     ListEmptyComponent={<ListEmpty message="No recent pours" />}
@@ -47,6 +49,7 @@ const BeveragePoursList = ({
     loadedRow={LoadedRow}
     onRefresh={onRefresh}
     queryOptions={queryOptions}
+    testID={testID}
   />
 );
 

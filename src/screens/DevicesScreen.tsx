@@ -93,6 +93,7 @@ const DevicesScreen: React.FC = () => {
         }
         showBackButton
         title="Devices"
+        testID="header-brewskey-boxes"
       />
       <DevicesList
         ListEmptyComponent={NuxNoEntity}
@@ -102,4 +103,4 @@ const DevicesScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(DevicesScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(DevicesScreen, <ErrorScreen shouldShowBackButton />);

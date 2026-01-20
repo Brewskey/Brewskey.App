@@ -75,4 +75,4 @@ const NewLocationScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(NewLocationScreen, <ErrorScreen showBackButton />);
+export default withErrorBoundary(NewLocationScreen, <ErrorScreen shouldShowBackButton />);

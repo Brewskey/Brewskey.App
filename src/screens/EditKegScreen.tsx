@@ -135,7 +135,7 @@ export const EditKegScreen: React.FC<Props> = withErrorBoundary(
       </KeyboardAwareScrollView>
     );
   },
-  <ErrorScreen showBackButton />,
+  <ErrorScreen shouldShowBackButton />,
 );
 
 export default EditKegScreen;

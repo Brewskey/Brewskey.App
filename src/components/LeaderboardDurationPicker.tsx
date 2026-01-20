@@ -41,7 +41,7 @@ const LeaderBoardDurationPicker = ({
     }}
   >
     <FormLabel>Select Leaderboard duration</FormLabel>
-    <Dropdown<LeaderboardDurationOptions>
+    <Dropdown
       placeholder="Leaderboard duration"
       labelField="label"
       valueField="value"

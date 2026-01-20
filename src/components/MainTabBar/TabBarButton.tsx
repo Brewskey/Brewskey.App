@@ -36,6 +36,8 @@ export const TabBarButton = (props: Props) => {
     isFocused,
   } = props;
 
+  const testID = `tab-${props.route.name}`;
+
   return (
     <Icon
       color={isFocused ? COLORS.primary2 : COLORS.secondary3}
@@ -43,6 +45,7 @@ export const TabBarButton = (props: Props) => {
       containerStyle={styles.container}
       name={name}
       onPress={_onPress}
+      testID={testID}
       type={type}
     />
   );
