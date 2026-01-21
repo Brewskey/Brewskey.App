@@ -20,6 +20,7 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { TextInput } from '../common/form/TextInput';
 import { FormField } from '../common/form/FormField';
 import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
+import LoadingIndicator from '../common/LoadingIndicator';
 
 type Props = {
   isFocused?: boolean;
@@ -45,7 +46,7 @@ export const TapForm: React.FC<Props> = ({
     },
   });
   const [deviceSearchFilter, setDeviceSearch] = React.useState('');
-  const { data: organization } = useGetOrganizationById(organizationId);
+  const { data: organization, isLoading } = useGetOrganizationById(organizationId);
   const { data: devices } = useGetDevices({
     filters:
       deviceSearchFilter != null && deviceSearchFilter != ''
@@ -53,8 +54,12 @@ export const TapForm: React.FC<Props> = ({
         : undefined,
   });
 
+  if (isLoading) {
+    return <LoadingIndicator testID="tap-form-loading" />;
+  }
+
   if (!organization) {
-    return null;
+    return <LoadingIndicator testID="tap-form-loading" />;
   }
 
   return (
