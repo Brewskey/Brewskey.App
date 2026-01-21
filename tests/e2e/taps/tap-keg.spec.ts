@@ -10,8 +10,9 @@ test('should display keg information on tap', async ({ page }) => {
   await page.goto(`/taps/${tap.id}`);
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
 
-  // Beverage name is dynamic content (user-generated), so text-based locator is acceptable
-  await expect(page.locator(`text=${beverage.name}`)).toBeVisible();
+  // Beverage name is displayed in BeverageDetailsContent component - use testID
+  await expect(page.getByTestId('beverage-name')).toBeVisible();
+  await expect(page.getByTestId('beverage-name')).toHaveText(beverage.name);
 });
 
 test('should show keg level visualization', async ({ page }) => {
@@ -21,10 +22,9 @@ test('should show keg level visualization', async ({ page }) => {
   await page.goto(`/taps/${tap.id}`);
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
 
-  // Keg level text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/level|remaining|ounces/i'),
-  ).toBeVisible();
+  // Keg level section has testID - use that instead of text-based locator
+  await expect(page.getByTestId('section-header-keg-level')).toBeVisible();
+  await expect(page.getByTestId('keg-level-text')).toBeVisible();
 });
 
 test('should navigate to create new keg', async ({ page }) => {

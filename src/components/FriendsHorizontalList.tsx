@@ -3,7 +3,7 @@ import type { Friend, QueryOptions } from '@brewskey/js-api';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
@@ -52,7 +52,7 @@ const LoadedRow: React.FC<LoadedRowProps> = ({ item: friend, onItemPress }) => {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.friendContainer}>
+    <TouchableOpacity onPress={handlePress} style={styles.friendContainer} testID={`friend-item-${friend.friendAccount.id}`}>
       <UserAvatar size={100} rounded={true} userName={friend.friendAccount.userName} />
       <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
     </TouchableOpacity>
@@ -63,7 +63,7 @@ const FriendsHorizontalList: React.FC<Props> = ({
   ListHeaderComponent,
   queryOptions = {},
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
 
   const {
     data: friendsData,
@@ -75,19 +75,11 @@ const FriendsHorizontalList: React.FC<Props> = ({
   } = useGetFriends(queryOptions);
 
   const onItemPress = (friend: Friend) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: friend.friendAccount.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/profile/${friend.friendAccount.id}`);
   };
 
-  const onRefreshList = () => {
-    refetch();
+  const onRefreshList = async () => {
+    await refetch();
   };
 
   const keyExtractor = (item: Friend): string => item.id.toString();
@@ -101,6 +93,7 @@ const FriendsHorizontalList: React.FC<Props> = ({
       data={friendsData}
       horizontal
       keyExtractor={keyExtractor}
+      listType="flatList"
       ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
       ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
@@ -111,6 +104,7 @@ const FriendsHorizontalList: React.FC<Props> = ({
       }}
       onRefresh={onRefreshList}
       renderItem={renderRow}
+      testID="friends-horizontal-list"
     />
   );
 };

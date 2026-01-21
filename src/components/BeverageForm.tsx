@@ -19,12 +19,13 @@ import { FormField } from '../common/form/FormField';
 import { CheckBoxField } from '../common/form/CheckBoxField';
 import { TextInput } from '../common/form/TextInput';
 import BeverageImagePicker from '../components/BeverageImagePicker';
-import AvailabilityPicker from './pickers/AvailabilityPicker';
-import GlassPicker from './pickers/GlassPicker';
-import StylePicker from './pickers/StylePicker';
-import { SimplePicker } from './pickers/SimplePicker';
-import SrmPicker from './pickers/SrmPicker';
+import { AvailabilityPicker } from './pickers';
+import { GlassPicker } from './pickers';
+import { StylePicker } from './pickers';
+import { SimplePicker } from './pickers';
+import { SrmPicker } from './pickers';
 import { extractShortenedEntityId } from '../utils';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 const styles = StyleSheet.create({
   imagePickerContainer: {
@@ -94,7 +95,6 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
   });
 
   const {
-    handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
   } = form;
 
@@ -139,6 +139,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
   return (
     <Form form={form}>
       <View>
+        <FormValidationMessage />
         <FormField
           beverageId={beverage?.id}
           containerStyle={styles.imagePickerContainer}
@@ -152,6 +153,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
           label="Name"
           name="name"
           nextFocusTo="description"
+          testID="input-name"
           {...({ required: 'Name is required!' } as Record<string, unknown>)}
         />
         <FormField
@@ -264,15 +266,15 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             keyboardType="numeric"
             label="IBU"
             name="ibu"
-            onSubmitEditing={handleSubmit(onSubmitForm)}
+            onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
           />,
         ]}
-        <FormValidationMessage />
         <SectionContent paddedVertical>
           <Button
             disabled={!isValid || !isDirty || isSubmitting}
             loading={isSubmitting}
-            onPress={handleSubmit(onSubmitForm)}
+            onPress={handleSubmitWithError(form, onSubmitForm)}
+            testID={beverage?.id ? 'submit-button-edit-beverage' : 'submit-button-create-beverage'}
             title={submitButtonLabel}
           />
         </SectionContent>

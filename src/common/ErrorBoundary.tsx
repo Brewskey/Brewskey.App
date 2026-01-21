@@ -15,7 +15,10 @@ export class ErrorBoundary extends React.PureComponent<Props, State> {
     error: null,
   };
 
-  componentDidCatch(error: Error) {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error);
+    console.error('Error info:', errorInfo);
+    console.error('Error stack:', error.stack);
     this.setState(() => ({ error }));
   }
 
@@ -36,15 +39,13 @@ export const withErrorBoundary = <
   Component: React.ComponentType<TProps>,
   fallbackComponent: React.ReactNode | null | undefined | React.ComponentType,
 ): TComponent => {
-  class WithErrorBoundary extends React.PureComponent<TProps> {
-    render(): React.ReactElement {
-      return (
-        <ErrorBoundary fallbackComponent={fallbackComponent}>
-          <Component {...this.props} />
-        </ErrorBoundary>
-      );
-    }
-  }
+  const WithErrorBoundary = React.memo((props: TProps): React.ReactElement => {
+    return (
+      <ErrorBoundary fallbackComponent={fallbackComponent}>
+        <Component {...props} />
+      </ErrorBoundary>
+    );
+  });
 
   return WithErrorBoundary as unknown as TComponent;
 };

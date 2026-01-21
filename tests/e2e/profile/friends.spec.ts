@@ -4,18 +4,15 @@ test.use({ autoAuthenticate: true });
 
 test('should display friends list', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/friends');
+  await page.goto('/menu/my-friends');
   
-
-  // Friends text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/friends|friend.*list/i'),
-  ).toBeVisible();
+  // Friends list has testID - use that instead of text-based locator
+  await expect(page.getByTestId('friends-list')).toBeVisible();
 });
 
 test('should allow sending friend request', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/friends');
+  await page.goto('/menu/my-friends');
   
 
   // Add friend button should be visible - use role-based locator for standard button
@@ -30,25 +27,21 @@ test('should allow sending friend request', async ({ page }) => {
 
 test('should show pending friend requests', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/friends/requests');
+  await page.goto('/menu/my-friends/myFriendsRequest');
   
-
-  // Pending requests text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/pending|requests/i'),
-  ).toBeVisible();
+  // Friend requests list should be visible - check for list or header
+  // FriendRequestsList component should render
+  await expect(page.getByTestId('friend-requests-list').or(page.getByTestId('section-header-pending-requests'))).toBeVisible();
 });
 
 test('should allow accepting friend requests', async ({ page }) => {
   // Set up explicit data: authenticated user with pending friend requests
   // Note: This would require mocking friend requests in the store
-  await page.goto('/friends/requests');
+  await page.goto('/menu/my-friends/myFriendsRequest');
   
 
   // Accept button should be visible if there are pending requests
   // Note: This test would need explicit data setup with pending friend requests
   // For now, verify the page loads correctly
-  await expect(
-    page.locator('text=/pending|requests/i'),
-  ).toBeVisible();
+  await expect(page.getByTestId('friend-requests-list').or(page.getByTestId('section-header-pending-requests'))).toBeVisible();
 });

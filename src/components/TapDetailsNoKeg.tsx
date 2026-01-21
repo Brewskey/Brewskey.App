@@ -6,7 +6,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import Fragment from '../common/Fragment';
 import Container from '../common/Container';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,17 +29,9 @@ type Props = {
 };
 
 export const TapDetailsNoKeg: React.FC<Props> = ({ tapId, canEdit }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const _onSetupPress = () =>
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'newKeg',
-        params: {
-          tapId,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${tapId}/keg/new`);
 
   return (
     <Container centered style={styles.container}>

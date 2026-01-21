@@ -7,7 +7,6 @@ import type {
 } from '@brewskey/js-api';
 
 import * as React from 'react';
-import { useIsFocused } from '@react-navigation/native';
 import { useForm, useWatch } from 'react-hook-form';
 import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
 
@@ -18,14 +17,15 @@ import { Form } from '../../common/form/Form';
 import { FormField } from '../../common/form/FormField';
 import { TextInput } from '../../common/form/TextInput';
 import Button from '../../common/buttons/Button';
-import { SimplePicker } from '../pickers/SimplePicker';
-import OrganizationPicker from '../pickers/OrganizationPicker';
+import { SimplePicker } from '../pickers';
+import { OrganizationPicker } from '../pickers';
 import {
   useGetOrganizationById,
   useGetOrganizations,
   useGetSquareLocations,
 } from '../../hooks/queries/OrganizationQueries';
 import { extractShortenedEntityId } from '../../utils';
+import { handleSubmitWithError } from '../../common/form/handleSubmitWithError';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -81,8 +81,7 @@ const LocationForm: React.FC<Props> = ({
   submitButtonLabel,
   onSubmit,
 }) => {
-  const isFocusedNavigation = useIsFocused();
-  const isFocused = isFocusedProp ?? isFocusedNavigation;
+  const isFocused = isFocusedProp ?? true;
 
   const form = useForm<FormProps>({
     defaultValues: {
@@ -141,6 +140,7 @@ const LocationForm: React.FC<Props> = ({
   return (
     <Form form={form}>
       <View style={styles.container} testID="location-form">
+        <FormValidationMessage testID="location-form-error-message" />
         {organizationField}
         <FormField
           component={TextInput}
@@ -233,12 +233,12 @@ const LocationForm: React.FC<Props> = ({
           />
         )}
         <MainTabBarFill>
-          <FormValidationMessage testID="location-form-error-message" />
           <Button
             disabled={!isValid || !isDirty || isSubmitting || !isFocused}
             loading={isSubmitting}
-            onPress={handleSubmit(onSubmitForm)}
+            onPress={handleSubmitWithError(form, onSubmitForm)}
             style={{ marginVertical: 12 }}
+            testID={location ? 'submit-button-edit-location' : 'submit-button-create-location'}
             title={submitButtonLabel}
           />
         </MainTabBarFill>

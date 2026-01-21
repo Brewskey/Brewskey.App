@@ -41,6 +41,7 @@ const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
       onPress={onPress}
       title={<Text>{`${tapNumber} - ${beverageName}`}</Text>}
       subtitle={<Text>{description || ''}</Text>}
+      testID={`tap-item-${tap.id}`}
     />
   );
 };

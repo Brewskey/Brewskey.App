@@ -7,7 +7,7 @@ import { useUserID, useUserName } from '../stores/AuthStore';
 import UserAvatar from '../common/avatars/UserAvatar';
 import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 import TouchableItem from '../common/buttons/TouchableItem';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,21 +31,13 @@ const styles = StyleSheet.create({
 });
 
 export const MenuUserBlock: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const userID = useUserID();
   const userName = useUserName();
 
   const _onPress = () => {
     if (!userID) return;
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: userID,
-        },
-      },
-    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    router.navigate(`/(tabs)/profile/${userID}`);
   };
 
   if (!userName) {
@@ -53,12 +45,12 @@ export const MenuUserBlock: React.FC = () => {
   }
 
   return (
-    <TouchableItem shouldBeBorderless onPress={_onPress}>
-      <View style={styles.container}>
+    <TouchableItem shouldBeBorderless onPress={_onPress} testID="menu-user-block">
+      <View style={styles.container} testID="menu-user-block-content">
         <UserAvatar userName={nullthrows(userName)} />
         <View style={styles.content}>
-          <Text style={styles.nameText}>{userName}</Text>
-          <Text style={styles.goToProfileText}>Go to profile</Text>
+          <Text style={styles.nameText} testID="menu-user-block-name">{userName}</Text>
+          <Text style={styles.goToProfileText} testID="menu-user-block-profile-text">Go to profile</Text>
         </View>
       </View>
     </TouchableItem>

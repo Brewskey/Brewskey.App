@@ -39,12 +39,8 @@ test('should show validation error for invalid email', async ({ page }) => {
   await expect(page.getByTestId('register-submit-button')).toBeVisible();
   await page.getByTestId('register-submit-button').click();
 
-  // Validation error messages - use testID when available, fallback to text-based locator
-  await expect(
-    page.getByTestId('register-error-message').or(
-      page.locator('text=/error|failed|required|must.*fill|invalid|try.*again|email.*not.*valid/i')
-    ),
-  ).toBeVisible();
+  // Validation error messages - field-level error testID
+  await expect(page.getByTestId('form-validation-error-email')).toBeVisible();
 });
 
 test('should show validation error for weak password', async ({ page }) => {
@@ -58,12 +54,8 @@ test('should show validation error for weak password', async ({ page }) => {
   await expect(page.getByTestId('register-submit-button')).toBeVisible();
   await page.getByTestId('register-submit-button').click();
 
-  // Validation error messages - use testID when available, fallback to text-based locator
-  await expect(
-    page.getByTestId('register-error-message').or(
-      page.locator('text=/error|failed|required|must.*fill|invalid|try.*again|password.*at.*least.*6/i')
-    ),
-  ).toBeVisible();
+  // Validation error messages - field-level error testID
+  await expect(page.getByTestId('form-validation-error-password')).toBeVisible();
 });
 
 test('should handle duplicate email error', async ({ page, mockStore }) => {
@@ -83,10 +75,6 @@ test('should handle duplicate email error', async ({ page, mockStore }) => {
   await expect(page.getByTestId('register-submit-button')).toBeVisible();
   await page.getByTestId('register-submit-button').click();
 
-  // Error messages from API responses - use testID when available, fallback to text-based locator
-  await expect(
-    page.getByTestId('register-error-message').or(
-      page.locator('text=/error|failed|required|must.*fill|invalid|try.*again|duplicate|already.*exists/i')
-    ),
-  ).toBeVisible();
+  // Error messages from API responses - use testID
+  await expect(page.getByTestId('register-error-message')).toBeVisible();
 });

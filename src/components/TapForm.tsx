@@ -2,9 +2,7 @@ import type { Device, EntityID, Tap, TapMutator } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { View } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
 
-import DevicePicker from './pickers/DevicePicker';
 import { useGetOrganizationById } from '../hooks/queries/OrganizationQueries';
 import {
   useGetDeviceById,
@@ -38,8 +36,7 @@ export const TapForm: React.FC<Props> = ({
   submitButtonLabel,
   isFocused: isFocusedProp,
 }) => {
-  const isFocusedNavigation = useIsFocused();
-  const isFocused = isFocusedProp ?? isFocusedNavigation;
+  const isFocused = isFocusedProp ?? true;
   const form = useForm<TapMutator>({
     defaultValues: {
       ...tap,
@@ -92,9 +89,12 @@ export const TapForm: React.FC<Props> = ({
         <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
         {!isFocused ? null : (
           <MainTabBarFill>
-            <FormValidationMessage testID="tap-form-error-message" />
             <SectionContent paddedVertical>
-              <SubmitButton onSubmit={onSubmit} title={submitButtonLabel} />
+              <SubmitButton
+                onSubmit={onSubmit}
+                testID={tap ? 'submit-button-edit-tap' : 'submit-button-create-tap'}
+                title={submitButtonLabel}
+              />
             </SectionContent>
           </MainTabBarFill>
         )}

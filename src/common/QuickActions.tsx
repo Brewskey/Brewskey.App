@@ -38,50 +38,55 @@ type Props<TItem> = {
   onEditItemPress?: (item: TItem) => void;
 };
 
-class QuickActions<TItem> extends React.Component<Props<TItem>> {
-  _modalToggleStore = new ToggleStore();
+function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
+  const {
+    deleteModalTitle,
+    deleteModalMessage,
+    onDeleteItemPress,
+    onEditItemPress,
+    item,
+  } = props;
 
-  _onDeleteModalConfirm = () => {
-    this._modalToggleStore.toggleOff();
-    nullthrows(this.props.onDeleteItemPress)(this.props.item);
-  };
+  const _modalToggleStore = React.useRef(new ToggleStore()).current;
 
-  _onEditItemPress = (): void =>
-    nullthrows(this.props.onEditItemPress)(this.props.item);
+  const _onDeleteModalConfirm = React.useCallback(() => {
+    _modalToggleStore.toggleOff();
+    nullthrows(onDeleteItemPress)(item);
+  }, [_modalToggleStore, onDeleteItemPress, item]);
 
-  render(): React.ReactElement {
-    const { deleteModalTitle, onDeleteItemPress, onEditItemPress } = this.props;
+  const _onEditItemPress = React.useCallback((): void => {
+    nullthrows(onEditItemPress)(item);
+  }, [onEditItemPress, item]);
 
-    return (
-      <View style={styles.container}>
-        {!onEditItemPress ? null : (
+  return (
+    <View style={styles.container}>
+      {!onEditItemPress ? null : (
+        <SwipeableActionButton
+          containerStyle={styles.editButtonContainer}
+          iconName="create"
+          iconStyle={styles.editIcon}
+          onPress={_onEditItemPress}
+        />
+      )}
+      {!onDeleteItemPress ? null : (
+        <Fragment>
           <SwipeableActionButton
-            containerStyle={styles.editButtonContainer}
-            iconName="create"
-            iconStyle={styles.editIcon}
-            onPress={this._onEditItemPress}
+            containerStyle={styles.deleteButtonContainer}
+            iconName="delete"
+            iconStyle={styles.deleteIcon}
+            onPress={_modalToggleStore.toggleOn}
           />
-        )}
-        {!onDeleteItemPress ? null : (
-          <Fragment>
-            <SwipeableActionButton
-              containerStyle={styles.deleteButtonContainer}
-              iconName="delete"
-              iconStyle={styles.deleteIcon}
-              onPress={this._modalToggleStore.toggleOn}
-            />
-            <DeleteModal
-              title={deleteModalTitle}
-              isVisible={this._modalToggleStore.isToggled}
-              message={this.props.deleteModalMessage}
-              onCancelButtonPress={this._modalToggleStore.toggleOff}
-              onDeleteButtonPress={this._onDeleteModalConfirm}
-            />
-          </Fragment>
-        )}
-      </View>
-    );
-  }
+          <DeleteModal
+            title={deleteModalTitle}
+            isVisible={_modalToggleStore.isToggled}
+            message={deleteModalMessage}
+            onCancelButtonPress={_modalToggleStore.toggleOff}
+            onDeleteButtonPress={_onDeleteModalConfirm}
+          />
+        </Fragment>
+      )}
+    </View>
+  );
 }
 
 export default QuickActions;

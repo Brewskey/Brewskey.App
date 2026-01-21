@@ -67,99 +67,91 @@ type Props<TEntity> = ListProps<TEntity> & {
   testID?: string;
 };
 
-type State = {
-  isRefreshing: boolean;
-};
+function List<TEntity>(props: Props<TEntity>): React.ReactElement {
+  const {
+    bounceFirstRowOnMount,
+    innerRef,
+    onRefresh,
+    renderItem: _,
+    ListEmptyComponent,
+    ListFooterComponent,
+    ListHeaderComponent,
+    testID,
+    listType = 'flatList',
+    renderItem,
+    onScroll,
+    ...rest
+  } = props;
 
-class List<TEntity> extends React.Component<Props<TEntity>, State> {
-  static defaultProps = {
-    listType: 'flatList' as const,
-  };
+  // Extract conditional properties based on listType
+  const renderSectionFooter = 'renderSectionFooter' in props ? props.renderSectionFooter : undefined;
+  const renderSectionHeader = 'renderSectionHeader' in props ? props.renderSectionHeader : undefined;
+  const sections = 'sections' in props ? props.sections : undefined;
+  const data = 'data' in props ? props.data : undefined;
 
-  state: {
-    isRefreshing: boolean;
-  } = {
-    isRefreshing: false,
-  };
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
-  _onRefresh = async (): Promise<void> => {
-    const { onRefresh } = this.props;
+  const _onRefresh = React.useCallback(async (): Promise<void> => {
     if (!onRefresh) {
       return;
     }
-    this.setState(() => ({ isRefreshing: true }));
+    setIsRefreshing(true);
     await onRefresh();
-    this.setState(() => ({ isRefreshing: false }));
-  };
+    setIsRefreshing(false);
+  }, [onRefresh]);
 
-  _renderFlatList = (
-    info: ListRenderItemInfo<TEntity>,
-  ): React.ReactElement | null => {
-    const { renderItem } = this.props;
-    if (renderItem == null) {
-      return null;
-    }
-    return renderItem(info);
-  };
+  const _renderFlatList = React.useCallback(
+    (info: ListRenderItemInfo<TEntity>): React.ReactElement | null => {
+      if (renderItem == null) {
+        return null;
+      }
+      return renderItem(info);
+    },
+    [renderItem],
+  );
 
-  render(): React.ReactElement {
-    const {
-      bounceFirstRowOnMount,
-      innerRef,
-      onRefresh,
-      renderItem: _,
-      ListEmptyComponent,
-      ListFooterComponent,
-      ListHeaderComponent,
-      testID,
-      ...rest
-    } = this.props;
-    if (this.props.listType === 'sectionList') {
-      return (
-        <SectionList<TEntity>
-          ListEmptyComponent={ListEmptyComponent}
-          ListFooterComponent={ListFooterComponent}
-          ListHeaderComponent={ListHeaderComponent}
-          renderSectionFooter={this.props.renderSectionFooter}
-          renderSectionHeader={this.props.renderSectionHeader}
-          contentContainerStyle={styles.contentContainerStyle}
-          stickySectionHeadersEnabled={true}
-          {...rest}
-          // ref={innerRef}
-          onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-          onRefresh={onRefresh ? this._onRefresh : null}
-          refreshing={this.state.isRefreshing}
-          sections={this.props.sections}
-          renderItem={this.props.renderItem}
-          testID={testID}
-        />
-      );
-    }
-
-    const data = this.props.data?.pages.flat() ?? [];
+  if (listType === 'sectionList' && sections) {
     return (
-      <FlatList<TEntity>
+      <SectionList<TEntity>
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={ListFooterComponent}
         ListHeaderComponent={ListHeaderComponent}
-        {...rest}
-        data={data}
-        bounces={bounceFirstRowOnMount}
+        renderSectionFooter={renderSectionFooter}
+        renderSectionHeader={renderSectionHeader}
         contentContainerStyle={styles.contentContainerStyle}
-        //ref={innerRef}
+        stickySectionHeadersEnabled={true}
+        {...rest}
+        // ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.isRefreshing}
-            onRefresh={onRefresh}
-          />
-        }
-        onScroll={this.props.onScroll}
-        renderItem={this._renderFlatList}
+        onRefresh={onRefresh ? _onRefresh : null}
+        refreshing={isRefreshing}
+        sections={sections}
+        renderItem={renderItem}
         testID={testID}
       />
     );
   }
+
+  const flatData = data?.pages.flat() ?? [];
+  return (
+    <FlatList<TEntity>
+      ListEmptyComponent={ListEmptyComponent}
+      ListFooterComponent={ListFooterComponent}
+      ListHeaderComponent={ListHeaderComponent}
+      {...rest}
+      data={flatData}
+      bounces={bounceFirstRowOnMount}
+      contentContainerStyle={styles.contentContainerStyle}
+      //ref={innerRef}
+      onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+      }
+      onScroll={onScroll}
+      renderItem={_renderFlatList}
+      testID={testID}
+    />
+  );
 }
 
 export default List;

@@ -29,8 +29,8 @@ const FlowSensorSwiperItem = ({
   image,
   title,
 }: Props): React.ReactElement => (
-  <View style={styles.container}>
-    <Text style={styles.title}>{title}</Text>
+  <View style={styles.container} testID={`flow-sensor-item-${title.toLowerCase().replace(/\s+/g, '-')}`}>
+    <Text style={styles.title} testID={`flow-sensor-title-${title.toLowerCase().replace(/\s+/g, '-')}`}>{title}</Text>
     <Image source={image} style={styles.image} resizeMode="contain" />
     <Text style={styles.description}>{description}</Text>
   </View>

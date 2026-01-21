@@ -8,18 +8,18 @@ test.use({ autoAuthenticate: true });
 test('should display tap information', async ({ page }) => {
   const { tap, beverage } = await mockTapWithKeg(page);
 
-  await page.goto(`/tap/${tap.id}`);
+  await page.goto(`/taps/${tap.id}`);
 
   // Wait for page to load - check for header with testID
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
   await expect(page.getByTestId('header-tap-details-title')).toHaveText('Tap');
   
   // Tap details page should show "On Tap" tab or beverage name
-  // The beverage name is displayed in the TapDetailsKegScreen
-  // For dynamic content like beverage name, we check for the tab which has a testID
-  // Note: Material top tabs may not have direct testIDs, so we check for content visibility
-  const beverageOrTab = page.locator(`text=${beverage.name}`).or(page.getByRole('tab', { name: /on tap/i }));
-  await expect(beverageOrTab.first()).toBeVisible();
+  // The beverage name is displayed in BeverageDetailsContent component - use testID
+  // Check for beverage name using testID, or fallback to "On Tap" tab
+  const beverageName = page.getByTestId('beverage-name');
+  const onTapTab = page.getByRole('tab', { name: /on tap/i });
+  await expect(beverageName.or(onTapTab).first()).toBeVisible();
 });
 
 test('should navigate between tabs', async ({ page, authenticatedUser }) => {
@@ -34,7 +34,7 @@ test('should navigate between tabs', async ({ page, authenticatedUser }) => {
   };
   mockStore.setTap(tapWithTabs);
 
-  await page.goto(`/tap/${tap.id}`);
+  await page.goto(`/taps/${tap.id}`);
 
   // Wait for page to load
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
@@ -61,16 +61,17 @@ test('should navigate between tabs', async ({ page, authenticatedUser }) => {
 test('should show flow sensor warning when missing', async ({ page }) => {
   const { tap, beverage } = await mockTapWithKeg(page);
 
-  await page.goto(`/tap/${tap.id}`);
+  await page.goto(`/taps/${tap.id}`);
 
   // Wait for page to load
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
 
   // Check for warning about flow sensor (may or may not be visible depending on permissions)
   // Warning visibility depends on permissions, so just verify page loads correctly
-  // Verify by checking for beverage name (dynamic content) or "On Tap" tab
-  const beverageOrTab = page.locator(`text=${beverage.name}`).or(page.getByRole('tab', { name: /on tap/i }));
-  await expect(beverageOrTab.first()).toBeVisible();
+  // Verify by checking for beverage name using testID, or "On Tap" tab
+  const beverageName = page.getByTestId('beverage-name');
+  const onTapTab = page.getByRole('tab', { name: /on tap/i });
+  await expect(beverageName.or(onTapTab).first()).toBeVisible();
 });
 
 test('should show edit button when user has permissions', async ({ page, authenticatedUser }) => {
@@ -96,7 +97,7 @@ test('should show edit button when user has permissions', async ({ page, authent
   });
   mockStore.setPermission(permission);
 
-  await page.goto(`/tap/${tap.id}`);
+  await page.goto(`/taps/${tap.id}`);
 
   // Wait for page to load
   await expect(page.getByTestId('header-tap-details')).toBeVisible();
@@ -104,7 +105,8 @@ test('should show edit button when user has permissions', async ({ page, authent
   // Edit button should be visible because user has Edit permission (explicit assertion)
   await expect(page.getByTestId('button-edit-tap')).toBeVisible();
   
-  // Verify page loads correctly by checking for beverage name (dynamic content) or "On Tap" tab
-  const beverageOrTab = page.locator(`text=${beverage.name}`).or(page.getByRole('tab', { name: /on tap/i }));
-  await expect(beverageOrTab.first()).toBeVisible();
+  // Verify page loads correctly by checking for beverage name using testID, or "On Tap" tab
+  const beverageName = page.getByTestId('beverage-name');
+  const onTapTab = page.getByRole('tab', { name: /on tap/i });
+  await expect(beverageName.or(onTapTab).first()).toBeVisible();
 });

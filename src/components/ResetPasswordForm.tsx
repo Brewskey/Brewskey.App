@@ -10,6 +10,7 @@ import { FormField } from '../common/form/FormField';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { TextInput } from '../common/form/TextInput';
 import { SubmitButton } from '../common/form/SubmitButton';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 export type ResetPasswordFormValues = {
   email: string;
@@ -25,7 +26,6 @@ export const ForgotPasswordForm: React.FC<{
   });
 
   const {
-    handleSubmit,
     formState: { isSubmitting },
   } = form;
 
@@ -56,7 +56,7 @@ export const ForgotPasswordForm: React.FC<{
     }
   };
 
-  const onSubmitButtonPress = handleSubmit(onSubmitHandler);
+  const onSubmitButtonPress = handleSubmitWithError(form, onSubmitHandler);
 
   return (
     <Form form={form}>

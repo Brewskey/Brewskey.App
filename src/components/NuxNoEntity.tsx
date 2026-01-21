@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import Button from '../common/buttons/Button';
 import TextBlock from '../common/TextBlock';
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 });
 
 const NuxNoEntity: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const [isHardwareSetupVisible, setIsHardwareSetupVisible] = useState(false);
   
   // Get locations count for navigation logic
@@ -47,21 +47,11 @@ const NuxNoEntity: React.FC = () => {
 
   const onGetStartedButtonPress = () => {
     // Navigate to nuxLocation screen with locations count
-    // Note: The original NuxSoftwareSetupStore.onGetStartedPress logic is commented out
-    // The navigation flow will be handled by the screens themselves through their callbacks
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'nuxLocation',
-        params: {
-          locationsCount,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/(nux)/location${locationsCount > 0 ? `?locationsCount=${locationsCount}` : ''}`);
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="nux-no-entity-content">
       <Text style={styles.headingText}>
         In order to use Brewskey you need to install the Brewskey hardware
       </Text>
@@ -90,6 +80,7 @@ const NuxNoEntity: React.FC = () => {
         color="white"
         containerStyle={styles.getStartedButtonContainer}
         onPress={onGetStartedButtonPress}
+        testID="button-get-started"
         title="Get started"
       />
       <HardwareSetupModal

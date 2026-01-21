@@ -87,7 +87,13 @@ export class LocationPage {
     await this.page.getByTestId('input-name').fill(data.name);
     await this.page.getByTestId('input-street').fill(data.address);
     await this.page.getByTestId('input-city').fill(data.city);
-    await this.page.getByTestId('input-state').fill(data.state);
+    // State is a SimplePicker, not a TextInput - use picker-state testID
+    await this.page.getByTestId('picker-state').click();
+    await expect(this.page.getByTestId('picker-state-modal')).toBeVisible();
+    // Find and click the state option - SimplePicker uses option-{index} format
+    // We need to find the option that contains the state text
+    await this.page.getByText(data.state).first().click();
+    // State picker doesn't require confirmation (doesRequireConfirmation={false})
     await this.page.getByTestId('input-zipCode').fill(data.zipCode);
   }
 
@@ -159,7 +165,9 @@ export class DevicePage {
   }
 
   getAddDeviceButton(): Locator {
-    return this.page.getByTestId('header-brewskey-boxes').getByRole('button', { name: /add/i });
+    return this.page.getByTestId('button-add-device').or(
+      this.page.getByTestId('header-brewskey-boxes').getByRole('button', { name: /add/i })
+    );
   }
 
   async clickDevice(deviceName: string): Promise<void> {
@@ -188,7 +196,8 @@ export class SettingsPage {
   constructor(private page: Page) {}
 
   async goto(): Promise<void> {
-    await this.page.goto('/settings');
+    // Route path: /(tabs)/menu/settings.tsx
+    await this.page.goto('/menu/settings');
   }
 
   getChangePasswordForm(): Locator {
@@ -208,7 +217,8 @@ export class SettingsPage {
   }
 
   getManageTapsToggle(): Locator {
-    return this.page.getByTestId('switch-manage-taps');
+    // ListItem has testID="switch-manage-taps", Switch inside has testID="switch-manage-taps-switch"
+    return this.page.getByTestId('switch-manage-taps-switch');
   }
 
   async toggleManageTaps(): Promise<void> {
@@ -216,11 +226,18 @@ export class SettingsPage {
   }
 
   getOrganizationPicker(): Locator {
-    return this.page.getByTestId('input-organization');
+    // OrganizationPicker uses testID format: organization-picker-{name}
+    // For name="organization", it's organization-picker-organization
+    return this.page.getByTestId('organization-picker-organization');
   }
 
   async selectOrganization(organizationName: string): Promise<void> {
-    await this.page.getByTestId('input-organization').selectOption({ label: organizationName });
+    // OrganizationPicker uses testID format: organization-picker-{name}
+    // For name="organization", it's organization-picker-organization
+    const picker = this.page.getByTestId('organization-picker-organization');
+    await picker.click();
+    // Wait for modal to open and select the organization by text
+    await this.page.getByText(organizationName).click();
   }
 }
 
@@ -264,19 +281,29 @@ export class NUXPage {
   }
 
   getLocationPicker(): Locator {
-    return this.page.getByTestId('input-location');
+    return this.page.getByTestId('picker-location-nux');
   }
 
   async selectLocation(locationName: string): Promise<void> {
-    await this.page.getByTestId('input-location').selectOption({ label: locationName });
+    const picker = this.page.getByTestId('picker-location-nux');
+    await picker.click();
+    // Wait for modal to open and select the location by text
+    await this.page.getByText(locationName).click();
+    // If confirmSelectItem is true, click the select button
+    const selectButton = this.page.getByTestId('picker-control-select-button');
+    if (await selectButton.isVisible().catch(() => false)) {
+      await selectButton.click();
+    }
   }
 }
 
 export class WiFiSetupPage {
   constructor(private page: Page) {}
 
-  async goto(): Promise<void> {
-    await this.page.goto('/wifi-setup');
+  async goto(deviceId?: string): Promise<void> {
+    // WiFi setup requires a device ID - use "new" for new devices or a specific device ID
+    const id = deviceId || 'new';
+    await this.page.goto(`/devices/${id}/wifi-setup`);
   }
 
   async fillParticleId(particleId: string): Promise<void> {
@@ -284,7 +311,7 @@ export class WiFiSetupPage {
   }
 
   getReadyButton(): Locator {
-    return this.page.getByTestId('button-ready');
+    return this.page.getByTestId('button-wifi-setup-ready');
   }
 
   async clickReady(): Promise<void> {
@@ -434,73 +461,6 @@ export async function fillForm(
   }
 }
 
-export async function mockLocationPermission(
-  page: Page,
-  granted: boolean = true,
-): Promise<void> {
-  await page.addInitScript((granted) => {
-    // Mock Expo Location API
-    if (typeof window !== 'undefined') {
-      // Mock expo-location module
-      const mockLocation = {
-        getForegroundPermissionsAsync: async () => ({
-          status: granted ? 'granted' : 'denied',
-          granted,
-          canAskAgain: true,
-          expires: 'never' as const,
-        }),
-        requestForegroundPermissionsAsync: async () => ({
-          status: granted ? 'granted' : 'denied',
-          granted,
-          canAskAgain: true,
-          expires: 'never' as const,
-        }),
-        getCurrentPositionAsync: async () => ({
-          coords: {
-            latitude: 40.7128,
-            longitude: -74.0060,
-            accuracy: 10,
-            altitude: null,
-            altitudeAccuracy: null,
-            heading: null,
-            speed: null,
-          },
-          timestamp: Date.now(),
-        }),
-      };
-      
-      // Store mock in window for expo-location to use
-      (window as any).__EXPO_LOCATION_MOCK__ = mockLocation;
-      
-      // Also mock navigator.geolocation for compatibility
-      const mockGetCurrentPosition: Geolocation['getCurrentPosition'] = (
-        success: PositionCallback,
-        error?: PositionErrorCallback,
-      ) => {
-        if (granted) {
-          success({
-            coords: {
-              latitude: 40.7128,
-              longitude: -74.0060,
-              accuracy: 10,
-              altitude: null,
-              altitudeAccuracy: null,
-              heading: null,
-              speed: null,
-            },
-            timestamp: Date.now(),
-          } as GeolocationPosition);
-        } else {
-          error?.({
-            code: 1,
-            message: 'User denied geolocation',
-            PERMISSION_DENIED: 1,
-            POSITION_UNAVAILABLE: 2,
-            TIMEOUT: 3,
-          } as GeolocationPositionError);
-        }
-      };
-      Object.assign(navigator.geolocation, { getCurrentPosition: mockGetCurrentPosition });
-    }
-  }, granted);
-}
+// Note: Geolocation permissions are already configured in test-fixtures.ts
+// For tests that need to deny permissions, use:
+// await page.context().clearPermissions();

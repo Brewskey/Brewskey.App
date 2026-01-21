@@ -1,11 +1,14 @@
 import * as React from 'react';
-import { SimplePicker } from '../../components/pickers/SimplePicker';
+import { SimplePicker } from '../../components/pickers';
 
 type Props = {
   error?: string,
   onChange: (value?: number) => void,
   placeholder?: string,
-  value: number | undefined
+  value: number | undefined,
+  name?: string;
+  defaultValue?: number;
+  required?: boolean | string;
 };
 
 const SECONDS_PER_MINUTE = 60;
@@ -15,6 +18,7 @@ const DeviceTimeOpenPicker = (props: Props): React.ReactElement => <SimplePicker
   doesRequireConfirmation={false}
   headerTitle="Select Time to Keep Valve Open"
   label="Time to stay in device state (will keep valve open)"
+  name={props.name || 'secondsToStayOpen'}
   onChange={props.onChange}
   pickerValues={[
     { label: '1 minute', value: SECONDS_PER_MINUTE },
@@ -29,6 +33,8 @@ const DeviceTimeOpenPicker = (props: Props): React.ReactElement => <SimplePicker
     { label: '6 Hours', value: 6 * SECONDS_PER_HOUR },
   ]}
   value={props.value}
+  defaultValue={props.defaultValue}
+  required={props.required}
 />;
 
 export default DeviceTimeOpenPicker;

@@ -27,6 +27,7 @@ const LoadedRow = ({
     leftAvatar={<BeverageAvatar beverageId={keg.beverage.id} />}
     chevron={false}
     item={keg}
+    testID={`keg-item-${keg.id}`}
     title={keg.beverage.name}
     onPress={(item) => onPress(item!)}
   />
@@ -75,6 +76,7 @@ const KegsList: React.FC<Props> = ({
       <List
         data={kegs.data}
         keyExtractor={_keyExtractor}
+        listType="flatList"
         ListEmptyComponent={!isLoading ? <ListEmpty message="No kegs" /> : null}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}

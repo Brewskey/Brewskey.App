@@ -34,6 +34,7 @@ const LoadedRow: React.FC<{
     } – ${pour.ounces.toFixed(1)} oz`}
     subtitle={moment(pour.pourDate).fromNow()}
     onPress={() => onItemPress(pour)}
+    testID={`pour-item-${pour.id}`}
   />
 );
 
@@ -50,6 +51,7 @@ const BeveragePoursList = ({
     onRefresh={onRefresh}
     queryOptions={queryOptions}
     testID={testID}
+    usePourModal={true}
   />
 );
 

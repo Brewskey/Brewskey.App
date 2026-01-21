@@ -26,14 +26,16 @@ const styles = StyleSheet.create({
 type Props = {
   title: string;
   subtitle?: string;
+  testID?: string;
 };
 
 const SectionHeader = (
   {
     title,
     subtitle,
+    testID,
   }: Props,
-): React.ReactElement => <View style={styles.container}>
+): React.ReactElement => <View style={styles.container} testID={testID}>
   <Text style={styles.title}>{title}</Text>
   {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
 </View>;

@@ -8,7 +8,8 @@ import { COLORS } from '../theme';
 import { TextInput } from '../common/form/TextInput';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useLogin } from '../hooks/queries/AuthQueries';
-import { FormValidationText } from '../common/form/FormValidationMessage';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 const styles = StyleSheet.create({
   input: {
@@ -38,14 +39,15 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
 
   const loginMutator = useLogin();
 
-  const onSubmit = methods.handleSubmit(async (formData: FormProps) => {
+  const onSubmit = async (formData: FormProps) => {
     await loginMutator.mutateAsync(formData);
-  });
+  };
 
   const { isSubmitting, isDirty, isValid } = methods.formState;
   return (
     <FormProvider {...methods}>
       <View testID="login-form">
+        <FormValidationMessage testID="login-error-message" />
         <TextInput
           required
           autoCapitalize="none"
@@ -76,14 +78,11 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
           underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
-        {loginMutator.error != null ? (
-          <FormValidationText testID="login-error-message">{loginMutator.error.message}</FormValidationText>
-        ) : null}
         <SectionContent paddedVertical>
           <Button
             disabled={!isDirty || !isValid}
             loading={isSubmitting}
-            onPress={onSubmit}
+            onPress={handleSubmitWithError(methods, onSubmit)}
             secondary={isInverse}
             testID="login-submit-button"
             title="Log in"

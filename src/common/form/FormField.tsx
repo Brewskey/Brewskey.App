@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 export const FormField = <
-   
+
   TComponent extends React.ComponentType<any>,
   TProps extends React.ComponentProps<TComponent>,
 >({
@@ -62,7 +62,7 @@ export const FormField = <
 }: Props<TComponent, TProps>) => {
   const formContext = useFormContext();
   const fieldName = nullthrows(name, 'FormField: name prop is required');
-  
+
   // If no component, just register the field (hidden field)
   if (!Component) {
     if (formContext) {
@@ -78,25 +78,25 @@ export const FormField = <
     }
     return <></>;
   }
-  
-  // Check if component uses Controller internally (TextInput, CheckBoxInput, DropdownInput, SliderInput, or their wrappers)
-  const usesInternalController = 
+
+  // Check if component uses Controller internally (TextInput, CheckBoxInput, DropDownInput, SliderInput, or their wrappers)
+  const usesInternalController =
     Component === TextInput ||
     Component === CheckBoxInput ||
     Component === CheckBoxField ||
     Component === DropdownInput ||
     Component === SliderInput;
-  
+
   // Build validation rules
   const validationRules: RegisterOptions = {
     ...rules,
-    ...(required && typeof required === 'string' 
+    ...(required && typeof required === 'string'
       ? { required: required }
-      : required === true 
-      ? { required: `${label || fieldName} is required` }
-      : {}),
+      : required === true
+        ? { required: `${label || fieldName} is required` }
+        : {}),
   };
-  
+
   return (
     <View
       style={
@@ -108,11 +108,12 @@ export const FormField = <
       {label && <FormLabel labelStyle={labelStyle}>{label}</FormLabel>}
       {usesInternalController && formContext ? (
         // Components that use Controller internally need name prop
-        <Component 
-           
-          {...(props as any)} 
-          name={fieldName} 
-          defaultValue={initialValue} 
+        <Component
+
+          {...(props as any)}
+          name={fieldName}
+          label={label}
+          defaultValue={initialValue}
           required={typeof required === 'boolean' ? required : required ? true : false}
           rules={rules || (required && typeof required === 'string' ? { required } : undefined)}
           testID={(props as any).testID}
@@ -125,8 +126,8 @@ export const FormField = <
           defaultValue={initialValue}
           rules={Object.keys(validationRules).length > 0 ? validationRules : undefined}
           render={({ field: { onChange, value } }) => (
-             
-            <Component {...(props as any)} name={fieldName} onChange={onChange} value={value} />
+
+            <Component {...(props as any)} name={fieldName} label={label} onChange={onChange} value={value} />
           )}
         />
       ) : (

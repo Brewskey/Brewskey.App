@@ -12,6 +12,7 @@ type Props<RNModalProps> = RNModalProps & {
   isVisible: boolean;
   onHideModal?: () => void;
   shouldHideOnRequestClose?: boolean;
+  testID?: string;
   transparent?: boolean;
   // other RN modal props,
 };
@@ -23,6 +24,7 @@ const Modal = <RNModalProps extends object>({
   isVisible,
   onHideModal,
   shouldHideOnRequestClose = true,
+  testID,
   transparent = true,
   ...rest
 }: Props<RNModalProps>): React.ReactElement => (
@@ -32,6 +34,7 @@ const Modal = <RNModalProps extends object>({
     onRequestClose={
       shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
     }
+    testID={testID}
     transparent={transparent}
     visible={isVisible}
   >

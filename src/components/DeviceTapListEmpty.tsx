@@ -29,7 +29,7 @@ const DeviceTapListEmpty = (
   }: Props,
 ): React.ReactElement => <View style={styles.container}>
   <Text style={styles.text}>You don't any taps for this device.</Text>
-  <TouchableOpacity onPress={onAddTapPress}>
+  <TouchableOpacity onPress={onAddTapPress} testID="button-add-tap">
     <Text style={[styles.text, styles.textLink]}>Click to set one up</Text>
   </TouchableOpacity>
 </View>;

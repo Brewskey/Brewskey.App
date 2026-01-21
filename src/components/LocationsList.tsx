@@ -8,13 +8,13 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { useMemo } from 'react';
 import nullthrows from 'nullthrows';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import ListEmpty from '../common/ListEmpty';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
+import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 import { useGetLocations, useDeleteLocation } from '../hooks/queries/LocationQueries';
@@ -31,8 +31,8 @@ const LocationsList: React.FC<Props> = ({
   ListHeaderComponent,
   queryOptions = {},
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
-  const swipeableListRef = React.useRef<SwipeableList<Location>>(null);
+  const router = useRouter();
+  const swipeableListRef = React.useRef<SwipeableListRef>(null);
   const addSnackBarMessage = useAddSnackBarMessage();
 
   const mergedQueryOptions = useMemo(
@@ -70,36 +70,16 @@ const LocationsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Location) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'locations',
-        params: {
-          screen: 'editLocation',
-          params: { id },
-        },
-      },
-    });
+    router.navigate(`/(tabs)/locations/${id}/edit`);
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Location): void => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'locations',
-        params: {
-          screen: 'locationDetails',
-          params: {
-            id: item.id,
-          },
-        },
-      },
-    });
+    router.navigate(`/(tabs)/locations/${item.id}`);
   };
 
-  const onRefreshList = () => {
-    refetch();
+  const onRefreshList = async () => {
+    await refetch();
   };
 
   const keyExtractor = (item: Location): string => item.id.toString();
@@ -114,6 +94,7 @@ const LocationsList: React.FC<Props> = ({
       onPress={onItemPress}
       subtitle={item.description || NULL_STRING_PLACEHOLDER}
       title={item.name}
+      testID={`location-item-${item.id}`}
     />
   );
 
@@ -138,6 +119,7 @@ const LocationsList: React.FC<Props> = ({
     <SwipeableRow
       index={index}
       item={item}
+      maxSwipeDistance={150}
       onDeleteItemPress={onDeleteItemPress}
       onEditItemPress={onEditItemPress}
       onItemPress={onItemPress}

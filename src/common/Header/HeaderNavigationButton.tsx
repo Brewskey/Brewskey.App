@@ -1,44 +1,30 @@
 import * as React from 'react';
 import { HeaderIconButton } from './HeaderIconButton';
 import IconButton from '../buttons/IconButton';
-import { LinkProps, useLinkProps, useNavigation } from '@react-navigation/native';
-import type { NavigationAction } from '@react-navigation/native';
+import { Href, useRouter } from 'expo-router';
 
-type CustomLinkProps<ParamList extends ReactNavigation.RootParamList> = {
-  screen?: keyof ParamList;
-  params?: ParamList[keyof ParamList];
-  action?: NavigationAction;
-  href?: string;
+type HeaderNavigationButtonProps = React.ComponentProps<typeof IconButton> & {
+  href?: Href;
+  // Legacy React Navigation props (for backward compatibility during migration)
+  screen?: string;
+  params?: any;
 };
 
-export const HeaderNavigationButton = <
-  ParamList extends ReactNavigation.RootParamList,
->(props: (LinkProps<ParamList> & React.ComponentProps<typeof IconButton>) | (Omit<React.ComponentProps<typeof IconButton>, 'screen'> & CustomLinkProps<ParamList>)) => {
-  const navigation = useNavigation();
-  const { screen, params, action, href, ...otherProps } = props;
-  
-  let linkProps: ReturnType<typeof useLinkProps<ParamList>>;
-  if (action) {
-    linkProps = useLinkProps<ParamList>({ action } as LinkProps<ParamList>);
-  } else if (screen) {
-    linkProps = useLinkProps<ParamList>({ 
-      screen: screen as keyof ParamList, 
-      params: params as ParamList[keyof ParamList] | undefined
-    } as LinkProps<ParamList>);
-  } else if (href) {
-    linkProps = useLinkProps<ParamList>({ href, action: { type: 'NAVIGATE' } as NavigationAction } as LinkProps<ParamList>);
-  } else {
-    linkProps = useLinkProps<ParamList>({ action: { type: 'NAVIGATE' } as NavigationAction } as LinkProps<ParamList>);
-  }
+export const HeaderNavigationButton: React.FC<HeaderNavigationButtonProps> = (props) => {
+  const router = useRouter();
+  const { href, screen, params, testID, ...otherProps } = props;
   
   const handlePress = () => {
-    if (action) {
-      navigation.dispatch(action);
-    } else {
-      // Use linkProps.onPress() which handles type-safe navigation
-      linkProps.onPress();
+    if (href) {
+      router.navigate(href);
+    } else if (screen) {
+      // Legacy navigation - convert to expo-router paths
+      // This is a fallback for screens not yet migrated
+      console.warn('HeaderNavigationButton: screen prop is deprecated, use href instead');
+      // Try to construct href from screen path
+      router.navigate(screen as any);
     }
   };
 
-  return <HeaderIconButton {...otherProps} onPress={handlePress} />;
+  return <HeaderIconButton {...otherProps} testID={testID} onPress={handlePress} />;
 };

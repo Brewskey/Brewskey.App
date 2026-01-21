@@ -66,19 +66,21 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
 
         if (Platform.OS === 'web') {
           return (
-            <View>
+            <View testID="flow-sensor-type-selector">
               {items[currentIndex]}
               <View style={{ flexDirection: 'row', marginVertical: 12 }}>
                 <Button
                   title="Previous"
                   containerStyle={{ flex: 1 }}
                   disabled={currentIndex === 0}
+                  testID="button-flow-sensor-previous"
                   onPress={() => onChangeCallback(currentIndex - 1)}
                 />
                 <Button
                   title="Next"
                   containerStyle={{ flex: 1 }}
                   disabled={currentIndex === FLOW_SENSOR_ITEMS.length - 1}
+                  testID="button-flow-sensor-next"
                   onPress={() => onChangeCallback(currentIndex + 1)}
                 />
               </View>
@@ -92,6 +94,7 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
             loop={false}
             onIndexChanged={onChangeCallback}
             style={styles.swiper}
+            testID="flow-sensor-type-selector"
           >
             {items}
           </Swiper>

@@ -31,8 +31,8 @@ export const FormValidationText = ({ children, testID }: PropsWithChildren & { t
  * 3. Direct error prop (for mutator errors):
  *    <FormValidationMessage error={mutation.error?.message} />
  */
-export const FormValidationMessage: React.FC<{ 
-  fieldName?: string; 
+export const FormValidationMessage: React.FC<{
+  fieldName?: string;
   testID?: string;
   error?: string | null;
 }> = ({
@@ -40,25 +40,28 @@ export const FormValidationMessage: React.FC<{
   testID,
   error,
 }) => {
-  const formContext = useFormContext();
-  
-  // If a direct error prop is provided, use it
-  if (error) {
-    return <FormValidationText testID={testID}>{error}</FormValidationText>;
-  }
-  
-  // If fieldName is provided, use field-level error
-  if (fieldName) {
-    return <ErrorMessage name={fieldName} as={(props: any) => <FormValidationText {...props} testID={testID} />} />;
-  }
-  
-  // For form-level errors, check errors.root
-  if (formContext) {
-    const rootError = formContext.formState.errors.root?.message;
-    if (rootError) {
-      return <FormValidationText testID={testID}>{rootError}</FormValidationText>;
+    const formContext = useFormContext();
+
+    // Default testID for form-level validation messages
+    const defaultTestID = testID || (fieldName ? `form-validation-error-${fieldName}` : 'form-validation-error');
+
+    // If a direct error prop is provided, use it
+    if (error) {
+      return <FormValidationText testID={defaultTestID}>{error}</FormValidationText>;
     }
-  }
-  
-  return null;
-};
+
+    // If fieldName is provided, use field-level error
+    if (fieldName) {
+      return <ErrorMessage name={fieldName} as={(props: any) => <FormValidationText {...props} testID={defaultTestID} />} />;
+    }
+
+    // For form-level errors, check errors.root
+    if (formContext) {
+      const rootError = formContext.formState.errors.root?.message;
+      if (rootError) {
+        return <FormValidationText testID={defaultTestID}>{rootError}</FormValidationText>;
+      }
+    }
+
+    return null;
+  };

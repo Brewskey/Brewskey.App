@@ -6,12 +6,12 @@ import type { RenderProps } from '../common/SwipeableList';
 import * as React from 'react';
 import { useMemo } from 'react';
 import nullthrows from 'nullthrows';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import { TapDAO } from '@brewskey/js-api';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
+import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
 import DeviceTapListEmpty from './DeviceTapListEmpty';
@@ -31,9 +31,9 @@ const TapsList: React.FC<Props> = ({
   onRefresh,
   queryOptions = {},
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const queryClient = useQueryClient();
-  const swipeableListRef = React.useRef<SwipeableList<Tap>>(null);
+  const swipeableListRef = React.useRef<SwipeableListRef>(null);
 
   const mergedQueryOptions = useMemo(
     () => ({
@@ -64,30 +64,16 @@ const TapsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'editTap',
-        params: { tapId: id },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${id}/edit`);
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Tap): void => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'tapDetails',
-        params: {
-          tapId: item.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${item.id}`);
   };
 
-  const onRefreshList = () => {
-    refetch();
+  const onRefreshList = async () => {
+    await refetch();
     onRefresh?.();
   };
 
@@ -122,6 +108,7 @@ const TapsList: React.FC<Props> = ({
     <SwipeableRow
       index={index}
       item={item}
+      maxSwipeDistance={150}
       onDeleteItemPress={onDeleteItemPress}
       onEditItemPress={onEditItemPress}
       onItemPress={onItemPress}

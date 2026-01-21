@@ -9,13 +9,11 @@ test('should display user profile', async ({ page }) => {
   const otherUser = createMockUser({ userName: 'otheruser' });
   mockStore.setUser(otherUser);
 
-  await page.goto(`/profile/${otherUser.id}`);
+  await page.goto(`/menu/profile/${otherUser.id}`);
   
-
-  // Profile text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/profile|user|account/i'),
-  ).toBeVisible();
+  // Profile screen has testID - use that instead of text-based locator
+  // Note: ProfileScreen doesn't have a testID on the header, so check for content or wait for loading to complete
+  await expect(page.getByTestId('profile-content').or(page.locator('text=' + otherUser.userName).first())).toBeVisible({ timeout: 10000 });
 });
 
 test('should show friend status', async ({ page }) => {
@@ -23,13 +21,13 @@ test('should show friend status', async ({ page }) => {
   const otherUser = createMockUser({ userName: 'otheruser' });
   mockStore.setUser(otherUser);
 
-  await page.goto(`/profile/${otherUser.id}`);
+  await page.goto(`/menu/profile/${otherUser.id}`);
   
-
-  // Friend status text is dynamic content, so text-based locator is acceptable
+  // Friend status section header or add friend button should be visible
+  // When not friends, shows "You aren't friends" section header
   await expect(
-    page.locator('text=/friend|status|request/i'),
-  ).toBeVisible();
+    page.getByTestId('section-header-not-friends').or(page.getByTestId('button-add-friend'))
+  ).toBeVisible({ timeout: 10000 });
 });
 
 test('should allow sending friend request', async ({ page }) => {
@@ -37,16 +35,13 @@ test('should allow sending friend request', async ({ page }) => {
   const otherUser = createMockUser({ userName: 'otheruser' });
   mockStore.setUser(otherUser);
 
-  await page.goto(`/profile/${otherUser.id}`);
+  await page.goto(`/menu/profile/${otherUser.id}`);
   
 
-  // Add friend button should be visible - use role-based locator for standard button
-  // Button should be visible when viewing a profile that's not a friend
-  const requestButton = page.getByRole('button', { name: /add.*friend|send.*request/i });
-  await expect(requestButton).toBeVisible();
+  // Add friend button should be visible - use testID
+  const requestButton = page.getByTestId('button-add-friend');
+  await expect(requestButton).toBeVisible({ timeout: 10000 });
   await requestButton.click();
-  // Success message is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/sent|request|success/i'),
-  ).toBeVisible();
+  // Success message appears in snackbar - use testID
+  await expect(page.getByTestId('snackbar-message')).toBeVisible();
 });

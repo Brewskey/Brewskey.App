@@ -2,7 +2,7 @@ import type { QueryOptions, Pour } from '@brewskey/js-api';
 
 import * as React from 'react';
 import moment from 'moment';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import ListEmpty from '../../common/ListEmpty';
 import ListItem from '../../common/ListItem';
@@ -39,6 +39,7 @@ const LoadedRow = ({ value: pour, onItemPress }: { value: Pour; onItemPress: (po
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}
+      testID={`pour-item-${pour.id}`}
     />
   );
 };
@@ -61,6 +62,7 @@ const SwipeableRowItem = ({ item: pour, onItemPress, slideoutComponent }: { item
       item={pour}
       title={title}
       subtitle={moment(pour.pourDate).fromNow()}
+      testID={`pour-item-${pour.id}`}
     />
   );
 };
@@ -80,7 +82,7 @@ const OwnerPoursList: React.FC<Props> = ({
   onRefresh,
   queryOptions,
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const deletePourMutation = useDeletePour();
   const addSnackBarMessage = useAddSnackBarMessage();
 
@@ -89,16 +91,7 @@ const OwnerPoursList: React.FC<Props> = ({
       return;
     }
 
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: pour.owner.id,
-        },
-         
-      } as any,
-    });
+    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
   };
 
   const onDeleteItemPress = async (item: Pour): Promise<void> => {

@@ -2,24 +2,27 @@ import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display user profile overview', async ({ page }) => {
+test('should display user profile overview', async ({ page, authenticatedUser }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/profile/overview');
+  // Profile overview is the same as viewing your own profile
+  if (!authenticatedUser) throw new Error('authenticatedUser is required');
+  await page.goto(`/menu/profile/${authenticatedUser.user.id}`);
   
-
-  // Profile overview text is dynamic content, so text-based locator is acceptable
+  // Profile screen shows badges and beverages when viewing own profile or friend's profile
+  // Wait for the page to load - check for badges or beverages sections
   await expect(
-    page.locator('text=/profile|overview|stats/i'),
-  ).toBeVisible();
+    page.getByTestId('section-header-badges').or(page.getByTestId('section-header-beverages-poured'))
+  ).toBeVisible({ timeout: 10000 });
 });
 
-test('should show stats and achievements', async ({ page }) => {
+test('should show stats and achievements', async ({ page, authenticatedUser }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/profile/overview');
+  // Profile overview is the same as viewing your own profile
+  if (!authenticatedUser) throw new Error('authenticatedUser is required');
+  await page.goto(`/menu/profile/${authenticatedUser.user.id}`);
   
-
-  // Stats and achievements text is dynamic content, so text-based locator is acceptable
+  // Stats and achievements sections have testIDs - check for badges or beverages sections
   await expect(
-    page.locator('text=/stats|achievements|badges/i'),
-  ).toBeVisible();
+    page.getByTestId('section-header-badges').or(page.getByTestId('section-header-beverages-poured'))
+  ).toBeVisible({ timeout: 10000 });
 });

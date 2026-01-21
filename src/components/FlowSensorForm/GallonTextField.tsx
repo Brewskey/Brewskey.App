@@ -21,6 +21,7 @@ export const GallonTextField: React.FC<
     labelStyle={styles.textHeading}
     descriptionStyle={styles.textDescription}
     keyboardType="numeric"
+    testID="input-calibration"
     description="Find out number of pulses per gallon for your flow sensor and type it here"
   />
 );

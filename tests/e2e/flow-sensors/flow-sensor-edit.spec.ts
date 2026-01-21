@@ -1,48 +1,119 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithFlowSensor } from '../../fixtures/entity-fixtures';
+import { mockTapWithCustomFlowSensor, mockTapWithStandardFlowSensor } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
 test('should navigate to edit flow sensor', async ({ page }) => {
-  // Set up explicit data: one tap with flow sensor
-  const { flowSensor } = await mockTapWithFlowSensor(page);
+  // Set up explicit data: one tap with standard flow sensor
+  const { tap } = await mockTapWithStandardFlowSensor(page);
 
-  await page.goto(`/flow-sensors/${flowSensor.id}/edit`);
+  await page.goto(`/flow-sensor/${tap.id}/edit`);
 
   await expect(page).toHaveURL(/.*flow.*sensor.*edit|edit.*flow.*sensor/i);
-  
+  await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
 });
 
-test('should pre-fill form with existing data', async ({ page }) => {
-  // Set up explicit data: one tap with flow sensor
-  const { flowSensor } = await mockTapWithFlowSensor(page);
+test('should pre-fill form with existing standard flow sensor data', async ({ page }) => {
+  // Set up explicit data: one tap with standard flow sensor
+  const { tap } = await mockTapWithStandardFlowSensor(page);
 
-  await page.goto(`/flow-sensors/${flowSensor.id}/edit`);
+  await page.goto(`/flow-sensor/${tap.id}/edit`);
   
 
-  // Gallons input should be visible for standard sensors
-  const gallonsInput = page.getByTestId('input-gallons');
-  await expect(gallonsInput).toBeVisible();
-  await expect(gallonsInput).toHaveValue(/.*/);
+  // Flow sensor form should be visible - check for type selector
+  await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
+  
+  // Standard flow sensor should show gallons slider
+  await expect(page.getByTestId('input-gallons')).toBeVisible();
 });
 
-test('should successfully update flow sensor', async ({ page }) => {
-  // Set up explicit data: one tap with flow sensor
-  const { flowSensor } = await mockTapWithFlowSensor(page);
+test('should pre-fill form with existing custom flow sensor data', async ({ page }) => {
+  // Set up explicit data: one tap with custom flow sensor
+  const { tap } = await mockTapWithCustomFlowSensor(page);
 
-  await page.goto(`/flow-sensors/${flowSensor.id}/edit`);
+  await page.goto(`/flow-sensor/${tap.id}/edit`);
   
 
-  // Fill gallons if input is visible (for standard sensor type)
+  // Flow sensor form should be visible - check for type selector
+  await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
+  
+  // Custom flow sensor should show calibration input
+  await expect(page.getByTestId('input-calibration')).toBeVisible();
+});
+
+test('should successfully update standard flow sensor', async ({ page }) => {
+  // Set up explicit data: one tap with standard flow sensor
+  const { tap } = await mockTapWithStandardFlowSensor(page);
+
+  await page.goto(`/flow-sensor/${tap.id}/edit`);
+  
+
+  // Flow sensor form should be visible
+  await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
+  
+  // Standard sensors use slider - verify it's visible and form is pre-filled
   const gallonsInput = page.getByTestId('input-gallons');
   await expect(gallonsInput).toBeVisible();
-  await page.getByTestId('input-gallons').fill('2');
+  
+  // Form is pre-filled with existing flow sensor data, so it's not dirty initially
+  // Interact with the slider to change the value and make the form dirty
+  const sliderContainer = page.getByTestId('input-gallons');
+  const sliderBounds = await sliderContainer.boundingBox();
+  
+  if (sliderBounds) {
+    // Drag the slider thumb to change the value
+    // Start from center (current position) and drag to 70% to change the value
+    const startX = sliderBounds.x + sliderBounds.width * 0.5;
+    const endX = sliderBounds.x + sliderBounds.width * 0.7;
+    const y = sliderBounds.y + sliderBounds.height / 2;
+    
+    // Drag from center to 70% to change the slider value
+    await page.mouse.move(startX, y);
+    await page.mouse.down();
+    await page.mouse.move(endX, y, { steps: 10 });
+    await page.mouse.up();
+    // Wait for the slider's onValueChange to fire and form state to update
+    await page.waitForTimeout(500);
+  }
 
+  // Verify form is ready to submit (form is now dirty)
   await expect(page.getByTestId('submit-button-save')).toBeVisible();
+  await expect(page.getByTestId('submit-button-save')).toBeEnabled();
+  
   await page.getByTestId('submit-button-save').click();
 
-  // Success messages are dynamic content from API responses (SnackBar), so text-based locator is acceptable
-  await expect(
-    page.locator('text=/success|created|saved|updated/i'),
-  ).toBeVisible();
+  // Edit form stays on same page after submission - verify success
+  await expect(page).toHaveURL(/.*flow.*sensor.*edit|.*edit.*flow.*sensor/i);
+  
+  // Verify success notification appears
+  await expect(page.getByTestId('snackbar-message')).toBeVisible();
+});
+
+test('should successfully update custom flow sensor', async ({ page }) => {
+  // Set up explicit data: one tap with custom flow sensor
+  const { tap } = await mockTapWithCustomFlowSensor(page);
+
+  await page.goto(`/flow-sensor/${tap.id}/edit`);
+  
+
+  // Flow sensor form should be visible
+  await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
+  
+  // Fill out form: update calibration value for custom sensor
+  const calibrationInput = page.getByTestId('input-calibration');
+  await expect(calibrationInput).toBeVisible();
+  // Form is pre-filled with existing value, update it
+  await calibrationInput.fill('2000');
+
+  // Verify form is ready to submit
+  await expect(page.getByTestId('submit-button-save')).toBeVisible();
+  await expect(page.getByTestId('submit-button-save')).toBeEnabled();
+  
+  await page.getByTestId('submit-button-save').click();
+
+  // Edit form stays on same page after submission - verify success
+  await expect(page).toHaveURL(/.*flow.*sensor.*edit|.*edit.*flow.*sensor/i);
+  
+  // Verify success notification appears
+  await expect(page.getByTestId('snackbar-message')).toBeVisible();
 });

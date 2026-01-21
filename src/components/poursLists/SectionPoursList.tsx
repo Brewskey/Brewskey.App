@@ -13,7 +13,7 @@ import { KegSectionHeader } from './KegSectionHeader';
 import PintCounter from '../../components/PintCounter';
 import { ListComponentTypes } from '../../common/List';
 import { useDeletePour, useGetPours } from '../../hooks/queries/PourQueries';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 
 type Props = {
@@ -36,21 +36,12 @@ export const SectionPoursList: React.FC<Props> = ({
     ],
     ...queryOptions,
   });
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const deletePour = useDeletePour();
   const addSnackBarMessage = useAddSnackBarMessage();
 
   const _onItemPress = (pour: Pour) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: pour.owner.id,
-        },
-         
-      } as any,
-    });
+    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
   };
 
   const _onDeleteItemPress = async (pour: Pour): Promise<void> => {
@@ -79,6 +70,7 @@ export const SectionPoursList: React.FC<Props> = ({
       item: pour,
       title,
       subtitle: moment(pour.pourDate).fromNow(),
+      testID: `pour-item-${pour.id}`,
     };
 
     if (canDeletePours) {

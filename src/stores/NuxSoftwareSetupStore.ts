@@ -1,6 +1,6 @@
 import type { Device, EntityID, Location } from '@brewskey/js-api';
-import type { NavigationProp } from '@react-navigation/native';
-import { CommonActions } from '@react-navigation/native';
+// Note: Navigation methods commented out as they're not used and contain old React Navigation code
+// If needed in the future, they should be migrated to use expo-router's useRouter hook
 
 class NuxSoftwareSetupStore {
   selectedLocation: Location | null | undefined = null;
@@ -20,6 +20,9 @@ class NuxSoftwareSetupStore {
     // Note: Navigation logic has been migrated to NuxNoEntity component
   };
 
+  // Commented out - contains old React Navigation code, not currently used
+  // If needed, migrate to use expo-router's useRouter hook
+  /*
   _onGetLocation: (navigation: NavigationProp<ReactNavigation.RootParamList>) => void = (
     navigation: NavigationProp<ReactNavigation.RootParamList>,
   ): void => {
@@ -173,6 +176,7 @@ class NuxSoftwareSetupStore {
       },
     } satisfies ReactNavigation.RootParamList['LoggedInStack']);
   };
+  */
 }
 
 export default new NuxSoftwareSetupStore();

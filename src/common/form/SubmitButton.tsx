@@ -1,5 +1,6 @@
 import { Button, ButtonProps } from '@rneui/themed';
 import { FieldValues, SubmitHandler, useFormContext } from 'react-hook-form';
+import { handleSubmitWithError } from './handleSubmitWithError';
 
 export const SubmitButton = <TFieldValues extends FieldValues>({
   onSubmit,
@@ -10,19 +11,26 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
   onSubmit: SubmitHandler<TFieldValues>;
   testID?: string;
 }) => {
+  let form: ReturnType<typeof useFormContext<TFieldValues>>;
+  
+  try {
+    form = useFormContext<TFieldValues>();
+  } catch (error) {
+    throw new Error('SubmitButton must be used inside a Form component');
+  }
+  
   const {
-    handleSubmit,
-    formState: { isSubmitting, isValid },
-  } = useFormContext<TFieldValues>();
+    formState: { isSubmitting, isValid, isDirty },
+  } = form;
 
-
+  const isDisabled = isSubmitting || !isValid || !isDirty;
 
   return (
     <Button
       {...props}
-      disabled={isSubmitting || !isValid}
+      disabled={isDisabled}
       loading={isSubmitting}
-      onPress={handleSubmit(onSubmit)}
+      onPress={handleSubmitWithError(form, onSubmit)}
       testID={testID}
       title={title}
     />

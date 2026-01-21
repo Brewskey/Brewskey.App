@@ -9,8 +9,8 @@ import Storage from '../utils/Storage';
 import CONFIG from '../config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { queryClient } from '../../App';
+import { useRouter } from 'expo-router';
+import { queryClient } from '../routes/_layout';
 import SnackBarStore from '../hooks/context/SnackBarContext';
 import { KegQueryKeys } from '../hooks/queries/KegQueries';
 import { FriendKeys } from '../hooks/queries/FriendQueries';
@@ -156,7 +156,7 @@ const useNotifications = () => {
 };
 
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { useUserID } = require('./AuthStore');
   const userId = useUserID();
@@ -165,15 +165,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
       case 'lowKegLevel': {
         const { tapId, kegId } = notification;
         queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
-        navigation.navigate('LoggedInStack', {
-          screen: 'home',
-          params: {
-            screen: 'tapDetails',
-            params: {
-              tapId,
-            },
-          },
-        });
+        router.navigate(`/(tabs)/taps/${tapId}`);
         break;
       }
       case 'newAchievement': {
@@ -182,8 +174,8 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
             queryKey: [AchievementQueryKeys.CountsByUserId, userId],
           });
         }
-        navigation.navigate('LoggedInStack', {
-          screen: 'stats',
+        router.navigate({
+          pathname: '/(tabs)/stats',
           params: {
             initialPopUpAchievementType: notification.achievementType,
           },
@@ -193,14 +185,14 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
       case 'newFriendRequest': {
         queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
         queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
-        // NavigationService.navigate('myFriendsRequest');
+        router.navigate('/(tabs)/notifications/my-friends/myFriendsRequest');
         break;
       }
       default: {
         break;
       }
     }
-  }, [userId, navigation]);
+  }, [userId, router]);
 };
 
 class NotificationsStore {

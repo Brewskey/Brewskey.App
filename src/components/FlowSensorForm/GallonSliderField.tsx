@@ -49,6 +49,7 @@ const GallonSliderField = ({
           maximumValue={maxValue}
           minimumValue={minValue}
           name={name}
+          testID="input-gallons"
         />
         <View style={styles.sliderLabelContainer}>
           <Text style={styles.textSlider}>-{BOUNDARIES_PERCENT}%</Text>

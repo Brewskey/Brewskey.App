@@ -21,6 +21,7 @@ import type {
   FriendStatus,
   AchievementType,
 } from '@brewskey/js-api';
+import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
 
 let idCounter = 1;
 
@@ -218,6 +219,19 @@ export function createMockOrganization(overrides?: Partial<Organization>): Organ
     name: faker.company.name(),
   };
   return { ...base, ...overrides } as Organization;
+}
+
+export function createMockSrm(overrides?: Partial<Srm>): Srm {
+  const id = generateId();
+  const srmNumber = overrides?.name ? parseInt(overrides.name, 10) : id;
+  // Generate a hex color code (format: #RRGGBB)
+  const hexColor = overrides?.hex ?? `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+  const base: Partial<Srm> = {
+    id,
+    name: srmNumber.toString(),
+    hex: hexColor,
+  };
+  return { ...base, ...overrides } as Srm;
 }
 
 export function createMockAchievement(overrides?: Partial<Achievement>): Achievement {

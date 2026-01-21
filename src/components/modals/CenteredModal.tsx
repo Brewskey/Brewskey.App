@@ -40,6 +40,7 @@ type Props = {
   header?: React.ReactNode;
   isVisible: boolean;
   onHideModal: () => void;
+  testID?: string;
   width?: DimensionValue;
 };
 
@@ -49,12 +50,14 @@ const CenteredModal: React.FC<Props> = ({
   header,
   isVisible,
   onHideModal,
+  testID,
   width,
 }) => {
   return (
     <Modal
       visible={isVisible}
       onRequestClose={onHideModal}
+      testID={testID}
       transparent={true}
     >
       <TouchableOpacity style={styles.container} onPressOut={onHideModal}>

@@ -1,5 +1,5 @@
 import type { StyleProp, TextStyle } from 'react-native';
-import type { PickerValue } from './DAOPicker';
+import type { PickerValue } from './LocationPicker';
 
 import * as React from 'react';
 import { StyleSheet, Text } from 'react-native';
@@ -24,6 +24,7 @@ export type Props<TValue> = {
   onPress: () => void;
   placeholder?: string;
   stringValueExtractor: (item: TValue) => string;
+  testID?: string;
   value: TValue | null | undefined | TValue[];
   // other react-native textInput props
 };
@@ -38,6 +39,7 @@ const PickerTextInput = <TValue,>({
   onPress,
   placeholder = 'Please select...',
   stringValueExtractor,
+  testID,
   value,
 }: Props<TValue>): React.ReactElement => {
   const stringValue = React.useMemo(() => {
@@ -51,11 +53,12 @@ const PickerTextInput = <TValue,>({
     <PickerInput
       description={description}
       disabled={disabled}
-      labelStyle={labelStyle}
       error={error}
       label={label}
+      labelStyle={labelStyle}
       onPress={onPress}
       placeholder={placeholder}
+      testID={testID}
       value={value}
     >
       <Text style={[styles.valueText, inputStyle]}>{stringValue}</Text>

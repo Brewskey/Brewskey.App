@@ -28,6 +28,7 @@ type Props = {
   message: string,
   onCancelButtonPress: () => void,
   onDeleteButtonPress: () => void,
+  testID?: string,
   title: string
 };
 
@@ -38,15 +39,17 @@ const DeleteModal = (
     message,
     onCancelButtonPress,
     onDeleteButtonPress,
+    testID,
     title,
   }: Props,
 ): React.ReactElement => <CenteredModal
   isVisible={isVisible}
-  header={<Text style={styles.titleText}>{title}</Text>}
+  header={<Text style={styles.titleText} testID={`${testID}-title`}>{title}</Text>}
   onHideModal={onCancelButtonPress}
+  testID={testID}
 >
   <View>
-    <Text style={styles.messageText}>{message}</Text>
+    <Text style={styles.messageText} testID={`${testID}-message`}>{message}</Text>
   </View>
   <View style={styles.buttonsContainer}>
     <Button
@@ -54,6 +57,7 @@ const DeleteModal = (
       color={COLORS.danger}
       icon={{ color: COLORS.danger, name: 'delete' }}
       onPress={onDeleteButtonPress}
+      testID={`${testID}-button-delete`}
       title={deleteButtonTitle}
     />
     <Button
@@ -61,6 +65,7 @@ const DeleteModal = (
       color={COLORS.text}
       icon={{ color: COLORS.text, name: 'close' }}
       onPress={onCancelButtonPress}
+      testID={`${testID}-button-cancel`}
       title="cancel"
     />
   </View>

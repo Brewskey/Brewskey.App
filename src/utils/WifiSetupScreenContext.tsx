@@ -12,7 +12,7 @@ type ContextValue = {
 };
 const WifiSetupScreenContext = createContext<
   [ContextValue, (newValue: ContextValue) => void]
->([{ currentStep: 1 }, () => {}]);
+>([{ currentStep: WifiSetupSteps.Screen1 }, () => {}]);
 
 export const useWifiSetupScreenContext = () =>
   useContext(WifiSetupScreenContext);
@@ -21,7 +21,7 @@ export const WifiSetupScreenContextProvider: React.FC<
   React.PropsWithChildren
 > = ({ children }) => {
   const [value, setValue] = useState<ContextValue>({
-    currentStep: 1,
+    currentStep: WifiSetupSteps.Screen1,
   });
   return (
     <WifiSetupScreenContext.Provider value={[value, setValue]}>

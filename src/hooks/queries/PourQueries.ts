@@ -12,7 +12,17 @@ import { EntityID, Pour, PourDAO, QueryOptions } from '@brewskey/js-api';
 enum PourQueryKeys {
   PoursByBeverageIds = 'pours_by_beverage_ids',
   PoursList = 'pours_list',
+  PourById = 'pour_get_by_id',
 }
+
+export const useGetPourById = (
+  pourId: EntityID | undefined | null,
+): UseQueryResult<Pour, Error> =>
+  useQuery({
+    queryKey: [PourQueryKeys.PourById, pourId],
+    queryFn: () => PourDAO.fetchByID(pourId!),
+    enabled: pourId != null,
+  });
 
 export const useGetPoursByBeverageIds = (
   beverageIds: EntityID[] | undefined,

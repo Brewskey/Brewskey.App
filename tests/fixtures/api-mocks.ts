@@ -14,6 +14,7 @@ import type {
   Organization,
   AuthResponse,
 } from '@brewskey/js-api';
+import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
 import {
   createMockUser,
   createMockLocation,
@@ -26,6 +27,7 @@ import {
   createMockPermission,
   createMockFlowSensor,
   createMockOrganization,
+  createMockSrm,
 } from './test-data';
 
 // In-memory data store
@@ -41,6 +43,7 @@ class MockDataStore {
   private permissions: Map<EntityID, Permission> = new Map();
   private flowSensors: Map<EntityID, FlowSensor> = new Map();
   private organizations: Map<EntityID, Organization> = new Map();
+  private srms: Map<EntityID, Srm> = new Map();
   private authTokens: Map<string, AuthResponse> = new Map();
   private refreshTokens: Map<string, AuthResponse> = new Map();
 
@@ -56,6 +59,7 @@ class MockDataStore {
     this.permissions.clear();
     this.flowSensors.clear();
     this.organizations.clear();
+    this.srms.clear();
     this.authTokens.clear();
     this.refreshTokens.clear();
   }
@@ -105,6 +109,10 @@ class MockDataStore {
     return Array.from(this.organizations.values());
   }
 
+  getSrms(): Srm[] {
+    return Array.from(this.srms.values());
+  }
+
   // Setters
   setUser(user: Account): void {
     this.users.set(user.id, user);
@@ -148,6 +156,10 @@ class MockDataStore {
 
   setOrganization(organization: Organization): void {
     this.organizations.set(organization.id, organization);
+  }
+
+  setSrm(srm: Srm): void {
+    this.srms.set(srm.id, srm);
   }
 
   setAuthToken(token: string, authResponse: AuthResponse): void {
@@ -203,6 +215,10 @@ class MockDataStore {
 
   getOrganization(id: EntityID): Organization | undefined {
     return this.organizations.get(id);
+  }
+
+  getSrm(id: EntityID): Srm | undefined {
+    return this.srms.get(id);
   }
 
   getAuthToken(token: string): AuthResponse | undefined {
@@ -287,7 +303,20 @@ function filterEntities<T extends { id: EntityID }>(
         const entityRecord = entity as Record<string, unknown>;
         
         // Handle nested properties (e.g., "tap/id" -> entity.tap.id)
-        const fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+        // Also handle flat properties (e.g., "tapId" -> entity.tapId)
+        let fieldValueToCompare: string | undefined;
+        if (fieldName.includes('/')) {
+          // Nested property like "tap/id" - try nested first, then camelCase fallback
+          fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+          if (!fieldValueToCompare) {
+            // Fallback to camelCase property (e.g., "tap/id" -> "tapId")
+            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) => letter.toUpperCase());
+            fieldValueToCompare = entityRecord[camelCaseField]?.toString();
+          }
+        } else {
+          // Flat property
+          fieldValueToCompare = entityRecord[fieldName]?.toString();
+        }
         return fieldValueToCompare === fieldValue;
       }
       if (f.includes(' ne ')) {
@@ -297,12 +326,59 @@ function filterEntities<T extends { id: EntityID }>(
         const entityRecord = entity as Record<string, unknown>;
         
         // Handle nested properties (e.g., "tap/id" -> entity.tap.id)
-        const fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+        // Also handle flat properties (e.g., "tapId" -> entity.tapId)
+        let fieldValueToCompare: string | undefined;
+        if (fieldName.includes('/')) {
+          // Nested property like "tap/id" - try nested first, then camelCase fallback
+          fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+          if (!fieldValueToCompare) {
+            // Fallback to camelCase property (e.g., "tap/id" -> "tapId")
+            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) => letter.toUpperCase());
+            fieldValueToCompare = entityRecord[camelCaseField]?.toString();
+          }
+        } else {
+          // Flat property
+          fieldValueToCompare = entityRecord[fieldName]?.toString();
+        }
         return fieldValueToCompare !== fieldValue;
       }
       return true;
     });
   });
+}
+
+// Normalize entity name to match EntityType
+function normalizeEntityName(entityName: string): string {
+  // Map common variations to EntityType values
+  const entityMap: Record<string, EntityType> = {
+    'locations': 'locations',
+    'location': 'locations',
+    'taps': 'taps',
+    'tap': 'taps',
+    'devices': 'devices',
+    'device': 'devices',
+    'beverages': 'beverages',
+    'beverage': 'beverages',
+    'kegs': 'kegs',
+    'keg': 'kegs',
+    'accounts': 'accounts',
+    'account': 'accounts',
+    'pours': 'pours',
+    'pour': 'pours',
+    'friends': 'friends',
+    'friend': 'friends',
+    'permissions': 'permissions',
+    'permission': 'permissions',
+    'flow-sensors': 'flow-sensors',
+    'flow-sensor': 'flow-sensors',
+    'flowSensors': 'flow-sensors',
+    'organizations': 'organizations',
+    'organization': 'organizations',
+    'beverage-srms': 'beverage-srms',
+    'beverage-srm': 'beverage-srms',
+  };
+  
+  return entityMap[entityName.toLowerCase()] || entityName.toLowerCase();
 }
 
 // Parse form-urlencoded data
@@ -393,7 +469,8 @@ type EntityType =
   | 'friends' 
   | 'permissions' 
   | 'flow-sensors' 
-  | 'organizations';
+  | 'organizations'
+  | 'beverage-srms';
 
 // Helper to get entity by ID from store
 function getEntityById(entityType: EntityType, id: EntityID): any {
@@ -427,6 +504,7 @@ function getAllEntities(entityType: EntityType): any[] {
     case 'permissions': return mockStore.getPermissions();
     case 'flow-sensors': return mockStore.getFlowSensors();
     case 'organizations': return mockStore.getOrganizations();
+    case 'beverage-srms': return mockStore.getSrms();
     default: return [];
   }
 }
@@ -665,19 +743,26 @@ export function setupAPIMocks(page: Page): void {
       // Handle entity endpoints
       if (query.id) {
         // GET by ID
-        const entity = getEntityById(query.entity as EntityType, query.id);
+        // Normalize entity name to match EntityType (handle plural/singular variations)
+        const normalizedEntity = normalizeEntityName(query.entity);
+        const entity = getEntityById(normalizedEntity as EntityType, query.id);
 
         if (entity) {
           return fulfillJSONResponse(route, 200, entity);
         } else {
-          console.warn(`[API Mock] Entity not found: ${query.entity}(${query.id}) - URL: ${url}`);
+          // Log available entities for debugging
+          const availableIds = getAllEntities(normalizedEntity as EntityType).map((e: any) => e.id);
+          console.warn(`[API Mock] Entity not found: ${normalizedEntity}(${query.id}) - URL: ${url}`);
+          console.warn(`[API Mock] Available IDs for ${normalizedEntity}:`, availableIds);
           return fulfillErrorResponse(route, 404, 'Not found');
         }
       }
 
       // Handle GET many
       if (method === 'GET') {
-        let entities = getAllEntities(query.entity as EntityType);
+        // Normalize entity name to match EntityType
+        const normalizedEntity = normalizeEntityName(query.entity);
+        let entities = getAllEntities(normalizedEntity as EntityType);
 
         // Apply filters
         entities = filterEntities(entities, query.filter);

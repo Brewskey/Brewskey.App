@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 type BaseProps<TExtraProps> = (TExtraProps) & {
   description?: string,
   paddedHorizontal?: boolean,
+  testID?: string,
   title: string,
   value: string
 };
@@ -46,6 +47,7 @@ const OverviewItem = <TExtraProps,>({
   leftComponent: LeftComponent,
   paddedHorizontal = true,
   rightComponent: RightComponent,
+  testID,
   title,
   value,
   ...otherProps
@@ -54,6 +56,7 @@ const OverviewItem = <TExtraProps,>({
     <SectionContent
       containerStyle={styles.container}
       paddedHorizontal={paddedHorizontal}
+      testID={testID}
     >
       {LeftComponent == null ? null : (
         <View style={styles.leftComponentContainer}>

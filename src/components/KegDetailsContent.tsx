@@ -2,7 +2,7 @@ import type { EntityID, Keg, Pour } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ListRenderItemInfo } from 'react-native';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import moment from 'moment';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import { createFilter } from '@brewskey/js-api/dist/filters';
@@ -102,23 +102,27 @@ type TabButtonProps = {
   onPress: () => void;
 };
 
-const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress }) => (
-  <TouchableOpacity
-    style={[styles.tab, isActive && styles.activeTab]}
-    onPress={onPress}
-  >
-    <Text style={[styles.tabText, isActive && styles.activeTabText]}>
-      {title}
-    </Text>
-  </TouchableOpacity>
-);
+const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress }) => {
+  const testID = `keg-details-tab-${title.toLowerCase()}`;
+  return (
+    <TouchableOpacity
+      style={[styles.tab, isActive && styles.activeTab]}
+      onPress={onPress}
+      testID={testID}
+    >
+      <Text style={[styles.tabText, isActive && styles.activeTabText]}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 const KegPoursList: React.FC<{ 
   kegId: EntityID; 
   beverageId: EntityID | undefined;
   onClose?: () => void;
 }> = ({ kegId, beverageId, onClose }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const pours = useGetPours({
     filters: [createFilter('keg/id').equals(kegId)],
     orderBy: [{ column: 'id', direction: 'desc' }],
@@ -130,15 +134,7 @@ const KegPoursList: React.FC<{
     }
 
     onClose?.();
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: pour.owner.id,
-        },
-      } as any,
-    });
+    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
   };
 
   const keyExtractor = (pour: Pour): string => pour.id.toString();
@@ -151,6 +147,7 @@ const KegPoursList: React.FC<{
     <List
       data={pours.data}
       keyExtractor={keyExtractor}
+      listType="flatList"
       ListEmptyComponent={!pours.isLoading ? <ListEmpty message="No pours" /> : null}
       ListFooterComponent={<LoadingListFooter isLoading={pours.isFetchingNextPage || pours.isLoading} />}
       onEndReached={() => {

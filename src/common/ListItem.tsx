@@ -50,92 +50,97 @@ type Props<TItem> = (
   testID?: string;
 };
 
-class ListItem<TItem> extends React.PureComponent<Props<TItem>> {
-  _onPress = (): void => {
-    if (this.props.swipeable) {
-      this.props.onPress?.(this.props.item);
-    } else if (this.props.item != null) {
-      this.props.onPress?.(this.props.item);
+function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
+  const {
+    item,
+    onPress: _2,
+    rightIcon,
+    swipeable,
+    switch: switchParams,
+    testID,
+    title,
+    leftAvatar,
+    subtitle,
+    badge,
+    chevron,
+    containerStyle,
+    titleStyle,
+    subtitleStyle,
+    ...otherProps
+  } = props;
+
+  const _onPress = React.useCallback((): void => {
+    if (swipeable) {
+      props.onPress?.(props.item);
+    } else if (item != null) {
+      props.onPress?.(item);
     } else {
       // For non-swipeable items without an item, onPress should be () => void
-      const onPress = this.props.onPress as (() => void) | undefined;
+      const onPress = props.onPress as (() => void) | undefined;
       onPress?.();
     }
-  };
+  }, [swipeable, item, props]);
 
-  render(): React.ReactElement {
-    const {
-      item,
-      onPress: _2,
-      rightIcon,
-      swipeable,
-      switch: switchParams,
-      testID,
-      title,
-      ...otherProps
-    } = this.props;
+  const content = (
+    <>
+      {leftAvatar}
+      <RNEListItem.Content>
+        <RNEListItem.Title style={[styles.title, titleStyle]}>
+          {title}
+        </RNEListItem.Title>
+        <RNEListItem.Subtitle style={[styles.title, subtitleStyle]}>
+          {subtitle}
+        </RNEListItem.Subtitle>
 
-    const content = (
+        {chevron === true ? <RNEListItem.Chevron /> : null}
+      </RNEListItem.Content>
       <>
-        {this.props.leftAvatar}
-        <RNEListItem.Content>
-          <RNEListItem.Title style={[styles.title, this.props.titleStyle]}>
-            {this.props.title}
-          </RNEListItem.Title>
-          <RNEListItem.Subtitle
-            style={[styles.title, this.props.subtitleStyle]}
-          >
-            {this.props.subtitle}
-          </RNEListItem.Subtitle>
-
-          {this.props.chevron === true ? <RNEListItem.Chevron /> : null}
-        </RNEListItem.Content>
-        <>
-          {rightIcon != null ? (
-            React.isValidElement(rightIcon) ? (
-              rightIcon
-            ) : (
-              <Icon {...(rightIcon as IconProps)} />
-            )
-          ) : null}
-          {switchParams != null ? (
-            <Switch
-              value={switchParams.value}
-              onValueChange={switchParams.onValueChange}
-            />
-          ) : null}
-        </>
-        {this.props.badge ? <Badge {...this.props.badge} /> : null}
+        {rightIcon != null ? (
+          React.isValidElement(rightIcon) ? (
+            rightIcon
+          ) : (
+            <Icon {...(rightIcon as IconProps)} />
+          )
+        ) : null}
+        {switchParams != null ? (
+          <Switch
+            testID={testID ? `${testID}-switch` : undefined}
+            value={switchParams.value}
+            onValueChange={switchParams.onValueChange}
+          />
+        ) : null}
       </>
-    );
+      {badge ? <Badge {...badge} /> : null}
+    </>
+  );
 
-    if (swipeable) {
-      return (
-        <RNEListItem.Swipeable
-          rightContent={this.props.slideoutComponent}
-          {...otherProps}
-          containerStyle={[styles.container, this.props.containerStyle]}
-          onPress={this._onPress}
-          testID={testID}
-          bottomDivider
-        >
-          {content}
-        </RNEListItem.Swipeable>
-      );
-    }
-
+  if (swipeable) {
+    const swipeableProps = props as Extract<Props<TItem>, { swipeable: true }>;
     return (
-      <RNEListItem
+      <RNEListItem.Swipeable
+        rightContent={swipeableProps.slideoutComponent}
         {...otherProps}
-        containerStyle={[styles.container, this.props.containerStyle]}
-        onPress={this._onPress}
+        containerStyle={[styles.container, containerStyle]}
+        onPress={_onPress}
         testID={testID}
         bottomDivider
       >
         {content}
-      </RNEListItem>
+      </RNEListItem.Swipeable>
     );
   }
+
+  return (
+    <RNEListItem
+      {...otherProps}
+      containerStyle={[styles.container, containerStyle]}
+      onPress={_onPress}
+      testID={testID}
+      bottomDivider
+    >
+      {content}
+    </RNEListItem>
+  );
 }
 
-export default ListItem;
+export default React.memo(ListItem) as typeof ListItem;

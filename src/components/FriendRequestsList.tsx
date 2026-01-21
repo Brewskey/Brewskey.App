@@ -3,7 +3,7 @@ import type { Section } from '../types';
 
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 
@@ -18,7 +18,7 @@ import { useGetManyFriends, useUpdateFriend, useDeleteFriend } from '../hooks/qu
 import { useQueryClient } from '@tanstack/react-query';
 
 const FriendRequestsList: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const userID = useUserID();
 
@@ -58,27 +58,11 @@ const FriendRequestsList: React.FC = () => {
   const isLoading = pendingRequestsQuery.isLoading || myRequestsQuery.isLoading;
 
   const onPendingRequestRowPress = (friend: Friend) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: friend.owningAccount.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/profile/${friend.owningAccount.id}`);
   };
 
   const onMyRequestRowPress = (friend: Friend) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: friend.friendAccount.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/profile/${friend.friendAccount.id}`);
   };
 
   const onFriendAcceptPress = async (friend: Friend) => {
@@ -161,6 +145,7 @@ const FriendRequestsList: React.FC = () => {
       renderSectionHeader={renderSectionHeader}
       renderSectionFooter={renderSectionFooter}
       sections={sections}
+      testID="friend-requests-list"
     />
   );
 };

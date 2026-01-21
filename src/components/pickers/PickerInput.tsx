@@ -49,6 +49,7 @@ export type Props = {
   labelStyle: StyleProp<TextStyle>,
   onPress: () => void,
   placeholder?: string | null | undefined,
+  testID?: string,
   value: unknown
 };
 
@@ -61,6 +62,7 @@ const PickerInput: React.FC<Props> = ({
   labelStyle,
   onPress,
   placeholder,
+  testID,
   value,
 }) => {
   let renderedDescription = null;
@@ -82,7 +84,7 @@ const PickerInput: React.FC<Props> = ({
         marginHorizontal: 16,
       }}
     >
-      <TouchableOpacity disabled={disabled} onPress={onPress}>
+      <TouchableOpacity disabled={disabled} onPress={onPress} testID={testID || (label ? `picker-${label.toLowerCase().replace(/\s+/g, '-')}` : undefined)}>
         <FormLabel labelStyle={labelStyle}>{label}</FormLabel>
         <View style={styles.valueContainer}>
           {!value || (Array.isArray(value) && !value.length) ? (

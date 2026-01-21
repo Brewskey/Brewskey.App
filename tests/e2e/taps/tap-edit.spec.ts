@@ -7,18 +7,20 @@ test('should navigate to edit tap', async ({ page }) => {
   // Set up explicit data: one tap with keg
   const { tap } = await mockTapWithKeg(page);
 
-  await page.goto(`/tap/${tap.id}/edit`);
+  // Edit tap route redirects to /taps/[tapId]/edit/feed by default
+  // But for basic edit form, go directly to /taps/[tapId]/edit/basic
+  await page.goto(`/taps/${tap.id}/edit/basic`);
 
   await expect(page).toHaveURL(/.*tap.*edit|edit.*tap/i);
-  // Wait for header to be visible
-  await expect(page.getByTestId('header-edit-tap')).toBeVisible();
+  // Wait for header to be visible - basic edit route has "Edit Tap" header
+  await expect(page.getByTestId('header-edit-tap').or(page.locator('text=Edit Tap').first())).toBeVisible({ timeout: 10000 });
 });
 
-test('should pre-fill form with existing data', async ({ page }) => {
+test('should pre-fill form with existing data when tap has description', async ({ page }) => {
   // Set up explicit data: one tap with description
-  const { tap } = await mockTapWithKeg(page);
+  const { tap } = await mockTapWithKeg(page, 'Test Tap Description');
 
-  await page.goto(`/tap/${tap.id}/edit`);
+  await page.goto(`/taps/${tap.id}/edit/basic`);
 
   // Wait for the page to load - check for Edit Tap header using testID
   await expect(page.getByTestId('header-edit-tap')).toBeVisible();
@@ -29,17 +31,34 @@ test('should pre-fill form with existing data', async ({ page }) => {
   // Wait for the form input to be visible
   await expect(page.getByTestId('input-description')).toBeVisible();
   
-  // TapForm has description field - assert it has the value if description exists
-  if (tap.description) {
-    await expect(page.getByTestId('input-description')).toHaveValue(tap.description);
-  }
+  // TapForm has description field - assert it has the value
+  await expect(page.getByTestId('input-description')).toHaveValue('Test Tap Description');
+});
+
+test('should pre-fill form with existing data when tap has no description', async ({ page }) => {
+  // Set up explicit data: one tap without description
+  const { tap } = await mockTapWithKeg(page);
+
+  await page.goto(`/taps/${tap.id}/edit/basic`);
+
+  // Wait for the page to load - check for Edit Tap header using testID
+  await expect(page.getByTestId('header-edit-tap')).toBeVisible();
+  
+  // Wait for the tap-form to be visible
+  await expect(page.getByTestId('tap-form')).toBeVisible();
+  
+  // Wait for the form input to be visible
+  await expect(page.getByTestId('input-description')).toBeVisible();
+  
+  // Description field should be empty when tap has no description
+  await expect(page.getByTestId('input-description')).toHaveValue('');
 });
 
 test('should successfully update tap', async ({ page }) => {
   // Set up explicit data: one tap with keg
   const { tap } = await mockTapWithKeg(page);
 
-  await page.goto(`/tap/${tap.id}/edit`);
+  await page.goto(`/taps/${tap.id}/edit/basic`);
 
   // Wait for the page to load
   await expect(page.getByTestId('header-edit-tap')).toBeVisible();
@@ -54,8 +73,6 @@ test('should successfully update tap', async ({ page }) => {
   await expect(page.getByTestId('submit-button-edit-tap')).toBeVisible();
   await page.getByTestId('submit-button-edit-tap').click();
 
-  // Success messages are dynamic content from API responses, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/success|created|saved|updated/i'),
-  ).toBeVisible();
+  // Success messages use SnackBar component with testID
+  await expect(page.getByTestId('snackbar-message')).toBeVisible();
 });

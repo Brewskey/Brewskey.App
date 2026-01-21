@@ -17,6 +17,7 @@ import FLOW_SENSOR_ITEMS from './flowSensorItems';
 import { useForm } from 'react-hook-form';
 import { Form } from '../../common/form/Form';
 import { SubmitButton } from '../../common/form/SubmitButton';
+import { FormValidationMessage } from '../../common/form/FormValidationMessage';
 
 const DEFAULT_FLOW_SENSOR_ITEM = FLOW_SENSOR_ITEMS[0];
 
@@ -31,12 +32,17 @@ export const FlowSensorForm: React.FC<Props> = ({
   flowSensor,
   tapId,
 }) => {
+  const initialFlowSensorType = flowSensor?.flowSensorType ?? FLOW_SENSOR_ITEMS[0].value;
+  const initialFlowSensorItem = FLOW_SENSOR_ITEMS.find(
+    (item: FlowSensorItem): boolean => item.value === initialFlowSensorType,
+  ) || DEFAULT_FLOW_SENSOR_ITEM;
+
   const form = useForm<FlowSensorMutator>({
     defaultValues: {
       tapId,
       id: flowSensor?.id,
-      flowSensorType: FLOW_SENSOR_ITEMS[0].value,
-      pulsesPerGallon: DEFAULT_FLOW_SENSOR_ITEM.defaultPulses,
+      flowSensorType: initialFlowSensorType,
+      pulsesPerGallon: flowSensor?.pulsesPerGallon ?? initialFlowSensorItem.defaultPulses,
     },
   });
   const { watch, setValue } = form;
@@ -55,6 +61,7 @@ export const FlowSensorForm: React.FC<Props> = ({
   return (
     <Form form={form}>
       <View>
+        <FormValidationMessage />
         <FlowSensorSwiperField
           name="flowSensorType"
           onChange={function (value: FlowSensorType): void {
@@ -64,6 +71,7 @@ export const FlowSensorForm: React.FC<Props> = ({
                 (flowSensorItem: FlowSensorItem): boolean =>
                   flowSensorItem.value === value,
               )!.defaultPulses,
+              { shouldDirty: true },
             );
           }}
         />
@@ -72,7 +80,7 @@ export const FlowSensorForm: React.FC<Props> = ({
           defaultPulses={selectedFlowSensorItem.defaultPulses}
         />
         <SectionContent paddedVertical>
-          <SubmitButton onSubmit={onSubmit} title="Set Sensor" />
+          <SubmitButton onSubmit={onSubmit} testID="submit-button-save" title="Set Sensor" />
         </SectionContent>
       </View>
     </Form>

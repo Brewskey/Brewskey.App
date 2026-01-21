@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import LoadingListFooter from '../../common/LoadingListFooter';
 import BeverageModal, { BeverageModalHandle } from '../modals/BeverageModal';
+import PourModal, { PourModalHandle } from '../modals/PourModal';
 import nullthrows from 'nullthrows';
 import { useGetPours } from '../../hooks/queries/PourQueries';
 import List, { ListComponentTypes } from '../../common/List';
@@ -30,6 +31,7 @@ type Props = {
     onDeleteItemPress: (item: Pour) => Promise<void>;
   }>;
   testID?: string;
+  usePourModal?: boolean; // If true, opens pour modal instead of beverage modal
 };
 
 export const BasePoursList = ({
@@ -43,26 +45,35 @@ export const BasePoursList = ({
   rowItemComponent: RowItemComponent,
   slideoutComponent: SlideoutComponent,
   testID,
+  usePourModal = false,
 }: Props) => {
   const beverageModal = React.useRef<BeverageModalHandle>(null);
+  const pourModal = React.useRef<PourModalHandle>(null);
   const keyExtractor = (row: Pour): string => row.id.toString();
   const pours = useGetPours(queryOptions);
   const [selectedBeverageId, setSelectedBeverageId] =
     React.useState<EntityID | null>(null);
+  const [selectedPourId, setSelectedPourId] =
+    React.useState<EntityID | null>(null);
 
-  const onRefreshList = () => {
+  const onRefreshList = async () => {
     onRefresh?.();
-    pours.refetch();
+    await pours.refetch();
   };
 
   const renderRow = ({
     item,
   }: ListRenderItemInfo<Pour>): React.ReactElement => {
-    // Use custom onItemPress if provided, otherwise default to beverage modal
-    const onItemPress = customOnItemPress || (() =>
-      setSelectedBeverageId(
-        nullthrows(item.beverage, 'beverage is undefined').id,
-      ));
+    // Use custom onItemPress if provided
+    // Otherwise use pour modal if usePourModal is true, else default to beverage modal
+    const onItemPress =
+      customOnItemPress ||
+      (usePourModal
+        ? () => setSelectedPourId(item.id)
+        : () =>
+            setSelectedBeverageId(
+              nullthrows(item.beverage, 'beverage is undefined').id,
+            ));
 
     // If swipeable functionality is provided, use RowItemComponent
     // RowItemComponent should render ListItem with swipeable props
@@ -90,6 +101,7 @@ export const BasePoursList = ({
       <List
         data={pours.data}
         keyExtractor={keyExtractor}
+        listType="flatList"
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={pours.isFetchingNextPage || pours.isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
@@ -102,7 +114,15 @@ export const BasePoursList = ({
         renderItem={renderRow}
         testID={testID}
       />
-      <BeverageModal ref={beverageModal} beverageID={selectedBeverageId} />
+      {usePourModal ? (
+        <PourModal
+          ref={pourModal}
+          pourID={selectedPourId}
+          onClose={() => setSelectedPourId(null)}
+        />
+      ) : (
+        <BeverageModal ref={beverageModal} beverageID={selectedBeverageId} />
+      )}
     </>
   );
 };

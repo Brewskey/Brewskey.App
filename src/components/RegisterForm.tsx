@@ -12,6 +12,7 @@ import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { TextInput } from '../common/form/TextInput';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 export type RegisterFormFields = {
   email: string;
@@ -70,22 +71,27 @@ const RegisterForm: React.FC = () => {
 
   const onSubmit = async (values: RegisterFormFields): Promise<void> => {
     if (validate(values)) {
+      await registerMutation.mutateAsync(values);
+      const { password, userName } = values;
       try {
-        await registerMutation.mutateAsync(values);
-        const { password, userName } = values;
         await login({ password, userName });
-      } catch (error) {
-        // Error is handled by FormValidationMessage via registerMutation.error
-        // Don't rethrow - let the form display the error
+      } catch (loginError) {
+        // If login fails after successful registration, set a form-level error
+        // so it can be displayed by FormValidationMessage
+        form.setError('root', {
+          type: 'manual',
+          message: loginError instanceof Error ? loginError.message : 'Registration successful but login failed. Please try logging in manually.',
+        });
       }
     }
   };
 
-  const onSubmitButtonPress = handleSubmit(onSubmit);
+  const onSubmitButtonPress = handleSubmitWithError(form, onSubmit);
 
   return (
     <Form form={form}>
       <View testID="register-form">
+        <FormValidationMessage testID="register-error-message" />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -116,10 +122,6 @@ const RegisterForm: React.FC = () => {
           onSubmitEditing={onSubmitButtonPress}
           secureTextEntry
           testID="input-password"
-        />
-        <FormValidationMessage 
-          testID="register-error-message" 
-          error={registerMutation.error?.message}
         />
         <SectionContent paddedVertical>
           <Button

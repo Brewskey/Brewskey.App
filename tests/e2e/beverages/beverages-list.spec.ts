@@ -20,10 +20,8 @@ test('should display user beverages', async ({ page, menuPage, authenticatedUser
   await expect(page.getByTestId('beverages-list')).toBeVisible();
   
 
-  // Beverage name is dynamic content (user-generated), so text-based locator is acceptable
-  // But we check within the beverages list container
-  const beveragesList = page.getByTestId('beverages-list');
-  await expect(beveragesList.locator(`text=${beverage.name}`)).toBeVisible();
+  // Beverage item has testID - use that instead of text-based locator
+  await expect(page.getByTestId(`beverage-item-${beverage.id}`)).toBeVisible();
 });
 
 test('should navigate to beverage details', async ({ page, menuPage, authenticatedUser }) => {
@@ -43,9 +41,8 @@ test('should navigate to beverage details', async ({ page, menuPage, authenticat
   await expect(page.getByTestId('beverages-list')).toBeVisible();
   
 
-  // Beverage name is dynamic content, so text-based locator is acceptable
-  const beveragesList = page.getByTestId('beverages-list');
-  await beveragesList.locator(`text=${beverage.name}`).click();
+  // Beverage item has testID - use that instead of text-based locator
+  await page.getByTestId(`beverage-item-${beverage.id}`).click();
 
   await expect(page).toHaveURL(/.*beverage.*details|beverage.*\d+/i);
 });

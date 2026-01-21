@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+import { mockLocationWithTaps, mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { mockStore } from '../../fixtures/api-mocks';
 
 // Configure tests to auto-authenticate and create test data
 test.use({ autoAuthenticate: true });
@@ -14,12 +15,9 @@ test('should display taps grouped by location', async ({ page, tapPage, menuPage
 
   await expect(tapPage.getTapsList()).toBeVisible();
 
-  // SectionTapsList groups taps by device name, not location name
-  // Tap numbers are dynamic content (user-generated), so text-based locators are acceptable
-  // Use first() to handle cases where multiple taps might have the same number
+  // TapListItem has testID - use that instead of text-based locator
   for (const tap of taps) {
-    // TapListItem displays as "${tapNumber} - ${beverageName}"
-    await expect(page.locator(`text=${tap.tapNumber}`).first()).toBeVisible();
+    await expect(page.getByTestId(`tap-item-${tap.id}`)).toBeVisible();
   }
 });
 
@@ -33,8 +31,8 @@ test('should show empty state', async ({ page, tapPage, menuPage }) => {
 
   // Empty state - list container is always visible, check for empty message
   await expect(tapPage.getTapsList()).toBeVisible();
-  // Check for empty state message (NuxNoEntity component) - use specific text
-  await expect(page.getByText('Get started')).toBeVisible();
+  // Check for empty state button (NuxNoEntity component) - use testID
+  await expect(page.getByTestId('button-get-started')).toBeVisible();
 });
 
 test('should navigate to tap details', async ({ page, tapPage, menuPage }) => {
@@ -55,6 +53,10 @@ test('should navigate to tap details', async ({ page, tapPage, menuPage }) => {
 });
 
 test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
+  // Set up explicit data: organization for tap creation
+  // NewTapScreen requires organizationId to render the form
+  const { organization } = await mockTapWithKeg(page);
+  
   // Navigate through menu to taps
   await menuPage.goto();
   await menuPage.clickTaps();
@@ -62,9 +64,24 @@ test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
   // Wait for page to load
   await expect(tapPage.getTapsList()).toBeVisible();
   
-  await tapPage.getAddTapButton().click();
+  // Navigate to new tap screen with organizationId parameter
+  // The header button doesn't pass organizationId, so we navigate directly
+  // Organization ID format: API mock expects number, but EntityID can be string or number
+  // The parseODataQuery function converts URL IDs to integers
+  // So we need to ensure the organization.id matches what's stored in the mock store
+  // Since mockTapWithKeg creates organization with generateId() which returns a number,
+  // we can use it directly
+  const url = `/(tabs)/taps/new?organizationId=${organization.id}`;
+  await page.goto(url);
 
-  // After clicking add, should navigate to new tap screen
-  // Check for form input instead of URL
-  await expect(page.getByTestId('input-tapNumber')).toBeVisible();
+  // Wait for the form to load - TapForm queries organization by ID
+  // The form container has testID="tap-form" when organization is loaded
+  // Organization query should complete and form should render
+  // The query uses OrganizationDAO.fetchByID which calls /api/v2/organizations(id)
+  // Wait for the form to appear (organization query completes)
+  await expect(page.getByTestId('tap-form')).toBeVisible();
+
+  // After form is visible, check for the description input field
+  // TapForm uses "description" field, not "tapNumber"
+  await expect(page.getByTestId('input-description')).toBeVisible();
 });

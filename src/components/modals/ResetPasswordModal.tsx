@@ -30,9 +30,10 @@ type Props = {
 const ResetPasswordModal: React.FC<Props> = ({ isVisible, onHideModal }) => {
   return (
     <CenteredModal
-      header={<Text style={styles.titleText}>Email sent!</Text>}
+      header={<Text style={styles.titleText} testID="reset-password-success-title">Email sent!</Text>}
       isVisible={isVisible}
       onHideModal={onHideModal}
+      testID="reset-password-success-modal"
     >
       <View style={styles.container}>
         <Text style={styles.messageText}>

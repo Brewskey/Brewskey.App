@@ -15,10 +15,9 @@ test('should show user block', async ({ page, menuPage }) => {
   await menuPage.goto();
   
 
-  // User block text is dynamic content (user name), so text-based locator is acceptable
-  await expect(
-    page.locator('text=/user|profile|account/i'),
-  ).toBeVisible();
+  // User block has testID - use that instead of text-based locator
+  await expect(page.getByTestId('menu-user-block')).toBeVisible();
+  await expect(page.getByTestId('menu-user-block-name')).toBeVisible();
 });
 
 test('should navigate to friends', async ({ page, menuPage }) => {

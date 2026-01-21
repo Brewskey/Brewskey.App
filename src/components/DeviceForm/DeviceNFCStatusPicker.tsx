@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Linking, Text, StyleSheet } from 'react-native';
-import { SimplePicker } from '../pickers/SimplePicker';
+import { SimplePicker } from '../pickers';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 
@@ -97,6 +97,9 @@ type Props = {
   onChange: (value?: NFCStatusValue) => void;
   placeholder?: string;
   value: NFCStatusValue | null | undefined;
+  name?: string;
+  defaultValue?: NFCStatusValue;
+  required?: boolean | string;
 };
 
 const DeviceNFCStatusPicker = (props: Props): React.ReactElement => (
@@ -105,6 +108,7 @@ const DeviceNFCStatusPicker = (props: Props): React.ReactElement => (
     doesRequireConfirmation={false}
     headerTitle="Select NFC Configuration"
     label="NFC Configuration"
+    name={props.name || 'nfcStatus'}
     onChange={props.onChange}
     pickerValues={[
       { label: 'Phone Only', value: 'PhoneOnly' },
@@ -113,6 +117,8 @@ const DeviceNFCStatusPicker = (props: Props): React.ReactElement => (
       { label: 'Disabled', value: 'Disabled' },
     ]}
     value={props.value ?? undefined}
+    defaultValue={props.defaultValue}
+    required={props.required}
   />
 );
 

@@ -7,6 +7,7 @@ type Props = {
   containerStyle?: StyleProp<ViewStyle>;
   paddedHorizontal?: boolean;
   paddedVertical?: boolean;
+  testID?: string;
 };
 
 const SectionContent = ({
@@ -15,6 +16,7 @@ const SectionContent = ({
   containerStyle,
   paddedHorizontal,
   paddedVertical = true,
+  testID,
 }: Props): React.ReactElement => (
   <View
     style={[
@@ -23,6 +25,7 @@ const SectionContent = ({
       paddedVertical && { paddingVertical: 12 },
       containerStyle,
     ]}
+    testID={testID}
   >
     {children}
   </View>

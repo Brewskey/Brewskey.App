@@ -4,42 +4,41 @@ test.use({ autoAuthenticate: true });
 
 test('should display help screen', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/help');
-  
+  // Route path: /(tabs)/menu/help.tsx
+  await page.goto('/menu/help');
 
   await expect(page).toHaveURL(/.*help/i);
-  // Help text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/help|faq|support/i'),
-  ).toBeVisible();
+  // Help content has testIDs - use those instead of text-based locators
+  // Check for instruction text directly (more reliable than checking Section)
+  await expect(page.getByTestId('help-instruction-text')).toBeVisible();
 });
 
 test('should show FAQ link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/help');
-  
+  // Route path: /(tabs)/menu/help.tsx
+  await page.goto('/menu/help');
 
-  // FAQ link text is dynamic content, so text-based locator is acceptable
-  const faqLink = page.getByRole('link', { name: /faq/i }).or(page.locator('text=/faq/i'));
-  await expect(faqLink.first()).toBeVisible();
+  // FAQ link has testID - use that instead of text-based locator
+  await expect(page.getByTestId('help-link-faq')).toBeVisible();
+  await expect(page.getByTestId('help-link-faq-text')).toBeVisible();
 });
 
 test('should show Facebook Messenger link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/help');
-  
+  // Route path: /(tabs)/menu/help.tsx
+  await page.goto('/menu/help');
 
-  // Messenger link text is dynamic content, so text-based locator is acceptable
-  const messengerLink = page.getByRole('link', { name: /messenger/i }).or(page.locator('text=/messenger/i'));
-  await expect(messengerLink.first()).toBeVisible();
+  // Messenger link has testID - use that instead of text-based locator
+  await expect(page.getByTestId('help-link-messenger')).toBeVisible();
+  await expect(page.getByTestId('help-link-messenger-text')).toBeVisible();
 });
 
 test('should show email link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/help');
-  
+  // Route path: /(tabs)/menu/help.tsx
+  await page.goto('/menu/help');
 
-  // Email link text is dynamic content, so text-based locator is acceptable
-  const emailLink = page.getByRole('link', { name: /email/i }).or(page.locator('text=/email/i'));
-  await expect(emailLink.first()).toBeVisible();
+  // Email link has testID - use that instead of text-based locator
+  await expect(page.getByTestId('help-link-email')).toBeVisible();
+  await expect(page.getByTestId('help-link-email-text')).toBeVisible();
 });

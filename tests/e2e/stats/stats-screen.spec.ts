@@ -10,10 +10,8 @@ test('should display stats screen', async ({ page, statsPage }) => {
 
   await expect(page).toHaveURL(/.*stats/i);
   
-  // Stats text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/my.*stats|stats/i'),
-  ).toBeVisible();
+  // Stats screen has testID - use that instead of text-based locator
+  await expect(page.getByTestId('header-stats')).toBeVisible();
 });
 
 test('should display badges section', async ({ page, statsPage }) => {

@@ -18,10 +18,9 @@ test('should display list of locations', async ({ page, locationPage, menuPage }
   // Wait for list to be visible (it may take a moment for the query to load)
   await expect(locationPage.getLocationsList()).toBeVisible();
 
-  // Location name is dynamic content (user-generated), so text-based locator is acceptable
-  // But we check within the locations list container
-  const locationsList = page.getByTestId('locations-list');
-  await expect(locationsList.locator(`text=${location.name}`)).toBeVisible();
+  // Location name is dynamic content, but we can use location-item testID
+  // LocationsList uses ListItem with testID
+  await expect(page.getByTestId(`location-item-${location.id}`)).toBeVisible();
 });
 
 test('should show empty state when no locations exist', async ({ page, locationPage, menuPage }) => {
@@ -35,8 +34,9 @@ test('should show empty state when no locations exist', async ({ page, locationP
   // When empty, the list shows ListEmptyComponent
   // The list container is always visible, and the empty message is shown inside it
   await expect(locationPage.getLocationsList()).toBeVisible();
-  // Check for empty state message
-  await expect(page.getByText('Create a location and set up the address')).toBeVisible();
+  // Check for empty state - NuxNoEntity component shows this message
+  await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
+  await expect(page.getByTestId('button-get-started')).toBeVisible();
 });
 
 test('should navigate to location details', async ({ page, locationPage, menuPage }) => {
@@ -50,8 +50,8 @@ test('should navigate to location details', async ({ page, locationPage, menuPag
   // Wait for list to load
   await expect(locationPage.getLocationsList()).toBeVisible();
   
-  // Location name is dynamic content, so text-based locator is acceptable
-  await locationPage.clickLocation(location.name);
+  // Location name is dynamic content, but we can use location-item testID
+  await page.getByTestId(`location-item-${location.id}`).click();
 
   await expect(page).toHaveURL(/.*location.*details|location.*\d+/i);
 });

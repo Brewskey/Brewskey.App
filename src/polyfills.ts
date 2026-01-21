@@ -1,12 +1,10 @@
-import { Buffer } from 'buffer';
-global.Buffer = Buffer;
+// Buffer polyfill is now loaded in index.js entry point
+// This file contains other polyfills and mocks
 
 // Mock expo-location for Playwright tests
-if (typeof window !== 'undefined' && (window as any).__PLAYWRIGHT_TEST__) {
-  const mockLocation = (window as any).__EXPO_LOCATION_MOCK__;
-  if (mockLocation) {
-    // Try to intercept expo-location module if it's available
-    // Note: This may not work if expo-location uses native modules
-    // The API endpoint mock should handle the actual data fetching
-  }
+// The actual mocking is done via addInitScript in test fixtures
+// This file just sets up a flag for test environment detection
+if (typeof window !== 'undefined') {
+  // Set up a flag to indicate we're in a test environment
+  (window as any).__PLAYWRIGHT_TEST__ = true;
 }

@@ -1,13 +1,24 @@
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { HeaderIconButton } from './HeaderIconButton';
 
 export const HeaderBackButton: React.FC = () => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
+  
+  const handlePress = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      // Fallback to home if there's no navigation history
+      // This can happen with deep links or when the screen is the first in the stack
+      router.replace('/(tabs)');
+    }
+  };
+  
   return (
     <HeaderIconButton 
       name="arrow-back" 
-      onPress={() => navigation.goBack()}
+      onPress={handlePress}
       testID="header-back-button"
     />
   );

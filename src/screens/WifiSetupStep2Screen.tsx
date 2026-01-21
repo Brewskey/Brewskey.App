@@ -32,8 +32,8 @@ export const WifiSetupStep2Screen: React.FC = () => {
   }, [particleID, wifiNetworks]);
 
   return (
-    <Container>
-      <SectionHeader title="Connect to Brewskey box WiFi" />
+    <Container testID="wifi-setup-step2-content">
+      <SectionHeader title="Connect to Brewskey box WiFi" testID="section-header-wifi-connect" />
       <SectionContent paddedHorizontal paddedVertical>
         <PhoneConnectInstructions />
       </SectionContent>

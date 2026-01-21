@@ -11,7 +11,7 @@ import ListItem from '../common/ListItem';
 import ListEmpty from '../common/ListEmpty';
 import { useGetTapLeaderboard } from '../hooks/queries/TapQueries';
 import { LeaderboardDurationValue } from './LeaderboardDurationPicker';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 type Props = {
   duration: LeaderboardDurationValue;
@@ -25,7 +25,7 @@ export const LeaderboardList: React.FC<Props> = ({
   ListHeaderComponent,
 }) => {
   const leaderboard = useGetTapLeaderboard(tapID, duration);
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
 
   const _keyExtractor = (item: LeaderboardItem): string => {
     return item.userName || item.lastPourDate.toString();
@@ -33,15 +33,7 @@ export const LeaderboardList: React.FC<Props> = ({
 
   const _onItemPress = ({ userID }: LeaderboardItem) => {
     if (!userID) return;
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: userID,
-        },
-      },
-    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    router.navigate(`/(tabs)/profile/${userID}`);
   };
 
   const _renderRow = ({
@@ -65,6 +57,7 @@ export const LeaderboardList: React.FC<Props> = ({
     <List
       data={leaderboard.data}
       keyExtractor={_keyExtractor}
+      listType="flatList"
       ListEmptyComponent={
         !leaderboard.isLoading ? (
           <ListEmpty message="There is nobody on the leaderboard for selected period!" />
@@ -77,6 +70,7 @@ export const LeaderboardList: React.FC<Props> = ({
       onEndReached={leaderboard.fetchNextPage}
       onRefresh={leaderboard.refetch}
       renderItem={_renderRow}
+      testID="leaderboard-list"
     />
   );
 };

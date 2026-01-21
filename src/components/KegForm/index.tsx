@@ -17,17 +17,22 @@ import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { COLORS } from '../../theme';
 import { calculateKegLevel, extractShortenedEntityId } from '../../utils';
 import { Form } from '../../common/form/Form';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { DropdownInput } from '../../common/form/DropdownInput';
 import nullthrows from 'nullthrows';
 import { FormField } from '../../common/form/FormField';
-import BeveragePicker from '../pickers/BeveragePicker';
+import { BeveragePicker } from '../pickers';
+import { FormValidationMessage } from '../../common/form/FormValidationMessage';
+import { SubmitButton } from '../../common/form/SubmitButton';
 
 const KEG_VALUES = (Object.keys(KEG_NAME_BY_KEG_TYPE) as KegType[])
   .sort((a, b) =>
     MAX_OUNCES_BY_KEG_TYPE[a] > MAX_OUNCES_BY_KEG_TYPE[b] ? 1 : -1,
   )
-  .map((kegType) => ({ label: KEG_NAME_BY_KEG_TYPE[kegType], value: kegType }));
+  .map((kegType) => ({
+    label: KEG_NAME_BY_KEG_TYPE[kegType],
+    value: kegType,
+  }));
 
 type Props = {
   keg?: Keg;
@@ -54,7 +59,7 @@ export const KegForm: React.FC<Props> = ({
 }) => {
   // Get the initial beverage from the keg (Keg has a beverage property)
   const initialBeverage = keg?.beverage ?? null;
-  
+
   // Calculate initial starting percentage before form initialization
   const initialKegType = keg?.kegType;
   const initialKegTypeMaxOunces = initialKegType ? MAX_OUNCES_BY_KEG_TYPE[initialKegType] : 0;
@@ -74,7 +79,6 @@ export const KegForm: React.FC<Props> = ({
   });
 
   const {
-    handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
   } = form;
 
@@ -91,22 +95,25 @@ export const KegForm: React.FC<Props> = ({
   // Transform form values to convert beverage to beverageId
   const transformValues = (values: FormFields): KegMutator => {
     const { beverage, ...rest } = values;
-    
+
     return {
       ...rest,
       beverageId: extractShortenedEntityId(beverage),
     } as KegMutator;
   };
 
-  const onSubmitForm = handleSubmit((values) => onSubmit(transformValues(values)));
+  const onSubmitForm: SubmitHandler<FormFields> = (values) => {
+    onSubmit(transformValues(values));
+  };
   const onReplaceSubmitForm = onReplaceSubmit
-    ? handleSubmit((values) => nullthrows(onReplaceSubmit)(transformValues(values)))
+    ? form.handleSubmit((values) => nullthrows(onReplaceSubmit)(transformValues(values)))
     : undefined;
-  const onFloatKegForm = handleSubmit((values) => nullthrows(onFloatedSubmit)(transformValues(values)));
+  const onFloatKegForm = form.handleSubmit((values) => nullthrows(onFloatedSubmit)(transformValues(values)));
 
   return (
     <Form form={form}>
-      <View>
+      <View testID="keg-form">
+        <FormValidationMessage />
         <FormField
           component={BeveragePicker}
           name="beverage"
@@ -121,7 +128,10 @@ export const KegForm: React.FC<Props> = ({
           required="Keg type is required"
           data={KEG_VALUES}
           labelField="label"
+          testID="dropdown-kegType"
           valueField="value"
+          mode="default"
+          confirmSelectItem={false}
         />
         <FormField
           component={KegLevelSliderField}
@@ -150,10 +160,9 @@ export const KegForm: React.FC<Props> = ({
           </SectionContent>
         )}
         <SectionContent paddedVertical>
-          <Button
-            disabled={!isDirty || !isValid || isSubmitting}
-            loading={isSubmitting}
-            onPress={onSubmitForm}
+          <SubmitButton<FormFields>
+            onSubmit={onSubmitForm}
+            testID={keg ? 'submit-button-update-current-keg' : 'submit-button-create-keg'}
             title={submitButtonLabel}
           />
         </SectionContent>

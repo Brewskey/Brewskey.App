@@ -10,8 +10,8 @@ test('should display devices list', async ({ page, devicePage }) => {
 
   await expect(devicePage.getDevicesList()).toBeVisible();
 
-  // Device name is dynamic content (user-generated), so text-based locator is acceptable
-  await expect(page.locator(`text=${device.name}`)).toBeVisible();
+  // Use testID for device item
+  await expect(page.getByTestId(`device-item-${device.id}`)).toBeVisible();
 });
 
 test('should show device online/offline status', async ({ page, devicePage }) => {
@@ -21,10 +21,8 @@ test('should show device online/offline status', async ({ page, devicePage }) =>
 
   await expect(devicePage.getDevicesList()).toBeVisible();
 
-  // Status text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/online|offline|status/i'),
-  ).toBeVisible();
+  // Use testID for device item - device list item includes online status indicator
+  await expect(page.getByTestId(`device-item-${device.id}`)).toBeVisible();
 });
 
 test('should navigate to device details', async ({ page, devicePage }) => {
@@ -35,8 +33,8 @@ test('should navigate to device details', async ({ page, devicePage }) => {
   // Wait for list to load
   await expect(devicePage.getDevicesList()).toBeVisible();
   
-  // Device name is dynamic content, so text-based locator is acceptable
-  await devicePage.clickDevice(device.name);
+  // Use testID for device item
+  await page.getByTestId(`device-item-${device.id}`).click();
 
   await expect(page).toHaveURL(/.*device.*details|device.*\d+/i);
 });

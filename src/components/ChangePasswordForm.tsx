@@ -8,6 +8,7 @@ import { FormField } from '../common/form/FormField';
 import SectionContent from '../common/SectionContent';
 import { TextInput } from '../common/form/TextInput';
 import Button from '../common/buttons/Button';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 export type ChangePasswordFormFields = {
   newPassword: string;
@@ -27,7 +28,6 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
   });
 
   const {
-    handleSubmit,
     formState: { isSubmitting, isValid },
   } = form;
 
@@ -70,6 +70,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
   return (
     <Form form={form}>
       <View testID="change-password-form">
+        <FormValidationMessage testID="change-password-error-message" />
         <FormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -79,6 +80,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           name="oldPassword"
           nextFocusTo="newPassword"
           secureTextEntry
+          testID="input-oldPassword"
         />
         <FormField
           autoCapitalize="none"
@@ -87,15 +89,15 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           disabled={isSubmitting}
           label="New password"
           name="newPassword"
-          onSubmitEditing={handleSubmit(onSubmitForm)}
+          onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
           secureTextEntry
+          testID="input-newPassword"
         />
-        <FormValidationMessage testID="change-password-error-message" />
         <SectionContent paddedVertical>
           <Button
             disabled={isSubmitting || !isValid}
             loading={isSubmitting}
-            onPress={handleSubmit(onSubmitForm)}
+            onPress={handleSubmitWithError(form, onSubmitForm)}
             testID="button-change-password"
             title="Change password"
           />

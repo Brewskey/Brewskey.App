@@ -33,13 +33,8 @@ test('should show error with invalid credentials', async ({ page, loginPage }) =
   await loginPage.goto();
   await loginPage.login('invaliduser', 'wrongpassword');
 
-  // Should show error message - use testID when available, fallback to text-based locator
-  // Error messages are dynamic content from API responses, so text-based locator is acceptable
-  await expect(
-    page.getByTestId('login-error-message').or(
-      page.locator('text=/invalid|error|incorrect/i')
-    ),
-  ).toBeVisible();
+  // Should show error message - use testID
+  await expect(page.getByTestId('login-error-message')).toBeVisible();
 });
 
 test('should navigate to register screen', async ({ page, loginPage }) => {

@@ -10,10 +10,8 @@ test('should display tap statistics', async ({ page }) => {
   await page.goto(`/taps/${tap.id}/stats`);
 
   await expect(page).toHaveURL(/.*stats/i);
-  // Stats text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/stats|statistics|data/i'),
-  ).toBeVisible();
+  // Stats screen shows "Recent pours" section header - use testID
+  await expect(page.getByTestId('section-header-recent-pours')).toBeVisible();
 });
 
 test('should allow filtering by time period', async ({ page }) => {

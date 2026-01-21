@@ -9,9 +9,10 @@ test('should display device information', async ({ page }) => {
 
   await page.goto(`/devices/${device.id}`);
 
-  // Device name and particle ID are dynamic content (user-generated), so text-based locators are acceptable
-  await expect(page.locator(`text=${device.name}`)).toBeVisible();
-  await expect(page.locator(`text=${device.particleId}`)).toBeVisible();
+  // Use testIDs for device information
+  await expect(page.getByTestId('overview-item-box-id')).toBeVisible();
+  await expect(page.getByTestId('overview-item-box-id')).toContainText(device.particleId);
+  await expect(page.getByTestId('overview-item-online-status')).toBeVisible();
 });
 
 test('should show device online/offline status', async ({ page }) => {
@@ -20,10 +21,8 @@ test('should show device online/offline status', async ({ page }) => {
 
   await page.goto(`/devices/${device.id}`);
 
-  // Status text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/online|offline|status/i'),
-  ).toBeVisible();
+  // Check for "Online Status" using testID
+  await expect(page.getByTestId('overview-item-online-status')).toBeVisible();
 });
 
 test('should display associated taps', async ({ page }) => {
@@ -33,22 +32,19 @@ test('should display associated taps', async ({ page }) => {
   await page.goto(`/devices/${device.id}`);
 
   for (const tap of taps) {
-    // TapListItem displays as "${tapNumber} - ${beverageName}"
-    // Tap number is dynamic content, so text-based locator is acceptable
-    await expect(page.locator(`text=${tap.tapNumber}`)).toBeVisible();
+    // Use testID from TapListItem for reliable identification
+    await expect(page.getByTestId(`tap-item-${tap.id}`)).toBeVisible();
   }
 });
 
 test('should navigate to add tap', async ({ page }) => {
-  // Set up explicit data: one device (add tap button should be visible)
+  // Set up explicit data: one device (add tap button should be visible when no taps)
   const { device } = await mockDeviceWithTaps(page, 0);
 
   await page.goto(`/devices/${device.id}`);
 
-  // Use testID if available, otherwise use role-based locator for add button
-  const addButton = page.getByTestId('button-add-tap').or(
-    page.getByRole('button', { name: /add.*tap|new.*tap/i })
-  );
+  // DeviceTapListEmpty has testID on the add button
+  const addButton = page.getByTestId('button-add-tap');
   await expect(addButton).toBeVisible();
   await addButton.click();
   

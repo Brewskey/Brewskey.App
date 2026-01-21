@@ -9,6 +9,7 @@ import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { COLORS } from '../theme';
 import { TextInput } from '../common/form/TextInput';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 const styles = StyleSheet.create({
   input: {
@@ -39,7 +40,6 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
   });
 
   const {
-    handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
   } = form;
 
@@ -81,18 +81,17 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
           label="Enter user name or email"
           labelStyle={styles.label}
           name="userName"
-          onSubmitEditing={handleSubmit(onSubmitForm)}
+          onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
           selectionColor={COLORS.textInverse}
           style={styles.input}
           underlineColorAndroid={COLORS.secondary}
           validationTextStyle={styles.validationText}
         />
-        <FormValidationMessage />
         <SectionContent paddedVertical>
           <Button
             disabled={!isDirty || isSubmitting || !isValid}
             loading={isSubmitting}
-            onPress={handleSubmit(onSubmitForm)}
+            onPress={handleSubmitWithError(form, onSubmitForm)}
             secondary
             title="Add Friend"
           />

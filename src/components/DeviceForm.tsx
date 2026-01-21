@@ -8,14 +8,13 @@ import type {
 import * as React from 'react';
 import { View } from 'react-native';
 import { useForm, useWatch } from 'react-hook-form';
-import { useIsFocused } from '@react-navigation/native';
 
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import Button from '../common/buttons/Button';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { TextInput } from '../common/form/TextInput';
-import LocationPicker from './pickers/LocationPicker';
+import { LocationPicker } from './pickers';
 import DeviceStatePicker from './DeviceStatePicker';
 import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
 import { CheckBoxField } from '../common/form/CheckBoxField';
@@ -23,6 +22,7 @@ import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
 import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
 import { extractShortenedEntityId } from '../utils';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 export const validate = (
   values: FormProps,
@@ -60,7 +60,6 @@ type FormProps = Omit<DeviceMutator, 'locationId'> & {
 };
 
 const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, onSubmit }) => {
-  const isFocused = useIsFocused();
   const form = useForm<FormProps>({
     defaultValues: {
       id: device.id,
@@ -80,7 +79,6 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
   });
 
   const {
-    handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
   } = form;
 
@@ -114,6 +112,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
   return (
     <Form form={form}>
       <View>
+        <FormValidationMessage testID="device-form-error-message" />
         <FormField
           component={TextInput}
           initialValue={device.name}
@@ -218,19 +217,16 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
             />
           </>
         )}
-        {!isFocused ? null : (
-          <MainTabBarFill>
-            <FormValidationMessage testID="device-form-error-message" />
-            <Button
-              disabled={!isValid || !isDirty || isSubmitting}
-              loading={isSubmitting}
-              onPress={handleSubmit(onSubmitForm)}
-              style={{ marginVertical: 12 }}
-              testID={device.id ? 'submit-button-edit-device' : 'submit-button-create-device'}
-              title={submitButtonLabel}
-            />
-          </MainTabBarFill>
-        )}
+        <MainTabBarFill>
+          <Button
+            disabled={!isValid || !isDirty || isSubmitting}
+            loading={isSubmitting}
+            onPress={handleSubmitWithError(form, onSubmitForm)}
+            style={{ marginVertical: 12 }}
+            testID={device.id ? 'submit-button-edit-device' : 'submit-button-create-device'}
+            title={submitButtonLabel}
+          />
+        </MainTabBarFill>
       </View>
     </Form>
   );

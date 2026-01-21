@@ -34,9 +34,9 @@ const NotificationsList: React.FC = () => {
 
   return (
     <List
-       
       data={{ pages: [NotificationsStore.notifications], pageParams: [0] } as any}
       keyExtractor={keyExtractor}
+      listType="flatList"
       ListEmptyComponent={<ListEmpty message="No new notifications!" />}
       renderItem={renderItem}
     />

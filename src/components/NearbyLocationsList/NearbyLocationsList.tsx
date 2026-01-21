@@ -13,7 +13,7 @@ import ListSectionHeader from '../../common/ListSectionHeader';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
 import { calculateKegLevel } from '../../utils';
 import { COLORS } from '../../theme';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { SectionListData } from 'react-native';
 
 type Props = {
@@ -27,7 +27,7 @@ export const NearbyLocationsList: React.FC<Props> = ({
   isLoading,
   onRefresh,
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const sections = (nearbyLocations ?? []).map(
     ({ name, taps }: NearbyLocation): Section<NearbyTap> => ({
       data: taps
@@ -42,15 +42,7 @@ export const NearbyLocationsList: React.FC<Props> = ({
   const keyExtractor = ({ id }: NearbyTap): string => id.toString();
 
   const onItemPress = ({ id }: NearbyTap) =>
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'tapDetails',
-        params: {
-          tapId: id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${id}`);
 
   const renderItem = ({
     index,

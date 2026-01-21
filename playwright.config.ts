@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices, ReporterDescription } from '@playwright/test';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -9,7 +9,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: process.env.CI ? 'html' : 'list',
+  reporter: [
+    ['html'],
+    ['json', { outputFile: 'test-results/results.json' }],
+    ...(process.env.CI ? [] : [['list'] as ReporterDescription]),
+  ],
   
   use: {
     baseURL: 'http://localhost:8081',

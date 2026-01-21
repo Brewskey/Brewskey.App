@@ -69,11 +69,13 @@ export const WifiList: React.FC<Props> = ({
         data={{ pages: [wifiNetworks ?? []], pageParams: [{}] }}
         extraData={{ expandedRowKey }}
         keyExtractor={keyExtractor}
+        listType="flatList"
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
         onRefresh={!isLoading ? refetch : undefined}
         renderItem={renderItem}
+        testID="wifi-networks-list"
       />
     </Form>
   );

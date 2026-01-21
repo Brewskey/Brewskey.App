@@ -9,9 +9,9 @@ test('should display beverage information', async ({ page }) => {
 
   await page.goto(`/beverages/${beverage.id}`);
   
-
-  // Beverage name is dynamic content (user-generated), so text-based locator is acceptable
-  await expect(page.locator(`text=${beverage.name}`)).toBeVisible();
+  // Use testID for beverage name
+  await expect(page.getByTestId('beverage-name')).toBeVisible();
+  await expect(page.getByTestId('beverage-name')).toHaveText(beverage.name);
 });
 
 test('should show pour history', async ({ page }) => {
@@ -21,10 +21,11 @@ test('should show pour history', async ({ page }) => {
   await page.goto(`/beverages/${beverage.id}`);
   
 
-  // Pour history text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/pour.*history|recent.*pours/i'),
-  ).toBeVisible();
+  // Check for the "Pour History" section header using testID
+  await expect(page.getByTestId('section-header-pour-history')).toBeVisible();
+  
+  // Verify that pour items are displayed (at least one pour should be visible)
+  await expect(page.getByTestId(`pour-item-${pours[0].id}`)).toBeVisible();
 });
 
 test('should navigate to edit beverage', async ({ page }) => {

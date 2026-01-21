@@ -8,10 +8,9 @@ test('should display device naming screen', async ({ page, nuxPage }) => {
   
 
   await expect(page).toHaveURL(/.*nux.*device/i);
-  // Device text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/device|box|brewskey/i'),
-  ).toBeVisible();
+  // Device screen has testID - use that instead of text-based locator
+  await expect(page.getByTestId('nux-device-content')).toBeVisible();
+  await expect(page.getByTestId('nux-device-description')).toBeVisible();
 });
 
 test('should show device setup instructions', async ({ page, nuxPage }) => {
@@ -20,10 +19,8 @@ test('should show device setup instructions', async ({ page, nuxPage }) => {
   await nuxPage.gotoDeviceStep();
   
 
-  // Instructions text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/connected|setup|configure/i'),
-  ).toBeVisible();
+  // Instructions text has testID - use that instead of text-based locator
+  await expect(page.getByTestId('nux-device-description')).toBeVisible();
 });
 
 test('should have continue button', async ({ page, nuxPage }) => {

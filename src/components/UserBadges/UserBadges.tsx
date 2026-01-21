@@ -21,7 +21,7 @@ export type UserBadgesHandle = {
 
 export const UserBadges = React.forwardRef<UserBadgesHandle, Props>(
   ({ userID }, ref) => {
-    const { data: achievementCounters, isLoading, refetch } = useGetAchievementCountsByUserId(userID);
+    const { data: achievementCounters, isLoading, error, refetch } = useGetAchievementCountsByUserId(userID);
     const loadedUserBadgesRef = React.useRef<LoadedUserBadgesHandle | null>(null);
 
     useImperativeHandle(
@@ -41,6 +41,12 @@ export const UserBadges = React.forwardRef<UserBadgesHandle, Props>(
 
     if (isLoading) {
       return null; // Or return a loading component if needed
+    }
+
+    // Handle errors gracefully - show empty badges for 401 (unauthorized) or any other errors
+    // This happens when the user doesn't have permission to view achievements
+    if (error) {
+      return <EmptyUserBadges />;
     }
 
     if (!achievementCounters || achievementCounters.length === 0) {

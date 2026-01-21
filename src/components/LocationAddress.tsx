@@ -35,16 +35,16 @@ const LocationAddress: React.FC<Props> = ({ location }) => {
   const { city, geolocation, state, street, suite, zipCode } = location;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
+    <View style={styles.container} testID="location-address">
+      <Text style={styles.text} testID="location-address-street">
         {`${street.toUpperCase()} ${(suite || '').toUpperCase()}`}
       </Text>
-      <Text style={styles.text}>
+      <Text style={styles.text} testID="location-address-city-state-zip">
         {`${city.toUpperCase()} ${(
           state || ''
         ).toUpperCase()} ${zipCode.toString().toUpperCase()}`}
       </Text>
-      <Text style={styles.text}>USA</Text>
+      <Text style={styles.text} testID="location-address-country">USA</Text>
       {geolocation && [
         <View key="mapButton" style={styles.mapButtonContainer}>
           <IconButton

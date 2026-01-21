@@ -34,99 +34,130 @@ type Props<TEntity> = ListProps<TEntity> & {
   testID?: string;
 };
 
-type State = {
-  openRowKey: string | null | undefined;
+export type SwipeableListRef = {
+  resetOpenRow: () => void;
 };
 
-export class SwipeableList<TEntity> extends React.Component<
-  Props<TEntity>,
-  State
-> {
-  static defaultProps = {
-    bounceFirstRowOnMount: true,
-  };
+export const SwipeableList = React.forwardRef<
+  SwipeableListRef,
+  Props<any>
+>(function SwipeableList<TEntity>(props: Props<TEntity>, ref: React.Ref<SwipeableListRef>): React.ReactElement {
+  const {
+    renderItem: _,
+    listType = 'flatList',
+    renderSectionHeader,
+    sections,
+    data,
+    testID,
+    bounceFirstRowOnMount = true,
+    keyExtractor,
+    renderItem,
+    onScroll,
+    ...otherProps
+  } = props;
 
-  state: State = {
-    openRowKey: null,
-  };
+  const [openRowKey, setOpenRowKey] = React.useState<string | null | undefined>(null);
 
-  _innerListRef = React.createRef<{
+  const _innerListRef = React.useRef<{
     setNativeProps: (arg1: { scrollEnabled: boolean }) => void;
-  }>();
+  }>(null);
 
-  resetOpenRow: () => void = (): void =>
-    this.setState(() => ({ openRowKey: null }));
+  const resetOpenRow = React.useCallback((): void => {
+    setOpenRowKey(null);
+  }, []);
 
-  _setListViewScrollableTo = (value: boolean) => {
-    if (!this._innerListRef.current) {
+  React.useImperativeHandle(ref, () => ({
+    resetOpenRow,
+  }), [resetOpenRow]);
+
+  const _setListViewScrollableTo = React.useCallback((value: boolean) => {
+    if (!_innerListRef.current) {
       return;
     }
-    this._innerListRef.current.setNativeProps({
+    _innerListRef.current.setNativeProps({
       scrollEnabled: value,
     });
-  };
+  }, []);
 
-  _setListViewScrollable = (): void => this._setListViewScrollableTo(true);
+  const _setListViewScrollable = React.useCallback((): void => {
+    _setListViewScrollableTo(true);
+  }, [_setListViewScrollableTo]);
 
-  _setListViewNotScrollable = (): void => this._setListViewScrollableTo(false);
+  const _setListViewNotScrollable = React.useCallback((): void => {
+    _setListViewScrollableTo(false);
+  }, [_setListViewScrollableTo]);
 
-  _onOpen = (key: string): void => this.setState(() => ({ openRowKey: key }));
+  const _onOpen = React.useCallback((key: string): void => {
+    setOpenRowKey(key);
+  }, []);
 
-  _onClose = (): void => this.resetOpenRow();
+  const _onClose = React.useCallback((): void => {
+    resetOpenRow();
+  }, [resetOpenRow]);
 
-  _onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
-    this.resetOpenRow();
-    const { onScroll } = this.props;
-    if (onScroll) {
-      onScroll(event);
-    }
-  };
+  const _onScroll = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>): void => {
+      resetOpenRow();
+      if (onScroll) {
+        onScroll(event);
+      }
+    },
+    [resetOpenRow, onScroll],
+  );
 
-  _renderItem: (arg1: ListRenderItemInfo<TEntity>) => React.ReactElement = (
-    info,
-  ) => {
-    const key = this.props.keyExtractor(info.item, info.index);
-    return this.props.renderItem({
-      info,
-      isOpen: key === this.state.openRowKey,
-      onClose: this._onClose,
-      onOpen: this._onOpen,
-      onSwipeEnd: this._setListViewScrollable,
-      onSwipeStart: this._setListViewNotScrollable,
-      rowKey: key,
-      shouldBounceOnMount:
-        this.props.bounceFirstRowOnMount === true && info.index === 0,
-    });
-  };
+  const _renderItem = React.useCallback(
+    (info: ListRenderItemInfo<TEntity>): React.ReactElement => {
+      const key = keyExtractor(info.item, info.index);
+      return renderItem({
+        info,
+        isOpen: key === openRowKey,
+        onClose: _onClose,
+        onOpen: _onOpen,
+        onSwipeEnd: _setListViewScrollable,
+        onSwipeStart: _setListViewNotScrollable,
+        rowKey: key,
+        shouldBounceOnMount: bounceFirstRowOnMount === true && info.index === 0,
+      });
+    },
+    [
+      keyExtractor,
+      renderItem,
+      openRowKey,
+      _onClose,
+      _onOpen,
+      _setListViewScrollable,
+      _setListViewNotScrollable,
+      bounceFirstRowOnMount,
+    ],
+  );
 
-  render(): React.ReactElement {
-    const { renderItem: _, listType = 'flatList', renderSectionHeader, sections, data, testID, ...otherProps } = this.props;
-    if (listType === 'sectionList' && sections) {
-      return (
-        <List
-          {...otherProps}
-          extraData={{ openRowKey: this.state.openRowKey }}
-          listType="sectionList"
-          renderSectionHeader={renderSectionHeader}
-          sections={sections}
-          onScroll={this._onScroll}
-          renderItem={this._renderItem}
-          innerRef={undefined}
-          testID={testID}
-        />
-      );
-    }
+  if (listType === 'sectionList' && sections) {
     return (
       <List
         {...otherProps}
-        data={data}
-        extraData={{ openRowKey: this.state.openRowKey }}
-        listType="flatList"
-        onScroll={this._onScroll}
-        renderItem={this._renderItem}
+        extraData={{ openRowKey }}
+        listType="sectionList"
+        renderSectionHeader={renderSectionHeader}
+        sections={sections}
+        onScroll={_onScroll}
+        renderItem={_renderItem}
+        keyExtractor={keyExtractor}
         innerRef={undefined}
         testID={testID}
       />
     );
   }
-}
+  return (
+    <List
+      {...otherProps}
+      data={data}
+      extraData={{ openRowKey }}
+      listType="flatList"
+      onScroll={_onScroll}
+      renderItem={_renderItem}
+      keyExtractor={keyExtractor}
+      innerRef={undefined}
+      testID={testID}
+    />
+  );
+}) as <TEntity>(props: Props<TEntity> & { ref?: React.Ref<SwipeableListRef> }) => React.ReactElement;

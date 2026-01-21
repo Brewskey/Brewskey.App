@@ -93,9 +93,10 @@ export const KegModal = React.forwardRef<
     <Modal
       isVisible={isVisible}
       onHideModal={handleClose}
+      testID="keg-modal"
       transparent={false}
     >
-      <View style={styles.container}>
+      <View style={styles.container} testID="keg-modal-content">
         <Section>
           <View style={styles.headerContainer}>
             <View style={styles.closeButton}>
@@ -103,9 +104,10 @@ export const KegModal = React.forwardRef<
                 color={COLORS.text}
                 name="close"
                 onPress={handleClose}
+                testID="button-close-keg-modal"
               />
             </View>
-            <SectionHeader title={keg.data.beverage.name} subtitle={subtitle} />
+            <SectionHeader title={keg.data.beverage.name} subtitle={subtitle} testID="section-header-keg-beverage" />
           </View>
         </Section>
         <View style={styles.scrollContent}>
@@ -116,6 +118,7 @@ export const KegModal = React.forwardRef<
             <Button
               title="Close"
               onPress={handleClose}
+              testID="button-close-keg"
             />
           </View>
         </Section>

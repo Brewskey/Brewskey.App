@@ -1,55 +1,66 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationPermission } from '../../fixtures/page-objects';
 import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
 
 test('should display nearby locations', async ({ page, homePage }) => {
-  // Set up explicit data: location permission granted, one location nearby
-  await mockLocationPermission(page, true);
+  // Set up explicit data: one location nearby
+  // Geolocation permission is already granted via test-fixtures.ts
   const { location } = await mockLocationWithTaps(page, 0);
   await homePage.goto();
 
   await expect(homePage.getNearbyLocationsList()).toBeVisible();
   
-  // Location name is dynamic content, so text-based locator is acceptable
-  await expect(page.locator(`text=${location.name}`)).toBeVisible();
+  // Location name is dynamic content, but we can check within the nearby-locations-list
+  // NearbyLocationsList shows location names in section headers
+  const nearbyList = page.getByTestId('nearby-locations-list');
+  await expect(nearbyList.locator(`text=${location.name}`)).toBeVisible();
 });
 
 test('should request location permission', async ({ page, homePage }) => {
   // Set up explicit data: location permission denied
-  await mockLocationPermission(page, false);
+  // Clear permissions to test permission request flow
+  await page.context().clearPermissions();
   await homePage.goto();
 
-  // Use specific text to avoid strict mode violation - check for permission request text
-  await expect(
-    page.getByText('In order to see nearby taps, we need location permissions'),
-  ).toBeVisible();
+  // Permission request text has testID - use that instead of text-based locator
+  await expect(page.getByTestId('home-permission-request')).toBeVisible();
+  await expect(page.getByTestId('home-permission-text')).toBeVisible();
 });
 
-test('should show permission request button', async ({ page, homePage }) => {
-  // Set up explicit data: location permission denied
-  await mockLocationPermission(page, false);
-  await homePage.goto();
+test.describe(() => {
+  test.use({
+    permissions: [],
+    geolocation: undefined,
+  })
+  test('should show permission request button', async ({ page, homePage }) => {
+    // Set up explicit data: location permission denied
+    // Clear permissions to test permission request flow
+    await page.context().clearPermissions();
+    await homePage.goto();
 
-  await expect(homePage.getPermissionRequestButton()).toBeVisible();
+    await expect(homePage.getPermissionRequestButton()).toBeVisible();
+  });
 });
+test.describe(() => {
+  test.use({
+    geolocation: undefined,
+  })
+  test('should show empty state when no nearby locations', async ({ page, homePage }) => {
+    // Set up explicit data: no locations nearby
+    // Geolocation permission is already granted via test-fixtures.ts
+    // Store is already empty from resetStores fixture
+    await homePage.goto();
 
-test('should show empty state when no nearby locations', async ({ page, homePage }) => {
-  // Set up explicit data: location permission granted, but no locations nearby
-  await mockLocationPermission(page, true);
-  // Store is already empty from resetStores fixture
-  await homePage.goto();
-
-  // Wait for nearby locations list to be visible (it shows empty state)
-  // The list itself should be visible even when empty
-  await expect(homePage.getNearbyLocationsList()).toBeVisible();
+    // Wait for nearby locations list to be visible (it shows empty state)
+    // The list itself should be visible even when empty
+    await expect(homePage.getNearbyLocationsList()).toBeVisible();
+  });
 });
-
 test('should allow refreshing locations', async ({ page, homePage }) => {
-  // Set up explicit data: location permission granted, one location nearby
-  await mockLocationPermission(page, true);
+  // Set up explicit data: one location nearby
+  // Geolocation permission is already granted via test-fixtures.ts
   await mockLocationWithTaps(page, 0);
   await homePage.goto();
 

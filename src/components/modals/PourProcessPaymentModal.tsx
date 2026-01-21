@@ -5,7 +5,7 @@ import { StyleSheet, ScrollView, Text, View } from 'react-native';
 
 import Button from '../../common/buttons/Button';
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import CenteredModal from './CenteredModal';
 import { COLORS } from '../../theme';
@@ -80,7 +80,7 @@ const TapPayment: React.FC<TapPaymentProps> = ({ tap }: TapPaymentProps) => {
 
 const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   const { setVisibility, shouldShowPaymentScreen } = usePourModalContext();
-  const navigation = useNavigation();
+  const router = useRouter();
   const [deviceID] = React.useState<EntityID | null>(null);
   
   const queryOptions = React.useMemo(() => {
@@ -105,14 +105,9 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
       // PourProcessStore.startPaymentPour();
     } else {
       setVisibility(false);
-      navigation.navigate('LoggedInStack', {
-        screen: 'menu',
-        params: {
-          screen: 'payments',
-        },
-      });
+      router.navigate('/(tabs)/menu/payments');
     }
-  }, [hasCreditCardDetails, setVisibility, navigation]);
+  }, [hasCreditCardDetails, setVisibility, router]);
 
   const isVisible = shouldShowPaymentScreen;
   const onHideModal = () => setVisibility(false);

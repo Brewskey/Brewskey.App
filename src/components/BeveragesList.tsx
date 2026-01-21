@@ -16,7 +16,7 @@ import {
   useDeleteBeverageById,
   useGetBeverages,
 } from '../hooks/queries/BeverageQueries';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 type Props = {
   ListHeaderComponent?:
@@ -28,7 +28,7 @@ type Props = {
 };
 
 const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const deleteBeverage = useDeleteBeverageById();
   const addSnackBarMessage = useAddSnackBarMessage();
   const onDeleteItemPress = async (deleteItem: Beverage): Promise<void> => {
@@ -36,16 +36,7 @@ const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
     addSnackBarMessage({ content: 'The beverage was deleted' });
   };
   const onEditItemPress = ({ id }: Beverage) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'myBeverages',
-        params: {
-          screen: 'editBeverage',
-          params: { id },
-        },
-      },
-    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    router.navigate(`/(tabs)/beverages/${id}/edit`);
   };
 
   return (
@@ -63,7 +54,7 @@ export const BeveragesList: React.FC<Props> = ({
   queryOptions,
   ListHeaderComponent,
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const beverages = useGetBeverages({
     ...queryOptions,
     orderBy: [
@@ -77,18 +68,7 @@ export const BeveragesList: React.FC<Props> = ({
   const keyExtractor = (row: Beverage): string => row.id.toString();
 
   const onItemPress = (item: Beverage): void =>
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'myBeverages',
-        params: {
-          screen: 'beverageDetails',
-          params: {
-            id: item.id,
-          },
-        },
-      },
-    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    router.navigate(`/(tabs)/beverages/${item.id}`);
 
   const renderRow = ({
     info: { item },
@@ -102,6 +82,7 @@ export const BeveragesList: React.FC<Props> = ({
       onPress={onItemPress}
       subtitle={item.beverageType}
       title={item.name}
+      testID={`beverage-item-${item.id}`}
     />
   );
 

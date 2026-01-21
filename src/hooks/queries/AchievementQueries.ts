@@ -11,4 +11,12 @@ export const useGetAchievementCountsByUserId = (
   useQuery({
     queryKey: [AchievementQueryKeys.CountsByUserId, userId],
     queryFn: () => AchievementDAO.fetchAchievementCounters(userId),
+    retry: (failureCount, error) => {
+      // Don't retry on 401 (unauthorized) errors - user doesn't have permission
+      if (error instanceof Error && error.message.includes('401')) {
+        return false;
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2;
+    },
   });

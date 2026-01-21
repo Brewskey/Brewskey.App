@@ -2,7 +2,7 @@ import type { Friend, QueryOptions } from '@brewskey/js-api';
 
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
@@ -13,11 +13,11 @@ import { useGetFriends } from '../hooks/queries/FriendQueries';
 
 type Props = {
   ListHeaderComponent?:
-     
-    | React.ComponentType<any>
-    | React.ReactNode
-    | null
-    | undefined;
+
+  | React.ComponentType<any>
+  | React.ReactNode
+  | null
+  | undefined;
   queryOptions?: QueryOptions;
 };
 
@@ -34,6 +34,7 @@ const LoadedRow = ({
     item={friend}
     onPress={onItemPress}
     title={friend.friendAccount.userName}
+    testID={`friend-item-${friend.friendAccount.id}`}
   />
 );
 
@@ -41,7 +42,7 @@ const FriendsList: React.FC<Props> = ({
   ListHeaderComponent,
   queryOptions = {},
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
 
   const {
     data: friendsData,
@@ -53,19 +54,11 @@ const FriendsList: React.FC<Props> = ({
   } = useGetFriends(queryOptions);
 
   const onItemPress = (friend: Friend) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'profile',
-        params: {
-          id: friend.friendAccount.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/profile/${friend.friendAccount.id}`);
   };
 
-  const onRefreshList = () => {
-    refetch();
+  const onRefreshList = async () => {
+    await refetch();
   };
 
   const keyExtractor = (item: Friend): string => item.id.toString();
@@ -78,6 +71,7 @@ const FriendsList: React.FC<Props> = ({
     <List
       data={friendsData}
       keyExtractor={keyExtractor}
+      listType="flatList"
       ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
       ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
@@ -88,6 +82,7 @@ const FriendsList: React.FC<Props> = ({
       }}
       onRefresh={onRefreshList}
       renderItem={renderRow}
+      testID="friends-list"
     />
   );
 };

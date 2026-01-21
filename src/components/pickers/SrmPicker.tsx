@@ -1,45 +1,73 @@
 import type { Srm, QueryOptions } from '@brewskey/js-api';
-import type { PickerValue, RenderRowProps } from './DAOPicker';
-
 import * as React from 'react';
-import DAOPicker from './DAOPicker';
-import SelectableListItem from '../../common/SelectableListItem';
+import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetSrms } from '../../hooks/queries/SrmQueries';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+
+export type PickerValue<TEntity, TMultiple extends boolean> = TMultiple extends true
+  ? TEntity[]
+  : TEntity | null | undefined;
 
 type Props = {
   error?: string | null | undefined;
+  label?: string;
   onChange: (value: PickerValue<Srm, false>) => void;
   queryOptions?: QueryOptions;
   value: PickerValue<Srm, false>;
+  // Form integration props
+  name: string;
+  defaultValue?: PickerValue<Srm, false>;
+  required?: boolean | string;
 };
 
-const SrmPicker: React.FC<Props> = (props) => {
-  const renderRow = ({
-    item: srm,
-    isSelected,
-    toggleItem,
-  }: RenderRowProps<Srm>): React.ReactElement => (
-    <SelectableListItem
-      chevron={false}
-      isSelected={isSelected}
-      item={srm}
-      title={srm.name}
-      onPress={() => toggleItem(srm)}
-    />
-  );
+const SrmPicker: React.FC<Props> = ({
+  label = 'SRM',
+  name = 'srm',
+  defaultValue,
+  required,
+  ...props
+}) => {
+
+  const onSearchFilter = React.useCallback((searchText: string, baseQueryOptions: QueryOptions) => {
+    return {
+      ...baseQueryOptions,
+      filters: [
+        ...(baseQueryOptions.filters || []),
+        createFilter('name').contains(searchText),
+      ],
+    };
+  }, []);
 
   return (
-    <DAOPicker
-      {...props}
+    <DropdownInput<Srm>
+      name={name}
+      defaultValue={defaultValue ?? undefined}
+      required={required}
       useQueryHook={useGetSrms}
-      headerTitle="Select SRM"
-      label="SRM"
-      multiple={false}
       queryOptions={props.queryOptions ?? {}}
-      renderRow={renderRow}
-      searchBy="name"
-      shouldUseSearchQuery={false}
-      stringValueExtractor={(srm: Srm): string => srm.name}
+      onSearchFilter={onSearchFilter}
+      labelField="name"
+      valueField="id"
+      multiple={false}
+      mode="modal"
+      headerTitle="Select SRM"
+      confirmSelectItem={true}
+      inputVariant="picker"
+      search={true}
+      searchPlaceholder="Search SRM..."
+      placeholder="Select SRM"
+      onChange={(item) => {
+        if (!Array.isArray(item)) {
+          props.onChange(item as Srm);
+        }
+      }}
+      onConfirmSelectItem={(item) => {
+        if (!Array.isArray(item)) {
+          props.onChange(item as Srm);
+        }
+      }}
+      keyExtractor={(item) => String(item.id)}
+      testID={label ? `picker-${label.toLowerCase().replace(/\s+/g, '-')}` : `srm-picker-${name}`}
     />
   );
 };

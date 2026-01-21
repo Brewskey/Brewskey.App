@@ -10,10 +10,8 @@ test('should display leaderboard', async ({ page }) => {
   await page.goto(`/taps/${tap.id}/leaderboard`);
 
   await expect(page).toHaveURL(/.*leaderboard/i);
-  // Leaderboard text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/leaderboard|ranking|top/i'),
-  ).toBeVisible();
+  // Leaderboard list has testID - use that instead of text-based locator
+  await expect(page.getByTestId('leaderboard-list')).toBeVisible();
 });
 
 test('should allow filtering by duration', async ({ page }) => {

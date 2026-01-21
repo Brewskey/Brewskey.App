@@ -95,7 +95,7 @@ const TextMessage = ({
   }
 
   return (
-    <View style={styles.textContainer}>
+    <View style={styles.textContainer} testID="snackbar-message">
       <Text numberOfLines={2} style={[styles.text, dynamicTextStyle]}>
         {text}
       </Text>

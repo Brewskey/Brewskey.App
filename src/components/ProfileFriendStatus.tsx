@@ -72,6 +72,7 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
         <HeaderIconButton
           name="person-add"
           onPress={() => setIsModalVisible(true)}
+          testID="button-add-friend"
           type="material-icons"
         />
         <FriendAddModal

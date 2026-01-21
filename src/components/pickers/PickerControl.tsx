@@ -57,6 +57,7 @@ const PickerControl = <TValue,>({
       />
       <Button
         onPress={onSelectPress}
+        testID="picker-control-select-button"
         titleStyle={styles.selectButtonText}
         title={selectButtonTitle}
         type="clear"

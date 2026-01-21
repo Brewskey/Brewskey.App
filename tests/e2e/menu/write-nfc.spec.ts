@@ -4,35 +4,31 @@ test.use({ autoAuthenticate: true });
 
 test('should display NFC setup screen', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/write-nfc');
-  
+  // Route path: /(tabs)/menu/write-nfc.tsx
+  await page.goto('/menu/write-nfc');
 
   await expect(page).toHaveURL(/.*nfc/i);
-  // NFC text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/nfc|card|setup/i'),
-  ).toBeVisible();
+  // NFC screen has testID - use that instead of text-based locator
+  await expect(page.getByTestId('header-write-nfc')).toBeVisible();
+  await expect(page.getByTestId('write-nfc-content')).toBeVisible();
 });
 
 test('should show NFC setup instructions', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/write-nfc');
-  
+  // Route path: /(tabs)/menu/write-nfc.tsx
+  await page.goto('/menu/write-nfc');
 
-  // Instructions text is dynamic content, so text-based locator is acceptable
-  await expect(
-    page.locator('text=/instructions|setup|tap/i'),
-  ).toBeVisible();
+  // Instructions text has testID - use that instead of text-based locator
+  await expect(page.getByTestId('nfc-instructions-section')).toBeVisible();
+  await expect(page.getByTestId('nfc-instructions-text')).toBeVisible();
 });
 
 test('should show supported cards link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/write-nfc');
-  
+  // Route path: /(tabs)/menu/write-nfc.tsx
+  await page.goto('/menu/write-nfc');
 
-  // Supported cards link text is dynamic content, so text-based locator is acceptable
-  const supportedLink = page.getByRole('link', { name: /supported/i }).or(
-    page.locator('text=/supported.*cards/i')
-  );
-  await expect(supportedLink.first()).toBeVisible();
+  // Supported cards link has testID - use that instead of text-based locator
+  await expect(page.getByTestId('nfc-supported-cards-link')).toBeVisible();
+  await expect(page.getByTestId('nfc-supported-cards-link-text')).toBeVisible();
 });

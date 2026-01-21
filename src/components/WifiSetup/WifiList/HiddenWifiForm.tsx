@@ -8,6 +8,8 @@ import { TextField } from '../../../common/form/TextField';
 import { DropdownInput } from '../../../common/form/DropdownInput';
 import { useForm, useFormContext } from 'react-hook-form';
 import { Form } from '../../../common/form/Form';
+import { handleSubmitWithError } from '../../../common/form/handleSubmitWithError';
+import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
 
 type Props = {
   onSubmit: (values: WifiNetwork) => Promise<void>;
@@ -34,6 +36,7 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
 
   return (
     <View>
+      <FormValidationMessage />
       <TextField label="SSID" name="ssid" required />
       <DropdownInput
         data={Object.entries(WIFI_SECURITIES).map(
@@ -51,7 +54,7 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
       )}
       <Button
         disabled={!isValid || !isDirty || isSubmitting}
-        onPress={form.handleSubmit(handleSubmit)}
+        onPress={handleSubmitWithError(form, handleSubmit)}
         title="Connect"
       />
     </View>

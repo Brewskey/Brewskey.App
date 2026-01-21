@@ -23,12 +23,12 @@ export const WifiSetupStep1Screen: React.FC<Props> = ({
   useClearAllQueryCaches();
 
   return (
-    <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-      <SectionHeader title="Time to set up WiFi on your Brewskey box!" />
+    <KeyboardAwareScrollView keyboardShouldPersistTaps="handled" testID="wifi-setup-step1-content">
+      <SectionHeader title="Time to set up WiFi on your Brewskey box!" testID="section-header-wifi-setup-instructions" />
       <SectionContent paddedHorizontal paddedVertical>
         <DeviceSetupInstructions />
       </SectionContent>
-      <Button onPress={onReadyClick} title="Ready" />
+      <Button onPress={onReadyClick} testID="button-wifi-setup-ready" title="Ready" />
       {isForNewDevice && (
         <SectionContent paddedHorizontal paddedVertical>
           <ParticleIDInput onContinuePress={onSetupFinish} />

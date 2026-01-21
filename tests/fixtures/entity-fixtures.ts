@@ -10,7 +10,9 @@ import type {
   AuthResponse,
   Pour,
   FlowSensor,
+  EntityID,
 } from '@brewskey/js-api';
+import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
 import {
   createMockUser,
   createMockLocation,
@@ -21,6 +23,7 @@ import {
   createMockOrganization,
   createMockPour,
   createMockFlowSensor,
+  createMockSrm,
 } from './test-data';
 import { mockStore } from './api-mocks';
 
@@ -100,6 +103,7 @@ export async function mockLocationWithTaps(
  */
 export async function mockTapWithKeg(
   page: Page,
+  description?: string,
 ): Promise<{ tap: Tap; keg: Keg; beverage: Beverage; organization: Organization; location: Location; device: Device }> {
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
@@ -121,6 +125,7 @@ export async function mockTapWithKeg(
     deviceId: device.id,
     organization: { id: organization.id, name: organization.name, isDeleted: false },
     isPaymentEnabled: false, // Ensure this field exists
+    description,
   });
   mockStore.setTap(tap);
 
@@ -251,7 +256,13 @@ export async function mockBeverageWithPours(
     }
   }
   
+  // Create SRM for the beverage (required field)
+  const srm = createMockSrm();
+  mockStore.setSrm(srm);
+  
   const beverage = createMockBeverage({
+    beverageType: 'Beer',
+    srm: srm,
     ...(finalUserID && finalUserName ? { 
       createdBy: { 
         id: finalUserID, 
@@ -304,6 +315,7 @@ export async function mockUserWithOrganizations(
  */
 export async function mockTapWithFlowSensor(
   page: Page,
+  flowSensorType: 'Titan' | 'Custom' = 'Titan',
 ): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
@@ -326,10 +338,24 @@ export async function mockTapWithFlowSensor(
 
   const flowSensor = createMockFlowSensor({
     tap: { id: tap.id, isDeleted: false },
+    flowSensorType,
+    pulsesPerGallon: flowSensorType === 'Custom' ? 1000 : 5375,
   });
   mockStore.setFlowSensor(flowSensor);
 
   return { tap, flowSensor, organization, location, device };
+}
+
+export async function mockTapWithCustomFlowSensor(
+  page: Page,
+): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
+  return mockTapWithFlowSensor(page, 'Custom');
+}
+
+export async function mockTapWithStandardFlowSensor(
+  page: Page,
+): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
+  return mockTapWithFlowSensor(page, 'Titan');
 }
 
 /**
@@ -393,4 +419,24 @@ export async function setupStatsData(
   }
 
   return { beverages, pours };
+}
+
+/**
+ * Sets up SRM data for beverage forms
+ * Creates common SRM values (1-40) that are typically used
+ */
+export async function setupSrmData(page: Page, count: number = 40): Promise<Srm[]> {
+  const srms: Srm[] = [];
+  
+  // Create SRMs with names 1-40 (typical SRM range)
+  for (let i = 1; i <= count; i++) {
+    const srm = createMockSrm({ 
+      name: i.toString(),
+      hex: `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`,
+    });
+    mockStore.setSrm(srm);
+    srms.push(srm);
+  }
+  
+  return srms;
 }

@@ -7,11 +7,11 @@ import type { ListComponentTypes } from '../common/List';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import nullthrows from 'nullthrows';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { SwipeableList } from '../common/SwipeableList';
+import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
 import QuickActions from '../common/QuickActions';
 import SwipeableRow from '../common/SwipeableRow';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
@@ -44,10 +44,10 @@ const DevicesList: React.FC<Props> = ({
   ListHeaderComponent,
   queryOptions = {},
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const addSnackBarMessage = useAddSnackBarMessage();
-  const swipeableListRef = React.useRef<SwipeableList<Device>>(null);
+  const swipeableListRef = React.useRef<SwipeableListRef>(null);
 
   const mergedQueryOptions = useMemo(
     () => ({
@@ -84,32 +84,12 @@ const DevicesList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Device) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'devices',
-        params: {
-          screen: 'editDevice',
-          params: { id },
-        },
-      },
-    } satisfies ReactNavigation.RootParamList['LoggedInStack']);
+    router.navigate(`/(tabs)/devices/${id}/edit`);
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Device): void => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'menu',
-      params: {
-        screen: 'devices',
-        params: {
-          screen: 'deviceDetails',
-          params: {
-            id: item.id,
-          },
-        },
-      },
-    });
+    router.navigate(`/(tabs)/devices/${item.id}`);
   };
 
   const keyExtractor = (item: Device): string => item.id.toString();
@@ -127,6 +107,7 @@ const DevicesList: React.FC<Props> = ({
         </View>
       }
       title={item.name}
+      testID={`device-item-${item.id}`}
     />
   );
 
@@ -154,6 +135,7 @@ const DevicesList: React.FC<Props> = ({
       <SwipeableRow
         index={index}
         item={item}
+        maxSwipeDistance={150}
         onDeleteItemPress={onDeleteItemPress}
         onEditItemPress={onEditItemPress}
         onItemPress={onItemPress}
@@ -200,7 +182,7 @@ const DevicesList: React.FC<Props> = ({
           fetchNextPage();
         }
       }}
-      onRefresh={() => refetch()}
+      onRefresh={async () => await refetch()}
       ref={swipeableListRef}
       renderItem={renderRow}
       testID="devices-list"

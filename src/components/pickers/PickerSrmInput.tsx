@@ -1,6 +1,6 @@
 import type { Srm } from '@brewskey/js-api';
 import type { StyleProp, TextStyle } from 'react-native';
-import type { PickerValue } from './DAOPicker';
+import type { PickerValue } from './LocationPicker';
 import type { Props as PickerTextInputProps } from './PickerTextInput';
 
 import * as React from 'react';

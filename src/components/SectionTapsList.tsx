@@ -5,13 +5,13 @@ import type { Section } from '../types';
 import * as React from 'react';
 import { View } from 'react-native';
 import { useMemo, useRef } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import nullthrows from 'nullthrows';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList, RenderProps } from '../common/SwipeableList';
+import { SwipeableList, type SwipeableListRef, RenderProps } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import TapListItem from './TapListItem';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
@@ -77,6 +77,7 @@ const SwipeableRowWithDelete: React.FC<
       {...swipeableStateProps}
       index={index}
       item={item}
+      maxSwipeDistance={150}
       onDeleteItemPress={async (tap): Promise<void> => {
         await deleteTap.mutateAsync(tap.id);
         addSnackBarMessage({ content: 'The tap was deleted' });
@@ -94,8 +95,8 @@ export const SectionTapsList: React.FC<Props> = ({
   ListEmptyComponent,
   ListHeaderComponent,
 }) => {
-  const navigation = useNavigation<NavigationProp<ReactNavigation.RootParamList>>();
-  const swipeableListRef = useRef<SwipeableList<Tap>>(null);
+  const router = useRouter();
+  const swipeableListRef = useRef<SwipeableListRef>(null);
 
   const tapsQuery = useGetTaps({
     orderBy: [
@@ -131,25 +132,11 @@ export const SectionTapsList: React.FC<Props> = ({
   const keyExtractor = ({ id }: Tap): string => id.toString();
 
   const onItemPress = (item: Tap): void => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'tapDetails',
-        params: {
-          tapId: item.id,
-        },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${item.id}`);
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    navigation.navigate('LoggedInStack', {
-      screen: 'home',
-      params: {
-        screen: 'editTap',
-        params: { tapId: id },
-      },
-    });
+    router.navigate(`/(tabs)/taps/${id}/edit`);
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 

@@ -147,6 +147,8 @@ type TestFixtures = {
  * ```
  */
 export const test = base.extend<TestOptions & TestFixtures>({
+  permissions: ['geolocation'],
+  geolocation: { latitude: 40.7128, longitude: -74.0060 },
   // Default options
   user: [undefined, { option: true }],
   autoAuthenticate: [false, { option: true }],

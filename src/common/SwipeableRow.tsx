@@ -5,7 +5,7 @@ import type { SharedValue } from 'react-native-reanimated';
 
 export type SwipeableProps = {
   isOpen: boolean;
-  maxSwipeDistance: number;
+  maxSwipeDistance?: number;
   onClose: () => void;
   onOpen: (rowKey: string) => void;
   onSwipeEnd?: () => void;
@@ -31,8 +31,8 @@ export type RowItemProps<TEntity> = {
 
 type Props<TEntity> = SwipeableProps &
   RowItemProps<TEntity> & {
-    maxSwipeDistance: number;
-    preventSwipeRight: boolean;
+    maxSwipeDistance?: number;
+    preventSwipeRight?: boolean;
     rowItemComponent: React.ComponentType<RowItemProps<TEntity>>;
     slideoutComponent: React.ComponentType<RowItemProps<TEntity>>;
   };
@@ -43,121 +43,127 @@ const styles = StyleSheet.create({
   },
 });
 
-class SwipeableRow<TEntity> extends React.PureComponent<Props<TEntity>> {
-  static defaultProps = {
-    maxSwipeDistance: 150,
-    preventSwipeRight: true,
-  };
+function SwipeableRow<TEntity>(props: Props<TEntity>): React.ReactElement {
+  const {
+    index,
+    item,
+    preventSwipeRight = true,
+    rowItemComponent: RowItemComponent,
+    separators,
+    swipeThreshold = 50,
+    maxSwipeDistance = 150,
+    slideoutComponent: SlideoutComponent,
+    shouldBounceOnMount,
+    isOpen,
+    onOpen,
+    rowKey,
+    onClose,
+    onSwipeStart,
+    onSwipeEnd,
+    ...extraProps
+  } = props;
 
-  private swipeableRef = React.createRef<SwipeableMethods>();
+  const swipeableRef = React.useRef<SwipeableMethods>(null);
 
-  componentDidMount(): void {
-    const { shouldBounceOnMount, isOpen } = this.props;
+  React.useEffect(() => {
     if (shouldBounceOnMount && !isOpen) {
       // Trigger a brief bounce animation after a short delay to ensure ref is set
-      setTimeout(() => {
-        this.swipeableRef.current?.openRight();
+      const timeoutId = setTimeout(() => {
+        swipeableRef.current?.openRight();
         setTimeout(() => {
-          this.swipeableRef.current?.close();
+          swipeableRef.current?.close();
         }, 300);
       }, 100);
+      return () => clearTimeout(timeoutId);
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  componentDidUpdate(prevProps: Props<TEntity>): void {
-    const { isOpen } = this.props;
-    if (prevProps.isOpen !== isOpen) {
-      if (isOpen) {
-        this.swipeableRef.current?.openRight();
-      } else {
-        this.swipeableRef.current?.close();
+  React.useEffect(() => {
+    if (isOpen) {
+      swipeableRef.current?.openRight();
+    } else {
+      swipeableRef.current?.close();
+    }
+  }, [isOpen]);
+
+  const _onOpen = React.useCallback((): void => {
+    onOpen(rowKey);
+  }, [onOpen, rowKey]);
+
+  const _onSwipeableWillOpen = React.useCallback(
+    (direction: 'left' | 'right'): void => {
+      // Only handle right swipe (swipe left to reveal right actions)
+      if (direction === 'right') {
+        onSwipeStart?.();
+        _onOpen();
       }
-    }
-  }
+    },
+    [onSwipeStart, _onOpen],
+  );
 
-  _onOpen = (): void => {
-    this.props.onOpen(this.props.rowKey);
-  };
+  const _onSwipeableWillClose = React.useCallback(
+    (_direction: 'left' | 'right'): void => {
+      onClose();
+    },
+    [onClose],
+  );
 
-  _onSwipeableWillOpen = (direction: 'left' | 'right'): void => {
-    // Only handle right swipe (swipe left to reveal right actions)
-    if (direction === 'right') {
-      this.props.onSwipeStart?.();
-      this._onOpen();
-    }
-  };
+  const _onSwipeableOpen = React.useCallback(
+    (_direction: 'left' | 'right'): void => {
+      onSwipeEnd?.();
+    },
+    [onSwipeEnd],
+  );
 
-  _onSwipeableWillClose = (_direction: 'left' | 'right'): void => {
-    this.props.onClose();
-  };
+  const _onSwipeableClose = React.useCallback(
+    (_direction: 'left' | 'right'): void => {
+      onSwipeEnd?.();
+    },
+    [onSwipeEnd],
+  );
 
-  _onSwipeableOpen = (_direction: 'left' | 'right'): void => {
-    this.props.onSwipeEnd?.();
-  };
+  const renderRightActions = React.useCallback(
+    (
+      _progress: SharedValue<number>,
+      _translation: SharedValue<number>,
+      _swipeableMethods: SwipeableMethods,
+    ): React.ReactElement => {
+      return (
+        <View style={[styles.slideoutContainer, { width: maxSwipeDistance }]}>
+          <SlideoutComponent
+            index={index}
+            item={item}
+            separators={separators}
+            {...extraProps}
+          />
+        </View>
+      );
+    },
+    [index, item, separators, SlideoutComponent, maxSwipeDistance, extraProps],
+  );
 
-  _onSwipeableClose = (_direction: 'left' | 'right'): void => {
-    this.props.onSwipeEnd?.();
-  };
-
-  renderRightActions = (
-    _progress: SharedValue<number>,
-    _translation: SharedValue<number>,
-    _swipeableMethods: SwipeableMethods,
-  ): React.ReactElement => {
-    const {
-      index,
-      item,
-      separators,
-      slideoutComponent: SlideoutComponent,
-      maxSwipeDistance,
-      ...extraProps
-    } = this.props;
-
-    return (
-      <View style={[styles.slideoutContainer, { width: maxSwipeDistance }]}>
-        <SlideoutComponent
-          index={index}
-          item={item}
-          separators={separators}
-          {...extraProps}
-        />
-      </View>
-    );
-  };
-
-  render(): React.ReactElement {
-    const {
-      index,
-      item,
-      preventSwipeRight,
-      rowItemComponent: RowItemComponent,
-      separators,
-      swipeThreshold = 50,
-      ...extraProps
-    } = this.props;
-
-    return (
-      <ReanimatedSwipeable
-        ref={this.swipeableRef}
-        renderRightActions={this.renderRightActions}
-        rightThreshold={swipeThreshold}
-        overshootRight={false}
-        overshootLeft={preventSwipeRight ? false : true}
-        friction={2}
-        onSwipeableWillOpen={this._onSwipeableWillOpen}
-        onSwipeableWillClose={this._onSwipeableWillClose}
-        onSwipeableOpen={this._onSwipeableOpen}
-        onSwipeableClose={this._onSwipeableClose}
-      >
-        <RowItemComponent
-          index={index}
-          item={item}
-          separators={separators}
-          {...extraProps}
-        />
-      </ReanimatedSwipeable>
-    );
-  }
+  return (
+    <ReanimatedSwipeable
+      ref={swipeableRef}
+      renderRightActions={renderRightActions}
+      rightThreshold={swipeThreshold}
+      overshootRight={false}
+      overshootLeft={preventSwipeRight ? false : true}
+      friction={2}
+      onSwipeableWillOpen={_onSwipeableWillOpen}
+      onSwipeableWillClose={_onSwipeableWillClose}
+      onSwipeableOpen={_onSwipeableOpen}
+      onSwipeableClose={_onSwipeableClose}
+    >
+      <RowItemComponent
+        index={index}
+        item={item}
+        separators={separators}
+        {...extraProps}
+      />
+    </ReanimatedSwipeable>
+  );
 }
 
-export default SwipeableRow;
+export default React.memo(SwipeableRow) as typeof SwipeableRow;

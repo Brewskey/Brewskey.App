@@ -9,16 +9,36 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = React.ComponentProps<typeof ListItem> & {
+type Props<TEntity> = {
   isSelected: boolean;
   item: TEntity;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  chevron?: boolean;
+  onPress?: () => void;
+  testID?: string;
 };
 
-const SelectableListItem = <TEntity,>({
+function SelectableListItem<TEntity>({
   isSelected,
-  ...rest
-}: Props<TEntity>): React.ReactElement => (
-  <ListItem {...rest} containerStyle={isSelected && styles.selected} />
-);
+  item,
+  title,
+  subtitle,
+  chevron,
+  onPress,
+  testID,
+}: Props<TEntity>): React.ReactElement {
+  return (
+    <ListItem
+      item={item}
+      title={title}
+      subtitle={subtitle}
+      chevron={chevron}
+      onPress={onPress}
+      containerStyle={isSelected ? styles.selected : undefined}
+      testID={testID}
+    />
+  );
+}
 
 export default SelectableListItem;

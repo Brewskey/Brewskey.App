@@ -74,7 +74,7 @@ const BeverageDetailsContent: React.FC<Props> = ({ beverage }) => {
 
   return (
     <Fragment>
-      <View style={[styles.imageContainer, styles.beverageImage, imageSize]}>
+      <View style={[styles.imageContainer, styles.beverageImage, imageSize]} testID="beverage-image">
         <Image
           style={[styles.beverageImage, imageSize]}
           source={{
@@ -82,7 +82,8 @@ const BeverageDetailsContent: React.FC<Props> = ({ beverage }) => {
           }}
         />
       </View>
-      <Text style={styles.descriptionText}>{description}</Text>
+      <Text style={styles.descriptionText} testID="beverage-name">{beverage.name}</Text>
+      <Text style={styles.descriptionText} testID="beverage-description">{description}</Text>
       <OverviewItem title="Type" value={beverageType} />
       {style ? <OverviewItem title="Style" value={style.name} /> : null}
       {glass ? <OverviewItem title="Glass" value={glass.name} /> : null}

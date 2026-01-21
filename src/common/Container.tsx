@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
 type Props = {
   centered?: boolean,
   children?: React.ReactNode,
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>,
+  testID?: string,
 };
 
 const Container = (
@@ -24,8 +25,9 @@ const Container = (
     centered,
     children,
     style,
+    testID,
   }: Props,
-): React.ReactElement => <View style={[styles.container, centered && styles.centered, style]}>
+): React.ReactElement => <View testID={testID} style={[styles.container, centered && styles.centered, style]}>
   {children}
 </View>;
 
