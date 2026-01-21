@@ -37,7 +37,7 @@ const LocationDetailsScreen: React.FC = () => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || !location) {
     return (
       <Container>
         <Header shouldShowBackButton />
@@ -46,7 +46,7 @@ const LocationDetailsScreen: React.FC = () => {
     );
   }
 
-  if (error || !location) {
+  if (error) {
     return (
       <NotFoundScreen
         title="Location Not Found"
