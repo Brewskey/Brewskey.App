@@ -43,16 +43,17 @@ test('should successfully update location', async ({ page }) => {
   await expect(locationTypePicker).toBeVisible();
   await locationTypePicker.click();
   // Select "Bar" which is at index 1
-  await expect(locationTypePicker.getByTestId('option-1')).toBeVisible();
-  await locationTypePicker.getByTestId('option-1').click();
+  // SimplePicker uses mode="modal", chain locators through modal testID
+  await expect(page.getByTestId('picker-location-type-modal').getByTestId('option-1')).toBeVisible();
+  await page.getByTestId('picker-location-type-modal').getByTestId('option-1').click();
   
   // Update state (required field)
   // State picker uses STATE_LIST - California (CA) is at index 4
   const statePicker = page.getByTestId('picker-state');
   await expect(statePicker).toBeVisible();
   await statePicker.click();
-  await expect(statePicker.getByTestId('option-4')).toBeVisible();
-  await statePicker.getByTestId('option-4').click();
+  await expect(page.getByTestId('picker-state-modal').getByTestId('option-4')).toBeVisible();
+  await page.getByTestId('picker-state-modal').getByTestId('option-4').click();
   
   // Submit the form
   await expect(page.getByTestId('submit-button-edit-location')).toBeVisible();

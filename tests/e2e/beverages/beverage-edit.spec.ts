@@ -40,16 +40,17 @@ test('should successfully update beverage', async ({ page }) => {
   await expect(beverageTypePicker).toBeVisible();
   await beverageTypePicker.click();
   // Select a different beverage type to test the picker (Cider is at index 1)
-  await expect(beverageTypePicker.getByTestId('option-1')).toBeVisible();
-  await beverageTypePicker.getByTestId('option-1').click();
+  // SimplePicker uses mode="modal", chain locators through modal testID
+  await expect(page.getByTestId('picker-beverage-type-modal').getByTestId('option-1')).toBeVisible();
+  await page.getByTestId('picker-beverage-type-modal').getByTestId('option-1').click();
   
   // Update SRM/Color (required field) - verify it's pre-filled, then change it
   const colorPicker = page.getByTestId('picker-color');
   await expect(colorPicker).toBeVisible();
   await colorPicker.click();
   // Select a different SRM option (index 2)
-  await expect(colorPicker.getByTestId('option-2')).toBeVisible();
-  await colorPicker.getByTestId('option-2').click();
+  await expect(page.getByTestId('picker-color-modal').getByTestId('option-2')).toBeVisible();
+  await page.getByTestId('picker-color-modal').getByTestId('option-2').click();
   // DAOPicker requires confirmation - click the select button
   await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
   await page.getByTestId('picker-control-select-button').click();

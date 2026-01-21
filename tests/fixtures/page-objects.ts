@@ -102,7 +102,8 @@ export class LocationPage {
     // Tests should set up data explicitly to determine which button should exist
     const submitButton = this.page.getByTestId('submit-button-create-location')
       .or(this.page.getByTestId('submit-button-edit-location'));
-    await submitButton.click();
+    // Use force click because dropdown overlays may intercept clicks
+    await submitButton.click({ force: true });
   }
 }
 
@@ -245,23 +246,23 @@ export class NUXPage {
   constructor(private page: Page) {}
 
   async gotoLocationStep(): Promise<void> {
-    await this.page.goto('/nux/location');
+    await this.page.goto('/(tabs)/(nux)/location');
   }
 
   async gotoWifiStep(): Promise<void> {
-    await this.page.goto('/nux/wifi');
+    await this.page.goto('/(tabs)/(nux)/wifi');
   }
 
   async gotoDeviceStep(): Promise<void> {
-    await this.page.goto('/nux/device');
+    await this.page.goto('/(tabs)/(nux)/device');
   }
 
   async gotoTapStep(): Promise<void> {
-    await this.page.goto('/nux/tap');
+    await this.page.goto('/(tabs)/(nux)/tap');
   }
 
   async gotoFinishStep(): Promise<void> {
-    await this.page.goto('/nux/finish');
+    await this.page.goto('/(tabs)/(nux)/finish');
   }
 
   getContinueButton(): Locator {

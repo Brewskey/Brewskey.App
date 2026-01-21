@@ -124,13 +124,14 @@ test('should successfully create keg', async ({ page }) => {
   await expect(kegTypeDropdown).toBeVisible();
   await kegTypeDropdown.click();
   // Wait for dropdown options to appear
-  // Find the Mini Keg option using chained locators
+  // DropdownInput mode="default" renders options inline within parent container
+  // Since there are multiple dropdowns on the page, scope to keg-form container
   // DropdownInput generates option testIDs as "option-{index}"
   // Mini Keg is the smallest size, so it should be first (index 0) after sorting by size
-  const miniKegOption = kegTypeDropdown.getByTestId('option-0');
-  await expect(miniKegOption).toBeVisible();
+  await expect(page.getByTestId('keg-form').getByTestId('option-0')).toBeVisible();
   // Click the option - DropdownInput uses mode="default" so it closes automatically
-  await miniKegOption.click();
+  // Use force click because form elements may overlap dropdown
+  await page.getByTestId('keg-form').getByTestId('option-0').click({ force: true });
   
   // Wait for form state to update - the dropdown should close and form should become dirty
   // SubmitButton requires isDirty=true, so we wait for the button to become enabled

@@ -3,12 +3,19 @@ import {
   mockLocationWithTaps,
   mockDeviceWithTaps,
 } from '../../fixtures/entity-fixtures';
+import { createMockOrganization } from '../../fixtures/test-data';
+import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
 test('should navigate to create tap form', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/taps/new');
+  // Set up explicit data: authenticated user and organization
+  // TapForm requires organizationId query param
+  // Use mockTapWithKeg to set up organization (even though we don't need the tap)
+  const { mockTapWithKeg } = await import('../../fixtures/entity-fixtures');
+  const { organization } = await mockTapWithKeg(page);
+  
+  await page.goto(`/taps/new?organizationId=${organization.id}`);
 
   await expect(page).toHaveURL(/.*tap.*new|new.*tap/i);
   await expect(page.getByTestId('input-description')).toBeVisible();
@@ -54,8 +61,6 @@ test('should successfully create tap', async ({ page, tapPage }) => {
   // Create organization if location doesn't have one
   let organizationId = location.organization?.id;
   if (!organizationId) {
-    const { createMockOrganization } = await import('../../fixtures/test-data');
-    const { mockStore } = await import('../../fixtures/api-mocks');
     const organization = createMockOrganization();
     mockStore.setOrganization(organization);
     organizationId = organization.id;
@@ -81,14 +86,12 @@ test('should set up tap and select beverage with image rendering', async ({ page
   const { location } = await mockLocationWithTaps(page, 0);
   const { device } = await mockDeviceWithTaps(page, 0);
   const { createMockBeverage } = await import('../../fixtures/test-data');
-  const { mockStore } = await import('../../fixtures/api-mocks');
   const beverage = createMockBeverage({ name: 'Test IPA' });
   mockStore.setBeverage(beverage);
   
   // Create organization if location doesn't have one
   let organizationId = location.organization?.id;
   if (!organizationId) {
-    const { createMockOrganization } = await import('../../fixtures/test-data');
     const organization = createMockOrganization();
     mockStore.setOrganization(organization);
     organizationId = organization.id;

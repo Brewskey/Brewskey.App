@@ -56,11 +56,12 @@ test('should successfully create beverage', async ({ page, menuPage }) => {
   const beverageTypePicker = page.getByTestId('picker-beverage-type');
   await expect(beverageTypePicker).toBeVisible();
   await beverageTypePicker.click();
-  // Wait for modal to be visible - check for picker option using chained locator
-  // DropdownInput generates option testIDs as "option-{index}"
-  await expect(beverageTypePicker.getByTestId('option-0')).toBeVisible();
+  // Wait for modal to be visible - SimplePicker uses mode="modal"
+  // Modal has testID "{picker-testID}-modal", options are "option-{index}"
+  // Use chained locators to scope to the specific modal
+  await expect(page.getByTestId('picker-beverage-type-modal').getByTestId('option-0')).toBeVisible();
   // Click the "Beer" option using testID (first option, index 0)
-  await beverageTypePicker.getByTestId('option-0').click();
+  await page.getByTestId('picker-beverage-type-modal').getByTestId('option-0').click();
   
   // Select SRM/Color (required field)
   // SrmPicker uses DAOPicker with label "Color" (from FormField)
@@ -69,9 +70,9 @@ test('should successfully create beverage', async ({ page, menuPage }) => {
   await colorPicker.click();
   // Wait for SRM picker modal to appear and SRM list to load
   await expect(page.getByTestId('picker-color-modal')).toBeVisible();
-  await expect(colorPicker.getByTestId('option-0')).toBeVisible();
+  await expect(page.getByTestId('picker-color-modal').getByTestId('option-0')).toBeVisible();
   // Click first SRM option using testID (index 0)
-  await colorPicker.getByTestId('option-0').click();
+  await page.getByTestId('picker-color-modal').getByTestId('option-0').click();
   // DAOPicker requires confirmation - click the select button using testID
   await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
   await page.getByTestId('picker-control-select-button').click();

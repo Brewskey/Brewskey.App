@@ -39,8 +39,9 @@ test('should successfully update device', async ({ page }) => {
   await expect(deviceStatusPicker).toBeVisible();
   await deviceStatusPicker.click();
   // Select a different status to test the picker (Cleaning is at index 1)
-  await expect(deviceStatusPicker.getByTestId('option-1')).toBeVisible();
-  await deviceStatusPicker.getByTestId('option-1').click();
+  // SimplePicker uses mode="modal", chain locators through modal testID
+  await expect(page.getByTestId('picker-device-status-modal').getByTestId('option-1')).toBeVisible();
+  await page.getByTestId('picker-device-status-modal').getByTestId('option-1').click();
   
   // Location is also required - verify it's present (should be pre-filled)
   const locationPicker = page.getByTestId('picker-location');
