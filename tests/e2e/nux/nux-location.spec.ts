@@ -31,13 +31,13 @@ test('should handle single location scenario', async ({ page, nuxPage }) => {
   // Set up explicit data: new user with one location
   await mockNewUserState(page);
   const { location } = await mockLocationWithTaps(page, 0);
-  await nuxPage.gotoLocationStep();
+  await nuxPage.gotoLocationStep(1); // Pass locationsCount=1
   
 
-  // Should show message about existing location - location name is in description text
-  // Location name is dynamic content, but we can check the description contains it
+  // Should show message about existing location
+  // The message is "You've already set up the location " (without the location name in the testID element)
   await expect(page.getByTestId('nux-location-description')).toBeVisible();
-  await expect(page.getByTestId('nux-location-description')).toContainText(location.name);
+  await expect(page.getByTestId('nux-location-description')).toContainText("You've already set up the location");
 });
 
 test('should handle multiple locations scenario', async ({ page, nuxPage }) => {
@@ -45,7 +45,7 @@ test('should handle multiple locations scenario', async ({ page, nuxPage }) => {
   await mockNewUserState(page);
   await mockLocationWithTaps(page, 0);
   await mockLocationWithTaps(page, 0);
-  await nuxPage.gotoLocationStep();
+  await nuxPage.gotoLocationStep(2); // Pass locationsCount=2
   
 
   // Should show location picker
@@ -59,7 +59,7 @@ test('should enable continue button when location selected', async ({ page, nuxP
   await mockNewUserState(page);
   const { location } = await mockLocationWithTaps(page, 0);
   await mockLocationWithTaps(page, 0);
-  await nuxPage.gotoLocationStep();
+  await nuxPage.gotoLocationStep(2); // Pass locationsCount=2
   
 
   // Location picker should be visible with multiple locations

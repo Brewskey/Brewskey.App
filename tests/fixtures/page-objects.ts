@@ -245,8 +245,9 @@ export class SettingsPage {
 export class NUXPage {
   constructor(private page: Page) {}
 
-  async gotoLocationStep(): Promise<void> {
-    await this.page.goto('/(tabs)/(nux)/location');
+  async gotoLocationStep(locationsCount?: number): Promise<void> {
+    const countParam = locationsCount !== undefined ? `?locationsCount=${locationsCount}` : '';
+    await this.page.goto(`/(tabs)/(nux)/location${countParam}`);
   }
 
   async gotoWifiStep(): Promise<void> {

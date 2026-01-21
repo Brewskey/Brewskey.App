@@ -141,6 +141,7 @@ test('should successfully create keg', async ({ page }) => {
   // The form should be valid after selecting beverage and keg type
   // Submit button has testID - wait for it to become enabled (form validation)
   // Form requires: beverage (selected), kegType (selected), and isDirty=true
+  // TODO: Form isDirty state isn't triggered by dropdown selections - needs investigation
   const submitButton = page.getByTestId('submit-button-create-keg');
   await expect(submitButton).toBeVisible();
   // Wait for form state to update (isDirty and isValid checks)
