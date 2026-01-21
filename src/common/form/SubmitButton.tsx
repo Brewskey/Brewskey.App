@@ -11,13 +11,7 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
   onSubmit: SubmitHandler<TFieldValues>;
   testID?: string;
 }) => {
-  let form: ReturnType<typeof useFormContext<TFieldValues>>;
-  
-  try {
-    form = useFormContext<TFieldValues>();
-  } catch (error) {
-    throw new Error('SubmitButton must be used inside a Form component');
-  }
+  const form = useFormContext<TFieldValues>();
   
   const {
     formState: { isSubmitting, isValid, isDirty },

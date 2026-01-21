@@ -750,10 +750,6 @@ export function setupAPIMocks(page: Page): void {
         if (entity) {
           return fulfillJSONResponse(route, 200, entity);
         } else {
-          // Log available entities for debugging
-          const availableIds = getAllEntities(normalizedEntity as EntityType).map((e: any) => e.id);
-          console.warn(`[API Mock] Entity not found: ${normalizedEntity}(${query.id}) - URL: ${url}`);
-          console.warn(`[API Mock] Available IDs for ${normalizedEntity}:`, availableIds);
           return fulfillErrorResponse(route, 404, 'Not found');
         }
       }
