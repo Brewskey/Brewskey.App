@@ -98,7 +98,7 @@ const webStyles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
     borderWidth: 1,
     borderRadius: 4,
-    zIndex: 1000,
+    zIndex: 10_000,
     elevation: 5,
     marginTop: 4,
     ...Platform.select({
@@ -766,7 +766,7 @@ const WebDropdown = <TValueType,>(props: DropdownProps<TValueType> & {
 
       {isOpen && (
         <View style={dropdownListStyle}>
-          <ScrollView style={{ maxHeight: props.maxHeight ?? 300 }}>
+          <ScrollView style={{ maxHeight: props.maxHeight ?? 300, zIndex: 10_000 }}>
             {props.search && (
               <TextInput
                 placeholder={props.searchPlaceholder ?? 'Search...'}
