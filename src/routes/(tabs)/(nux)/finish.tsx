@@ -30,12 +30,25 @@ const styles = StyleSheet.create({
 
 const NuxFinishScreen: React.FC = () => {
   const router = useRouter();
-  const { onContinuePress } = useLocalSearchParams<{ onContinuePress?: string }>();
+  const { onContinuePress, tapId } = useLocalSearchParams<{ 
+    onContinuePress?: string;
+    tapId?: string;
+  }>();
 
   const handlePress = () => {
     if (onContinuePress) {
-      const callback = JSON.parse(onContinuePress);
-      callback();
+      try {
+        const callback = JSON.parse(onContinuePress);
+        callback();
+      } catch (error) {
+        console.error('Failed to parse onContinuePress callback:', error);
+        // Fall through to default navigation
+      }
+    }
+    
+    // Default behavior: navigate to tap details if tapId is provided, otherwise go to tabs
+    if (tapId) {
+      router.replace(`/(tabs)/taps/${tapId}`);
     } else {
       router.replace('/(tabs)');
     }

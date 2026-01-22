@@ -1,92 +1,53 @@
-import React, { PropsWithChildren, useCallback, useContext } from 'react';
+import React, { PropsWithChildren, useCallback, useContext, useState, useEffect } from 'react';
 import type { EntityID } from '@brewskey/js-api';
 
 import { Platform } from 'react-native';
 import nullthrows from 'nullthrows';
 import { fetchJSON } from '../../utils';
 import CONFIG from '../../config';
-import { useGetLocation } from '../useGetLocation';
+import {
+  useLocationPermission,
+  useDeviceLocation,
+} from '../useGetLocation';
 import { useAddSnackBarMessage } from './SnackBarContext';
 import NfcManager, {
-  NfcAdapter,
   NfcError,
   NfcEvents,
-  NfcTech,
   RegisterTagEventOpts,
   TagEvent,
 } from 'react-native-nfc-manager';
 import { useAuthContext } from './AuthContext';
 
-type PourProcessData = {
+type PourProcessState = {
   isVisible: boolean;
   isNFCSupported: boolean;
   isNFCEnabled: boolean;
   isLoading: boolean;
-  shouldShowPaymentScreen: false;
+  shouldShowPaymentScreen: boolean;
   hasReadTag: boolean;
   pourErrorText: string | null;
 };
 
-type PourProcessContextType = [
-  PourProcessData,
-  (data: PourProcessData) => void,
-];
-
-const PourProcessContext = React.createContext<PourProcessContextType>(
-  [] as unknown as PourProcessContextType,
-);
-
-export const PourProcessProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [contextData, setContextData] = React.useState<PourProcessData>({
-    isVisible: false,
-    isNFCSupported: false,
-    isNFCEnabled: false,
-    isLoading: false,
-    shouldShowPaymentScreen: false,
-    hasReadTag: false,
-    pourErrorText: null,
-  });
-
-  // Set up NFC
-  React.useEffect(() => {
-    const bootstrap = async () => {
-      try {
-        await NfcManager.start();
-
-        if (Platform.OS === 'android') {
-          setContextData({
-            ...contextData,
-            isNFCEnabled: await NfcManager.isEnabled(),
-          });
-        } else {
-          setContextData({
-            ...contextData,
-            isNFCEnabled: contextData.isNFCSupported,
-          });
-        }
-      } catch (_) {
-        setContextData({
-          ...contextData,
-          isNFCSupported: false,
-          isNFCEnabled: false,
-        });
-      }
-    };
-
-    void bootstrap();
-    return () => {
-      void NfcManager.close();
-    };
-  }, []);
-
-  return (
-    <PourProcessContext.Provider value={[contextData, setContextData]}>
-      {children}
-    </PourProcessContext.Provider>
-  );
+type PourProcessContextValue = {
+  // State (read-only)
+  isVisible: boolean;
+  isNFCSupported: boolean;
+  isNFCEnabled: boolean;
+  isLoading: boolean;
+  shouldShowPaymentScreen: boolean;
+  hasReadTag: boolean;
+  pourErrorText: string | null;
+  
+  // Actions
+  openModal: () => Promise<void>;
+  closeModal: () => Promise<void>;
+  startPourAuthorization: (totp: string) => Promise<void>;
+  clearError: () => void;
+  setLoading: (isLoading: boolean) => void;
+  setError: (error: string | null) => void;
 };
+
+const PourProcessContext = React.createContext<PourProcessContextValue | null>(null);
 
 const STANDARD_NFC_ERROR_MESSAGE =
   'Could not read the full NFC message.\nTry Again!';
@@ -103,22 +64,7 @@ const onNFCTagDiscovered = (
     return undefined;
   }
 
-  // this._hasReadTag = true;
   const { payload } = tag.ndefMessage[1];
-  // if (tag.ndefMessage) {
-  //   // eslint-disable-next-line prefer-destructuring
-  //   payload = tag.ndefMessage[1].payload;
-  // } else if (tag.length) {
-  //   if (!tag[1].payload[0]) {
-  //     tag[1].payload.shift();
-  //   }
-
-  //   // eslint-disable-next-line prefer-destructuring
-  //   payload = tag[1].payload;
-  // } else {
-  //   this._showBadScan();
-  //   return;
-  // }
 
   const tagValue = String.fromCharCode.apply(
     null,
@@ -137,7 +83,6 @@ const onNFCTagDiscovered = (
 
   const result = nullthrows(tagValue.substring(index).match(/\d+/));
   return result[0];
-  // this._processPour();
 };
 
 type AuthPayloadParams = {
@@ -213,162 +158,262 @@ const listenForTagOnce = (
   });
 };
 
-export const usePourModalContext = (): PourProcessData & {
-  setVisibility: (isVisible: boolean) => void;
-  startPourAuthorization: (totp: string) => void;
-  setContextData: (data: Partial<PourProcessData>) => void;
-} => {
+/**
+ * Provider component that manages pour process state and NFC setup
+ */
+export const PourProcessProvider: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
+  const [state, setState] = useState<PourProcessState>({
+    isVisible: false,
+    isNFCSupported: false,
+    isNFCEnabled: false,
+    isLoading: false,
+    shouldShowPaymentScreen: false,
+    hasReadTag: false,
+    pourErrorText: null,
+  });
+
+  // Set up NFC support detection
+  useEffect(() => {
+    const bootstrap = async () => {
+      try {
+        await NfcManager.start();
+        const isSupported = await NfcManager.isSupported();
+
+        if (Platform.OS === 'android') {
+          const isEnabled = await NfcManager.isEnabled();
+          setState((prev) => ({
+            ...prev,
+            isNFCSupported: isSupported,
+            isNFCEnabled: isEnabled,
+          }));
+        } else {
+          setState((prev) => ({
+            ...prev,
+            isNFCSupported: isSupported,
+            isNFCEnabled: isSupported, // iOS doesn't have separate enabled check
+          }));
+        }
+      } catch (_) {
+        setState((prev) => ({
+          ...prev,
+          isNFCSupported: false,
+          isNFCEnabled: false,
+        }));
+      }
+    };
+
+    void bootstrap();
+    return () => {
+      void NfcManager.close();
+    };
+  }, []);
+
+  const openModal = useCallback(async () => {
+    setState((prev) => ({
+      ...prev,
+      isVisible: true,
+      pourErrorText: null,
+      isLoading: false,
+    }));
+  }, []);
+
+  const closeModal = useCallback(async () => {
+    if (state.isNFCEnabled) {
+      await NfcManager.unregisterTagEvent();
+      await NfcManager.cancelTechnologyRequest();
+    }
+    setState((prev) => ({
+      ...prev,
+      isVisible: false,
+      isLoading: false,
+      shouldShowPaymentScreen: false,
+      hasReadTag: false,
+    }));
+  }, [state.isNFCEnabled]);
+
+  const setLoading = useCallback((isLoading: boolean) => {
+    setState((prev) => ({ ...prev, isLoading }));
+  }, []);
+
+  const setError = useCallback((error: string | null) => {
+    setState((prev) => ({ ...prev, pourErrorText: error }));
+  }, []);
+
+  const clearError = useCallback(() => {
+    setState((prev) => ({ ...prev, pourErrorText: null }));
+  }, []);
+
+  const startPourAuthorization = useCallback(async (_totp: string) => {
+    // Base implementation - will be overridden by hook with business logic
+  }, []);
+
+  const contextValue: PourProcessContextValue = {
+    // State (read-only)
+    isVisible: state.isVisible,
+    isNFCSupported: state.isNFCSupported,
+    isNFCEnabled: state.isNFCEnabled,
+    isLoading: state.isLoading,
+    shouldShowPaymentScreen: state.shouldShowPaymentScreen,
+    hasReadTag: state.hasReadTag,
+    pourErrorText: state.pourErrorText,
+    
+    // Actions
+    openModal,
+    closeModal,
+    startPourAuthorization,
+    clearError,
+    setLoading,
+    setError,
+  };
+
+  return (
+    <PourProcessContext.Provider value={contextValue}>
+      {children}
+    </PourProcessContext.Provider>
+  );
+};
+
+/**
+ * Hook to access pour modal context
+ * Provides state and actions for managing the pour authorization flow
+ * 
+ * @example
+ * ```tsx
+ * const { isVisible, openModal, closeModal, startPourAuthorization } = usePourModalContext();
+ * 
+ * <Button onPress={() => openModal()}>Pour</Button>
+ * ```
+ */
+export const usePourModalContext = (): PourProcessContextValue => {
+  const context = useContext(PourProcessContext);
+  if (!context) {
+    throw new Error('usePourModalContext must be used within PourProcessProvider');
+  }
+
   const [session] = useAuthContext();
-  const [contextData, setContextData] = useContext(PourProcessContext);
-  const { location, permission } = useGetLocation();
+  const permissionQuery = useLocationPermission();
+  const locationQuery = useDeviceLocation();
+  const location = locationQuery.data ?? null;
+  const permission = permissionQuery.data ?? null;
   const addSnackBarMessage = useAddSnackBarMessage();
 
-  const setVisibility = useCallback(
-    async (isVisible: boolean) => {
-      if (isVisible) {
-        setContextData({
-          ...contextData,
-          isVisible: true,
-          pourErrorText: null,
-          isLoading: false,
+  const openModal = useCallback(async () => {
+    // Wait for queries to resolve before proceeding
+    if (permissionQuery.isLoading || locationQuery.isLoading) {
+      return;
+    }
+
+    // Open the modal
+    await context.openModal();
+
+    // Check geolocation permission
+    if (permission == null || permission.granted === false) {
+      addSnackBarMessage({
+        duration: 3000,
+        style: 'danger',
+        content: "Can't get your GPS coordinates",
+      });
+    }
+
+    // Start NFC listening if enabled
+    if (context.isNFCEnabled) {
+      const sendPourAuthorizationParams = {
+        accessToken: session?.accessToken,
+        latitude: location?.coords.latitude ?? 0,
+        longitude: location?.coords.longitude ?? 0,
+        didAuthorizePayment: false,
+        totp: '',
+      };
+      
+      try {
+        await listenForTagOnce({
+          alertMessage: 'Tap Brewskey Box',
+          invalidateAfterFirstRead: true,
         });
-        if (contextData.isNFCEnabled) {
-          const sendPourAuthorizationParams = {
-            accessToken: session?.accessToken,
-            latitude: location?.coords.latitude ?? 0,
-            longitude: location?.coords.latitude ?? 0,
-            didAuthorizePayment: false,
-            totp: '',
-          };
-          await listenForTagOnce({
-            alertMessage: 'Tap Brewskey Box',
-            invalidateAfterFirstRead: true,
-            // isReaderModeEnabled: true,
-            // readerModeFlags:
-            //   NfcAdapter.FLAG_READER_NFC_A |
-            //   NfcAdapter.FLAG_READER_NFC_B |
-            //   NfcAdapter.FLAG_READER_NFC_F |
-            //   NfcAdapter.FLAG_READER_NFC_V, // & NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
-          })
-            .then(() => NfcManager.getTag())
-            .then(async (tag) => {
-              const deviceId = await onNFCTagDiscovered(
-                tag,
-                contextData.hasReadTag,
-              );
+        
+        const tag = await NfcManager.getTag();
+        const deviceId = await onNFCTagDiscovered(tag, context.hasReadTag);
 
-              if (deviceId == null) {
-                return;
-              }
-
-              setContextData({
-                ...contextData,
-                hasReadTag: true,
-              });
-              await sendPourAuthorization({
-                ...sendPourAuthorizationParams,
-                deviceId,
-              });
-              addSnackBarMessage({
-                duration: 3000,
-                style: 'success',
-                content: 'You can start pouring now!',
-              });
-              setVisibility(false);
-            })
-            .catch((error: Error) => {
-              addSnackBarMessage({
-                duration: 3000,
-                style: 'danger',
-                content: error.message,
-              });
-              NfcManager.cancelTechnologyRequest();
-            });
-        }
-        // check geolocation
-        if (permission == null || permission.granted === false) {
+        if (deviceId != null) {
+          await sendPourAuthorization({
+            ...sendPourAuthorizationParams,
+            deviceId,
+          });
           addSnackBarMessage({
             duration: 3000,
-            style: 'danger',
-            content: "Can't get your GPS coordinates",
+            style: 'success',
+            content: 'You can start pouring now!',
           });
+          await context.closeModal();
         }
-        setContextData({
-          ...contextData,
-          pourErrorText: null,
-          isLoading: false,
-          isVisible,
-        });
-        return;
-      }
-
-      if (contextData.isNFCEnabled) {
-        await NfcManager.unregisterTagEvent();
-        await NfcManager.cancelTechnologyRequest();
-      }
-
-      setContextData({
-        ...contextData,
-        isLoading: false,
-        shouldShowPaymentScreen: false,
-        hasReadTag: false,
-        isVisible,
-      });
-    },
-    [contextData, setContextData],
-  );
-
-  const startPourAuthorization = useCallback(
-    async (totp: string) => {
-      if (totp.length !== 6) {
+      } catch (error) {
         addSnackBarMessage({
           duration: 3000,
           style: 'danger',
-          content: 'Invalid code',
+          content: (error as Error).message,
         });
-        return;
+        NfcManager.cancelTechnologyRequest();
       }
+    }
+  }, [
+    context,
+    permissionQuery.isLoading,
+    locationQuery.isLoading,
+    permission,
+    location,
+    session?.accessToken,
+    addSnackBarMessage,
+  ]);
 
-      try {
-        setContextData({
-          ...contextData,
-          isLoading: true,
-        });
-        await sendPourAuthorization({
-          accessToken: session?.accessToken,
-          latitude: location?.coords.latitude ?? 0,
-          longitude: location?.coords.latitude ?? 0,
-          didAuthorizePayment: false,
-          deviceId: undefined,
-          totp,
-        });
-        setVisibility(false);
-      } catch (error) {
-        setContextData({
-          ...contextData,
-          isLoading: false,
-          pourErrorText: (error as Error).message,
-        });
-      }
-    },
-    [
-      addSnackBarMessage,
-      session,
-      location,
-      setContextData,
-      contextData,
-      setVisibility,
-    ],
-  );
+  const startPourAuthorization = useCallback(async (totp: string) => {
+    if (totp.length !== 6) {
+      addSnackBarMessage({
+        duration: 3000,
+        style: 'danger',
+        content: 'Invalid code',
+      });
+      return;
+    }
+
+    // Wait for queries to resolve before proceeding
+    if (permissionQuery.isLoading || locationQuery.isLoading) {
+      addSnackBarMessage({
+        duration: 3000,
+        style: 'danger',
+        content: 'Location data is still loading. Please try again.',
+      });
+      return;
+    }
+
+    try {
+      context.setLoading(true);
+      await sendPourAuthorization({
+        accessToken: session?.accessToken,
+        latitude: location?.coords.latitude ?? 0,
+        longitude: location?.coords.longitude ?? 0,
+        didAuthorizePayment: false,
+        deviceId: undefined,
+        totp,
+      });
+      await context.closeModal();
+    } catch (error) {
+      context.setLoading(false);
+      context.setError((error as Error).message);
+    }
+  }, [
+    addSnackBarMessage,
+    session?.accessToken,
+    location,
+    permissionQuery.isLoading,
+    locationQuery.isLoading,
+    context,
+  ]);
 
   return {
-    ...contextData,
-    setVisibility,
+    ...context,
+    openModal,
     startPourAuthorization,
-    setContextData: (data) =>
-      setContextData({
-        ...contextData,
-        ...data,
-      }),
   };
 };

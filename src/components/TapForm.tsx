@@ -14,7 +14,6 @@ import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import SectionContent from '../common/SectionContent';
 import { Form } from '../common/form/Form';
 import { CheckBoxInput } from '../common/form/CheckBoxInput';
-import { TextField } from '../common/form/TextField';
 import { DropdownInput } from '../common/form/DropdownInput';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { TextInput } from '../common/form/TextInput';
@@ -23,7 +22,6 @@ import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
 import LoadingIndicator from '../common/LoadingIndicator';
 
 type Props = {
-  isFocused?: boolean;
   onSubmit: (values: TapMutator) => void | Promise<void>;
   submitButtonLabel: string;
   organizationId: EntityID;
@@ -35,9 +33,7 @@ export const TapForm: React.FC<Props> = ({
   tap,
   onSubmit,
   submitButtonLabel,
-  isFocused: isFocusedProp,
 }) => {
-  const isFocused = isFocusedProp ?? true;
   const form = useForm<TapMutator>({
     defaultValues: {
       ...tap,
@@ -46,7 +42,7 @@ export const TapForm: React.FC<Props> = ({
     },
   });
   const [deviceSearchFilter, setDeviceSearch] = React.useState('');
-  const { data: organization, isLoading } = useGetOrganizationById(organizationId);
+  const { data: organization, isLoading, error } = useGetOrganizationById(organizationId);
   const { data: devices } = useGetDevices({
     filters:
       deviceSearchFilter != null && deviceSearchFilter != ''
@@ -54,56 +50,55 @@ export const TapForm: React.FC<Props> = ({
         : undefined,
   });
 
-  if (isLoading) {
-    return <LoadingIndicator testID="tap-form-loading" />;
-  }
+  // Ensure form is ready before rendering SubmitButton
+  const isFormReady = !isLoading && !error && organization && form.formState;
 
-  if (!organization) {
-    return <LoadingIndicator testID="tap-form-loading" />;
-  }
-
+  // Always render Form to provide context, even during loading
   return (
     <Form form={form}>
-      <View testID="tap-form">
-        <FormField
-          component={TextInput}
-          name="description"
-          label="Description"
-          testID="input-description"
-        />
-        <DropdownInput<Device>
-          data={devices?.pages.flat() ?? []}
-          labelField={'name'}
-          valueField={'id'}
-          name="deviceId"
-          required="Brewskey box is required"
-          search
-          searchQuery={(keyword) => {
-            setDeviceSearch(keyword);
-            return true;
-          }}
-        />
-        {organization == null || !organization.canEnablePayments ? null : (
-          <CheckBoxInput
-            label="Enable Payments for this tap"
-            name="isPaymentEnabled"
+      {isLoading || error || !organization ? (
+        <LoadingIndicator testID="tap-form-loading" />
+      ) : (
+        <View testID="tap-form">
+          <FormField
+            component={TextInput}
+            name="description"
+            label="Description"
+            testID="input-description"
           />
-        )}
-        <CheckBoxInput label="Hide leaderboard" name="hideLeaderboard" />
-        <CheckBoxInput label="Hide Stats tab" name="hideStats" />
-        <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
-        {!isFocused ? null : (
+          <DropdownInput<Device>
+            data={devices?.pages.flat() ?? []}
+            labelField={'name'}
+            valueField={'id'}
+            name="deviceId"
+            required="Brewskey box is required"
+            search
+            searchQuery={(keyword: string) => {
+              setDeviceSearch(keyword);
+              return true;
+            }}
+          />
+          {organization == null || !organization.canEnablePayments ? null : (
+            <CheckBoxInput
+              label="Enable Payments for this tap"
+              name="isPaymentEnabled"
+            />
+          )}
+          <CheckBoxInput label="Hide leaderboard" name="hideLeaderboard" />
+          <CheckBoxInput label="Hide Stats tab" name="hideStats" />
+          <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
           <MainTabBarFill>
             <SectionContent paddedVertical>
               <SubmitButton
                 onSubmit={onSubmit}
                 testID={tap ? 'submit-button-edit-tap' : 'submit-button-create-tap'}
                 title={submitButtonLabel}
+                disabled={!isFormReady}
               />
             </SectionContent>
           </MainTabBarFill>
-        )}
-      </View>
+        </View>
+      )}
     </Form>
   );
 };

@@ -20,6 +20,7 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import ErrorScreen from '../../../../../common/ErrorScreen';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
 import Container from '../../../../../common/Container';
+import Header from '../../../../../common/Header';
 import Section from '../../../../../common/Section';
 import SectionHeader from '../../../../../common/SectionHeader';
 import Button from '../../../../../common/buttons/Button';
@@ -69,6 +70,7 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   }
 
   const form = useFormContext<PriceVariantMutator>();
+  const isFormReady = form.formState != null;
   const {
     formState: { isSubmitting, isValid, isDirty, errors },
   } = form;
@@ -149,7 +151,8 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   if (isLoading || !tap || !location || !organization) {
     return (
       <Container>
-        <LoadingIndicator />
+        <Header shouldShowBackButton />
+        <LoadingIndicator testID="tap-payments-loading" />
       </Container>
     );
   }
@@ -216,9 +219,9 @@ const EditTapPaymentsRouteContent: React.FC = () => {
       </KeyboardAwareScrollView>
       <MainTabBarFill>
         <Button
-          disabled={isSubmitting || !isValid || !isDirty}
+          disabled={!isFormReady || isSubmitting || !isValid || !isDirty}
           loading={isSubmitting}
-          onPress={handleSubmitWithError(form, onFormSubmit)}
+          onPress={isFormReady ? handleSubmitWithError(form, onFormSubmit) : undefined}
           style={{ marginVertical: 12 }}
           title={formValue == null ? 'Create Price' : 'Update Price'}
         />

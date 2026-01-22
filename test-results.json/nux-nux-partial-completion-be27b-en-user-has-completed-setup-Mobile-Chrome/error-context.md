@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e8]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e22]: Brewskey
+      - button "" [ref=e25]:
+        - generic [ref=e27]: 
+    - generic [ref=e29]:
+      - generic [ref=e35] [cursor=pointer]:
+        - generic [ref=e36]: Randal97
+        - generic [ref=e37]: Go to profile
+      - generic [ref=e38]:
+        - generic [ref=e40] [cursor=pointer]:
+          - generic:
+            - generic:
+              - button "":
+                - generic:
+                  - generic: 
+          - generic [ref=e41]: Friends
+        - generic [ref=e42] [cursor=pointer]:
+          - generic:
+            - generic:
+              - button "":
+                - generic:
+                  - generic: 
+          - generic [ref=e43]: Help
+        - generic [ref=e45] [cursor=pointer]:
+          - generic:
+            - generic:
+              - button "󰍃":
+                - generic:
+                  - generic: 󰍃
+          - generic [ref=e46]: Log Out
+  - generic [ref=e47]:
+    - button "" [ref=e51]:
+      - generic [ref=e53]: 
+    - generic [ref=e54]:
+      - button "" [ref=e56] [cursor=pointer]:
+        - generic [ref=e58]: 
+      - button "󰄫" [ref=e60] [cursor=pointer]:
+        - generic [ref=e62]: 󰄫
+      - button "" [ref=e64] [cursor=pointer]:
+        - generic [ref=e67]: 
+      - button "" [ref=e69] [cursor=pointer]:
+        - generic [ref=e72]: 
+```

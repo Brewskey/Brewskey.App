@@ -34,7 +34,7 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(() => {
     );
   }
 
-  const tap = useGetTapById(tapIdValue as EntityID);
+  const { data: tap, isLoading } = useGetTapById(tapIdValue as EntityID);
   const createTap = useCreateTap();
   const updateTap = useUpdateTap();
 
@@ -43,7 +43,7 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(() => {
   const addSnackbarMessage = useAddSnackBarMessage();
 
   const onTapFormSubmit = async (values: TapMutator): Promise<void> => {
-    if (tap.data?.id) {
+    if (tap?.id) {
       await updateTap.mutateAsync(values);
     } else {
       await createTap.mutateAsync(values);
@@ -53,20 +53,12 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(() => {
     });
   };
 
-  if (tap.isLoading) {
+  if (isLoading || !tap || !tap.organization?.id) {
     return (
       <Container>
         <Header shouldShowBackButton title="Edit Tap" />
         <LoadingIndicator />
       </Container>
-    );
-  }
-  if (tap.status !== 'success' || tap.data == null) {
-    return (
-      <NotFoundScreen
-        title="Tap Not Found"
-        message="The tap you're looking for could not be found."
-      />
     );
   }
 
@@ -90,8 +82,8 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(() => {
         <TapForm
           onSubmit={onTapFormSubmit}
           submitButtonLabel="Edit tap"
-          tap={tap.data}
-          organizationId={tap.data.organization.id}
+          tap={tap}
+          organizationId={tap.organization.id}
         />
       </KeyboardAwareScrollView>
     </Container>

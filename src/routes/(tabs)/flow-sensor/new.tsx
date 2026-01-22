@@ -46,7 +46,12 @@ const NewFlowSensorScreen = withErrorBoundary(() => {
       if (shouldReturn && router.canGoBack()) {
         router.back();
       } else {
-        router.navigate(`/(tabs)/taps/${tapId}/keg/new`);
+        router.navigate({
+          pathname: `/(tabs)/taps/${tapId}/keg/new`,
+          params: {
+            ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
+          },
+        });
       }
     };
 
@@ -64,6 +69,7 @@ const NewFlowSensorScreen = withErrorBoundary(() => {
         params: {
           tapId: tapId as string,
           onFlowSensorCreated: JSON.stringify(_onFlowSensorCreated),
+          ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
         },
       });
     };

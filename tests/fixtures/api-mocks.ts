@@ -585,6 +585,38 @@ export function setupAPIMocks(page: Page): void {
     return fulfillErrorResponse(route, 405, 'Method not allowed');
   });
 
+  // Handle pour authorization endpoint
+  page.route('**/api/authorizations/pour/**', async (route: Route) => {
+    const method = route.request().method();
+
+    if (method === 'POST') {
+      try {
+        const body = await route.request().postDataJSON();
+        
+        // Validate TOTP format (6 digits) if provided
+        if (body.totp && (typeof body.totp !== 'string' || body.totp.length !== 6 || !/^\d+$/.test(body.totp))) {
+          return fulfillErrorResponse(route, 400, 'Invalid code', 'The passcode you entered was incorrect or expired. Please try a new code.');
+        }
+        
+        // Validate deviceId if provided
+        if (body.deviceId && typeof body.deviceId !== 'number') {
+          return fulfillErrorResponse(route, 400, 'Invalid device', 'Invalid device ID');
+        }
+        
+        // Success response
+        return fulfillJSONResponse(route, 200, { success: true });
+      } catch (error) {
+        return fulfillErrorResponse(
+          route,
+          500,
+          error instanceof Error ? error.message : 'Internal server error',
+        );
+      }
+    }
+
+    return fulfillErrorResponse(route, 405, 'Method not allowed');
+  });
+
   // Handle account endpoints (not under /api/v2/)
   page.route('**/api/account/**', async (route: Route) => {
     const url = route.request().url();
@@ -676,6 +708,24 @@ export function setupAPIMocks(page: Page): void {
         });
         mockStore.setUser(newUser);
         return fulfillJSONResponse(route, 200, { success: true });
+      }
+
+      // Handle leaderboard endpoint (e.g., /api/v2/taps/{id}/Default.leaderboard(...))
+      // The URL pattern can be: /api/v2/taps(123)/Default.leaderboard(...) or /api/v2/taps/123/Default.leaderboard(...)
+      if (url.includes('Default.leaderboard') && method === 'GET') {
+        // Extract tap ID from URL - handle both patterns: taps(123) and taps/123
+        const tapIdMatch = url.match(/\/taps(?:\((\d+)\)|\/(\d+))\/?/);
+        const tapId = tapIdMatch ? parseInt(tapIdMatch[1] || tapIdMatch[2], 10) : null;
+        
+        if (!tapId) {
+          return fulfillErrorResponse(route, 400, 'Invalid tap ID');
+        }
+        
+        // Return empty leaderboard array for now
+        // In a real scenario, you'd query pours and aggregate by user
+        const leaderboard: any[] = [];
+        
+        return fulfillJSONResponse(route, 200, leaderboard);
       }
 
       // Handle custom function endpoints (e.g., Default.nearby())

@@ -1,0 +1,104 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e8]:
+    - generic [ref=e17]:
+      - generic [ref=e19]:
+        - button "" [ref=e22]:
+          - generic [ref=e24]: 
+        - generic [ref=e26]: New location
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e33]: Name
+          - generic [ref=e34]:
+            - generic [ref=e35]: Name
+            - textbox [ref=e37]: Test Location
+        - generic [ref=e38]:
+          - generic [ref=e40]: Description
+          - generic [ref=e41]:
+            - generic [ref=e42]: Description
+            - textbox [ref=e44]
+        - generic [ref=e47]: Location type
+        - generic [ref=e52]:
+          - generic [ref=e54]: Street
+          - generic [ref=e55]:
+            - generic [ref=e56]: Street
+            - textbox [ref=e58]: 123 Test St
+        - generic [ref=e59]:
+          - generic [ref=e61]: Apt./Suite
+          - generic [ref=e62]:
+            - generic [ref=e63]: Apt./Suite
+            - textbox [ref=e65]
+        - generic [ref=e66]:
+          - generic [ref=e68]: City
+          - generic [ref=e69]:
+            - generic [ref=e70]: City
+            - textbox [ref=e72]: Test City
+        - generic [ref=e75]: State
+        - generic [ref=e80]:
+          - generic [ref=e82]: Zip
+          - generic [ref=e83]:
+            - generic [ref=e84]: Zip
+            - textbox [ref=e86]: "12345"
+    - button "Create location" [ref=e89] [cursor=pointer]:
+      - generic [ref=e91]: Create location
+  - dialog [ref=e93]:
+    - generic [ref=e95]:
+      - generic [ref=e97]:
+        - button "" [ref=e100]:
+          - generic [ref=e102]: 
+        - generic [ref=e104]: Select State
+      - generic [ref=e108]:
+        - generic [ref=e111] [cursor=pointer]: Alabama
+        - generic [ref=e114] [cursor=pointer]: Alaska
+        - generic [ref=e117] [cursor=pointer]: Arizona
+        - generic [ref=e120] [cursor=pointer]: Arkansas
+        - generic [ref=e123] [cursor=pointer]: California
+        - generic [ref=e126] [cursor=pointer]: Colorado
+        - generic [ref=e129] [cursor=pointer]: Connecticut
+        - generic [ref=e132] [cursor=pointer]: Delaware
+        - generic [ref=e135] [cursor=pointer]: District Of Columbia
+        - generic [ref=e138] [cursor=pointer]: Florida
+        - generic [ref=e141] [cursor=pointer]: Georgia
+        - generic [ref=e144] [cursor=pointer]: Hawaii
+        - generic [ref=e147] [cursor=pointer]: Idaho
+        - generic [ref=e150] [cursor=pointer]: Illinois
+        - generic [ref=e153] [cursor=pointer]: Indiana
+        - generic [ref=e156] [cursor=pointer]: Iowa
+        - generic [ref=e159] [cursor=pointer]: Kansas
+        - generic [ref=e162] [cursor=pointer]: Kentucky
+        - generic [ref=e165] [cursor=pointer]: Louisiana
+        - generic [ref=e168] [cursor=pointer]: Maine
+        - generic [ref=e171] [cursor=pointer]: Maryland
+        - generic [ref=e174] [cursor=pointer]: Massachusetts
+        - generic [ref=e177] [cursor=pointer]: Michigan
+        - generic [ref=e180] [cursor=pointer]: Minnesota
+        - generic [ref=e183] [cursor=pointer]: Mississippi
+        - generic [ref=e186] [cursor=pointer]: Missouri
+        - generic [ref=e189] [cursor=pointer]: Montana
+        - generic [ref=e192] [cursor=pointer]: Nebraska
+        - generic [ref=e195] [cursor=pointer]: Nevada
+        - generic [ref=e198] [cursor=pointer]: New Hampshire
+        - generic [ref=e201] [cursor=pointer]: New Jersey
+        - generic [ref=e204] [cursor=pointer]: New Mexico
+        - generic [ref=e207] [cursor=pointer]: New York
+        - generic [ref=e210] [cursor=pointer]: North Carolina
+        - generic [ref=e213] [cursor=pointer]: North Dakota
+        - generic [ref=e216] [cursor=pointer]: Ohio
+        - generic [ref=e219] [cursor=pointer]: Oklahoma
+        - generic [ref=e222] [cursor=pointer]: Oregon
+        - generic [ref=e225] [cursor=pointer]: Pennsylvania
+        - generic [ref=e228] [cursor=pointer]: Rhode Island
+        - generic [ref=e231] [cursor=pointer]: South Carolina
+        - generic [ref=e234] [cursor=pointer]: South Dakota
+        - generic [ref=e237] [cursor=pointer]: Tennessee
+        - generic [ref=e240] [cursor=pointer]: Texas
+        - generic [ref=e243] [cursor=pointer]: Utah
+        - generic [ref=e246] [cursor=pointer]: Vermont
+        - generic [ref=e249] [cursor=pointer]: Virginia
+        - generic [ref=e252] [cursor=pointer]: Washington
+        - generic [ref=e255] [cursor=pointer]: West Virginia
+        - generic [ref=e258] [cursor=pointer]: Wisconsin
+        - generic [ref=e261] [cursor=pointer]: Wyoming
+```

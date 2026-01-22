@@ -53,9 +53,9 @@ test('should navigate to tap details', async ({ page, tapPage, menuPage }) => {
 });
 
 test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
-  // Set up explicit data: organization for tap creation
-  // NewTapScreen requires organizationId to render the form
-  const { organization } = await mockTapWithKeg(page);
+  // Set up explicit data: device for tap creation
+  // NewTapScreen requires deviceId to render the form
+  const { device } = await mockTapWithKeg(page);
   
   // Navigate through menu to taps
   await menuPage.goto();
@@ -64,22 +64,24 @@ test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
   // Wait for page to load
   await expect(tapPage.getTapsList()).toBeVisible();
   
-  // Navigate to new tap screen with organizationId parameter
-  // The header button doesn't pass organizationId, so we navigate directly
-  // Organization ID format: API mock expects number, but EntityID can be string or number
-  // The parseODataQuery function converts URL IDs to integers
-  // So we need to ensure the organization.id matches what's stored in the mock store
-  // Since mockTapWithKeg creates organization with generateId() which returns a number,
-  // we can use it directly
-  const url = `/(tabs)/taps/new?organizationId=${organization.id}`;
+  // Navigate to new tap screen with deviceId parameter
+  // NewTapScreen gets organizationId from the device, so we only need deviceId
+  const url = `/(tabs)/taps/new?deviceId=${device.id}`;
   await page.goto(url);
 
-  // Wait for the form to load - TapForm queries organization by ID
+  // Wait for the form to load - TapForm queries organization by ID from device
   // The form container has testID="tap-form" when organization is loaded
   // Organization query should complete and form should render
-  // The query uses OrganizationDAO.fetchByID which calls /api/v2/organizations(id)
   // Wait for the form to appear (organization query completes)
-  await expect(page.getByTestId('tap-form')).toBeVisible();
+  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
+  
+  // Wait for loading to complete and form to be visible
+  const loadingIndicator = page.getByTestId('tap-form-loading');
+  if (await loadingIndicator.isVisible().catch(() => false)) {
+    await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
+  }
+  
+  await expect(page.getByTestId('tap-form')).toBeVisible({ timeout: 5000 });
 
   // After form is visible, check for the description input field
   // TapForm uses "description" field, not "tapNumber"

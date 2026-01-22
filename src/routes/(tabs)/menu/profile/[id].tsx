@@ -47,17 +47,13 @@ const ProfileScreen: React.FC = () => {
 
   const isLoading = accountLoading || friendLoading;
 
-  if (isLoading) {
+  if (isLoading || account == null) {
     return (
       <Container>
         <Header shouldShowBackButton />
-        <LoadingIndicator />
+        <LoadingIndicator testID="profile-loading" />
       </Container>
     );
-  }
-
-  if (account == null) {
-    return null;
   }
 
   return (
@@ -69,7 +65,7 @@ const ProfileScreen: React.FC = () => {
         shouldShowBackButton
         title={account.userName}
       />
-      <ScrollView>
+      <ScrollView testID="profile-content">
         <Section bottomPadded>
           <SectionContent centered paddedVertical>
             {userID === account.id ? (
@@ -84,6 +80,7 @@ const ProfileScreen: React.FC = () => {
           <Section>
             <SectionHeader
               title={`You aren't friends with ${account.userName}`}
+              testID="section-header-not-friends"
             />
           </Section>
         ) : (
@@ -92,7 +89,7 @@ const ProfileScreen: React.FC = () => {
               bottomPadded
               innerContainerStyle={styles.friendsListSection}
             >
-              <SectionHeader title="Friends" />
+              <SectionHeader title="Friends" testID="section-header-friends" />
               <FriendsHorizontalList
                 queryOptions={{
                   filters: [
@@ -105,11 +102,11 @@ const ProfileScreen: React.FC = () => {
               />
             </Section>
             <Section bottomPadded>
-              <SectionHeader title="Badges" />
+              <SectionHeader title="Badges" testID="section-header-badges" />
               <UserBadges userID={account.id} />
             </Section>
             <Section bottomPadded>
-              <SectionHeader title="Beverages Poured" />
+              <SectionHeader title="Beverages Poured" testID="section-header-beverages-poured" />
               <AllBeveragesHScroll userID={account.id} />
             </Section>
           </React.Fragment>

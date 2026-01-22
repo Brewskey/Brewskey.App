@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  isFocused?: boolean;
   location?: Location;
   onSubmit: (values: LocationMutator) => undefined | Promise<unknown>;
   submitButtonLabel: string;
@@ -74,14 +73,12 @@ type FormProps = Omit<LocationMutator, 'organizationId'> & {
 };
 
 const LocationForm: React.FC<Props> = ({
-  isFocused: isFocusedProp,
   location = {
     squareLocationID: '',
   } as Location,
   submitButtonLabel,
   onSubmit,
 }) => {
-  const isFocused = isFocusedProp ?? true;
 
   const form = useForm<FormProps>({
     defaultValues: {
@@ -234,7 +231,7 @@ const LocationForm: React.FC<Props> = ({
         )}
         <MainTabBarFill>
           <Button
-            disabled={!isValid || !isDirty || isSubmitting || !isFocused}
+            disabled={!isValid || !isDirty || isSubmitting}
             loading={isSubmitting}
             onPress={handleSubmitWithError(form, onSubmitForm)}
             style={{ marginVertical: 12 }}

@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
 });
 
 export const PourButton: React.FC = (_) => {
-  const { isLoading, setVisibility } = usePourModalContext();
+  const { isLoading, openModal } = usePourModalContext();
   return (
     <>
       {!isLoading ? (
         <TouchableItem 
-          onPress={() => setVisibility(true)} 
+          onPress={() => openModal()} 
           style={styles.container}
           testID="pour-button"
         >

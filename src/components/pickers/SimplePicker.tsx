@@ -65,7 +65,6 @@ export const SimplePicker = <TValue,>({
       labelField="label"
       valueField="value"
       multiple={false}
-      mode="modal"
       headerTitle={headerTitle}
       confirmSelectItem={doesRequireConfirmation}
       inputVariant="picker"

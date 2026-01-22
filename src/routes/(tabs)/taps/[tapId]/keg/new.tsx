@@ -13,7 +13,10 @@ import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarCont
 
 const NewKegScreen: React.FC = () => {
   const router = useRouter();
-  const { tapId } = useLocalSearchParams<{ tapId: string }>();
+  const { tapId, onTapSetupFinish } = useLocalSearchParams<{ 
+    tapId: string;
+    onTapSetupFinish?: string;
+  }>();
   const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
 
   const createKeg = useCreateKeg();
@@ -31,6 +34,20 @@ const NewKegScreen: React.FC = () => {
   const onFormSubmit = async (values: KegMutator): Promise<KegMutator> => {
     await createKeg.mutateAsync(values);
     addSnackBarMessage({ content: 'New keg added' });
+    
+    // If onTapSetupFinish is provided (from NUX flow), navigate to nuxFinish instead of normal navigation
+    // In NUX flow, onTapSetupFinish indicates we should navigate to the finish screen
+    if (onTapSetupFinish) {
+      // Navigate to nuxFinish screen - this completes the NUX flow
+      // The finish screen will handle the final navigation to tap details
+      router.replace({
+        pathname: '/(tabs)/(nux)/finish',
+        params: {
+          tapId: tapIdValue.toString(),
+        },
+      });
+      return values;
+    }
     
     if (router.canGoBack()) {
       router.back();

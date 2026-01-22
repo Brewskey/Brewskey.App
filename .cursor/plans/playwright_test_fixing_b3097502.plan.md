@@ -28,7 +28,16 @@ todos:
     status: completed
   - id: fix-assertions
     content: Fix assertion failures and timing issues
-    status: in_progress
+    status: completed
+  - id: fix-submitbutton-form-context
+    content: Fix SubmitButton form context null error in TapForm and KegForm
+    status: completed
+  - id: fix-loading-patterns
+    content: Apply LoadingIndicator pattern to prevent null return issues
+    status: completed
+  - id: fix-nux-tests
+    content: Fix NUX partial completion tests by creating mockLocationOnly helper
+    status: completed
   - id: verify-all-pass
     content: Run complete test suite and verify all tests pass
     status: pending

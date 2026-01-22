@@ -13,9 +13,10 @@ import { useCreateFlowSensor } from '../../../hooks/queries/FlowSensorQueries';
 
 const NewFlowSensorCustomScreen = withErrorBoundary(() => {
       const router = useRouter();
-      const { tapId, onFlowSensorCreated } = useLocalSearchParams<{ 
+      const { tapId, onFlowSensorCreated, onTapSetupFinish } = useLocalSearchParams<{ 
         tapId: string;
         onFlowSensorCreated?: string;
+        onTapSetupFinish?: string;
       }>();
       const createFlowSensor = useCreateFlowSensor();
 
@@ -32,7 +33,22 @@ const NewFlowSensorCustomScreen = withErrorBoundary(() => {
           } catch (parseError) {
             console.error('Failed to parse onFlowSensorCreated callback:', parseError);
             // Continue execution even if callback parsing fails
+            // Fall through to default navigation
+            router.navigate({
+              pathname: `/(tabs)/taps/${tapId}/keg/new`,
+              params: {
+                ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
+              },
+            });
           }
+        } else {
+          // If no callback, navigate to keg creation (same as default flow sensor)
+          router.navigate({
+            pathname: `/(tabs)/taps/${tapId}/keg/new`,
+            params: {
+              ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
+            },
+          });
         }
       };
 

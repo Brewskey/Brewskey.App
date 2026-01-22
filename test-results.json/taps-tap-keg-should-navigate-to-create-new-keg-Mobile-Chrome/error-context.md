@@ -1,0 +1,64 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e8]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - button "" [ref=e22]:
+        - generic [ref=e24]: 
+      - generic [ref=e26]: Tap
+    - generic [ref=e27]:
+      - tablist [ref=e30]:
+        - generic [ref=e31]:
+          - tab "On Tap" [selected] [ref=e33] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: On Tap
+                - generic:
+                  - generic: On Tap
+          - tab "Stats" [ref=e35] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Stats
+                - generic:
+                  - generic: Stats
+          - tab "Leaderboard" [ref=e37] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Leaderboard
+                - generic:
+                  - generic: Leaderboard
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - generic [ref=e46]:
+            - generic [ref=e48]: Keg level
+            - generic [ref=e49]:
+              - generic [ref=e52]: 24%
+              - generic [ref=e53]: 484 oz. of 1984 oz. remaining
+          - generic [ref=e55]:
+            - generic [ref=e57]: Intelligent Plastic Sausages
+            - generic [ref=e58]:
+              - generic [ref=e61]: Intelligent Plastic Sausages
+              - generic [ref=e62]: Acsi talio utrum supplanto pel velum depraedor. Reiciendis capio arbor cognomen odit adversus adhaero caritas. Condico verbum assumenda cohibeo pecus balbus acies.
+              - generic [ref=e64]: Type
+              - generic [ref=e65]:
+                - generic [ref=e66]: Organic?
+                - generic [ref=e67]: "No"
+          - generic [ref=e69]: Past Kegs
+        - generic [ref=e75] [cursor=pointer]: Intelligent Plastic Sausages
+  - generic [ref=e80]:
+    - button "" [ref=e84]:
+      - generic [ref=e86]: 
+    - generic [ref=e87]:
+      - button "" [ref=e89] [cursor=pointer]:
+        - generic [ref=e91]: 
+      - button "󰄫" [ref=e93] [cursor=pointer]:
+        - generic [ref=e95]: 󰄫
+      - button "" [ref=e97] [cursor=pointer]:
+        - generic [ref=e100]: 
+      - button "" [ref=e102] [cursor=pointer]:
+        - generic [ref=e105]: 
+```

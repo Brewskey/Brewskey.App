@@ -1,0 +1,45 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e8]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - button "" [ref=e22]:
+        - generic [ref=e24]: 
+      - generic [ref=e26]: New location
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e33]: Name
+        - generic [ref=e34]:
+          - generic [ref=e35]: Name
+          - textbox [ref=e37]: Error Location
+      - generic [ref=e38]:
+        - generic [ref=e40]: Description
+        - generic [ref=e41]:
+          - generic [ref=e42]: Description
+          - textbox [ref=e44]
+      - generic [ref=e47]: Location type
+      - generic [ref=e52]:
+        - generic [ref=e54]: Street
+        - generic [ref=e55]:
+          - generic [ref=e56]: Street
+          - textbox [ref=e58]: 123 Test St
+      - generic [ref=e59]:
+        - generic [ref=e61]: Apt./Suite
+        - generic [ref=e62]:
+          - generic [ref=e63]: Apt./Suite
+          - textbox [ref=e65]
+      - generic [ref=e66]:
+        - generic [ref=e68]: City
+        - generic [ref=e69]:
+          - generic [ref=e70]: City
+          - textbox [ref=e72]: Test City
+      - generic [ref=e75]: State
+      - generic [ref=e80]:
+        - generic [ref=e82]: Zip
+        - generic [ref=e83]:
+          - generic [ref=e84]: Zip
+          - textbox [ref=e86]: "12345"
+  - button "Create location" [ref=e89] [cursor=pointer]:
+    - generic [ref=e91]: Create location
+```

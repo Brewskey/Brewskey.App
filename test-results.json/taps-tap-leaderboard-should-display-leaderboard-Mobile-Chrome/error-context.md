@@ -1,0 +1,55 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e8]:
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - button "" [ref=e22]:
+        - generic [ref=e24]: 
+      - generic [ref=e26]: Tap
+    - generic [ref=e27]:
+      - tablist [ref=e30]:
+        - generic [ref=e31]:
+          - tab "On Tap" [ref=e33] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: On Tap
+                - generic:
+                  - generic: On Tap
+          - tab "Stats" [ref=e35] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Stats
+                - generic:
+                  - generic: Stats
+          - tab "Leaderboard" [selected] [ref=e37] [cursor=pointer]:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Leaderboard
+                - generic:
+                  - generic: Leaderboard
+      - generic [ref=e44]:
+        - generic [ref=e46]:
+          - button "" [ref=e49]:
+            - generic [ref=e51]: 
+          - generic [ref=e53]: Whoops! Error!
+        - generic [ref=e55]:
+          - button "" [ref=e57]:
+            - generic [ref=e59]: 
+          - generic [ref=e60]: Whoa! Brewskey had an error. We'll try to get it fixed soon.
+  - generic [ref=e61]:
+    - button "" [ref=e65]:
+      - generic [ref=e67]: 
+    - generic [ref=e68]:
+      - button "" [ref=e70] [cursor=pointer]:
+        - generic [ref=e72]: 
+      - button "󰄫" [ref=e74] [cursor=pointer]:
+        - generic [ref=e76]: 󰄫
+      - button "" [ref=e78] [cursor=pointer]:
+        - generic [ref=e81]: 
+      - button "" [ref=e83] [cursor=pointer]:
+        - generic [ref=e86]: 
+```

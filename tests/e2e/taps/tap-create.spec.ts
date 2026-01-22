@@ -3,35 +3,61 @@ import {
   mockLocationWithTaps,
   mockDeviceWithTaps,
 } from '../../fixtures/entity-fixtures';
-import { createMockOrganization } from '../../fixtures/test-data';
 import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
 test('should navigate to create tap form', async ({ page }) => {
-  // Set up explicit data: authenticated user and organization
-  // TapForm requires organizationId query param
-  // Use mockTapWithKeg to set up organization (even though we don't need the tap)
-  const { mockTapWithKeg } = await import('../../fixtures/entity-fixtures');
-  const { organization } = await mockTapWithKeg(page);
+  // Set up explicit data: device is required for tap creation
+  const { device, organization } = await mockDeviceWithTaps(page, 0);
   
-  await page.goto(`/taps/new?organizationId=${organization.id}`);
+  // Verify device has organization before navigating
+  expect(device.organization?.id).toBeDefined();
+  expect(device.organization?.id).toBe(organization.id);
+  
+  // Verify organization is in mock store
+  const { mockStore } = await import('../../fixtures/api-mocks');
+  const storedOrg = mockStore.getOrganization(organization.id);
+  expect(storedOrg).toBeDefined();
+  expect(storedOrg?.id).toBe(organization.id);
+  
+  await page.goto(`/taps/new?deviceId=${device.id}`);
 
   await expect(page).toHaveURL(/.*tap.*new|new.*tap/i);
-  // Check for either loading indicator or the form - TapForm might be loading
-  const loadingOrForm = page.getByTestId('tap-form-loading').or(page.getByTestId('input-description'));
+  
+  // Wait for page header to ensure page has loaded
+  await expect(page.getByText('New tap')).toBeVisible({ timeout: 10000 });
+  
+  // Wait for device loading to complete first (if shown)
+  const deviceLoading = page.getByTestId('device-loading');
+  if (await deviceLoading.isVisible().catch(() => false)) {
+    await expect(deviceLoading).toBeHidden({ timeout: 10000 });
+  }
+  
+  // Wait for form to load - tap form has description field (optional) and deviceId (required)
+  // TapForm should render immediately, showing either loading indicator or form
+  // If loading indicator appears, wait for it to disappear and form to appear
+  const loadingOrForm = page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'));
   await expect(loadingOrForm).toBeVisible({ timeout: 10000 });
-  // If loading was shown, wait for actual form
-  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
+  
+  // If loading was shown, wait for it to disappear and form to appear
+  const loadingIndicator = page.getByTestId('tap-form-loading');
+  if (await loadingIndicator.isVisible().catch(() => false)) {
+    // Wait for loading to disappear (organization query completes)
+    // This might take longer if the organization query is slow
+    await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
+  }
+  
+  // Now wait for the actual form
+  await expect(page.getByTestId('tap-form')).toBeVisible({ timeout: 5000 });
+  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 5000 });
 });
 
 test('should validate required fields', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Tap form requires organizationId - use mockTapWithKeg which sets up organization properly
-  const { mockTapWithKeg } = await import('../../fixtures/entity-fixtures');
-  const { organization } = await mockTapWithKeg(page);
+  // Set up explicit data: device is required for tap creation
+  const { device } = await mockDeviceWithTaps(page, 0);
   
-  await page.goto(`/taps/new?organizationId=${organization.id}`);
+  await page.goto(`/taps/new?deviceId=${device.id}`);
   
   // Wait for form to load - tap form has description field (optional) and deviceId (required)
   await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
@@ -51,14 +77,10 @@ test('should validate required fields', async ({ page }) => {
 
 test('should successfully create tap', async ({ page, tapPage }) => {
   // Set up explicit data: one location and one device
-  // Tap form requires organizationId - get it from location or use mockTapWithKeg
-  const { mockTapWithKeg } = await import('../../fixtures/entity-fixtures');
-  const { organization } = await mockTapWithKeg(page);
-  
   const { location } = await mockLocationWithTaps(page, 0);
   const { device } = await mockDeviceWithTaps(page, 0);
 
-  await page.goto(`/taps/new?organizationId=${organization.id}`);
+  await page.goto(`/taps/new?deviceId=${device.id}`);
   await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
   await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
 
@@ -75,9 +97,6 @@ test('should successfully create tap', async ({ page, tapPage }) => {
 
 test('should set up tap and select beverage with image rendering', async ({ page, tapPage }) => {
   // Set up explicit data: location, device, and beverage
-  const { mockTapWithKeg } = await import('../../fixtures/entity-fixtures');
-  const { organization } = await mockTapWithKeg(page);
-  
   const { location } = await mockLocationWithTaps(page, 0);
   const { device } = await mockDeviceWithTaps(page, 0);
   const { createMockBeverage } = await import('../../fixtures/test-data');
@@ -85,7 +104,7 @@ test('should set up tap and select beverage with image rendering', async ({ page
   mockStore.setBeverage(beverage);
 
   // Step 1: Create a tap
-  await page.goto(`/taps/new?organizationId=${organization.id}`);
+  await page.goto(`/taps/new?deviceId=${device.id}`);
   await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
   await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
 

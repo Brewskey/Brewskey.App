@@ -79,7 +79,7 @@ const TapPayment: React.FC<TapPaymentProps> = ({ tap }: TapPaymentProps) => {
 };
 
 const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
-  const { setVisibility, shouldShowPaymentScreen } = usePourModalContext();
+  const { closeModal, shouldShowPaymentScreen } = usePourModalContext();
   const router = useRouter();
   const [deviceID] = React.useState<EntityID | null>(null);
   
@@ -104,13 +104,13 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
       // continue normal payment - this needs to be implemented
       // PourProcessStore.startPaymentPour();
     } else {
-      setVisibility(false);
+      closeModal();
       router.navigate('/(tabs)/menu/payments');
     }
-  }, [hasCreditCardDetails, setVisibility, router]);
+  }, [hasCreditCardDetails, closeModal, router]);
 
   const isVisible = shouldShowPaymentScreen;
-  const onHideModal = () => setVisibility(false);
+  const onHideModal = () => closeModal();
 
   if (!deviceID) return null;
 

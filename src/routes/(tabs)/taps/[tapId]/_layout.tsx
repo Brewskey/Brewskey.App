@@ -66,17 +66,13 @@ const TapDetailsLayout = withErrorBoundary(() => {
     return <Slot />;
   }
 
-  if (isLoading) {
+  if (isLoading || !tap) {
     return (
       <Container>
         <Header showBackButton title="Tap" />
         <LoadingIndicator />
       </Container>
     );
-  }
-
-  if (!tap) {
-    return null;
   }
 
   return (

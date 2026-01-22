@@ -3,6 +3,7 @@ import * as React from 'react';
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetSrms } from '../../hooks/queries/SrmQueries';
 import { createFilter } from '@brewskey/js-api/dist/filters';
+import ColorIcon from '../../common/ColorIcon';
 
 export type PickerValue<TEntity, TMultiple extends boolean> = TMultiple extends true
   ? TEntity[]
@@ -38,6 +39,12 @@ const SrmPicker: React.FC<Props> = ({
     };
   }, []);
 
+  const renderRow = (item: Srm) => {
+    return (
+      <ColorIcon color={`#${item.hex}`} />
+    );
+  };
+
   return (
     <DropdownInput<Srm>
       name={name}
@@ -49,13 +56,13 @@ const SrmPicker: React.FC<Props> = ({
       labelField="name"
       valueField="id"
       multiple={false}
-      mode="modal"
       headerTitle="Select SRM"
       confirmSelectItem={true}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search SRM..."
       placeholder="Select SRM"
+      renderItem={renderRow}
       onChange={(item) => {
         if (!Array.isArray(item)) {
           props.onChange(item as Srm);

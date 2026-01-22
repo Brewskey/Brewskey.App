@@ -201,6 +201,22 @@ export async function mockNewUserState(
 }
 
 /**
+ * Sets up a location only (no devices or taps)
+ * Useful for testing NUX scenarios where user has location but no devices
+ */
+export async function mockLocationOnly(
+  page: Page,
+): Promise<{ location: Location; organization: Organization }> {
+  const organization = createMockOrganization();
+  mockStore.setOrganization(organization);
+
+  const location = createMockLocation();
+  mockStore.setLocation(location);
+
+  return { location, organization };
+}
+
+/**
  * Sets up a device with associated taps
  * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
  * Hierarchy: Organization => Location => Devices => Taps => Kegs
@@ -208,14 +224,19 @@ export async function mockNewUserState(
 export async function mockDeviceWithTaps(
   page: Page,
   tapCount: number = 2,
-): Promise<{ device: Device; taps: Tap[]; location: Location }> {
+): Promise<{ device: Device; taps: Tap[]; location: Location; organization: Organization }> {
+  // Create organization first (required for device)
+  const organization = createMockOrganization();
+  mockStore.setOrganization(organization);
+
   // Create location first (required for device)
   const location = createMockLocation();
   mockStore.setLocation(location);
 
-  // Create device with location
+  // Create device with location and organization
   const device = createMockDevice({
     location: { id: location.id, name: location.name, isDeleted: false },
+    organization: { id: organization.id, name: organization.name, isDeleted: false },
   });
   mockStore.setDevice(device);
 
@@ -231,7 +252,7 @@ export async function mockDeviceWithTaps(
     taps.push(tap);
   }
 
-  return { device, taps, location };
+  return { device, taps, location, organization };
 }
 
 /**

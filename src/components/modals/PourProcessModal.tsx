@@ -67,10 +67,10 @@ const PourProcessInputModal: React.FC = () => {
     isNFCSupported,
     isLoading,
     isVisible,
-    setVisibility,
+    closeModal,
     startPourAuthorization,
     pourErrorText,
-    setContextData,
+    clearError,
   } = usePourModalContext();
 
   const [currentSeconds, setCurrentSeconds] = React.useState<number>(
@@ -84,19 +84,17 @@ const PourProcessInputModal: React.FC = () => {
     if (isVisible) {
       setTotp('');
     }
-  }, [isVisible, setTotp]);
+  }, [isVisible]);
 
   const onInputChanged = async (value: string) => {
     setTotp(value);
-    setContextData({
-      pourErrorText: null,
-    });
+    clearError();
     if (value.length === 6) {
       await startPourAuthorization(value);
     }
   };
 
-  const onHideModal = () => setVisibility(false);
+  const onHideModal = () => closeModal();
 
   const onEnableNFC = async () => {
     await NfcManager.goToNfcSetting();
@@ -109,6 +107,7 @@ const PourProcessInputModal: React.FC = () => {
       header={<Text style={styles.headerText}>{headerText}</Text>}
       onHideModal={onHideModal}
       isVisible={isVisible}
+      testID="pour-process-modal"
     >
       <View style={styles.root}>
         {isNFCSupported && !isNFCEnabled && (
@@ -157,6 +156,7 @@ const PourProcessInputModal: React.FC = () => {
           onChangeText={onInputChanged}
           style={styles.input}
           value={totp}
+          testID="pour-modal-totp-input"
         />
         <Text style={styles.errorText}>{pourErrorText ?? ''}</Text>
       </View>

@@ -1,47 +1,67 @@
 import * as Location from 'expo-location';
-import React from 'react';
+import {
+  UseMutationResult,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
-export const useGetLocation = (): {
-  location: Location.LocationObject | null;
-  permission: Location.LocationPermissionResponse | null;
-  requestPermission: () => Promise<Location.LocationPermissionResponse>;
-} => {
-  const [locationPermission, setLocationPermission] =
-    React.useState<Location.LocationPermissionResponse | null>(null);
-  const [location, setLocation] =
-    React.useState<Location.LocationObject | null>(null);
+export enum LocationQueryKeys {
+  LocationPermission = 'location_permission',
+  DeviceLocation = 'device_location',
+}
 
-  // Check permissions on mount
-  React.useEffect(() => {
-    const checkPermission = async () => {
-      const permission = await Location.getForegroundPermissionsAsync();
-      setLocationPermission(permission);
-    };
-    void checkPermission();
-  }, []);
+/**
+ * Query hook for checking location permission status
+ */
+export const useLocationPermission = (): UseQueryResult<
+  Location.LocationPermissionResponse,
+  Error
+> =>
+  useQuery({
+    queryKey: [LocationQueryKeys.LocationPermission],
+    queryFn: () => Location.getForegroundPermissionsAsync(),
+  });
 
-  React.useEffect(() => {
-    if (locationPermission == null || locationPermission.status !== 'granted') {
-      return;
-    }
+/**
+ * Query hook for getting device location
+ * Only enabled when permission is granted
+ */
+export const useDeviceLocation = (): UseQueryResult<
+  Location.LocationObject,
+  Error
+> => {
+  const permissionQuery = useLocationPermission();
+  const isGranted = permissionQuery.data?.status === 'granted';
 
-    const updateLocation = async () => {
-      const locationValue = await Location.getCurrentPositionAsync();
-      setLocation(locationValue);
-    };
-    void updateLocation();
-  }, [locationPermission]);
+  return useQuery({
+    queryKey: [LocationQueryKeys.DeviceLocation],
+    queryFn: () => Location.getCurrentPositionAsync(),
+    enabled: isGranted,
+  });
+};
 
-  const requestPermission = React.useCallback(async () => {
-    const result = await Location.requestForegroundPermissionsAsync();
-    // Update state after requesting to ensure UI reflects the new permission status
-    setLocationPermission(result);
-    return result;
-  }, []);
+/**
+ * Mutation hook for requesting location permission
+ */
+export const useRequestLocationPermission = (): UseMutationResult<
+  Location.LocationPermissionResponse,
+  Error,
+  void
+> => {
+  const queryClient = useQueryClient();
 
-  return {
-    location,
-    permission: locationPermission,
-    requestPermission,
-  };
+  return useMutation({
+    mutationFn: () => Location.requestForegroundPermissionsAsync(),
+    onSuccess: () => {
+      // Invalidate and refetch permission and location queries after permission change
+      queryClient.invalidateQueries({
+        queryKey: [LocationQueryKeys.LocationPermission],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LocationQueryKeys.DeviceLocation],
+      });
+    },
+  });
 };

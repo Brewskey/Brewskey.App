@@ -46,6 +46,9 @@ export const FlowSensorForm: React.FC<Props> = ({
     },
   });
   const { watch, setValue } = form;
+
+  // Ensure form is ready before accessing formState
+  const isFormReady = form.formState != null;
   const flowSensorType = watch('flowSensorType');
   const selectedFlowSensorItem =
     FLOW_SENSOR_ITEMS.find(
@@ -80,7 +83,7 @@ export const FlowSensorForm: React.FC<Props> = ({
           defaultPulses={selectedFlowSensorItem.defaultPulses}
         />
         <SectionContent paddedVertical>
-          <SubmitButton onSubmit={onSubmit} testID="submit-button-save" title="Set Sensor" />
+          <SubmitButton onSubmit={onSubmit} testID="submit-button-save" title="Set Sensor" disabled={!isFormReady} />
         </SectionContent>
       </View>
     </Form>

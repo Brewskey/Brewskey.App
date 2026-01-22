@@ -3,7 +3,9 @@ import {
   mockNewUserState,
   mockLocationWithTaps,
   mockDeviceWithTaps,
+  mockLocationOnly,
 } from '../../fixtures/entity-fixtures';
+import { setAppSettingsStorage } from '../../fixtures/storage-helper';
 
 /**
  * Tests to verify that NUX persists when user stops partway through setup
@@ -17,6 +19,13 @@ import {
  * that require the missing entities.
  */
 
+test.beforeEach(async ({ page }) => {
+  await setAppSettingsStorage(page, {
+    manageTapsEnabled: true,
+    selectedOrganization: null,
+  });
+});
+
 test.describe('NUX Partial Completion - Location Only', () => {
   test('should show NUX on devices screen when user has location but no devices', async ({
     page,
@@ -24,24 +33,24 @@ test.describe('NUX Partial Completion - Location Only', () => {
   }) => {
     // Set up: user has created a location but no devices
     await mockNewUserState(page);
-    await mockLocationWithTaps(page, 0); // Location with no taps
+    await mockLocationOnly(page); // Location only, no devices
 
     // Navigate to devices screen
     await devicePage.goto();
 
     // Should show NUX because no devices exist
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
-    await expect(page.getByTestId('button-get-started')).toBeVisible();
+    await page.getByTestId('button-get-started').click();
+    await expect(page.getByTestId('button-next')).toBeVisible();
   });
 
   test('should show NUX on taps screen when user has location but no devices', async ({
     page,
-    tapPage,
     menuPage,
   }) => {
     // Set up: user has created a location but no devices
     await mockNewUserState(page);
-    await mockLocationWithTaps(page, 0); // Location with no taps
+    await mockLocationOnly(page); // Location only, no devices
 
     // Navigate to taps screen through menu
     await menuPage.goto();
@@ -49,7 +58,8 @@ test.describe('NUX Partial Completion - Location Only', () => {
 
     // Should show NUX because no taps exist (and likely no devices)
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
-    await expect(page.getByTestId('button-get-started')).toBeVisible();
+    await page.getByTestId('button-get-started').click();
+    await expect(page.getByTestId('button-next')).toBeVisible();
   });
 
   test('should NOT show NUX on locations screen when user has location', async ({
@@ -58,7 +68,7 @@ test.describe('NUX Partial Completion - Location Only', () => {
   }) => {
     // Set up: user has created a location
     await mockNewUserState(page);
-    const { location } = await mockLocationWithTaps(page, 0);
+    const { location } = await mockLocationOnly(page);
 
     // Navigate to locations screen
     await locationPage.goto();
@@ -161,7 +171,7 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
   }) => {
     // Set up: user has created a location but no devices
     await mockNewUserState(page);
-    await mockLocationWithTaps(page, 0);
+    await mockLocationOnly(page);
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
@@ -172,7 +182,7 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
 
     // Should navigate to NUX location step (or appropriate step)
     // The flow should continue from where they left off
-    await expect(page).toHaveURL(/.*nux.*location/i);
+    await expect(page).toHaveURL('location?locationsCount=1');
   });
 
   test('should allow user to continue NUX flow from taps screen after creating location and device', async ({
@@ -193,7 +203,7 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
     await page.getByTestId('button-get-started').click();
 
     // Should navigate to NUX flow (likely tap step since location/device exist)
-    await expect(page).toHaveURL(/.*nux/i);
+    await expect(page).toHaveURL('location?locationsCount=1');
   });
 });
 
@@ -205,7 +215,7 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
   }) => {
     // Set up: user has created a location but no devices
     await mockNewUserState(page);
-    await mockLocationWithTaps(page, 0);
+    await mockLocationOnly(page);
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
@@ -262,7 +272,7 @@ test.describe('NUX Progressive Completion', () => {
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a location (add location to mock store)
-    const { location } = await mockLocationWithTaps(page, 0);
+    const { location } = await mockLocationOnly(page);
 
     // Step 2: Check locations screen again - should NOT show NUX (location exists)
     await locationPage.goto();

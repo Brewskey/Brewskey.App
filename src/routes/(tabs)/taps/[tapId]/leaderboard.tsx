@@ -48,7 +48,7 @@ const LeaderboardRoute: React.FC = () => {
     return (
       <Container>
         <Header shouldShowBackButton />
-        <LoadingIndicator />
+        <LoadingIndicator testID="leaderboard-loading" />
       </Container>
     );
   }
