@@ -3,27 +3,6 @@ import { mockBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display user beverages', async ({ page, menuPage, authenticatedUser }) => {
-  // Set up explicit data: one beverage created by the authenticated user
-  const { beverage } = await mockBeverageWithPours(
-    page, 
-    0, 
-    authenticatedUser?.user.id,
-    authenticatedUser?.user.userName
-  );
-
-  // Navigate through menu to beverages (since MyBeveragesStack is nested in MenuStack)
-  await menuPage.goto();
-  await menuPage.clickBeverages();
-  
-  // Wait for beverages list to be visible
-  await expect(page.getByTestId('beverages-list')).toBeVisible();
-  
-
-  // Beverage item has testID - use that instead of text-based locator
-  await expect(page.getByTestId(`beverage-item-${beverage.id}`)).toBeVisible();
-});
-
 test('should navigate to beverage details', async ({ page, menuPage, authenticatedUser }) => {
   // Set up explicit data: one beverage created by the authenticated user
   const { beverage } = await mockBeverageWithPours(

@@ -57,18 +57,13 @@ const SrmPicker: React.FC<Props> = ({
       valueField="id"
       multiple={false}
       headerTitle="Select SRM"
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search SRM..."
       placeholder="Select SRM"
       renderItem={renderRow}
       onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Srm);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
         if (!Array.isArray(item)) {
           props.onChange(item as Srm);
         }

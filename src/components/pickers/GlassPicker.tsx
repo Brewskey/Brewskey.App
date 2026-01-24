@@ -47,19 +47,14 @@ const GlassPicker: React.FC<Props> = ({
       labelField="name"
       valueField="id"
       multiple={false}
-      mode="modal"
+      
       headerTitle="Select Glass"
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search glasses..."
       placeholder="Select Glass"
       onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Glass);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
         if (!Array.isArray(item)) {
           props.onChange(item as Glass);
         }

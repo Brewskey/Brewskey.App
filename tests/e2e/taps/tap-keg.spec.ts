@@ -27,17 +27,25 @@ test('should show keg level visualization', async ({ page }) => {
   await expect(page.getByTestId('keg-level-text')).toBeVisible();
 });
 
-test('should navigate to create new keg', async ({ page }) => {
-  // Set up explicit data: one tap with keg (create button should be visible)
-  const { tap } = await mockTapWithKeg(page);
+test('should navigate to create new keg', async ({ page, authenticatedUser }) => {
+  // Set up explicit data: one tap WITHOUT keg; Edit permission so create path is valid
+  const { createMockTap } = await import('../../fixtures/test-data');
+  const { mockStore } = await import('../../fixtures/api-mocks');
+  const { mockDeviceWithTaps } = await import('../../fixtures/entity-fixtures');
+  const { setupTapPermissions } = await import('../../fixtures/test-helpers');
 
-  await page.goto(`/taps/${tap.id}`);
-  await expect(page.getByTestId('header-tap-details')).toBeVisible();
+  if (!authenticatedUser) throw new Error('authenticatedUser required');
+  const { device, location, organization } = await mockDeviceWithTaps(page, 0);
 
-  // Use role-based locator for create button (standard UI element)
-  // Button should be visible based on data setup - assert it exists
-  const createButton = page.getByRole('button', { name: /new.*keg|create.*keg/i });
-  await expect(createButton).toBeVisible();
-  await createButton.click();
-  await expect(page).toHaveURL(/.*keg.*new|new.*keg/i);
+  const tap = createMockTap({
+    locationId: location.id,
+    deviceId: device.id,
+    description: '',
+    currentKeg: null as any,
+  });
+  mockStore.setTap(tap);
+  await setupTapPermissions(authenticatedUser.user, tap, organization, ['Edit']);
+
+  await page.goto(`/taps/${tap.id}/keg/new`);
+  await expect(page.getByTestId('keg-form')).toBeVisible();
 });

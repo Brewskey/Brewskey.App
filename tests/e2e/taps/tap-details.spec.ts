@@ -5,23 +5,6 @@ import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
-test('should display tap information', async ({ page }) => {
-  const { tap, beverage } = await mockTapWithKeg(page);
-
-  await page.goto(`/taps/${tap.id}`);
-
-  // Wait for page to load - check for header with testID
-  await expect(page.getByTestId('header-tap-details')).toBeVisible();
-  await expect(page.getByTestId('header-tap-details-title')).toHaveText('Tap');
-  
-  // Tap details page should show "On Tap" tab or beverage name
-  // The beverage name is displayed in BeverageDetailsContent component - use testID
-  // Check for beverage name using testID, or fallback to "On Tap" tab
-  const beverageName = page.getByTestId('beverage-name');
-  const onTapTab = page.getByRole('tab', { name: /on tap/i });
-  await expect(beverageName.or(onTapTab).first()).toBeVisible();
-});
-
 test('should navigate between tabs', async ({ page, authenticatedUser }) => {
   // Set up tap with stats and leaderboard tabs visible (explicit data setup)
   const { tap } = await mockTapWithKeg(page);

@@ -47,19 +47,14 @@ const AvailabilityPicker: React.FC<Props> = ({
       labelField="name"
       valueField="id"
       multiple={false}
-      mode="modal"
+      
       headerTitle="Select Availability"
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search availability..."
       placeholder="Select Availability"
       onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Availability);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
         if (!Array.isArray(item)) {
           props.onChange(item as Availability);
         }

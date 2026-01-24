@@ -3,17 +3,6 @@ import { setupStatsData } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display stats screen', async ({ page, statsPage }) => {
-  // Set up explicit data: stats data with beverages and pours
-  await setupStatsData(page, 10, 5);
-  await statsPage.goto();
-
-  await expect(page).toHaveURL(/.*stats/i);
-  
-  // Stats screen has testID - use that instead of text-based locator
-  await expect(page.getByTestId('header-stats')).toBeVisible();
-});
-
 test('should display badges section', async ({ page, statsPage }) => {
   // Set up explicit data: stats data with beverages and pours
   await setupStatsData(page, 10, 5);

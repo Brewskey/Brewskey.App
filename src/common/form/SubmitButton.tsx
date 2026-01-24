@@ -8,11 +8,13 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
   testID,
   title,
   disabled: externalDisabled,
+  allowSubmitWhenValid = false,
   ...props
 }: Omit<ButtonProps, 'onPress' | 'disabled' | 'loading'> & {
   onSubmit: SubmitHandler<TFieldValues>;
   testID?: string;
   disabled?: boolean;
+  allowSubmitWhenValid?: boolean;
 }) => {
   const form = nullthrows(useFormContext<TFieldValues>(), 'Form context not found. This component must be used within a Form component.');
 
@@ -21,7 +23,9 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
     formState: { isSubmitting, isValid, isDirty },
   } = form;
 
-  const isDisabled = externalDisabled || isSubmitting || !isValid || !isDirty;
+  // For new forms (allowSubmitWhenValid=true), allow submission when valid even if not dirty
+  // For edit forms, require both valid and dirty
+  const isDisabled = externalDisabled || isSubmitting || !isValid || (!allowSubmitWhenValid && !isDirty);
 
   return (
     <Button

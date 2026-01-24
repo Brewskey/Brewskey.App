@@ -38,7 +38,7 @@ export const TapDetailsNoKeg: React.FC<Props> = ({ tapId, canEdit }) => {
       {canEdit ? (
         <Fragment>
           <Text style={styles.text}>You don't have kegs on the tap.</Text>
-          <TouchableOpacity onPress={_onSetupPress}>
+          <TouchableOpacity onPress={_onSetupPress} testID="button-create-new-keg">
             <Text style={[styles.text, styles.textLink]}>
               Click to setup one.
             </Text>

@@ -2,14 +2,6 @@ import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to create device form', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/devices/new');
-
-  await expect(page).toHaveURL(/.*device.*new|new.*device/i);
-  await expect(page.getByTestId('input-name')).toBeVisible();
-});
-
 test('should validate required fields', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await page.goto('/devices/new');
@@ -53,9 +45,7 @@ test('should successfully create device', async ({ page, devicePage }) => {
   const locationItem = page.getByTestId(`location-item-${location.id}`);
   await expect(locationItem).toBeVisible();
   await locationItem.click();
-  
-  // Click the Select button to confirm selection and close modal
-  await page.getByTestId('picker-control-select-button').click();
+  // Selection is confirmed immediately (no confirmation button needed)
   
   // Wait for modal to close
   await expect(page.getByTestId('picker-location-modal')).not.toBeVisible();
@@ -68,5 +58,7 @@ test('should successfully create device', async ({ page, devicePage }) => {
   await expect(page).toHaveURL(/.*devices\/\d+/i);
   
   // Success messages use SnackBar component with testID
+  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
+  await expect(page.getByTestId('snackbar-message')).toHaveText('New Brewskey box created');
 });

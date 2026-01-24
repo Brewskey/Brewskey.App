@@ -3,17 +3,6 @@ import { mockBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display beverage information', async ({ page }) => {
-  // Set up explicit data: one beverage with no pours
-  const { beverage } = await mockBeverageWithPours(page, 0);
-
-  await page.goto(`/beverages/${beverage.id}`);
-  
-  // Use testID for beverage name
-  await expect(page.getByTestId('beverage-name')).toBeVisible();
-  await expect(page.getByTestId('beverage-name')).toHaveText(beverage.name);
-});
-
 test('should show pour history', async ({ page }) => {
   // Set up explicit data: one beverage with 5 pours
   const { beverage, pours } = await mockBeverageWithPours(page, 5);

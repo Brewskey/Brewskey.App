@@ -15,7 +15,6 @@ type Props = {
 
 const DeviceStatePicker = (props: Props): React.ReactElement => <SimplePicker
   description={props.value ? DESCRIPTION_BY_DEVICE_STATE[props.value as keyof typeof DESCRIPTION_BY_DEVICE_STATE] : undefined}
-  doesRequireConfirmation={false}
   headerTitle="Select State"
   label={props.label || "State"}
   name={props.name || 'deviceStatus'}

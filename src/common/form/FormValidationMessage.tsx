@@ -9,6 +9,9 @@ export const FormValidationText = ({ children, testID }: PropsWithChildren & { t
   <Text
     style={{
       color: COLORS.danger2,
+      marginHorizontal: 12,
+      marginVertical: 8,
+      padding: 8,
     }}
     testID={testID}
   >

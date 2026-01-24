@@ -77,6 +77,7 @@ export const TapForm: React.FC<Props> = ({
               setDeviceSearch(keyword);
               return true;
             }}
+            testID="dropdown-deviceId"
           />
           {organization == null || !organization.canEnablePayments ? null : (
             <CheckBoxInput

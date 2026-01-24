@@ -106,7 +106,7 @@ const EditTapFeedRoute: React.FC = withErrorBoundary(() => {
   if (isLoading) {
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <LoadingIndicator />
+        <LoadingIndicator testID="keg-form-loading" />
       </KeyboardAwareScrollView>
     );
   }

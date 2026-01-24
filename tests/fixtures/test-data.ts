@@ -156,6 +156,8 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
     tap,
     beverage,
     kegType: 'HalfBarrel' as KegType,
+    // Ensure tapId is set as flat property for filtering (filter checks both tap.id and tapId)
+    tapId: tap?.id,
   };
   
   return { ...base, ...mappedOverrides } as Keg;

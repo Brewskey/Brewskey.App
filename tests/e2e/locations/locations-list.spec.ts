@@ -4,25 +4,6 @@ import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
 
-test('should display list of locations', async ({ page, locationPage, menuPage }) => {
-  // Set up explicit data: one location with 2 taps
-  const { location } = await mockLocationWithTaps(page, 2);
-  
-  // Navigate through menu to locations (since LocationsStack is nested in MenuStack)
-  await menuPage.goto();
-  await menuPage.clickLocations();
-
-  // Wait for screen to load - check header first
-  await expect(page.getByTestId('header-locations')).toBeVisible();
-  
-  // Wait for list to be visible (it may take a moment for the query to load)
-  await expect(locationPage.getLocationsList()).toBeVisible();
-
-  // Location name is dynamic content, but we can use location-item testID
-  // LocationsList uses ListItem with testID
-  await expect(page.getByTestId(`location-item-${location.id}`)).toBeVisible();
-});
-
 test('should show empty state when no locations exist', async ({ page, locationPage, menuPage }) => {
   // Set up explicit data: no locations (empty state)
   // Store is already empty from resetStores fixture

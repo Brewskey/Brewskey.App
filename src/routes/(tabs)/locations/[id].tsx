@@ -40,8 +40,8 @@ const LocationDetailsScreen: React.FC = () => {
   if (isLoading || !location) {
     return (
       <Container>
-        <Header shouldShowBackButton />
-        <LoadingIndicator />
+        <Header shouldShowBackButton testID="header-location-details" />
+        <LoadingIndicator testID="location-details-loading" />
       </Container>
     );
   }

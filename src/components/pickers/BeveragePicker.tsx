@@ -74,9 +74,9 @@ function BeveragePicker<TMultiple extends boolean>({
       labelField="name"
       valueField="id"
       multiple={multiple}
-      mode="modal"
+      
       headerTitle={`Select Beverage${multiple ? 's' : ''}`}
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search beverages..."
@@ -86,13 +86,6 @@ function BeveragePicker<TMultiple extends boolean>({
         if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Beverage, TMultiple>);
         } else if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Beverage, TMultiple>);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
-        if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Beverage, TMultiple>);
-        } else if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Beverage, TMultiple>);
         }
       }}

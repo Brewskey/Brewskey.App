@@ -39,6 +39,7 @@ const LeaderBoardDurationPicker = ({
     style={{
       marginHorizontal: 16,
     }}
+    testID="leaderboard-duration-picker"
   >
     <FormLabel>Select Leaderboard duration</FormLabel>
     <Dropdown

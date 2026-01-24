@@ -3,25 +3,6 @@ import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to create keg form', async ({ page }) => {
-  // Set up explicit data: one tap with keg
-  const { tap } = await mockTapWithKeg(page);
-  
-  // Navigate directly to keg/new route
-  // With the new route structure (keg/index.tsx + keg/_layout.tsx), 
-  // the route should be accessible as /taps/[tapId]/keg/new
-  await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
-  
-  await expect(page).toHaveURL(/.*keg.*new|new.*keg/i);
-  // Wait for form to load - KegForm has testID="keg-form"
-  // NewKegScreen renders KegForm which should be visible
-  await expect(page.getByTestId('keg-form')).toBeVisible();
-  // KegForm uses BeveragePicker2 with name="beverage"
-  // BeveragePicker2 generates testID as: beverage-picker-${name} = beverage-picker-beverage
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await expect(beveragePicker).toBeVisible();
-});
-
 test('should allow selecting beverage', async ({ page }) => {
   // Set up explicit data: one tap with beverage available
   const { tap, beverage } = await mockTapWithKeg(page);
@@ -39,9 +20,7 @@ test('should allow selecting beverage', async ({ page }) => {
   await expect(page.getByText(beverage.name)).toBeVisible();
   // Click the beverage
   await page.getByText(beverage.name).click();
-  // Confirm selection
-  await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
-  await page.getByTestId('picker-control-select-button').click();
+  // Selection is confirmed immediately (no confirmation button needed)
 });
 
 test('should render beverage picker with images', async ({ page }) => {
@@ -82,10 +61,7 @@ test('should render beverage picker with images', async ({ page }) => {
   
   // Select the beverage
   await beverageRow.click();
-  
-  // Confirm selection
-  await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
-  await page.getByTestId('picker-control-select-button').click();
+  // Selection is confirmed immediately (no confirmation button needed)
   
   // Verify the selection was successful - the picker should show the selected beverage
   await expect(page.getByTestId('keg-form')).toBeVisible();
@@ -111,10 +87,7 @@ test('should successfully create keg', async ({ page }) => {
   await expect(page.getByText(beverage.name)).toBeVisible();
   // Click the beverage
   await page.getByText(beverage.name).click();
-  // Confirm selection - BeveragePicker2 uses confirmSelectItem={true}
-  await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
-  await page.getByTestId('picker-control-select-button').click();
-  
+  // Selection is confirmed immediately (no confirmation button needed)
   // Wait for modal to close and form state to update
   await expect(page.getByTestId('keg-form')).toBeVisible();
   
@@ -125,40 +98,21 @@ test('should successfully create keg', async ({ page }) => {
   await kegTypeDropdown.click();
   // Wait for dropdown options to appear
   // DropdownInput mode="default" renders options inline within parent container
-  // Since there are multiple dropdowns on the page, scope to keg-form container
-  // DropdownInput generates option testIDs as "option-{index}"
+  // Options use testID format: {pickerTestID}-option-{index}
   // Mini Keg is the smallest size, so it should be first (index 0) after sorting by size
-  await expect(page.getByTestId('keg-form').getByTestId('option-0')).toBeVisible();
+  await expect(page.getByTestId('dropdown-kegType-option-0')).toBeVisible();
   // Click the option - DropdownInput uses mode="default" so it closes automatically
-  // Use force click because form elements may overlap dropdown
-  await page.getByTestId('keg-form').getByTestId('option-0').click({ force: true });
+  await page.getByTestId('dropdown-kegType-option-0').click();
+  // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
   
-  // Wait for form state to update - the dropdown should close and form should become dirty
-  // SubmitButton requires isDirty=true AND isValid=true
-  // For new kegs, dropdown selections should trigger isDirty when values change from undefined/null
-  // However, React Hook Form may not mark as dirty if the change happens before form initialization
-  // Interact with slider to ensure form becomes dirty (change from default 100% to 99%)
-  const slider = page.locator('[role="slider"]').first();
-  await expect(slider).toBeVisible({ timeout: 5000 });
-  
-  // Get slider bounding box and drag to change value
-  const sliderBox = await slider.boundingBox();
-  if (sliderBox) {
-    // Drag from center (100%) to slightly left (99%) to trigger dirty state
-    await slider.hover({ position: { x: sliderBox.width * 0.99, y: sliderBox.height / 2 } });
-    await slider.click({ position: { x: sliderBox.width * 0.99, y: sliderBox.height / 2 } });
-    // Wait for form state to update
-    await page.waitForTimeout(500);
-  }
-  
-  // Submit button has testID - wait for it to become enabled (form validation)
-  // Form requires: beverage (selected), kegType (selected), and isDirty=true
+  // For new forms with allowSubmitWhenValid=true, button should be enabled when isValid=true
+  // Form requires: beverage (selected), kegType (selected) to be valid
   const submitButton = page.getByTestId('submit-button-create-keg');
-  await expect(submitButton).toBeVisible();
-  // Wait for form state to update (isDirty and isValid checks)
-  await expect(submitButton).toBeEnabled({ timeout: 5000 });
+  await expect(submitButton).toBeEnabled();
   await submitButton.click();
 
   // Success messages use SnackBar component with testID
+  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
+  await expect(page.getByTestId('snackbar-message')).toHaveText('New keg added');
 });

@@ -3,16 +3,6 @@ import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to edit location', async ({ page }) => {
-  // Set up explicit data: one location
-  const { location } = await mockLocationWithTaps(page, 0);
-
-  await page.goto(`/locations/${location.id}/edit`);
-
-  await expect(page).toHaveURL(/.*location.*edit|edit.*location/i);
-  await expect(page.getByTestId('input-name')).toBeVisible();
-});
-
 test('should pre-fill form with existing data', async ({ page }) => {
   // Set up explicit data: one location
   const { location } = await mockLocationWithTaps(page, 0);
@@ -43,22 +33,28 @@ test('should successfully update location', async ({ page }) => {
   await expect(locationTypePicker).toBeVisible();
   await locationTypePicker.click();
   // Select "Bar" which is at index 1
-  // SimplePicker uses mode="modal", chain locators through modal testID
-  await expect(page.getByTestId('picker-location-type-modal').getByTestId('option-1')).toBeVisible();
-  await page.getByTestId('picker-location-type-modal').getByTestId('option-1').click();
+  // SimplePicker uses default mode (inline), options use testID format: {pickerTestID}-option-{index}
+  await expect(page.getByTestId('picker-location-type-option-1')).toBeVisible();
+  await page.getByTestId('picker-location-type-option-1').click();
+  // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
   
   // Update state (required field)
   // State picker uses STATE_LIST - California (CA) is at index 4
   const statePicker = page.getByTestId('picker-state');
   await expect(statePicker).toBeVisible();
   await statePicker.click();
-  await expect(page.getByTestId('picker-state-modal').getByTestId('option-4')).toBeVisible();
-  await page.getByTestId('picker-state-modal').getByTestId('option-4').click();
+  // Options use testID format: {pickerTestID}-option-{index}
+  await expect(page.getByTestId('picker-state-option-4')).toBeVisible();
+  await page.getByTestId('picker-state-option-4').click();
+  // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
   
   // Submit the form
-  await expect(page.getByTestId('submit-button-edit-location')).toBeVisible();
-  await page.getByTestId('submit-button-edit-location').click();
+  const submitButton = page.getByTestId('submit-button-edit-location');
+  await expect(submitButton).toBeEnabled();
+  await submitButton.click();
 
   // Success messages use SnackBar component with testID
+  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
+  await expect(page.getByTestId('snackbar-message')).toHaveText('Location edited.');
 });

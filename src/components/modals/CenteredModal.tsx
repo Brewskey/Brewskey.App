@@ -2,20 +2,22 @@ import * as React from 'react';
 import {
   DimensionValue,
   Modal,
+  Pressable,
   StyleProp,
   StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
   ViewStyle,
 } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    height: '100%',
     justifyContent: 'center',
+  },
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, .5)',
   },
   content: {
     padding: 12,
@@ -31,6 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     backgroundColor: 'rgb(35,131,147)',
     flexDirection: 'column',
+    maxHeight: '80%',
   },
 });
 
@@ -60,16 +63,15 @@ const CenteredModal: React.FC<Props> = ({
       testID={testID}
       transparent={true}
     >
-      <TouchableOpacity style={styles.container} onPressOut={onHideModal}>
-        <TouchableWithoutFeedback style={{ maxHeight: '80%', width }}>
-          <View style={styles.modal}>
-            {!header ? null : <View style={styles.header}>{header}</View>}
-            <View style={[styles.content, contentContainerStyle]}>
-              {children}
-            </View>
+      <View style={styles.container}>
+        <Pressable style={styles.backdrop} onPress={onHideModal} />
+        <View style={[styles.modal, width != null && { width }]}>
+          {!header ? null : <View style={styles.header}>{header}</View>}
+          <View style={[styles.content, contentContainerStyle]}>
+            {children}
           </View>
-        </TouchableWithoutFeedback>
-      </TouchableOpacity>
+        </View>
+      </View>
     </Modal>
   );
 };

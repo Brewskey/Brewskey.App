@@ -40,7 +40,7 @@ const ResetPasswordModal: React.FC<Props> = ({ isVisible, onHideModal }) => {
           We've sent a email to the address you provided with instructions on
           how to reset your password.
         </Text>
-        <Button secondary title="OK" onPress={onHideModal} />
+        <Button secondary title="OK" onPress={onHideModal} testID="button-reset-password-success-ok" />
       </View>
     </CenteredModal>
   );

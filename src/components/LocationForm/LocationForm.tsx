@@ -126,10 +126,23 @@ const LocationForm: React.FC<Props> = ({
 
 
   const onSubmitForm = async (formValues: FormProps) => {
-    if (validateForm(formValues)) {
+    const errors = validateForm(formValues);
+    if (Object.keys(errors).length === 0) {
       await onSubmit({
         ...formValues,
         organizationId: extractShortenedEntityId(formValues.organization),
+      });
+    } else {
+      // Set form errors for react-hook-form
+      Object.keys(errors).forEach((key) => {
+        const errorKey = key as keyof FormProps;
+        const errorMessage = errors[errorKey];
+        if (errorMessage) {
+          form.setError(errorKey, {
+            type: 'manual',
+            message: errorMessage,
+          });
+        }
       });
     }
   };
@@ -157,7 +170,6 @@ const LocationForm: React.FC<Props> = ({
         />
         <FormField
           component={SimplePicker}
-          doesRequireConfirmation={false}
           headerTitle="Select Location Type"
           initialValue={location.locationType}
           label="Location type"
@@ -195,7 +207,6 @@ const LocationForm: React.FC<Props> = ({
         <FormField
           component={SimplePicker}
           disabled={isSubmitting}
-          doesRequireConfirmation={false}
           headerTitle="Select State"
           initialValue={location.state}
           label="State"
@@ -218,7 +229,6 @@ const LocationForm: React.FC<Props> = ({
           <FormField
             component={SimplePicker}
             disabled={isSubmitting}
-            doesRequireConfirmation={false}
             headerTitle="Select Square Location"
             initialValue={location.squareLocationID}
             label="Square Location"

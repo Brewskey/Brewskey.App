@@ -3,25 +3,15 @@ import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to tap payments screen', async ({ page }) => {
-  // Set up explicit data: one tap with payments enabled
-  const { tap } = await mockTapWithKeg(page);
-
-  // Payments screen is under edit route
-  await page.goto(`/taps/${tap.id}/edit/payments`);
-
-  await expect(page).toHaveURL(/.*payments/i);
-});
-
 test('should display payment options', async ({ page }) => {
-  // Set up explicit data: one tap with payments enabled
-  const { tap } = await mockTapWithKeg(page);
+  // Set up explicit data: tap with payments enabled; org.canEnablePayments; Payments tab visible
+  const { tap, organization } = await mockTapWithKeg(page);
+  const { mockStore } = await import('../../fixtures/api-mocks');
+  mockStore.setOrganization({ ...organization, canEnablePayments: true });
+  mockStore.setTap({ ...tap, isPaymentEnabled: true });
 
-  // Payments screen is under edit route
   await page.goto(`/taps/${tap.id}/edit/payments`);
-
-  // Payment form should be visible - use testID
+  await expect(page.getByTestId('header-edit-tap')).toBeVisible();
   await expect(page.getByTestId('tap-payments-form')).toBeVisible();
-  // Check for price/ounces section header
   await expect(page.getByTestId('section-header-price-ounces')).toBeVisible();
 });

@@ -38,6 +38,10 @@ test.describe('NUX Partial Completion - Location Only', () => {
     // Navigate to devices screen
     await devicePage.goto();
 
+    // Wait for the devices list query to complete (loading finishes)
+    // The list shows ListEmptyComponent only when !isLoading
+    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+
     // Should show NUX because no devices exist
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
     await page.getByTestId('button-get-started').click();
@@ -55,6 +59,10 @@ test.describe('NUX Partial Completion - Location Only', () => {
     // Navigate to taps screen through menu
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete (loading finishes)
+    // The list shows ListEmptyComponent only when !isLoading
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
 
     // Should show NUX because no taps exist (and likely no devices)
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
@@ -93,6 +101,9 @@ test.describe('NUX Partial Completion - Location and Device', () => {
     // Navigate to taps screen through menu
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete (loading finishes)
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
 
     // Should show NUX because no taps exist
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
@@ -175,6 +186,10 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
+
+    // Wait for the devices list query to complete (loading finishes)
+    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Click "Get started" button to start NUX flow
@@ -197,6 +212,10 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
     // Navigate to taps screen through menu - should show NUX
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete (loading finishes)
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Click "Get started" button to start NUX flow
@@ -219,6 +238,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
+
+    // Wait for the devices list query to complete (loading finishes)
+    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Navigate away to locations screen
@@ -227,6 +250,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
 
     // Navigate back to devices screen - should STILL show NUX
     await devicePage.goto();
+
+    // Wait for the devices list query to complete again
+    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
   });
 
@@ -243,6 +270,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
     // Navigate to taps screen through menu - should show NUX
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete (loading finishes)
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Navigate away to devices screen
@@ -252,6 +283,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
     // Navigate back to taps screen - should STILL show NUX
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete again
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
   });
 });
@@ -269,6 +304,10 @@ test.describe('NUX Progressive Completion', () => {
 
     // Step 1: Check locations screen - should show NUX (no locations)
     await locationPage.goto();
+
+    // Wait for the locations list query to complete (loading finishes)
+    await expect(page.getByTestId('locations-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a location (add location to mock store)
@@ -281,6 +320,10 @@ test.describe('NUX Progressive Completion', () => {
 
     // Step 3: Check devices screen - should show NUX (no devices yet)
     await devicePage.goto();
+
+    // Wait for the devices list query to complete (loading finishes)
+    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a device (add device to mock store)
@@ -294,6 +337,10 @@ test.describe('NUX Progressive Completion', () => {
     // Step 5: Check taps screen - should show NUX (no taps yet)
     await menuPage.goto();
     await menuPage.clickTaps();
+
+    // Wait for the taps list query to complete (loading finishes)
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
+
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a tap (add tap to mock store)

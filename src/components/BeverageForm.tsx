@@ -174,7 +174,6 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             { label: 'Coffee', value: 'Coffee' },
             { label: 'Soda', value: 'Soda' },
           ]}
-          doesRequireConfirmation={false}
           required="Beverage type is required"
         />
         <FormField
@@ -191,7 +190,6 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             { label: 'Warm', value: 'warm' },
             { label: 'Hot', value: 'hot' },
           ]}
-          doesRequireConfirmation={false}
         />
         <FormField
           component={SimplePicker}
@@ -205,7 +203,6 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             }),
           )}
           headerTitle="Select Year"
-          doesRequireConfirmation={false}
         />
         <FormField
           component={AvailabilityPicker}

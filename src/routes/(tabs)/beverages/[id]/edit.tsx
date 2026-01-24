@@ -72,8 +72,8 @@ const EditBeverageScreen: React.FC = () => {
       flushImageCache(`${CONFIG.CDN}beverages/${beverageIdValue.toString()}`);
     }
 
-    router.back();
     addSnackBarMessage({ content: 'The beverage edited.' });
+    router.push(`/beverages/${beverageIdValue}`);
   };
 
   if (isLoading || !beverage) {

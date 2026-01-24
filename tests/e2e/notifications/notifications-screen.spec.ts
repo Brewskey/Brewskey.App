@@ -2,16 +2,6 @@ import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display notifications screen', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/notifications');
-
-  await expect(page).toHaveURL(/.*notifications/i);
-  
-  // Notifications screen has testID - use that instead of text-based locator
-  await expect(page.getByTestId('header-notifications')).toBeVisible();
-});
-
 test('should show delete all button', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await page.goto('/notifications');

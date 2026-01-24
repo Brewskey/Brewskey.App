@@ -51,7 +51,8 @@ const OnTapRoute: React.FC = () => {
   const { data: tap, isLoading } = useGetTapById(id as any);
   const { data: tapPermission } = useGetPermissionForEntityById('tap', id as any);
   const { data: flowSensor } = useGetFlowSensorByTapId(id as any);
-  const { data: currentKeg, refetch } = useGetKegById(tap?.currentKeg.id);
+  const kegId = tap?.currentKeg?.id ?? null;
+  const { data: currentKeg, refetch } = useGetKegById(kegId);
 
   if (isLoading) {
     return (

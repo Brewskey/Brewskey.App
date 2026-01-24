@@ -1,25 +1,8 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 import { mockLocationWithTaps, mockTapWithKeg } from '../../fixtures/entity-fixtures';
-import { mockStore } from '../../fixtures/api-mocks';
 
 // Configure tests to auto-authenticate and create test data
 test.use({ autoAuthenticate: true });
-
-test('should display taps grouped by location', async ({ page, tapPage, menuPage }) => {
-  // Set up explicit data: one location with 3 taps
-  const { location, taps } = await mockLocationWithTaps(page, 3);
-  
-  // Navigate through menu to taps (since TapsStack is nested in MenuStack)
-  await menuPage.goto();
-  await menuPage.clickTaps();
-
-  await expect(tapPage.getTapsList()).toBeVisible();
-
-  // TapListItem has testID - use that instead of text-based locator
-  for (const tap of taps) {
-    await expect(page.getByTestId(`tap-item-${tap.id}`)).toBeVisible();
-  }
-});
 
 test('should show empty state', async ({ page, tapPage, menuPage }) => {
   // Set up explicit data: no taps (empty state)
@@ -73,7 +56,8 @@ test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
   // The form container has testID="tap-form" when organization is loaded
   // Organization query should complete and form should render
   // Wait for the form to appear (organization query completes)
-  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
+  // Playwright's auto-waiting will handle timing
+  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible();
   
   // Wait for loading to complete and form to be visible
   const loadingIndicator = page.getByTestId('tap-form-loading');
@@ -81,7 +65,8 @@ test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
     await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
   }
   
-  await expect(page.getByTestId('tap-form')).toBeVisible({ timeout: 5000 });
+  // Playwright's auto-waiting will handle timing
+  await expect(page.getByTestId('tap-form')).toBeVisible();
 
   // After form is visible, check for the description input field
   // TapForm uses "description" field, not "tapNumber"

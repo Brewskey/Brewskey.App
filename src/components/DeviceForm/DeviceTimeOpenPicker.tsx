@@ -15,7 +15,6 @@ const SECONDS_PER_MINUTE = 60;
 const SECONDS_PER_HOUR = SECONDS_PER_MINUTE * 60;
 
 const DeviceTimeOpenPicker = (props: Props): React.ReactElement => <SimplePicker
-  doesRequireConfirmation={false}
   headerTitle="Select Time to Keep Valve Open"
   label="Time to stay in device state (will keep valve open)"
   name={props.name || 'secondsToStayOpen'}

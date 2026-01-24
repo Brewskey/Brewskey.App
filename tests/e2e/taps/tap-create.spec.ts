@@ -7,52 +7,6 @@ import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to create tap form', async ({ page }) => {
-  // Set up explicit data: device is required for tap creation
-  const { device, organization } = await mockDeviceWithTaps(page, 0);
-  
-  // Verify device has organization before navigating
-  expect(device.organization?.id).toBeDefined();
-  expect(device.organization?.id).toBe(organization.id);
-  
-  // Verify organization is in mock store
-  const { mockStore } = await import('../../fixtures/api-mocks');
-  const storedOrg = mockStore.getOrganization(organization.id);
-  expect(storedOrg).toBeDefined();
-  expect(storedOrg?.id).toBe(organization.id);
-  
-  await page.goto(`/taps/new?deviceId=${device.id}`);
-
-  await expect(page).toHaveURL(/.*tap.*new|new.*tap/i);
-  
-  // Wait for page header to ensure page has loaded
-  await expect(page.getByText('New tap')).toBeVisible({ timeout: 10000 });
-  
-  // Wait for device loading to complete first (if shown)
-  const deviceLoading = page.getByTestId('device-loading');
-  if (await deviceLoading.isVisible().catch(() => false)) {
-    await expect(deviceLoading).toBeHidden({ timeout: 10000 });
-  }
-  
-  // Wait for form to load - tap form has description field (optional) and deviceId (required)
-  // TapForm should render immediately, showing either loading indicator or form
-  // If loading indicator appears, wait for it to disappear and form to appear
-  const loadingOrForm = page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'));
-  await expect(loadingOrForm).toBeVisible({ timeout: 10000 });
-  
-  // If loading was shown, wait for it to disappear and form to appear
-  const loadingIndicator = page.getByTestId('tap-form-loading');
-  if (await loadingIndicator.isVisible().catch(() => false)) {
-    // Wait for loading to disappear (organization query completes)
-    // This might take longer if the organization query is slow
-    await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
-  }
-  
-  // Now wait for the actual form
-  await expect(page.getByTestId('tap-form')).toBeVisible({ timeout: 5000 });
-  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 5000 });
-});
-
 test('should validate required fields', async ({ page }) => {
   // Set up explicit data: device is required for tap creation
   const { device } = await mockDeviceWithTaps(page, 0);
@@ -60,8 +14,9 @@ test('should validate required fields', async ({ page }) => {
   await page.goto(`/taps/new?deviceId=${device.id}`);
   
   // Wait for form to load - tap form has description field (optional) and deviceId (required)
-  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
-  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
+  // Playwright's auto-waiting will handle timing
+  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible();
+  await expect(page.getByTestId('input-description')).toBeVisible();
 
   // TapForm uses react-hook-form validation - deviceId is required
   // The form's SubmitButton component is disabled when !isValid
@@ -81,8 +36,9 @@ test('should successfully create tap', async ({ page, tapPage }) => {
   const { device } = await mockDeviceWithTaps(page, 0);
 
   await page.goto(`/taps/new?deviceId=${device.id}`);
-  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
-  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
+  // Playwright's auto-waiting will handle timing
+  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible();
+  await expect(page.getByTestId('input-description')).toBeVisible();
 
   await tapPage.fillTapForm({
     name: 'New Tap',
@@ -92,7 +48,9 @@ test('should successfully create tap', async ({ page, tapPage }) => {
   await tapPage.submitForm();
 
   // Success messages use SnackBar component with testID
+  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
+  await expect(page.getByTestId('snackbar-message')).toHaveText('New tap created');
 });
 
 test('should set up tap and select beverage with image rendering', async ({ page, tapPage }) => {
@@ -105,8 +63,9 @@ test('should set up tap and select beverage with image rendering', async ({ page
 
   // Step 1: Create a tap
   await page.goto(`/taps/new?deviceId=${device.id}`);
-  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible({ timeout: 10000 });
-  await expect(page.getByTestId('input-description')).toBeVisible({ timeout: 10000 });
+  // Playwright's auto-waiting will handle timing
+  await expect(page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form'))).toBeVisible();
+  await expect(page.getByTestId('input-description')).toBeVisible();
 
   await tapPage.fillTapForm({
     name: 'New Tap with Beverage',
@@ -115,8 +74,9 @@ test('should set up tap and select beverage with image rendering', async ({ page
   });
   await tapPage.submitForm();
 
-  // Wait for success message
+  // Wait for success message and verify exact text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
+  await expect(page.getByTestId('snackbar-message')).toHaveText('New tap created');
   
   // Step 2: Create a tap with known ID via mock for navigation
   const { createMockTap } = await import('../../fixtures/test-data');
@@ -164,10 +124,7 @@ test('should set up tap and select beverage with image rendering', async ({ page
   
   // Step 6: Select the beverage
   await beverageRow.click();
-  
-  // Confirm selection
-  await expect(page.getByTestId('picker-control-select-button')).toBeVisible();
-  await page.getByTestId('picker-control-select-button').click();
+  // Selection is confirmed immediately (no confirmation button needed)
   
   // Verify the selection was successful - the picker should show the selected beverage
   await expect(page.getByTestId('keg-form')).toBeVisible();

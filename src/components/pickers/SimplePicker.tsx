@@ -10,7 +10,6 @@ export type SimplePickerValue<TValue> = {
 type Props<TValue> = {
   description?: React.ReactNode;
   disabled?: boolean;
-  doesRequireConfirmation: boolean;
   error?: string;
   headerTitle: string;
   label: string;
@@ -27,7 +26,6 @@ type Props<TValue> = {
 export const SimplePicker = <TValue,>({
   description,
   disabled,
-  doesRequireConfirmation,
   error,
   label,
   headerTitle,
@@ -66,19 +64,12 @@ export const SimplePicker = <TValue,>({
       valueField="value"
       multiple={false}
       headerTitle={headerTitle}
-      confirmSelectItem={doesRequireConfirmation}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={false}
       placeholder={placeholder}
       onChange={(item) => {
-        // This will be called immediately if doesRequireConfirmation is false
-        if (!doesRequireConfirmation && item && !Array.isArray(item)) {
-          onChange((item as SimplePickerValue<TValue>).value);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
-        // This will be called when confirm button is pressed
-        if (doesRequireConfirmation && item && !Array.isArray(item)) {
+        if (item && !Array.isArray(item)) {
           onChange((item as SimplePickerValue<TValue>).value);
         }
       }}

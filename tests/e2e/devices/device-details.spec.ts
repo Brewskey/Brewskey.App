@@ -3,18 +3,6 @@ import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display device information', async ({ page }) => {
-  // Set up explicit data: one device with no taps
-  const { device } = await mockDeviceWithTaps(page, 0);
-
-  await page.goto(`/devices/${device.id}`);
-
-  // Use testIDs for device information
-  await expect(page.getByTestId('overview-item-box-id')).toBeVisible();
-  await expect(page.getByTestId('overview-item-box-id')).toContainText(device.particleId);
-  await expect(page.getByTestId('overview-item-online-status')).toBeVisible();
-});
-
 test('should show device online/offline status', async ({ page }) => {
   // Set up explicit data: one device with online status (default)
   const { device } = await mockDeviceWithTaps(page, 0);

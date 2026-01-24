@@ -823,6 +823,12 @@ export function setupAPIMocks(page: Page): void {
           return fulfillErrorResponse(route, 404, 'Not found');
         }
 
+        // If take is 1 (fetchSingle) and we have results, return the first item as a single object
+        // This matches the behavior of fetchSingle which expects a single entity, not an array
+        if (take === 1 && paginatedEntities.length > 0) {
+          return fulfillJSONResponse(route, 200, paginatedEntities[0]);
+        }
+
         return fulfillJSONResponse(route, 200, paginatedEntities);
       }
 

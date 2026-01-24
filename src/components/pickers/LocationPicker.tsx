@@ -85,26 +85,17 @@ function LocationPicker<TMultiple extends boolean>({
       labelField="name"
       valueField="id"
       multiple={multiple}
-      mode="modal"
+      
       headerTitle={`Select Location${multiple ? 's' : ''}`}
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search locations..."
       placeholder={`Select Location${multiple ? 's' : ''}`}
       onChange={(item) => {
-        // This will be called immediately if confirmSelectItem is false
         if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Location, TMultiple>);
         } else if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Location, TMultiple>);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
-        // This will be called when confirm button is pressed
-        if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Location, TMultiple>);
-        } else if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Location, TMultiple>);
         }
       }}

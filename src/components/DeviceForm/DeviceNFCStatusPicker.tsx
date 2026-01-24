@@ -105,7 +105,6 @@ type Props = {
 const DeviceNFCStatusPicker = (props: Props): React.ReactElement => (
   <SimplePicker
     description={props.value ? DESCRIPTION_BY_VALUE[props.value] : undefined}
-    doesRequireConfirmation={false}
     headerTitle="Select NFC Configuration"
     label="NFC Configuration"
     name={props.name || 'nfcStatus'}

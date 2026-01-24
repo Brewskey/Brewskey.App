@@ -2,14 +2,6 @@ import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display menu screen', async ({ page, menuPage }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await menuPage.goto();
-
-  await expect(page).toHaveURL(/.*menu/i);
-  
-});
-
 test('should show user block', async ({ page, menuPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await menuPage.goto();

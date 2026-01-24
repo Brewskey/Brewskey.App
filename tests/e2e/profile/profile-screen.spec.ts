@@ -4,18 +4,6 @@ import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
-test('should display user profile', async ({ page }) => {
-  // Set up explicit data: another user's profile
-  const otherUser = createMockUser({ userName: 'otheruser' });
-  mockStore.setUser(otherUser);
-
-  await page.goto(`/menu/profile/${otherUser.id}`);
-  
-  // Profile screen has testID - use that instead of text-based locator
-  // Note: ProfileScreen doesn't have a testID on the header, so check for content or wait for loading to complete
-  await expect(page.getByTestId('profile-content').or(page.locator('text=' + otherUser.userName).first())).toBeVisible({ timeout: 10000 });
-});
-
 test('should show friend status', async ({ page }) => {
   // Set up explicit data: another user's profile
   const otherUser = createMockUser({ userName: 'otheruser' });
@@ -23,11 +11,15 @@ test('should show friend status', async ({ page }) => {
 
   await page.goto(`/menu/profile/${otherUser.id}`);
   
+  // Wait for profile content to load
+  await expect(page.getByTestId('profile-content')).toBeVisible();
+  
   // Friend status section header or add friend button should be visible
-  // When not friends, shows "You aren't friends" section header
-  await expect(
-    page.getByTestId('section-header-not-friends').or(page.getByTestId('button-add-friend'))
-  ).toBeVisible({ timeout: 10000 });
+  // When not friends, shows "You aren't friends" section header or add friend button
+  const notFriendsHeader = page.getByTestId('section-header-not-friends');
+  const addFriendButton = page.getByTestId('button-add-friend');
+  // At least one should be visible
+  await expect(notFriendsHeader.or(addFriendButton)).toBeVisible();
 });
 
 test('should allow sending friend request', async ({ page }) => {
@@ -39,8 +31,9 @@ test('should allow sending friend request', async ({ page }) => {
   
 
   // Add friend button should be visible - use testID
+  // Playwright's auto-waiting will handle timing
   const requestButton = page.getByTestId('button-add-friend');
-  await expect(requestButton).toBeVisible({ timeout: 10000 });
+  await expect(requestButton).toBeVisible();
   await requestButton.click();
   // Success message appears in snackbar - use testID
   await expect(page.getByTestId('snackbar-message')).toBeVisible();

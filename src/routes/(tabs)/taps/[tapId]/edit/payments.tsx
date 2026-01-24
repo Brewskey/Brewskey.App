@@ -180,7 +180,6 @@ const EditTapPaymentsRouteContent: React.FC = () => {
             <FormField
               component={SimplePicker}
               disabled={isSubmitting}
-              doesRequireConfirmation={false}
               headerTitle="Select Square Location"
               initialValue={location.squareLocationID}
               label="Square Location"

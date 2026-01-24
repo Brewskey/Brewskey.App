@@ -49,19 +49,14 @@ const StylePicker: React.FC<Props> = ({
       labelField="name"
       valueField="id"
       multiple={false}
-      mode="modal"
+      
       headerTitle="Select Style"
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search styles..."
       placeholder="Select Style"
       onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Style);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
         if (!Array.isArray(item)) {
           props.onChange(item as Style);
         }

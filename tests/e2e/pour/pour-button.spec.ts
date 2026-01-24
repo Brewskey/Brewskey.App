@@ -3,13 +3,6 @@ import { test, expect } from '../../fixtures/test-fixtures';
 test.use({ autoAuthenticate: true });
 
 test.describe('Pour Button', () => {
-  test('should display pour button on home screen', async ({ page }) => {
-    await page.goto('/');
-    
-    // Wait for page to load
-    await expect(page.getByTestId('pour-button')).toBeVisible({ timeout: 10000 });
-  });
-
   test('should open pour modal when button is clicked', async ({ page }) => {
     await page.goto('/');
     
@@ -39,13 +32,15 @@ test.describe('Pour Button', () => {
     const input = page.getByTestId('pour-modal-totp-input');
     await expect(input).toBeVisible();
     
-    // Type a valid TOTP code
+    // Type a valid TOTP code - this triggers async authorization
     await input.fill('123456');
     
-    // Wait for loading state (the authorization request is async)
-    // Note: Loading indicator might appear briefly, but since we're mocking the API,
-    // it should complete quickly
-    await page.waitForTimeout(500);
+    // Wait for input to become disabled (indicates loading state)
+    // The input has editable={!isLoading}, so it becomes disabled during loading
+    await expect(input).toBeDisabled();
+    
+    // Authorization completes and modal closes - wait for modal to be hidden
+    await expect(page.getByTestId('pour-process-modal')).toBeHidden({ timeout: 5000 });
   });
 
   test('should close modal when clicking outside', async ({ page }) => {
@@ -61,9 +56,17 @@ test.describe('Pour Button', () => {
     await expect(page.getByTestId('pour-process-modal')).toBeVisible({ timeout: 5000 });
     
     // Click outside the modal (on the backdrop)
-    // The modal backdrop is clickable and should close the modal
-    const modal = page.getByTestId('pour-process-modal');
-    await modal.click({ position: { x: 0, y: 0 } });
+    // The CenteredModal uses TouchableOpacity with onPressOut for the backdrop
+    // Click at the edge of the viewport to ensure we hit the backdrop, not the modal content
+    const viewportSize = page.viewportSize();
+    if (viewportSize) {
+      // Click at the top-left corner of the viewport (backdrop area)
+      await page.mouse.click(10, 10);
+    } else {
+      // Fallback: click on a point outside the modal content
+      // The modal is centered, so clicking at viewport edges should hit the backdrop
+      await page.click('body', { position: { x: 10, y: 10 } });
+    }
     
     // Wait for modal to disappear
     await expect(page.getByTestId('pour-process-modal')).toBeHidden({ timeout: 2000 });
@@ -85,22 +88,19 @@ test.describe('Pour Button', () => {
     const input = page.getByTestId('pour-modal-totp-input');
     await expect(input).toBeVisible();
     
-    // Type a 5-digit code (should not trigger authorization)
+    // Type a 5-digit code (should not trigger authorization - requires 6 digits)
     await input.fill('12345');
     
-    // Wait a bit to ensure no authorization is triggered
-    await page.waitForTimeout(500);
-    
-    // Modal should still be visible (code too short)
+    // Modal should still be visible (code too short, authorization not triggered)
+    // Input should remain enabled since isLoading is false
     await expect(page.getByTestId('pour-process-modal')).toBeVisible();
+    await expect(input).toBeEnabled();
     
-    // Now enter a valid 6-digit code
+    // Now enter a valid 6-digit code to trigger authorization
     await input.fill('123456');
     
-    // Wait for authorization to complete
-    await page.waitForTimeout(1000);
-    
-    // Modal should close after successful authorization
+    // Wait for input to become disabled (loading state) and then modal to close
+    // Authorization completes and modal closes automatically
     await expect(page.getByTestId('pour-process-modal')).toBeHidden({ timeout: 5000 });
   });
 

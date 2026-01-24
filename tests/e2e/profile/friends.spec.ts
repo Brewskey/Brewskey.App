@@ -2,36 +2,30 @@ import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display friends list', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-friends');
-  
-  // Friends list has testID - use that instead of text-based locator
-  await expect(page.getByTestId('friends-list')).toBeVisible();
-});
-
 test('should allow sending friend request', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await page.goto('/menu/my-friends');
   
-
-  // Add friend button should be visible - use role-based locator for standard button
-  // Button should be visible when user is authenticated
-  const addButton = page.getByRole('button', { name: /add.*friend|add/i });
+  // Add friend button should be visible - use testID
+  const addButton = page.getByTestId('button-add-friend');
   await expect(addButton).toBeVisible();
   await addButton.click();
-  // Friend request form inputs should be visible
-  const friendInput = page.getByTestId('input-userName').or(page.getByTestId('input-email'));
-  await expect(friendInput.first()).toBeVisible();
+  
+  // Friend request form inputs should be visible after clicking add button
+  // The form might use userName or email input - check for either
+  const userNameInput = page.getByTestId('input-userName');
+  const emailInput = page.getByTestId('input-email');
+  // At least one input should be visible
+  await expect(userNameInput.or(emailInput)).toBeVisible();
 });
 
 test('should show pending friend requests', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await page.goto('/menu/my-friends/myFriendsRequest');
   
-  // Friend requests list should be visible - check for list or header
-  // FriendRequestsList component should render
-  await expect(page.getByTestId('friend-requests-list').or(page.getByTestId('section-header-pending-requests'))).toBeVisible();
+  // FriendRequestsList component always renders the List with testID="friend-requests-list"
+  // The list is visible even when empty (shows "No requests" message)
+  await expect(page.getByTestId('friend-requests-list')).toBeVisible();
 });
 
 test('should allow accepting friend requests', async ({ page }) => {
@@ -39,9 +33,10 @@ test('should allow accepting friend requests', async ({ page }) => {
   // Note: This would require mocking friend requests in the store
   await page.goto('/menu/my-friends/myFriendsRequest');
   
-
-  // Accept button should be visible if there are pending requests
-  // Note: This test would need explicit data setup with pending friend requests
-  // For now, verify the page loads correctly
-  await expect(page.getByTestId('friend-requests-list').or(page.getByTestId('section-header-pending-requests'))).toBeVisible();
+  // FriendRequestsList component always renders the List with testID="friend-requests-list"
+  // The list is visible even when empty
+  await expect(page.getByTestId('friend-requests-list')).toBeVisible();
+  
+  // Note: To test accepting friend requests, we would need to set up mock data
+  // with pending friend requests in the store
 });

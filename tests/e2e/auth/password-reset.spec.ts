@@ -20,6 +20,10 @@ test('should send password reset request', async ({ page }) => {
   // Success modal should appear - use testID
   await expect(page.getByTestId('reset-password-success-modal')).toBeVisible();
   await expect(page.getByTestId('reset-password-success-title')).toBeVisible();
+
+  // Close the modal and verify it closed
+  await page.getByTestId('button-reset-password-success-ok').click();
+  await expect(page.getByTestId('reset-password-success-modal')).not.toBeVisible();
 });
 
 test('should show error for invalid email', async ({ page }) => {

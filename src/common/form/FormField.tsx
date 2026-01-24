@@ -112,7 +112,6 @@ export const FormField = <
 
           {...(props as any)}
           name={fieldName}
-          label={label}
           defaultValue={initialValue}
           required={typeof required === 'boolean' ? required : required ? true : false}
           rules={rules || (required && typeof required === 'string' ? { required } : undefined)}

@@ -74,9 +74,9 @@ function DevicePicker2<TMultiple extends boolean>({
       labelField="name"
       valueField="id"
       multiple={multiple}
-      mode="modal"
+      
       headerTitle={`Select Brewskey Box${multiple ? 'es' : ''}`}
-      confirmSelectItem={true}
+      confirmSelectItem={false}
       inputVariant="picker"
       search={true}
       searchPlaceholder="Search devices..."
@@ -85,13 +85,6 @@ function DevicePicker2<TMultiple extends boolean>({
         if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Device, TMultiple>);
         } else if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Device, TMultiple>);
-        }
-      }}
-      onConfirmSelectItem={(item) => {
-        if (multiple && Array.isArray(item)) {
-          props.onChange(item as PickerValue<Device, TMultiple>);
-        } else if (!multiple && !Array.isArray(item)) {
           props.onChange(item as PickerValue<Device, TMultiple>);
         }
       }}

@@ -78,9 +78,6 @@ export const KegForm: React.FC<Props> = ({
     },
   });
 
-  // Ensure form is ready before accessing formState
-  const isFormReady = form.formState != null;
-  
   const {
     formState: { isDirty, isSubmitting, isValid },
   } = form;
@@ -167,7 +164,7 @@ export const KegForm: React.FC<Props> = ({
             onSubmit={onSubmitForm}
             testID={keg ? 'submit-button-update-current-keg' : 'submit-button-create-keg'}
             title={submitButtonLabel}
-            disabled={!isFormReady}
+            allowSubmitWhenValid={!keg}
           />
         </SectionContent>
       </View>
