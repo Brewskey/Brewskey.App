@@ -152,6 +152,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
             initialValue="3600"
             label="Seconds To Stay Open"
             name="secondsToStayOpen"
+            testID="input-secondsToStayOpen"
           />
         ) : (
           <FormField
@@ -168,6 +169,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
           keyboardType="number-pad"
           label="Pour Time Buffer"
           name="timeForValveOpen"
+          testID="input-timeForValveOpen"
           _parseOnSubmit={(value: unknown): number => Math.max(Number(value as string) || 0, 5)}
         />
         <FormField
@@ -175,6 +177,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
           initialValue={device.ledBrightness}
           label="LED Brightness"
           name="ledBrightness"
+          testID="input-ledBrightness"
           _parseOnSubmit={(value: unknown): string => (value as number).toFixed(0)}
         />
         <FormField
@@ -188,6 +191,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
           initialValue={device.isScreenDisabled}
           label="Is Screen Disabled"
           name="isScreenDisabled"
+          testID="input-isScreenDisabled"
         />
         {values.isScreenDisabled ? (
           <>
@@ -208,12 +212,14 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
               initialValue={device.isTotpDisabled}
               label="Is Passcode Disabled"
               name="isTotpDisabled"
+              testID="input-isTotpDisabled"
             />
             <FormField
               component={CheckBoxField}
               initialValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
+              testID="input-shouldInvertScreen"
             />
           </>
         )}

@@ -83,11 +83,12 @@ export const TapForm: React.FC<Props> = ({
             <CheckBoxInput
               label="Enable Payments for this tap"
               name="isPaymentEnabled"
+              testID="input-isPaymentEnabled"
             />
           )}
-          <CheckBoxInput label="Hide leaderboard" name="hideLeaderboard" />
-          <CheckBoxInput label="Hide Stats tab" name="hideStats" />
-          <CheckBoxInput label="Disable Badges for tap" name="disableBadges" />
+          <CheckBoxInput label="Hide leaderboard" name="hideLeaderboard" testID="input-hideLeaderboard" />
+          <CheckBoxInput label="Hide Stats tab" name="hideStats" testID="input-hideStats" />
+          <CheckBoxInput label="Disable Badges for tap" name="disableBadges" testID="input-disableBadges" />
           <MainTabBarFill>
             <SectionContent paddedVertical>
               <SubmitButton

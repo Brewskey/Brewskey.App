@@ -167,6 +167,7 @@ const LocationForm: React.FC<Props> = ({
           initialValue={location.description}
           label="Description"
           name="description"
+          testID="input-description"
         />
         <FormField
           component={SimplePicker}
@@ -195,6 +196,7 @@ const LocationForm: React.FC<Props> = ({
           label="Apt./Suite"
           name="suite"
           nextFocusTo="city"
+          testID="input-suite"
         />
         <FormField
           component={TextInput}

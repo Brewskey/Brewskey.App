@@ -161,6 +161,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
           initialValue={beverage?.description ?? undefined}
           label="Description"
           name="description"
+          testID="input-description"
         />
         <FormField
           component={SimplePicker}
@@ -221,6 +222,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
           initialValue={beverage?.isOrganic}
           label="Is Organic?"
           name="isOrganic"
+          testID="input-isOrganic"
         />
         <FormField
           component={SrmPicker}
@@ -246,6 +248,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             label="ABV"
             name="abv"
             nextFocusTo="originalGravity"
+            testID="input-abv"
           />,
           <FormField
             component={TextInput}
@@ -255,6 +258,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             label="Original Gravity"
             name="originalGravity"
             nextFocusTo="ibu"
+            testID="input-originalGravity"
           />,
           <FormField
             component={TextInput}
@@ -264,6 +268,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             label="IBU"
             name="ibu"
             onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
+            testID="input-ibu"
           />,
         ]}
         <SectionContent paddedVertical>

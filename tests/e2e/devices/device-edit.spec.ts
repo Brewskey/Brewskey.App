@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
+import { mockDeviceWithTaps, mockLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
@@ -14,40 +14,68 @@ test('should pre-fill form with existing data', async ({ page }) => {
 });
 
 test('should successfully update device', async ({ page }) => {
-  // Set up explicit data: one device
+  // Set up: one device and a second location so we can mutate the location field
+  const { location: location2 } = await mockLocationWithTaps(page, 1);
   const { device } = await mockDeviceWithTaps(page, 0);
 
   await page.goto(`/devices/${device.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
 
-  // Fill all required fields: name, location, and deviceStatus
-  // Even though form is pre-filled, we update fields to test form inputs properly
+  // Mutate every form field: name, location, deviceStatus, secondsToStayOpen,
+  // timeForValveOpen, ledBrightness, nfcStatus, isScreenDisabled, isTotpDisabled, shouldInvertScreen
+
   await page.getByTestId('input-name').fill('Updated Device Name');
-  
-  // Update device status (required field) - verify picker works
+
+  // Location (required) - select the second location
+  await page.getByTestId('picker-location').click();
+  await expect(page.getByTestId('picker-location-modal')).toBeVisible();
+  const locationItem = page.getByTestId(`location-item-${location2.id}`);
+  await expect(locationItem).toBeVisible({ timeout: 5000 });
+  await locationItem.click();
+  await expect(page.getByTestId('picker-location-modal')).not.toBeVisible();
+
+  // Device status (required)
   const deviceStatusPicker = page.getByTestId('picker-device-status');
-  await expect(deviceStatusPicker).toBeVisible();
   await deviceStatusPicker.click();
-  // Select a different status to test the picker (Cleaning is at index 1)
-  // SimplePicker uses default mode (inline), options use testID format: {pickerTestID}-option-{index}
   await expect(page.getByTestId('picker-device-status-option-1')).toBeVisible();
   await page.getByTestId('picker-device-status-option-1').click();
-  // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
-  
-  // Location is also required - verify it's present (should be pre-filled)
-  const locationPicker = page.getByTestId('picker-location');
-  await expect(locationPicker).toBeVisible();
-  
-  // Submit the form
+
+  // secondsToStayOpen: when Active/Inactive shows TextInput; after selecting Cleaning it becomes DeviceTimeOpenPicker
+  // Keep deviceStatus as Cleaning (option 1) - secondsToStayOpen is now DeviceTimeOpenPicker
+  const secondsPicker = page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)');
+  await secondsPicker.click();
+  await expect(page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-option-2')).toBeVisible({ timeout: 5000 });
+  await page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-option-2').click();
+
+  await page.getByTestId('input-timeForValveOpen').fill('15');
+
+  // LED Brightness slider
+  const ledSlider = page.getByTestId('input-ledBrightness');
+  await expect(ledSlider).toBeVisible();
+  const ledBox = await ledSlider.boundingBox();
+  if (ledBox) {
+    await page.mouse.move(ledBox.x + ledBox.width * 0.5, ledBox.y + ledBox.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(ledBox.x + ledBox.width * 0.8, ledBox.y + ledBox.height / 2, { steps: 5 });
+    await page.mouse.up();
+  }
+
+  // NFC status
+  const nfcPicker = page.getByTestId('picker-nfc-configuration');
+  await nfcPicker.click();
+  await expect(page.getByTestId('picker-nfc-configuration-option-1')).toBeVisible({ timeout: 5000 });
+  await page.getByTestId('picker-nfc-configuration-option-1').click();
+
+  // Checkboxes: isScreenDisabled, isTotpDisabled, shouldInvertScreen
+  await page.getByTestId('input-isScreenDisabled').click();
+  await page.getByTestId('input-isTotpDisabled').click();
+  await page.getByTestId('input-shouldInvertScreen').click();
+
   const submitButton = page.getByTestId('submit-button-edit-device');
   await expect(submitButton).toBeEnabled();
   await submitButton.click();
 
-  // Wait for navigation back to device details page
   await expect(page).toHaveURL(new RegExp(`/devices/${device.id}(?:/edit)?$`));
-  
-  // Success messages use SnackBar component with testID
-  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
   await expect(page.getByTestId('snackbar-message')).toHaveText('The Brewskey box was edited');
 });

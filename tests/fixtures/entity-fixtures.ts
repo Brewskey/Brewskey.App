@@ -264,6 +264,7 @@ export async function mockBeverageWithPours(
   pourCount: number = 5,
   userID?: EntityID,
   userName?: string,
+  beverageOverrides?: Partial<Beverage>,
 ): Promise<{ beverage: Beverage; pours: any[] }> {
   // Get the authenticated user from mockStore if userID not provided
   let finalUserID = userID;
@@ -290,6 +291,7 @@ export async function mockBeverageWithPours(
         userName: finalUserName 
       } 
     } : {}),
+    ...beverageOverrides,
   });
   mockStore.setBeverage(beverage);
 

@@ -84,9 +84,17 @@ export class LocationPage {
     state: string;
     zipCode: string;
     locationType?: string;
+    description?: string;
+    suite?: string;
   }): Promise<void> {
     await this.page.getByTestId('input-name').fill(data.name);
+    if (data.description != null) {
+      await this.page.getByTestId('input-description').fill(data.description);
+    }
     await this.page.getByTestId('input-street').fill(data.address);
+    if (data.suite != null) {
+      await this.page.getByTestId('input-suite').fill(data.suite);
+    }
     await this.page.getByTestId('input-city').fill(data.city);
     // State is a SimplePicker, not a TextInput - use picker-state testID
     const statePicker = this.page.getByTestId('picker-state');

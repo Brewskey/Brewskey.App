@@ -138,6 +138,7 @@ export const KegForm: React.FC<Props> = ({
           label="Keg Level"
           maxOunces={selectedKegTypeMaxOunces}
           name="startingPercentage"
+          testID="input-startingPercentage"
         />
         {!showReplaceButton ? null : (
           <SectionContent paddedVertical>

@@ -92,21 +92,19 @@ test('should successfully create keg', async ({ page }) => {
   await expect(page.getByTestId('keg-form')).toBeVisible();
   
   // Select keg type - required field (defaults to undefined for new keg)
-  // DropdownInput for kegType has testID="dropdown-kegType"
   const kegTypeDropdown = page.getByTestId('dropdown-kegType');
-  await expect(kegTypeDropdown).toBeVisible();
   await kegTypeDropdown.click();
-  // Wait for dropdown options to appear
-  // DropdownInput mode="default" renders options inline within parent container
-  // Options use testID format: {pickerTestID}-option-{index}
-  // Mini Keg is the smallest size, so it should be first (index 0) after sorting by size
   await expect(page.getByTestId('dropdown-kegType-option-0')).toBeVisible();
-  // Click the option - DropdownInput uses mode="default" so it closes automatically
   await page.getByTestId('dropdown-kegType-option-0').click();
-  // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
-  
-  // For new forms with allowSubmitWhenValid=true, button should be enabled when isValid=true
-  // Form requires: beverage (selected), kegType (selected) to be valid
+
+  // Mutate startingPercentage (Keg Level slider)
+  const startingSlider = page.locator('[role="slider"]').first();
+  await expect(startingSlider).toBeVisible();
+  const sliderBox = await startingSlider.boundingBox();
+  if (sliderBox) {
+    await startingSlider.click({ position: { x: sliderBox.width * 0.8, y: sliderBox.height / 2 } });
+  }
+
   const submitButton = page.getByTestId('submit-button-create-keg');
   await expect(submitButton).toBeEnabled();
   await submitButton.click();

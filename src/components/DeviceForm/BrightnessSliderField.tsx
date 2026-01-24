@@ -19,13 +19,15 @@ const styles = StyleSheet.create({
 type Props = SliderProps & {
   onChange: (value: number) => void;
   value: number;
+  testID?: string;
 };
 
 const BrightnessSliderField = ({
   onChange,
   value,
+  testID,
   ...rest
-}: Props): React.ReactElement => <View>
+}: Props): React.ReactElement => <View testID={testID}>
   <View style={styles.container}>
     <Slider
       {...rest}

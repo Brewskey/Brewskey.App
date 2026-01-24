@@ -31,12 +31,16 @@ test('should successfully create location', async ({ page, locationPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await page.goto('/locations/new');
   await expect(page.getByTestId('input-name')).toBeVisible();
-  
+
+  // Mutate every form field: name, description, locationType, street, suite, city, state, zipCode
+  // (organization and squareLocationID are conditional and may not be present)
   await locationPage.fillLocationForm({
     name: 'Test Location',
+    description: 'Test location description',
     address: '123 Test St',
+    suite: 'Suite 100',
     city: 'Test City',
-    state: 'Texas', // Use full state name, not abbreviation
+    state: 'Texas',
     zipCode: '12345',
     locationType: 'Kegerator',
   });
