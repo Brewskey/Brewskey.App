@@ -48,9 +48,9 @@ const NuxFinishScreen: React.FC = () => {
     
     // Default behavior: navigate to tap details if tapId is provided, otherwise go to tabs
     if (tapId) {
-      router.replace(`/(tabs)/taps/${tapId}`);
+      router.replace({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId } });
     } else {
-      router.replace('/(tabs)');
+      router.replace({ pathname: '/(tabs)', params: {} });
     }
   };
 
@@ -64,6 +64,7 @@ const NuxFinishScreen: React.FC = () => {
         <Button
           onPress={handlePress}
           secondary
+          testID="button-finish"
           title="Finish"
         />
       </View>

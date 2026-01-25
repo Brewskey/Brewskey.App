@@ -41,7 +41,7 @@ export const SectionPoursList: React.FC<Props> = ({
   const addSnackBarMessage = useAddSnackBarMessage();
 
   const _onItemPress = (pour: Pour) => {
-    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
   };
 
   const _onDeleteItemPress = async (pour: Pour): Promise<void> => {

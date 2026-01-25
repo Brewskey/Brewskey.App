@@ -132,11 +132,11 @@ export const SectionTapsList: React.FC<Props> = ({
   const keyExtractor = ({ id }: Tap): string => id.toString();
 
   const onItemPress = (item: Tap): void => {
-    router.navigate(`/(tabs)/taps/${item.id}`);
+    router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(item.id) } });
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    router.navigate(`/(tabs)/taps/${id}/edit`);
+    router.navigate({ pathname: '/(tabs)/taps/[tapId]/edit/feed', params: { tapId: String(id) } });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 

@@ -60,7 +60,7 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.owner?.id) {
       onClose?.();
       onNavigateToProfile?.(pour.owner.id);
-      router.navigate(`/(tabs)/profile/${pour.owner.id}`);
+      router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
     }
   };
 
@@ -68,7 +68,7 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.beverage?.id) {
       onClose?.();
       onNavigateToBeverage?.(pour.beverage.id);
-      router.navigate(`/(tabs)/beverages/${pour.beverage.id}`);
+      router.navigate({ pathname: '/(tabs)/beverages/[id]', params: { id: String(pour.beverage.id) } });
     }
   };
 
@@ -76,7 +76,7 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.location?.id) {
       onClose?.();
       onNavigateToLocation?.(pour.location.id);
-      router.navigate(`/(tabs)/locations/${pour.location.id}`);
+      router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: String(pour.location.id) } });
     }
   };
 
@@ -84,7 +84,7 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.device?.id) {
       onClose?.();
       onNavigateToDevice?.(pour.device.id);
-      router.navigate(`/(tabs)/devices/${pour.device.id}`);
+      router.navigate({ pathname: '/(tabs)/devices/[id]', params: { id: String(pour.device.id) } });
     }
   };
 

@@ -54,7 +54,7 @@ const FriendsList: React.FC<Props> = ({
   } = useGetFriends(queryOptions);
 
   const onItemPress = (friend: Friend) => {
-    router.navigate(`/(tabs)/profile/${friend.friendAccount.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.friendAccount.id) } });
   };
 
   const onRefreshList = async () => {

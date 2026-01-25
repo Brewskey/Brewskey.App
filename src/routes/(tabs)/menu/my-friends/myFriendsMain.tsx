@@ -5,7 +5,7 @@ import ErrorScreen from '../../../../common/ErrorScreen';
 import { withErrorBoundary } from '../../../../common/ErrorBoundary';
 
 import FriendsList from '../../../../components/FriendsList';
-import { useUserID } from '../../../../stores/AuthStore';
+import { useUserID } from '../../../../hooks/context/AuthContext';
 
 const MyFriendsMainRoute: React.FC = () => {
   const userID = useUserID();

@@ -19,7 +19,7 @@ import BeverageForm from '../../../../components/BeverageForm';
 import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import CONFIG from '../../../../config';
 import { useGetBeverageById, useUpdateBeverage } from '../../../../hooks/queries/BeverageQueries';
-import { useAccessToken } from '../../../../stores/AuthStore';
+import { useAccessToken } from '../../../../hooks/context/AuthContext';
 
 const updateBeverageImage = async (beverageID: string, beverageData: string, accessToken: string | null): Promise<void> => {
   const response = await fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
@@ -73,7 +73,7 @@ const EditBeverageScreen: React.FC = () => {
     }
 
     addSnackBarMessage({ content: 'The beverage edited.' });
-    router.push(`/beverages/${beverageIdValue}`);
+    router.push({ pathname: '/(tabs)/beverages/[id]', params: { id: beverageIdValue.toString() } });
   };
 
   if (isLoading || !beverage) {

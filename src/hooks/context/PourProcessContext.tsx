@@ -16,7 +16,7 @@ import NfcManager, {
   RegisterTagEventOpts,
   TagEvent,
 } from 'react-native-nfc-manager';
-import { useAuthContext } from './AuthContext';
+import { useAuthSession } from './AuthContext';
 
 type PourProcessState = {
   isVisible: boolean;
@@ -292,7 +292,7 @@ export const usePourModalContext = (): PourProcessContextValue => {
     throw new Error('usePourModalContext must be used within PourProcessProvider');
   }
 
-  const [session] = useAuthContext();
+  const { data: session } = useAuthSession();
   const permissionQuery = useLocationPermission();
   const locationQuery = useDeviceLocation();
   const location = locationQuery.data ?? null;

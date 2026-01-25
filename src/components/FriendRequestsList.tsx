@@ -13,20 +13,19 @@ import ListSectionHeader from '../common/ListSectionHeader';
 import FriendPendingRequestListItem from './FriendPendingRequestListItem';
 import FriendMyRequestListItem from './FriendMyRequestListItem';
 import ListEmpty from '../common/ListEmpty';
-import { useUserID } from '../stores/AuthStore';
 import { useGetManyFriends, useUpdateFriend, useDeleteFriend } from '../hooks/queries/FriendQueries';
 import { useQueryClient } from '@tanstack/react-query';
+import { useAuthSession } from '../hooks/context/AuthContext';
 
 const FriendRequestsList: React.FC = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const userID = useUserID();
+  const { data: authResponse } = useAuthSession();
 
   // Query for pending requests (requests sent to me)
   const pendingRequestsQuery = useGetManyFriends({
     filters: [
       createFilter('friendAccount').notEquals(null),
-      createFilter('owningAccount/id').equals(userID),
+      createFilter('owningAccount/id').equals(authResponse?.id),
       createFilter('friendStatus').equals(FRIEND_STATUSES.PENDING),
     ],
     orderBy: [
@@ -42,7 +41,7 @@ const FriendRequestsList: React.FC = () => {
     filters: [
       createFilter('friendAccount').notEquals(null),
       createFilter('friendStatus').equals(FRIEND_STATUSES.AWAITING_APPROVAL),
-      createFilter('owningAccount/id').equals(userID),
+      createFilter('owningAccount/id').equals(authResponse?.id),
     ],
     orderBy: [
       {
@@ -58,11 +57,11 @@ const FriendRequestsList: React.FC = () => {
   const isLoading = pendingRequestsQuery.isLoading || myRequestsQuery.isLoading;
 
   const onPendingRequestRowPress = (friend: Friend) => {
-    router.navigate(`/(tabs)/profile/${friend.owningAccount.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.owningAccount.id) } });
   };
 
   const onMyRequestRowPress = (friend: Friend) => {
-    router.navigate(`/(tabs)/profile/${friend.friendAccount.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.friendAccount.id) } });
   };
 
   const onFriendAcceptPress = async (friend: Friend) => {

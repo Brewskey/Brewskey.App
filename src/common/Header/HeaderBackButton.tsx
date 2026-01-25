@@ -11,7 +11,7 @@ export const HeaderBackButton: React.FC = () => {
     } else {
       // Fallback to home if there's no navigation history
       // This can happen with deep links or when the screen is the first in the stack
-      router.replace('/(tabs)');
+      router.replace({ pathname: '/(tabs)', params: {} });
     }
   };
   

@@ -45,10 +45,14 @@ test('should successfully create tap', async ({ page, tapPage }) => {
     deviceId: device.id as number,
     locationId: location.id as number,
   });
+
+  // Mutate checkboxes: hideLeaderboard, hideStats, disableBadges (isPaymentEnabled is conditional)
+  await page.getByTestId('input-hideLeaderboard').click();
+  await page.getByTestId('input-hideStats').click();
+  await page.getByTestId('input-disableBadges').click();
+
   await tapPage.submitForm();
 
-  // Success messages use SnackBar component with testID
-  // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
   await expect(page.getByTestId('snackbar-message')).toHaveText('New tap created');
 });

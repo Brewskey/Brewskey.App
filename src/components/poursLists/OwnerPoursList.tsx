@@ -91,7 +91,7 @@ const OwnerPoursList: React.FC<Props> = ({
       return;
     }
 
-    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
   };
 
   const onDeleteItemPress = async (item: Pour): Promise<void> => {

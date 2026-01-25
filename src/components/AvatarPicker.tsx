@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Icon } from '@rneui/themed';
 
-import { useAccessToken, useUserName } from '../stores/AuthStore';
+import { useAuthSession } from '../hooks/context/AuthContext';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import UserAvatar from '../common/avatars/UserAvatar';
 import CONFIG from '../config';
@@ -33,8 +33,7 @@ const IMAGE_PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
 const AvatarPicker: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const addSnackBarMessage = useAddSnackBarMessage();
-  const accessToken = useAccessToken();
-  const userName = useUserName();
+  const { data: authResponse } = useAuthSession();
 
   const onAvatarPress = async () => {
     // Request permissions
@@ -65,7 +64,7 @@ const AvatarPicker: React.FC = () => {
         body: JSON.stringify({ photo: base64 }),
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${accessToken || ''}`,
+          Authorization: `Bearer ${authResponse?.accessToken || ''}`,
           'Content-Type': 'application/json',
         },
         method: 'PUT',
@@ -90,7 +89,7 @@ const AvatarPicker: React.FC = () => {
     <TouchableOpacity onPress={onAvatarPress}>
       <UserAvatar
         size={200}
-        userName={userName || ''}
+        userName={authResponse?.userName || ''}
       />
       <Icon
         color={COLORS.textInverse}

@@ -84,6 +84,7 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
           onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
           selectionColor={COLORS.textInverse}
           style={styles.input}
+          testID="input-userName"
           underlineColorAndroid={COLORS.secondary}
           validationTextStyle={styles.validationText}
         />

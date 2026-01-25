@@ -20,6 +20,7 @@ type Props<TMultiple extends boolean> = {
   name: string;
   defaultValue?: PickerValue<Beverage, TMultiple>;
   required?: boolean | string;
+  testID?: string;
 };
 
 type BeveragePickerItemProps = {
@@ -50,6 +51,7 @@ function BeveragePicker<TMultiple extends boolean>({
   name = 'beverage',
   defaultValue,
   required,
+  testID,
   ...props
 }: Props<TMultiple>): React.ReactElement {
 
@@ -74,7 +76,6 @@ function BeveragePicker<TMultiple extends boolean>({
       labelField="name"
       valueField="id"
       multiple={multiple}
-      
       headerTitle={`Select Beverage${multiple ? 's' : ''}`}
       confirmSelectItem={false}
       inputVariant="picker"
@@ -91,7 +92,7 @@ function BeveragePicker<TMultiple extends boolean>({
       }}
       renderItem={BeveragePickerItem}
       keyExtractor={(item) => String(item.id)}
-      testID={`beverage-picker-${name}`}
+      testID={testID}
     />
   );
 }

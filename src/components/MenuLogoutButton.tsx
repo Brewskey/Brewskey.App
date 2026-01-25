@@ -3,16 +3,16 @@ import { useState } from 'react';
 
 import Fragment from '../common/Fragment';
 import LogoutModal from './modals/LogoutModal';
-import { useAuthActions } from '../stores/AuthStore';
 import MenuButton from './MenuButton';
+import { useLogout } from '../hooks/queries/AuthQueries';
 
 const MenuLogoutButton: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { logout } = useAuthActions();
 
+  const logoutMutation = useLogout();
   const onLogoutConfirm = async () => {
     setIsModalVisible(false);
-    await logout();
+    await logoutMutation.mutateAsync();
   };
 
   return (

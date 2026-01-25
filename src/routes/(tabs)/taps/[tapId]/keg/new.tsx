@@ -52,7 +52,7 @@ const NewKegScreen: React.FC = () => {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.navigate(`/(tabs)/taps/${tapIdValue}`);
+      router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: tapIdValue.toString() } });
     }
     
     return values;

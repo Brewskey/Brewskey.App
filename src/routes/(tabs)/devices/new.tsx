@@ -55,7 +55,7 @@ const NewDeviceScreen: React.FC = () => {
     }
 
     // Navigate to device details
-    router.navigate(`/(tabs)/devices/${device.id}`);
+    router.navigate({ pathname: '/(tabs)/devices/[id]', params: { id: device.id.toString() } });
   };
 
   return (

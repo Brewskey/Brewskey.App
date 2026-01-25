@@ -28,15 +28,18 @@ test('should successfully update location', async ({ page }) => {
   await page.getByTestId('input-city').fill('Updated City');
   await page.getByTestId('input-zipCode').fill('54321');
 
+  // Scope options to picker modals (WebDropdown uses option-{index})
   const locationTypePicker = page.getByTestId('picker-location-type');
   await locationTypePicker.click();
-  await expect(page.getByTestId('picker-location-type-option-1')).toBeVisible();
-  await page.getByTestId('picker-location-type-option-1').click();
+  const locationTypeModal = page.getByTestId('picker-location-type-modal');
+  await expect(locationTypeModal.getByTestId('option-1')).toBeVisible();
+  await locationTypeModal.getByTestId('option-1').click();
 
   const statePicker = page.getByTestId('picker-state');
   await statePicker.click();
-  await expect(page.getByTestId('picker-state-option-4')).toBeVisible();
-  await page.getByTestId('picker-state-option-4').click();
+  const stateModal = page.getByTestId('picker-state-modal');
+  await expect(stateModal.getByTestId('option-4')).toBeVisible();
+  await stateModal.getByTestId('option-4').click();
 
   const submitButton = page.getByTestId('submit-button-edit-location');
   await expect(submitButton).toBeEnabled();

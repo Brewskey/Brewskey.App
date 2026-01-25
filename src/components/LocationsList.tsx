@@ -70,12 +70,12 @@ const LocationsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Location) => {
-    router.navigate(`/(tabs)/locations/${id}/edit`);
+    router.navigate({ pathname: '/(tabs)/locations/[id]/edit', params: { id: String(id) } });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Location): void => {
-    router.navigate(`/(tabs)/locations/${item.id}`);
+    router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: String(item.id) } });
   };
 
   const onRefreshList = async () => {

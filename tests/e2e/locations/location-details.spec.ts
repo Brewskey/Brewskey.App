@@ -14,30 +14,24 @@ test('should navigate to edit location', async ({ page, authenticatedUser }) => 
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
   
-  // Update location to include organization and set owner to authenticated user
-  // authenticatedUser is always available when autoAuthenticate: true
+  // Update location to include organization, owner, and address (LocationAddress requires street, city, state, zipCode)
   if (!authenticatedUser) throw new Error('authenticatedUser is required');
   const locationWithOrg = {
     ...location,
-    id: location.id, // Ensure ID is preserved
+    id: location.id,
+    street: location.street ?? '123 Test St',
     organization: { id: organization.id, name: organization.name, isDeleted: false },
     owner: { id: authenticatedUser.user.id, userName: authenticatedUser.user.userName },
   };
   mockStore.setLocation(locationWithOrg);
   
-  // Set up Edit permission so edit button is visible
   await setupLocationPermissions(authenticatedUser.user, locationWithOrg, organization, ['Edit']);
 
   await page.goto(`/locations/${location.id}`);
 
-  // Wait for header to ensure page loaded (header appears even during loading)
   await expect(page.getByTestId('header-location-details')).toBeVisible();
-  
-  // Wait for loading to complete - loading indicator should disappear
-  await expect(page.getByTestId('location-details-loading')).toBeHidden({ timeout: 10000 });
-  
-  // Wait for content to appear after loading completes
-  await expect(page.getByTestId('location-address')).toBeVisible();
+  // Wait for location to load and Address section (LocationAddress) to render
+  await expect(page.getByTestId('location-address')).toBeVisible({ timeout: 10000 });
   
   // Use testID for edit button - should be visible because we set up Edit permission
   const editButton = page.getByTestId('button-edit-location');

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { useForm } from 'react-hook-form';
 
-import { useAuthActions } from '../stores/AuthStore';
-import { useRegister } from '../hooks/queries/AuthQueries';
+import { useAuthSession } from '../hooks/context/AuthContext';
+import { useLogin, useRegister } from '../hooks/queries/AuthQueries';
 
 import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
@@ -22,7 +22,7 @@ export type RegisterFormFields = {
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegister();
-  const { login } = useAuthActions();
+  const loginMutation = useLogin();
   const form = useForm<RegisterFormFields>({
     defaultValues: {
       email: '',
@@ -74,7 +74,7 @@ const RegisterForm: React.FC = () => {
       await registerMutation.mutateAsync(values);
       const { password, userName } = values;
       try {
-        await login({ password, userName });
+        await loginMutation.mutateAsync({ password, userName });
       } catch (loginError) {
         // If login fails after successful registration, set a form-level error
         // so it can be displayed by FormValidationMessage

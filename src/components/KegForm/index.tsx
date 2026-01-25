@@ -116,6 +116,7 @@ export const KegForm: React.FC<Props> = ({
         <FormValidationMessage />
         <FormField
           component={BeveragePicker}
+          testID="beverage-picker-beverage"
           name="beverage"
           label="Select Beverage"
           required="Beverage is required"
@@ -156,6 +157,7 @@ export const KegForm: React.FC<Props> = ({
               disabled={shouldReplaceBeDisnabled || !isValid || isSubmitting}
               loading={isSubmitting}
               onPress={onReplaceSubmitForm}
+              testID="button-replace-keg"
               title="Replace keg"
             />
           </SectionContent>

@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 import Fragment from '../common/Fragment';
 import { HeaderIconButton } from '../common/Header/HeaderIconButton';
-import { useUserID } from '../stores/AuthStore';
+import { useAuthSession } from '../hooks/context/AuthContext';
 import FriendApprovedModal from './modals/FriendApprovedModal';
 import FriendAddModal from './modals/FriendAddModal';
 import FriendPendingModal from './modals/FriendPendingModal';
@@ -24,7 +24,7 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
   const addFriendMutation = useAddFriend();
   const deleteFriendMutation = useDeleteFriend();
   const addSnackBarMessage = useAddSnackBarMessage();
-  const userID = useUserID();
+  const { data: authResponse } = useAuthSession();
 
   const onFriendAddPress = async () => {
     const { userName } = account;
@@ -62,7 +62,7 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
     }
   };
 
-  if (userID === account.id) {
+  if (authResponse?.id === account.id) {
     return null;
   }
 

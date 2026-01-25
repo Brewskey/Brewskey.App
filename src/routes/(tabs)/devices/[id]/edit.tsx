@@ -37,7 +37,7 @@ const EditDeviceScreen: React.FC = () => {
 
   const onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     await updateMutation.mutateAsync(values);
-    router.back();
+    router.replace({ pathname: '/(tabs)/devices/[id]', params: { id: deviceId.toString() } });
     addSnackBarMessage({ content: 'The Brewskey box was edited' });
   };
 

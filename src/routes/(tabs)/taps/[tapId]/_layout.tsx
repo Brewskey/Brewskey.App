@@ -82,7 +82,7 @@ const TapDetailsLayout = withErrorBoundary(() => {
           !checkCanEdit(tapPermission) ? null : (
             <HeaderNavigationButton
               name="edit"
-              href={`/(tabs)/taps/${tapId}/edit`}
+              href={{ pathname: '/(tabs)/taps/[tapId]/edit', params: { tapId: String(tapId) } }}
               testID="button-edit-tap"
             />
           )

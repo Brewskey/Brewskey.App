@@ -36,7 +36,7 @@ const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
     addSnackBarMessage({ content: 'The beverage was deleted' });
   };
   const onEditItemPress = ({ id }: Beverage) => {
-    router.navigate(`/(tabs)/beverages/${id}/edit`);
+    router.navigate({ pathname: '/(tabs)/beverages/[id]/edit', params: { id: String(id) } });
   };
 
   return (
@@ -68,7 +68,7 @@ export const BeveragesList: React.FC<Props> = ({
   const keyExtractor = (row: Beverage): string => row.id.toString();
 
   const onItemPress = (item: Beverage): void =>
-    router.navigate(`/(tabs)/beverages/${item.id}`);
+    router.navigate({ pathname: '/(tabs)/beverages/[id]', params: { id: String(item.id) } });
 
   const renderRow = ({
     info: { item },

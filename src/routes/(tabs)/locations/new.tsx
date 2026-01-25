@@ -44,7 +44,7 @@ const NewLocationScreen: React.FC = () => {
     }
 
     // Navigate to location details
-    router.navigate(`/(tabs)/locations/${location.id}`);
+    router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: location.id.toString() } });
   };
 
   return (

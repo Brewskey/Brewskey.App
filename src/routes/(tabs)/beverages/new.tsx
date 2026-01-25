@@ -13,7 +13,7 @@ import BeverageForm from '../../../components/BeverageForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import CONFIG from '../../../config';
 import { useCreateBeverage } from '../../../hooks/queries/BeverageQueries';
-import { useAccessToken } from '../../../stores/AuthStore';
+import { useAccessToken } from '../../../hooks/context/AuthContext';
 
 const updateBeverageImage = async (beverageID: string, beverageData: string, accessToken: string | null): Promise<void> => {
   const response = await fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
@@ -53,7 +53,7 @@ const NewBeverageScreen: React.FC = () => {
       flushImageCache(`${CONFIG.CDN}beverages/${String(id)}`);
     }
 
-    router.navigate(`/(tabs)/beverages/${id}`);
+    router.navigate({ pathname: '/(tabs)/beverages/[id]', params: { id: String(id) } });
     addSnackBarMessage({ content: 'New beverage created.' });
   };
 

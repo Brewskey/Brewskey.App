@@ -156,8 +156,6 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
     tap,
     beverage,
     kegType: 'HalfBarrel' as KegType,
-    // Ensure tapId is set as flat property for filtering (filter checks both tap.id and tapId)
-    tapId: tap?.id,
   };
   
   return { ...base, ...mappedOverrides } as Keg;
@@ -219,6 +217,7 @@ export function createMockOrganization(overrides?: Partial<Organization>): Organ
   const base: Partial<Organization> = {
     id,
     name: faker.company.name(),
+    canEnablePayments: false,
   };
   return { ...base, ...overrides } as Organization;
 }

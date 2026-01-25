@@ -3,7 +3,7 @@ import nullthrows from 'nullthrows';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useUserID, useUserName } from '../stores/AuthStore';
+import { useAuthSession } from '../hooks/context/AuthContext';
 import UserAvatar from '../common/avatars/UserAvatar';
 import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 import TouchableItem from '../common/buttons/TouchableItem';
@@ -32,24 +32,23 @@ const styles = StyleSheet.create({
 
 export const MenuUserBlock: React.FC = () => {
   const router = useRouter();
-  const userID = useUserID();
-  const userName = useUserName();
+  const { data: authResponse } = useAuthSession();
 
   const _onPress = () => {
-    if (!userID) return;
-    router.navigate(`/(tabs)/profile/${userID}`);
+    if (!authResponse?.id) return;
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(authResponse.id) } });
   };
 
-  if (!userName) {
+  if (authResponse == null) {
     return null;
   }
 
   return (
     <TouchableItem shouldBeBorderless onPress={_onPress} testID="menu-user-block">
       <View style={styles.container} testID="menu-user-block-content">
-        <UserAvatar userName={nullthrows(userName)} />
+        <UserAvatar userName={nullthrows(authResponse.userName)} />
         <View style={styles.content}>
-          <Text style={styles.nameText} testID="menu-user-block-name">{userName}</Text>
+          <Text style={styles.nameText} testID="menu-user-block-name">{authResponse.userName}</Text>
           <Text style={styles.goToProfileText} testID="menu-user-block-profile-text">Go to profile</Text>
         </View>
       </View>

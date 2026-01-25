@@ -35,8 +35,9 @@ const NewFlowSensorCustomScreen = withErrorBoundary(() => {
             // Continue execution even if callback parsing fails
             // Fall through to default navigation
             router.navigate({
-              pathname: `/(tabs)/taps/${tapId}/keg/new`,
+              pathname: '/(tabs)/taps/[tapId]/keg/new',
               params: {
+                tapId: String(tapId),
                 ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
               },
             });
@@ -44,8 +45,9 @@ const NewFlowSensorCustomScreen = withErrorBoundary(() => {
         } else {
           // If no callback, navigate to keg creation (same as default flow sensor)
           router.navigate({
-            pathname: `/(tabs)/taps/${tapId}/keg/new`,
+            pathname: '/(tabs)/taps/[tapId]/keg/new',
             params: {
+              tapId: String(tapId),
               ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
             },
           });

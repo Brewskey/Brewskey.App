@@ -9,7 +9,7 @@ import { COLORS } from '../../../../theme';
 import { useGetManyFriends } from '../../../../hooks/queries/FriendQueries';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { FRIEND_STATUSES } from '@brewskey/js-api';
-import { useUserID } from '../../../../stores/AuthStore';
+import { useUserID } from '../../../../hooks/context/AuthContext';
 
 const styles = StyleSheet.create({
   badge: {

@@ -26,10 +26,10 @@ const styles = StyleSheet.create({
 export default function LoginScreen() {
   const router = useRouter();
   const onRegisterPress = () => {
-    router.navigate('/(auth)/register');
+    router.navigate({ pathname: '/(auth)/register', params: {} });
   };
 
-  const onForgotPasswordPress = () => router.navigate('/(auth)/reset-password');
+  const onForgotPasswordPress = () => router.navigate({ pathname: '/(auth)/reset-password', params: {} });
 
   const dimensions = Dimensions.get('window');
   const imageHeight = Math.round(dimensions.width * 0.234);

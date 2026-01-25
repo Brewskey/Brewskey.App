@@ -15,7 +15,7 @@ const TapsScreen: React.FC = () => {
           <HeaderNavigationButton
             name="add"
             testID="header-add-button"
-            href="/(tabs)/taps/new"
+            href={{ pathname: '/(tabs)/taps/new', params: {} }}
           />
         }
         shouldShowBackButton

@@ -14,7 +14,7 @@ import SectionHeader from '../../../common/SectionHeader';
 import { UserBadges } from '../../../components/UserBadges/UserBadges';
 import Container from '../../../common/Container';
 
-import { useUserID } from '../../../stores/AuthStore';
+import { useUserID } from '../../../hooks/context/AuthContext';
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import SectionContent from '../../../common/SectionContent';
 import Header from '../../../common/Header';

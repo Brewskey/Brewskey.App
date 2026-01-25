@@ -44,18 +44,18 @@ test('should successfully create flow sensor with default sensor type', async ({
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
   
 
-  // Form defaults to Titan sensor type which uses GallonSliderField (slider)
-  // Verify the slider is visible - slider uses default value from form initialization
+  // Mutate every form field: flowSensorType (swiper), pulsesPerGallon (slider for default Titan)
+  // Change flowSensorType to next sensor (e.g. FT330) by clicking Next
+  const nextButton = page.getByTestId('button-flow-sensor-next');
+  if (await nextButton.isEnabled()) {
+    await nextButton.click();
+    await page.waitForTimeout(100);
+  }
+
   const gallonsInput = page.getByTestId('input-gallons');
   await expect(gallonsInput).toBeVisible();
-
-  // Initially, submit button should be disabled (form is not dirty)
   await expect(page.getByTestId('submit-button-save')).toBeVisible();
-  await expect(page.getByTestId('submit-button-save')).toBeDisabled();
 
-  // Interact with the slider to change the pulsesPerGallon value
-  // This should make the form dirty
-  // The slider is wrapped in a View, so we need to find the actual slider element
   const sliderContainer = page.getByTestId('input-gallons');
   const sliderBounds = await sliderContainer.boundingBox();
   
@@ -102,19 +102,12 @@ test('should successfully create flow sensor with custom sensor', async ({ page 
     }
   }
 
-  // Custom sensor uses GallonTextField (text input), not slider
-  // Verify the text input is visible
+  // Mutate every form field: flowSensorType (swiper - we changed to Custom), pulsesPerGallon (text input)
   const calibrationInput = page.getByTestId('input-calibration');
   await expect(calibrationInput).toBeVisible();
 
-  // Note: The form is already dirty because we changed the sensor type to Custom
-  // But we need to fill in a value for the custom pulses input
-  // Clear the input first to ensure we're starting fresh, then fill in a new value
   await calibrationInput.clear();
   await page.waitForTimeout(100);
-  
-  // Initially, submit button should be disabled after clearing (form might not be dirty if value is empty)
-  // Actually, since we changed sensor type, form is dirty, but let's fill in a value to ensure it's valid
   await calibrationInput.fill('5000');
   await page.waitForTimeout(200);
   

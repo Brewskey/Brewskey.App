@@ -72,7 +72,7 @@ const DeviceDetailsScreen = withErrorBoundary(() => {
           rightComponent={
           <HeaderNavigationButton
             name="edit"
-            href={`/(tabs)/devices/${device.id}/edit`}
+            href={{ pathname: '/(tabs)/devices/[id]/edit', params: { id: device.id.toString() } }}
           />
           }
           shouldShowBackButton

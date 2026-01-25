@@ -9,7 +9,7 @@ import { useGetPoursByBeverageIds } from '../../hooks/queries/PourQueries';
 import { Card } from '@rneui/themed';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { InfiniteData } from '@tanstack/react-query';
-import { useAuthContext } from '../../hooks/context/AuthContext';
+import { useAuthSession } from '../../hooks/context/AuthContext';
 
 type Props = {
   userID: EntityID;
@@ -102,7 +102,7 @@ export const AllBeveragesHScroll = React.forwardRef<
   AllBeveragesHScrollHandle,
   Props
 >(({ userID }, ref) => {
-  const [session] = useAuthContext();
+  const { data: session } = useAuthSession();
   const beverages = useGetBeverages({
     filters: [
       createFilter('Pours').any(`pour: pour/owner/id eq '${userID}'`),

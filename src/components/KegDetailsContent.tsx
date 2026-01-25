@@ -134,7 +134,7 @@ const KegPoursList: React.FC<{
     }
 
     onClose?.();
-    router.navigate(`/(tabs)/profile/${pour.owner.id}`);
+    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
   };
 
   const keyExtractor = (pour: Pour): string => pour.id.toString();

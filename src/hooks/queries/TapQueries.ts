@@ -26,8 +26,11 @@ export enum TapQueryKeys {
 
 export const useGetTapById = (id: EntityID): UseQueryResult<Tap, Error> =>
   useQuery({
-    queryKey: [TapQueryKeys.TapById, id],
-    queryFn: () => TapDAO.fetchByID(id),
+    queryKey: [TapQueryKeys.TapById, String(id)],
+    queryFn: () => {
+      console.log('useGetTapById', id, typeof id);
+      return TapDAO.fetchByID(id);
+    },
   });
 
 export const useGetTaps = (

@@ -14,5 +14,5 @@ export default function EditTapIndex() {
     );
   }
 
-  return <Redirect href={`/(tabs)/taps/${tapId}/edit/feed`} />;
+  return <Redirect href={{ pathname: '/(tabs)/taps/[tapId]/edit/feed', params: { tapId: String(tapId) } }} />;
 }

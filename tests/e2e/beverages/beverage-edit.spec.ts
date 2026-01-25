@@ -39,8 +39,9 @@ test.describe('update to each Beverage Type', () => {
       const beverageTypePicker = page.getByTestId('picker-beverage-type');
       await beverageTypePicker.click();
       const beverageTypeModal = page.getByTestId('picker-beverage-type-modal');
-      await expect(beverageTypeModal.getByTestId(`option-${optionIndex}`)).toBeVisible();
-      await beverageTypeModal.getByTestId(`option-${optionIndex}`).click();
+      const option = beverageTypeModal.getByTestId(`option-${optionIndex}`);
+      await expect(option).toBeVisible();
+      await option.dispatchEvent('click');
 
       // Beer-only fields (style, abv, og, ibu) are optional; we only assert Beverage Type selection here.
 

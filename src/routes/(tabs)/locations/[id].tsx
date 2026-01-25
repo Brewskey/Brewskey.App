@@ -63,7 +63,7 @@ const LocationDetailsScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="edit"
-            href={`/(tabs)/locations/${locId}/edit`}
+            href={{ pathname: '/(tabs)/locations/[id]/edit', params: { id: String(locId) } }}
             testID="button-edit-location"
           />
         }

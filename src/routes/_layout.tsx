@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import BrewskeyJSApi from '@brewskey/js-api';
-import { AUTH_QUERY_KEY, loadAuthStateFromStorage } from '../hooks/context/AuthContext';
+import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
+import { AUTH_QUERY_KEY, loadAuthStateFromStorage, saveAuthStateToStorage, setAuthSession } from '../hooks/context/AuthContext';
 import { APP_SETTINGS_QUERY_KEY, loadAppSettingsFromStorage } from '../hooks/context/AppSettingsContext';
 import { SnackBar } from '../common/SnackBar';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
@@ -19,6 +19,9 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: Infinity,
       gcTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     },
   },
 });
@@ -28,17 +31,7 @@ const hydrateAuthState = async () => {
   try {
     const authState = await loadAuthStateFromStorage();
     if (authState) {
-      queryClient.setQueryData(AUTH_QUERY_KEY, authState);
-      
-      // Setup Storage.getUserID callback for app settings hydration
-      const userID = authState.id
-        ? authState.id === ''
-          ? null
-          : authState.id.toString()
-        : null;
-      Storage.setGetUserID(async () => {
-        return userID || '';
-      });
+      setAuthSession(queryClient, authState);
     }
   } catch (error) {
     // Ignore hydration errors
@@ -64,28 +57,21 @@ const hydrateAppSettings = async () => {
 };
 
 function RootLayoutNav() {
-  const { authResponse, isLoading } = useAuthSession();
-  const segments = useSegments();
-  const router = useRouter();
+  const { data: authResponse, isLoading } = useAuthSession();
 
-  React.useEffect(() => {
-    if (isLoading) return;
-
-    const inAuthGroup = segments[0] === '(auth)';
-
-    if (!authResponse && !inAuthGroup) {
-      // Redirect to login if not authenticated
-      router.replace('/(auth)/login');
-    } else if (authResponse && inAuthGroup) {
-      // Redirect to home if authenticated and in auth group
-      router.replace('/(tabs)');
-    }
-  }, [authResponse, isLoading, segments, router]);
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Protected guard={!!authResponse}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!authResponse}>
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+      </Stack.Protected>
     </Stack>
   );
 }
@@ -102,6 +88,14 @@ export default function RootLayout() {
     };
     hydrate();
   }, []);
+  React.useEffect(() => {
+    BrewskeyJSApi.setOnSessionUpdated((session, error) => {
+      if (error) {
+        console.error(error);
+      }
+      setAuthSession(queryClient, session ?? null);
+    });
+  }, [queryClient]);
 
   if (!isHydrated) {
     // Return null or a loading screen while hydrating

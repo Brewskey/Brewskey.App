@@ -15,7 +15,7 @@ const LocationsScreen: React.FC = () => {
           <HeaderNavigationButton
             name="add"
             testID="header-add-button"
-            href="/(tabs)/locations/new"
+            href={{ pathname: '/(tabs)/locations/new', params: {} }}
           />
         }
         shouldShowBackButton

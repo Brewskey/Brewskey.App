@@ -7,7 +7,7 @@ import Container from '../../../common/Container';
 import Header from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
 
-import { useUserID } from '../../../stores/AuthStore';
+import { useUserID } from '../../../hooks/context/AuthContext';
 import BeveragesList from '../../../components/BeveragesList';
 
 const MyBeveragesScreen: React.FC = () => {
@@ -20,7 +20,7 @@ const MyBeveragesScreen: React.FC = () => {
           <HeaderNavigationButton
             name="add"
             testID="header-add-button"
-            href="/(tabs)/beverages/new"
+            href={{ pathname: '/(tabs)/beverages/new', params: {} }}
           />
         }
         shouldShowBackButton

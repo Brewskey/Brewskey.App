@@ -56,7 +56,14 @@ const StatsRoute: React.FC = () => {
   }
 
   const onWarningPress = () => {
-    router.navigate(`/(tabs)/flow-sensor/new?tapId=${tap.id}&shouldReturnOnFinish=true&showBackButton=true`);
+    router.navigate({
+      pathname: '/(tabs)/flow-sensor/new',
+      params: {
+        tapId: tap.id.toString(),
+        shouldReturnOnFinish: 'true',
+        showBackButton: 'true',
+      },
+    });
   };
 
   const noFlowSensorWarning: React.ReactNode | null | undefined =

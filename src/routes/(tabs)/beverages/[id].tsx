@@ -56,7 +56,7 @@ const BeverageDetailsScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="edit"
-            href={`/(tabs)/beverages/${beverage.id}/edit`}
+            href={{ pathname: '/(tabs)/beverages/[id]/edit', params: { id: beverage.id.toString() } }}
             testID="button-edit-beverage"
           />
         }

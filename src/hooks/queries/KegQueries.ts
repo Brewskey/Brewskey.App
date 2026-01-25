@@ -41,6 +41,7 @@ export const useGetKegByQuery = (
   useQuery({
     queryKey: [KegQueryKeys.KeyByQuery, queryOptions],
     queryFn: () => KegDAO.fetchSingle(queryOptions),
+    refetchOnWindowFocus: false,
   });
 
 export const useGetKegs = (

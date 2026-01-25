@@ -49,7 +49,7 @@ const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
 
   const handleNextButtonPress = React.useCallback(() => {
     if (!isLastStep) {
-      nullthrows(swiperRef.current).scrollBy(1);
+      nullthrows(swiperRef.current).scrollBy(1 + stepIndex);
     } else {
       onClosePress();
     }
@@ -89,6 +89,7 @@ const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
         onPress={handleNextButtonPress}
         title={isLastStep ? 'FINISH' : 'NEXT'}
         type="clear"
+        testID='hardware-setup-guide-next-button'
       />
     </View>
   );

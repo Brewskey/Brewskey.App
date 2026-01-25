@@ -376,8 +376,10 @@ function normalizeEntityName(entityName: string): string {
     'organization': 'organizations',
     'beverage-srms': 'beverage-srms',
     'beverage-srm': 'beverage-srms',
+    'price-variants': 'price-variants',
+    'price-variant': 'price-variants',
   };
-  
+
   return entityMap[entityName.toLowerCase()] || entityName.toLowerCase();
 }
 
@@ -458,19 +460,20 @@ function fulfillErrorResponse(
 }
 
 // Entity type mapping for store operations
-type EntityType = 
-  | 'accounts' 
-  | 'locations' 
-  | 'taps' 
-  | 'beverages' 
-  | 'kegs' 
-  | 'devices' 
-  | 'pours' 
-  | 'friends' 
-  | 'permissions' 
-  | 'flow-sensors' 
+type EntityType =
+  | 'accounts'
+  | 'locations'
+  | 'taps'
+  | 'beverages'
+  | 'kegs'
+  | 'devices'
+  | 'pours'
+  | 'friends'
+  | 'permissions'
+  | 'flow-sensors'
   | 'organizations'
-  | 'beverage-srms';
+  | 'beverage-srms'
+  | 'price-variants';
 
 // Helper to get entity by ID from store
 function getEntityById(entityType: EntityType, id: EntityID): any {
@@ -486,6 +489,7 @@ function getEntityById(entityType: EntityType, id: EntityID): any {
     case 'permissions': return mockStore.getPermission(id);
     case 'flow-sensors': return mockStore.getFlowSensor(id);
     case 'organizations': return mockStore.getOrganization(id);
+    case 'price-variants': return undefined;
     default: return undefined;
   }
 }
@@ -728,6 +732,16 @@ export function setupAPIMocks(page: Page): void {
         return fulfillJSONResponse(route, 200, leaderboard);
       }
 
+      // Handle fetchSquareLocations (organizations(id)/Default.fetchSquareLocations())
+      if (url.includes('Default.fetchSquareLocations') && method === 'GET') {
+        return fulfillJSONResponse(route, 200, []);
+      }
+
+      // Handle friends/Default.addByUserName() (add friend by userName)
+      if (url.includes('Default.addByUserName') && method === 'POST') {
+        return fulfillJSONResponse(route, 200, {});
+      }
+
       // Handle custom function endpoints (e.g., Default.nearby())
       if (url.includes('Default.nearby()') && method === 'GET') {
         // Parse query params for latitude, longitude, radius
@@ -928,6 +942,9 @@ export function setupAPIMocks(page: Page): void {
               break;
             case 'taps':
               mockStore.setTap(updated);
+              break;
+            case 'kegs':
+              mockStore.setKeg(updated);
               break;
             // Add other entities as needed
           }

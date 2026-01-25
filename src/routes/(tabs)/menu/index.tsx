@@ -18,7 +18,7 @@ import { MenuUserBlock } from '../../../components/MenuUserBlock';
 import ErrorScreen from '../../../common/ErrorScreen';
 import { useRouter } from 'expo-router';
 import { useGetFriendsCount } from '../../../hooks/queries/FriendQueries';
-import { useAuthContext } from '../../../hooks/context/AuthContext';
+  import { useAuthSession } from '../../../hooks/context/AuthContext';
 import { Badge } from '@rneui/themed';
 
 const styles = StyleSheet.create({
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 const MenuScreen = withErrorBoundary(
   () => {
     const router = useRouter();
-    const [session] = useAuthContext();
+    const { data: session } = useAuthSession();
     const { isManageTapsEnabled } = useAppSettings();
     const queryOptions = {
       filters: [
@@ -61,7 +61,7 @@ const MenuScreen = withErrorBoundary(
           rightComponent={
             <HeaderNavigationButton
               name="settings"
-              href="/(tabs)/menu/settings"
+              href={{ pathname: '/(tabs)/menu/settings', params: {} }}
               testID="header-settings-button"
             />
           }
@@ -74,7 +74,7 @@ const MenuScreen = withErrorBoundary(
             <View>
               <MenuNavigationButton
                 onPress={() => {
-                  router.navigate('/(tabs)/menu/my-friends');
+                  router.navigate({ pathname: '/(tabs)/menu/my-friends', params: {} });
                 }}
                 icon={{ name: 'people' }}
                 routeName="myFriends"
@@ -100,7 +100,7 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-locations"
                 title="Locations"
                 onPress={() => {
-                  router.navigate('/(tabs)/locations');
+                  router.navigate({ pathname: '/(tabs)/locations', params: {} });
                 }}
               />,
               <MenuNavigationButton
@@ -110,7 +110,7 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-taps"
                 title="Taps"
                 onPress={() => {
-                  router.navigate('/(tabs)/taps');
+                  router.navigate({ pathname: '/(tabs)/taps', params: {} });
                 }}
               />,
               <MenuNavigationButton
@@ -120,7 +120,7 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-devices"
                 title="Brewskey boxes"
                 onPress={() => {
-                  router.navigate('/(tabs)/devices');
+                  router.navigate({ pathname: '/(tabs)/devices', params: {} });
                 }}
               />,
               <MenuNavigationButton
@@ -130,7 +130,7 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-beverages"
                 title="Homebrew"
                 onPress={() => {
-                  router.navigate('/(tabs)/beverages');
+                  router.navigate({ pathname: '/(tabs)/beverages', params: {} });
                 }}
               />,
               <MenuSeparator key="separator2" />,
@@ -142,7 +142,7 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-write-nfc"
                 title="Setup NFC Cards"
                 onPress={() => {
-                  router.navigate('/(tabs)/menu/write-nfc');
+                  router.navigate({ pathname: '/(tabs)/menu/write-nfc', params: {} });
                 }}
               />
             )}
@@ -157,7 +157,7 @@ const MenuScreen = withErrorBoundary(
               testID="menu-item-help"
               title="Help"
               onPress={() => {
-                router.navigate('/(tabs)/menu/help');
+                router.navigate({ pathname: '/(tabs)/menu/help', params: {} });
               }}
             />
             <MenuSeparator />

@@ -47,7 +47,10 @@ const NuxNoEntity: React.FC = () => {
 
   const onGetStartedButtonPress = () => {
     // Navigate to nuxLocation screen with locations count
-    router.navigate(`/(tabs)/(nux)/location${locationsCount > 0 ? `?locationsCount=${locationsCount}` : ''}`);
+    router.navigate({
+      pathname: '/(tabs)/(nux)/location',
+      params: locationsCount > 0 ? { locationsCount: locationsCount.toString() } : {},
+    });
   };
 
   return (
@@ -59,6 +62,7 @@ const NuxNoEntity: React.FC = () => {
         onPress={() => setIsHardwareSetupVisible(true)}
         secondary
         title="See instructions"
+        testID='button-see-instructions' 
       />
       <Text style={styles.headingText}>and set up the Brewskey box by:</Text>
       <View style={styles.stepsContainer}>

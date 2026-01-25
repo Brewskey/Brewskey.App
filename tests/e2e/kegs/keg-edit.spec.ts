@@ -20,21 +20,21 @@ test('should successfully update keg', async ({ page }) => {
   // Beverage - select the other beverage
   const beveragePicker = page.getByTestId('beverage-picker-beverage');
   await beveragePicker.click();
-  await expect(page.getByText(otherBeverage.name)).toBeVisible({ timeout: 5000 });
+  await expect(page.getByTestId(`beverage-picker-item-${otherBeverage.id}`)).toBeVisible({ timeout: 5000 });
   await page.getByTestId(`beverage-picker-item-${otherBeverage.id}`).click();
 
-  // Keg type - select a different option
+  // Keg type - select a different option (WebDropdown uses option-0, option-1, ...; scope to keg type modal)
   const kegTypeDropdown = page.getByTestId('dropdown-kegType');
   await kegTypeDropdown.click();
-  await expect(page.getByTestId('dropdown-kegType-option-1')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('dropdown-kegType-option-1').click();
+  await expect(page.getByTestId('dropdown-kegType-modal').getByTestId('option-1')).toBeVisible({ timeout: 5000 });
+  await page.getByTestId('dropdown-kegType-modal').getByTestId('option-1').click();
 
-  // startingPercentage (Keg Level slider)
-  const slider = page.locator('[role="slider"]').first();
-  await expect(slider).toBeVisible();
-  const sliderBox = await slider.boundingBox();
+  // startingPercentage (Keg Level slider) - use testID on the SliderInput container
+  const sliderContainer = page.getByTestId('input-startingPercentage');
+  await expect(sliderContainer).toBeVisible();
+  const sliderBox = await sliderContainer.boundingBox();
   if (sliderBox) {
-    await slider.click({ position: { x: sliderBox.width * 0.8, y: sliderBox.height / 2 } });
+    await sliderContainer.click({ position: { x: sliderBox.width * 0.8, y: sliderBox.height / 2 } });
   }
 
   const submitButton = page.getByTestId('submit-button-update-current-keg');

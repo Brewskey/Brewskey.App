@@ -1,18 +1,30 @@
-import { UseMutationResult, useMutation } from '@tanstack/react-query';
+import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Auth, AuthResponse, ChangePasswordArgs, UserCredentials } from '@brewskey/js-api';
-import { useSetAuthSession } from '../context/AuthContext';
+import { setAuthSession } from '../context/AuthContext';
 
 export const useLogin = (): UseMutationResult<
-  AuthResponse,
+  AuthResponse, 
   Error,
   UserCredentials
 > => {
-  const setAuthSession = useSetAuthSession();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (params: UserCredentials) => Auth.login(params),
     onSuccess: (data) => {
-      setAuthSession(data);
+      setAuthSession(queryClient, data);
     },
+  });
+};
+
+export const useLogout = (): UseMutationResult<
+  void,
+  Error,
+  void
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => 
+      setAuthSession(queryClient, null),
   });
 };
 

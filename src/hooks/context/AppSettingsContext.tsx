@@ -3,7 +3,7 @@ import type { Organization } from '@brewskey/js-api';
 import * as React from 'react';
 import { useState, useCallback, createContext, useContext } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Storage from '../../utils/Storage';
+import Storage, { StorageKeys } from '../../utils/Storage';
 import DAOApi from '@brewskey/js-api';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
@@ -27,16 +27,16 @@ export const loadAppSettingsFromStorage = async (): Promise<
       if (playwrightSettings) {
         // Store it in Storage for consistency
         try {
-          await Storage.setForCurrentUser(APP_SETTINGS_STORAGE_KEY, playwrightSettings);
+          await Storage.setForCurrentUser(StorageKeys.AppSettings, playwrightSettings);
         } catch (e) {
           // Storage might not be ready yet, but we can still return the settings
-        }
+        } 
         return playwrightSettings;
       }
     }
     
     const storedSettings = await Storage.getForCurrentUser<AppSettings>(
-      APP_SETTINGS_STORAGE_KEY,
+      StorageKeys.AppSettings,
     );
     return storedSettings || null;
   } catch (error) {
@@ -52,9 +52,9 @@ export const saveAppSettingsToStorage = async (
 ): Promise<void> => {
   try {
     if (settings) {
-      await Storage.setForCurrentUser(APP_SETTINGS_STORAGE_KEY, settings);
+      await Storage.setForCurrentUser(StorageKeys.AppSettings, settings);
     } else {
-      await Storage.removeForCurrentUser(APP_SETTINGS_STORAGE_KEY);
+      await Storage.removeForCurrentUser(StorageKeys.AppSettings);
     }
   } catch (error) {
     // Ignore storage errors

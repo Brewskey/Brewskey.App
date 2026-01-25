@@ -64,12 +64,12 @@ const TapsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    router.navigate(`/(tabs)/taps/${id}/edit`);
+    router.navigate({ pathname: '/(tabs)/taps/[tapId]/edit/feed', params: { tapId: String(id) } });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Tap): void => {
-    router.navigate(`/(tabs)/taps/${item.id}`);
+    router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(item.id) } });
   };
 
   const onRefreshList = async () => {

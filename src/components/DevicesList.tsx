@@ -84,12 +84,12 @@ const DevicesList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Device) => {
-    router.navigate(`/(tabs)/devices/${id}/edit`);
+    router.navigate({ pathname: '/(tabs)/devices/[id]/edit', params: { id: String(id) } });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Device): void => {
-    router.navigate(`/(tabs)/devices/${item.id}`);
+    router.navigate({ pathname: '/(tabs)/devices/[id]', params: { id: String(item.id) } });
   };
 
   const keyExtractor = (item: Device): string => item.id.toString();

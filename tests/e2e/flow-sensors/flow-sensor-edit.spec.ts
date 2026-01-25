@@ -48,20 +48,25 @@ test('should successfully update standard flow sensor', async ({ page }) => {
   await page.goto(`/flow-sensor/${tap.id}/edit`);
   
 
-  // Flow sensor form should be visible
+  // Mutate every form field: flowSensorType (swiper), pulsesPerGallon (slider for standard)
   await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
-  
-  // Standard sensors use slider - verify it's visible and form is pre-filled
+
+  // Mutate flowSensorType (click Next to change sensor type)
+  const nextBtn = page.getByTestId('button-flow-sensor-next');
+  if (await nextBtn.isEnabled()) {
+    await nextBtn.click();
+    await page.waitForTimeout(100);
+    await page.getByTestId('button-flow-sensor-previous').click();
+    await page.waitForTimeout(100);
+  }
+
   const gallonsInput = page.getByTestId('input-gallons');
   await expect(gallonsInput).toBeVisible();
-  
-  // Form is pre-filled with existing flow sensor data, so it's not dirty initially
-  // Interact with the slider to change the value and make the form dirty
+
   const sliderContainer = page.getByTestId('input-gallons');
   const sliderBounds = await sliderContainer.boundingBox();
-  
+
   if (sliderBounds) {
-    // Drag the slider thumb to change the value
     // Start from center (current position) and drag to 70% to change the value
     const startX = sliderBounds.x + sliderBounds.width * 0.5;
     const endX = sliderBounds.x + sliderBounds.width * 0.7;
@@ -96,13 +101,20 @@ test('should successfully update custom flow sensor', async ({ page }) => {
   await page.goto(`/flow-sensor/${tap.id}/edit`);
   
 
-  // Flow sensor form should be visible
+  // Mutate every form field: flowSensorType (swiper), pulsesPerGallon (text for custom)
   await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
-  
-  // Fill out form: update calibration value for custom sensor
+
+  // Mutate flowSensorType (click Next then Previous)
+  const nextBtn = page.getByTestId('button-flow-sensor-next');
+  if (await nextBtn.isEnabled()) {
+    await nextBtn.click();
+    await page.waitForTimeout(100);
+    await page.getByTestId('button-flow-sensor-previous').click();
+    await page.waitForTimeout(100);
+  }
+
   const calibrationInput = page.getByTestId('input-calibration');
   await expect(calibrationInput).toBeVisible();
-  // Form is pre-filled with existing value, update it
   await calibrationInput.fill('2000');
 
   // Verify form is ready to submit

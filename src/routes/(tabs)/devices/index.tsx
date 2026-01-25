@@ -19,7 +19,7 @@ import DevicesList from '../../../components/DevicesList';
 
 const DevicesScreen: React.FC = () => {
   const router = useRouter();
-  const { authResponse } = useAuthSession();
+  const { data: authResponse } = useAuthSession();
 
   const onAppStateChange = (appState: string) => {
     if (appState === 'active' && authResponse) {
@@ -44,7 +44,7 @@ const DevicesScreen: React.FC = () => {
   }, [authResponse]);
 
   const onWifiSetupButtonPress = () => {
-    router.navigate('/(tabs)/devices/new?wifiSetup=true');
+    router.navigate({ pathname: '/(tabs)/devices/new', params: { wifiSetup: 'true' } });
   };
 
   const renderListHeader = ({
@@ -75,7 +75,7 @@ const DevicesScreen: React.FC = () => {
         rightComponent={
           <HeaderNavigationButton
             name="add"
-            href="/(tabs)/devices/new?forNewDevice=true"
+            href={{ pathname: '/(tabs)/devices/new', params: { forNewDevice: 'true' } }}
             testID="button-add-device"
           />
         }

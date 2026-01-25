@@ -196,12 +196,18 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
         {values.isScreenDisabled ? (
           <>
             <FormField
+              component={CheckBoxField}
               initialValue={device.isTotpDisabled}
+              label="Is Passcode Disabled"
               name="isTotpDisabled"
+              testID="input-isTotpDisabled"
             />
             <FormField
+              component={CheckBoxField}
               initialValue={device.shouldInvertScreen}
+              label="Invert Screen"
               name="shouldInvertScreen"
+              testID="input-shouldInvertScreen"
             />
           </>
         ) : (

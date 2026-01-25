@@ -34,18 +34,20 @@ test('should successfully update device', async ({ page }) => {
   await locationItem.click();
   await expect(page.getByTestId('picker-location-modal')).not.toBeVisible();
 
-  // Device status (required)
+  // Device status (required) - scope option to picker modal (WebDropdown uses option-{index})
   const deviceStatusPicker = page.getByTestId('picker-device-status');
   await deviceStatusPicker.click();
-  await expect(page.getByTestId('picker-device-status-option-1')).toBeVisible();
-  await page.getByTestId('picker-device-status-option-1').click();
+  const deviceStatusModal = page.getByTestId('picker-device-status-modal');
+  await expect(deviceStatusModal.getByTestId('option-1')).toBeVisible();
+  await deviceStatusModal.getByTestId('option-1').click();
 
   // secondsToStayOpen: when Active/Inactive shows TextInput; after selecting Cleaning it becomes DeviceTimeOpenPicker
   // Keep deviceStatus as Cleaning (option 1) - secondsToStayOpen is now DeviceTimeOpenPicker
   const secondsPicker = page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)');
   await secondsPicker.click();
-  await expect(page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-option-2')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-option-2').click();
+  const secondsModal = page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-modal');
+  await expect(secondsModal.getByTestId('option-2')).toBeVisible({ timeout: 5000 });
+  await secondsModal.getByTestId('option-2').click();
 
   await page.getByTestId('input-timeForValveOpen').fill('15');
 
@@ -60,11 +62,12 @@ test('should successfully update device', async ({ page }) => {
     await page.mouse.up();
   }
 
-  // NFC status
+  // NFC status - scope option to picker modal (WebDropdown uses option-{index})
   const nfcPicker = page.getByTestId('picker-nfc-configuration');
   await nfcPicker.click();
-  await expect(page.getByTestId('picker-nfc-configuration-option-1')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('picker-nfc-configuration-option-1').click();
+  const nfcModal = page.getByTestId('picker-nfc-configuration-modal');
+  await expect(nfcModal.getByTestId('option-1')).toBeVisible({ timeout: 5000 });
+  await nfcModal.getByTestId('option-1').click();
 
   // Checkboxes: isScreenDisabled, isTotpDisabled, shouldInvertScreen
   await page.getByTestId('input-isScreenDisabled').click();

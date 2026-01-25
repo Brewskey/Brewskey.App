@@ -91,11 +91,12 @@ test('should successfully create keg', async ({ page }) => {
   // Wait for modal to close and form state to update
   await expect(page.getByTestId('keg-form')).toBeVisible();
   
-  // Select keg type - required field (defaults to undefined for new keg)
+  // Select keg type - required field. Scope to dropdown modal (WebDropdown uses option-{index})
   const kegTypeDropdown = page.getByTestId('dropdown-kegType');
   await kegTypeDropdown.click();
-  await expect(page.getByTestId('dropdown-kegType-option-0')).toBeVisible();
-  await page.getByTestId('dropdown-kegType-option-0').click();
+  const kegTypeModal = page.getByTestId('dropdown-kegType-modal');
+  await expect(kegTypeModal.getByTestId('option-0')).toBeVisible();
+  await kegTypeModal.getByTestId('option-0').click();
 
   // Mutate startingPercentage (Keg Level slider)
   const startingSlider = page.locator('[role="slider"]').first();

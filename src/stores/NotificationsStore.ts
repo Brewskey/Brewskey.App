@@ -5,7 +5,7 @@ import { Platform, Vibration } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import Storage from '../utils/Storage';
+import Storage, { StorageKeys } from '../utils/Storage';
 import CONFIG from '../config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
@@ -15,11 +15,9 @@ import SnackBarStore from '../hooks/context/SnackBarContext';
 import { KegQueryKeys } from '../hooks/queries/KegQueries';
 import { FriendKeys } from '../hooks/queries/FriendQueries';
 import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
+import { useAuthSession } from '../hooks/context/AuthContext';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
-
-const NOTIFICATIONS_STORAGE_KEY = 'notifications';
-const DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY = 'notifications/disabledTaps';
 
 export type BaseNotificationProps = {
   body: string;
@@ -157,15 +155,14 @@ const useNotifications = () => {
 
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { useUserID } = require('./AuthStore');
-  const userId = useUserID();
+  const { data: authResponse } = useAuthSession();  
+  const userId = authResponse?.id;
   return useCallback((notification: Notification): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
         const { tapId, kegId } = notification;
         queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
-        router.navigate(`/(tabs)/taps/${tapId}`);
+        router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(tapId) } });
         break;
       }
       case 'newAchievement': {
@@ -185,7 +182,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
       case 'newFriendRequest': {
         queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
         queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
-        router.navigate('/(tabs)/notifications/my-friends/myFriendsRequest');
+        router.navigate({ pathname: '/(tabs)/notifications/my-friends/myFriendsRequest', params: {} });
         break;
       }
       default: {
@@ -362,7 +359,7 @@ class NotificationsStore {
   _rehydrateState: () => Promise<void> = async (): Promise<void> => {
     const notifications =
       (await Storage.getForCurrentUser<Notification[]>(
-        NOTIFICATIONS_STORAGE_KEY,
+        StorageKeys.Notifications,
       )) || [];
 
     // if (Platform.OS === 'ios') {
@@ -391,7 +388,7 @@ class NotificationsStore {
       : [];
 
     const disabledTapIDs = await Storage.getForCurrentUser<EntityID[]>(
-      DISABLED_NOTIFICATIONS_TAPS_STORAGE_KEY,
+      StorageKeys.NotificationsDisabledTaps,
     );
 
     const disabledTapsIDsEntries = disabledTapIDs
@@ -545,12 +542,11 @@ const notificationsStore = new NotificationsStore();
 
 // Hook wrapper for React components to use onNotificationPress with userId
 export const useNotificationPress = () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { useUserID } = require('./AuthStore');
-  const userId = useUserID();
+  const { data: authResponse } = useAuthSession();
+  const userId = authResponse?.id;
   
   return useCallback((notification: Notification): Promise<void> => {
-    return notificationsStore.onNotificationPress(notification, userId);
+    return notificationsStore.onNotificationPress(notification, userId ? String(userId) : null);
   }, [userId]);
 };
 
