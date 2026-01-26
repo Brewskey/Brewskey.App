@@ -1,26 +1,29 @@
-import type { QueryOptions, Pour } from '@brewskey/js-api';
-
 import * as React from 'react';
+
+import { useRouter } from 'expo-router';
 import moment from 'moment';
 
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { RenderProps, SwipeableList } from '../../common/SwipeableList';
-import QuickActions from '../../common/QuickActions';
-import ListItem from '../../common/ListItem';
-import UserAvatar from '../../common/avatars/UserAvatar';
-import LoadingListFooter from '../../common/LoadingListFooter';
 import { KegSectionHeader } from './KegSectionHeader';
-import PintCounter from '../../components/PintCounter';
-import { ListComponentTypes } from '../../common/List';
-import { useDeletePour, useGetPours } from '../../hooks/queries/PourQueries';
-import { useRouter } from 'expo-router';
+import UserAvatar from '../../common/avatars/UserAvatar';
+import ListItem from '../../common/ListItem';
+import LoadingListFooter from '../../common/LoadingListFooter';
+import QuickActions from '../../common/QuickActions';
+import { SwipeableList } from '../../common/SwipeableList';
+import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
+import { useDeletePour, useGetPours } from '../../hooks/queries/PourQueries';
+import PintCounter from '../PintCounter';
 
-type Props = {
+import type { Pour, QueryOptions } from '@brewskey/js-api';
+
+import type { ListComponentTypes } from '../../common/List';
+import type { RenderProps } from '../../common/SwipeableList';
+
+interface Props {
   ListHeaderComponent?: ListComponentTypes;
   canDeletePours: boolean;
   queryOptions?: QueryOptions;
-};
+}
 
 export const SectionPoursList: React.FC<Props> = ({
   queryOptions = {},
@@ -41,7 +44,10 @@ export const SectionPoursList: React.FC<Props> = ({
   const addSnackBarMessage = useAddSnackBarMessage();
 
   const _onItemPress = (pour: Pour) => {
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(pour.owner.id) },
+    });
   };
 
   const _onDeleteItemPress = async (pour: Pour): Promise<void> => {
@@ -77,7 +83,7 @@ export const SectionPoursList: React.FC<Props> = ({
       return (
         <ListItem
           {...params}
-          swipeable={true}
+          swipeable
           slideoutComponent={
             <QuickActions
               deleteModalMessage="Are you sure you want to delete this pour?"
@@ -93,7 +99,8 @@ export const SectionPoursList: React.FC<Props> = ({
     return <ListItem {...params} />;
   };
 
-  const _keyExtractor = (pour: Pour, _index: number): string => pour.id.toString();
+  const _keyExtractor = (pour: Pour, _index: number): string =>
+    pour.id.toString();
 
   const allPours = (pours.data?.pages ?? []).flat();
   const kegIds = new Set(allPours.map((pour) => pour.keg.id));
@@ -104,6 +111,7 @@ export const SectionPoursList: React.FC<Props> = ({
   }));
   return (
     <SwipeableList
+      stickySectionHeadersEnabled
       keyExtractor={_keyExtractor}
       ListFooterComponent={<LoadingListFooter isLoading={pours.isLoading} />}
       ListHeaderComponent={ListHeaderComponent}
@@ -111,13 +119,10 @@ export const SectionPoursList: React.FC<Props> = ({
       onEndReached={pours.fetchNextPage}
       onRefresh={pours.refetch}
       renderItem={_renderRow}
-      renderSectionHeader={(info: { section: import('react-native').SectionListData<Pour> }) => (
-         
-        <KegSectionHeader section={info.section as any} />
-      )}
-       
       sections={kegWithPours as any}
-      stickySectionHeadersEnabled
+      renderSectionHeader={(info: {
+        section: import('react-native').SectionListData<Pour>;
+      }) => <KegSectionHeader section={info.section as any} />}
     />
   );
 };

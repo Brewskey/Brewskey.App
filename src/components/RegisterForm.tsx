@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { View } from 'react-native';
+
 import { useForm } from 'react-hook-form';
+import { View } from 'react-native';
 
-import { useAuthSession } from '../hooks/context/AuthContext';
-import { useLogin, useRegister } from '../hooks/queries/AuthQueries';
-
-import SectionContent from '../common/SectionContent';
 import Button from '../common/buttons/Button';
-import { validateEmail } from '../utils';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { TextInput } from '../common/form/TextInput';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { TextInput } from '../common/form/TextInput';
+import SectionContent from '../common/SectionContent';
+import { useAuthSession } from '../hooks/context/AuthContext';
+import { useLogin, useRegister } from '../hooks/queries/AuthQueries';
+import { validateEmail } from '../utils';
 
-export type RegisterFormFields = {
+export interface RegisterFormFields {
   email: string;
   password: string;
   userName: string;
-};
+}
 
 const RegisterForm: React.FC = () => {
   const registerMutation = useRegister();
@@ -80,7 +80,10 @@ const RegisterForm: React.FC = () => {
         // so it can be displayed by FormValidationMessage
         form.setError('root', {
           type: 'manual',
-          message: loginError instanceof Error ? loginError.message : 'Registration successful but login failed. Please try logging in manually.',
+          message:
+            loginError instanceof Error
+              ? loginError.message
+              : 'Registration successful but login failed. Please try logging in manually.',
         });
       }
     }
@@ -113,6 +116,7 @@ const RegisterForm: React.FC = () => {
           testID="input-email"
         />
         <FormField
+          secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
@@ -120,7 +124,6 @@ const RegisterForm: React.FC = () => {
           label="Password"
           name="password"
           onSubmitEditing={onSubmitButtonPress}
-          secureTextEntry
           testID="input-password"
         />
         <SectionContent paddedVertical>

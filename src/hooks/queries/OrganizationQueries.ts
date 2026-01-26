@@ -1,17 +1,15 @@
-import {
+import { OrganizationDAO } from '@brewskey/js-api';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, Organization, QueryOptions } from '@brewskey/js-api';
+import type {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  EntityID,
-  Organization,
-  OrganizationDAO,
-  QueryOptions,
-} from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
 
 enum OrganizationQueryKeys {
   OrganizationById = 'organization_by_id',
@@ -21,19 +19,22 @@ enum OrganizationQueryKeys {
 
 export const useGetOrganizationById = (
   id: EntityID | undefined,
-): UseQueryResult<Organization, Error> =>
+): UseQueryResult<Organization> =>
   useQuery({
-    queryKey: [OrganizationQueryKeys.OrganizationById, id],
-    queryFn: () => OrganizationDAO.fetchByID(nullthrows(id)),
+    queryKey: [
+      OrganizationQueryKeys.OrganizationById,
+      getStringFromEntityID(id),
+    ],
+    queryFn: async () => OrganizationDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetOrganizations = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Organization[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Organization[]>> =>
   useInfiniteQuery({
     queryKey: [OrganizationQueryKeys.Organizations, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       OrganizationDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [
@@ -57,14 +58,20 @@ export const useGetSquareLocations = (
   {
     locationID: string;
     name: string;
-  }[],
-  Error
+  }[]
 > => {
-  const { data: organization } = useGetOrganizationById(organizationId ?? undefined);
+  const { data: organization } = useGetOrganizationById(
+    organizationId ?? undefined,
+  );
 
   return useQuery({
-    queryKey: [OrganizationQueryKeys.SquareLocations, organizationId],
-    queryFn: () => OrganizationDAO.fetchSquareLocations(nullthrows(organizationId)),
-    enabled: organizationId != null && (organization?.canEnablePayments ?? false),
+    queryKey: [
+      OrganizationQueryKeys.SquareLocations,
+      getStringFromEntityID(organizationId),
+    ],
+    queryFn: async () =>
+      OrganizationDAO.fetchSquareLocations(nullthrows(organizationId)),
+    enabled:
+      organizationId != null && (organization?.canEnablePayments ?? false),
   });
 };

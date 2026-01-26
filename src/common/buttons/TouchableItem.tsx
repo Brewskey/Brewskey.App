@@ -10,18 +10,19 @@
  */
 
 import * as React from 'react';
+
 import {
   Platform,
-  StyleProp,
   TouchableNativeFeedback,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from 'react-native';
+
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const ANDROID_VERSION_LOLLIPOP = 21;
 
-export type Props = {
+export interface Props {
   shouldBeBorderless?: boolean;
   children?: React.ReactNode;
   delayPressIn?: number;
@@ -30,7 +31,7 @@ export type Props = {
   style?: StyleProp<ViewStyle>;
   testID?: string;
   pointerEvents?: 'auto' | 'none' | 'box-none' | 'box-only';
-};
+}
 
 const TouchableItem: React.FC<Props> = ({
   shouldBeBorderless = false,
@@ -57,18 +58,20 @@ const TouchableItem: React.FC<Props> = ({
     return (
       <TouchableNativeFeedback
         {...restProps}
+        testID={testID}
         background={TouchableNativeFeedback.Ripple(
           pressColor,
           shouldBeBorderless,
         )}
-        testID={testID}
       >
         <View style={combinedStyle}>{React.Children.only(children)}</View>
       </TouchableNativeFeedback>
     );
   }
   return (
-    <TouchableOpacity {...restProps} style={combinedStyle} testID={testID}>{children}</TouchableOpacity>
+    <TouchableOpacity {...restProps} style={combinedStyle} testID={testID}>
+      {children}
+    </TouchableOpacity>
   );
 };
 

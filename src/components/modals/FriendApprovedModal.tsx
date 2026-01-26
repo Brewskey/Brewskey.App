@@ -1,14 +1,15 @@
-import type { Account } from '@brewskey/js-api';
-
 import * as React from 'react';
 import { useState } from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 
+import CenteredModal from './CenteredModal';
+import DeleteModal from './DeleteModal';
 import Button from '../../common/buttons/Button';
 import Fragment from '../../common/Fragment';
-import CenteredModal from './CenteredModal';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import DeleteModal from './DeleteModal';
+
+import type { Account } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   headerText: {
@@ -25,12 +26,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   account: Account;
   isVisible: boolean;
   onFriendDeletePress: () => Promise<void>;
   onHideModal: () => void;
-};
+}
 
 const FriendApprovedModal: React.FC<Props> = ({
   account,
@@ -49,17 +50,17 @@ const FriendApprovedModal: React.FC<Props> = ({
     <Fragment>
       <CenteredModal
         header={<Text style={styles.headerText}>You are friends!</Text>}
-        isVisible={isVisible && !isDeleteModalVisible}
+        isVisible={isVisible ? !isDeleteModalVisible : null}
         onHideModal={onHideModal}
       >
         <View style={styles.root}>
           <Text style={styles.messageText}>
             You're friends with {account.userName}
           </Text>
-          <Button secondary title="okay" onPress={onHideModal} />
+          <Button secondary onPress={onHideModal} title="okay" />
           <Button
-            title="remove friend"
             onPress={() => setIsDeleteModalVisible(true)}
+            title="remove friend"
           />
         </View>
       </CenteredModal>

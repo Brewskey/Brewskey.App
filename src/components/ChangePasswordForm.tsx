@@ -1,23 +1,24 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { useForm } from 'react-hook-form';
 
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { useForm } from 'react-hook-form';
+import { View } from 'react-native';
+
+import Button from '../common/buttons/Button';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
-import SectionContent from '../common/SectionContent';
-import { TextInput } from '../common/form/TextInput';
-import Button from '../common/buttons/Button';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { TextInput } from '../common/form/TextInput';
+import SectionContent from '../common/SectionContent';
 
-export type ChangePasswordFormFields = {
+export interface ChangePasswordFormFields {
   newPassword: string;
   oldPassword: string;
-};
+}
 
-type Props = {
+interface Props {
   onSubmit: (values: ChangePasswordFormFields) => undefined | Promise<unknown>;
-};
+}
 
 const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
   const form = useForm<ChangePasswordFormFields>({
@@ -72,6 +73,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
       <View testID="change-password-form">
         <FormValidationMessage testID="change-password-error-message" />
         <FormField
+          secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
@@ -79,10 +81,10 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           label="Old password"
           name="oldPassword"
           nextFocusTo="newPassword"
-          secureTextEntry
           testID="input-oldPassword"
         />
         <FormField
+          secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
@@ -90,7 +92,6 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           label="New password"
           name="newPassword"
           onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
-          secureTextEntry
           testID="input-newPassword"
         />
         <SectionContent paddedVertical>

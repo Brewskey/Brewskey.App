@@ -1,81 +1,80 @@
-import type { QueryOptions, Organization } from '@brewskey/js-api';
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { StyleSheet, Text, View } from 'react-native';
+
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetOrganizations } from '../../hooks/queries/OrganizationQueries';
-import { createFilter } from '@brewskey/js-api/dist/filters';
 import { COLORS } from '../../theme';
 
-type Props = {
+import type { Organization, QueryOptions } from '@brewskey/js-api';
+
+interface Props {
   error?: string | null | undefined;
-  onChange: (value?: Organization | null | undefined) => void;
   queryOptions?: QueryOptions;
-  value: Organization | null | undefined;
   // Form integration props
   name: string;
   defaultValue?: Organization | null | undefined;
   required?: boolean | string;
-};
+}
 
-type OrganizationPickerItemProps = {
+interface OrganizationPickerItemProps {
   item: Organization;
   selected?: boolean;
-};
+}
 
-const OrganizationPickerItem = (item: Organization, selected?: boolean): React.ReactElement => {
+const OrganizationPickerItem = (
+  item: Organization,
+  selected?: boolean,
+): React.ReactElement => {
   const displayText = `${item.id} - ${item.name}`;
 
   return (
-    <View style={styles.itemContainer} testID={`organization-picker-item-${item.id}`}>
-      <Text style={[styles.nameText, selected === true && styles.nameTextSelected]}>
+    <View
+      style={styles.itemContainer}
+      testID={`organization-picker-item-${item.id}`}
+    >
+      <Text style={[styles.nameText, selected && styles.nameTextSelected]}>
         {displayText}
       </Text>
     </View>
   );
 };
 
-const OrganizationPicker: React.FC<Props> = ({
+export const OrganizationPicker: React.FC<Props> = ({
   name = 'organization',
   defaultValue,
   required,
   ...props
 }) => {
-
-  const onSearchFilter = React.useCallback((searchText: string, baseQueryOptions: QueryOptions) => {
-    return {
+  const onSearchFilter = React.useCallback(
+    (searchText: string, baseQueryOptions: QueryOptions) => ({
       ...baseQueryOptions,
       filters: [
         ...(baseQueryOptions.filters || []),
         createFilter('name').contains(searchText),
       ],
-    };
-  }, []);
+    }),
+    [],
+  );
 
   return (
     <DropdownInput<Organization>
-      name={name}
-      defaultValue={defaultValue ?? undefined}
-      required={required}
-      useQueryHook={useGetOrganizations}
-      queryOptions={props.queryOptions ?? {}}
-      onSearchFilter={onSearchFilter}
-      labelField="name"
-      valueField="id"
-      multiple={false}
-      mode="default"
+      {...props}
+      search
       confirmSelectItem={false}
-      inputVariant="picker"
-      search={true}
-      searchPlaceholder="Search organizations..."
+      defaultValue={defaultValue ?? undefined}
+      labelField="name"
+      name={name}
+      onSearchFilter={onSearchFilter}
       placeholder="None"
-      onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Organization | null);
-        }
-      }}
+      queryOptions={props.queryOptions ?? {}}
       renderItem={OrganizationPickerItem}
-      keyExtractor={(item) => String(item.id)}
+      required={required}
+      searchPlaceholder="Search organizations..."
       testID={`organization-picker-${name}`}
+      useQueryHook={useGetOrganizations}
+      valueField="id"
     />
   );
 };
@@ -93,5 +92,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-export default OrganizationPicker;

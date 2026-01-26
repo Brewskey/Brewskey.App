@@ -1,38 +1,42 @@
-import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
-import * as React from 'react';
-import { useQuery, useQueryClient, useMutation, QueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
+
+import BrewskeyJSApi from '@brewskey/js-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import Storage, { StorageKeys } from '../../utils/Storage';
+
+import type { AuthResponse } from '@brewskey/js-api';
+import type { QueryClient } from '@tanstack/react-query';
 
 export const AUTH_QUERY_KEY = ['auth', 'session'] as const;
 
 /**
  * Load auth state from Storage for hydration
  */
-export const loadAuthStateFromStorage = async (): Promise<
-  AuthResponse | null
-> => {
-  try {
-    // Check for Playwright test data first (for e2e tests)
-    // This needs to be checked synchronously if possible, or we need to ensure
-    // it's set before React Query runs
-    if (typeof window !== 'undefined') {
-      const playwrightAuth = (window as any).__PLAYWRIGHT_AUTH_DATA__;
-      if (playwrightAuth) {
-        // Store it in Storage for consistency
-        try {
-          await Storage.setItem(StorageKeys.SessionData, playwrightAuth);
-        } catch (e) {
-          // Storage might not be ready yet, but we can still return the auth data
+export const loadAuthStateFromStorage =
+  async (): Promise<AuthResponse | null> => {
+    try {
+      // Check for Playwright test data first (for e2e tests)
+      // This needs to be checked synchronously if possible, or we need to ensure
+      // it's set before React Query runs
+      if (typeof window !== 'undefined') {
+        const playwrightAuth = (window as any).__PLAYWRIGHT_AUTH_DATA__;
+        if (playwrightAuth) {
+          // Store it in Storage for consistency
+          try {
+            await Storage.setItem(StorageKeys.SessionData, playwrightAuth);
+          } catch (e) {
+            // Storage might not be ready yet, but we can still return the auth data
+          }
+          return playwrightAuth;
         }
-        return playwrightAuth;
       }
+
+      return await Storage.getItem<AuthResponse>(StorageKeys.SessionData);
+    } catch (error) {
+      return null;
     }
-    
-    return await Storage.getItem<AuthResponse>(StorageKeys.SessionData);
-  } catch (error) {
-    return null;
-  }
-};
+  };
 
 /**
  * Save auth state to Storage
@@ -76,19 +80,21 @@ const refreshAuthToken = async (
  * Hook to access the current auth state using react-query
  * @returns The current AuthResponse or undefined if not authenticated
  */
-export const useAuthSession = () => {
-  return useQuery<AuthResponse | null>({
+export const useAuthSession = () =>
+  useQuery<AuthResponse | null>({
     queryKey: AUTH_QUERY_KEY,
     queryFn: async () => loadAuthStateFromStorage(),
     staleTime: Infinity, // Auth state doesn't become stale
     gcTime: Infinity, // Never garbage collect auth state
     retry: false,
   });
-};
 
-export const setAuthSession = (queryClient: QueryClient, authResponse: AuthResponse | null) => {
+export const setAuthSession = (
+  queryClient: QueryClient,
+  authResponse: AuthResponse | null,
+) => {
   queryClient.setQueryData(AUTH_QUERY_KEY, authResponse);
-  saveAuthStateToStorage(authResponse); 
+  saveAuthStateToStorage(authResponse);
   BrewskeyJSApi.initializeForSession(authResponse ?? null);
 };
 
@@ -122,7 +128,7 @@ export const setAuthSession = (queryClient: QueryClient, authResponse: AuthRespo
  */
 export const useSetAuthSession = () => {
   const queryClient = useQueryClient();
-  return React.useCallback(
+  return useCallback(
     (response: AuthResponse | null) => {
       setAuthSession(queryClient, response);
     },

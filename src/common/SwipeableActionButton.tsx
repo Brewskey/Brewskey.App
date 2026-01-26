@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+
+import { StyleSheet } from 'react-native';
+
 import IconButton from './buttons/IconButton';
+
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -11,24 +15,24 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TIconProps> = (TIconProps) & {
-  containerStyle?: StyleProp<ViewStyle>,
-  iconName: string,
-  onPress?: () => void
+type Props<TIconProps> = TIconProps & {
+  containerStyle?: StyleProp<ViewStyle>;
+  iconName: string;
+  onPress?: () => void;
 };
 
-const SwipeableActionButton = <TIconProps extends object>(
-  {
-    containerStyle,
-    iconName,
-    onPress,
-    ...rest
-  }: Props<TIconProps>,
-): React.ReactElement => <IconButton
-  {...rest}
-  containerStyle={[styles.container, containerStyle]}
-  name={iconName}
-  onPress={onPress}
-/>;
+const SwipeableActionButton = <TIconProps extends object>({
+  containerStyle,
+  iconName,
+  onPress,
+  ...rest
+}: Props<TIconProps>): React.ReactElement => (
+  <IconButton
+    {...rest}
+    containerStyle={[styles.container, containerStyle]}
+    name={iconName}
+    onPress={onPress}
+  />
+);
 
 export default SwipeableActionButton;

@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, View, Text, Pressable, PressableProps } from 'react-native';
-import { COLORS } from '../theme';
+
 import { Icon } from '@rneui/themed';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { COLORS } from '../theme';
+
+import type { PressableProps } from 'react-native';
 
 const styles = StyleSheet.create({
   active: {
@@ -37,25 +41,37 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
   routeName?: string;
 };
 
-const MenuButton: React.FC<Props> = ({ icon, isActive, onPress, title, testID, routeName, ...pressableProps }) => {
+const MenuButton: React.FC<Props> = ({
+  icon,
+  isActive,
+  onPress,
+  title,
+  testID,
+  routeName,
+  ...pressableProps
+}) => {
   const { pointerEvents, ...restProps } = pressableProps;
-  
+
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.button, isActive && styles.active, pointerEvents && { pointerEvents }]}
       testID={testID}
+      style={[
+        styles.button,
+        isActive && styles.active,
+        pointerEvents && { pointerEvents },
+      ]}
       {...restProps}
     >
       <View style={[styles.iconContainer, { pointerEvents: 'none' }]}>
         <Icon
-          name={icon.name}
-          type={icon.type}
           color={COLORS.textFaded}
+          name={icon.name}
           size={20}
+          type={icon.type}
         />
       </View>
-      {title && <Text style={styles.text}>{title}</Text>}
+      {title ? <Text style={styles.text}>{title}</Text> : null}
     </Pressable>
   );
 };

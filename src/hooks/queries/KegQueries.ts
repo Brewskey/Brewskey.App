@@ -1,24 +1,23 @@
+import { KegDAO, PourDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseMutationResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
-  EntityID,
-  Keg,
-  KegDAO,
-  KegMutator,
-  PourDAO,
-  QueryOptions,
-} from '@brewskey/js-api';
 import nullthrows from 'nullthrows';
-import { TapQueryKeys } from './TapQueries';
+
 import { NEARBY_LOCATIONS_QUERY_KEY_BASE } from './LocationQueries';
+import { TapQueryKeys } from './TapQueries';
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, Keg, KegMutator, QueryOptions } from '@brewskey/js-api';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseMutationResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 export enum KegQueryKeys {
   KeyById = 'keg_by_id',
@@ -28,29 +27,29 @@ export enum KegQueryKeys {
 
 export const useGetKegById = (
   id: EntityID | null | undefined,
-): UseQueryResult<Keg, Error> =>
+): UseQueryResult<Keg> =>
   useQuery({
-    queryKey: [KegQueryKeys.KeyById, id],
-    queryFn: () => KegDAO.fetchByID(id!),
+    queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(id)],
+    queryFn: async () => KegDAO.fetchByID(id),
     enabled: id != null,
   });
 
 export const useGetKegByQuery = (
-  queryOptions?: QueryOptions | undefined,
-): UseQueryResult<Keg, Error> =>
+  queryOptions?: QueryOptions,
+): UseQueryResult<Keg> =>
   useQuery({
     queryKey: [KegQueryKeys.KeyByQuery, queryOptions],
-    queryFn: () => KegDAO.fetchSingle(queryOptions),
+    queryFn: async () => KegDAO.fetchSingle(queryOptions),
     refetchOnWindowFocus: false,
   });
 
 export const useGetKegs = (
   queryOptions: QueryOptions,
-): UseInfiniteQueryResult<InfiniteData<Keg[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Keg[]>> =>
   useInfiniteQuery({
     queryKey: [KegQueryKeys.KegsList, queryOptions],
     initialPageParam: 0,
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       KegDAO.fetchMany({
         ...queryOptions,
         orderBy: [
@@ -70,7 +69,7 @@ export const useGetKegs = (
 export const useCreateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (mutator) => KegDAO.post(mutator),
+    mutationFn: async (mutator) => KegDAO.post(mutator),
     onSuccess: async () => {
       // Invalidate all keg queries - this will match all queries that start with these keys
       // Using refetchType: 'active' ensures active queries refetch immediately
@@ -107,7 +106,7 @@ export const useCreateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
 export const useUpdateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (mutator) =>
+    mutationFn: async (mutator) =>
       KegDAO.put(nullthrows(mutator.id, 'keg ID was not defined'), mutator),
     onSuccess: async (keg) => {
       // Invalidate all keg queries - this will match all queries that start with these keys

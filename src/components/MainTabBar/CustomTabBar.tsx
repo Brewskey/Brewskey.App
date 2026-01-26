@@ -1,13 +1,18 @@
 import * as React from 'react';
+
+import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { COLORS } from '../../theme';
-import { TabBarButton } from './TabBarButton';
-import { PourButton } from './PourButton';
+
 import BadgeContainer from './BadgeContainer';
-import TouchableItem from '../../common/buttons/TouchableItem';
 import { useMainTabBarSlot } from './MainTabBarSlot';
-import { NavigationRoute, ParamListBase } from '@react-navigation/native';
+import { PourButton } from './PourButton';
+import { TabBarButton } from './TabBarButton';
+import { COLORS } from '../../theme';
+
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
+
+import type TouchableItem from '../../common/buttons/TouchableItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,26 +37,35 @@ const styles = StyleSheet.create({
   },
 });
 
-const NotificationBadges: React.FC<React.ComponentProps<typeof TouchableItem>> = (props) => (
+const NotificationBadges: React.FC<
+  React.ComponentProps<typeof TouchableItem>
+> = (props) => (
   <BadgeContainer
     {...props}
     badgeCount={0 /* NotificationsStore.unreadCount */}
   />
 );
 
-const FriendRequestBadge: React.FC<React.ComponentProps<typeof TouchableItem>> = (props) => (
-  <BadgeContainer {...props} badgeCount={0} />
-);
+const FriendRequestBadge: React.FC<
+  React.ComponentProps<typeof TouchableItem>
+> = (props) => <BadgeContainer {...props} badgeCount={0} />;
 
 export const CustomTabBar: React.FC<BottomTabBarProps> = ({
   state,
   navigation,
 }) => {
-  const { content } = useMainTabBarSlot();
+  const { content, formContext } = useMainTabBarSlot();
 
-  // When content is set (e.g., Location form), render content instead of tab bar
+  // When content is set (e.g., Location form), render content instead of tab bar.
+  // Slot content (e.g. submit button) needs FormProvider when it uses useFormContext.
   if (content !== null) {
-    return <View style={styles.container}>{content}</View>;
+    const slot =
+      formContext != null ? (
+        <FormProvider {...formContext}>{content}</FormProvider>
+      ) : (
+        content
+      );
+    return <View style={styles.container}>{slot}</View>;
   }
 
   const _onTabPress = (

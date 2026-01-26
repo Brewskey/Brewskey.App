@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -10,9 +11,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   isLoading: boolean;
-};
+}
 
 const LoadingListFooter: React.FC<Props> = ({ isLoading }) => {
   if (!isLoading) {

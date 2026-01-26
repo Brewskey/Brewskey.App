@@ -1,23 +1,25 @@
-import type { EntityID, KegMutator } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
 
-import KegForm from '../../../../../components/KegForm';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import Container from '../../../../../common/Container';
 import Header from '../../../../../common/Header';
 import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useCreateKeg } from '../../../../../hooks/queries/KegQueries';
+import KegForm from '../../../../../components/KegForm';
 import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarContext';
+import { useCreateKeg } from '../../../../../hooks/queries/KegQueries';
+
+import type { EntityID, KegMutator } from '@brewskey/js-api';
 
 const NewKegScreen: React.FC = () => {
   const router = useRouter();
-  const { tapId, onTapSetupFinish } = useLocalSearchParams<{ 
+  const { tapId, onTapSetupFinish } = useLocalSearchParams<{
     tapId: string;
     onTapSetupFinish?: string;
   }>();
-  const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+  const tapIdValue =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
 
   const createKeg = useCreateKeg();
   const addSnackBarMessage = useAddSnackBarMessage();
@@ -25,8 +27,8 @@ const NewKegScreen: React.FC = () => {
   if (!tapIdValue) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
@@ -34,7 +36,7 @@ const NewKegScreen: React.FC = () => {
   const onFormSubmit = async (values: KegMutator): Promise<KegMutator> => {
     await createKeg.mutateAsync(values);
     addSnackBarMessage({ content: 'New keg added' });
-    
+
     // If onTapSetupFinish is provided (from NUX flow), navigate to nuxFinish instead of normal navigation
     // In NUX flow, onTapSetupFinish indicates we should navigate to the finish screen
     if (onTapSetupFinish) {
@@ -48,27 +50,29 @@ const NewKegScreen: React.FC = () => {
       });
       return values;
     }
-    
+
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: tapIdValue.toString() } });
+      router.navigate({
+        pathname: '/(tabs)/taps/[tapId]/on_tap',
+        params: { tapId: tapIdValue.toString() },
+      });
     }
-    
+
     return values;
   };
 
-  const onFloatedSubmit = async (values: KegMutator): Promise<KegMutator> => {
-    return onFormSubmit(values);
-  };
+  const onFloatedSubmit = async (values: KegMutator): Promise<KegMutator> =>
+    onFormSubmit(values);
 
   return (
     <Container>
       <Header shouldShowBackButton title="New keg" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <KegForm
-          onSubmit={onFormSubmit}
           onFloatedSubmit={onFloatedSubmit}
+          onSubmit={onFormSubmit}
           submitButtonLabel="Create keg"
           tapId={tapIdValue as EntityID}
         />

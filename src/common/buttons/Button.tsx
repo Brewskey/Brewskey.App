@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
 
 import { Button as RNEButton } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+
 import ToggleStore from '../../stores/ToggleStore';
 import { COLORS } from '../../theme';
+
+import type { ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   secondaryDisabledButton: {
@@ -28,9 +31,9 @@ type Props = React.ComponentProps<typeof RNEButton> & {
   // react-native-elemenets button porps
 };
 
-type State = {
+interface State {
   isLoading: boolean;
-};
+}
 
 const Button: React.FC<Props> = ({
   backgroundColor = COLORS.primary2,
@@ -62,6 +65,8 @@ const Button: React.FC<Props> = ({
 
   return (
     <RNEButton
+      disabledStyle={secondary ? styles.secondaryDisabledButton : null}
+      disabledTitleStyle={secondary ? styles.secondaryDisabledText : null}
       buttonStyle={{
         marginHorizontal: 20,
         ...(type === 'solid' || type == null
@@ -71,18 +76,16 @@ const Button: React.FC<Props> = ({
           : null),
         ...(style || {}),
       }}
-      disabledStyle={secondary && styles.secondaryDisabledButton}
-      disabledTitleStyle={secondary && styles.secondaryDisabledText}
       {...rest}
       disabled={disabled || isLoading}
       loading={loading || isLoading}
       onPress={handlePress}
       testID={testID}
       title={title}
+      type={type}
       titleStyle={{
         color: secondary ? COLORS.text : color,
       }}
-      type={type}
     />
   );
 };

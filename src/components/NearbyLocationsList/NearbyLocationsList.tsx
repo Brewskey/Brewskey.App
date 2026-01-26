@@ -1,26 +1,28 @@
-import type { NearbyLocation, NearbyTap, Section } from '../../types';
-
 import * as React from 'react';
-import { View } from 'react-native';
-import Fragment from '../../common/Fragment';
-import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
 
+import { useRouter } from 'expo-router';
+import { View } from 'react-native';
+
+import NearbyLocationsListEmpty from './NearbyLocationsListEmpty';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import Fragment from '../../common/Fragment';
 import List from '../../common/List';
 import ListItem from '../../common/ListItem';
-import NearbyLocationsListEmpty from './NearbyLocationsListEmpty';
-import LoadingListFooter from '../../common/LoadingListFooter';
 import ListSectionHeader from '../../common/ListSectionHeader';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import { calculateKegLevel } from '../../utils';
+import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
+import LoadingListFooter from '../../common/LoadingListFooter';
 import { COLORS } from '../../theme';
-import { useRouter } from 'expo-router';
-import { SectionListData } from 'react-native';
+import { calculateKegLevel } from '../../utils';
 
-type Props = {
+import type { SectionListData } from 'react-native';
+
+import type { NearbyLocation, NearbyTap, Section } from '../../types';
+
+interface Props {
   isLoading: boolean;
   nearbyLocations: NearbyLocation[] | undefined;
   onRefresh: () => void;
-};
+}
 
 export const NearbyLocationsList: React.FC<Props> = ({
   nearbyLocations,
@@ -42,7 +44,10 @@ export const NearbyLocationsList: React.FC<Props> = ({
   const keyExtractor = ({ id }: NearbyTap): string => id.toString();
 
   const onItemPress = ({ id }: NearbyTap) =>
-    router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      params: { tapId: String(id) },
+    });
 
   const renderItem = ({
     index,
@@ -72,11 +77,11 @@ export const NearbyLocationsList: React.FC<Props> = ({
       <Fragment>
         {showTopSeparator ? <ListSubSectionSeparator /> : null}
         <ListItem
-          leftAvatar={
-            <BeverageAvatar
-              beverageId={currentKeg ? currentKeg.beverageId : ''}
-            />
-          }
+          chevron={false}
+          item={item}
+          onPress={onItemPress}
+          subtitle={(name?.trim().length ? `${name} - ` : '') + deviceName}
+          title={`${tapNumber} - ${beverageName}`}
           badge={
             kegLevel !== null
               ? {
@@ -85,13 +90,10 @@ export const NearbyLocationsList: React.FC<Props> = ({
                 }
               : undefined
           }
-          chevron={false}
-          item={item}
-          onPress={onItemPress}
-          title={`${tapNumber} - ${beverageName}`}
-          subtitle={
-            (name != null && name.trim().length ? `${name} - ` : '') +
-            deviceName
+          leftAvatar={
+            <BeverageAvatar
+              beverageId={currentKeg ? currentKeg.beverageId : ''}
+            />
           }
         />
       </Fragment>
@@ -105,16 +107,18 @@ export const NearbyLocationsList: React.FC<Props> = ({
   }): React.ReactElement => <ListSectionHeader title={section.title} />;
 
   return (
-    <View testID="nearby-locations-list" style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="nearby-locations-list">
       <List
         keyExtractor={keyExtractor}
-        ListEmptyComponent={!isLoading ? <NearbyLocationsListEmpty /> : undefined}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         listType="sectionList"
         onRefresh={onRefresh}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
         sections={sections}
+        ListEmptyComponent={
+          !isLoading ? <NearbyLocationsListEmpty /> : undefined
+        }
       />
     </View>
   );

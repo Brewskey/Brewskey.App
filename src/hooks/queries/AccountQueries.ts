@@ -1,6 +1,11 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import { Account, AccountDAO, EntityID } from '@brewskey/js-api';
+import { AccountDAO } from '@brewskey/js-api';
+import { useQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { Account, EntityID } from '@brewskey/js-api';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 enum AccountQueryKeys {
   AccountById = 'account_by_id',
@@ -8,9 +13,9 @@ enum AccountQueryKeys {
 
 export const useGetAccountById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Account, Error> =>
+): UseQueryResult<Account> =>
   useQuery({
-    queryKey: [AccountQueryKeys.AccountById, id],
-    queryFn: () => AccountDAO.fetchByID(nullthrows(id)),
+    queryKey: [AccountQueryKeys.AccountById, getStringFromEntityID(id)],
+    queryFn: async () => AccountDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });

@@ -6,10 +6,10 @@ export enum WifiSetupSteps {
   Screen3,
   Screen4,
 }
-type ContextValue = {
+interface ContextValue {
   currentStep: WifiSetupSteps;
   particleID?: string;
-};
+}
 const WifiSetupScreenContext = createContext<
   [ContextValue, (newValue: ContextValue) => void]
 >([{ currentStep: WifiSetupSteps.Screen1 }, () => {}]);

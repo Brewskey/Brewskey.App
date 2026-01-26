@@ -1,17 +1,15 @@
-import {
+import { AvailabilityDAO } from '@brewskey/js-api';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { Availability, EntityID, QueryOptions } from '@brewskey/js-api';
+import type {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  Availability,
-  AvailabilityDAO,
-  EntityID,
-  QueryOptions,
-} from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
 
 enum AvailabilityQueryKeys {
   AvailabilityById = 'availability_by_id',
@@ -20,19 +18,22 @@ enum AvailabilityQueryKeys {
 
 export const useGetAvailabilityById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Availability, Error> =>
+): UseQueryResult<Availability> =>
   useQuery({
-    queryKey: [AvailabilityQueryKeys.AvailabilityById, id],
-    queryFn: () => AvailabilityDAO.fetchByID(nullthrows(id)),
+    queryKey: [
+      AvailabilityQueryKeys.AvailabilityById,
+      getStringFromEntityID(id),
+    ],
+    queryFn: async () => AvailabilityDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetAvailabilities = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Availability[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Availability[]>> =>
   useInfiniteQuery({
     queryKey: [AvailabilityQueryKeys.Availabilities, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       AvailabilityDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [

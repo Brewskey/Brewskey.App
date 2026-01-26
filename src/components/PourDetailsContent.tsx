@@ -1,16 +1,18 @@
-import type { Pour } from '@brewskey/js-api';
-
 import * as React from 'react';
-import moment from 'moment';
+
 import { useRouter } from 'expo-router';
-import OverviewItem from '../common/OverviewItem';
-import Fragment from '../common/Fragment';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
+import moment from 'moment';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import PintCounter from './PintCounter';
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
 import UserAvatar from '../common/avatars/UserAvatar';
-import PintCounter from './PintCounter';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import Fragment from '../common/Fragment';
+import OverviewItem from '../common/OverviewItem';
+import { NULL_STRING_PLACEHOLDER } from '../constants';
 import { COLORS, TYPOGRAPHY } from '../theme';
+
+import type { Pour } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   avatarContainer: {
@@ -37,14 +39,14 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   pour: Pour;
   onNavigateToProfile?: (userId: string | number) => void;
   onNavigateToBeverage?: (beverageId: string | number) => void;
   onNavigateToLocation?: (locationId: string | number) => void;
   onNavigateToDevice?: (deviceId: string | number) => void;
   onClose?: () => void;
-};
+}
 
 const PourDetailsContent: React.FC<Props> = ({
   pour,
@@ -60,7 +62,10 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.owner?.id) {
       onClose?.();
       onNavigateToProfile?.(pour.owner.id);
-      router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
+      router.navigate({
+        pathname: '/(tabs)/profile/[id]',
+        params: { id: String(pour.owner.id) },
+      });
     }
   };
 
@@ -68,7 +73,10 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.beverage?.id) {
       onClose?.();
       onNavigateToBeverage?.(pour.beverage.id);
-      router.navigate({ pathname: '/(tabs)/beverages/[id]', params: { id: String(pour.beverage.id) } });
+      router.navigate({
+        pathname: '/(tabs)/beverages/[id]',
+        params: { id: String(pour.beverage.id) },
+      });
     }
   };
 
@@ -76,7 +84,10 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.location?.id) {
       onClose?.();
       onNavigateToLocation?.(pour.location.id);
-      router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: String(pour.location.id) } });
+      router.navigate({
+        pathname: '/(tabs)/locations/[id]',
+        params: { id: String(pour.location.id) },
+      });
     }
   };
 
@@ -84,7 +95,10 @@ const PourDetailsContent: React.FC<Props> = ({
     if (pour.device?.id) {
       onClose?.();
       onNavigateToDevice?.(pour.device.id);
-      router.navigate({ pathname: '/(tabs)/devices/[id]', params: { id: String(pour.device.id) } });
+      router.navigate({
+        pathname: '/(tabs)/devices/[id]',
+        params: { id: String(pour.device.id) },
+      });
     }
   };
 
@@ -97,17 +111,17 @@ const PourDetailsContent: React.FC<Props> = ({
   return (
     <Fragment>
       <View style={styles.avatarContainer}>
-        {pour.beverage?.id && (
+        {pour.beverage?.id ? (
           <BeverageAvatar beverageId={pour.beverage.id} size={80} />
-        )}
+        ) : null}
       </View>
       <OverviewItem
         title="Beverage"
         value={
           pour.beverage?.id ? (
             <TouchableOpacity
-              style={styles.touchableRow}
               onPress={handleBeveragePress}
+              style={styles.touchableRow}
             >
               <BeverageAvatar beverageId={pour.beverage.id} size={24} />
               <Text style={[styles.beverageName, { marginLeft: 8 }]}>
@@ -124,14 +138,14 @@ const PourDetailsContent: React.FC<Props> = ({
         value={
           <View style={styles.touchableRow}>
             <Text>{`${pour.ounces.toFixed(1)} oz`}</Text>
-            {pour.beverage?.id && (
+            {pour.beverage?.id ? (
               <View style={{ marginLeft: 8 }}>
                 <PintCounter
                   beverageID={pour.beverage.id}
                   ounces={pour.ounces}
                 />
               </View>
-            )}
+            ) : null}
           </View>
         }
       />
@@ -140,43 +154,48 @@ const PourDetailsContent: React.FC<Props> = ({
       )}
       <OverviewItem title="Date" value={pourDate} />
       <OverviewItem title="Time" value={pourDateRelative} />
-      {pour.owner && (
+      {pour.owner ? (
         <OverviewItem
           title="Owner"
           value={
             <TouchableOpacity
-              style={styles.touchableRow}
               onPress={handleProfilePress}
+              style={styles.touchableRow}
             >
-              <UserAvatar userName={pour.owner.userName} size={24} />
+              <UserAvatar size={24} userName={pour.owner.userName} />
               <Text style={[styles.ownerName, { marginLeft: 8 }]}>
                 {ownerName}
               </Text>
             </TouchableOpacity>
           }
         />
-      )}
-      {pour.location && (
+      ) : null}
+      {pour.location ? (
         <OverviewItem
           title="Location"
           value={
             <TouchableOpacity
-              style={styles.touchableRow}
               onPress={handleLocationPress}
+              style={styles.touchableRow}
             >
               <Text style={styles.locationName}>{locationName}</Text>
             </TouchableOpacity>
           }
         />
-      )}
-      {pour.device && (
-        <OverviewItem title="Box" value={<TouchableOpacity
-          style={styles.touchableRow}
-          onPress={handleDevicePress}
-        >
-          <Text style={styles.locationName}>{pour.device.name}</Text>
-        </TouchableOpacity>} />
-      )}
+      ) : null}
+      {pour.device ? (
+        <OverviewItem
+          title="Box"
+          value={
+            <TouchableOpacity
+              onPress={handleDevicePress}
+              style={styles.touchableRow}
+            >
+              <Text style={styles.locationName}>{pour.device.name}</Text>
+            </TouchableOpacity>
+          }
+        />
+      ) : null}
     </Fragment>
   );
 };

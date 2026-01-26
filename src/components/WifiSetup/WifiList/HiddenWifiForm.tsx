@@ -1,56 +1,64 @@
+import * as React from 'react';
+
+import { useForm, useFormContext } from 'react-hook-form';
+import { View } from 'react-native';
+
+import Button from '../../../common/buttons/Button';
+import { DropdownInput } from '../../../common/form/DropdownInput';
+import { Form } from '../../../common/form/Form';
+import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
+import { handleSubmitWithError } from '../../../common/form/handleSubmitWithError';
+import { TextField } from '../../../common/form/TextField';
+import { WIFI_SECURITIES } from '../../../SoftApService';
+
 import type { WifiNetwork } from '../../../types';
 
-import * as React from 'react';
-import { View } from 'react-native';
-import Button from '../../../common/buttons/Button';
-import { WIFI_SECURITIES } from '../../../SoftApService';
-import { TextField } from '../../../common/form/TextField';
-import { DropdownInput } from '../../../common/form/DropdownInput';
-import { useForm, useFormContext } from 'react-hook-form';
-import { Form } from '../../../common/form/Form';
-import { handleSubmitWithError } from '../../../common/form/handleSubmitWithError';
-import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
-
-type Props = {
+interface Props {
   onSubmit: (values: WifiNetwork) => Promise<void>;
-};
+}
 
-type FormProps = {
+interface FormProps {
   ssid: string;
   security: number;
   password?: string;
-};
+}
+
+const SECURITY_OPTIONS = Object.entries(WIFI_SECURITIES).map(
+  ([name, value]): { label: string; value: number } => ({
+    label: name,
+    value,
+  }),
+);
 
 const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
   const form = useFormContext<FormProps>();
   const { isValid, isDirty, isSubmitting } = form.formState;
   const security = form.watch('security');
 
-  const handleSubmit = React.useCallback((formProps: FormProps) => {
-    onSubmit({
-      security: formProps.security,
-      ssid: formProps.ssid,
-      password: formProps.password,
-    });
-  }, [onSubmit]);
+  const handleSubmit = React.useCallback(
+    (formProps: FormProps) => {
+      onSubmit({
+        security: formProps.security,
+        ssid: formProps.ssid,
+        password: formProps.password,
+      });
+    },
+    [onSubmit],
+  );
 
   return (
     <View>
       <FormValidationMessage />
-      <TextField label="SSID" name="ssid" required />
+      <TextField required label="SSID" name="ssid" />
       <DropdownInput
-        data={Object.entries(WIFI_SECURITIES).map(
-          ([name, value]): { label: string; value: number } => ({
-            label: name,
-            value,
-          }),
-        )}
+        data={SECURITY_OPTIONS}
+        defaultValue={SECURITY_OPTIONS[0]}
         labelField="label"
+        name="security"
         valueField="value"
-        name={'security'}
       />
       {security !== WIFI_SECURITIES.OPEN && (
-        <TextField label="Password" name="password" secureTextEntry />
+        <TextField secureTextEntry label="Password" name="password" />
       )}
       <Button
         disabled={!isValid || !isDirty || isSubmitting}

@@ -1,19 +1,21 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { useImperativeHandle } from 'react';
+
 import moment from 'moment';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
 import Modal from './Modal';
+import Button from '../../common/buttons/Button';
+import IconButton from '../../common/buttons/IconButton';
 import Section from '../../common/Section';
 import SectionContent from '../../common/SectionContent';
 import SectionHeader from '../../common/SectionHeader';
-import KegDetailsContent from '../KegDetailsContent';
-import Button from '../../common/buttons/Button';
-import IconButton from '../../common/buttons/IconButton';
-import { COLORS } from '../../theme';
-import { useGetKegById } from '../../hooks/queries/KegQueries';
-import { useImperativeHandle } from 'react';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useGetKegById } from '../../hooks/queries/KegQueries';
+import { COLORS } from '../../theme';
+import KegDetailsContent from '../KegDetailsContent';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,11 +38,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export type KegModalHandle = {
-  closeModal(): void;
-  openModal(): void;
+export interface KegModalHandle {
+  closeModal: () => void;
+  openModal: () => void;
   get isOpen(): boolean;
-};
+}
 
 export const KegModal = React.forwardRef<
   KegModalHandle,
@@ -107,7 +109,11 @@ export const KegModal = React.forwardRef<
                 testID="button-close-keg-modal"
               />
             </View>
-            <SectionHeader title={keg.data.beverage.name} subtitle={subtitle} testID="section-header-keg-beverage" />
+            <SectionHeader
+              subtitle={subtitle}
+              testID="section-header-keg-beverage"
+              title={keg.data.beverage.name}
+            />
           </View>
         </Section>
         <View style={styles.scrollContent}>
@@ -116,9 +122,9 @@ export const KegModal = React.forwardRef<
         <Section>
           <View style={styles.bottomButton}>
             <Button
-              title="Close"
               onPress={handleClose}
               testID="button-close-keg"
+              title="Close"
             />
           </View>
         </Section>

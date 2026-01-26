@@ -3,12 +3,12 @@ import type { SectionListData } from 'react-native/Libraries/Lists/SectionList';
 
 export type Section<TEntity> = SectionListData<TEntity>;
 
-export type Coordinates = {
+export interface Coordinates {
   latitude: number;
   longitude: number;
-};
+}
 
-export type NearbyTap = {
+export interface NearbyTap {
   currentKeg: {
     beverageId: number; // not translated to string,
     beverageName: string;
@@ -23,19 +23,19 @@ export type NearbyTap = {
   id: EntityID;
   name: string;
   tapNumber: number;
-};
+}
 
-export type NearbyLocation = {
+export interface NearbyLocation {
   id: EntityID;
   name: string;
   summary: string | null | undefined;
   taps: NearbyTap[];
-};
+}
 
-export type WifiNetwork = {
+export interface WifiNetwork {
   channel?: number;
   index?: number;
   password?: string;
   security: number;
   ssid: string;
-};
+}

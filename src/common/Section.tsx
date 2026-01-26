@@ -1,6 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+
+import { StyleSheet, View } from 'react-native';
+
 import { COLORS, getElevationStyle } from '../theme';
+
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   innerContainer: {
@@ -17,22 +21,27 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  bottomPadded?: boolean,
-  children?: React.ReactNode,
-  innerContainerStyle?: StyleProp<ViewStyle>,
-  testID?: string,
-};
+interface Props {
+  bottomPadded?: boolean;
+  children?: React.ReactNode;
+  innerContainerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
+}
 
-const Section: React.FC<Props> = ({ bottomPadded, children, innerContainerStyle, testID }) => {
+const Section: React.FC<Props> = ({
+  bottomPadded,
+  children,
+  innerContainerStyle,
+  testID,
+}) => {
   const innerElement = (
     <View
+      testID={testID}
       style={[
         styles.innerContainer,
         bottomPadded && styles.innerContainerPadded,
         innerContainerStyle,
       ]}
-      testID={testID}
     >
       {children}
     </View>

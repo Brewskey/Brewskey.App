@@ -1,25 +1,25 @@
-import type { Friend, QueryOptions } from '@brewskey/js-api';
-
 import * as React from 'react';
 import { useMemo } from 'react';
+
 import { useRouter } from 'expo-router';
 
+import UserAvatar from '../common/avatars/UserAvatar';
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
-import UserAvatar from '../common/avatars/UserAvatar';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 import { useGetFriends } from '../hooks/queries/FriendQueries';
 
-type Props = {
-  ListHeaderComponent?:
+import type { Friend, QueryOptions } from '@brewskey/js-api';
 
-  | React.ComponentType<any>
-  | React.ReactNode
-  | null
-  | undefined;
+interface Props {
+  ListHeaderComponent?:
+    | React.ComponentType<any>
+    | React.ReactNode
+    | null
+    | undefined;
   queryOptions?: QueryOptions;
-};
+}
 
 const LoadedRow = ({
   item: friend,
@@ -29,12 +29,12 @@ const LoadedRow = ({
   onItemPress: (friend: Friend) => void;
 }): React.ReactElement => (
   <ListItem
-    leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
     chevron={false}
     item={friend}
+    leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
     onPress={onItemPress}
-    title={friend.friendAccount.userName}
     testID={`friend-item-${friend.friendAccount.id}`}
+    title={friend.friendAccount.userName}
   />
 );
 
@@ -54,7 +54,10 @@ const FriendsList: React.FC<Props> = ({
   } = useGetFriends(queryOptions);
 
   const onItemPress = (friend: Friend) => {
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.friendAccount.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(friend.friendAccount.id) },
+    });
   };
 
   const onRefreshList = async () => {
@@ -63,7 +66,11 @@ const FriendsList: React.FC<Props> = ({
 
   const keyExtractor = (item: Friend): string => item.id.toString();
 
-  const renderRow = ({ item: friend }: { item: Friend }): React.ReactElement => (
+  const renderRow = ({
+    item: friend,
+  }: {
+    item: Friend;
+  }): React.ReactElement => (
     <LoadedRow item={friend} onItemPress={onItemPress} />
   );
 
@@ -71,18 +78,26 @@ const FriendsList: React.FC<Props> = ({
     <List
       data={friendsData}
       keyExtractor={keyExtractor}
-      listType="flatList"
-      ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
-      ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
+      listType="flatList"
+      onRefresh={onRefreshList}
+      renderItem={renderRow}
+      testID="friends-list"
+      ListEmptyComponent={
+        !isLoading ? <ListEmpty message="No friends" /> : null
+      }
+      ListHeaderComponent={
+        ListHeaderComponent as
+          | React.ComponentType
+          | React.ReactElement
+          | null
+          | undefined
+      }
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();
         }
       }}
-      onRefresh={onRefreshList}
-      renderItem={renderRow}
-      testID="friends-list"
     />
   );
 };

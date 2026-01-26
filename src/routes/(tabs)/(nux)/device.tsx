@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
 import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
 
 import Button from '../../../common/buttons/Button';
-import Header from '../../../common/Header';
 import Container from '../../../common/Container';
-import ErrorScreen from '../../../common/ErrorScreen';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -29,7 +30,9 @@ const styles = StyleSheet.create({
 });
 
 const NuxDeviceScreen: React.FC = () => {
-  const { onContinuePress } = useLocalSearchParams<{ onContinuePress?: string }>();
+  const { onContinuePress } = useLocalSearchParams<{
+    onContinuePress?: string;
+  }>();
 
   const handlePress = () => {
     if (onContinuePress) {
@@ -47,8 +50,8 @@ const NuxDeviceScreen: React.FC = () => {
           lights. Next, finish setting up your box.
         </Text>
         <Button
-          onPress={handlePress}
           secondary
+          onPress={handlePress}
           testID="button-next"
           title="Next"
         />
@@ -57,4 +60,7 @@ const NuxDeviceScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NuxDeviceScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NuxDeviceScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

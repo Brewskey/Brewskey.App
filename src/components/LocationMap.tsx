@@ -1,17 +1,18 @@
-import type { Coordinates } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 import { GOOGLE_MAPS_API_KEY } from '../constants';
 
-type Region = {
+import type { Coordinates } from '@brewskey/js-api';
+
+interface Region {
   latitude: number;
   longitude: number;
   latitudeDelta: number;
   longitudeDelta: number;
-};
+}
 
 // todo marker is not visible for some reason
 // todo not sure if this right formula for deltas
@@ -42,10 +43,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   coordinates: Coordinates;
   zoomDistance?: number;
-};
+}
 
 const LocationMap = ({
   coordinates: { latitude, longitude },

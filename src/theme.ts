@@ -29,7 +29,7 @@ export const TYPOGRAPHY = {
   small: { fontSize: 14 },
 } as const;
 
-type ElevationStyle = {
+interface ElevationStyle {
   elevation: number;
   shadowOffset: {
     width: number;
@@ -37,7 +37,7 @@ type ElevationStyle = {
   };
   shadowOpacity: number;
   shadowRadius: number;
-};
+}
 
 // for full effect on android we probably have to set elevation
 // prop to the <View /> itself and it also will affect zIndex  and

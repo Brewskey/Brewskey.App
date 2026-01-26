@@ -1,29 +1,21 @@
-import type { AchievementCounter, AchievementType } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+
+import { ScrollView, View } from 'react-native';
+
 import BadgeIcon from '../BadgeIcon';
 import EmptyUserBadges from './EmptyUserBadges';
 import { BadgeModal } from '../modals/BadgeModal';
+import { styles } from './UserBadgesStyles';
 
-export const styles = StyleSheet.create({
-  badgeContainer: {
-    paddingHorizontal: 5,
-  },
-  container: {
-    alignItems: 'center',
-    height: 80,
-    justifyContent: 'center',
-  },
-});
+import type { AchievementCounter, AchievementType } from '@brewskey/js-api';
 
-type Props = {
+interface Props {
   value: { achievementCounter: AchievementCounter[] };
-};
+}
 
-export type LoadedUserBadgesHandle = {
+export interface LoadedUserBadgesHandle {
   selectAchievementCounterByType: (achievementCounter: AchievementType) => void;
-};
+}
 
 const LoadedUserBadges = React.forwardRef<LoadedUserBadgesHandle, Props>(
   ({ value }, ref) => {
@@ -51,7 +43,7 @@ const LoadedUserBadges = React.forwardRef<LoadedUserBadgesHandle, Props>(
       return <EmptyUserBadges />;
     }
     return (
-      <ScrollView contentContainerStyle={styles.container} horizontal>
+      <ScrollView horizontal contentContainerStyle={styles.container}>
         {value.achievementCounter.map(
           ({
             achievementType,

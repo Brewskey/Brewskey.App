@@ -1,28 +1,25 @@
-import type {
-  Device,
-  DeviceMutator,
-  EntityID,
-  Location,
-  ShortenedEntity,
-} from '@brewskey/js-api';
 import * as React from 'react';
-import { View } from 'react-native';
-import { useForm, useWatch } from 'react-hook-form';
 
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import Button from '../common/buttons/Button';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { TextInput } from '../common/form/TextInput';
-import { LocationPicker } from './pickers';
-import DeviceStatePicker from './DeviceStatePicker';
+import { useForm, useWatch } from 'react-hook-form';
+import { View } from 'react-native';
+
 import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
-import { CheckBoxField } from '../common/form/CheckBoxField';
-import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
 import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
-import { MainTabBarFill } from '../components/MainTabBar/MainTabBarSlot';
-import { extractShortenedEntityId } from '../utils';
+import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
+import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
+import { LocationPicker } from './pickers/LocationPicker';
+import Button from '../common/buttons/Button';
+import { CheckBoxField } from '../common/form/CheckBoxField';
+import { DropdownInput } from '../common/form/DropdownInput';
+import { Form } from '../common/form/Form';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { FormField } from '../common/form/FormField';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { TextInput } from '../common/form/TextInput';
+import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
+import { extractShortenedEntityId } from '../utils';
+
+import type { Device, DeviceMutator, ShortenedEntity } from '@brewskey/js-api';
 
 export const validate = (
   values: FormProps,
@@ -48,18 +45,23 @@ export const validate = (
   return errors;
 };
 
-type Props = {
+interface Props {
   device: Partial<Device>;
   hideLocation?: boolean;
   onSubmit: (values: DeviceMutator) => Promise<void>;
   submitButtonLabel: string;
-};
+}
 
 type FormProps = Omit<DeviceMutator, 'locationId'> & {
   location: ShortenedEntity | null | undefined;
 };
 
-const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, onSubmit }) => {
+const DeviceForm: React.FC<Props> = ({
+  device,
+  hideLocation,
+  submitButtonLabel,
+  onSubmit,
+}) => {
   const form = useForm<FormProps>({
     defaultValues: {
       id: device.id,
@@ -70,7 +72,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
       deviceStatus: device.id ? device.deviceStatus : 'Active',
       secondsToStayOpen: device.secondsToStayOpen || 3600,
       timeForValveOpen: device.timeForValveOpen,
-      ledBrightness: device.ledBrightness,
+      ledBrightness: device.ledBrightness ?? 255,
       nfcStatus: device.nfcStatus,
       isScreenDisabled: device.isScreenDisabled,
       isTotpDisabled: device.isTotpDisabled,
@@ -83,7 +85,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
   } = form;
 
   const values = useWatch({ control: form.control });
-  const deviceStatus = values.deviceStatus;
+  const { deviceStatus } = values;
 
   const validateForm = (formValues: FormProps): boolean => {
     const errors = validate(formValues);
@@ -109,13 +111,15 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
     }
   };
 
+  const deviceStatusValue = form.getValues('deviceStatus');
+
   return (
     <Form form={form}>
       <View>
         <FormValidationMessage testID="device-form-error-message" />
         <FormField
           component={TextInput}
-          initialValue={device.name}
+          defaultValue={device.name}
           label="Name"
           name="name"
           testID="input-name"
@@ -123,7 +127,7 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
         {!device.id && (
           <FormField
             component={TextInput}
-            initialValue={device.particleId}
+            defaultValue={device.particleId}
             label="Particle ID"
             name="particleId"
             testID="input-particleId"
@@ -132,111 +136,126 @@ const DeviceForm: React.FC<Props> = ({ device, hideLocation, submitButtonLabel, 
         {!hideLocation && (
           <FormField
             component={LocationPicker}
-            initialValue={device.location}
+            defaultValue={device.location}
             label="Location"
             name="location"
-            multiple={false}
           />
         )}
-        {device.id && (
+        {device.id ? (
           <FormField
-            component={DeviceStatePicker}
-            initialValue={device.deviceStatus}
+            component={DropdownInput}
+            defaultValue={device.deviceStatus}
             label="Device Status"
+            labelField="label"
             name="deviceStatus"
+            valueField="value"
+            data={[
+              { label: 'Active', value: 'Active' },
+              { label: 'Cleaning', value: 'Cleaning' },
+              { label: 'Unlocked', value: 'Unlocked' },
+              { label: 'Inactive', value: 'Inactive' },
+            ]}
+            description={
+              deviceStatusValue
+                ? DESCRIPTION_BY_DEVICE_STATE[
+                    deviceStatusValue as keyof typeof DESCRIPTION_BY_DEVICE_STATE
+                  ]
+                : undefined
+            }
           />
-        )}
+        ) : null}
         {['Active', 'Inactive'].includes(deviceStatus || '') ? (
           <FormField
             component={TextInput}
-            initialValue="3600"
             label="Seconds To Stay Open"
             name="secondsToStayOpen"
             testID="input-secondsToStayOpen"
           />
         ) : (
-          <FormField
-            component={DeviceTimeOpenPicker}
-            initialValue={device.secondsToStayOpen}
-            label="Seconds To Stay Open"
+          <DeviceTimeOpenPicker
+            defaultValue={device.secondsToStayOpen}
             name="secondsToStayOpen"
           />
         )}
         <FormField
           component={TextInput}
+          defaultValue={device.timeForValveOpen?.toString()}
           description="Time in seconds before and after a pour that the pour remains authorized and the LEDs are green."
-          initialValue={device.timeForValveOpen?.toString()}
           keyboardType="number-pad"
           label="Pour Time Buffer"
           name="timeForValveOpen"
           testID="input-timeForValveOpen"
-          _parseOnSubmit={(value: unknown): number => Math.max(Number(value as string) || 0, 5)}
         />
         <FormField
           component={BrightnessSliderField}
-          initialValue={device.ledBrightness}
           label="LED Brightness"
           name="ledBrightness"
           testID="input-ledBrightness"
-          _parseOnSubmit={(value: unknown): string => (value as number).toFixed(0)}
         />
-        <FormField
-          component={DeviceNFCStatusPicker}
-          initialValue={device.nfcStatus}
-          label="NFC Status"
-          name="nfcStatus"
-        />
+        <DeviceNFCStatusPicker name="nfcStatus" />
         <FormField
           component={CheckBoxField}
-          initialValue={device.isScreenDisabled}
+          defaultValue={device.isScreenDisabled}
           label="Is Screen Disabled"
           name="isScreenDisabled"
           testID="input-isScreenDisabled"
         />
         {values.isScreenDisabled ? (
-          <>
+          <React.Fragment>
             <FormField
               component={CheckBoxField}
-              initialValue={device.isTotpDisabled}
+              defaultValue={device.isTotpDisabled}
               label="Is Passcode Disabled"
               name="isTotpDisabled"
               testID="input-isTotpDisabled"
             />
             <FormField
               component={CheckBoxField}
-              initialValue={device.shouldInvertScreen}
+              defaultValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
               testID="input-shouldInvertScreen"
             />
-          </>
+          </React.Fragment>
         ) : (
-          <>
+          <React.Fragment>
             <FormField
               component={CheckBoxField}
+              defaultValue={device.isTotpDisabled}
               description="Disable the passcode shown on the Brewskey box"
-              initialValue={device.isTotpDisabled}
               label="Is Passcode Disabled"
               name="isTotpDisabled"
               testID="input-isTotpDisabled"
             />
             <FormField
               component={CheckBoxField}
-              initialValue={device.shouldInvertScreen}
+              defaultValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
               testID="input-shouldInvertScreen"
             />
-          </>
+          </React.Fragment>
         )}
         <MainTabBarFill>
           <Button
             disabled={!isValid || !isDirty || isSubmitting}
             loading={isSubmitting}
-            onPress={handleSubmitWithError(form, onSubmitForm)}
             style={{ marginVertical: 12 }}
-            testID={device.id ? 'submit-button-edit-device' : 'submit-button-create-device'}
             title={submitButtonLabel}
+            onPress={handleSubmitWithError(form, (formData) =>
+              onSubmitForm({
+                ...formData,
+                timeForValveOpen: Math.max(
+                  Number(formData.timeForValveOpen ?? '0') || 0,
+                  5,
+                ),
+              }),
+            )}
+            testID={
+              device.id
+                ? 'submit-button-edit-device'
+                : 'submit-button-create-device'
+            }
           />
         </MainTabBarFill>
       </View>

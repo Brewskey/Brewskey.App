@@ -1,17 +1,18 @@
-import type { Friend, QueryOptions } from '@brewskey/js-api';
-
 import * as React from 'react';
 import { useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useRouter } from 'expo-router';
 
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import BaseAvatar from '../common/avatars/BaseAvatar';
+import UserAvatar from '../common/avatars/UserAvatar';
 import List from '../common/List';
 import ListEmpty from '../common/ListEmpty';
-import UserAvatar from '../common/avatars/UserAvatar';
 import LoadingListFooter from '../common/LoadingListFooter';
-import BaseAvatar from '../common/avatars/BaseAvatar';
-import { COLORS } from '../theme';
 import { useGetFriends } from '../hooks/queries/FriendQueries';
+import { COLORS } from '../theme';
+
+import type { Friend, QueryOptions } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   friendContainer: {
@@ -31,20 +32,19 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   ListHeaderComponent?:
-     
     | React.ComponentType<any>
     | React.ReactNode
     | null
     | undefined;
   queryOptions?: QueryOptions;
-};
+}
 
-type LoadedRowProps = {
+interface LoadedRowProps {
   item: Friend;
   onItemPress: (friend: Friend) => void;
-};
+}
 
 const LoadedRow: React.FC<LoadedRowProps> = ({ item: friend, onItemPress }) => {
   const handlePress = () => {
@@ -52,8 +52,12 @@ const LoadedRow: React.FC<LoadedRowProps> = ({ item: friend, onItemPress }) => {
   };
 
   return (
-    <TouchableOpacity onPress={handlePress} style={styles.friendContainer} testID={`friend-item-${friend.friendAccount.id}`}>
-      <UserAvatar size={100} rounded={true} userName={friend.friendAccount.userName} />
+    <TouchableOpacity
+      onPress={handlePress}
+      style={styles.friendContainer}
+      testID={`friend-item-${friend.friendAccount.id}`}
+    >
+      <UserAvatar rounded size={100} userName={friend.friendAccount.userName} />
       <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
     </TouchableOpacity>
   );
@@ -75,7 +79,10 @@ const FriendsHorizontalList: React.FC<Props> = ({
   } = useGetFriends(queryOptions);
 
   const onItemPress = (friend: Friend) => {
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.friendAccount.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(friend.friendAccount.id) },
+    });
   };
 
   const onRefreshList = async () => {
@@ -84,34 +91,46 @@ const FriendsHorizontalList: React.FC<Props> = ({
 
   const keyExtractor = (item: Friend): string => item.id.toString();
 
-  const renderRow = ({ item: friend }: { item: Friend }): React.ReactElement => (
+  const renderRow = ({
+    item: friend,
+  }: {
+    item: Friend;
+  }): React.ReactElement => (
     <LoadedRow item={friend} onItemPress={onItemPress} />
   );
 
   return (
     <List
-      data={friendsData}
       horizontal
+      data={friendsData}
       keyExtractor={keyExtractor}
-      listType="flatList"
-      ListEmptyComponent={!isLoading ? <ListEmpty message="No friends" /> : null}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
-      ListHeaderComponent={ListHeaderComponent as React.ComponentType | React.ReactElement | null | undefined}
+      listType="flatList"
+      onRefresh={onRefreshList}
+      renderItem={renderRow}
+      testID="friends-horizontal-list"
+      ListEmptyComponent={
+        !isLoading ? <ListEmpty message="No friends" /> : null
+      }
+      ListHeaderComponent={
+        ListHeaderComponent as
+          | React.ComponentType
+          | React.ReactElement
+          | null
+          | undefined
+      }
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();
         }
       }}
-      onRefresh={onRefreshList}
-      renderItem={renderRow}
-      testID="friends-horizontal-list"
     />
   );
 };
 
 const LoadingRow = () => (
   <View style={styles.friendContainer}>
-    <BaseAvatar size={100} rounded={true} uri="" />
+    <BaseAvatar rounded size={100} uri="" />
     <View style={styles.userNameLoadingPlaceholder} />
   </View>
 );

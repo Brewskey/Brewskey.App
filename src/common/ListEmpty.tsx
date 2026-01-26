@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { StyleSheet, Text } from 'react-native';
+
+import Container from './Container';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import Container from '../common/Container';
 
 const styles = StyleSheet.create({
   messageText: {
@@ -13,16 +15,14 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  message: string
-};
+interface Props {
+  message: string;
+}
 
-const ListEmpty = (
-  {
-    message,
-  }: Props,
-): React.ReactElement => <Container centered>
-  <Text style={styles.messageText}>{message}</Text>
-</Container>;
+const ListEmpty = ({ message }: Props): React.ReactElement => (
+  <Container centered>
+    <Text style={styles.messageText}>{message}</Text>
+  </Container>
+);
 
 export default ListEmpty;

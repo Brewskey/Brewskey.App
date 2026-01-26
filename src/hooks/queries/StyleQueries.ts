@@ -1,17 +1,15 @@
-import {
+import { StyleDAO } from '@brewskey/js-api';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, QueryOptions, Style } from '@brewskey/js-api';
+import type {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  EntityID,
-  QueryOptions,
-  Style,
-  StyleDAO,
-} from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
 
 enum StyleQueryKeys {
   StyleById = 'style_by_id',
@@ -20,19 +18,19 @@ enum StyleQueryKeys {
 
 export const useGetStyleById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Style, Error> =>
+): UseQueryResult<Style> =>
   useQuery({
-    queryKey: [StyleQueryKeys.StyleById, id],
-    queryFn: () => StyleDAO.fetchByID(nullthrows(id)),
+    queryKey: [StyleQueryKeys.StyleById, getStringFromEntityID(id)],
+    queryFn: async () => StyleDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetStyles = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Style[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Style[]>> =>
   useInfiniteQuery({
     queryKey: [StyleQueryKeys.Styles, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       StyleDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [

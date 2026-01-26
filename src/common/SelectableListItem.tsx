@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { StyleSheet } from 'react-native';
+
 import ListItem from './ListItem';
 import { COLORS } from '../theme';
 
@@ -9,7 +11,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TEntity> = {
+interface Props<TEntity> {
   isSelected: boolean;
   item: TEntity;
   title: React.ReactNode;
@@ -17,7 +19,7 @@ type Props<TEntity> = {
   chevron?: boolean;
   onPress?: () => void;
   testID?: string;
-};
+}
 
 function SelectableListItem<TEntity>({
   isSelected,
@@ -30,13 +32,13 @@ function SelectableListItem<TEntity>({
 }: Props<TEntity>): React.ReactElement {
   return (
     <ListItem
-      item={item}
-      title={title}
-      subtitle={subtitle}
       chevron={chevron}
-      onPress={onPress}
       containerStyle={isSelected ? styles.selected : undefined}
+      item={item}
+      onPress={onPress}
+      subtitle={subtitle}
       testID={testID}
+      title={title}
     />
   );
 }

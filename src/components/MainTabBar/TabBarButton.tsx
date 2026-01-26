@@ -1,9 +1,12 @@
 import * as React from 'react';
+
+import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
+
 import TouchableItem from '../../common/buttons/TouchableItem';
 import { COLORS } from '../../theme';
-import { Icon } from '@rneui/themed';
-import { NavigationRoute, ParamListBase } from '@react-navigation/native';
+
+import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -13,19 +16,21 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   icon: {
     name: string;
     type?: string;
   };
-  iconContainerComponent?: React.ComponentType<React.ComponentProps<typeof TouchableItem>>;
+  iconContainerComponent?: React.ComponentType<
+    React.ComponentProps<typeof TouchableItem>
+  >;
   isFocused: boolean;
   onPress: (
     route: NavigationRoute<ParamListBase, string>,
     isFocused: boolean,
   ) => void;
   route: NavigationRoute<ParamListBase, string>;
-};
+}
 
 export const TabBarButton = (props: Props) => {
   const _onPress = () => props.onPress(props.route, props.isFocused);
@@ -41,7 +46,7 @@ export const TabBarButton = (props: Props) => {
   return (
     <Icon
       color={isFocused ? COLORS.primary2 : COLORS.secondary3}
-      Component={iconContainerComponent as typeof React.Component}
+      Component={iconContainerComponent}
       containerStyle={styles.container}
       name={name}
       onPress={_onPress}

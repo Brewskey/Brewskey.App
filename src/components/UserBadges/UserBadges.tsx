@@ -1,28 +1,38 @@
+import * as React from 'react';
+import { useImperativeHandle } from 'react';
+
+import EmptyUserBadges from './EmptyUserBadges';
+import LoadedUserBadges from './LoadedUserBadges';
+import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
+
 import type {
   AchievementCounter,
   AchievementType,
   EntityID,
 } from '@brewskey/js-api';
 
-import * as React from 'react';
-import LoadedUserBadges, { LoadedUserBadgesHandle } from './LoadedUserBadges';
-import EmptyUserBadges from './EmptyUserBadges';
-import { useImperativeHandle } from 'react';
-import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
+import type { LoadedUserBadgesHandle } from './LoadedUserBadges';
 
-type Props = {
+interface Props {
   userID: EntityID;
-};
+}
 
-export type UserBadgesHandle = {
-  openBadgeModal(achievementType: AchievementType): Promise<void>;
-  refresh(): void;
-};
+export interface UserBadgesHandle {
+  openBadgeModal: (achievementType: AchievementType) => Promise<void>;
+  refresh: () => void;
+}
 
 export const UserBadges = React.forwardRef<UserBadgesHandle, Props>(
   ({ userID }, ref) => {
-    const { data: achievementCounters, isLoading, error, refetch } = useGetAchievementCountsByUserId(userID);
-    const loadedUserBadgesRef = React.useRef<LoadedUserBadgesHandle | null>(null);
+    const {
+      data: achievementCounters,
+      isLoading,
+      error,
+      refetch,
+    } = useGetAchievementCountsByUserId(userID);
+    const loadedUserBadgesRef = React.useRef<LoadedUserBadgesHandle | null>(
+      null,
+    );
 
     useImperativeHandle(
       ref,

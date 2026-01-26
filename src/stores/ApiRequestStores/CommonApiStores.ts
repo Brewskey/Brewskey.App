@@ -1,9 +1,12 @@
-import { deepIdCast, type EntityID } from '@brewskey/js-api';
-import type { Coordinates, NearbyLocation } from '../../types';
+import { deepIdCast } from '@brewskey/js-api';
 
 import makeApiRequestStore from './makeRequestApiStore';
-import { fetchJSON } from '../../utils';
 import CONFIG from '../../config';
+import { fetchJSON } from '../../utils';
+
+import type { EntityID } from '@brewskey/js-api';
+
+import type { Coordinates, NearbyLocation } from '../../types';
 
 // const makeNearbyLocationsStore = () => {
 //   const store = makeApiRequestStore<Array<NearbyLocation>>(
@@ -28,9 +31,11 @@ import CONFIG from '../../config';
 
 // export const NearbyLocationsStore = makeNearbyLocationsStore();
 
-let iter = 0;
-export const updateAvatar = (avatarData: string, accessToken: string | null) =>
-   
+const iter = 0;
+export const updateAvatar = async (
+  avatarData: string,
+  accessToken: string | null,
+) =>
   fetch(`${CONFIG.HOST}/api/profile/photo/`, {
     body: JSON.stringify({ photo: avatarData }),
     headers: {
@@ -42,11 +47,11 @@ export const updateAvatar = (avatarData: string, accessToken: string | null) =>
   });
 
 export const UpdateBeverageImageStore = makeApiRequestStore<void>(
-  (...args: unknown[]) => {
+  async (...args: unknown[]) => {
     const beverageID = args[0] as EntityID;
     const beverageData = args[1] as string;
     const accessToken = args[2] as string | null;
-     
+
     return fetch(`${CONFIG.HOST}/api/v2/beverages/${beverageID}/photo/`, {
       body: JSON.stringify({ photo: beverageData }),
       headers: {

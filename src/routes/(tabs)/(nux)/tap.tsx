@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import Button from '../../../common/buttons/Button';
 
-import Header from '../../../common/Header';
+import { useLocalSearchParams } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+
+import Button from '../../../common/buttons/Button';
 import Container from '../../../common/Container';
-import ErrorScreen from '../../../common/ErrorScreen';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -29,7 +30,9 @@ const styles = StyleSheet.create({
 });
 
 const NuxTapScreen: React.FC = () => {
-  const { onContinuePress } = useLocalSearchParams<{ onContinuePress?: string }>();
+  const { onContinuePress } = useLocalSearchParams<{
+    onContinuePress?: string;
+  }>();
 
   const handlePress = () => {
     if (onContinuePress) {
@@ -47,8 +50,8 @@ const NuxTapScreen: React.FC = () => {
           box.
         </Text>
         <Button
-          onPress={handlePress}
           secondary
+          onPress={handlePress}
           testID="button-next"
           title="Next"
         />
@@ -57,4 +60,7 @@ const NuxTapScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NuxTapScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NuxTapScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

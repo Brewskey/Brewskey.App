@@ -1,30 +1,29 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
-import { AUTH_QUERY_KEY, loadAuthStateFromStorage, saveAuthStateToStorage, setAuthSession } from '../hooks/context/AuthContext';
-import { APP_SETTINGS_QUERY_KEY, loadAppSettingsFromStorage } from '../hooks/context/AppSettingsContext';
-import { SnackBar } from '../common/SnackBar';
-import { SnackBarProvider } from '../hooks/context/SnackBarContext';
-import { PourProcessProvider } from '../hooks/context/PourProcessContext';
-import { AppSettingsProvider } from '../hooks/context/AppSettingsContext';
-import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
-import Storage from '../utils/Storage';
-import { useAuthSession } from '../hooks/context/AuthContext';
-import { Stack, useRouter, useSegments } from 'expo-router';
 import * as React from 'react';
 
-BrewskeyJSApi.initialize('https://brewskey.com');
+import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { Stack, useRouter, useSegments } from 'expo-router';
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-      gcTime: Infinity,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  },
-});
+import { SnackBar } from '../common/SnackBar';
+import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
+import {
+  APP_SETTINGS_QUERY_KEY,
+  AppSettingsProvider,
+  loadAppSettingsFromStorage,
+} from '../hooks/context/AppSettingsContext';
+import {
+  AUTH_QUERY_KEY,
+  loadAuthStateFromStorage,
+  saveAuthStateToStorage,
+  setAuthSession,
+  useAuthSession,
+} from '../hooks/context/AuthContext';
+import { PourProcessProvider } from '../hooks/context/PourProcessContext';
+import { SnackBarProvider } from '../hooks/context/SnackBarContext';
+import { queryClient } from '../utils/queryClient';
+import Storage from '../utils/Storage';
+
+BrewskeyJSApi.initialize('https://brewskey.com');
 
 // Hydrate auth state from Storage on app startup
 const hydrateAuthState = async () => {
@@ -43,10 +42,13 @@ const hydrateAppSettings = async () => {
   try {
     const appSettings = await loadAppSettingsFromStorage();
     // Always set query data, using default values if no stored settings found
-    queryClient.setQueryData(APP_SETTINGS_QUERY_KEY, appSettings || {
-      manageTapsEnabled: false,
-      selectedOrganization: null,
-    });
+    queryClient.setQueryData(
+      APP_SETTINGS_QUERY_KEY,
+      appSettings || {
+        manageTapsEnabled: false,
+        selectedOrganization: null,
+      },
+    );
   } catch (error) {
     // Ignore hydration errors, set default values
     queryClient.setQueryData(APP_SETTINGS_QUERY_KEY, {
@@ -56,7 +58,7 @@ const hydrateAppSettings = async () => {
   }
 };
 
-function RootLayoutNav() {
+const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
 
   if (isLoading) {
@@ -74,7 +76,7 @@ function RootLayoutNav() {
       </Stack.Protected>
     </Stack>
   );
-}
+};
 
 export default function RootLayout() {
   const [isHydrated, setIsHydrated] = React.useState(false);

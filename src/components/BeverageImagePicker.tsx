@@ -1,10 +1,12 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { type StyleProp, type ViewStyle } from 'react-native';
+
 import * as ImagePicker from 'expo-image-picker';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
+
+import type { EntityID } from '@brewskey/js-api';
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const IMAGE_PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
   allowsEditing: true,
@@ -14,46 +16,54 @@ const IMAGE_PICKER_OPTIONS: ImagePicker.ImagePickerOptions = {
   mediaTypes: ['images'],
 } as const;
 
-type Props = {
+interface Props {
+  name: string;
   beverageId: EntityID | null | undefined;
   containerStyle?: StyleProp<ViewStyle>;
-  onChange: (imageData?: string | null | undefined) => void;
-  value: string | null | undefined;
-};
+}
 
-const BeverageImagePickerField: React.FC<Props> = ({
+export const BeverageImagePicker: React.FC<Props> = ({
   beverageId,
   containerStyle,
-  onChange,
-  value,
+  name,
 }) => {
-  const handleAvatarPress = React.useCallback(async () => {
-    // Request permissions
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync(IMAGE_PICKER_OPTIONS);
-    
-    if (result.canceled || !result.assets || !result.assets[0]) {
-      return;
-    }
-
-    onChange(result.assets[0].base64 || null);
-  }, [onChange]);
+  const { control } = useFormContext();
 
   return (
-    <BeverageAvatar
-      beverageId={beverageId}
-      cached={false}
-      containerStyle={containerStyle}
-      onPress={handleAvatarPress}
-      rounded={true}
-      size={250}
-      uri={value ? `data:image/jpeg;base64,${value}` : null}
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, value } }) => {
+        const handleAvatarPress = async () => {
+          // Request permissions
+          const permissionResult =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (!permissionResult.granted) {
+            return;
+          }
+
+          const result =
+            await ImagePicker.launchImageLibraryAsync(IMAGE_PICKER_OPTIONS);
+
+          if (result.canceled || !result.assets?.[0]) {
+            return;
+          }
+
+          onChange(result.assets[0].base64 || null);
+        };
+
+        return (
+          <BeverageAvatar
+            rounded
+            beverageId={beverageId}
+            cached={false}
+            containerStyle={containerStyle}
+            onPress={handleAvatarPress}
+            size={250}
+            uri={value ? `data:image/jpeg;base64,${value}` : null}
+          />
+        );
+      }}
     />
   );
 };
-
-export default BeverageImagePickerField;

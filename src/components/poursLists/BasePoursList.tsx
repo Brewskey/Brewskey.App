@@ -1,16 +1,22 @@
-import { EntityID, type Pour, type QueryOptions } from '@brewskey/js-api';
-
 import * as React from 'react';
 
-import LoadingListFooter from '../../common/LoadingListFooter';
-import BeverageModal, { BeverageModalHandle } from '../modals/BeverageModal';
-import PourModal, { PourModalHandle } from '../modals/PourModal';
 import nullthrows from 'nullthrows';
-import { useGetPours } from '../../hooks/queries/PourQueries';
-import List, { ListComponentTypes } from '../../common/List';
-import { ListRenderItemInfo } from 'react-native';
 
-type Props = {
+import List from '../../common/List';
+import LoadingListFooter from '../../common/LoadingListFooter';
+import { useGetPours } from '../../hooks/queries/PourQueries';
+import BeverageModal from '../modals/BeverageModal';
+import PourModal from '../modals/PourModal';
+
+import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
+import type { ListRenderItemInfo } from 'react-native';
+
+import type { ListComponentTypes } from '../../common/List';
+
+import type { BeverageModalHandle } from '../modals/BeverageModal';
+import type { PourModalHandle } from '../modals/PourModal';
+
+interface Props {
   ListEmptyComponent?: ListComponentTypes;
   ListHeaderComponent?: ListComponentTypes;
   loadedRow: React.ComponentType<{
@@ -32,7 +38,7 @@ type Props = {
   }>;
   testID?: string;
   usePourModal?: boolean; // If true, opens pour modal instead of beverage modal
-};
+}
 
 export const BasePoursList = ({
   ListEmptyComponent,
@@ -53,8 +59,9 @@ export const BasePoursList = ({
   const pours = useGetPours(queryOptions);
   const [selectedBeverageId, setSelectedBeverageId] =
     React.useState<EntityID | null>(null);
-  const [selectedPourId, setSelectedPourId] =
-    React.useState<EntityID | null>(null);
+  const [selectedPourId, setSelectedPourId] = React.useState<EntityID | null>(
+    null,
+  );
 
   const onRefreshList = async () => {
     onRefresh?.();
@@ -82,48 +89,52 @@ export const BasePoursList = ({
         <RowItemComponent
           item={item}
           onItemPress={onItemPress}
-          slideoutComponent={<SlideoutComponent item={item} onDeleteItemPress={onDeleteItemPress} />}
+          slideoutComponent={
+            <SlideoutComponent
+              item={item}
+              onDeleteItemPress={onDeleteItemPress}
+            />
+          }
         />
       );
     }
 
     // Otherwise use the standard LoadedRow
-    return (
-      <LoadedRow
-        value={item}
-        onItemPress={onItemPress}
-      />
-    );
+    return <LoadedRow onItemPress={onItemPress} value={item} />;
   };
 
   return (
-    <>
+    <React.Fragment>
       <List
         data={pours.data}
         keyExtractor={keyExtractor}
-        listType="flatList"
         ListEmptyComponent={ListEmptyComponent}
-        ListFooterComponent={<LoadingListFooter isLoading={pours.isFetchingNextPage || pours.isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
+        listType="flatList"
+        onRefresh={onRefreshList}
+        renderItem={renderRow}
+        testID={testID}
+        ListFooterComponent={
+          <LoadingListFooter
+            isLoading={pours.isFetchingNextPage || pours.isLoading}
+          />
+        }
         onEndReached={() => {
           if (pours.hasNextPage) {
             pours.fetchNextPage();
           }
         }}
-        onRefresh={onRefreshList}
-        renderItem={renderRow}
-        testID={testID}
       />
       {usePourModal ? (
         <PourModal
           ref={pourModal}
-          pourID={selectedPourId}
           onClose={() => setSelectedPourId(null)}
+          pourID={selectedPourId}
         />
       ) : (
         <BeverageModal ref={beverageModal} beverageID={selectedBeverageId} />
       )}
-    </>
+    </React.Fragment>
   );
 };
 

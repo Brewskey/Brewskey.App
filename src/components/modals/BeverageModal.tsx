@@ -1,17 +1,19 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { useImperativeHandle } from 'react';
+
+import { ScrollView, StyleSheet, View } from 'react-native';
+
 import Modal from './Modal';
+import Button from '../../common/buttons/Button';
+import IconButton from '../../common/buttons/IconButton';
 import Section from '../../common/Section';
 import SectionContent from '../../common/SectionContent';
 import SectionHeader from '../../common/SectionHeader';
-import BeverageDetailsContent from '../../components/BeverageDetailsContent';
-import Button from '../../common/buttons/Button';
-import IconButton from '../../common/buttons/IconButton';
-import { COLORS } from '../../theme';
 import { useGetBeverageById } from '../../hooks/queries/BeverageQueries';
-import { useImperativeHandle } from 'react';
+import { COLORS } from '../../theme';
+import BeverageDetailsContent from '../BeverageDetailsContent';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +36,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export type BeverageModalHandle = {
-  closeModal(): void;
-  openModal(): void;
+export interface BeverageModalHandle {
+  closeModal: () => void;
+  openModal: () => void;
   get isOpen(): boolean;
-};
+}
 
 export const BeverageModal = React.forwardRef<
   BeverageModalHandle,
@@ -95,10 +97,7 @@ export const BeverageModal = React.forwardRef<
         </ScrollView>
         <Section>
           <View style={styles.bottomButton}>
-            <Button
-              title="Close"
-              onPress={() => setIsVisible(false)}
-            />
+            <Button onPress={() => setIsVisible(false)} title="Close" />
           </View>
         </Section>
       </View>

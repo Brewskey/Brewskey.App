@@ -1,50 +1,54 @@
-import type {
-  EntityID,
-  LocationMutator,
-} from '@brewskey/js-api';
-
 import * as React from 'react';
-import nullthrows from 'nullthrows';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { LocationDAO } from '@brewskey/js-api';
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import nullthrows from 'nullthrows';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import Container from '../../../../common/Container';
+import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../common/ErrorScreen';
 import Header from '../../../../common/Header';
 import LoadingIndicator from '../../../../common/LoadingIndicator';
 import NotFoundScreen from '../../../../common/NotFoundScreen';
-import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import LocationForm from '../../../../components/LocationForm/LocationForm';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import { useGetLocationById } from '../../../../hooks/queries/LocationQueries';
+import { getStringFromEntityID } from '../../../../utils/getStringFromEntityID';
+
+import type { EntityID, LocationMutator } from '@brewskey/js-api';
 
 const EditLocationScreen: React.FC = () => {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const locationId = typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+  const locationId =
+    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
   const queryClient = useQueryClient();
   const addSnackBarMessage = useAddSnackBarMessage();
 
-  const { data: location, isLoading } = useGetLocationById(locationId as EntityID);
+  const { data: location, isLoading } = useGetLocationById(
+    locationId as EntityID,
+  );
 
   if (!locationId) {
     return (
       <NotFoundScreen
-        title="Location Not Found"
         message="The location you're looking for could not be found."
+        title="Location Not Found"
       />
     );
   }
 
   const updateMutation = useMutation({
-    mutationFn: (values: LocationMutator) => {
+    mutationFn: async (values: LocationMutator) => {
       const locId = nullthrows(values.id);
       return LocationDAO.put(locId, values);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['location_by_id', locationId] });
+      queryClient.invalidateQueries({
+        queryKey: ['location_by_id', getStringFromEntityID(locationId)],
+      });
       router.back();
       addSnackBarMessage({ content: 'Location edited.' });
     },
@@ -79,4 +83,7 @@ const EditLocationScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(EditLocationScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  EditLocationScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

@@ -1,19 +1,21 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { useImperativeHandle } from 'react';
+
 import moment from 'moment';
+import { ScrollView, StyleSheet, View } from 'react-native';
+
 import Modal from './Modal';
+import Button from '../../common/buttons/Button';
+import IconButton from '../../common/buttons/IconButton';
 import Section from '../../common/Section';
 import SectionContent from '../../common/SectionContent';
 import SectionHeader from '../../common/SectionHeader';
-import PourDetailsContent from '../PourDetailsContent';
-import Button from '../../common/buttons/Button';
-import IconButton from '../../common/buttons/IconButton';
-import { COLORS } from '../../theme';
-import { useGetPourById } from '../../hooks/queries/PourQueries';
-import { useImperativeHandle } from 'react';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useGetPourById } from '../../hooks/queries/PourQueries';
+import { COLORS } from '../../theme';
+import PourDetailsContent from '../PourDetailsContent';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,11 +38,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export type PourModalHandle = {
-  closeModal(): void;
-  openModal(): void;
+export interface PourModalHandle {
+  closeModal: () => void;
+  openModal: () => void;
   get isOpen(): boolean;
-};
+}
 
 export const PourModal = React.forwardRef<
   PourModalHandle,
@@ -88,10 +90,10 @@ export const PourModal = React.forwardRef<
 
   return (
     <Modal
+      isTouchable={false}
       isVisible={isVisible}
       onHideModal={handleClose}
       transparent={false}
-      isTouchable={false}
     >
       <View style={styles.container}>
         <Section>
@@ -103,22 +105,19 @@ export const PourModal = React.forwardRef<
                 onPress={handleClose}
               />
             </View>
-            <SectionHeader title={beverageName} subtitle={subtitle} />
+            <SectionHeader subtitle={subtitle} title={beverageName} />
           </View>
         </Section>
         <ScrollView style={styles.scrollContent}>
           <Section>
             <SectionContent>
-              <PourDetailsContent pour={pour.data} onClose={handleClose} />
+              <PourDetailsContent onClose={handleClose} pour={pour.data} />
             </SectionContent>
           </Section>
         </ScrollView>
         <Section>
           <View style={styles.bottomButton}>
-            <Button
-              title="Close"
-              onPress={handleClose}
-            />
+            <Button onPress={handleClose} title="Close" />
           </View>
         </Section>
       </View>

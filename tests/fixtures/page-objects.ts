@@ -96,10 +96,10 @@ export class LocationPage {
       await this.page.getByTestId('input-suite').fill(data.suite);
     }
     await this.page.getByTestId('input-city').fill(data.city);
-    // State is a SimplePicker, not a TextInput - use picker-state testID
+    // State is a StatePicker (DropdownInput), not a TextInput - use picker-state testID
     const statePicker = this.page.getByTestId('picker-state');
     await statePicker.click();
-    // SimplePicker uses default mode (inline), options appear in positioned container
+    // StatePicker uses default mode (inline), options appear in positioned container
     // Find state by full label (not abbreviation) to avoid strict mode violations
     // State list uses full names like "Texas" not "TX", so find by label
     // Scope to dropdown options to avoid matching other text on page
@@ -113,8 +113,7 @@ export class LocationPage {
     // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
     await this.page.getByTestId('input-zipCode').fill(data.zipCode);
     // Location type is required - fill it if provided, otherwise use default 'Kegerator'
-    // SimplePicker testID format: picker-${label.toLowerCase().replace(/\s+/g, '-')}
-    // For "Location type" label, testID is "picker-location-type"
+    // LocationTypePicker uses testID: "picker-location-type"
     if (data.locationType) {
       const locationTypePicker = this.page.getByTestId('picker-location-type');
       await locationTypePicker.click();

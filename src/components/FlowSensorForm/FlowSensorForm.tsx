@@ -1,48 +1,53 @@
+import * as React from 'react';
+
+import { useForm } from 'react-hook-form';
+import { View } from 'react-native';
+
+import FLOW_SENSOR_ITEMS from './flowSensorItems';
+import FlowSensorSwiperField from './FlowSensorSwiperField';
+import GallonSliderField from './GallonSliderField';
+import { GallonTextField } from './GallonTextField';
+import { Form } from '../../common/form/Form';
+import { FormValidationMessage } from '../../common/form/FormValidationMessage';
+import { SubmitButton } from '../../common/form/SubmitButton';
+import SectionContent from '../../common/SectionContent';
+
 import type {
   EntityID,
   FlowSensor,
   FlowSensorMutator,
   FlowSensorType,
 } from '@brewskey/js-api';
+
 import type { FlowSensorItem } from './flowSensorItems';
-
-import * as React from 'react';
-import { View } from 'react-native';
-
-import SectionContent from '../../common/SectionContent';
-import FlowSensorSwiperField from './FlowSensorSwiperField';
-import GallonSliderField from './GallonSliderField';
-import { GallonTextField } from './GallonTextField';
-import FLOW_SENSOR_ITEMS from './flowSensorItems';
-import { useForm } from 'react-hook-form';
-import { Form } from '../../common/form/Form';
-import { SubmitButton } from '../../common/form/SubmitButton';
-import { FormValidationMessage } from '../../common/form/FormValidationMessage';
 
 const DEFAULT_FLOW_SENSOR_ITEM = FLOW_SENSOR_ITEMS[0];
 
-type Props = {
+interface Props {
   flowSensor?: FlowSensor;
   onSubmit: (values: FlowSensorMutator) => void | Promise<void>;
   tapId: EntityID;
-};
+}
 
 export const FlowSensorForm: React.FC<Props> = ({
   onSubmit,
   flowSensor,
   tapId,
 }) => {
-  const initialFlowSensorType = flowSensor?.flowSensorType ?? FLOW_SENSOR_ITEMS[0].value;
-  const initialFlowSensorItem = FLOW_SENSOR_ITEMS.find(
-    (item: FlowSensorItem): boolean => item.value === initialFlowSensorType,
-  ) || DEFAULT_FLOW_SENSOR_ITEM;
+  const initialFlowSensorType =
+    flowSensor?.flowSensorType ?? FLOW_SENSOR_ITEMS[0].value;
+  const initialFlowSensorItem =
+    FLOW_SENSOR_ITEMS.find(
+      (item: FlowSensorItem): boolean => item.value === initialFlowSensorType,
+    ) || DEFAULT_FLOW_SENSOR_ITEM;
 
   const form = useForm<FlowSensorMutator>({
     defaultValues: {
       tapId,
       id: flowSensor?.id,
       flowSensorType: initialFlowSensorType,
-      pulsesPerGallon: flowSensor?.pulsesPerGallon ?? initialFlowSensorItem.defaultPulses,
+      pulsesPerGallon:
+        flowSensor?.pulsesPerGallon ?? initialFlowSensorItem.defaultPulses,
     },
   });
   const { watch, setValue } = form;
@@ -79,11 +84,16 @@ export const FlowSensorForm: React.FC<Props> = ({
           }}
         />
         <PulsesPerGallonComponent
-          name="pulsesPerGallon"
           defaultPulses={selectedFlowSensorItem.defaultPulses}
+          name="pulsesPerGallon"
         />
         <SectionContent paddedVertical>
-          <SubmitButton onSubmit={onSubmit} testID="submit-button-save" title="Set Sensor" disabled={!isFormReady} />
+          <SubmitButton
+            disabled={!isFormReady}
+            onSubmit={onSubmit}
+            testID="submit-button-save"
+            title="Set Sensor"
+          />
         </SectionContent>
       </View>
     </Form>

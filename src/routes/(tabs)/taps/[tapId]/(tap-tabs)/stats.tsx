@@ -1,38 +1,43 @@
-import type { Permission, Tap } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { View } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import Container from '../../../../common/Container';
-import Header from '../../../../common/Header';
-import SectionHeader from '../../../../common/SectionHeader';
-import LoadingIndicator from '../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../common/NotFoundScreen';
-import { checkCanEdit, checkIsAdmin } from '../../../../permissionHelpers';
-import { useGetTapById } from '../../../../hooks/queries/TapQueries';
-import { useGetPermissionForEntityById } from '../../../../hooks/queries/PermissionQueries';
-import { useGetFlowSensorByTapId } from '../../../../hooks/queries/FlowSensorQueries';
-import WarningNotification from '../../../../common/WarningNotification';
-import SectionPoursList from '../../../../components/poursLists/SectionPoursList';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { View } from 'react-native';
+
+import Container from '../../../../../common/Container';
+import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../../common/ErrorScreen';
+import Header from '../../../../../common/Header';
+import LoadingIndicator from '../../../../../common/LoadingIndicator';
+import NotFoundScreen from '../../../../../common/NotFoundScreen';
+import SectionHeader from '../../../../../common/SectionHeader';
+import WarningNotification from '../../../../../common/WarningNotification';
+import SectionPoursList from '../../../../../components/poursLists/SectionPoursList';
+import { useGetFlowSensorByTapId } from '../../../../../hooks/queries/FlowSensorQueries';
+import { useGetPermissionForEntityById } from '../../../../../hooks/queries/PermissionQueries';
+import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
+import { checkCanEdit, checkIsAdmin } from '../../../../../permissionHelpers';
+
+import type { Permission, Tap } from '@brewskey/js-api';
 
 const StatsRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const id = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+  const id =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
   const router = useRouter();
-  
+
   const { data: tap, isLoading } = useGetTapById(id as any);
-  const { data: tapPermission } = useGetPermissionForEntityById('tap', id as any);
+  const { data: tapPermission } = useGetPermissionForEntityById(
+    'tap',
+    id as any,
+  );
   const { data: flowSensor } = useGetFlowSensorByTapId(id as any);
 
   if (!id) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
@@ -49,8 +54,8 @@ const StatsRoute: React.FC = () => {
   if (!tap) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
@@ -81,7 +86,10 @@ const StatsRoute: React.FC = () => {
         ListHeaderComponent={
           <View>
             {noFlowSensorWarning}
-            <SectionHeader title="Recent pours" testID="section-header-recent-pours" />
+            <SectionHeader
+              testID="section-header-recent-pours"
+              title="Recent pours"
+            />
           </View>
         }
         queryOptions={{
@@ -92,4 +100,7 @@ const StatsRoute: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(StatsRoute, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  StatsRoute,
+  <ErrorScreen shouldShowBackButton />,
+);

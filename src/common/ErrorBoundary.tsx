@@ -1,14 +1,15 @@
 import * as React from 'react';
+
 import { getElementFromComponentProp } from '../utils';
 
-type Props = {
+interface Props {
   children: React.ReactNode;
   fallbackComponent: React.ReactNode | null | undefined | React.ComponentType;
-};
+}
 
-type State = {
+interface State {
   error: Error | null | undefined;
-};
+}
 
 export class ErrorBoundary extends React.PureComponent<Props, State> {
   state: State = {
@@ -22,7 +23,7 @@ export class ErrorBoundary extends React.PureComponent<Props, State> {
     this.setState(() => ({ error }));
   }
 
-  render() {
+  async render() {
     const { fallbackComponent } = this.props;
 
     if (this.state.error) {
@@ -39,20 +40,19 @@ export const withErrorBoundary = <
   Component: React.ComponentType<TProps>,
   fallbackComponent: React.ReactNode | null | undefined | React.ComponentType,
 ): TComponent => {
-  const WithErrorBoundary = React.memo((props: TProps): React.ReactElement => {
-    return (
+  const WithErrorBoundary = React.memo(
+    (props: TProps): React.ReactElement => (
       <ErrorBoundary fallbackComponent={fallbackComponent}>
         <Component {...props} />
       </ErrorBoundary>
-    );
-  });
+    ),
+  );
 
   return WithErrorBoundary as unknown as TComponent;
 };
 
 export const errorBoundary =
-   
-  <TComponent extends React.ComponentClass<any, any>>(
+  <TComponent extends React.ComponentClass<any>>(
     fallbackComponent?: React.ReactNode | React.ComponentType,
   ): ((c: TComponent) => TComponent) =>
   (Component: TComponent): TComponent =>

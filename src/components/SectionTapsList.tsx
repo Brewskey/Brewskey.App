@@ -1,23 +1,26 @@
-import type { Tap } from '@brewskey/js-api';
-import type { RowItemProps } from '../common/SwipeableRow';
-import type { Section } from '../types';
-
 import * as React from 'react';
-import { View } from 'react-native';
 import { useMemo, useRef } from 'react';
-import { useRouter } from 'expo-router';
 
+import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
+import { View } from 'react-native';
+
+import TapListItem from './TapListItem';
 import ListSectionHeader from '../common/ListSectionHeader';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList, type SwipeableListRef, RenderProps } from '../common/SwipeableList';
+import { SwipeableList } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
-import TapListItem from './TapListItem';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import { useDeleteTap, useGetTaps } from '../hooks/queries/TapQueries';
 
-type Props = {
+import type { Tap } from '@brewskey/js-api';
+
+import type { SwipeableListRef, RenderProps  } from '../common/SwipeableList';
+import type { RowItemProps } from '../common/SwipeableRow';
+import type { Section } from '../types';
+
+interface Props {
   ListEmptyComponent?:
     | React.ComponentType
     | React.ReactElement
@@ -29,7 +32,7 @@ type Props = {
     | null
     | undefined;
   // todo add queryOptions?
-};
+}
 
 const SwipeableRowItem = ({
   index,
@@ -78,15 +81,15 @@ const SwipeableRowWithDelete: React.FC<
       index={index}
       item={item}
       maxSwipeDistance={150}
-      onDeleteItemPress={async (tap): Promise<void> => {
-        await deleteTap.mutateAsync(tap.id);
-        addSnackBarMessage({ content: 'The tap was deleted' });
-      }}
       onEditItemPress={onEditItemPress}
       onItemPress={onItemPress}
       rowItemComponent={rowItemComponent}
       separators={separators}
       slideoutComponent={slideoutComponent}
+      onDeleteItemPress={async (tap): Promise<void> => {
+        await deleteTap.mutateAsync(tap.id);
+        addSnackBarMessage({ content: 'The tap was deleted' });
+      }}
     />
   );
 };
@@ -132,11 +135,17 @@ export const SectionTapsList: React.FC<Props> = ({
   const keyExtractor = ({ id }: Tap): string => id.toString();
 
   const onItemPress = (item: Tap): void => {
-    router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(item.id) } });
+    router.navigate({
+      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      params: { tapId: String(item.id) },
+    });
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    router.navigate({ pathname: '/(tabs)/taps/[tapId]/edit/feed', params: { tapId: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/taps/[tapId]/edit/feed',
+      params: { tapId: String(id) },
+    });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
@@ -146,17 +155,15 @@ export const SectionTapsList: React.FC<Props> = ({
     section: Section<Tap>;
   }): React.ReactElement => <ListSectionHeader title={section.title} />;
 
-  const renderRow = (props: RenderProps<Tap>): React.ReactElement => {
-    return (
-      <SwipeableRowWithDelete
-        {...props}
-        onEditItemPress={onEditItemPress}
-        onItemPress={onItemPress}
-        rowItemComponent={SwipeableRowItem}
-        slideoutComponent={Slideout}
-      />
-    );
-  };
+  const renderRow = (props: RenderProps<Tap>): React.ReactElement => (
+    <SwipeableRowWithDelete
+      {...props}
+      onEditItemPress={onEditItemPress}
+      onItemPress={onItemPress}
+      rowItemComponent={SwipeableRowItem}
+      slideoutComponent={Slideout}
+    />
+  );
 
   const handleEndReached = () => {
     if (tapsQuery.hasNextPage && !tapsQuery.isFetchingNextPage) {
@@ -169,9 +176,18 @@ export const SectionTapsList: React.FC<Props> = ({
   };
 
   return (
-    <View testID="taps-list" style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="taps-list">
       <SwipeableList
+        ref={swipeableListRef}
+        stickySectionHeadersEnabled
         keyExtractor={keyExtractor}
+        ListHeaderComponent={ListHeaderComponent}
+        listType="sectionList"
+        onEndReached={handleEndReached}
+        onRefresh={handleRefresh}
+        renderItem={renderRow}
+        renderSectionHeader={renderSectionHeader}
+        sections={sections}
         ListEmptyComponent={
           tapsQuery.isLoading ? undefined : ListEmptyComponent
         }
@@ -180,15 +196,6 @@ export const SectionTapsList: React.FC<Props> = ({
             isLoading={tapsQuery.isFetchingNextPage || tapsQuery.isLoading}
           />
         }
-        ListHeaderComponent={ListHeaderComponent}
-        listType="sectionList"
-        onEndReached={handleEndReached}
-        onRefresh={handleRefresh}
-        ref={swipeableListRef}
-        renderItem={renderRow}
-        renderSectionHeader={renderSectionHeader}
-        sections={sections}
-        stickySectionHeadersEnabled
       />
     </View>
   );

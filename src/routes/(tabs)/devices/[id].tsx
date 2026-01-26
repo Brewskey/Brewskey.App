@@ -1,25 +1,27 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import TapsList from '../../../components/TapsList';
-import OverviewItem from '../../../common/OverviewItem2';
-import DeviceStateOverviewItem from '../../../components/DeviceStateOverviewItem';
-import DeviceOnlineOverviewItem from '../../../components/DeviceOnlineOverviewItem';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
+import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
+import LoadingIndicator from '../../../common/LoadingIndicator';
+import NotFoundScreen from '../../../common/NotFoundScreen';
+import OverviewItem from '../../../common/OverviewItem2';
+import DeviceOnlineOverviewItem from '../../../components/DeviceOnlineOverviewItem';
 import Section from '../../../common/Section';
 import SectionHeader from '../../../common/SectionHeader';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import Header from '../../../common/Header';
-import NotFoundScreen from '../../../common/NotFoundScreen';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
+import DeviceStateOverviewItem from '../../../components/DeviceStateOverviewItem';
+import TapsList from '../../../components/TapsList';
 import { useGetDeviceById } from '../../../hooks/queries/DeviceQueries';
 
-const DeviceDetailsScreen = withErrorBoundary(() => {
+import type { EntityID } from '@brewskey/js-api';
+
+const DeviceDetailsScreen = withErrorBoundary(
+  () => {
     const router = useRouter();
     const { id } = useLocalSearchParams<{ id: string }>();
     // Normalize ID: expo-router may serialize numbers as strings
@@ -28,13 +30,17 @@ const DeviceDetailsScreen = withErrorBoundary(() => {
         ? Number(id)
         : (id as EntityID);
 
-    const { data: device, isLoading, refetch } = useGetDeviceById(normalizedDeviceId);
+    const {
+      data: device,
+      isLoading,
+      refetch,
+    } = useGetDeviceById(normalizedDeviceId);
 
     if (!normalizedDeviceId) {
       return (
         <NotFoundScreen
-          title="Device Not Found"
           message="The device you're looking for could not be found."
+          title="Device Not Found"
         />
       );
     }
@@ -60,8 +66,8 @@ const DeviceDetailsScreen = withErrorBoundary(() => {
     if (!device) {
       return (
         <NotFoundScreen
-          title="Device Not Found"
           message="The device you're looking for could not be found."
+          title="Device Not Found"
         />
       );
     }
@@ -69,28 +75,35 @@ const DeviceDetailsScreen = withErrorBoundary(() => {
     return (
       <Container>
         <Header
-          rightComponent={
-          <HeaderNavigationButton
-            name="edit"
-            href={{ pathname: '/(tabs)/devices/[id]/edit', params: { id: device.id.toString() } }}
-          />
-          }
           shouldShowBackButton
           title={device.name}
+          rightComponent={
+            <HeaderNavigationButton
+              name="edit"
+              href={{
+                pathname: '/(tabs)/devices/[id]/edit',
+                params: { id: device.id.toString() },
+              }}
+            />
+          }
         />
         <TapsList
+          onAddTapPress={onAddTapPress}
+          onRefresh={refetch}
           ListHeaderComponent={
             <Container>
               <Section bottomPadded>
-                <OverviewItem title="Box ID" value={device.particleId} testID="overview-item-box-id" />
+                <OverviewItem
+                  testID="overview-item-box-id"
+                  title="Box ID"
+                  value={device.particleId}
+                />
                 <DeviceStateOverviewItem deviceState={device.deviceStatus} />
                 <DeviceOnlineOverviewItem particleID={device.particleId} />
               </Section>
-              <SectionHeader title="Taps" testID="section-header-taps" />
+              <SectionHeader testID="section-header-taps" title="Taps" />
             </Container>
           }
-          onAddTapPress={onAddTapPress}
-          onRefresh={refetch}
           queryOptions={{
             filters: [createFilter('device/id').equals(normalizedDeviceId)],
           }}

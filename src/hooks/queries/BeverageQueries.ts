@@ -1,21 +1,26 @@
+import { BeverageDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseMutationResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type {
   Beverage,
-  BeverageDAO,
   BeverageMutator,
   EntityID,
   QueryOptions,
 } from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseMutationResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 enum BeverageQueryKeys {
   BeveragesById = 'beverage_get_by_id',
@@ -25,19 +30,22 @@ enum BeverageQueryKeys {
 
 export const useGetBeverageById = (
   beverageId: EntityID | undefined | null,
-): UseQueryResult<Beverage, Error> =>
+): UseQueryResult<Beverage> =>
   useQuery({
-    queryKey: [BeverageQueryKeys.BeveragesById, beverageId],
-    queryFn: () => BeverageDAO.fetchByID(beverageId!),
+    queryKey: [
+      BeverageQueryKeys.BeveragesById,
+      getStringFromEntityID(beverageId),
+    ],
+    queryFn: async () => BeverageDAO.fetchByID(beverageId),
     enabled: beverageId != null,
   });
 
 export const useGetBeverages = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Beverage[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Beverage[]>> =>
   useInfiniteQuery({
     queryKey: [BeverageQueryKeys.Beverages, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       BeverageDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [
@@ -64,10 +72,12 @@ export const useCreateBeverage = () => {
     },
     onSuccess: (beverage) => {
       queryClient.setQueryData(
-        [BeverageQueryKeys.BeveragesById, beverage.id],
+        [BeverageQueryKeys.BeveragesById, getStringFromEntityID(beverage.id)],
         beverage,
       );
-      queryClient.invalidateQueries({ queryKey: [BeverageQueryKeys.Beverages] });
+      queryClient.invalidateQueries({
+        queryKey: [BeverageQueryKeys.Beverages],
+      });
     },
   });
 };
@@ -78,14 +88,16 @@ export const useUpdateBeverage = () => {
     mutationFn: async (mutator: BeverageMutator) => {
       const beverageId = nullthrows(mutator.id);
       await BeverageDAO.put(beverageId, mutator);
-      return await BeverageDAO.fetchByID(beverageId);
+      return BeverageDAO.fetchByID(beverageId);
     },
     onSuccess: (beverage) => {
       queryClient.setQueryData(
-        [BeverageQueryKeys.BeveragesById, beverage.id],
+        [BeverageQueryKeys.BeveragesById, getStringFromEntityID(beverage.id)],
         beverage,
       );
-      queryClient.invalidateQueries({ queryKey: [BeverageQueryKeys.Beverages] });
+      queryClient.invalidateQueries({
+        queryKey: [BeverageQueryKeys.Beverages],
+      });
     },
   });
 };
@@ -96,5 +108,5 @@ export const useDeleteBeverageById = (): UseMutationResult<
   EntityID
 > =>
   useMutation({
-    mutationFn: (beverageId) => BeverageDAO.deleteByID(beverageId),
+    mutationFn: async (beverageId) => BeverageDAO.deleteByID(beverageId),
   });

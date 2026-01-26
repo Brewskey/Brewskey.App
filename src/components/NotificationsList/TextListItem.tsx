@@ -1,12 +1,14 @@
-import type {TextNotification} from '../../stores/NotificationsStore';
-import type { Props as NotificationListItemProps } from './NotificationListItem';
-
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import BadgeIcon from '../BadgeIcon';
+
+import { StyleSheet, Text, View } from 'react-native';
+
+import NotificationListItem from './NotificationListItem';
 import BADGE_BY_TYPE from '../../badges';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import NotificationListItem from './NotificationListItem';
+import BadgeIcon from '../BadgeIcon';
+
+import type { Props as NotificationListItemProps } from './NotificationListItem';
+import type { TextNotification } from '../../stores/NotificationTypes';
 
 const styles = StyleSheet.create({
   badgeNameText: {
@@ -15,16 +17,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = (NotificationListItemProps) & {
-  notification: TextNotification
+type Props = NotificationListItemProps & {
+  notification: TextNotification;
 };
 
-const TextListItem = (props: Props): React.ReactElement => {
-  return (
-    <NotificationListItem
-      {...props}
-    />
-  );
-};
+const TextListItem = (props: Props): React.ReactElement => (
+  <NotificationListItem {...props} />
+);
 
 export default TextListItem;

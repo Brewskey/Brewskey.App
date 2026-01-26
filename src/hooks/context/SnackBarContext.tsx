@@ -1,19 +1,17 @@
-import type { Notification } from '../../stores/NotificationsStore';
-import React, {
-  PropsWithChildren,
-  ReactElement,
-  useCallback,
-  useContext,
-} from 'react';
+import React, { useCallback, useContext } from 'react';
+
+import type { PropsWithChildren, ReactElement } from 'react';
+
+import type { Notification } from '../../stores/NotificationTypes';
 
 type TextStyleType = 'danger' | 'default' | 'success';
 
-type SnackBarMessageParameters = {
+interface SnackBarMessageParameters {
   duration?: number;
   position?: 'bottom' | 'top';
   style?: TextStyleType;
   content: ReactElement | string | Notification;
-};
+}
 
 export type SnackBarMessage =
   | {
@@ -65,7 +63,7 @@ export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
         };
       } else if (isJSX(messageParameters.content)) {
         message = {
-          content: messageParameters.content as ReactElement,
+          content: messageParameters.content,
           duration: 2000,
           position: 'top',
           type: 'content',
@@ -73,7 +71,7 @@ export const SnackBarProvider: React.FC<PropsWithChildren> = ({ children }) => {
       } else {
         message = {
           duration: 2000,
-          notification: messageParameters.content as Notification,
+          notification: messageParameters.content,
           position: 'top',
           type: 'notification',
         };
@@ -116,7 +114,7 @@ export const useAddSnackBarMessage = (): ((
         };
       } else if (isJSX(messageParameters.content)) {
         message = {
-          content: messageParameters.content as ReactElement,
+          content: messageParameters.content,
           duration: 2000,
           position: 'top',
           type: 'content',
@@ -124,7 +122,7 @@ export const useAddSnackBarMessage = (): ((
       } else {
         message = {
           duration: 2000,
-          notification: messageParameters.content as Notification,
+          notification: messageParameters.content,
           position: 'top',
           type: 'notification',
         };
@@ -153,9 +151,13 @@ export const useGetCurrentSnackBarMessage = (): SnackBarMessage | null => {
 
 // Compatibility layer for legacy stores that can't use hooks
 // This is a temporary solution - stores should be migrated to use React hooks
-let globalAddSnackBarMessage: ((messageParameters: SnackBarMessageParameters) => void) | null = null;
+let globalAddSnackBarMessage:
+  | ((messageParameters: SnackBarMessageParameters) => void)
+  | null = null;
 
-export const setGlobalSnackBarMessage = (fn: ((messageParameters: SnackBarMessageParameters) => void) | null): void => {
+export const setGlobalSnackBarMessage = (
+  fn: ((messageParameters: SnackBarMessageParameters) => void) | null,
+): void => {
   globalAddSnackBarMessage = fn;
 };
 
@@ -164,7 +166,9 @@ const SnackBarStore = {
     if (globalAddSnackBarMessage) {
       globalAddSnackBarMessage(messageParameters);
     } else {
-      console.warn('SnackBarStore.showMessage called before SnackBarProvider is initialized');
+      console.warn(
+        'SnackBarStore.showMessage called before SnackBarProvider is initialized',
+      );
     }
   },
 };

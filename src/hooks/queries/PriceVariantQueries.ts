@@ -1,20 +1,20 @@
 import {
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import {
   EntityID,
   Location,
   LocationDAO,
-  PriceVariant,
   PriceVariantDAO,
+} from '@brewskey/js-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { LocationQueryKeys } from './LocationQueries';
+
+import type {
+  PriceVariant,
   PriceVariantMutator,
   QueryOptions,
 } from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
-import { LocationQueryKeys } from './LocationQueries';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 enum PriceVariantQueryKeys {
   PriceVariantSingle = 'price_variant_single',
@@ -22,16 +22,17 @@ enum PriceVariantQueryKeys {
 
 export const useGetPriceVariantSingle = (
   queryOptions?: QueryOptions,
-): UseQueryResult<PriceVariant | null, Error> =>
+): UseQueryResult<PriceVariant | null> =>
   useQuery({
     queryKey: [PriceVariantQueryKeys.PriceVariantSingle, queryOptions],
-    queryFn: () => PriceVariantDAO.fetchSingle(queryOptions),
+    queryFn: async () => PriceVariantDAO.fetchSingle(queryOptions),
   });
 
 export const useCreatePriceVariant = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (mutator: PriceVariantMutator) => PriceVariantDAO.post(mutator),
+    mutationFn: async (mutator: PriceVariantMutator) =>
+      PriceVariantDAO.post(mutator),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [PriceVariantQueryKeys.PriceVariantSingle],
@@ -46,7 +47,7 @@ export const useUpdatePriceVariant = () => {
     mutationFn: async (mutator: PriceVariantMutator) => {
       const priceVariantId = nullthrows(mutator.id);
       await PriceVariantDAO.put(priceVariantId, mutator);
-      return await PriceVariantDAO.fetchByID(priceVariantId);
+      return PriceVariantDAO.fetchByID(priceVariantId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -55,4 +56,3 @@ export const useUpdatePriceVariant = () => {
     },
   });
 };
-

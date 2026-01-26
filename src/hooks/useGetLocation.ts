@@ -1,11 +1,7 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import * as Location from 'expo-location';
-import {
-  UseMutationResult,
-  UseQueryResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+
+import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 export enum LocationQueryKeys {
   LocationPermission = 'location_permission',
@@ -15,32 +11,28 @@ export enum LocationQueryKeys {
 /**
  * Query hook for checking location permission status
  */
-export const useLocationPermission = (): UseQueryResult<
-  Location.LocationPermissionResponse,
-  Error
-> =>
-  useQuery({
-    queryKey: [LocationQueryKeys.LocationPermission],
-    queryFn: () => Location.getForegroundPermissionsAsync(),
-  });
+export const useLocationPermission =
+  (): UseQueryResult<Location.LocationPermissionResponse> =>
+    useQuery({
+      queryKey: [LocationQueryKeys.LocationPermission],
+      queryFn: async () => Location.getForegroundPermissionsAsync(),
+    });
 
 /**
  * Query hook for getting device location
  * Only enabled when permission is granted
  */
-export const useDeviceLocation = (): UseQueryResult<
-  Location.LocationObject,
-  Error
-> => {
-  const permissionQuery = useLocationPermission();
-  const isGranted = permissionQuery.data?.status === 'granted';
+export const useDeviceLocation =
+  (): UseQueryResult<Location.LocationObject> => {
+    const permissionQuery = useLocationPermission();
+    const isGranted = permissionQuery.data?.status === 'granted';
 
-  return useQuery({
-    queryKey: [LocationQueryKeys.DeviceLocation],
-    queryFn: () => Location.getCurrentPositionAsync(),
-    enabled: isGranted,
-  });
-};
+    return useQuery({
+      queryKey: [LocationQueryKeys.DeviceLocation],
+      queryFn: async () => Location.getCurrentPositionAsync(),
+      enabled: isGranted,
+    });
+  };
 
 /**
  * Mutation hook for requesting location permission
@@ -53,7 +45,7 @@ export const useRequestLocationPermission = (): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => Location.requestForegroundPermissionsAsync(),
+    mutationFn: async () => Location.requestForegroundPermissionsAsync(),
     onSuccess: () => {
       // Invalidate and refetch permission and location queries after permission change
       queryClient.invalidateQueries({

@@ -1,18 +1,20 @@
 import * as React from 'react';
+
 import { StyleSheet, Text } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+
 import Button from '../../common/buttons/Button';
 import Container from '../../common/Container';
+import { withErrorBoundary } from '../../common/ErrorBoundary';
+import ErrorScreen from '../../common/ErrorScreen';
 import Header from '../../common/Header';
 import NearbyLocationsList from '../../components/NearbyLocationsList/NearbyLocationsList';
-import ErrorScreen from '../../common/ErrorScreen';
-import { withErrorBoundary } from '../../common/ErrorBoundary';
 import { useGetNearbyLocations } from '../../hooks/queries/LocationQueries';
 import {
-  useLocationPermission,
   useDeviceLocation,
+  useLocationPermission,
   useRequestLocationPermission,
 } from '../../hooks/useGetLocation';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
   permissionText: {
@@ -43,8 +45,7 @@ const HomeScreen = withErrorBoundary(() => {
         !permissionQuery.isLoading &&
         !locationQuery.isLoading &&
         permission?.granted === true &&
-        location != null &&
-        location.coords.latitude != null &&
+        location?.coords.latitude != null &&
         location.coords.longitude != null,
     },
   );
@@ -60,7 +61,7 @@ const HomeScreen = withErrorBoundary(() => {
       <Container>
         <Header title="Nearby locations" />
         <NearbyLocationsList
-          isLoading={true}
+          isLoading
           nearbyLocations={undefined}
           onRefresh={() => {
             void locationQuery.refetch();
@@ -79,18 +80,18 @@ const HomeScreen = withErrorBoundary(() => {
             In order to see nearby taps, we need location permissions
           </Text>
           <Button
+            testID="button-provide-permissions"
+            title="Provide permissions"
             onPress={() => {
               void requestPermissionMutation.mutateAsync();
             }}
-            testID="button-provide-permissions"
-            title="Provide permissions"
           />
         </Container>
       ) : (
         <NearbyLocationsList
           isLoading={nearbyLocations.isLoading}
           nearbyLocations={nearbyLocations.data}
-          onRefresh={() => nearbyLocations.refetch()}
+          onRefresh={async () => nearbyLocations.refetch()}
         />
       )}
     </Container>

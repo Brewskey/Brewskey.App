@@ -1,5 +1,6 @@
-import type { Coordinates } from '../../types';
 import makeRequestApiStore from './makeRequestApiStore';
+
+import type { Coordinates } from '../../types';
 
 // const getGPSPosition = (): Promise<Position> => new Promise((resolve, reject: (error: PositionError) => void) => {
 //   Geolocation.getCurrentPosition(
@@ -15,23 +16,23 @@ import makeRequestApiStore from './makeRequestApiStore';
 //   );
 // });
 
-type Position = {
+interface Position {
   coords: {
     latitude: number;
     longitude: number;
   };
-};
+}
 
-const getGPSPosition = (): Promise<Position> => Promise.reject();
+const getGPSPosition = async (): Promise<Position> => Promise.reject();
 
 export const createGPSCoordinatesStore = () =>
-  makeRequestApiStore<Coordinates>(() =>
-    getGPSPosition().then((position: Position): Coordinates => {
-      return {
+  makeRequestApiStore<Coordinates>(async () =>
+    getGPSPosition().then(
+      (position: Position): Coordinates => ({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
-      };
-    }),
+      }),
+    ),
   );
 
 export const GPSCoordinatesStore = createGPSCoordinatesStore();

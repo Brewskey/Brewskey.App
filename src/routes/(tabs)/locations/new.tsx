@@ -1,33 +1,36 @@
-import type { Location, LocationMutator, EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
 import LocationForm from '../../../components/LocationForm/LocationForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { useCreateLocation } from '../../../hooks/queries/LocationQueries';
 
+import type { EntityID, Location, LocationMutator } from '@brewskey/js-api';
+
 const NewLocationScreen: React.FC = () => {
   const router = useRouter();
-  const { onLocationCreated, showBackButton } = useLocalSearchParams<{ 
+  const { onLocationCreated, showBackButton } = useLocalSearchParams<{
     onLocationCreated?: string;
     showBackButton?: string;
   }>();
 
   const mergedProps = {
-    onLocationCreated: onLocationCreated ? (() => {
-      try {
-        return JSON.parse(onLocationCreated);
-      } catch (error) {
-        console.error('Failed to parse onLocationCreated:', error);
-        return undefined;
-      }
-    })() : undefined,
+    onLocationCreated: onLocationCreated
+      ? (() => {
+          try {
+            return JSON.parse(onLocationCreated);
+          } catch (error) {
+            console.error('Failed to parse onLocationCreated:', error);
+            return undefined;
+          }
+        })()
+      : undefined,
     showBackButton: showBackButton !== 'false',
   };
 
@@ -44,7 +47,10 @@ const NewLocationScreen: React.FC = () => {
     }
 
     // Navigate to location details
-    router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: location.id.toString() } });
+    router.navigate({
+      pathname: '/(tabs)/locations/[id]',
+      params: { id: location.id.toString() },
+    });
   };
 
   return (
@@ -63,4 +69,7 @@ const NewLocationScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NewLocationScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NewLocationScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

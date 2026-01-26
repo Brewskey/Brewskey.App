@@ -1,48 +1,52 @@
-import type { Organization } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { useState, useCallback, createContext, useContext } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Storage, { StorageKeys } from '../../utils/Storage';
+import { createContext, useCallback, useContext, useState } from 'react';
+
 import DAOApi from '@brewskey/js-api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
+import Storage, { StorageKeys } from '../../utils/Storage';
+
+import type { Organization } from '@brewskey/js-api';
 
 const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 export const APP_SETTINGS_QUERY_KEY = ['app', 'settings'] as const;
 
-export type AppSettings = {
+export interface AppSettings {
   manageTapsEnabled: boolean;
   selectedOrganization: Organization | null | undefined;
-};
+}
 
 /**
  * Load app settings from Storage for hydration
  */
-export const loadAppSettingsFromStorage = async (): Promise<
-  AppSettings | null
-> => {
-  try {
-    // Check for Playwright test data first (for e2e tests)
-    if (typeof window !== 'undefined') {
-      const playwrightSettings = (window as any).__PLAYWRIGHT_APP_SETTINGS__;
-      if (playwrightSettings) {
-        // Store it in Storage for consistency
-        try {
-          await Storage.setForCurrentUser(StorageKeys.AppSettings, playwrightSettings);
-        } catch (e) {
-          // Storage might not be ready yet, but we can still return the settings
-        } 
-        return playwrightSettings;
+export const loadAppSettingsFromStorage =
+  async (): Promise<AppSettings | null> => {
+    try {
+      // Check for Playwright test data first (for e2e tests)
+      if (typeof window !== 'undefined') {
+        const playwrightSettings = (window as any).__PLAYWRIGHT_APP_SETTINGS__;
+        if (playwrightSettings) {
+          // Store it in Storage for consistency
+          try {
+            await Storage.setForCurrentUser(
+              StorageKeys.AppSettings,
+              playwrightSettings,
+            );
+          } catch (e) {
+            // Storage might not be ready yet, but we can still return the settings
+          }
+          return playwrightSettings;
+        }
       }
+
+      const storedSettings = await Storage.getForCurrentUser<AppSettings>(
+        StorageKeys.AppSettings,
+      );
+      return storedSettings || null;
+    } catch (error) {
+      return null;
     }
-    
-    const storedSettings = await Storage.getForCurrentUser<AppSettings>(
-      StorageKeys.AppSettings,
-    );
-    return storedSettings || null;
-  } catch (error) {
-    return null;
-  }
-};
+  };
 
 /**
  * Save app settings to Storage
@@ -61,17 +65,20 @@ export const saveAppSettingsToStorage = async (
   }
 };
 
-type AppSettingsContextValue = {
+interface AppSettingsContextValue {
   isManageTapsEnabled: boolean;
   selectedOrganization: Organization | null | undefined;
-  updateMetadata: {
-    appVersion: string;
-    label: string;
-  } | null | undefined;
+  updateMetadata:
+    | {
+        appVersion: string;
+        label: string;
+      }
+    | null
+    | undefined;
   onToggleManageTaps: () => void;
   onOrganizationChange: (selectedOrganization?: Organization | null) => void;
   updateAppSettings: (appSettings: Partial<AppSettings>) => void;
-};
+}
 
 const AppSettingsContext = createContext<AppSettingsContextValue | undefined>(
   undefined,
@@ -125,13 +132,13 @@ const useAppSettingsQuery = () => {
   const updateAppSettings = useCallback(
     async (newSettings: Partial<AppSettings>) => {
       const updatedSettings = { ...appSettings, ...newSettings };
-      
+
       // Update query cache
       queryClient.setQueryData<AppSettings>(
         APP_SETTINGS_QUERY_KEY,
         updatedSettings,
       );
-      
+
       // Save to Storage
       await saveAppSettingsToStorage(updatedSettings);
     },

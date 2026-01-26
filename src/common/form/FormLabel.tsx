@@ -1,14 +1,11 @@
-import React, { PropsWithChildren } from 'react';
-import {
-  StyleSheet,
-  View,
-  Platform,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-import { Text, normalize } from '@rneui/themed';
+import React from 'react';
+
 import { fonts } from '@rneui/base';
+import { normalize, Text } from '@rneui/themed';
+import { Platform, StyleSheet, View } from 'react-native';
+
+import type { PropsWithChildren } from 'react';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {},

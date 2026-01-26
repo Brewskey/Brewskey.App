@@ -1,18 +1,18 @@
-import { fetchJSON } from '../../utils';
 import { useQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
 import { GOOGLE_MAPS_API_KEY } from '../../constants';
+import { fetchJSON } from '../../utils';
 
 const QUERY_KEY_BASE = 'GET_COORDINATES_FROM_ADDRESS';
 
-type ApiResult = {
+interface ApiResult {
   status: string;
   results: { geometry: { location: { lat: number; lng: number } } }[];
-};
+}
 
-export const useGetCoordinatesFromAddress = (address: string | undefined) => {
-  return useQuery({
+export const useGetCoordinatesFromAddress = (address: string | undefined) =>
+  useQuery({
     queryKey: [QUERY_KEY_BASE, address],
     queryFn: () => {
       const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
@@ -35,4 +35,3 @@ export const useGetCoordinatesFromAddress = (address: string | undefined) => {
       return { latitude: lat, longitude: lng };
     },
   });
-};

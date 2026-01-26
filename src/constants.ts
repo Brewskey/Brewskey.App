@@ -1,6 +1,6 @@
-import type { DeviceStatus, KegType } from '@brewskey/js-api';
-
 import { Platform } from 'react-native';
+
+import type { DeviceStatus, KegType } from '@brewskey/js-api';
 
 export const NULL_STRING_PLACEHOLDER = '–';
 

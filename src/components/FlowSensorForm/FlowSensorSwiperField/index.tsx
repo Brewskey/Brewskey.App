@@ -1,14 +1,16 @@
-import type { FlowSensorType } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 // import Swiper from '../../../common/Swiper';
-import Swiper from 'react-native-swiper';
-import { View, StyleSheet, Platform } from 'react-native';
-import FlowSensorSwiperItem from './FlowSensorSwiperItem';
-import FLOW_SENSOR_ITEMS, { FlowSensorItem } from '../flowSensorItems';
-import { useFormContext, Controller } from 'react-hook-form';
-import Button from '../../../common/buttons/Button';
 import { ButtonGroup } from '@rneui/themed';
+import { Controller, useFormContext } from 'react-hook-form';
+import { Platform, StyleSheet, View } from 'react-native';
+import Swiper from 'react-native-swiper';
+
+import FlowSensorSwiperItem from './FlowSensorSwiperItem';
+import Button from '../../../common/buttons/Button';
+import FLOW_SENSOR_ITEMS, { FlowSensorItem } from '../flowSensorItems';
+
+import type { FlowSensorType } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   swiper: {
@@ -16,11 +18,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   onChange: (value: FlowSensorType) => void;
   required?: boolean;
   name: string;
-};
+}
 
 export const FlowSensorSwiperField: React.FC<Props> = ({
   onChange,
@@ -32,9 +34,9 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
   return (
     <Controller
       control={control}
+      defaultValue={FLOW_SENSOR_ITEMS[0].value}
       name={name}
       rules={{ required }}
-      defaultValue={FLOW_SENSOR_ITEMS[0].value}
       render={({ field: { onChange: onChangeController, value } }) => {
         const currentIndex = FLOW_SENSOR_ITEMS.findIndex(
           (item) => item.value === value,
@@ -70,18 +72,18 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
               {items[currentIndex]}
               <View style={{ flexDirection: 'row', marginVertical: 12 }}>
                 <Button
-                  title="Previous"
                   containerStyle={{ flex: 1 }}
                   disabled={currentIndex === 0}
-                  testID="button-flow-sensor-previous"
                   onPress={() => onChangeCallback(currentIndex - 1)}
+                  testID="button-flow-sensor-previous"
+                  title="Previous"
                 />
                 <Button
-                  title="Next"
                   containerStyle={{ flex: 1 }}
                   disabled={currentIndex === FLOW_SENSOR_ITEMS.length - 1}
-                  testID="button-flow-sensor-next"
                   onPress={() => onChangeCallback(currentIndex + 1)}
+                  testID="button-flow-sensor-next"
+                  title="Next"
                 />
               </View>
             </View>

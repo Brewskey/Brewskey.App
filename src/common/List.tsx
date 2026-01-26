@@ -1,19 +1,24 @@
-import type { Section } from '../types';
-
 import * as React from 'react';
+
 import {
   FlatList,
   FlatListProps,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+} from 'react-native';
+
+import { ON_END_REACHED_THRESHOLD } from '../constants';
+
+import type { InfiniteData } from '@tanstack/react-query';
+import type {
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  RefreshControl,
-  SectionList,
   SectionListData,
-  StyleSheet,
 } from 'react-native';
-import { ON_END_REACHED_THRESHOLD } from '../constants';
-import { InfiniteData } from '@tanstack/react-query';
+
+import type { Section } from '../types';
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
@@ -22,7 +27,6 @@ const styles = StyleSheet.create({
 });
 
 export type ListComponentTypes =
-   
   | React.ComponentType<any>
   | React.ReactElement
   | null
@@ -84,8 +88,10 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
   } = props;
 
   // Extract conditional properties based on listType
-  const renderSectionFooter = 'renderSectionFooter' in props ? props.renderSectionFooter : undefined;
-  const renderSectionHeader = 'renderSectionHeader' in props ? props.renderSectionHeader : undefined;
+  const renderSectionFooter =
+    'renderSectionFooter' in props ? props.renderSectionFooter : undefined;
+  const renderSectionHeader =
+    'renderSectionHeader' in props ? props.renderSectionHeader : undefined;
   const sections = 'sections' in props ? props.sections : undefined;
   const data = 'data' in props ? props.data : undefined;
 
@@ -113,20 +119,20 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
   if (listType === 'sectionList' && sections) {
     return (
       <SectionList<TEntity>
+        stickySectionHeadersEnabled
+        contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={ListFooterComponent}
         ListHeaderComponent={ListHeaderComponent}
         renderSectionFooter={renderSectionFooter}
         renderSectionHeader={renderSectionHeader}
-        contentContainerStyle={styles.contentContainerStyle}
-        stickySectionHeadersEnabled={true}
         {...rest}
         // ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
         onRefresh={onRefresh ? _onRefresh : null}
         refreshing={isRefreshing}
-        sections={sections}
         renderItem={renderItem}
+        sections={sections}
         testID={testID}
       />
     );
@@ -139,17 +145,17 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
       ListFooterComponent={ListFooterComponent}
       ListHeaderComponent={ListHeaderComponent}
       {...rest}
-      data={flatData}
       bounces={bounceFirstRowOnMount}
-      contentContainerStyle={styles.contentContainerStyle}
-      //ref={innerRef}
-      onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-      refreshControl={
-        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
-      }
+      data={flatData}
       onScroll={onScroll}
       renderItem={_renderFlatList}
       testID={testID}
+      refreshControl={
+        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+      }
+      contentContainerStyle={styles.contentContainerStyle}
+      //ref={innerRef}
+      onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
     />
   );
 }

@@ -1,20 +1,25 @@
+import { DeviceDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type {
   Device,
-  DeviceDAO,
   DeviceMutator,
   EntityID,
   QueryOptions,
 } from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 enum DeviceQueryKeys {
   DeviceById = 'device_by_id',
@@ -23,18 +28,18 @@ enum DeviceQueryKeys {
 
 export const useGetDeviceById = (
   id: EntityID | undefined,
-): UseQueryResult<Device, Error> =>
+): UseQueryResult<Device> =>
   useQuery({
-    queryKey: [DeviceQueryKeys.DeviceById, id],
-    queryFn: () => DeviceDAO.fetchByID(nullthrows(id)),
+    queryKey: [DeviceQueryKeys.DeviceById, getStringFromEntityID(id)],
+    queryFn: async () => DeviceDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 export const useGetDevices = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Device[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Device[]>> =>
   useInfiniteQuery({
     queryKey: [DeviceQueryKeys.Devices, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       DeviceDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [
@@ -61,7 +66,7 @@ export const useCreateDevice = () => {
     },
     onSuccess: (device) => {
       queryClient.setQueryData(
-        [DeviceQueryKeys.DeviceById, device.id],
+        [DeviceQueryKeys.DeviceById, getStringFromEntityID(device.id)],
         device,
       );
       queryClient.invalidateQueries({ queryKey: [DeviceQueryKeys.Devices] });
@@ -75,11 +80,11 @@ export const useUpdateDevice = () => {
     mutationFn: async (mutator: DeviceMutator) => {
       const deviceId = nullthrows(mutator.id);
       await DeviceDAO.put(deviceId, mutator);
-      return await DeviceDAO.fetchByID(deviceId);
+      return DeviceDAO.fetchByID(deviceId);
     },
     onSuccess: (device) => {
       queryClient.setQueryData(
-        [DeviceQueryKeys.DeviceById, device.id],
+        [DeviceQueryKeys.DeviceById, getStringFromEntityID(device.id)],
         device,
       );
       queryClient.invalidateQueries({ queryKey: [DeviceQueryKeys.Devices] });
@@ -90,7 +95,7 @@ export const useUpdateDevice = () => {
 export const useDeleteDevice = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (deviceId: EntityID) => DeviceDAO.deleteByID(deviceId),
+    mutationFn: async (deviceId: EntityID) => DeviceDAO.deleteByID(deviceId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [DeviceQueryKeys.Devices] });
       queryClient.invalidateQueries({ queryKey: [DeviceQueryKeys.DeviceById] });

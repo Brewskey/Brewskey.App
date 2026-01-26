@@ -1,30 +1,31 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import { createFilter } from '@brewskey/js-api/dist/filters';
+
 import { FRIEND_STATUSES } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { useLocalSearchParams } from 'expo-router';
+import { ScrollView, StyleSheet } from 'react-native';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
 import UserAvatar from '../../../common/avatars/UserAvatar';
-import Section from '../../../common/Section';
-import SectionHeader from '../../../common/SectionHeader';
-import { UserBadges } from '../../../components/UserBadges/UserBadges';
 import Container from '../../../common/Container';
-
-import { useUserID } from '../../../hooks/context/AuthContext';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import SectionContent from '../../../common/SectionContent';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
+import LoadingIndicator from '../../../common/LoadingIndicator';
 import NotFoundScreen from '../../../common/NotFoundScreen';
+import Section from '../../../common/Section';
+import SectionContent from '../../../common/SectionContent';
+import SectionHeader from '../../../common/SectionHeader';
+import AvatarPicker from '../../../components/AvatarPicker';
+import FriendsHorizontalList from '../../../components/FriendsHorizontalList';
 import ProfileFriendStatus from '../../../components/ProfileFriendStatus';
 import { AllBeveragesHScroll } from '../../../components/Stats/AllBeveragesHScroll';
-import FriendsHorizontalList from '../../../components/FriendsHorizontalList';
-import AvatarPicker from '../../../components/AvatarPicker';
+import { UserBadges } from '../../../components/UserBadges/UserBadges';
+
+import { useUserID } from '../../../hooks/context/AuthContext';
 import { useGetAccountById } from '../../../hooks/queries/AccountQueries';
 import { useGetFriendSingle } from '../../../hooks/queries/FriendQueries';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   friendsListSection: {
@@ -34,10 +35,13 @@ const styles = StyleSheet.create({
 
 const ProfileScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const profileId = typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+  const profileId =
+    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
   const userID = useUserID();
 
-  const { data: account, isLoading: accountLoading } = useGetAccountById(profileId as EntityID);
+  const { data: account, isLoading: accountLoading } = useGetAccountById(
+    profileId as EntityID,
+  );
   const { data: friend, isLoading: friendLoading } = useGetFriendSingle({
     filters: [
       createFilter('owningAccount/id').equals(userID),
@@ -49,8 +53,8 @@ const ProfileScreen: React.FC = () => {
   if (!profileId) {
     return (
       <NotFoundScreen
-        title="Profile Not Found"
         message="The profile you're looking for could not be found."
+        title="Profile Not Found"
       />
     );
   }
@@ -69,8 +73,8 @@ const ProfileScreen: React.FC = () => {
   if (account == null) {
     return (
       <NotFoundScreen
-        title="Profile Not Found"
         message="The profile you're looking for could not be found."
+        title="Profile Not Found"
       />
     );
   }
@@ -78,12 +82,12 @@ const ProfileScreen: React.FC = () => {
   return (
     <Container>
       <Header
-        rightComponent={
-          <ProfileFriendStatus account={account} friend={friend ?? null} />
-        }
         shouldShowBackButton
         testID="header-profile"
         title={account.userName}
+        rightComponent={
+          <ProfileFriendStatus account={account} friend={friend ?? null} />
+        }
       />
       <ScrollView testID="profile-content">
         <Section bottomPadded>
@@ -91,16 +95,16 @@ const ProfileScreen: React.FC = () => {
             {userID === account.id ? (
               <AvatarPicker />
             ) : (
-              <UserAvatar userName={account.userName} size={200} />
+              <UserAvatar size={200} userName={account.userName} />
             )}
           </SectionContent>
         </Section>
         {userID !== account.id &&
-        (!friend || friend.friendStatus !== FRIEND_STATUSES.APPROVED) ? (
+        friend?.friendStatus !== FRIEND_STATUSES.APPROVED ? (
           <Section>
             <SectionHeader
-              title={`You aren't friends with ${account.userName}`}
               testID="section-header-not-friends"
+              title={`You aren't friends with ${account.userName}`}
             />
           </Section>
         ) : (
@@ -109,7 +113,7 @@ const ProfileScreen: React.FC = () => {
               bottomPadded
               innerContainerStyle={styles.friendsListSection}
             >
-              <SectionHeader title="Friends" testID="section-header-friends" />
+              <SectionHeader testID="section-header-friends" title="Friends" />
               <FriendsHorizontalList
                 queryOptions={{
                   filters: [
@@ -122,11 +126,14 @@ const ProfileScreen: React.FC = () => {
               />
             </Section>
             <Section bottomPadded>
-              <SectionHeader title="Badges" testID="section-header-badges" />
+              <SectionHeader testID="section-header-badges" title="Badges" />
               <UserBadges userID={account.id} />
             </Section>
             <Section bottomPadded>
-              <SectionHeader title="Beverages Poured" testID="section-header-beverages-poured" />
+              <SectionHeader
+                testID="section-header-beverages-poured"
+                title="Beverages Poured"
+              />
               <AllBeveragesHScroll userID={account.id} />
             </Section>
           </React.Fragment>
@@ -136,4 +143,7 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(ProfileScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  ProfileScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

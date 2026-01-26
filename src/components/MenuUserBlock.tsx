@@ -1,13 +1,13 @@
 import * as React from 'react';
-import nullthrows from 'nullthrows';
 
+import { useRouter } from 'expo-router';
+import nullthrows from 'nullthrows';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { useAuthSession } from '../hooks/context/AuthContext';
 import UserAvatar from '../common/avatars/UserAvatar';
-import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 import TouchableItem from '../common/buttons/TouchableItem';
-import { useRouter } from 'expo-router';
+import { useAuthSession } from '../hooks/context/AuthContext';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,7 +36,10 @@ export const MenuUserBlock: React.FC = () => {
 
   const _onPress = () => {
     if (!authResponse?.id) return;
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(authResponse.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(authResponse.id) },
+    });
   };
 
   if (authResponse == null) {
@@ -44,12 +47,23 @@ export const MenuUserBlock: React.FC = () => {
   }
 
   return (
-    <TouchableItem shouldBeBorderless onPress={_onPress} testID="menu-user-block">
+    <TouchableItem
+      shouldBeBorderless
+      onPress={_onPress}
+      testID="menu-user-block"
+    >
       <View style={styles.container} testID="menu-user-block-content">
         <UserAvatar userName={nullthrows(authResponse.userName)} />
         <View style={styles.content}>
-          <Text style={styles.nameText} testID="menu-user-block-name">{authResponse.userName}</Text>
-          <Text style={styles.goToProfileText} testID="menu-user-block-profile-text">Go to profile</Text>
+          <Text style={styles.nameText} testID="menu-user-block-name">
+            {authResponse.userName}
+          </Text>
+          <Text
+            style={styles.goToProfileText}
+            testID="menu-user-block-profile-text"
+          >
+            Go to profile
+          </Text>
         </View>
       </View>
     </TouchableItem>

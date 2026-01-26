@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TYPOGRAPHY } from '../theme';
+
 import { Icon } from '@rneui/themed';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,13 +33,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   iconName?: string;
   iconType?: string; // todo grab enum from rn-elements repo,
   title?: string;
   value: React.ReactNode;
   testID?: string;
-};
+}
 
 const OverviewItem = ({
   iconName,
@@ -49,7 +51,11 @@ const OverviewItem = ({
   const isStringValue = typeof value === 'string' || typeof value === 'number';
 
   // Generate testID from title if not provided
-  const itemTestID = testID || (title ? `overview-item-${title.toLowerCase().replace(/\s+/g, '-')}` : undefined);
+  const itemTestID =
+    testID ||
+    (title
+      ? `overview-item-${title.toLowerCase().replace(/\s+/g, '-')}`
+      : undefined);
 
   return (
     <View style={styles.container} testID={itemTestID}>

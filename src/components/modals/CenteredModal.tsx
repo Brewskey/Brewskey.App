@@ -1,13 +1,8 @@
 import * as React from 'react';
-import {
-  DimensionValue,
-  Modal,
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+
+import { Modal, Pressable, StyleSheet, View } from 'react-native';
+
+import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +32,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   children?: React.ReactNode;
   contentContainerStyle?: StyleProp<ViewStyle>;
   header?: React.ReactNode;
@@ -45,7 +40,7 @@ type Props = {
   onHideModal: () => void;
   testID?: string;
   width?: DimensionValue;
-};
+}
 
 const CenteredModal: React.FC<Props> = ({
   children,
@@ -55,25 +50,21 @@ const CenteredModal: React.FC<Props> = ({
   onHideModal,
   testID,
   width,
-}) => {
-  return (
-    <Modal
-      visible={isVisible}
-      onRequestClose={onHideModal}
-      testID={testID}
-      transparent={true}
-    >
-      <View style={styles.container}>
-        <Pressable style={styles.backdrop} onPress={onHideModal} />
-        <View style={[styles.modal, width != null && { width }]}>
-          {!header ? null : <View style={styles.header}>{header}</View>}
-          <View style={[styles.content, contentContainerStyle]}>
-            {children}
-          </View>
-        </View>
+}) => (
+  <Modal
+    transparent
+    onRequestClose={onHideModal}
+    testID={testID}
+    visible={isVisible}
+  >
+    <View style={styles.container}>
+      <Pressable onPress={onHideModal} style={styles.backdrop} />
+      <View style={[styles.modal, width != null && { width }]}>
+        {!header ? null : <View style={styles.header}>{header}</View>}
+        <View style={[styles.content, contentContainerStyle]}>{children}</View>
       </View>
-    </Modal>
-  );
-};
+    </View>
+  </Modal>
+);
 
 export default CenteredModal;

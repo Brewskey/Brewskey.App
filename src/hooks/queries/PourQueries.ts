@@ -1,13 +1,19 @@
+import { PourDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import { EntityID, Pour, PourDAO, QueryOptions } from '@brewskey/js-api';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 enum PourQueryKeys {
   PoursByBeverageIds = 'pours_by_beverage_ids',
@@ -17,30 +23,33 @@ enum PourQueryKeys {
 
 export const useGetPourById = (
   pourId: EntityID | undefined | null,
-): UseQueryResult<Pour, Error> =>
+): UseQueryResult<Pour> =>
   useQuery({
-    queryKey: [PourQueryKeys.PourById, pourId],
-    queryFn: () => PourDAO.fetchByID(pourId!),
+    queryKey: [PourQueryKeys.PourById, getStringFromEntityID(pourId)],
+    queryFn: async () => PourDAO.fetchByID(pourId),
     enabled: pourId != null,
   });
 
 export const useGetPoursByBeverageIds = (
   beverageIds: EntityID[] | undefined,
   userId?: EntityID,
-): UseQueryResult<Map<EntityID, number>, Error> =>
+): UseQueryResult<Map<EntityID, number>> =>
   useQuery({
-    queryKey: [PourQueryKeys.PoursByBeverageIds, beverageIds],
-    queryFn: () => PourDAO.getPoursByBeverageIDs(beverageIds!, userId),
+    queryKey: [
+      PourQueryKeys.PoursByBeverageIds,
+      beverageIds?.map((id) => getStringFromEntityID(id)),
+    ],
+    queryFn: async () => PourDAO.getPoursByBeverageIDs(beverageIds, userId),
     enabled: beverageIds != null,
   });
 
 export const useGetPours = (
   queryOptions: QueryOptions,
-): UseInfiniteQueryResult<InfiniteData<Pour[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Pour[]>> =>
   useInfiniteQuery({
     queryKey: [PourQueryKeys.PoursList, queryOptions],
     initialPageParam: 0,
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       PourDAO.fetchMany({
         ...queryOptions,
         orderBy: [
@@ -60,10 +69,12 @@ export const useGetPours = (
 export const useDeletePour = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (pourId: EntityID) => PourDAO.deleteByID(pourId),
+    mutationFn: async (pourId: EntityID) => PourDAO.deleteByID(pourId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [PourQueryKeys.PoursList] });
-      queryClient.invalidateQueries({ queryKey: [PourQueryKeys.PoursByBeverageIds] });
+      queryClient.invalidateQueries({
+        queryKey: [PourQueryKeys.PoursByBeverageIds],
+      });
     },
   });
 };

@@ -1,8 +1,9 @@
-import type {BaseAvatarProps} from './BaseAvatar';
-
 import * as React from 'react';
-import CONFIG from '../../config';
+
 import BaseAvatar from './BaseAvatar';
+import CONFIG from '../../config';
+
+import type { BaseAvatarProps } from './BaseAvatar';
 
 type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
   rounded?: boolean;
@@ -15,15 +16,13 @@ const UserAvatar: React.FC<Props> = ({
   rounded = true,
   size = 45,
   ...otherProps
-}) => {
-  return (
-    <BaseAvatar
-      {...otherProps}
-      rounded={rounded}
-      size={size}
-      uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${size}&h=${size}&mode=crop`}
-    />
-  );
-};
+}) => (
+  <BaseAvatar
+    {...otherProps}
+    rounded={rounded}
+    size={size}
+    uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${size}&h=${size}&mode=crop`}
+  />
+);
 
 export default React.memo(UserAvatar);

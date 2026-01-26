@@ -1,29 +1,30 @@
-import type { QueryOptions, Tap } from '@brewskey/js-api';
-
-import type { RowItemProps } from '../common/SwipeableRow';
-import type { RenderProps } from '../common/SwipeableList';
-
 import * as React from 'react';
 import { useMemo } from 'react';
-import nullthrows from 'nullthrows';
-import { useRouter } from 'expo-router';
 
 import { TapDAO } from '@brewskey/js-api';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import nullthrows from 'nullthrows';
+
+import DeviceTapListEmpty from './DeviceTapListEmpty';
+import TapListItem from './TapListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
+import { SwipeableList } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
-import TapListItem from './TapListItem';
-import DeviceTapListEmpty from './DeviceTapListEmpty';
-import { useGetTaps, useDeleteTap } from '../hooks/queries/TapQueries';
-import { useQueryClient } from '@tanstack/react-query';
+import { useDeleteTap, useGetTaps } from '../hooks/queries/TapQueries';
 
-type Props = {
+import type { QueryOptions, Tap } from '@brewskey/js-api';
+
+import type { SwipeableListRef, RenderProps  } from '../common/SwipeableList';
+import type { RowItemProps } from '../common/SwipeableRow';
+
+interface Props {
   ListHeaderComponent?: React.ReactNode;
   onAddTapPress: () => void;
   onRefresh?: () => void;
   queryOptions?: QueryOptions;
-};
+}
 
 const TapsList: React.FC<Props> = ({
   ListHeaderComponent,
@@ -64,12 +65,18 @@ const TapsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Tap) => {
-    router.navigate({ pathname: '/(tabs)/taps/[tapId]/edit/feed', params: { tapId: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/taps/[tapId]/edit/feed',
+      params: { tapId: String(id) },
+    });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Tap): void => {
-    router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(item.id) } });
+    router.navigate({
+      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      params: { tapId: String(item.id) },
+    });
   };
 
   const onRefreshList = async () => {
@@ -121,22 +128,31 @@ const TapsList: React.FC<Props> = ({
 
   return (
     <SwipeableList
+      ref={swipeableListRef}
       data={tapsData}
       keyExtractor={keyExtractor}
-      listType="flatList"
-      ListEmptyComponent={!isLoading ? <DeviceTapListEmpty onAddTapPress={onAddTapPress} /> : undefined}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
-       
-      ListHeaderComponent={ListHeaderComponent as React.ComponentType<any> | React.ReactElement | null | undefined}
+      listType="flatList"
+      onRefresh={onRefreshList}
+      renderItem={renderRow}
+      testID="taps-list"
+      ListEmptyComponent={
+        !isLoading ? (
+          <DeviceTapListEmpty onAddTapPress={onAddTapPress} />
+        ) : undefined
+      }
+      ListHeaderComponent={
+        ListHeaderComponent as
+          | React.ComponentType<any>
+          | React.ReactElement
+          | null
+          | undefined
+      }
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();
         }
       }}
-      onRefresh={onRefreshList}
-      ref={swipeableListRef}
-      renderItem={renderRow}
-      testID="taps-list"
     />
   );
 };

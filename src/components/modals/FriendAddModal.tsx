@@ -1,11 +1,12 @@
-import type { Account } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 
-import Button from '../../common/buttons/Button';
 import CenteredModal from './CenteredModal';
+import Button from '../../common/buttons/Button';
 import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import type { Account } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   buttonStyle: { width: 100 },
@@ -30,47 +31,45 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   account: Account;
   isVisible: boolean;
   onFriendAddPress: () => Promise<void>;
   onHideModal: () => void;
-};
+}
 
 const FriendApprovedModal: React.FC<Props> = ({
   account,
   isVisible,
   onHideModal,
   onFriendAddPress,
-}) => {
-  return (
-    <CenteredModal
-      header={<Text style={styles.headerText}>Request friendship!</Text>}
-      isVisible={isVisible}
-      onHideModal={onHideModal}
-    >
-      <View style={styles.root}>
-        <Text style={styles.messageText}>
-          Do you want to add{' '}
-          <Text style={styles.userNameText}>{account.userName}</Text> to your
-          friends?
-        </Text>
-        <View style={styles.buttonsContainer}>
-          <Button
-            buttonStyle={styles.buttonStyle}
-            onPress={onHideModal}
-            title="no"
-          />
-          <Button
-            buttonStyle={styles.buttonStyle}
-            onPress={onFriendAddPress}
-            secondary
-            title="yes"
-          />
-        </View>
+}) => (
+  <CenteredModal
+    header={<Text style={styles.headerText}>Request friendship!</Text>}
+    isVisible={isVisible}
+    onHideModal={onHideModal}
+  >
+    <View style={styles.root}>
+      <Text style={styles.messageText}>
+        Do you want to add{' '}
+        <Text style={styles.userNameText}>{account.userName}</Text> to your
+        friends?
+      </Text>
+      <View style={styles.buttonsContainer}>
+        <Button
+          buttonStyle={styles.buttonStyle}
+          onPress={onHideModal}
+          title="no"
+        />
+        <Button
+          secondary
+          buttonStyle={styles.buttonStyle}
+          onPress={onFriendAddPress}
+          title="yes"
+        />
       </View>
-    </CenteredModal>
-  );
-};
+    </View>
+  </CenteredModal>
+);
 
 export default FriendApprovedModal;

@@ -1,15 +1,16 @@
 import * as React from 'react';
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import FriendRequestsList from '../../../../components/FriendRequestsList';
 
+import { FRIEND_STATUSES } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import { Badge } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
-import { COLORS } from '../../../../theme';
-import { useGetManyFriends } from '../../../../hooks/queries/FriendQueries';
-import { createFilter } from '@brewskey/js-api/dist/filters';
-import { FRIEND_STATUSES } from '@brewskey/js-api';
+
+import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../common/ErrorScreen';
+import FriendRequestsList from '../../../../components/FriendRequestsList';
 import { useUserID } from '../../../../hooks/context/AuthContext';
+import { useGetManyFriends } from '../../../../hooks/queries/FriendQueries';
+import { COLORS } from '../../../../theme';
 
 const styles = StyleSheet.create({
   badge: {
@@ -62,8 +63,9 @@ const TabBarLabel: React.FC<{ tintColor: string }> = ({ tintColor }) => (
   </View>
 );
 
-const MyFriendsRequestRoute: React.FC = () => {
-  return <FriendRequestsList />;
-};
+const MyFriendsRequestRoute: React.FC = () => <FriendRequestsList />;
 
-export default withErrorBoundary(MyFriendsRequestRoute, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  MyFriendsRequestRoute,
+  <ErrorScreen shouldShowBackButton />,
+);

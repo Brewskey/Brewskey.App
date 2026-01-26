@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { StyleSheet, View } from 'react-native';
+
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -9,6 +11,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const ListSubSectionSeparator = (): React.ReactElement => <View style={styles.separator} />;
+const ListSubSectionSeparator = (): React.ReactElement => (
+  <View style={styles.separator} />
+);
 
 export default ListSubSectionSeparator;

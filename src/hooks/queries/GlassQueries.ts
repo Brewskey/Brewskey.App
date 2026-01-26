@@ -1,17 +1,15 @@
-import {
+import { GlassDAO } from '@brewskey/js-api';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, Glass, QueryOptions } from '@brewskey/js-api';
+import type {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  EntityID,
-  Glass,
-  GlassDAO,
-  QueryOptions,
-} from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
 
 enum GlassQueryKeys {
   GlassById = 'glass_by_id',
@@ -20,19 +18,19 @@ enum GlassQueryKeys {
 
 export const useGetGlassById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Glass, Error> =>
+): UseQueryResult<Glass> =>
   useQuery({
-    queryKey: [GlassQueryKeys.GlassById, id],
-    queryFn: () => GlassDAO.fetchByID(nullthrows(id)),
+    queryKey: [GlassQueryKeys.GlassById, getStringFromEntityID(id)],
+    queryFn: async () => GlassDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetGlasses = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Glass[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Glass[]>> =>
   useInfiniteQuery({
     queryKey: [GlassQueryKeys.Glasses, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       GlassDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [

@@ -1,3 +1,45 @@
+import * as React from 'react';
+import { useMemo } from 'react';
+
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { useLocalSearchParams } from 'expo-router';
+import nullthrows from 'nullthrows';
+import { useFormContext } from 'react-hook-form';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import Button from '../../../../../common/buttons/Button';
+import Container from '../../../../../common/Container';
+import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../../common/ErrorScreen';
+import { Form } from '../../../../../common/form/Form';
+import { FormField } from '../../../../../common/form/FormField';
+import { handleSubmitWithError } from '../../../../../common/form/handleSubmitWithError';
+
+
+import { TextInput } from '../../../../../common/form/TextInput';
+import Header from '../../../../../common/Header';
+import LoadingIndicator from '../../../../../common/LoadingIndicator';
+import NotFoundScreen from '../../../../../common/NotFoundScreen';
+import Section from '../../../../../common/Section';
+import SectionHeader from '../../../../../common/SectionHeader';
+import { MainTabBarFill } from '../../../../../components/MainTabBar/MainTabBarSlot';
+import SquareLocationPicker from '../../../../../components/pickers/SquareLocationPicker';
+import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarContext';
+import {
+  useGetLocationById,
+  useUpdateLocation,
+} from '../../../../../hooks/queries/LocationQueries';
+import {
+  useGetOrganizationById,
+  useGetSquareLocations,
+} from '../../../../../hooks/queries/OrganizationQueries';
+import {
+  useCreatePriceVariant,
+  useGetPriceVariantSingle,
+  useUpdatePriceVariant,
+} from '../../../../../hooks/queries/PriceVariantQueries';
+import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
+
 import type {
   EntityID,
   Location,
@@ -5,41 +47,6 @@ import type {
   PriceVariant,
   PriceVariantMutator,
 } from '@brewskey/js-api';
-
-import * as React from 'react';
-import { useMemo } from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { useFormContext } from 'react-hook-form';
-import { FormValidationMessage } from '../../../../../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../../../../../common/form/handleSubmitWithError';
-import nullthrows from 'nullthrows';
-
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
-import { createFilter } from '@brewskey/js-api/dist/filters';
-import ErrorScreen from '../../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import Container from '../../../../../common/Container';
-import Header from '../../../../../common/Header';
-import Section from '../../../../../common/Section';
-import SectionHeader from '../../../../../common/SectionHeader';
-import Button from '../../../../../common/buttons/Button';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import { FormField } from '../../../../../common/form/FormField';
-import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarContext';
-import { MainTabBarFill } from '../../../../../components/MainTabBar/MainTabBarSlot';
-import { SimplePicker } from '../../../../../components/pickers';
-import { TextInput } from '../../../../../common/form/TextInput';
-import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
-import { useGetLocationById, useUpdateLocation } from '../../../../../hooks/queries/LocationQueries';
-import { useGetOrganizationById, useGetSquareLocations } from '../../../../../hooks/queries/OrganizationQueries';
-import {
-  useGetPriceVariantSingle,
-  useCreatePriceVariant,
-  useUpdatePriceVariant,
-} from '../../../../../hooks/queries/PriceVariantQueries';
-import { Form } from '../../../../../common/form/Form';
 
 const validate = {
   ounces: (value: unknown) => {
@@ -58,13 +65,14 @@ const validate = {
 
 const EditTapPaymentsRouteContent: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
-  
+  const tapIdValue =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+
   if (!tapIdValue) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
@@ -78,11 +86,14 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   const addSnackBarMessage = useAddSnackBarMessage();
 
   // Fetch tap to get location and organization IDs
-  const { data: tap, isLoading: tapLoading } = useGetTapById(tapIdValue as EntityID);
+  const { data: tap, isLoading: tapLoading } = useGetTapById(
+    tapIdValue as EntityID,
+  );
 
   // Fetch location
   const locationId = tap?.location?.id;
-  const { data: location, isLoading: locationLoading } = useGetLocationById(locationId);
+  const { data: location, isLoading: locationLoading } =
+    useGetLocationById(locationId);
 
   // Fetch organization
   const organizationId = tap?.organization?.id;
@@ -115,7 +126,9 @@ const EditTapPaymentsRouteContent: React.FC = () => {
     priceVariantLoading ||
     squareLocationsLoading;
 
-  const onFormSubmit = async (values: PriceVariantMutator): Promise<PriceVariantMutator> => {
+  const onFormSubmit = async (
+    values: PriceVariantMutator,
+  ): Promise<PriceVariantMutator> => {
     const squareLocationID = null;
 
     if (squareLocationID != null && location) {
@@ -176,43 +189,54 @@ const EditTapPaymentsRouteContent: React.FC = () => {
       <KeyboardAwareScrollView testID="tap-payments-form">
         {location.squareLocationID == null && squareLocations.length > 0 && (
           <Section bottomPadded>
-            <SectionHeader title="Set Square Location" testID="section-header-square-location" />
-            <FormField
-              component={SimplePicker}
+            <SectionHeader
+              testID="section-header-square-location"
+              title="Set Square Location"
+            />
+            <SquareLocationPicker
+              defaultValue={location.squareLocationID ?? undefined}
               disabled={isSubmitting}
-              headerTitle="Select Square Location"
-              initialValue={location.squareLocationID}
-              label="Square Location"
               name="squareLocationID"
-              pickerValues={squareLocations.map((item) => ({
-                label: item.name,
-                value: item.locationID,
-              }))}
+              squareLocations={squareLocations}
             />
           </Section>
         )}
         <Section bottomPadded>
-          <SectionHeader title="Set Price and Ounces" testID="section-header-price-ounces" />
-          {formValue != null && <FormField component={TextInput} initialValue={formValue.id} label="ID" name="id" />}
-          <FormField component={TextInput} initialValue={tapIdValue} label="Tap ID" name="tapID" />
+          <SectionHeader
+            testID="section-header-price-ounces"
+            title="Set Price and Ounces"
+          />
+          {formValue != null && (
+            <FormField
+              component={TextInput}
+              defaultValue={formValue.id?.toString()}
+              label="ID"
+              name="id"
+            />
+          )}
+          <FormField
+            component={TextInput}
+            defaultValue={tapIdValue?.toString()}
+            label="Tap ID"
+            name="tapID"
+          />
 
           <FormField
             component={TextInput}
-            initialValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
-            name="ounces"
+            defaultValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
             keyboardType="numeric"
             label="Ounces"
+            name="ounces"
           />
           <FormField
             component={TextInput}
-            initialValue={(formValue != null ? formValue.price / 100 : 0).toFixed(2)}
-            name="price"
             keyboardType="numeric"
             label="Price"
-            _parseOnSubmit={(price: unknown) => {
-              const priceNum = typeof price === 'string' ? parseFloat(price) : typeof price === 'number' ? price : 0;
-              return (priceNum * 100).toFixed(0);
-            }}
+            name="price"
+            defaultValue={(formValue != null
+              ? formValue.price / 100
+              : 0
+            ).toFixed(2)}
           />
         </Section>
       </KeyboardAwareScrollView>
@@ -220,9 +244,26 @@ const EditTapPaymentsRouteContent: React.FC = () => {
         <Button
           disabled={!isFormReady || isSubmitting || !isValid || !isDirty}
           loading={isSubmitting}
-          onPress={isFormReady ? handleSubmitWithError(form, onFormSubmit) : undefined}
           style={{ marginVertical: 12 }}
           title={formValue == null ? 'Create Price' : 'Update Price'}
+          onPress={
+            isFormReady
+              ? handleSubmitWithError(form, (values: PriceVariantMutator) =>
+                  onFormSubmit({
+                    ...values,
+                    price: Number.parseInt(
+                      (
+                        (typeof values.price === 'string'
+                          ? parseFloat(values.price)
+                          : typeof values.price === 'number'
+                            ? values.price
+                            : 0) * 100
+                      ).toFixed(0),
+                    ),
+                  }),
+                )
+              : undefined
+          }
         />
       </MainTabBarFill>
     </Container>
@@ -231,8 +272,9 @@ const EditTapPaymentsRouteContent: React.FC = () => {
 
 const EditTapPaymentsRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
-  
+  const tapIdValue =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+
   if (!tapIdValue) {
     return null;
   }
@@ -252,7 +294,10 @@ const EditTapPaymentsRoute: React.FC = () => {
   );
 
   return (
-    <Form<PriceVariantMutator> defaultValues={defaultValues} validate={validate}>
+    <Form<PriceVariantMutator>
+      defaultValues={defaultValues}
+      validate={validate}
+    >
       <EditTapPaymentsRouteContent />
     </Form>
   );

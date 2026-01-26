@@ -1,7 +1,9 @@
 import * as React from 'react';
+
 import { Modal as RNModal, TouchableWithoutFeedback } from 'react-native';
-import Fragment from '../../common/Fragment';
+
 import StatusBarFake from './StatusBarFake';
+import Fragment from '../../common/Fragment';
 
 const emptyFunction = () => {};
 
@@ -31,12 +33,12 @@ const Modal = <RNModalProps extends object>({
   <RNModal
     {...rest}
     animationType={animationType}
-    onRequestClose={
-      shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
-    }
     testID={testID}
     transparent={transparent}
     visible={isVisible}
+    onRequestClose={
+      shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
+    }
   >
     <Fragment>
       <StatusBarFake />

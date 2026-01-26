@@ -16,7 +16,8 @@
     "test:e2e:report": "playwright show-report",
     "test:e2e:expo": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test\"",
     "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\"",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "lint:fix": "expo lint --fix"
   },
   "dependencies": {
     "@brewskey/js-api": "^2.0.5",
@@ -77,6 +78,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.6",
+    "@eslint/compat": "^2.0.1",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
     "@faker-js/faker": "^10.2.0",
@@ -92,10 +94,12 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "concurrently": "^9.1.0",
     "eslint": "^9.39.2",
+    "eslint-config-airbnb-extended": "^3.0.1",
+    "eslint-config-expo": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "typescript": "~5.9.3",
     "wait-on": "^8.0.1"
   },

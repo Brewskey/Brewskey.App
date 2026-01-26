@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { Dimensions, Image, StyleSheet, Text } from 'react-native';
+
 import Fragment from '../../common/Fragment';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
@@ -26,22 +28,22 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  description: string,
-  image: number,
-  title: string
-};
+interface Props {
+  description: string;
+  image: number;
+  title: string;
+}
 
-const SetupStep = (
-  {
-    description,
-    image,
-    title,
-  }: Props,
-): React.ReactElement => <Fragment>
-  <Text style={styles.titleText}>{title}</Text>
-  <Image style={styles.image} source={image} />
-  <Text style={styles.instructionText}>{description}</Text>
-</Fragment>;
+const SetupStep = ({
+  description,
+  image,
+  title,
+}: Props): React.ReactElement => (
+  <Fragment>
+    <Text style={styles.titleText}>{title}</Text>
+    <Image source={image} style={styles.image} />
+    <Text style={styles.instructionText}>{description}</Text>
+  </Fragment>
+);
 
 export default SetupStep;

@@ -1,32 +1,38 @@
-import type { EntityID, FlowSensorMutator, FlowSensor } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import nullthrows from 'nullthrows';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { FlowSensorDAO } from '@brewskey/js-api';
-
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import NotFoundScreen from '../../../../common/NotFoundScreen';
-
-import FlowSensorForm from '../../../../components/FlowSensorForm/FlowSensorForm';
-import LoadingIndicator from '../../../../common/LoadingIndicator';
-import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams } from 'expo-router';
+import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../common/ErrorScreen';
+import LoadingIndicator from '../../../../common/LoadingIndicator';
+import NotFoundScreen from '../../../../common/NotFoundScreen';
+import FlowSensorForm from '../../../../components/FlowSensorForm/FlowSensorForm';
+import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import {
   useCreateFlowSensor,
   useGetFlowSensorByTapId,
 } from '../../../../hooks/queries/FlowSensorQueries';
+import { getStringFromEntityID } from '../../../../utils/getStringFromEntityID';
 
-type ExtraProps = {
+import type { EntityID, FlowSensor, FlowSensorMutator } from '@brewskey/js-api';
+
+interface ExtraProps {
   tapId: EntityID;
-};
+}
 
 type LoadedComponentProps = {
   value: NonNullable<ReturnType<typeof useGetFlowSensorByTapId>['data']>;
-  updateMutation: ReturnType<typeof useMutation<FlowSensor, Error, { id: EntityID; values: FlowSensorMutator }>>;
+  updateMutation: ReturnType<
+    typeof useMutation<
+      FlowSensor,
+      Error,
+      { id: EntityID; values: FlowSensorMutator }
+    >
+  >;
   createMutation: ReturnType<typeof useCreateFlowSensor>;
 } & ExtraProps;
 
@@ -47,11 +53,7 @@ const LoadedComponent: React.FC<LoadedComponentProps> = ({
   };
 
   return (
-    <FlowSensorForm
-      flowSensor={value}
-      onSubmit={onFormSubmit}
-      tapId={tapId}
-    />
+    <FlowSensorForm flowSensor={value} onSubmit={onFormSubmit} tapId={tapId} />
   );
 };
 
@@ -72,30 +74,47 @@ const EmptyComponent: React.FC<EmptyComponentProps> = ({
 
 const EditFlowSensorRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
-  
+  const tapIdValue =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+
   const queryClient = useQueryClient();
 
-  const { data: flowSensor, isLoading, error } = useGetFlowSensorByTapId(tapIdValue as EntityID);
+  const {
+    data: flowSensor,
+    isLoading,
+    error,
+  } = useGetFlowSensorByTapId(tapIdValue as EntityID);
   const createMutation = useCreateFlowSensor();
   const addSnackBarMessage = useAddSnackBarMessage();
 
   if (!tapIdValue) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
 
-  const updateMutation = useMutation<FlowSensor, Error, { id: EntityID; values: FlowSensorMutator }>({
-    mutationFn: async ({ id, values }: { id: EntityID; values: FlowSensorMutator }) => {
+  const updateMutation = useMutation<
+    FlowSensor,
+    Error,
+    { id: EntityID; values: FlowSensorMutator }
+  >({
+    mutationFn: async ({
+      id,
+      values,
+    }: {
+      id: EntityID;
+      values: FlowSensorMutator;
+    }) => {
       await FlowSensorDAO.put(id, values);
-      return await FlowSensorDAO.fetchByID(id);
+      return FlowSensorDAO.fetchByID(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['flow_sensor_by_tap_id', tapIdValue] });
+      queryClient.invalidateQueries({
+        queryKey: ['flow_sensor_by_tap_id', getStringFromEntityID(tapIdValue)],
+      });
       addSnackBarMessage({ content: 'The flow sensor set' });
     },
   });
@@ -111,7 +130,10 @@ const EditFlowSensorRoute: React.FC = () => {
   if (error || !flowSensor) {
     return (
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <EmptyComponent tapId={tapIdValue as EntityID} createMutation={createMutation} />
+        <EmptyComponent
+          createMutation={createMutation}
+          tapId={tapIdValue as EntityID}
+        />
       </KeyboardAwareScrollView>
     );
   }
@@ -119,13 +141,16 @@ const EditFlowSensorRoute: React.FC = () => {
   return (
     <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
       <LoadedComponent
-        tapId={tapIdValue as EntityID}
-        value={flowSensor}
-        updateMutation={updateMutation}
         createMutation={createMutation}
+        tapId={tapIdValue as EntityID}
+        updateMutation={updateMutation}
+        value={flowSensor}
       />
     </KeyboardAwareScrollView>
   );
 };
 
-export default withErrorBoundary(EditFlowSensorRoute, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  EditFlowSensorRoute,
+  <ErrorScreen shouldShowBackButton />,
+);

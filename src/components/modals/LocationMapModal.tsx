@@ -1,11 +1,13 @@
-import type { Coordinates } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 import { StyleSheet, View } from 'react-native';
+
 import Modal from './Modal';
-import LocationMap from '../LocationMap';
-import { COLORS } from '../../theme';
 import IconButton from '../../common/buttons/IconButton';
+import { COLORS } from '../../theme';
+import LocationMap from '../LocationMap';
+
+import type { Coordinates } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   closeButtonContainer: {
@@ -20,11 +22,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   coordinates: Coordinates;
   isVisible: boolean;
   onHideModal: () => void;
-};
+}
 
 const LocationMapModal = ({
   coordinates,

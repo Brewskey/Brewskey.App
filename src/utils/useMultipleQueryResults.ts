@@ -1,26 +1,26 @@
-import { QueryStatus, UseQueryResult } from '@tanstack/react-query';
+import type { QueryStatus, UseQueryResult } from '@tanstack/react-query';
 
 type Entries<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T][];
 
 export type UseMultipleQueryResultsData<
-  T extends Record<string, UseQueryResult<unknown, Error>>,
+  T extends Record<string, UseQueryResult<unknown>>,
 > = {
   [K in keyof T]: Exclude<T[K]['data'], undefined>;
 };
 
 export const useMultipleQueryResults = <
-  TQueries extends Record<string, UseQueryResult<unknown, Error>>,
+  TQueries extends Record<string, UseQueryResult<unknown>>,
 >(
   queries: TQueries,
-): UseQueryResult<UseMultipleQueryResultsData<TQueries>, Error> => {
+): UseQueryResult<UseMultipleQueryResultsData<TQueries>> => {
   const itemsInQuery = Object.entries(queries) as Entries<TQueries>;
   return itemsInQuery.reduce(
     (
       accumulator,
       [key, queryResult],
-    ): UseQueryResult<UseMultipleQueryResultsData<TQueries>, Error> => {
+    ): UseQueryResult<UseMultipleQueryResultsData<TQueries>> => {
       const statuses = [accumulator.status, queryResult.status];
       let status: QueryStatus = 'success';
       if (statuses.includes('error')) {
@@ -44,8 +44,8 @@ export const useMultipleQueryResults = <
           queryResult.isRefetchError || accumulator.isRefetchError,
         isSuccess: queryResult.isSuccess || accumulator.isSuccess,
         status,
-      } as UseQueryResult<UseMultipleQueryResultsData<TQueries>, Error>;
+      } as UseQueryResult<UseMultipleQueryResultsData<TQueries>>;
     },
-    {} as UseQueryResult<UseMultipleQueryResultsData<TQueries>, Error>,
+    {} as UseQueryResult<UseMultipleQueryResultsData<TQueries>>,
   );
 };

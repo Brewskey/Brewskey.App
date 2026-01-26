@@ -1,17 +1,21 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
 
-import OverviewItem from '../common/OverviewItem2';
 import DeviceOnlineIndicator from './DeviceOnlineIndicator';
+import OverviewItem from '../common/OverviewItem2';
 import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
 
-type Props = {
+import type { EntityID } from '@brewskey/js-api';
+
+interface Props {
   particleID: EntityID;
-};
+}
 
 const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
-  const { data: cloudDevice, isLoading, error } = useGetParticleAttributes(particleID);
+  const {
+    data: cloudDevice,
+    isLoading,
+    error,
+  } = useGetParticleAttributes(particleID);
 
   if (isLoading) {
     return (
@@ -42,22 +46,24 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
 
   return (
     <OverviewItem
-      description={
-        !connected ? 'Check that your device is powerd on and connected to WiFi' : undefined
-      }
       leftComponent={undefined}
       particleID={particleID}
       rightComponent={DeviceOnlineIndicator}
       testID="overview-item-online-status"
       title="Online Status"
       value={connected ? 'Connected' : 'Disconnected'}
+      description={
+        !connected
+          ? 'Check that your device is powerd on and connected to WiFi'
+          : undefined
+      }
     />
   );
 };
 
-type LoadingComponentProps = {
+interface LoadingComponentProps {
   particleID: EntityID;
-};
+}
 
 const LoadingComponent = ({ particleID }: LoadingComponentProps) => (
   <OverviewItem
@@ -68,10 +74,10 @@ const LoadingComponent = ({ particleID }: LoadingComponentProps) => (
   />
 );
 
-type ErrorComponentProps = {
+interface ErrorComponentProps {
   particleID: EntityID;
   error: Error;
-};
+}
 
 const ErrorComponent = ({ particleID }: ErrorComponentProps) => (
   <OverviewItem
@@ -83,10 +89,10 @@ const ErrorComponent = ({ particleID }: ErrorComponentProps) => (
   />
 );
 
-type LoadedComponentProps = {
+interface LoadedComponentProps {
   particleID: EntityID;
   value: boolean;
-};
+}
 
 const LoadedComponent = ({
   particleID,
@@ -94,12 +100,14 @@ const LoadedComponent = ({
 }: LoadedComponentProps) => (
   <OverviewItem
     particleID={particleID}
-    description={
-      !connected ? 'Check that your device is powerd on and connected to WiFi' : undefined
-    }
     rightComponent={DeviceOnlineIndicator}
     title="Online Status"
     value={connected ? 'Connected' : 'Disconnected'}
+    description={
+      !connected
+        ? 'Check that your device is powerd on and connected to WiFi'
+        : undefined
+    }
   />
 );
 

@@ -1,14 +1,17 @@
 import * as React from 'react';
-import ErrorScreen from '../common/ErrorScreen';
-import { withErrorBoundary } from '../common/ErrorBoundary';
+
 import { Text, View } from 'react-native';
 
-const ProfileStatsScreen: React.FC = () => {
-  return (
-    <View>
-      <Text>Profile stats and charts </Text>
-    </View>
-  );
-};
+import { withErrorBoundary } from '../common/ErrorBoundary';
+import ErrorScreen from '../common/ErrorScreen';
 
-export default withErrorBoundary(ProfileStatsScreen, <ErrorScreen shouldShowBackButton />);
+const ProfileStatsScreen: React.FC = () => (
+  <View>
+    <Text>Profile stats and charts </Text>
+  </View>
+);
+
+export default withErrorBoundary(
+  ProfileStatsScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

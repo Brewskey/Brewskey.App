@@ -1,9 +1,12 @@
 import * as React from 'react';
+
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { COLORS, TYPOGRAPHY, getElevationStyle } from '../../theme';
+
 import HeaderBackButton from './HeaderBackButton';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from '../../theme';
 import { getElementFromComponentProp } from '../../utils';
-import { ListComponentTypes } from '../List';
+
+import type { ListComponentTypes } from '../List';
 
 // todo title have slight offset to the left when there are more than one
 // button in the right component. Need to figure better solution to position
@@ -38,14 +41,14 @@ const styles = StyleSheet.create({
 
 const FakeHeaderButton = () => <View style={styles.fakeHeaderButton} />;
 
-type Props = {
+interface Props {
   leftComponent?: ListComponentTypes;
   rightComponent?: ListComponentTypes;
   showBackButton?: boolean;
   shouldShowBackButton?: boolean;
   title?: string | null | undefined;
   testID?: string;
-};
+}
 
 const Header: React.FC<Props> = ({
   leftComponent = <FakeHeaderButton />,

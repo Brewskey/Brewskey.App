@@ -1,12 +1,14 @@
-import type {NewAchievementNotification} from '../../stores/NotificationsStore';
-import type { Props as NotificationListItemProps } from './NotificationListItem';
-
 import * as React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import BadgeIcon from '../BadgeIcon';
+
+import { StyleSheet, Text, View } from 'react-native';
+
+import NotificationListItem from './NotificationListItem';
 import BADGE_BY_TYPE from '../../badges';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import NotificationListItem from './NotificationListItem';
+import BadgeIcon from '../BadgeIcon';
+
+import type { Props as NotificationListItemProps } from './NotificationListItem';
+import type { NewAchievementNotification } from '../../stores/NotificationTypes';
 
 const styles = StyleSheet.create({
   badgeNameText: {
@@ -15,8 +17,8 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = (NotificationListItemProps) & {
-  notification: NewAchievementNotification
+type Props = NotificationListItemProps & {
+  notification: NewAchievementNotification;
 };
 
 const AchievementListItem = (props: Props): React.ReactElement => {
@@ -34,7 +36,9 @@ const AchievementListItem = (props: Props): React.ReactElement => {
           <Text>{badge.description}</Text>
         </View>
       }
-      leftComponent={<BadgeIcon achievementType={achievementType} size="small" />}
+      leftComponent={
+        <BadgeIcon achievementType={achievementType} size="small" />
+      }
     />
   );
 };

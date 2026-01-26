@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { TextInput, TextInputProps } from './TextInput';
+
 import { FormField } from './FormField';
+import { TextInput } from './TextInput';
+
+import type { TextInputProps } from './TextInput';
 
 export type Props = Omit<TextInputProps, 'label'> & {
   label: string;
@@ -17,16 +20,14 @@ export const TextField: React.FC<Props> = ({
   labelStyle,
   descriptionStyle,
   ...textInputProps
-}) => {
-  return (
-    <FormField
-      component={TextInput}
-      label={label}
-      description={description}
-      containerStyle={containerStyle}
-      labelStyle={labelStyle}
-      descriptionStyle={descriptionStyle}
-      {...textInputProps}
-    />
-  );
-};
+}) => (
+  <FormField
+    component={TextInput}
+    containerStyle={containerStyle}
+    description={description}
+    descriptionStyle={descriptionStyle}
+    label={label}
+    labelStyle={labelStyle}
+    {...textInputProps}
+  />
+);

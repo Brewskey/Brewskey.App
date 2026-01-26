@@ -1,12 +1,14 @@
-import type { WifiNetwork } from '../../../types';
-
 import * as React from 'react';
+import { useState } from 'react';
+
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import HiddenWifiForm from './HiddenWifiForm';
 import Container from '../../../common/Container';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
-import HiddenWifiForm from './HiddenWifiForm';
-import { useState } from 'react';
+
+import type { WifiNetwork } from '../../../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,9 +23,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>;
-};
+}
 
 export const HiddenWifiInput: React.FC<Props> = ({ onConnectPress }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -34,7 +36,7 @@ export const HiddenWifiInput: React.FC<Props> = ({ onConnectPress }) => {
         <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
           <Text style={styles.title}>Hidden network</Text>
         </TouchableOpacity>
-        {isExpanded && <HiddenWifiForm onSubmit={onConnectPress} />}
+        {isExpanded ? <HiddenWifiForm onSubmit={onConnectPress} /> : null}
       </KeyboardAwareScrollView>
     </Container>
   );

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+
 import { useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
 
 import Container from '../../../common/Container';
 import Header from '../../../common/Header';
-import DeleteModal from '../../../components/modals/DeleteModal';
 import { HeaderIconButton } from '../../../common/Header/HeaderIconButton';
+import DeleteModal from '../../../components/modals/DeleteModal';
 
 export default function NotificationsIndex() {
   const [isFocused, setIsFocused] = useState(false);
@@ -16,7 +16,7 @@ export default function NotificationsIndex() {
     useCallback(() => {
       setIsFocused(true);
       return () => setIsFocused(false);
-    }, [])
+    }, []),
   );
 
   const onDeleteAllConfirm = () => {
@@ -39,13 +39,13 @@ export default function NotificationsIndex() {
       />
       {/* {isFocused ? <NotificationsList /> : null} */}
       <DeleteModal
-        title="Clear all notifications"
-        isVisible={isDeleteModalVisible}
         deleteButtonTitle="clear"
+        isVisible={isDeleteModalVisible}
         message="Are sure you want to clear all notifications?"
         onCancelButtonPress={() => setIsDeleteModalVisible(false)}
         onDeleteButtonPress={onDeleteAllConfirm}
         testID="modal-delete-all-notifications"
+        title="Clear all notifications"
       />
     </Container>
   );

@@ -1,9 +1,11 @@
-import type { EntityID } from '@brewskey/js-api';
-import type { BaseAvatarProps } from './BaseAvatar';
-
 import * as React from 'react';
-import CONFIG from '../../config';
+
 import BaseAvatar from './BaseAvatar';
+import CONFIG from '../../config';
+
+import type { EntityID } from '@brewskey/js-api';
+
+import type { BaseAvatarProps } from './BaseAvatar';
 
 type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
   beverageId: EntityID | null | undefined;
@@ -11,6 +13,7 @@ type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
   rounded?: boolean;
   size?: number;
   uri?: string | null | undefined;
+  testID?: string;
 };
 
 const BeverageAvatar: React.FC<Props> = ({
@@ -19,6 +22,7 @@ const BeverageAvatar: React.FC<Props> = ({
   rounded = true,
   size = 45,
   uri,
+  testID,
   ...otherProps
 }) => {
   const beverageIdString = beverageId != null ? beverageId.toString() : '';
@@ -31,6 +35,8 @@ const BeverageAvatar: React.FC<Props> = ({
     <BaseAvatar
       {...otherProps}
       rounded={rounded}
+      size={size}
+      testID={testID}
       uri={
         uri ||
         `${
@@ -39,7 +45,6 @@ const BeverageAvatar: React.FC<Props> = ({
           cached ? '' : new Date().toString()
         }`
       }
-      size={size}
     />
   );
 };

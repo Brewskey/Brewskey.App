@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { StyleSheet, View } from 'react-native';
+
 import Modal from './Modal';
 import { COLORS } from '../../theme';
 import HardwareSetupGuide from '../HardwareSetupGuide';
@@ -11,25 +13,25 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  isVisible: boolean,
-  onHideModal: () => void
-};
+interface Props {
+  isVisible: boolean;
+  onHideModal: () => void;
+}
 
-const HardwareSetupModal = (
-  {
-    isVisible,
-    onHideModal,
-  }: Props,
-): React.ReactElement => <Modal
-  hardwareAccelerated
-  isTouchable={false}
-  isVisible={isVisible}
-  shouldHideOnRequestClose={false}
->
-  <View style={styles.container}>
-    <HardwareSetupGuide onClosePress={onHideModal} />
-  </View>
-</Modal>;
+const HardwareSetupModal = ({
+  isVisible,
+  onHideModal,
+}: Props): React.ReactElement => (
+  <Modal
+    hardwareAccelerated
+    isTouchable={false}
+    isVisible={isVisible}
+    shouldHideOnRequestClose={false}
+  >
+    <View style={styles.container}>
+      <HardwareSetupGuide onClosePress={onHideModal} />
+    </View>
+  </Modal>
+);
 
 export default HardwareSetupModal;

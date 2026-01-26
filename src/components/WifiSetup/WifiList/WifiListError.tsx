@@ -1,9 +1,11 @@
 import * as React from 'react';
+
+import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
+
 import Container from '../../../common/Container';
 import TextBlock from '../../../common/TextBlock';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
-import { Icon } from '@rneui/themed';
 
 const styles = StyleSheet.create({
   textInstructions: {
@@ -23,15 +25,15 @@ const WifiListError = () => (
   <Container centered>
     <Icon
       reverse
-      reverseColor={COLORS.accent}
       color={COLORS.secondary2}
       name="priority_high"
+      reverseColor={COLORS.accent}
       size={45}
     />
     <TextBlock paddedBottom textStyle={styles.textTitle}>
       Couldn't receive the Brewskey box available WiFi networks
     </TextBlock>
-    <TextBlock index={1} paddedBottom textStyle={styles.textInstructions}>
+    <TextBlock paddedBottom index={1} textStyle={styles.textInstructions}>
       Try unplugging and plugging the Brewskey box back in. Reconnect to
       Photon-XXX WiFi network on your phone and pull to refresh.
     </TextBlock>

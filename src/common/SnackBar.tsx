@@ -1,24 +1,26 @@
-import {
-  useGetCurrentSnackBarMessage,
-  useRemoveSnackBarMessage,
-  type SnackBarMessage,
-} from '../hooks/context/SnackBarContext';
-import type { Notification } from '../stores/NotificationsStore';
-
 import * as React from 'react';
 
+import nullthrows from 'nullthrows';
 import {
   Animated,
-  LayoutChangeEvent,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { COLORS } from '../theme';
-import NotificationsStore from '../stores/NotificationsStore';
+
 import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
-import nullthrows from 'nullthrows';
+import {
+  useGetCurrentSnackBarMessage,
+  useRemoveSnackBarMessage,
+} from '../hooks/context/SnackBarContext';
+import NotificationsStore from '../stores/NotificationsStore';
+import { COLORS } from '../theme';
+
+import type { LayoutChangeEvent } from 'react-native';
+
+import type { SnackBarMessage } from '../hooks/context/SnackBarContext';
+import type { Notification } from '../stores/NotificationTypes';
 
 const ENTER_ANIMATION_DURATION = 300;
 const EXIT_ANIMATION_DURATION = 300;

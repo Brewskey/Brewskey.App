@@ -1,10 +1,10 @@
+import * as React from 'react';
+
+import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
+import { Dimensions, Platform, StatusBar } from 'react-native';
+
 import type { EntityID, KegType, ShortenedEntity } from '@brewskey/js-api';
 
-import * as React from 'react';
-import { Dimensions, Platform, StatusBar } from 'react-native';
-import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
-
- 
 const EMAIL_REGEXP =
   /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
@@ -44,11 +44,7 @@ export const calculateKegLevel = ({
 export const getElementFromComponentProp = <
   TProps extends Record<string, unknown>,
 >(
-  ComponentProp?:
-    | React.ReactNode
-    | null
-    | undefined
-    | React.ComponentType<TProps>,
+  ComponentProp?: React.ReactNode | null | React.ComponentType<TProps>,
 ): React.ReactNode | null | undefined => {
   if (!ComponentProp) {
     return null;
@@ -62,11 +58,11 @@ export const getElementFromComponentProp = <
   return <CastedComponent />;
 };
 
-type ErrorWithModelState = {
+interface ErrorWithModelState {
   ModelState?: Record<string, string[]>;
   error_description?: string;
   Message?: string;
-};
+}
 
 export const parseError = (error: unknown): string => {
   if (typeof error === 'string') {
@@ -78,14 +74,16 @@ export const parseError = (error: unknown): string => {
 
     if (errorObj.ModelState) {
       let resultErrorMessage = '';
-      Array.from(Object.values(errorObj.ModelState)).forEach((fieldErrorArray) => {
-        if (Array.isArray(fieldErrorArray)) {
-          new Set(fieldErrorArray).forEach(
-            (fieldError: string): string =>
-              (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
-          );
-        }
-      });
+      Array.from(Object.values(errorObj.ModelState)).forEach(
+        (fieldErrorArray) => {
+          if (Array.isArray(fieldErrorArray)) {
+            new Set(fieldErrorArray).forEach(
+              (fieldError: string): string =>
+                (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
+            );
+          }
+        },
+      );
 
       return resultErrorMessage;
     }
@@ -105,7 +103,6 @@ export const parseError = (error: unknown): string => {
 export const fetchJSON = async <TResult extends Record<string, unknown>>(
   ...fetchArgs: Parameters<typeof fetch>
 ): Promise<TResult> => {
-   
   const response = await fetch(...fetchArgs);
 
   let responseJson;
@@ -160,7 +157,7 @@ export const extractShortenedEntityId = (
     return undefined;
   }
 
-  const id = entity.id;
+  const { id } = entity;
   if (id == null) {
     return undefined;
   }

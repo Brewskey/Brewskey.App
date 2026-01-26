@@ -1,13 +1,17 @@
-import type {Props as NotificationListItemProps} from './NotificationListItem';
-
 import * as React from 'react';
-import {Text} from 'react-native';
-import LowKegLevelListItem from './LowKegLevelListItem';
+
+import { Text } from 'react-native';
+
 import AchievementListItem from './AchievementListItem';
 import FriendRequestListItem from './FriendRequestListItem';
+import LowKegLevelListItem from './LowKegLevelListItem';
 import TextListItem from './TextListItem';
 
-const NotificationComponentByType = (props: NotificationListItemProps): React.ReactElement | null => {
+import type { Props as NotificationListItemProps } from './NotificationListItem';
+
+const NotificationComponentByType = (
+  props: NotificationListItemProps,
+): React.ReactElement | null => {
   const {
     contentComponent,
     isSwipeable,

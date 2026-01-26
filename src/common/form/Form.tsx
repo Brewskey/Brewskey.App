@@ -1,17 +1,19 @@
-import React, { PropsWithChildren } from 'react';
-import {
+import React from 'react';
+
+import { FormProvider, useForm } from 'react-hook-form';
+
+import type { PropsWithChildren } from 'react';
+import type {
   DefaultValues,
   FieldValues,
-  FormProvider,
   UseFormReturn,
-  useForm,
 } from 'react-hook-form';
 
-type FormProps<TFormFields extends FieldValues> = {
+interface FormProps<TFormFields extends FieldValues> {
   defaultValues?: DefaultValues<TFormFields>;
   form?: UseFormReturn<TFormFields>;
   validate?: Record<string, (value: unknown) => true | string>;
-};
+}
 
 export const Form = <TFormFields extends FieldValues>({
   defaultValues,
@@ -29,8 +31,7 @@ export const Form = <TFormFields extends FieldValues>({
   React.useEffect(() => {
     if (validate && !outerFormSetup) {
       Object.keys(validate).forEach((fieldName) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        form.register(fieldName as any, {
+        form.register(fieldName, {
           validate: validate[fieldName],
         });
       });

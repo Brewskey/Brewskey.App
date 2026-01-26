@@ -1,5 +1,5 @@
 class ToggleStore {
-  isToggled: boolean = false;
+  isToggled = false;
 
   toggleOn: () => void = (): void => {
     this.isToggled = true;

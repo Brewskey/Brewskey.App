@@ -1,10 +1,12 @@
 import * as React from 'react';
+
+import { useRouter } from 'expo-router';
 import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
-import Button from '../../common/buttons/Button';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
+import Button from '../../common/buttons/Button';
 import { LoginForm } from '../../components/LoginForm';
 import { COLORS } from '../../theme';
-import { useRouter } from 'expo-router';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +31,8 @@ export default function LoginScreen() {
     router.navigate({ pathname: '/(auth)/register', params: {} });
   };
 
-  const onForgotPasswordPress = () => router.navigate({ pathname: '/(auth)/reset-password', params: {} });
+  const onForgotPasswordPress = () =>
+    router.navigate({ pathname: '/(auth)/reset-password', params: {} });
 
   const dimensions = Dimensions.get('window');
   const imageHeight = Math.round(dimensions.width * 0.234);
@@ -54,7 +57,12 @@ export default function LoginScreen() {
       </View>
       <LoginForm isInverse />
       <View style={{ paddingTop: 20 }}>
-        <Button onPress={onRegisterPress} testID="button-register" title="Register" type="clear" />
+        <Button
+          onPress={onRegisterPress}
+          testID="button-register"
+          title="Register"
+          type="clear"
+        />
         <Button
           onPress={onForgotPasswordPress}
           testID="button-forgot-password"

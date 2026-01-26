@@ -1,18 +1,19 @@
-import type { Account, EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { StyleSheet, View } from 'react-native';
-import { StaticScreenProps } from '@react-navigation/native';
-import ErrorScreen from '../common/ErrorScreen';
-import { withErrorBoundary } from '../common/ErrorBoundary';
 
 import UserAvatar from '../common/avatars/UserAvatar';
+import { withErrorBoundary } from '../common/ErrorBoundary';
+import ErrorScreen from '../common/ErrorScreen';
+import LoadingIndicator from '../common/LoadingIndicator';
+import SectionHeader from '../common/SectionHeader';
 import BeveragePoursList from '../components/poursLists/BeveragePoursList';
 import { UserBadges } from '../components/UserBadges/UserBadges';
-import SectionHeader from '../common/SectionHeader';
 import { useGetAccountById } from '../hooks/queries/AccountQueries';
-import LoadingIndicator from '../common/LoadingIndicator';
+
+import type { Account, EntityID } from '@brewskey/js-api';
+import type { StaticScreenProps } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   // todo make separate components for such things
@@ -34,11 +35,11 @@ const ProfileOverviewScreen: React.FC<Props> = ({
 }: Props) => {
   // Get account from route params or fetch by ID
   const accountId = accountIdParam || accountFromParams?.id;
-  
+
   const { data: accountFromQuery, isLoading } = useGetAccountById(
     accountId && !accountFromParams ? accountId : undefined,
   );
-  
+
   const account = accountFromParams || accountFromQuery;
 
   if (isLoading || !account) {
@@ -50,7 +51,7 @@ const ProfileOverviewScreen: React.FC<Props> = ({
       ListHeaderComponent={
         <View>
           <View style={styles.avatarContainer}>
-            <UserAvatar userName={account.userName} size={200} />
+            <UserAvatar size={200} userName={account.userName} />
           </View>
           <SectionHeader title="Badges" />
           <UserBadges userID={account.id} />
@@ -65,4 +66,7 @@ const ProfileOverviewScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(ProfileOverviewScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  ProfileOverviewScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

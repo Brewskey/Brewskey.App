@@ -20,7 +20,7 @@ test('should validate required fields', async ({ page }) => {
   // But since button is disabled, user can't submit invalid form
 });
 
-test('should successfully create device', async ({ page, devicePage }) => {
+test('should successfully create device', async ({ page, devicePage, dropDown }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   // Need location for device creation
   const { mockLocationWithTaps } = await import('../../fixtures/entity-fixtures');
@@ -34,21 +34,10 @@ test('should successfully create device', async ({ page, devicePage }) => {
     particleId: 'particle_12345',
   });
   
-  // Select location (required field) - LocationPicker opens a modal when clicked
-  // PickerInput has testID: picker-location (from LocationPicker component)
-  await page.getByTestId('picker-location').click();
-  
-  // Wait for modal to open - Modal testID is {testID}-modal
-  await expect(page.getByTestId('picker-location-modal')).toBeVisible();
-  
-  // Click on the location item using testID
-  const locationItem = page.getByTestId(`location-item-${location.id}`);
-  await expect(locationItem).toBeVisible();
-  await locationItem.click();
-  // Selection is confirmed immediately (no confirmation button needed)
-  
-  // Wait for modal to close
-  await expect(page.getByTestId('picker-location-modal')).not.toBeVisible();
+  // Select location (required field) - one location from mock, use index 0
+  const locationPicker = dropDown.create('picker-location');
+  await locationPicker.select(0);
+  await expect(locationPicker.modal).not.toBeVisible();
   
   // Scroll to ensure submit button is visible and clickable
   await page.getByTestId('submit-button-create-device').scrollIntoViewIfNeeded();

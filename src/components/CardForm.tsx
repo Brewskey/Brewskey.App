@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 
-//import { PaymentCardTextField } from 'tipsi-stripe';
+import { StyleSheet, View } from 'react-native';
+
+import type { StyleProp, ViewStyle } from 'react-native';
+
+// import { PaymentCardTextField } from 'tipsi-stripe';
 // Note: PaymentsScreenStore.addNewCard would be used here when PaymentCardTextField is uncommented
 
 const styles = StyleSheet.create({
@@ -16,14 +19,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   style?: StyleProp<ViewStyle>;
-};
+}
 
-const CardForm: React.FC<Props> = ({ style }) => {
-  return (
-    <View style={style}>
-      {/* <PaymentCardTextField
+const CardForm: React.FC<Props> = ({ style }) => (
+  <View style={style}>
+    {/* <PaymentCardTextField
         accessible={false}
         cvcPlaceholder="CVC"
         expirationPlaceholder="MM/YY"
@@ -31,8 +33,7 @@ const CardForm: React.FC<Props> = ({ style }) => {
         onParamsChange={PaymentsScreenStore.addNewCard}
         style={styles.field}
       /> */}
-    </View>
-  );
-};
+  </View>
+);
 
 export default CardForm;

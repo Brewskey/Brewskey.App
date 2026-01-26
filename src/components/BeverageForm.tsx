@@ -1,3 +1,26 @@
+import * as React from 'react';
+
+import { useForm, useWatch } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+
+import { BeverageImagePicker } from './BeverageImagePicker';
+import { TextInput } from '../common/form/TextInput';
+import { extractShortenedEntityId } from '../utils';
+import { AvailabilityPicker } from './pickers/AvailabilityPicker';
+import BeverageTypePicker from './pickers/BeverageTypePicker';
+import { GlassPicker } from './pickers/GlassPicker';
+import { StylePicker } from './pickers/StylePicker';
+import { SrmPicker } from './pickers/SrmPicker';
+import ServingTemperaturePicker from './pickers/ServingTemperaturePicker';
+import YearPicker from './pickers/YearPicker';
+import Button from '../common/buttons/Button';
+import { CheckBoxField } from '../common/form/CheckBoxField';
+import { Form } from '../common/form/Form';
+import { FormField } from '../common/form/FormField';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import SectionContent from '../common/SectionContent';
+
 import type {
   Beverage,
   BeverageMutator,
@@ -5,27 +28,6 @@ import type {
   ShortenedEntity,
   Srm,
 } from '@brewskey/js-api';
-import type { SimplePickerValue } from '../components/pickers/SimplePicker';
-
-import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useForm, useWatch } from 'react-hook-form';
-
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import Button from '../common/buttons/Button';
-import SectionContent from '../common/SectionContent';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { CheckBoxField } from '../common/form/CheckBoxField';
-import { TextInput } from '../common/form/TextInput';
-import BeverageImagePicker from '../components/BeverageImagePicker';
-import { AvailabilityPicker } from './pickers';
-import { GlassPicker } from './pickers';
-import { StylePicker } from './pickers';
-import { SimplePicker } from './pickers';
-import { SrmPicker } from './pickers';
-import { extractShortenedEntityId } from '../utils';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 
 const styles = StyleSheet.create({
   imagePickerContainer: {
@@ -34,9 +36,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const YEARS_RANGE_LENGTH = 10;
-
-type FormProps = Omit<BeverageMutator, 'availableId' | 'glasswareId' | 'srmId' | 'styleId'> & {
+type FormProps = Omit<
+  BeverageMutator,
+  'availableId' | 'glasswareId' | 'srmId' | 'styleId'
+> & {
   availability: ShortenedEntity | null | undefined;
   glass: ShortenedEntity | null | undefined;
   srm: Srm | null | undefined;
@@ -64,7 +67,7 @@ const validate = (
   return errors;
 };
 
-type Props = {
+interface Props {
   beverage?: Beverage;
   onSubmit: (
     values: BeverageMutator & {
@@ -72,9 +75,13 @@ type Props = {
     },
   ) => undefined | Promise<unknown>;
   submitButtonLabel: string;
-};
+}
 
-const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }) => {
+const BeverageForm: React.FC<Props> = ({
+  beverage,
+  submitButtonLabel,
+  onSubmit,
+}) => {
   const form = useForm<FormProps>({
     defaultValues: {
       id: beverage?.id,
@@ -99,15 +106,7 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
   } = form;
 
   const values = useWatch({ control: form.control });
-  const beverageType = values.beverageType;
-
-  const currentYear = new Date().getFullYear();
-  const yearsRange = [...Array(YEARS_RANGE_LENGTH)]
-    .map(
-      (_value: null, index: number): number =>
-        currentYear - YEARS_RANGE_LENGTH + index + 1,
-    )
-    .reverse();
+  const { beverageType } = values;
 
   const onSubmitForm = async (formValues: FormProps) => {
     const errors = validate(formValues);
@@ -142,14 +141,14 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
         <FormValidationMessage />
         <FormField
           beverageId={beverage?.id}
-          containerStyle={styles.imagePickerContainer}
           component={BeverageImagePicker}
+          containerStyle={styles.imagePickerContainer}
           label=""
           name="beverageImage"
         />
         <FormField
           component={TextInput}
-          initialValue={beverage?.name}
+          defaultValue={beverage?.name}
           label="Name"
           name="name"
           nextFocusTo="description"
@@ -158,92 +157,60 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
         />
         <FormField
           component={TextInput}
-          initialValue={beverage?.description ?? undefined}
+          defaultValue={beverage?.description ?? undefined}
           label="Description"
           name="description"
           testID="input-description"
         />
-        <FormField
-          component={SimplePicker}
-          headerTitle="Select Beverage Type"
-          initialValue={beverage?.beverageType}
-          label="Beverage Type"
+        <BeverageTypePicker
+          defaultValue={beverage?.beverageType}
           name="beverageType"
-          pickerValues={[
-            { label: 'Beer', value: 'Beer' },
-            { label: 'Cider', value: 'Cider' },
-            { label: 'Coffee', value: 'Coffee' },
-            { label: 'Soda', value: 'Soda' },
-          ]}
           required="Beverage type is required"
         />
-        <FormField
-          component={SimplePicker}
-          initialValue={beverage?.servingTemperature}
-          headerTitle="Select Serving Temperature"
-          label="Serving temperature"
+        <ServingTemperaturePicker
+          defaultValue={beverage?.servingTemperature ?? undefined}
           name="servingTemperature"
-          pickerValues={[
-            { label: 'Cellar', value: 'cellar' },
-            { label: 'Very Cold', value: 'very_cold' },
-            { label: 'Cold', value: 'cold' },
-            { label: 'Cool', value: 'cool' },
-            { label: 'Warm', value: 'warm' },
-            { label: 'Hot', value: 'hot' },
-          ]}
         />
-        <FormField
-          component={SimplePicker}
-          initialValue={beverage?.year?.toString()}
-          label="Year"
-          name="year"
-          pickerValues={yearsRange.map(
-            (year: number): SimplePickerValue<string> => ({
-              label: year.toString(),
-              value: year.toString(),
-            }),
-          )}
-          headerTitle="Select Year"
-        />
+        <YearPicker defaultValue={beverage?.year?.toString()} name="year" />
         <FormField
           component={AvailabilityPicker}
-          initialValue={beverage?.availability}
+          defaultValue={beverage?.availability}
           label="Availability"
           name="availability"
         />
         <FormField
           component={GlassPicker}
-          initialValue={beverage?.glass}
+          defaultValue={beverage?.glass}
           label="Glass"
           name="glass"
         />
         <FormField
           component={CheckBoxField}
-          initialValue={beverage?.isOrganic}
+          defaultValue={beverage?.isOrganic}
           label="Is Organic?"
           name="isOrganic"
           testID="input-isOrganic"
         />
         <FormField
-          component={SrmPicker}
-          initialValue={beverage?.srm}
           key="srm"
+          component={SrmPicker}
+          defaultValue={beverage?.srm}
           label="Color"
           name="srm"
           required="SRM is required"
         />
         {beverageType === 'Beer' && [
           <FormField
-            component={StylePicker}
-            initialValue={beverage?.style}
             key="style"
+            component={StylePicker}
+            defaultValue={beverage?.style}
             label="Style"
             name="style"
           />,
           <FormField
-            component={TextInput}
-            initialValue={beverage?.abv?.toString()}
             key="abv"
+            component={TextInput}
+            defaultValue={beverage?.abv?.toString() ?? ''}
             keyboardType="numeric"
             label="ABV"
             name="abv"
@@ -251,9 +218,9 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             testID="input-abv"
           />,
           <FormField
-            component={TextInput}
-            initialValue={beverage?.originalGravity?.toString()}
             key="og"
+            component={TextInput}
+            defaultValue={beverage?.originalGravity?.toString()}
             keyboardType="numeric"
             label="Original Gravity"
             name="originalGravity"
@@ -261,9 +228,9 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             testID="input-originalGravity"
           />,
           <FormField
-            component={TextInput}
-            initialValue={beverage?.ibu?.toString()}
             key="ibu"
+            component={TextInput}
+            defaultValue={beverage?.ibu?.toString()}
             keyboardType="numeric"
             label="IBU"
             name="ibu"
@@ -276,8 +243,12 @@ const BeverageForm: React.FC<Props> = ({ beverage, submitButtonLabel, onSubmit }
             disabled={!isValid || !isDirty || isSubmitting}
             loading={isSubmitting}
             onPress={handleSubmitWithError(form, onSubmitForm)}
-            testID={beverage?.id ? 'submit-button-edit-beverage' : 'submit-button-create-beverage'}
             title={submitButtonLabel}
+            testID={
+              beverage?.id
+                ? 'submit-button-edit-beverage'
+                : 'submit-button-create-beverage'
+            }
           />
         </SectionContent>
       </View>

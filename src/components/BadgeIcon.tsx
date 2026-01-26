@@ -1,8 +1,11 @@
-import type { AchievementType } from '@brewskey/js-api';
 import * as React from 'react';
+
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 import BADGE_BY_ACHIEVEMENT_TYPE, { BADGE_IMAGE_SIZES } from '../badges';
 import { COLORS } from '../theme';
+
+import type { AchievementType } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   counterContainer: {
@@ -40,12 +43,12 @@ const styles = StyleSheet.create({
 });
 
 type SizeType = 'large' | 'small';
-type Props = {
+interface Props {
   achievementType: AchievementType;
   count?: number;
   onPress?: (achievementCounter: AchievementType) => void;
   size: SizeType;
-};
+}
 
 const BadgeIcon: React.FC<Props> = ({
   achievementType,
@@ -53,7 +56,7 @@ const BadgeIcon: React.FC<Props> = ({
   onPress,
   size = 'small',
 }) => {
-  const handlePress = () => onPress && onPress(achievementType);
+  const handlePress = () => onPress?.(achievementType);
 
   const badge = BADGE_BY_ACHIEVEMENT_TYPE[achievementType];
   const isLarge = size === 'large';
@@ -67,7 +70,7 @@ const BadgeIcon: React.FC<Props> = ({
           width: BADGE_IMAGE_SIZES[size],
         }}
       />
-      {count && (
+      {count ? (
         <View
           style={[
             styles.counterContainer,
@@ -85,7 +88,7 @@ const BadgeIcon: React.FC<Props> = ({
             x{count}
           </Text>
         </View>
-      )}
+      ) : null}
     </TouchableOpacity>
   );
 };

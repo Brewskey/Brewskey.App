@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { AppState, View } from 'react-native';
-import { useRouter } from 'expo-router';
 
-import ErrorScreen from '../../../common/ErrorScreen';
 import { CloudDeviceDAO } from '@brewskey/js-api';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import Button from '../../../common/buttons/Button';
-import SectionContent from '../../../common/SectionContent';
-import { useAuthSession } from '../../../hooks/context/AuthContext';
+import { useRouter } from 'expo-router';
+import { AppState, View } from 'react-native';
 
+import Button from '../../../common/buttons/Button';
 import Container from '../../../common/Container';
-import Section from '../../../common/Section';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import NuxNoEntity from '../../../components/NuxNoEntity';
+import Section from '../../../common/Section';
+import SectionContent from '../../../common/SectionContent';
 import DevicesList from '../../../components/DevicesList';
+import NuxNoEntity from '../../../components/NuxNoEntity';
+import { useAuthSession } from '../../../hooks/context/AuthContext';
 
 const DevicesScreen: React.FC = () => {
   const router = useRouter();
@@ -44,7 +44,10 @@ const DevicesScreen: React.FC = () => {
   }, [authResponse]);
 
   const onWifiSetupButtonPress = () => {
-    router.navigate({ pathname: '/(tabs)/devices/new', params: { wifiSetup: 'true' } });
+    router.navigate({
+      pathname: '/(tabs)/devices/new',
+      params: { wifiSetup: 'true' },
+    });
   };
 
   const renderListHeader = ({
@@ -72,16 +75,19 @@ const DevicesScreen: React.FC = () => {
   return (
     <Container>
       <Header
+        showBackButton
+        testID="header-brewskey-boxes"
+        title="Devices"
         rightComponent={
           <HeaderNavigationButton
             name="add"
-            href={{ pathname: '/(tabs)/devices/new', params: { forNewDevice: 'true' } }}
             testID="button-add-device"
+            href={{
+              pathname: '/(tabs)/devices/new',
+              params: { forNewDevice: 'true' },
+            }}
           />
         }
-        showBackButton
-        title="Devices"
-        testID="header-brewskey-boxes"
       />
       <DevicesList
         ListEmptyComponent={NuxNoEntity}
@@ -91,4 +97,7 @@ const DevicesScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(DevicesScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  DevicesScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

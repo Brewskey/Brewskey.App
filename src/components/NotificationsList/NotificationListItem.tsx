@@ -1,12 +1,14 @@
-import type { Notification } from '../../stores/NotificationsStore';
-
 import * as React from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
-import moment from 'moment';
-import TouchableItem from '../../common/buttons/TouchableItem';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+
 import { ListItem } from '@rneui/base';
 import { Icon } from '@rneui/themed';
+import moment from 'moment';
+import { Animated, StyleSheet, Text, View } from 'react-native';
+
+import TouchableItem from '../../common/buttons/TouchableItem';
+import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import type { Notification } from '../../stores/NotificationTypes';
 
 const READ_TIMEOUT = 2000;
 
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type Props = {
+export interface Props {
   contentComponent?: React.ReactNode;
   isSwipeable: boolean;
   leftComponent?: React.ReactNode;
@@ -55,19 +57,19 @@ export type Props = {
   onOpen: (notification: Notification) => void;
   onPress: (notification: Notification) => void | Promise<void>;
   onReadEnd: (notification: Notification) => void;
-};
+}
 
-type State = {
+interface State {
   readAnimationValue: Animated.Value;
-};
+}
 
 const SlideoutView = () => (
   <View style={styles.slideoutContainer}>
     <Icon
-      name="delete"
       color={COLORS.danger}
-      size={32}
       containerStyle={{ alignSelf: 'center' }}
+      name="delete"
+      size={32}
     />
   </View>
 );
@@ -82,7 +84,9 @@ const NotificationListItem: React.FC<Props> = ({
   onReadEnd,
 }) => {
   const readAnimationValue = React.useRef(new Animated.Value(0)).current;
-  const readAnimationRef = React.useRef<Animated.CompositeAnimation | null>(null);
+  const readAnimationRef = React.useRef<Animated.CompositeAnimation | null>(
+    null,
+  );
 
   React.useEffect(() => {
     const animation = Animated.timing(readAnimationValue, {
@@ -137,7 +141,9 @@ const NotificationListItem: React.FC<Props> = ({
         {LeftComponent}
         <View style={styles.mainContainer}>
           <Text style={styles.titleText}>{notification.title}</Text>
-          <Text style={styles.dateText}>{moment(notification.date).fromNow()}</Text>
+          <Text style={styles.dateText}>
+            {moment(notification.date).fromNow()}
+          </Text>
           <View style={styles.contentContainer}>{contentElement}</View>
         </View>
       </Animated.View>
@@ -150,11 +156,11 @@ const NotificationListItem: React.FC<Props> = ({
 
   return (
     <ListItem.Swipeable
-      //maxSwipeDistance={250}
+      // maxSwipeDistance={250}
       onSwipeBegin={handleOpen}
-      //preventSwipeRight
+      // preventSwipeRight
       rightContent={<SlideoutView />}
-      //swipeThreshold={250}
+      // swipeThreshold={250}
     >
       {content}
     </ListItem.Swipeable>

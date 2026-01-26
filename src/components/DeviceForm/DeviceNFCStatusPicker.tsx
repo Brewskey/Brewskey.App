@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { Linking, Text, StyleSheet } from 'react-native';
-import { SimplePicker } from '../pickers';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import { useFormContext } from 'react-hook-form';
+import { Linking, StyleSheet, Text } from 'react-native';
+
+import { DropdownInput } from '../../common/form/DropdownInput';
+import { FormField } from '../../common/form/FormField';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 type NFCStatusValue = 'PhoneOnly' | 'CardOnly' | 'PhoneAndCard' | 'Disabled';
 
@@ -38,7 +42,10 @@ const CardComponent: React.FC = () => {
         The Brewskey box can be unlocked by tapping a NFC card. Mobile phone NFC
         will not work.
       </Text>
-      <Text onPress={callback} style={[styles.descriptionText, styles.linkText]}>
+      <Text
+        onPress={callback}
+        style={[styles.descriptionText, styles.linkText]}
+      >
         See compatible cards and learn more here
       </Text>
     </React.Fragment>
@@ -69,7 +76,10 @@ const PhoneAndCardComponent: React.FC = () => {
       <Text style={styles.descriptionText}>
         The Brewskey box can be unlocked by tapping your phone or card.
       </Text>
-      <Text onPress={callback} style={[styles.descriptionText, styles.linkText]}>
+      <Text
+        onPress={callback}
+        style={[styles.descriptionText, styles.linkText]}
+      >
         See compatible cards and learn more here
       </Text>
     </React.Fragment>
@@ -92,33 +102,34 @@ const DESCRIPTION_BY_VALUE = {
   ),
 } as const;
 
-type Props = {
-  error?: string;
-  onChange: (value?: NFCStatusValue) => void;
-  placeholder?: string;
-  value: NFCStatusValue | null | undefined;
-  name?: string;
-  defaultValue?: NFCStatusValue;
-  required?: boolean | string;
-};
+interface Props {
+  name: string;
+}
 
-const DeviceNFCStatusPicker = (props: Props): React.ReactElement => (
-  <SimplePicker
-    description={props.value ? DESCRIPTION_BY_VALUE[props.value] : undefined}
-    headerTitle="Select NFC Configuration"
-    label="NFC Configuration"
-    name={props.name || 'nfcStatus'}
-    onChange={props.onChange}
-    pickerValues={[
-      { label: 'Phone Only', value: 'PhoneOnly' },
-      { label: 'Card Only', value: 'CardOnly' },
-      { label: 'Phone And Card', value: 'PhoneAndCard' },
-      { label: 'Disabled', value: 'Disabled' },
-    ]}
-    value={props.value ?? undefined}
-    defaultValue={props.defaultValue}
-    required={props.required}
-  />
-);
+const DeviceNFCStatusPicker = (props: Props): React.ReactElement => {
+  const { getValues } = useFormContext();
+  const value = getValues(props.name || 'nfcStatus');
+  return (
+    <FormField
+      required
+      component={DropdownInput}
+      label="NFC Status"
+      labelField="label"
+      name={props.name || 'nfcStatus'}
+      valueField="value"
+      data={[
+        { label: 'Phone Only', value: 'PhoneOnly' },
+        { label: 'Card Only', value: 'CardOnly' },
+        { label: 'Phone And Card', value: 'PhoneAndCard' },
+        { label: 'Disabled', value: 'Disabled' },
+      ]}
+      description={
+        value
+          ? DESCRIPTION_BY_VALUE[value as keyof typeof DESCRIPTION_BY_VALUE]
+          : undefined
+      }
+    />
+  );
+};
 
 export default DeviceNFCStatusPicker;

@@ -1,12 +1,13 @@
-import type { EntityID, Keg } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { Animated, StyleSheet, View, Text } from 'react-native';
+
+import { Animated, StyleSheet, Text, View } from 'react-native';
 
 import LoadingIndicator from '../common/LoadingIndicator';
-import { calculateKegLevel } from '../utils';
-import { COLORS, TYPOGRAPHY, getElevationStyle } from '../theme';
 import { useGetKegById } from '../hooks/queries/KegQueries';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from '../theme';
+import { calculateKegLevel } from '../utils';
+
+import type { EntityID, Keg } from '@brewskey/js-api';
 
 const LOW_KEG_LEVEL = 10;
 
@@ -46,9 +47,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   kegID: EntityID;
-};
+}
 
 const LoadingKegLevelBar = () => (
   <View style={styles.container}>
@@ -56,9 +57,9 @@ const LoadingKegLevelBar = () => (
   </View>
 );
 
-type LoadedProps = {
+interface LoadedProps {
   value: Keg;
-};
+}
 
 const LoadedKegLevelBar: React.FC<LoadedProps> = ({ value }) => {
   const animationValue = React.useRef(new Animated.Value(0)).current;

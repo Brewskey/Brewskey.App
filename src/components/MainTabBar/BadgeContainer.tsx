@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { COLORS } from '../../theme';
-import TouchableItem from '../../common/buttons/TouchableItem';
+
 import { Badge } from '@rneui/themed';
+import { StyleSheet, View } from 'react-native';
+
+import TouchableItem from '../../common/buttons/TouchableItem';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   badge: {
@@ -27,23 +29,25 @@ type Props = React.ComponentProps<typeof TouchableItem> & {
   badgeCount: number;
 };
 
-const BadgeContainer: React.FC<Props> = ({ children, badgeCount, ...props }) => {
-  return (
-    <TouchableItem {...props}>
-      <View>
-        {children}
-        {badgeCount === 0 ? null : (
-          <View style={styles.container}>
-            <Badge
-              badgeStyle={styles.badge}
-              textStyle={styles.badgeText}
-              value={badgeCount > 99 ? '99+' : badgeCount}
-            />
-          </View>
-        )}
-      </View>
-    </TouchableItem>
-  );
-};
+const BadgeContainer: React.FC<Props> = ({
+  children,
+  badgeCount,
+  ...props
+}) => (
+  <TouchableItem {...props}>
+    <View>
+      {children}
+      {badgeCount === 0 ? null : (
+        <View style={styles.container}>
+          <Badge
+            badgeStyle={styles.badge}
+            textStyle={styles.badgeText}
+            value={badgeCount > 99 ? '99+' : badgeCount}
+          />
+        </View>
+      )}
+    </View>
+  </TouchableItem>
+);
 
 export default BadgeContainer;

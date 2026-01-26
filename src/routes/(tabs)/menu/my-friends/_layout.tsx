@@ -1,20 +1,21 @@
-import type { FriendAddFormValues } from '../../../../components/FriendAddForm';
-
 import * as React from 'react';
 import { useState } from 'react';
+
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import Container from '../../../../common/Container';
-import Header from '../../../../common/Header';
-import { HeaderIconButton } from '../../../../common/Header/HeaderIconButton';
 import MyFriendsMainRoute from './myFriendsMain';
 import MyFriendsRequestRoute from './myFriendsRequest';
+import Container from '../../../../common/Container';
+import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../common/ErrorScreen';
+import Header from '../../../../common/Header';
+import { HeaderIconButton } from '../../../../common/Header/HeaderIconButton';
 import FriendAddCustomModal from '../../../../components/modals/FriendAddCustomModal';
-import theme from '../../../../theme';
 import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import { useAddFriend } from '../../../../hooks/queries/FriendQueries';
+import theme from '../../../../theme';
+
+import type { FriendAddFormValues } from '../../../../components/FriendAddForm';
 
 const MyFriendsNavigator = createMaterialTopTabNavigator();
 
@@ -34,6 +35,8 @@ const MyFriendsLayout: React.FC = () => {
   return (
     <Container>
       <Header
+        shouldShowBackButton
+        title="Friends"
         rightComponent={
           <HeaderIconButton
             name="person-add"
@@ -42,8 +45,6 @@ const MyFriendsLayout: React.FC = () => {
             type="material-icons"
           />
         }
-        shouldShowBackButton
-        title="Friends"
       />
       <MyFriendsNavigator.Navigator
         screenOptions={{
@@ -52,12 +53,12 @@ const MyFriendsLayout: React.FC = () => {
         }}
       >
         <MyFriendsNavigator.Screen
-          name="myFriendsMain"
           component={MyFriendsMainRoute}
+          name="myFriendsMain"
         />
         <MyFriendsNavigator.Screen
-          name="myFriendsRequest"
           component={MyFriendsRequestRoute}
+          name="myFriendsRequest"
         />
       </MyFriendsNavigator.Navigator>
       <FriendAddCustomModal
@@ -69,4 +70,7 @@ const MyFriendsLayout: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(MyFriendsLayout, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  MyFriendsLayout,
+  <ErrorScreen shouldShowBackButton />,
+);

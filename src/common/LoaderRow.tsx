@@ -1,14 +1,13 @@
-import type { RowItemProps } from './SwipeableRow';
-
 import * as React from 'react';
-import ErrorListItem from './ErrorListItem';
-import LoadingListItem from './LoadingListItem';
-import { LoaderComponent } from './LoaderComponent';
-import { UseQueryResult } from '@tanstack/react-query';
 
-export type LoaderErrorRowProps<TExtraProps> = TExtraProps & {
-  error: Error;
-};
+import ErrorListItem from './ErrorListItem';
+import { LoaderComponent } from './LoaderComponent';
+import LoadingListItem from './LoadingListItem';
+
+import type { UseQueryResult } from '@tanstack/react-query';
+
+import type { LoaderErrorRowProps } from './LoaderRowTypes';
+import type { RowItemProps } from './SwipeableRow';
 
 type LoadedRowComponentProps<TEntity, TExtraProps> = TExtraProps & {
   loadedRow: React.ComponentType<RowItemProps<TEntity>>;
@@ -28,7 +27,12 @@ const LoadedRowComponent = <TEntity, TExtraProps>({
   separators,
   ...rest
 }: LoadedRowComponentProps<TEntity, TExtraProps>) => (
-  <LoadedRow item={value.entity} index={index} separators={separators} {...rest} />
+  <LoadedRow
+    index={index}
+    item={value.entity}
+    separators={separators}
+    {...rest}
+  />
 );
 
 type Props<TEntity, TExtraProps> = TExtraProps &
@@ -36,7 +40,7 @@ type Props<TEntity, TExtraProps> = TExtraProps &
     errorRow?: React.ComponentType<LoaderErrorRowProps<TExtraProps>>;
     index: number;
     loadedRow: React.ComponentType<RowItemProps<TEntity>>;
-    query: UseQueryResult<TEntity, Error>;
+    query: UseQueryResult<TEntity>;
     loadingRow?: React.ComponentType<
       React.ComponentProps<typeof LoadingListItem>
     >;
@@ -57,26 +61,23 @@ export const LoaderRow = <TEntity, TExtraProps>({
   ...extraProps
 }: Props<TEntity, TExtraProps>): React.ReactElement => {
   const ErrorRowComponent = errorRow || ErrorListItem;
-  const queries = React.useMemo(
-    () => ({ entity: query }),
-    [query],
-  ) as Record<string, UseQueryResult<TEntity, Error>>;
+  const queries = React.useMemo(() => ({ entity: query }), [query]) as Record<
+    string,
+    UseQueryResult<TEntity, Error>
+  >;
 
   return (
     <LoaderComponent
+      errorComponent={ErrorRowComponent as React.ComponentType<any>}
+      loadedComponent={LoadedRowComponent as React.ComponentType<any>}
+      loadingComponent={loadingRow as React.ComponentType<any>}
+      queries={queries}
       componentProps={{
         ...extraProps,
         index,
         separators,
         loadedRow,
       }}
-       
-      errorComponent={ErrorRowComponent as React.ComponentType<any>}
-       
-      loadedComponent={LoadedRowComponent as React.ComponentType<any>}
-       
-      loadingComponent={loadingRow as React.ComponentType<any>}
-      queries={queries}
     />
   );
 };

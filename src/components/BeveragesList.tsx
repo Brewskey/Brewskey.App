@@ -1,31 +1,32 @@
-import type { Beverage, QueryOptions } from '@brewskey/js-api';
-
-import type { RenderProps } from '../common/SwipeableList';
-
 import * as React from 'react';
+
+import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
 import BeverageAvatar from '../common/avatars/BeverageAvatar';
+import ListEmpty from '../common/ListEmpty';
+import ListItem from '../common/ListItem';
+import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
 import { SwipeableList } from '../common/SwipeableList';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
-import ListEmpty from '../common/ListEmpty';
-import LoadingListFooter from '../common/LoadingListFooter';
-import ListItem from '../common/ListItem';
 import {
   useDeleteBeverageById,
   useGetBeverages,
 } from '../hooks/queries/BeverageQueries';
-import { useRouter } from 'expo-router';
 
-type Props = {
+import type { Beverage, QueryOptions } from '@brewskey/js-api';
+
+import type { RenderProps } from '../common/SwipeableList';
+
+interface Props {
   ListHeaderComponent?:
     | React.ComponentType
     | React.ReactElement
     | null
     | undefined;
   queryOptions?: QueryOptions;
-};
+}
 
 const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
   const router = useRouter();
@@ -36,7 +37,10 @@ const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
     addSnackBarMessage({ content: 'The beverage was deleted' });
   };
   const onEditItemPress = ({ id }: Beverage) => {
-    router.navigate({ pathname: '/(tabs)/beverages/[id]/edit', params: { id: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/beverages/[id]/edit',
+      params: { id: String(id) },
+    });
   };
 
   return (
@@ -68,39 +72,42 @@ export const BeveragesList: React.FC<Props> = ({
   const keyExtractor = (row: Beverage): string => row.id.toString();
 
   const onItemPress = (item: Beverage): void =>
-    router.navigate({ pathname: '/(tabs)/beverages/[id]', params: { id: String(item.id) } });
+    router.navigate({
+      pathname: '/(tabs)/beverages/[id]',
+      params: { id: String(item.id) },
+    });
 
   const renderRow = ({
     info: { item },
   }: RenderProps<Beverage>): React.ReactElement => (
     <ListItem
       swipeable
-      slideoutComponent={<Slideout item={item} />}
-      leftAvatar={<BeverageAvatar beverageId={item.id} />}
       chevron={false}
       item={item}
+      leftAvatar={<BeverageAvatar beverageId={item.id} />}
       onPress={onItemPress}
+      slideoutComponent={<Slideout item={item} />}
       subtitle={item.beverageType}
-      title={item.name}
       testID={`beverage-item-${item.id}`}
+      title={item.name}
     />
   );
 
-  const isLoading = beverages.isLoading;
+  const { isLoading } = beverages;
   return (
-    <View testID="beverages-list" style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="beverages-list">
       <SwipeableList<Beverage>
-        listType="flatList"
         data={beverages.data}
-        ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         keyExtractor={keyExtractor}
-        ListEmptyComponent={
-          !isLoading ? <ListEmpty message="No beverages" /> : null
-        }
+        ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
+        ListHeaderComponent={ListHeaderComponent}
+        listType="flatList"
         onEndReached={beverages.fetchNextPage}
         onRefresh={beverages.refetch}
         renderItem={renderRow}
+        ListEmptyComponent={
+          !isLoading ? <ListEmpty message="No beverages" /> : null
+        }
       />
     </View>
   );

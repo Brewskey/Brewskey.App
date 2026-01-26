@@ -1,21 +1,22 @@
-import type { EntityID, Location } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import { useLocalSearchParams } from 'expo-router';
+import { ScrollView, StyleSheet, Text } from 'react-native';
+
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
+import LoadingIndicator from '../../../common/LoadingIndicator';
+import NotFoundScreen from '../../../common/NotFoundScreen';
 import SectionContent from '../../../common/SectionContent';
 import SectionHeader from '../../../common/SectionHeader';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import Header from '../../../common/Header';
-import NotFoundScreen from '../../../common/NotFoundScreen';
 import LocationAddress from '../../../components/LocationAddress';
-import { TYPOGRAPHY } from '../../../theme';
 import { useGetLocationById } from '../../../hooks/queries/LocationQueries';
+import { TYPOGRAPHY } from '../../../theme';
+
+import type { EntityID, Location } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   description: {
@@ -25,14 +26,19 @@ const styles = StyleSheet.create({
 
 const LocationDetailsScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const locationId = typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
-  const { data: location, isLoading, error } = useGetLocationById(locationId as EntityID);
+  const locationId =
+    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+  const {
+    data: location,
+    isLoading,
+    error,
+  } = useGetLocationById(locationId as EntityID);
 
   if (!locationId) {
     return (
       <NotFoundScreen
-        title="Location Not Found"
         message="The location you're looking for could not be found."
+        title="Location Not Found"
       />
     );
   }
@@ -49,8 +55,8 @@ const LocationDetailsScreen: React.FC = () => {
   if (error) {
     return (
       <NotFoundScreen
-        title="Location Not Found"
         message="The location you're looking for could not be found."
+        title="Location Not Found"
       />
     );
   }
@@ -60,16 +66,19 @@ const LocationDetailsScreen: React.FC = () => {
   return (
     <Container>
       <Header
+        shouldShowBackButton
+        testID="header-location-details"
+        title={name}
         rightComponent={
           <HeaderNavigationButton
             name="edit"
-            href={{ pathname: '/(tabs)/locations/[id]/edit', params: { id: String(locId) } }}
             testID="button-edit-location"
+            href={{
+              pathname: '/(tabs)/locations/[id]/edit',
+              params: { id: String(locId) },
+            }}
           />
         }
-        shouldShowBackButton
-        title={name}
-        testID="header-location-details"
       />
       <ScrollView>
         <SectionHeader title="Address" />
@@ -77,16 +86,19 @@ const LocationDetailsScreen: React.FC = () => {
           <LocationAddress location={location} />
         </SectionContent>
         {description != null && description !== '' && (
-          <>
+          <React.Fragment>
             <SectionHeader key="header" title="Description" />
             <SectionContent key="content" paddedHorizontal>
               <Text style={styles.description}>{description}</Text>
             </SectionContent>
-          </>
+          </React.Fragment>
         )}
       </ScrollView>
     </Container>
   );
 };
 
-export default withErrorBoundary(LocationDetailsScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  LocationDetailsScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

@@ -1,26 +1,35 @@
-import type { EntityID, Keg, Pour } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, ListRenderItemInfo } from 'react-native';
+
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
-import { COLORS, TYPOGRAPHY } from '../theme';
-import { createFilter } from '@brewskey/js-api/dist/filters';
-import OverviewItem from '../common/OverviewItem';
-import Fragment from '../common/Fragment';
-import { calculateKegLevel } from '../utils';
-import { NULL_STRING_PLACEHOLDER, KEG_NAME_BY_KEG_TYPE } from '../constants';
-import { useGetPours } from '../hooks/queries/PourQueries';
-import ListItem from '../common/ListItem';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import { BeverageDetailsLoader } from './BeverageDetailsLoader';
+import PintCounter from './PintCounter';
 import UserAvatar from '../common/avatars/UserAvatar';
-import LoadingListFooter from '../common/LoadingListFooter';
+import Fragment from '../common/Fragment';
 import ListEmpty from '../common/ListEmpty';
+import ListItem from '../common/ListItem';
+import OverviewItem from '../common/OverviewItem';
+import { COLORS, TYPOGRAPHY } from '../theme';
+import { calculateKegLevel } from '../utils';
+import { KEG_NAME_BY_KEG_TYPE, NULL_STRING_PLACEHOLDER } from '../constants';
+import { useGetPours } from '../hooks/queries/PourQueries';
+import LoadingListFooter from '../common/LoadingListFooter';
 import Section from '../common/Section';
 import SectionHeader from '../common/SectionHeader';
 import SectionContent from '../common/SectionContent';
-import { BeverageDetailsLoader } from './BeverageDetailsLoader';
 import List from '../common/List';
-import PintCounter from './PintCounter';
+
+import type { EntityID, Keg, Pour } from '@brewskey/js-api';
+import type { ListRenderItemInfo } from 'react-native';
 
 const styles = StyleSheet.create({
   tabContainer: {
@@ -58,13 +67,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   keg: Keg;
   onClose?: () => void;
-};
+}
 
-const PourRow: React.FC<{ 
-  pour: Pour; 
+const PourRow: React.FC<{
+  pour: Pour;
   beverageId: EntityID | undefined;
   onPress?: (pour: Pour) => void;
 }> = ({ pour, beverageId, onPress }) => {
@@ -84,30 +93,28 @@ const PourRow: React.FC<{
   return (
     <ListItem
       chevron={false}
-      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       item={pour}
-      title={title}
-      subtitle={moment(pour.pourDate).fromNow()}
-      rightIcon={
-        <PintCounter beverageID={beverageId} ounces={pour.ounces} />
-      }
+      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={pour.owner ? handlePress : undefined}
+      rightIcon={<PintCounter beverageID={beverageId} ounces={pour.ounces} />}
+      subtitle={moment(pour.pourDate).fromNow()}
+      title={title}
     />
   );
 };
 
-type TabButtonProps = {
+interface TabButtonProps {
   title: string;
   isActive: boolean;
   onPress: () => void;
-};
+}
 
 const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress }) => {
   const testID = `keg-details-tab-${title.toLowerCase()}`;
   return (
     <TouchableOpacity
-      style={[styles.tab, isActive && styles.activeTab]}
       onPress={onPress}
+      style={[styles.tab, isActive && styles.activeTab]}
       testID={testID}
     >
       <Text style={[styles.tabText, isActive && styles.activeTabText]}>
@@ -117,8 +124,8 @@ const TabButton: React.FC<TabButtonProps> = ({ title, isActive, onPress }) => {
   );
 };
 
-const KegPoursList: React.FC<{ 
-  kegId: EntityID; 
+const KegPoursList: React.FC<{
+  kegId: EntityID;
   beverageId: EntityID | undefined;
   onClose?: () => void;
 }> = ({ kegId, beverageId, onClose }) => {
@@ -134,13 +141,18 @@ const KegPoursList: React.FC<{
     }
 
     onClose?.();
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(pour.owner.id) },
+    });
   };
 
   const keyExtractor = (pour: Pour): string => pour.id.toString();
 
-  const renderRow = ({ item }: ListRenderItemInfo<Pour>): React.ReactElement => (
-    <PourRow pour={item} beverageId={beverageId} onPress={handleItemPress} />
+  const renderRow = ({
+    item,
+  }: ListRenderItemInfo<Pour>): React.ReactElement => (
+    <PourRow beverageId={beverageId} onPress={handleItemPress} pour={item} />
   );
 
   return (
@@ -148,15 +160,21 @@ const KegPoursList: React.FC<{
       data={pours.data}
       keyExtractor={keyExtractor}
       listType="flatList"
-      ListEmptyComponent={!pours.isLoading ? <ListEmpty message="No pours" /> : null}
-      ListFooterComponent={<LoadingListFooter isLoading={pours.isFetchingNextPage || pours.isLoading} />}
+      onRefresh={pours.refetch}
+      renderItem={renderRow}
+      ListEmptyComponent={
+        !pours.isLoading ? <ListEmpty message="No pours" /> : null
+      }
+      ListFooterComponent={
+        <LoadingListFooter
+          isLoading={pours.isFetchingNextPage || pours.isLoading}
+        />
+      }
       onEndReached={() => {
         if (pours.hasNextPage) {
           pours.fetchNextPage();
         }
       }}
-      onRefresh={pours.refetch}
-      renderItem={renderRow}
     />
   );
 };
@@ -173,7 +191,9 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
     pulses,
   } = keg;
 
-  const [activeTab, setActiveTab] = React.useState<'details' | 'pours'>('details');
+  const [activeTab, setActiveTab] = React.useState<'details' | 'pours'>(
+    'details',
+  );
 
   const kegLevel = calculateKegLevel(keg);
 
@@ -181,14 +201,14 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
     <Fragment>
       <View style={styles.tabContainer}>
         <TabButton
-          title="Details"
           isActive={activeTab === 'details'}
           onPress={() => setActiveTab('details')}
+          title="Details"
         />
         <TabButton
-          title="Pours"
           isActive={activeTab === 'pours'}
           onPress={() => setActiveTab('pours')}
+          title="Pours"
         />
       </View>
       <View style={styles.tabContent}>
@@ -199,11 +219,11 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
                 <BeverageDetailsLoader beverageID={beverage.id} />
               </SectionContent>
             </Section>
-            <OverviewItem title="Keg Type" value={KEG_NAME_BY_KEG_TYPE[kegType]} />
             <OverviewItem
-              title="Keg Level"
-              value={`${kegLevel.toFixed(1)}%`}
+              title="Keg Type"
+              value={KEG_NAME_BY_KEG_TYPE[kegType]}
             />
+            <OverviewItem title="Keg Level" value={`${kegLevel.toFixed(1)}%`} />
             <OverviewItem
               title="Ounces Poured"
               value={`${Math.round(ounces)} oz`}
@@ -215,16 +235,22 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
             <OverviewItem
               title="Floated Date"
               value={
-                floatedDate ? moment(floatedDate).format('l') : NULL_STRING_PLACEHOLDER
+                floatedDate
+                  ? moment(floatedDate).format('l')
+                  : NULL_STRING_PLACEHOLDER
               }
             />
-            {location && (
+            {location ? (
               <OverviewItem title="Location" value={location.name} />
-            )}
+            ) : null}
           </ScrollView>
         ) : (
           <View style={styles.poursListContainer}>
-            <KegPoursList kegId={keg.id} beverageId={keg.beverage?.id} onClose={onClose} />
+            <KegPoursList
+              beverageId={keg.beverage?.id}
+              kegId={keg.id}
+              onClose={onClose}
+            />
           </View>
         )}
       </View>

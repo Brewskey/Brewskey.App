@@ -1,27 +1,28 @@
 import * as React from 'react';
 
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useForm, FormProvider, useWatch } from 'react-hook-form';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
-import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
+
+import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import { FormField } from '../../../common/form/FormField';
+import Header from '../../../common/Header';
+import ListItem from '../../../common/ListItem';
+import Section from '../../../common/Section';
 import { useAppSettings } from '../../../hooks/context/AppSettingsContext';
+import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
+import { COLORS, TYPOGRAPHY } from '../../../theme';
 import { useChangePassword } from '../../../hooks/queries/AuthQueries';
 import { useGetOrganizations } from '../../../hooks/queries/OrganizationQueries';
-
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import Container from '../../../common/Container';
-import Header from '../../../common/Header';
-import Section from '../../../common/Section';
 import SectionContent from '../../../common/SectionContent';
 import SectionHeader from '../../../common/SectionHeader';
-import ListItem from '../../../common/ListItem';
-import ChangePasswordForm, {
-  type ChangePasswordFormFields,
-} from '../../../components/ChangePasswordForm';
-import { OrganizationPicker } from '../../../components/pickers';
-import { FormField } from '../../../common/form/FormField';
+import ChangePasswordForm from '../../../components/ChangePasswordForm';
+
+import type { ChangePasswordFormFields } from '../../../components/ChangePasswordForm';
+
+import { OrganizationPicker } from '../../../components/pickers/OrganizationPicker';
 
 const styles = StyleSheet.create({
   versionText: {
@@ -56,7 +57,10 @@ const SettingsScreen: React.FC = () => {
   }, [selectedOrganization, form]);
 
   // Watch form value changes and sync with custom callback
-  const formOrganization = useWatch({ control: form.control, name: 'organization' });
+  const formOrganization = useWatch({
+    control: form.control,
+    name: 'organization',
+  });
   React.useEffect(() => {
     if (formOrganization !== selectedOrganization) {
       onOrganizationChange(formOrganization);
@@ -77,7 +81,7 @@ const SettingsScreen: React.FC = () => {
 
   return (
     <Container>
-      <Header shouldShowBackButton title="Settings" testID="header-settings" />
+      <Header shouldShowBackButton testID="header-settings" title="Settings" />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>
           <SectionHeader title="Change password" />
@@ -89,29 +93,29 @@ const SettingsScreen: React.FC = () => {
           <SectionContent>
             <ListItem
               chevron={false}
+              testID="switch-manage-taps"
+              title="Manage taps"
               switch={{
                 onValueChange: onToggleManageTaps,
                 value: isManageTapsEnabled,
               }}
-              testID="switch-manage-taps"
-              title="Manage taps"
             />
           </SectionContent>
         </Section>
-        {hasOrganizations && (
+        {hasOrganizations ? (
           <Section bottomPadded={updateMetadata != null}>
             <SectionContent>
               <FormProvider {...form}>
                 <FormField
                   component={OrganizationPicker}
+                  defaultValue={selectedOrganization}
                   label="Organization"
                   name="organization"
-                  initialValue={selectedOrganization}
                 />
               </FormProvider>
             </SectionContent>
           </Section>
-        )}
+        ) : null}
         {updateMetadata != null && (
           <Section>
             <SectionContent>
@@ -126,4 +130,7 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(SettingsScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  SettingsScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

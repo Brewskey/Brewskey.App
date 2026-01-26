@@ -1,7 +1,8 @@
-import type { WifiNetwork } from './types';
+import NodeRSA from 'node-rsa';
 
 import { fetchJSON } from './utils';
-import NodeRSA from 'node-rsa';
+
+import type { WifiNetwork } from './types';
 
 const BASE_URL = 'http://192.168.0.1:80';
 const DEFAULT_WIFI_CHANNEL = 3;
@@ -20,13 +21,12 @@ export const WIFI_SECURITIES = {
   WPA_AES_PSK: 2097156,
   WPA_TKIP_PSK: 2097154,
 } as const;
- 
 
-type WifiResult = {
+interface WifiResult {
   ch: number;
   sec: number;
   ssid: string;
-};
+}
 
 const translateWifiFromApi = ({ ch, sec, ssid }: WifiResult): WifiNetwork => ({
   channel: ch,
@@ -85,7 +85,7 @@ class SoftAPService {
     }
   };
 
-  static connectWifi = async (networkIndex: number = 0): Promise<void> => {
+  static connectWifi = async (networkIndex = 0): Promise<void> => {
     const body = JSON.stringify({ idx: networkIndex });
     const { r: responseCode } = await fetchJSON(`${BASE_URL}/connect-ap`, {
       body,

@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { CheckBoxInput, TextInputProps as CheckBoxInputProps } from './CheckBoxInput';
+
+import { CheckBoxInput } from './CheckBoxInput';
+
+import type { TextInputProps as CheckBoxInputProps } from './CheckBoxInput';
 
 export type CheckBoxFieldProps = Omit<CheckBoxInputProps, 'defaultValue'> & {
   initialValue?: boolean;

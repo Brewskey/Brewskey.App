@@ -1,4 +1,4 @@
-export type Contact = {
+export interface Contact {
   company: string | null | undefined;
   department: string | null | undefined;
   emailAddresses: {
@@ -26,7 +26,7 @@ export type Contact = {
   recordID: string;
   suffix: string | null | undefined;
   thumbnailPath: string | null | undefined;
-};
+}
 
 class ContactsStore {
   contacts: Contact[] = [];

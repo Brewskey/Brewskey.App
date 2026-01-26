@@ -1,13 +1,13 @@
 import type { FlowSensorType } from '@brewskey/js-api';
-import { ImageSourcePropType } from 'react-native';
+import type { ImageSourcePropType } from 'react-native';
 
-export type FlowSensorItem = {
+export interface FlowSensorItem {
   defaultPulses: number;
   description: string;
   image: ImageSourcePropType | undefined;
   name: string;
   value: FlowSensorType;
-};
+}
 
 const FLOW_SENSOR_ITEMS: FlowSensorItem[] = [
   {

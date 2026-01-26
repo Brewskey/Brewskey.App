@@ -1,29 +1,31 @@
-import type { Beverage, Keg, Permission, Tap } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { COLORS, TYPOGRAPHY } from '../../../../../theme';
+
 import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
-import KegsList from '../../../../../components/KegsList';
-import Section from '../../../../../common/Section';
-import SectionHeader from '../../../../../common/SectionHeader';
-import SectionContent from '../../../../../common/SectionContent';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StyleSheet, Text } from 'react-native';
+
 import Container from '../../../../../common/Container';
+import Fragment from '../../../../../common/Fragment';
 import Header from '../../../../../common/Header';
 import LoadingIndicator from '../../../../../common/LoadingIndicator';
 import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import Fragment from '../../../../../common/Fragment';
-import { checkCanEdit } from '../../../../../permissionHelpers';
-import { useGetKegById } from '../../../../../hooks/queries/KegQueries';
-import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
-import { useGetPermissionForEntityById } from '../../../../../hooks/queries/PermissionQueries';
-import { useGetFlowSensorByTapId } from '../../../../../hooks/queries/FlowSensorQueries';
+import Section from '../../../../../common/Section';
+import SectionContent from '../../../../../common/SectionContent';
+import SectionHeader from '../../../../../common/SectionHeader';
 import WarningNotification from '../../../../../common/WarningNotification';
-import { KegLevelBar } from '../../../../../components/KegLevelBar';
 import { BeverageDetailsLoader } from '../../../../../components/BeverageDetailsLoader';
+import { KegLevelBar } from '../../../../../components/KegLevelBar';
+import KegsList from '../../../../../components/KegsList';
 import { TapDetailsNoKeg } from '../../../../../components/TapDetailsNoKeg';
+import { useGetFlowSensorByTapId } from '../../../../../hooks/queries/FlowSensorQueries';
+import { useGetKegById } from '../../../../../hooks/queries/KegQueries';
+import { useGetPermissionForEntityById } from '../../../../../hooks/queries/PermissionQueries';
+import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
+import { checkCanEdit } from '../../../../../permissionHelpers';
+import { COLORS, TYPOGRAPHY } from '../../../../../theme';
+
+import type { Beverage, Keg, Permission, Tap } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   text: {
@@ -36,20 +38,24 @@ const styles = StyleSheet.create({
 
 const KegRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const id = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+  const id =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
   const router = useRouter();
-  
+
   if (!id) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
 
   const { data: tap, isLoading } = useGetTapById(id as any);
-  const { data: tapPermission } = useGetPermissionForEntityById('tap', id as any);
+  const { data: tapPermission } = useGetPermissionForEntityById(
+    'tap',
+    id as any,
+  );
   const { data: flowSensor } = useGetFlowSensorByTapId(id as any);
   const { data: currentKeg, refetch } = useGetKegById(tap?.currentKeg.id);
 
@@ -65,8 +71,8 @@ const KegRoute: React.FC = () => {
   if (!tap) {
     return (
       <NotFoundScreen
-        title="Tap Not Found"
         message="The tap you're looking for could not be found."
+        title="Tap Not Found"
       />
     );
   }
@@ -96,6 +102,7 @@ const KegRoute: React.FC = () => {
 
   return (
     <KegsList
+      onRefresh={_onRefresh}
       ListHeaderComponent={
         <Fragment>
           {noFlowSensorWarning}
@@ -116,7 +123,10 @@ const KegRoute: React.FC = () => {
                 </SectionContent>
               </Section>
               <Section bottomPadded>
-                <SectionHeader title={currentKeg.beverage.name} testID="section-header-beverage" />
+                <SectionHeader
+                  testID="section-header-beverage"
+                  title={currentKeg.beverage.name}
+                />
                 <SectionContent>
                   <BeverageDetailsLoader beverageID={currentKeg.beverage.id} />
                 </SectionContent>
@@ -133,7 +143,6 @@ const KegRoute: React.FC = () => {
           <SectionHeader title="Past Kegs" />
         </Fragment>
       }
-      onRefresh={_onRefresh}
       queryOptions={{
         filters: [createFilter('tap/id').equals(tap.id)],
         orderBy: [{ column: 'id', direction: 'desc' }],

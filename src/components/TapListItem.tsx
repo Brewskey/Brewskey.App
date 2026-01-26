@@ -1,17 +1,19 @@
+import * as React from 'react';
+
+import { Text } from 'react-native';
+
+import BeverageAvatar from '../common/avatars/BeverageAvatar';
+import ListItem from '../common/ListItem';
+import { COLORS } from '../theme';
+import { calculateKegLevel } from '../utils';
+
 import type { Tap } from '@brewskey/js-api';
 
-import * as React from 'react';
-import { Text } from 'react-native';
-import ListItem from '../common/ListItem';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import { calculateKegLevel } from '../utils';
-import { COLORS } from '../theme';
-
-type Props = {
+interface Props {
   index: number;
   onPress?: (arg1: Tap) => void;
   tap: Tap;
-};
+}
 
 const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
   const { currentKeg, description, tapNumber } = tap;
@@ -27,6 +29,13 @@ const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
 
   return (
     <ListItem
+      chevron={false}
+      item={tap}
+      leftAvatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
+      onPress={onPress}
+      subtitle={<Text>{description || ''}</Text>}
+      testID={`tap-item-${tap.id}`}
+      title={<Text>{`${tapNumber} - ${beverageName}`}</Text>}
       badge={
         kegLevel !== null
           ? {
@@ -35,13 +44,6 @@ const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
             }
           : undefined
       }
-      leftAvatar={<BeverageAvatar beverageId={beverage ? beverage.id : ''} />}
-      chevron={false}
-      item={tap}
-      onPress={onPress}
-      title={<Text>{`${tapNumber} - ${beverageName}`}</Text>}
-      subtitle={<Text>{description || ''}</Text>}
-      testID={`tap-item-${tap.id}`}
     />
   );
 };

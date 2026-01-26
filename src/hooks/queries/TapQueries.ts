@@ -1,22 +1,28 @@
+import { TapDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type {
   EntityID,
   LeaderboardItem,
   QueryOptions,
   Tap,
-  TapDAO,
   TapMutator,
 } from '@brewskey/js-api';
-import { LeaderboardDurationValue } from '../../components/LeaderboardDurationPicker';
-import nullthrows from 'nullthrows';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
+
+import type { LeaderboardDurationValue } from '../../components/LeaderboardDurationPicker';
 
 export enum TapQueryKeys {
   TapById = 'tap_by_id',
@@ -24,21 +30,18 @@ export enum TapQueryKeys {
   LeaderboardQuery = 'leaderboard_query',
 }
 
-export const useGetTapById = (id: EntityID): UseQueryResult<Tap, Error> =>
+export const useGetTapById = (id: EntityID): UseQueryResult<Tap> =>
   useQuery({
-    queryKey: [TapQueryKeys.TapById, String(id)],
-    queryFn: () => {
-      console.log('useGetTapById', id, typeof id);
-      return TapDAO.fetchByID(id);
-    },
+    queryKey: [TapQueryKeys.TapById, getStringFromEntityID(id)],
+    queryFn: async () => TapDAO.fetchByID(id),
   });
 
 export const useGetTaps = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Tap[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Tap[]>> =>
   useInfiniteQuery({
     queryKey: [TapQueryKeys.Taps, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       TapDAO.fetchMany({
         ...queryOptions,
         skip: pageParam * 20,
@@ -58,7 +61,7 @@ export const useGetTaps = (
 export const useCreateTap = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (mutator: TapMutator) => TapDAO.post(mutator),
+    mutationFn: async (mutator: TapMutator) => TapDAO.post(mutator),
     onSuccess: async () => {
       await queryClient.removeQueries({
         queryKey: [TapQueryKeys.Taps],
@@ -69,14 +72,14 @@ export const useCreateTap = () => {
 export const useUpdateTap = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (mutator: TapMutator) =>
+    mutationFn: async (mutator: TapMutator) =>
       TapDAO.put(nullthrows(mutator.id), mutator),
     onSuccess: async (result) => {
       await queryClient.invalidateQueries({
         queryKey: [TapQueryKeys.Taps],
       });
       await queryClient.invalidateQueries({
-        queryKey: [TapQueryKeys.TapById, result.id],
+        queryKey: [TapQueryKeys.TapById, getStringFromEntityID(result.id)],
       });
     },
   });
@@ -85,7 +88,7 @@ export const useUpdateTap = () => {
 export const useDeleteTap = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (tapId: EntityID) => TapDAO.deleteByID(tapId),
+    mutationFn: async (tapId: EntityID) => TapDAO.deleteByID(tapId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [TapQueryKeys.Taps],
@@ -98,11 +101,16 @@ export const useGetTapLeaderboard = (
   tapId: EntityID,
   duration: LeaderboardDurationValue,
   queryOptions?: QueryOptions,
-): UseInfiniteQueryResult<InfiniteData<LeaderboardItem[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<LeaderboardItem[]>> =>
   useInfiniteQuery({
-    queryKey: [TapQueryKeys.LeaderboardQuery, tapId, duration, queryOptions],
+    queryKey: [
+      TapQueryKeys.LeaderboardQuery,
+      getStringFromEntityID(tapId),
+      duration,
+      queryOptions,
+    ],
     initialPageParam: 0,
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       TapDAO.fetchLeaderboard(tapId, duration, {
         ...queryOptions,
         skip: pageParam * 20,

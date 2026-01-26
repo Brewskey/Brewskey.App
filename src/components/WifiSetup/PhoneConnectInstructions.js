@@ -1,22 +1,24 @@
 // flow
 
 import * as React from 'react';
+
 import { View } from 'react-native';
+
 import TextBlock from '../../common/TextBlock';
 
 const PhoneConnectInstructions = () => (
   <View>
-    <TextBlock index={1} paddedBottom>
+    <TextBlock paddedBottom index={1}>
       Open your nearby networks on your phone.
     </TextBlock>
-    <TextBlock index={2} paddedBottom>
+    <TextBlock paddedBottom index={2}>
       Make sure WiFi is turned on, and choose a network that looks like
       Photon-XXXX.
     </TextBlock>
-    <TextBlock index={3} paddedBottom>
+    <TextBlock paddedBottom index={3}>
       Once connected, you will move to the next step.
     </TextBlock>
-    <TextBlock index={4} paddedBottom>
+    <TextBlock paddedBottom index={4}>
       If your Brewskey box is blinking blue but still not showing up in you
       smart phone's WiFi list, try turning your WiFi off and then on again.
     </TextBlock>

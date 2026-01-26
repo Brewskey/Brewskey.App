@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, TextStyle, ViewStyle } from 'react-native';
+
+import { Badge, Icon, ListItem as RNEListItem, Switch } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+
 import { COLORS } from '../theme';
-import {
-  Badge,
-  BadgeProps,
-  Icon,
-  IconProps,
-  ListItem as RNEListItem,
-  Switch,
-} from '@rneui/themed';
+
+import type { BadgeProps, IconProps } from '@rneui/themed';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -82,7 +80,7 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
   }, [swipeable, item, props]);
 
   const content = (
-    <>
+    <React.Fragment>
       {leftAvatar}
       <RNEListItem.Content>
         <RNEListItem.Title style={[styles.title, titleStyle]}>
@@ -94,7 +92,7 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
 
         {chevron === true ? <RNEListItem.Chevron /> : null}
       </RNEListItem.Content>
-      <>
+      <React.Fragment>
         {rightIcon != null ? (
           React.isValidElement(rightIcon) ? (
             rightIcon
@@ -104,26 +102,26 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
         ) : null}
         {switchParams != null ? (
           <Switch
+            onValueChange={switchParams.onValueChange}
             testID={testID ? `${testID}-switch` : undefined}
             value={switchParams.value}
-            onValueChange={switchParams.onValueChange}
           />
         ) : null}
-      </>
+      </React.Fragment>
       {badge ? <Badge {...badge} /> : null}
-    </>
+    </React.Fragment>
   );
 
   if (swipeable) {
-    const swipeableProps = props as Extract<Props<TItem>, { swipeable: true }>;
+    const swipeableProps = props;
     return (
       <RNEListItem.Swipeable
         rightContent={swipeableProps.slideoutComponent}
         {...otherProps}
+        bottomDivider
         containerStyle={[styles.container, containerStyle]}
         onPress={_onPress}
         testID={testID}
-        bottomDivider
       >
         {content}
       </RNEListItem.Swipeable>
@@ -133,10 +131,10 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
   return (
     <RNEListItem
       {...otherProps}
+      bottomDivider
       containerStyle={[styles.container, containerStyle]}
       onPress={_onPress}
       testID={testID}
-      bottomDivider
     >
       {content}
     </RNEListItem>

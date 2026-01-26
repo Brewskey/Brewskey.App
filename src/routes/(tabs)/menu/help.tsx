@@ -1,12 +1,20 @@
 import * as React from 'react';
-import { Linking, StyleSheet, Text, TouchableHighlight, View } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
+
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} from 'react-native';
+
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
 import Section from '../../../common/Section';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
+import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
   instructionText: {
@@ -54,6 +62,7 @@ const HelpScreen: React.FC = () => {
       <Header shouldShowBackButton title="Help" />
       <Section innerContainerStyle={styles.section} testID="help-content">
         <Text
+          testID="help-instruction-text"
           style={[
             styles.instructionText,
             {
@@ -62,7 +71,6 @@ const HelpScreen: React.FC = () => {
               paddingBottom: 8,
             },
           ]}
-          testID="help-instruction-text"
         >
           Having trouble setting up your Brewskey box or have questions in
           General?
@@ -72,31 +80,37 @@ const HelpScreen: React.FC = () => {
         </Text>
         <View testID="help-link-faq">
           <TouchableHighlight
-            onPress={() => onOpenLink('https://brewskey.com/faq')}
+            onPress={async () => onOpenLink('https://brewskey.com/faq')}
           >
             <Text style={styles.listText}>
               {'• '}
-              <Text style={styles.linkText} testID="help-link-faq-text">Check out our FAQ</Text>
+              <Text style={styles.linkText} testID="help-link-faq-text">
+                Check out our FAQ
+              </Text>
             </Text>
           </TouchableHighlight>
         </View>
         <View testID="help-link-messenger">
           <TouchableHighlight
-            onPress={() => onOpenLink('https://m.me/brewskeyapp')}
+            onPress={async () => onOpenLink('https://m.me/brewskeyapp')}
           >
             <Text style={styles.listText}>
               {'• '}
-              <Text style={styles.linkText} testID="help-link-messenger-text">Facebook Messenger</Text>
+              <Text style={styles.linkText} testID="help-link-messenger-text">
+                Facebook Messenger
+              </Text>
             </Text>
           </TouchableHighlight>
         </View>
         <View testID="help-link-email">
           <TouchableHighlight
-            onPress={() => onOpenLink('mailto:john@brewskey.com')}
+            onPress={async () => onOpenLink('mailto:john@brewskey.com')}
           >
             <Text style={styles.listText}>
               {'• '}
-              <Text style={styles.linkText} testID="help-link-email-text">Email</Text>
+              <Text style={styles.linkText} testID="help-link-email-text">
+                Email
+              </Text>
             </Text>
           </TouchableHighlight>
         </View>
@@ -105,4 +119,7 @@ const HelpScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(HelpScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  HelpScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

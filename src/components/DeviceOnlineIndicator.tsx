@@ -1,11 +1,12 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { Icon } from '@rneui/themed';
-import theme, { COLORS } from '../theme';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
 import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
+import theme, { COLORS } from '../theme';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const ICON_SIZE_SUBSTRACT = 6;
 
@@ -23,14 +24,21 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   particleID: EntityID;
   size?: number;
-};
+}
 
-const DeviceOnlineIndicator: React.FC<Props> = ({ particleID, size = 25 }) => {
-  const { data: cloudDevice, isLoading, error } = useGetParticleAttributes(particleID);
-  
+export const DeviceOnlineIndicator: React.FC<Props> = ({
+  particleID,
+  size = 25,
+}) => {
+  const {
+    data: cloudDevice,
+    isLoading,
+    error,
+  } = useGetParticleAttributes(particleID);
+
   const sizeStyle = {
     borderRadius: size / 2,
     height: size,
@@ -67,10 +75,10 @@ const DeviceOnlineIndicator: React.FC<Props> = ({ particleID, size = 25 }) => {
   );
 };
 
-type ExtraProps = {
+interface ExtraProps {
   iconSize: number;
   sizeStyle: { borderRadius: number; height: number; width: number };
-};
+}
 
 const LoadingComponent = ({ sizeStyle }: ExtraProps) => (
   <View style={[styles.container, sizeStyle]}>

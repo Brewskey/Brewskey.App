@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
-
-import { useAppSettings } from '../../../hooks/context/AppSettingsContext';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import Container from '../../../common/Container';
-import Section from '../../../common/Section';
-import Header from '../../../common/Header';
-import MenuSeparator from '../../../components/MenuSeparator';
-import MenuLogoutButton from '../../../components/MenuLogoutButton';
-import MenuNavigationButton from '../../../components/MenuNavigationButton';
-import { COLORS } from '../../../theme';
-import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import { MenuUserBlock } from '../../../components/MenuUserBlock';
-import ErrorScreen from '../../../common/ErrorScreen';
-import { useRouter } from 'expo-router';
-import { useGetFriendsCount } from '../../../hooks/queries/FriendQueries';
-  import { useAuthSession } from '../../../hooks/context/AuthContext';
 import { Badge } from '@rneui/themed';
+import { useRouter } from 'expo-router';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+
+import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
+import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
+import Section from '../../../common/Section';
+import MenuLogoutButton from '../../../components/MenuLogoutButton';
+import MenuSeparator from '../../../components/MenuSeparator';
+import { useAppSettings } from '../../../hooks/context/AppSettingsContext';
+import MenuNavigationButton from '../../../components/MenuNavigationButton';
+import { useAuthSession } from '../../../hooks/context/AuthContext';
+import { useGetFriendsCount } from '../../../hooks/queries/FriendQueries';
+import { COLORS } from '../../../theme';
+import { MenuUserBlock } from '../../../components/MenuUserBlock';
 
 const styles = StyleSheet.create({
   badge: {
@@ -56,12 +56,12 @@ const MenuScreen = withErrorBoundary(
     return (
       <Container>
         <Header
-          title="Brewskey"
           testID="header-brewskey"
+          title="Brewskey"
           rightComponent={
             <HeaderNavigationButton
-              name="settings"
               href={{ pathname: '/(tabs)/menu/settings', params: {} }}
+              name="settings"
               testID="header-settings-button"
             />
           }
@@ -73,13 +73,16 @@ const MenuScreen = withErrorBoundary(
           <Section>
             <View>
               <MenuNavigationButton
-                onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/menu/my-friends', params: {} });
-                }}
                 icon={{ name: 'people' }}
                 routeName="myFriends"
                 testID="menu-item-friends"
                 title="Friends"
+                onPress={() => {
+                  router.navigate({
+                    pathname: '/(tabs)/menu/my-friends',
+                    params: {},
+                  });
+                }}
               />
               {(pendingRequestCount.data ?? 0) === 0 ? null : (
                 <View style={styles.container}>
@@ -91,50 +94,61 @@ const MenuScreen = withErrorBoundary(
                 </View>
               )}
             </View>
-            {isManageTapsEnabled && [
-              <MenuSeparator key="separator1" />,
-              <MenuNavigationButton
-                icon={{ name: 'map-marker', type: 'material-community' }}
-                key="locations"
-                routeName="locations"
-                testID="menu-item-locations"
-                title="Locations"
-                onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/locations', params: {} });
-                }}
-              />,
-              <MenuNavigationButton
-                icon={{ name: 'stocking', type: 'material-community' }}
-                key="taps"
-                routeName="taps"
-                testID="menu-item-taps"
-                title="Taps"
-                onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/taps', params: {} });
-                }}
-              />,
-              <MenuNavigationButton
-                icon={{ name: 'cube', type: 'material-community' }}
-                key="devices"
-                routeName="devices"
-                testID="menu-item-devices"
-                title="Brewskey boxes"
-                onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/devices', params: {} });
-                }}
-              />,
-              <MenuNavigationButton
-                icon={{ name: 'beer', type: 'material-community' }}
-                key="myBeverages"
-                routeName="myBeverages"
-                testID="menu-item-beverages"
-                title="Homebrew"
-                onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/beverages', params: {} });
-                }}
-              />,
-              <MenuSeparator key="separator2" />,
-            ]}
+            {isManageTapsEnabled
+              ? [
+                  <MenuSeparator key="separator1" />,
+                  <MenuNavigationButton
+                    key="locations"
+                    icon={{ name: 'map-marker', type: 'material-community' }}
+                    routeName="locations"
+                    testID="menu-item-locations"
+                    title="Locations"
+                    onPress={() => {
+                      router.navigate({
+                        pathname: '/(tabs)/locations',
+                        params: {},
+                      });
+                    }}
+                  />,
+                  <MenuNavigationButton
+                    key="taps"
+                    icon={{ name: 'stocking', type: 'material-community' }}
+                    routeName="taps"
+                    testID="menu-item-taps"
+                    title="Taps"
+                    onPress={() => {
+                      router.navigate({ pathname: '/(tabs)/taps', params: {} });
+                    }}
+                  />,
+                  <MenuNavigationButton
+                    key="devices"
+                    icon={{ name: 'cube', type: 'material-community' }}
+                    routeName="devices"
+                    testID="menu-item-devices"
+                    title="Brewskey boxes"
+                    onPress={() => {
+                      router.navigate({
+                        pathname: '/(tabs)/devices',
+                        params: {},
+                      });
+                    }}
+                  />,
+                  <MenuNavigationButton
+                    key="myBeverages"
+                    icon={{ name: 'beer', type: 'material-community' }}
+                    routeName="myBeverages"
+                    testID="menu-item-beverages"
+                    title="Homebrew"
+                    onPress={() => {
+                      router.navigate({
+                        pathname: '/(tabs)/beverages',
+                        params: {},
+                      });
+                    }}
+                  />,
+                  <MenuSeparator key="separator2" />,
+                ]
+              : null}
             {Platform.OS !== 'android' ? null : (
               <MenuNavigationButton
                 icon={{ name: 'nfc' }}
@@ -142,7 +156,10 @@ const MenuScreen = withErrorBoundary(
                 testID="menu-item-write-nfc"
                 title="Setup NFC Cards"
                 onPress={() => {
-                  router.navigate({ pathname: '/(tabs)/menu/write-nfc', params: {} });
+                  router.navigate({
+                    pathname: '/(tabs)/menu/write-nfc',
+                    params: {},
+                  });
                 }}
               />
             )}

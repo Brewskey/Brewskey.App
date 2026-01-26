@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TYPOGRAPHY } from '../../theme';
-import { SliderInput } from '../../common/form/SliderInput';
+
 import { useWatch } from 'react-hook-form';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { SliderInput } from '../../common/form/SliderInput';
+import { TYPOGRAPHY } from '../../theme';
 
 const BOUNDARIES_PERCENT = 10;
 
@@ -21,10 +23,10 @@ const styles = StyleSheet.create({
   textValuePulses: { ...TYPOGRAPHY.secondary, textAlign: 'center' },
 });
 
-type Props = {
+interface Props {
   defaultPulses: number;
   name: string;
-};
+}
 
 const GallonSliderField = ({
   defaultPulses,

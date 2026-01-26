@@ -1,18 +1,19 @@
 import * as React from 'react';
-import PhoneConnectInstructions from '../components/WifiSetup/PhoneConnectInstructions';
+import { useEffect } from 'react';
+
 import Container from '../common/Container';
-import SectionHeader from '../common/SectionHeader';
-import SectionContent from '../common/SectionContent';
 import LoadingIndicator from '../common/LoadingIndicator';
+import SectionContent from '../common/SectionContent';
+import SectionHeader from '../common/SectionHeader';
+import PhoneConnectInstructions from '../components/WifiSetup/PhoneConnectInstructions';
 import {
   useGetParticleId,
   useGetWifiNetworks,
 } from '../hooks/queries/SoftApQueries';
 import {
-  WifiSetupSteps,
   useWifiSetupScreenContext,
+  WifiSetupSteps,
 } from '../utils/WifiSetupScreenContext';
-import { useEffect } from 'react';
 
 export const WifiSetupStep2Screen: React.FC = () => {
   const [value, setValue] = useWifiSetupScreenContext();
@@ -33,7 +34,10 @@ export const WifiSetupStep2Screen: React.FC = () => {
 
   return (
     <Container testID="wifi-setup-step2-content">
-      <SectionHeader title="Connect to Brewskey box WiFi" testID="section-header-wifi-connect" />
+      <SectionHeader
+        testID="section-header-wifi-connect"
+        title="Connect to Brewskey box WiFi"
+      />
       <SectionContent paddedHorizontal paddedVertical>
         <PhoneConnectInstructions />
       </SectionContent>

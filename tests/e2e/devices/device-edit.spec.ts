@@ -13,7 +13,7 @@ test('should pre-fill form with existing data', async ({ page }) => {
   await expect(page.getByTestId('input-name')).toHaveValue(device.name);
 });
 
-test('should successfully update device', async ({ page }) => {
+test('should successfully update device', async ({ page, dropDown }) => {
   // Set up: one device and a second location so we can mutate the location field
   const { location: location2 } = await mockLocationWithTaps(page, 1);
   const { device } = await mockDeviceWithTaps(page, 0);
@@ -26,28 +26,24 @@ test('should successfully update device', async ({ page }) => {
 
   await page.getByTestId('input-name').fill('Updated Device Name');
 
-  // Location (required) - select the second location
-  await page.getByTestId('picker-location').click();
-  await expect(page.getByTestId('picker-location-modal')).toBeVisible();
-  const locationItem = page.getByTestId(`location-item-${location2.id}`);
-  await expect(locationItem).toBeVisible({ timeout: 5000 });
-  await locationItem.click();
-  await expect(page.getByTestId('picker-location-modal')).not.toBeVisible();
+  // Location (required) - select the second location (index 1: device's is 0, location2 is 1)
+  const locationPicker = dropDown.create('picker-location');
+  await locationPicker.input.click();
+  await expect(locationPicker.modal).toBeVisible();
+  await locationPicker.scrollToItemByIndex(1);
+  await locationPicker.select(1);
+  await expect(locationPicker.modal).not.toBeVisible();
 
-  // Device status (required) - scope option to picker modal (WebDropdown uses option-{index})
-  const deviceStatusPicker = page.getByTestId('picker-device-status');
-  await deviceStatusPicker.click();
-  const deviceStatusModal = page.getByTestId('picker-device-status-modal');
-  await expect(deviceStatusModal.getByTestId('option-1')).toBeVisible();
-  await deviceStatusModal.getByTestId('option-1').click();
+  // Device status (required) - WebDropdown uses option-{index}
+  const deviceStatusDd = dropDown.create('picker-device-status');
+  await deviceStatusDd.select(1);
 
   // secondsToStayOpen: when Active/Inactive shows TextInput; after selecting Cleaning it becomes DeviceTimeOpenPicker
   // Keep deviceStatus as Cleaning (option 1) - secondsToStayOpen is now DeviceTimeOpenPicker
-  const secondsPicker = page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)');
-  await secondsPicker.click();
-  const secondsModal = page.getByTestId('picker-time-to-stay-in-device-state-(will-keep-valve-open)-modal');
-  await expect(secondsModal.getByTestId('option-2')).toBeVisible({ timeout: 5000 });
-  await secondsModal.getByTestId('option-2').click();
+  const secondsDd = dropDown.create('picker-time-to-stay-in-device-state-(will-keep-valve-open)');
+  await secondsDd.input.click();
+  await secondsDd.scrollToItemByIndex(2);
+  await secondsDd.select(2);
 
   await page.getByTestId('input-timeForValveOpen').fill('15');
 
@@ -62,12 +58,11 @@ test('should successfully update device', async ({ page }) => {
     await page.mouse.up();
   }
 
-  // NFC status - scope option to picker modal (WebDropdown uses option-{index})
-  const nfcPicker = page.getByTestId('picker-nfc-configuration');
-  await nfcPicker.click();
-  const nfcModal = page.getByTestId('picker-nfc-configuration-modal');
-  await expect(nfcModal.getByTestId('option-1')).toBeVisible({ timeout: 5000 });
-  await nfcModal.getByTestId('option-1').click();
+  // NFC status - WebDropdown uses option-{index}
+  const nfcDd = dropDown.create('picker-nfc-configuration');
+  await nfcDd.input.click();
+  await nfcDd.scrollToItemByIndex(1);
+  await nfcDd.select(1);
 
   // Checkboxes: isScreenDisabled, isTotpDisabled, shouldInvertScreen
   await page.getByTestId('input-isScreenDisabled').click();

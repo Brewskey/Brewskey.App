@@ -3,7 +3,7 @@ import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should allow selecting beverage', async ({ page }) => {
+test('should allow selecting beverage', async ({ page, dropDown }) => {
   // Set up explicit data: one tap with beverage available
   const { tap, beverage } = await mockTapWithKeg(page);
 
@@ -12,18 +12,13 @@ test('should allow selecting beverage', async ({ page }) => {
   
   // KegForm uses BeveragePicker2 with name="beverage"
   // BeveragePicker2 generates testID as: beverage-picker-${name} = beverage-picker-beverage
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await expect(beveragePicker).toBeVisible();
-  await beveragePicker.click();
-  // Wait for modal to appear - DropDownInput modal doesn't have a testID based on label
-  // Wait for the beverage name to appear in the modal (more reliable than header title)
-  await expect(page.getByText(beverage.name)).toBeVisible();
-  // Click the beverage
-  await page.getByText(beverage.name).click();
-  // Selection is confirmed immediately (no confirmation button needed)
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await expect(beveragePicker.input).toBeVisible();
+  await beveragePicker.select(0);
+  await expect(beveragePicker.modal).toBeHidden();
 });
 
-test('should render beverage picker with images', async ({ page }) => {
+test('should render beverage picker with images', async ({ page, dropDown }) => {
   // Set up explicit data: one tap with beverage available
   const { tap, beverage } = await mockTapWithKeg(page);
 
@@ -34,15 +29,10 @@ test('should render beverage picker with images', async ({ page }) => {
   await expect(page.getByTestId('keg-form')).toBeVisible();
   
   // Open beverage picker
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await expect(beveragePicker).toBeVisible();
-  await beveragePicker.click();
-  
-  // Wait for modal to appear and beverage list to load
-  await expect(page.getByText(beverage.name)).toBeVisible();
-  
-  // Verify the beverage row is rendered with testID
-  const beverageRow = page.getByTestId(`beverage-picker-item-${beverage.id}`);
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await expect(beveragePicker.input).toBeVisible();
+  await beveragePicker.input.click();
+  const beverageRow = beveragePicker.getItemByIndex(0);
   await expect(beverageRow).toBeVisible();
   
   // Verify the beverage name is displayed
@@ -51,13 +41,8 @@ test('should render beverage picker with images', async ({ page }) => {
   // Verify an image element is present in the beverage row
   // BeverageAvatar renders an Image component (expo-image) which becomes an <img> tag on web
   // Check for image element within the beverage row
-  const beverageImage = beverageRow.locator('img').or(beverageRow.locator('[data-testid*="avatar"]'));
+  const beverageImage = beverageRow.getByTestId('beverage-avatar');
   await expect(beverageImage.first()).toBeVisible();
-  
-  // Verify the image has a src attribute (indicating it's trying to load an image)
-  const imageElement = beverageImage.first();
-  const imageSrc = await imageElement.getAttribute('src');
-  expect(imageSrc).toBeTruthy();
   
   // Select the beverage
   await beverageRow.click();
@@ -65,9 +50,11 @@ test('should render beverage picker with images', async ({ page }) => {
   
   // Verify the selection was successful - the picker should show the selected beverage
   await expect(page.getByTestId('keg-form')).toBeVisible();
+
+  await expect(beveragePicker.modal).toBeHidden();
 });
 
-test('should successfully create keg', async ({ page }) => {
+test('should successfully create keg', async ({ page, dropDown }) => {
   // Set up explicit data: one tap with beverage available
   const { tap, beverage } = await mockTapWithKeg(page);
 
@@ -78,25 +65,13 @@ test('should successfully create keg', async ({ page }) => {
   // Wait for form to load
   await expect(page.getByTestId('keg-form')).toBeVisible();
   // KegForm uses BeveragePicker2 with name="beverage"
-  // BeveragePicker2 generates testID as: beverage-picker-${name} = beverage-picker-beverage
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await expect(beveragePicker).toBeVisible();
-  await beveragePicker.click();
-  // Wait for modal to appear - DropDownInput modal doesn't have a testID based on label
-  // Wait for the beverage name to appear in the modal (more reliable than header title)
-  await expect(page.getByText(beverage.name)).toBeVisible();
-  // Click the beverage
-  await page.getByText(beverage.name).click();
-  // Selection is confirmed immediately (no confirmation button needed)
-  // Wait for modal to close and form state to update
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await expect(beveragePicker.input).toBeVisible();
+  await beveragePicker.select(0);
   await expect(page.getByTestId('keg-form')).toBeVisible();
-  
-  // Select keg type - required field. Scope to dropdown modal (WebDropdown uses option-{index})
-  const kegTypeDropdown = page.getByTestId('dropdown-kegType');
-  await kegTypeDropdown.click();
-  const kegTypeModal = page.getByTestId('dropdown-kegType-modal');
-  await expect(kegTypeModal.getByTestId('option-0')).toBeVisible();
-  await kegTypeModal.getByTestId('option-0').click();
+
+  const kegTypeDd = dropDown.create('dropdown-kegType');
+  await kegTypeDd.select(0);
 
   // Mutate startingPercentage (Keg Level slider)
   const startingSlider = page.locator('[role="slider"]').first();

@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+
 import nullthrows from 'nullthrows';
-import SwipeableActionButton from './SwipeableActionButton';
+import { StyleSheet, View } from 'react-native';
+
 import Fragment from './Fragment';
+import SwipeableActionButton from './SwipeableActionButton';
 import DeleteModal from '../components/modals/DeleteModal';
 import ToggleStore from '../stores/ToggleStore';
 import { COLORS } from '../theme';
@@ -30,13 +32,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props<TItem> = {
+interface Props<TItem> {
   deleteModalMessage: string;
   deleteModalTitle: string;
   item: TItem;
   onDeleteItemPress?: (item: TItem) => void | Promise<void>;
   onEditItemPress?: (item: TItem) => void;
-};
+}
 
 function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
   const {
@@ -77,11 +79,11 @@ function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
             onPress={_modalToggleStore.toggleOn}
           />
           <DeleteModal
-            title={deleteModalTitle}
             isVisible={_modalToggleStore.isToggled}
             message={deleteModalMessage}
             onCancelButtonPress={_modalToggleStore.toggleOff}
             onDeleteButtonPress={_onDeleteModalConfirm}
+            title={deleteModalTitle}
           />
         </Fragment>
       )}

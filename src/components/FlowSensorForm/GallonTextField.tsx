@@ -1,8 +1,12 @@
 import * as React from 'react';
+
 import { StyleSheet } from 'react-native';
-import { TYPOGRAPHY } from '../../theme';
-import { TextInput, TextInputProps } from '../../common/form/TextInput';
+
 import { FormField } from '../../common/form/FormField';
+import { TextInput } from '../../common/form/TextInput';
+import { TYPOGRAPHY } from '../../theme';
+
+import type { TextInputProps } from '../../common/form/TextInput';
 
 const styles = StyleSheet.create({
   container: { alignItems: 'center' },
@@ -16,12 +20,12 @@ export const GallonTextField: React.FC<
   <FormField
     component={TextInput}
     {...props}
-    label="Set custom pulses"
     containerStyle={styles.container}
-    labelStyle={styles.textHeading}
+    description="Find out number of pulses per gallon for your flow sensor and type it here"
     descriptionStyle={styles.textDescription}
     keyboardType="numeric"
+    label="Set custom pulses"
+    labelStyle={styles.textHeading}
     testID="input-calibration"
-    description="Find out number of pulses per gallon for your flow sensor and type it here"
   />
 );

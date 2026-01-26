@@ -1,12 +1,13 @@
 import * as React from 'react';
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useFormContext, useWatch } from 'react-hook-form';
-import TextBlock from '../common/TextBlock';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
 import Button from '../common/buttons/Button';
-import { TYPOGRAPHY } from '../theme';
 import { FormField } from '../common/form/FormField';
 import { TextInput } from '../common/form/TextInput';
+import TextBlock from '../common/TextBlock';
+import { TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
   descriptionText: {
@@ -20,14 +21,15 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   onContinuePress: (particleID: string) => void;
-};
+}
 
 const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const formContext = useFormContext();
-  const particleID = useWatch({ control: formContext?.control, name: 'particleIDInput' }) || '';
+  const particleID =
+    useWatch({ control: formContext?.control, name: 'particleIDInput' }) || '';
 
   const handleContinuePress = () => {
     onContinuePress(particleID);
@@ -42,26 +44,20 @@ const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
           </Text>
         </TouchableOpacity>
       ) : (
-        <>
-          <TextBlock
-            textStyle={styles.descriptionText}
-            paddedBottom
-          >
+        <React.Fragment>
+          <TextBlock paddedBottom textStyle={styles.descriptionText}>
             Enter the hardware ID of your Brewskey box. We'll skip the WiFi
             setup for now but you'll still be able to setup your taps.
           </TextBlock>
           <FormField
             component={TextInput}
-            name="particleIDInput"
-            label="Internal ID"
             defaultValue=""
+            label="Internal ID"
+            name="particleIDInput"
             testID="input-particleId"
           />
-          <Button
-            onPress={handleContinuePress}
-            title="Continue"
-          />
-        </>
+          <Button onPress={handleContinuePress} title="Continue" />
+        </React.Fragment>
       )}
     </View>
   );

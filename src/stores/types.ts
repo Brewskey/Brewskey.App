@@ -1,4 +1,4 @@
 export interface IComponentStore {
-  initialize(): void;
-  dispose(): void;
+  initialize: () => void;
+  dispose: () => void;
 }

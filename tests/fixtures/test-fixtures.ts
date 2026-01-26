@@ -89,6 +89,7 @@ import {
   MenuPage,
   StatsPage,
 } from './page-objects';
+import { DropDownTestHelper } from './DropDownTestHelper';
 
 // Store for authentication setup data (set by __setup fixture)
 let authSetupData: { user: Account; authResponse: AuthResponse } | null = null;
@@ -129,6 +130,7 @@ type TestFixtures = {
   wifiPage: WiFiSetupPage;
   menuPage: MenuPage;
   statsPage: StatsPage;
+  dropDown: DropDownTestHelper;
 };
 
 /**
@@ -342,8 +344,9 @@ export const test = base.extend<TestOptions & TestFixtures>({
     await use(new StatsPage(page));
   },
 
-  // Note: Mock data creation is handled via helper functions in entity-fixtures.ts
-  // Use test.use() to configure options, and helper functions for complex data setup
+  dropDown: async ({ page }, use) => {
+    await use(new DropDownTestHelper(page));
+  },
 });
 
 export { expect } from '@playwright/test';

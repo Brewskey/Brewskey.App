@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
 import { Icon } from '@rneui/themed';
 import { useLocalSearchParams } from 'expo-router';
-import Button from '../../../common/buttons/Button';
+import { StyleSheet, Text, View } from 'react-native';
 
-import Header from '../../../common/Header';
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import Button from '../../../common/buttons/Button';
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -30,7 +31,9 @@ const styles = StyleSheet.create({
 });
 
 const NuxWifiScreen: React.FC = () => {
-  const { onContinuePress } = useLocalSearchParams<{ onContinuePress?: string }>();
+  const { onContinuePress } = useLocalSearchParams<{
+    onContinuePress?: string;
+  }>();
 
   const handlePress = () => {
     if (onContinuePress) {
@@ -53,8 +56,8 @@ const NuxWifiScreen: React.FC = () => {
           Next, you need to setup WiFi on your Brewskey box.
         </Text>
         <Button
-          onPress={handlePress}
           secondary
+          onPress={handlePress}
           testID="button-next"
           title="Next"
         />
@@ -63,4 +66,7 @@ const NuxWifiScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NuxWifiScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NuxWifiScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

@@ -1,19 +1,24 @@
-import type { Beverage, EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
+
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { Card } from '@rneui/themed';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import BeverageModal, { BeverageModalHandle } from '../modals/BeverageModal';
+import { useAuthSession } from '../../hooks/context/AuthContext';
 import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
 import { useGetPoursByBeverageIds } from '../../hooks/queries/PourQueries';
-import { Card } from '@rneui/themed';
-import { createFilter } from '@brewskey/js-api/dist/filters';
-import { InfiniteData } from '@tanstack/react-query';
-import { useAuthSession } from '../../hooks/context/AuthContext';
+import BeverageModal from '../modals/BeverageModal';
 
-type Props = {
+import type { Beverage, EntityID } from '@brewskey/js-api';
+
+import type { InfiniteData } from '@tanstack/react-query';
+import type { BeverageModalHandle } from '../modals/BeverageModal';
+
+
+interface Props {
   userID: EntityID;
-};
+}
 
 const AllBeveragesHScrollContent: React.FC<{
   beverages: InfiniteData<Beverage[]>;
@@ -90,14 +95,14 @@ const AllBeveragesHScrollContent: React.FC<{
           </Card>
         </TouchableOpacity>
       ))}
-      <BeverageModal beverageID={currentBeverageId} ref={modalRef} />
+      <BeverageModal ref={modalRef} beverageID={currentBeverageId} />
     </ScrollView>
   );
 };
 
-export type AllBeveragesHScrollHandle = {
-  refresh(): void;
-};
+export interface AllBeveragesHScrollHandle {
+  refresh: () => void;
+}
 export const AllBeveragesHScroll = React.forwardRef<
   AllBeveragesHScrollHandle,
   Props
@@ -112,9 +117,7 @@ export const AllBeveragesHScroll = React.forwardRef<
   const beverageTotals = useGetPoursByBeverageIds(
     beverages.data
       ? Array.from(
-          new Set(
-            beverages.data.pages.flat().map((beverage) => beverage.id),
-          ),
+          new Set(beverages.data.pages.flat().map((beverage) => beverage.id)),
         )
       : undefined,
     session?.id,

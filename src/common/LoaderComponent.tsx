@@ -1,20 +1,22 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import {
-  UseMultipleQueryResultsData,
-  useMultipleQueryResults,
-} from '../utils/useMultipleQueryResults';
-import { UseQueryResult } from '@tanstack/react-query';
+
 import { Icon } from '@rneui/themed';
+import { StyleSheet, Text, View } from 'react-native';
+
 import { COLORS } from '../theme';
 import LoadingIndicator from './LoadingIndicator';
+import { useMultipleQueryResults } from '../utils/useMultipleQueryResults';
 
-type Props<
+import type { UseQueryResult } from '@tanstack/react-query';
+
+import type { UseMultipleQueryResultsData } from '../utils/useMultipleQueryResults';
+
+interface Props<
   TQueries extends Record<string, UseQueryResult<unknown, Error>>,
   TComponentProps extends {
     value: UseMultipleQueryResultsData<TQueries>;
   },
-> = {
+> {
   componentProps?: Omit<TComponentProps, 'value'>;
   // deletingComponent?: React.ComponentType<TExtraProps>;
   emptyComponent?: React.ComponentType;
@@ -29,7 +31,7 @@ type Props<
   //     value: UseMultipleQueryResultsData<TQueries>;
   //   }
   // >;
-};
+}
 
 const STYLES = StyleSheet.create({
   container: {
@@ -49,27 +51,27 @@ const Error = () => (
   <View style={STYLES.container}>
     <Icon
       reverse
-      reverseColor={COLORS.accent}
       color={COLORS.secondary2}
       name="priority_high"
+      reverseColor={COLORS.accent}
       size={20}
     />
   </View>
 );
 
 export const LoaderComponent = <
-  TQueries extends Record<string, UseQueryResult<unknown, Error>>,
+  TQueries extends Record<string, UseQueryResult<unknown>>,
   TComponentProps extends {
     value: UseMultipleQueryResultsData<TQueries>;
   },
 >({
-  //deletingComponent: DeletingComponent,
+  // deletingComponent: DeletingComponent,
   emptyComponent: EmptyComponent = Empty,
   errorComponent: ErrorComponent = Error,
   loadedComponent: LoadedComponent,
   queries,
   loadingComponent: LoadingComponent = Loading,
-  //updatingComponent: UpdatingComponent,
+  // updatingComponent: UpdatingComponent,
   componentProps = {} as Omit<TComponentProps, 'value'>,
 }: Props<TQueries, TComponentProps>): React.ReactElement => {
   const results = useMultipleQueryResults(queries);
@@ -92,7 +94,6 @@ export const LoaderComponent = <
 
   if (results.status === 'success') {
     return (
-       
       <LoadedComponent {...(componentProps as any)} value={results.data} />
     );
   }

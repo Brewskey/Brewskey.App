@@ -1,14 +1,17 @@
 import * as React from 'react';
-import WifiList from '../components/WifiSetup/WifiList/WifiList';
-import { HiddenWifiInput } from '../components/WifiSetup/WifiList/HiddenWifiInput';
-import { useSetupWifi } from '../hooks/queries/SoftApQueries';
-import { WifiNetwork } from '../types';
-import {
-  WifiSetupSteps,
-  useWifiSetupScreenContext,
-} from '../utils/WifiSetupScreenContext';
+
 import { useForm } from 'react-hook-form';
+
 import { Form } from '../common/form/Form';
+import { HiddenWifiInput } from '../components/WifiSetup/WifiList/HiddenWifiInput';
+import WifiList from '../components/WifiSetup/WifiList/WifiList';
+import { useSetupWifi } from '../hooks/queries/SoftApQueries';
+import {
+  useWifiSetupScreenContext,
+  WifiSetupSteps,
+} from '../utils/WifiSetupScreenContext';
+
+import type { WifiNetwork } from '../types';
 
 export const WifiSetupStep3Screen: React.FC = () => {
   const [value, setValue] = useWifiSetupScreenContext();
@@ -24,9 +27,9 @@ export const WifiSetupStep3Screen: React.FC = () => {
   return (
     <Form form={form}>
       <WifiList
+        isSettingUpWifi={false}
         ListHeaderComponent={<HiddenWifiInput onConnectPress={setupWifi} />}
         onConnectPress={setupWifi}
-        isSettingUpWifi={false}
       />
     </Form>
   );

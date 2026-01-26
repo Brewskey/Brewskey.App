@@ -1,12 +1,13 @@
-import type {LowKegLevelNotification} from '../../stores/NotificationsStore';
-import type { Props as NotificationListItemProps } from './NotificationListItem';
-
 import * as React from 'react';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import NotificationListItem from './NotificationListItem';
 
-type Props = (NotificationListItemProps) & {
-  notification: LowKegLevelNotification
+import NotificationListItem from './NotificationListItem';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+
+import type { Props as NotificationListItemProps } from './NotificationListItem';
+import type { LowKegLevelNotification } from '../../stores/NotificationTypes';
+
+type Props = NotificationListItemProps & {
+  notification: LowKegLevelNotification;
 };
 
 const LowKegLevelListItem = (props: Props): React.ReactElement => {

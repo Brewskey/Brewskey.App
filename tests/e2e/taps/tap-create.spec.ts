@@ -57,7 +57,7 @@ test('should successfully create tap', async ({ page, tapPage }) => {
   await expect(page.getByTestId('snackbar-message')).toHaveText('New tap created');
 });
 
-test('should set up tap and select beverage with image rendering', async ({ page, tapPage }) => {
+test('should set up tap and select beverage with image rendering', async ({ page, tapPage, dropDown }) => {
   // Set up explicit data: location, device, and beverage
   const { location } = await mockLocationWithTaps(page, 0);
   const { device } = await mockDeviceWithTaps(page, 0);
@@ -100,17 +100,17 @@ test('should set up tap and select beverage with image rendering', async ({ page
   
   // Step 3: Verify beverage picker is visible and works
   await expect(page.getByTestId('keg-form')).toBeVisible();
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await expect(beveragePicker).toBeVisible();
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await expect(beveragePicker.input).toBeVisible();
   
   // Step 4: Open beverage picker and verify images are rendered
-  await beveragePicker.click();
+  await beveragePicker.input.click();
   
   // Wait for modal to appear and beverage list to load
   await expect(page.getByText(beverage.name)).toBeVisible();
   
-  // Verify the beverage row is rendered with testID
-  const beverageRow = page.getByTestId(`beverage-picker-item-${beverage.id}`);
+  // Verify the beverage row (WebDropdown uses option-{index})
+  const beverageRow = beveragePicker.getItemByIndex(0);
   await expect(beverageRow).toBeVisible();
   
   // Verify the beverage name is displayed
@@ -134,5 +134,5 @@ test('should set up tap and select beverage with image rendering', async ({ page
   await expect(page.getByTestId('keg-form')).toBeVisible();
   
   // Verify the beverage picker now shows the selected beverage name
-  await expect(beveragePicker).toContainText(beverage.name);
+  await expect(beveragePicker.input).toContainText(beverage.name);
 });

@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import Button from '../../../common/buttons/Button';
 
-import Header from '../../../common/Header';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+
+import Button from '../../../common/buttons/Button';
 import Container from '../../../common/Container';
-import ErrorScreen from '../../../common/ErrorScreen';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Header from '../../../common/Header';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 
 const NuxFinishScreen: React.FC = () => {
   const router = useRouter();
-  const { onContinuePress, tapId } = useLocalSearchParams<{ 
+  const { onContinuePress, tapId } = useLocalSearchParams<{
     onContinuePress?: string;
     tapId?: string;
   }>();
@@ -45,10 +46,13 @@ const NuxFinishScreen: React.FC = () => {
         // Fall through to default navigation
       }
     }
-    
+
     // Default behavior: navigate to tap details if tapId is provided, otherwise go to tabs
     if (tapId) {
-      router.replace({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId } });
+      router.replace({
+        pathname: '/(tabs)/taps/[tapId]/on_tap',
+        params: { tapId },
+      });
     } else {
       router.replace({ pathname: '/(tabs)', params: {} });
     }
@@ -62,8 +66,8 @@ const NuxFinishScreen: React.FC = () => {
           You've completed setting up Brewskey. Have fun!
         </Text>
         <Button
-          onPress={handlePress}
           secondary
+          onPress={handlePress}
           testID="button-finish"
           title="Finish"
         />
@@ -72,4 +76,7 @@ const NuxFinishScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(NuxFinishScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NuxFinishScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

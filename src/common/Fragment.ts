@@ -1,11 +1,9 @@
 import * as React from 'react';
 
-type Props = {
-  children?: React.ReactNode
-};
+interface Props {
+  children?: React.ReactNode;
+}
 
-const Fragment: React.FC<Props> = ({ children }) => {
-  return children ?? null;
-};
+const Fragment: React.FC<Props> = async ({ children }) => children ?? null;
 
 export default React.memo(Fragment);

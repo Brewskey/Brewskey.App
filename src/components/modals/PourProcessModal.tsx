@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import { Input } from '@rneui/themed';
 
-import * as Progress from 'react-native-progress';
-import { COLORS } from '../../theme';
-import { useInterval } from 'usehooks-ts';
+import { Input } from '@rneui/themed';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import NfcManager from 'react-native-nfc-manager';
+import * as Progress from 'react-native-progress';
+import { useInterval } from 'usehooks-ts';
+
+import CenteredModal from './CenteredModal';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
-import CenteredModal from './CenteredModal';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   enableNFCContainer: {
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     textAlign: 'center',
     width: '85%',
-     
+
     ...(Platform.OS === 'web' ? ({ outlineStyle: 'none' } as any) : {}),
   },
   loadingIndicator: {
@@ -94,7 +95,7 @@ const PourProcessInputModal: React.FC = () => {
     }
   };
 
-  const onHideModal = () => closeModal();
+  const onHideModal = async () => closeModal();
 
   const onEnableNFC = async () => {
     await NfcManager.goToNfcSetting();
@@ -105,12 +106,12 @@ const PourProcessInputModal: React.FC = () => {
   return (
     <CenteredModal
       header={<Text style={styles.headerText}>{headerText}</Text>}
-      onHideModal={onHideModal}
       isVisible={isVisible}
+      onHideModal={onHideModal}
       testID="pour-process-modal"
     >
       <View style={styles.root}>
-        {isNFCSupported && !isNFCEnabled && (
+        {isNFCSupported && !isNFCEnabled ? (
           <TouchableItem
             onPress={onEnableNFC}
             style={styles.enableNFCContainer}
@@ -119,7 +120,7 @@ const PourProcessInputModal: React.FC = () => {
               or press here to enable NFC on your device
             </Text>
           </TouchableItem>
-        )}
+        ) : null}
         <View style={styles.progressContainer}>
           {isLoading ? (
             <LoadingIndicator
@@ -129,11 +130,11 @@ const PourProcessInputModal: React.FC = () => {
             />
           ) : (
             <Progress.Circle
+              showsText
               borderWidth={0}
               color="#fa0"
               formatText={() => currentSeconds}
               progress={currentSeconds / 30}
-              showsText
               size={120}
               textStyle={styles.progressText}
               thickness={16}
@@ -141,22 +142,24 @@ const PourProcessInputModal: React.FC = () => {
             />
           )}
         </View>
-        {isNFCEnabled && <Text style={styles.smallText}>or enter a code</Text>}
+        {isNFCEnabled ? (
+          <Text style={styles.smallText}>or enter a code</Text>
+        ) : null}
         <Input
+          autoFocus
           autoCapitalize="none"
           autoCorrect={false}
-          autoFocus
           clearButtonMode="always"
           editable={!isLoading}
           enablesReturnKeyAutomatically={false}
           keyboardType="numeric"
           maxLength={6}
-          selectionColor={COLORS.textInverse}
-          underlineColorAndroid={COLORS.secondary}
           onChangeText={onInputChanged}
+          selectionColor={COLORS.textInverse}
           style={styles.input}
-          value={totp}
           testID="pour-modal-totp-input"
+          underlineColorAndroid={COLORS.secondary}
+          value={totp}
         />
         <Text style={styles.errorText}>{pourErrorText ?? ''}</Text>
       </View>

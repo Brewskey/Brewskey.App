@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
+
 import { useRouter } from 'expo-router';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import Button from '../common/buttons/Button';
 import TextBlock from '../common/TextBlock';
-
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { COLORS, TYPOGRAPHY } from '../theme';
 import HardwareSetupModal from './modals/HardwareSetupModal';
 import { useGetLocations } from '../hooks/queries/LocationQueries';
@@ -40,16 +40,13 @@ const styles = StyleSheet.create({
 const NuxNoEntity: React.FC = () => {
   const router = useRouter();
   const [isHardwareSetupVisible, setIsHardwareSetupVisible] = useState(false);
-  
+
   // Get locations count for navigation logic
-  const locationsQuery = useGetLocations({ take: 1 });
-  const locationsCount = locationsQuery.data?.pages[0]?.length ?? 0;
 
   const onGetStartedButtonPress = () => {
     // Navigate to nuxLocation screen with locations count
     router.navigate({
       pathname: '/(tabs)/(nux)/location',
-      params: locationsCount > 0 ? { locationsCount: locationsCount.toString() } : {},
     });
   };
 
@@ -59,10 +56,10 @@ const NuxNoEntity: React.FC = () => {
         In order to use Brewskey you need to install the Brewskey hardware
       </Text>
       <Button
-        onPress={() => setIsHardwareSetupVisible(true)}
         secondary
+        onPress={() => setIsHardwareSetupVisible(true)}
+        testID="button-see-instructions"
         title="See instructions"
-        testID='button-see-instructions' 
       />
       <Text style={styles.headingText}>and set up the Brewskey box by:</Text>
       <View style={styles.stepsContainer}>

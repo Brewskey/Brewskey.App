@@ -1,23 +1,25 @@
-import type { EntityID, LeaderboardItem } from '@brewskey/js-api';
-
 import * as React from 'react';
 
-import List, { ListComponentTypes } from '../common/List';
-
-import LoadingListFooter from '../common/LoadingListFooter';
-import PintCounter from '../components/PintCounter';
-import UserAvatar from '../common/avatars/UserAvatar';
-import ListItem from '../common/ListItem';
-import ListEmpty from '../common/ListEmpty';
-import { useGetTapLeaderboard } from '../hooks/queries/TapQueries';
-import { LeaderboardDurationValue } from './LeaderboardDurationPicker';
 import { useRouter } from 'expo-router';
 
-type Props = {
+import PintCounter from './PintCounter';
+import UserAvatar from '../common/avatars/UserAvatar';
+import List from '../common/List';
+import ListEmpty from '../common/ListEmpty';
+import ListItem from '../common/ListItem';
+import LoadingListFooter from '../common/LoadingListFooter';
+import { useGetTapLeaderboard } from '../hooks/queries/TapQueries';
+
+import type { EntityID, LeaderboardItem } from '@brewskey/js-api';
+
+import type { LeaderboardDurationValue } from './LeaderboardDurationPicker';
+import type { ListComponentTypes } from '../common/List';
+
+interface Props {
   duration: LeaderboardDurationValue;
   ListHeaderComponent?: ListComponentTypes;
   tapID: EntityID;
-};
+}
 
 export const LeaderboardList: React.FC<Props> = ({
   tapID,
@@ -27,13 +29,15 @@ export const LeaderboardList: React.FC<Props> = ({
   const leaderboard = useGetTapLeaderboard(tapID, duration);
   const router = useRouter();
 
-  const _keyExtractor = (item: LeaderboardItem): string => {
-    return item.userName || item.lastPourDate.toString();
-  };
+  const _keyExtractor = (item: LeaderboardItem): string =>
+    item.userName || item.lastPourDate.toString();
 
   const _onItemPress = ({ userID }: LeaderboardItem) => {
     if (!userID) return;
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(userID) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(userID) },
+    });
   };
 
   const _renderRow = ({
@@ -44,8 +48,8 @@ export const LeaderboardList: React.FC<Props> = ({
     index: number;
   }): React.ReactElement => (
     <ListItem
-      leftAvatar={<UserAvatar userName={item.userName || ''} />}
       item={item}
+      leftAvatar={<UserAvatar userName={item.userName || ''} />}
       onPress={item.userID ? _onItemPress : undefined}
       rightIcon={<PintCounter beverageID={null} ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
@@ -57,7 +61,12 @@ export const LeaderboardList: React.FC<Props> = ({
     <List
       data={leaderboard.data}
       keyExtractor={_keyExtractor}
+      ListHeaderComponent={ListHeaderComponent}
       listType="flatList"
+      onEndReached={leaderboard.fetchNextPage}
+      onRefresh={leaderboard.refetch}
+      renderItem={_renderRow}
+      testID="leaderboard-list"
       ListEmptyComponent={
         !leaderboard.isLoading ? (
           <ListEmpty message="There is nobody on the leaderboard for selected period!" />
@@ -66,11 +75,6 @@ export const LeaderboardList: React.FC<Props> = ({
       ListFooterComponent={
         <LoadingListFooter isLoading={leaderboard.isLoading} />
       }
-      ListHeaderComponent={ListHeaderComponent}
-      onEndReached={leaderboard.fetchNextPage}
-      onRefresh={leaderboard.refetch}
-      renderItem={_renderRow}
-      testID="leaderboard-list"
     />
   );
 };

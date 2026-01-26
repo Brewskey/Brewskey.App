@@ -22,7 +22,7 @@ const BEVERAGE_TYPES = [
 
 test.describe('update to each Beverage Type', () => {
   for (const { label, optionIndex } of BEVERAGE_TYPES) {
-    test(`should successfully update beverage to type ${label}`, async ({ page }) => {
+    test(`should successfully update beverage to type ${label}`, async ({ page, dropDown }) => {
       // For "edit to Beer": start with Cider so we can change to Beer and fill Beer-only fields.
       // For others: start with Beer (default).
       const initialType = label === 'Beer' ? { beverageType: 'Cider' as const } : undefined;
@@ -36,12 +36,10 @@ test.describe('update to each Beverage Type', () => {
       await page.getByTestId('input-description').fill(`Updated description (${label})`);
 
       // Change beverage type to target (required). SRM is pre-filled from mock; name/description make form dirty.
-      const beverageTypePicker = page.getByTestId('picker-beverage-type');
-      await beverageTypePicker.click();
-      const beverageTypeModal = page.getByTestId('picker-beverage-type-modal');
-      const option = beverageTypeModal.getByTestId(`option-${optionIndex}`);
-      await expect(option).toBeVisible();
-      await option.dispatchEvent('click');
+      const beverageTypeDd = dropDown.create('picker-beverage-type');
+      await beverageTypeDd.input.click();
+      await beverageTypeDd.scrollToItemByIndex(optionIndex);
+      await beverageTypeDd.select(optionIndex);
 
       // Beer-only fields (style, abv, og, ibu) are optional; we only assert Beverage Type selection here.
 

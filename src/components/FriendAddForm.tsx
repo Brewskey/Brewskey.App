@@ -1,15 +1,16 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useForm } from 'react-hook-form';
 
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import SectionContent from '../common/SectionContent';
+import { useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+
 import Button from '../common/buttons/Button';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
-import { COLORS } from '../theme';
-import { TextInput } from '../common/form/TextInput';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { TextInput } from '../common/form/TextInput';
+import SectionContent from '../common/SectionContent';
+import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
   input: {
@@ -24,13 +25,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export type FriendAddFormValues = {
+export interface FriendAddFormValues {
   userName: string;
-};
+}
 
-type Props = {
+interface Props {
   onSubmit: (values: FriendAddFormValues) => Promise<void> | void;
-};
+}
 
 const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
   const form = useForm<FriendAddFormValues>({
@@ -70,9 +71,9 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
     <Form form={form}>
       <View>
         <FormField
+          autoFocus
           autoCapitalize="none"
           autoCorrect={false}
-          autoFocus
           clearButtonMode="always"
           component={TextInput}
           editable={!isSubmitting}
@@ -90,10 +91,10 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
         />
         <SectionContent paddedVertical>
           <Button
+            secondary
             disabled={!isDirty || isSubmitting || !isValid}
             loading={isSubmitting}
             onPress={handleSubmitWithError(form, onSubmitForm)}
-            secondary
             title="Add Friend"
           />
         </SectionContent>

@@ -36,7 +36,7 @@ test('should pre-fill form with existing data when tap has no description', asyn
   await expect(page.getByTestId('input-description')).toHaveValue('');
 });
 
-test('should successfully update tap', async ({ page }) => {
+test('should successfully update tap', async ({ page, dropDown }) => {
   // Set up explicit data: one tap with keg
   const { tap } = await mockTapWithKeg(page);
 
@@ -49,17 +49,9 @@ test('should successfully update tap', async ({ page }) => {
   // (isPaymentEnabled is conditional on organization.canEnablePayments)
   await page.getByTestId('input-description').fill('Updated Tap Description');
 
-  // Device (dropdown) - scope to modal (WebDropdown uses option-{index})
-  const deviceDropdown = page.getByTestId('dropdown-deviceId');
-  await deviceDropdown.click();
-  const deviceModal = page.getByTestId('dropdown-deviceId-modal');
-  const opt1 = deviceModal.getByTestId('option-1');
-  const opt0 = deviceModal.getByTestId('option-0');
-  if (await opt1.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await opt1.click();
-  } else {
-    await opt0.click();
-  }
+  // Device (dropdown) - WebDropdown uses option-{index}; select option-1 if visible else option-0
+  const deviceDd = dropDown.create('dropdown-deviceId');
+  await deviceDd.select(1);
 
   // Checkboxes
   await page.getByTestId('input-hideLeaderboard').click();

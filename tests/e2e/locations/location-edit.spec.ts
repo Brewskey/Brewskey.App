@@ -13,7 +13,7 @@ test('should pre-fill form with existing data', async ({ page }) => {
   await expect(page.getByTestId('input-name')).toHaveValue(location.name);
 });
 
-test('should successfully update location', async ({ page }) => {
+test('should successfully update location', async ({ page, dropDown }) => {
   // Set up explicit data: one location
   const { location } = await mockLocationWithTaps(page, 0);
 
@@ -28,18 +28,16 @@ test('should successfully update location', async ({ page }) => {
   await page.getByTestId('input-city').fill('Updated City');
   await page.getByTestId('input-zipCode').fill('54321');
 
-  // Scope options to picker modals (WebDropdown uses option-{index})
-  const locationTypePicker = page.getByTestId('picker-location-type');
-  await locationTypePicker.click();
-  const locationTypeModal = page.getByTestId('picker-location-type-modal');
-  await expect(locationTypeModal.getByTestId('option-1')).toBeVisible();
-  await locationTypeModal.getByTestId('option-1').click();
+  // Location type and state (WebDropdown uses option-{index})
+  const locationTypeDd = dropDown.create('picker-location-type');
+  await locationTypeDd.input.click();
+  await locationTypeDd.scrollToItemByIndex(1);
+  await locationTypeDd.select(1);
 
-  const statePicker = page.getByTestId('picker-state');
-  await statePicker.click();
-  const stateModal = page.getByTestId('picker-state-modal');
-  await expect(stateModal.getByTestId('option-4')).toBeVisible();
-  await stateModal.getByTestId('option-4').click();
+  const stateDd = dropDown.create('picker-state');
+  await stateDd.input.click();
+  await stateDd.scrollToItemByIndex(4);
+  await stateDd.select(4);
 
   const submitButton = page.getByTestId('submit-button-edit-location');
   await expect(submitButton).toBeEnabled();

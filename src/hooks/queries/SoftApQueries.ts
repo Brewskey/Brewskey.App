@@ -1,12 +1,12 @@
-import {
-  UseMutationResult,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import SoftApService from '../../SoftApService';
-import { WifiNetwork } from '../../types';
 import { useEffect } from 'react';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import SoftApService from '../../SoftApService';
+
+import type { UseMutationResult } from '@tanstack/react-query';
+
+import type { WifiNetwork } from '../../types';
 
 enum SoftApQueryKeys {
   GetParticleId = 'get_particle_id',
@@ -28,24 +28,24 @@ export const useClearAllQueryCaches = () => {
 export const useGetParticleId = () =>
   useQuery({
     queryKey: [SoftApQueryKeys.GetParticleId],
-    queryFn: () => SoftApService.getParticleID(),
+    queryFn: async () => SoftApService.getParticleID(),
     retry: true,
   });
 export const useGetWifiNetworks = () =>
   useQuery({
     queryKey: [SoftApQueryKeys.GetWifiNetworks],
-    queryFn: () => SoftApService.scanWifi(),
+    queryFn: async () => SoftApService.scanWifi(),
     retry: true,
   });
 
 export const useConfigureWifi = () =>
   useMutation({
-    mutationFn: (wifiNetwork: WifiNetwork) =>
+    mutationFn: async (wifiNetwork: WifiNetwork) =>
       SoftApService.configureWifi(wifiNetwork),
   });
 export const useConnectToWifi = () =>
   useMutation({
-    mutationFn: (networkIndex?: number) =>
+    mutationFn: async (networkIndex?: number) =>
       SoftApService.connectWifi(networkIndex),
   });
 

@@ -1,17 +1,15 @@
-import {
+import { SrmDAO } from '@brewskey/js-api';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { EntityID, QueryOptions, Srm } from '@brewskey/js-api';
+import type {
   InfiniteData,
   UseInfiniteQueryResult,
   UseQueryResult,
-  useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query';
-import {
-  EntityID,
-  QueryOptions,
-  Srm,
-  SrmDAO,
-} from '@brewskey/js-api';
-import nullthrows from 'nullthrows';
 
 enum SrmQueryKeys {
   SrmById = 'srm_by_id',
@@ -20,19 +18,19 @@ enum SrmQueryKeys {
 
 export const useGetSrmById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Srm, Error> =>
+): UseQueryResult<Srm> =>
   useQuery({
-    queryKey: [SrmQueryKeys.SrmById, id],
-    queryFn: () => SrmDAO.fetchByID(nullthrows(id)),
+    queryKey: [SrmQueryKeys.SrmById, getStringFromEntityID(id)],
+    queryFn: async () => SrmDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetSrms = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Srm[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Srm[]>> =>
   useInfiniteQuery({
     queryKey: [SrmQueryKeys.Srms, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       SrmDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [

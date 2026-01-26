@@ -1,29 +1,36 @@
-import type { QueryOptions, Pour } from '@brewskey/js-api';
-
 import * as React from 'react';
-import moment from 'moment';
-import { useRouter } from 'expo-router';
 
+import { useRouter } from 'expo-router';
+import moment from 'moment';
+
+import BasePoursList from './BasePoursList';
+import UserAvatar from '../../common/avatars/UserAvatar';
 import ListEmpty from '../../common/ListEmpty';
 import ListItem from '../../common/ListItem';
-import UserAvatar from '../../common/avatars/UserAvatar';
 import QuickActions from '../../common/QuickActions';
-import BasePoursList from './BasePoursList';
-import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { useDeletePour } from '../../hooks/queries/PourQueries';
 
-import { ListComponentTypes } from '../../common/List';
+import type { Pour, QueryOptions } from '@brewskey/js-api';
 
-type Props = {
+import type { ListComponentTypes } from '../../common/List';
+
+interface Props {
   canDeletePours: boolean;
   ListHeaderComponent?: ListComponentTypes;
   onRefresh?: () => void;
   queryOptions?: QueryOptions;
-};
+}
 
 // todo add pour amount rendering
-const LoadedRow = ({ value: pour, onItemPress }: { value: Pour; onItemPress: (pour: Pour) => void }) => {
+const LoadedRow = ({
+  value: pour,
+  onItemPress,
+}: {
+  value: Pour;
+  onItemPress: (pour: Pour) => void;
+}) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -34,17 +41,25 @@ const LoadedRow = ({ value: pour, onItemPress }: { value: Pour; onItemPress: (po
   return (
     <ListItem
       chevron={false}
+      item={pour}
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={() => onItemPress(pour)}
-      item={pour}
-      title={title}
       subtitle={moment(pour.pourDate).fromNow()}
       testID={`pour-item-${pour.id}`}
+      title={title}
     />
   );
 };
 
-const SwipeableRowItem = ({ item: pour, onItemPress, slideoutComponent }: { item: Pour; onItemPress: (pour: Pour) => void; slideoutComponent: React.ReactNode }) => {
+const SwipeableRowItem = ({
+  item: pour,
+  onItemPress,
+  slideoutComponent,
+}: {
+  item: Pour;
+  onItemPress: (pour: Pour) => void;
+  slideoutComponent: React.ReactNode;
+}) => {
   const pourOwnerUserName = pour.owner
     ? pour.owner.userName
     : NULL_STRING_PLACEHOLDER;
@@ -54,20 +69,26 @@ const SwipeableRowItem = ({ item: pour, onItemPress, slideoutComponent }: { item
 
   return (
     <ListItem
-      swipeable={true}
+      swipeable
+      chevron={false}
+      item={pour}
+      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      onPress={() => onItemPress(pour)}
       slideoutComponent={slideoutComponent}
-      chevron={false}
-      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
-      onPress={() => onItemPress(pour)}
-      item={pour}
-      title={title}
       subtitle={moment(pour.pourDate).fromNow()}
       testID={`pour-item-${pour.id}`}
+      title={title}
     />
   );
 };
 
-const Slideout = ({ item: pour, onDeleteItemPress }: { item: Pour; onDeleteItemPress: (item: Pour) => Promise<void> }) => (
+const Slideout = ({
+  item: pour,
+  onDeleteItemPress,
+}: {
+  item: Pour;
+  onDeleteItemPress: (item: Pour) => Promise<void>;
+}) => (
   <QuickActions
     deleteModalMessage="Are you sure you want to delete this pour?"
     deleteModalTitle="Delete Pour"
@@ -91,7 +112,10 @@ const OwnerPoursList: React.FC<Props> = ({
       return;
     }
 
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(pour.owner.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(pour.owner.id) },
+    });
   };
 
   const onDeleteItemPress = async (item: Pour): Promise<void> => {

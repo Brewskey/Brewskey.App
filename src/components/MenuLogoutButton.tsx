@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 
+import MenuButton from './MenuButton';
 import Fragment from '../common/Fragment';
 import LogoutModal from './modals/LogoutModal';
-import MenuButton from './MenuButton';
 import { useLogout } from '../hooks/queries/AuthQueries';
 
 const MenuLogoutButton: React.FC = () => {

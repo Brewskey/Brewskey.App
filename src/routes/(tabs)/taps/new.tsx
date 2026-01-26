@@ -1,32 +1,38 @@
-import type { EntityID, TapMutator } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useQueryClient } from '@tanstack/react-query';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import { useQueryClient } from '@tanstack/react-query';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import NotFoundScreen from '../../../common/NotFoundScreen';
 import { TapForm } from '../../../components/TapForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
-import { useCreateTap } from '../../../hooks/queries/TapQueries';
 import { useGetDeviceById } from '../../../hooks/queries/DeviceQueries';
+import { useCreateTap } from '../../../hooks/queries/TapQueries';
+
+import type { EntityID, TapMutator } from '@brewskey/js-api';
 
 const NewTapScreen: React.FC = () => {
   const router = useRouter();
-  const { deviceId: deviceIdParam, showBackButton, onTapSetupFinish } = useLocalSearchParams<{ 
+  const {
+    deviceId: deviceIdParam,
+    showBackButton,
+    onTapSetupFinish,
+  } = useLocalSearchParams<{
     deviceId: string;
     showBackButton?: string;
     onTapSetupFinish?: string;
   }>();
 
-  const deviceId = typeof deviceIdParam === 'string' && !isNaN(Number(deviceIdParam)) 
-    ? Number(deviceIdParam) 
-    : deviceIdParam as EntityID | undefined;
+  const deviceId =
+    typeof deviceIdParam === 'string' && !isNaN(Number(deviceIdParam))
+      ? Number(deviceIdParam)
+      : deviceIdParam;
 
   const { data: device, isLoading, error } = useGetDeviceById(deviceId);
   const queryClient = useQueryClient();
@@ -36,7 +42,7 @@ const NewTapScreen: React.FC = () => {
   const onFormSubmit = async (values: TapMutator): Promise<void> => {
     const tap = await createTap.mutateAsync(values);
     queryClient.invalidateQueries({ queryKey: ['taps'] });
-    
+
     router.navigate({
       pathname: '/(tabs)/flow-sensor/new',
       params: {
@@ -52,8 +58,8 @@ const NewTapScreen: React.FC = () => {
   if (!deviceId) {
     return (
       <NotFoundScreen
-        title="Device Required"
         message="A device ID is required to create a tap."
+        title="Device Required"
       />
     );
   }
@@ -70,8 +76,8 @@ const NewTapScreen: React.FC = () => {
   if (error) {
     return (
       <NotFoundScreen
-        title="Device Not Found"
         message={`The device could not be found. Error: ${error.message}`}
+        title="Device Not Found"
       />
     );
   }
@@ -89,8 +95,8 @@ const NewTapScreen: React.FC = () => {
   if (!organizationId) {
     return (
       <NotFoundScreen
-        title="Organization Required"
         message="The device must be associated with an organization."
+        title="Organization Required"
       />
     );
   }
@@ -101,12 +107,15 @@ const NewTapScreen: React.FC = () => {
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <TapForm
           onSubmit={onFormSubmit}
-          submitButtonLabel="Create tap"
           organizationId={organizationId}
+          submitButtonLabel="Create tap"
         />
       </KeyboardAwareScrollView>
     </Container>
   );
 };
 
-export default withErrorBoundary(NewTapScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  NewTapScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

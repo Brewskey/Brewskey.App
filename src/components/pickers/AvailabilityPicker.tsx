@@ -1,68 +1,58 @@
-import type { Availability, QueryOptions } from '@brewskey/js-api';
 import * as React from 'react';
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { useGetAvailabilities } from '../../hooks/queries/AvailabilityQueries';
+
 import { createFilter } from '@brewskey/js-api/dist/filters';
 
-export type PickerValue<TEntity, TMultiple extends boolean> = TMultiple extends true
-  ? TEntity[]
-  : TEntity | null | undefined;
+import { DropdownInput } from '../../common/form/DropdownInput';
+import { useGetAvailabilities } from '../../hooks/queries/AvailabilityQueries';
 
-type Props = {
+import type {
+  Availability,
+  QueryOptions,
+  ShortenedEntity,
+} from '@brewskey/js-api';
+
+export type PickerValue<T> = T | null | undefined;
+
+interface Props {
   error?: string | null | undefined;
-  onChange: (value: PickerValue<Availability, false>) => void;
   queryOptions?: QueryOptions;
-  value: PickerValue<Availability, false>;
-  // Form integration props
   name: string;
-  defaultValue?: PickerValue<Availability, false>;
+  defaultValue?: PickerValue<Availability | ShortenedEntity>;
   required?: boolean | string;
-};
+}
 
-const AvailabilityPicker: React.FC<Props> = ({
+export const AvailabilityPicker: React.FC<Props> = ({
   name = 'availability',
   defaultValue,
   required,
   ...props
 }) => {
-
-  const onSearchFilter = React.useCallback((searchText: string, baseQueryOptions: QueryOptions) => {
-    return {
+  const onSearchFilter = React.useCallback(
+    (searchText: string, baseQueryOptions: QueryOptions) => ({
       ...baseQueryOptions,
       filters: [
         ...(baseQueryOptions.filters || []),
         createFilter('name').contains(searchText),
       ],
-    };
-  }, []);
+    }),
+    [],
+  );
 
   return (
-    <DropdownInput<Availability>
-      name={name}
-      defaultValue={defaultValue ?? undefined}
-      required={required}
-      useQueryHook={useGetAvailabilities}
-      queryOptions={props.queryOptions ?? {}}
-      onSearchFilter={onSearchFilter}
-      labelField="name"
-      valueField="id"
-      multiple={false}
-      
-      headerTitle="Select Availability"
+    <DropdownInput<Availability | ShortenedEntity>
+      search
       confirmSelectItem={false}
-      inputVariant="picker"
-      search={true}
-      searchPlaceholder="Search availability..."
+      defaultValue={defaultValue ?? undefined}
+      labelField="name"
+      name={name}
+      onSearchFilter={onSearchFilter}
       placeholder="Select Availability"
-      onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Availability);
-        }
-      }}
-      keyExtractor={(item) => String(item.id)}
+      queryOptions={props.queryOptions ?? {}}
+      required={required}
+      searchPlaceholder="Search availability..."
       testID={`availability-picker-${name}`}
+      useQueryHook={useGetAvailabilities}
+      valueField="id"
     />
   );
 };
-
-export default AvailabilityPicker;

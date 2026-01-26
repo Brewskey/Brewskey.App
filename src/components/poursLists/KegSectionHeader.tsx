@@ -1,12 +1,16 @@
 import * as React from 'react';
+
 import moment from 'moment';
-import { SectionListData, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+
 import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import { COLORS, TYPOGRAPHY } from '../../theme';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { EntityID, Pour } from '@brewskey/js-api';
-import { useGetKegById } from '../../hooks/queries/KegQueries';
 import LoadingContainer from '../../common/LoadingIndicator';
+import { NULL_STRING_PLACEHOLDER } from '../../constants';
+import { useGetKegById } from '../../hooks/queries/KegQueries';
+import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import type { EntityID, Pour } from '@brewskey/js-api';
+import type { SectionListData } from 'react-native';
 
 const styles = StyleSheet.create({
   beverageNameText: {
@@ -35,15 +39,15 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   section: SectionListData<Pour>;
-};
+}
 
 export const KegSectionHeader: React.FC<Props> = ({ section: { kegId } }) => {
   const keg = useGetKegById(kegId as unknown as EntityID);
 
   if (keg.isLoading) {
-    return <LoadingContainer style={styles.container} activitySize={'small'} />;
+    return <LoadingContainer activitySize="small" style={styles.container} />;
   }
 
   if (keg.data == null) {

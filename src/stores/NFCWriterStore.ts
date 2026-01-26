@@ -1,14 +1,15 @@
-import type { UserCredentials } from '@brewskey/js-api';
-
+import { Auth } from '@brewskey/js-api';
 import NfcManager, { Ndef } from 'react-native-nfc-manager';
+
 import CONFIG from '../config';
 import SnackBarStore from '../hooks/context/SnackBarContext';
-import { Auth } from '@brewskey/js-api';
+
+import type { UserCredentials } from '@brewskey/js-api';
 
 type NFCWriterStoreStatus = 'instructions' | 'login' | 'writing';
 
 class NFCWriterStore {
-  isNFCSupported: boolean = true;
+  isNFCSupported = true;
 
   status: NFCWriterStoreStatus = 'instructions';
 
@@ -35,7 +36,7 @@ class NFCWriterStore {
 
     try {
       // Use token to grab auth for NFC
-       
+
       const response = await fetch(
         `${CONFIG.HOST}/api/authorizations/nfc-tag/`,
         {

@@ -1,46 +1,52 @@
+import { LocationDAO } from '@brewskey/js-api';
 import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  UseQueryResult,
   useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query';
-import {
+import nullthrows from 'nullthrows';
+
+import { NearbyLocation } from '../../types';
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type {
   Coordinates,
   EntityID,
   Location,
-  LocationDAO,
   LocationMutator,
   QueryOptions,
 } from '@brewskey/js-api';
-import { NearbyLocation } from '../../types';
-import nullthrows from 'nullthrows';
+import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  UseQueryResult,
+} from '@tanstack/react-query';
 
 export enum LocationQueryKeys {
   LocationById = 'location_by_id',
   Locations = 'locations',
   NearbyLocations = 'nearby_locations',
+  LocationsCount = 'locations_count',
 }
 
 export const NEARBY_LOCATIONS_QUERY_KEY_BASE = 'GET_COORDINATES_FROM_ADDRESS';
 
 export const useGetLocationById = (
   id: EntityID | undefined | null,
-): UseQueryResult<Location, Error> =>
+): UseQueryResult<Location> =>
   useQuery({
-    queryKey: [LocationQueryKeys.LocationById, id],
-    queryFn: () => LocationDAO.fetchByID(nullthrows(id)),
+    queryKey: [LocationQueryKeys.LocationById, getStringFromEntityID(id)],
+    queryFn: async () => LocationDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
 
 export const useGetLocations = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
-): UseInfiniteQueryResult<InfiniteData<Location[]>, Error> =>
+): UseInfiniteQueryResult<InfiniteData<Location[]>> =>
   useInfiniteQuery({
     queryKey: [LocationQueryKeys.Locations, queryOptions],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam = 0 }) =>
       LocationDAO.fetchMany({
         ...queryOptions,
         orderBy: queryOptions?.orderBy ?? [
@@ -58,6 +64,12 @@ export const useGetLocations = (
     getPreviousPageParam: (_, pages) => pages.length,
   });
 
+export const useGetLocationsCount = (queryOptions?: QueryOptions) =>
+  useQuery({
+    queryKey: [LocationQueryKeys.LocationsCount, queryOptions],
+    queryFn: () => LocationDAO.count(queryOptions),
+  });
+
 export const useGetNearbyLocations = (
   parameters: Coordinates & { radius?: number },
   {
@@ -65,25 +77,29 @@ export const useGetNearbyLocations = (
   }: {
     enabled: boolean;
   },
-) => {
-  return useQuery({
+) =>
+  useQuery({
     queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE, parameters],
     queryFn: () =>
       LocationDAO.getNearbyLocations({
         radius: 15_000,
         ...parameters,
-      }) as unknown as Promise<NearbyLocation[]>,
+      }),
     enabled,
   });
-};
 
 export const useDeleteLocation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (locationId: EntityID) => LocationDAO.deleteByID(locationId),
+    mutationFn: async (locationId: EntityID) =>
+      LocationDAO.deleteByID(locationId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [LocationQueryKeys.Locations] });
-      queryClient.invalidateQueries({ queryKey: [LocationQueryKeys.LocationById] });
+      queryClient.invalidateQueries({
+        queryKey: [LocationQueryKeys.Locations],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [LocationQueryKeys.LocationById],
+      });
     },
   });
 };
@@ -97,7 +113,7 @@ export const useCreateLocation = () => {
     },
     onSuccess: (location) => {
       queryClient.setQueryData(
-        [LocationQueryKeys.LocationById, location.id],
+        [LocationQueryKeys.LocationById, getStringFromEntityID(location.id)],
         location,
       );
       queryClient.invalidateQueries({
@@ -118,11 +134,11 @@ export const useUpdateLocation = () => {
       mutator: LocationMutator;
     }) => {
       await LocationDAO.put(locationId, mutator);
-      return await LocationDAO.fetchByID(locationId);
+      return LocationDAO.fetchByID(locationId);
     },
     onSuccess: (location) => {
       queryClient.setQueryData(
-        [LocationQueryKeys.LocationById, location.id],
+        [LocationQueryKeys.LocationById, getStringFromEntityID(location.id)],
         location,
       );
       queryClient.invalidateQueries({

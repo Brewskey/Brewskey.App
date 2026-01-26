@@ -1,18 +1,19 @@
-import type { EntityID, Tap } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { StyleSheet, ScrollView, Text, View } from 'react-native';
 
-import Button from '../../common/buttons/Button';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+
 import CenteredModal from './CenteredModal';
-import { COLORS } from '../../theme';
+import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import Button from '../../common/buttons/Button';
 import ListItem from '../../common/ListItem';
+import LoadingIndicator from '../../common/LoadingIndicator';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
 import { useGetTaps } from '../../hooks/queries/TapQueries';
-import { createFilter } from '@brewskey/js-api/dist/filters';
+import { COLORS } from '../../theme';
+
+import type { EntityID, Tap } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   content: {
@@ -47,9 +48,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type TapPaymentProps = {
+interface TapPaymentProps {
   tap: Tap;
-};
+}
 
 const tapStyles = StyleSheet.create({
   container: {
@@ -65,15 +66,15 @@ const TapPayment: React.FC<TapPaymentProps> = ({ tap }: TapPaymentProps) => {
   const { beverage } = currentKeg;
   return (
     <ListItem
-      leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
-      containerStyle={tapStyles.container}
       chevron={false}
+      containerStyle={tapStyles.container}
+      leftAvatar={<BeverageAvatar beverageId={beverage.id} />}
+      subtitleStyle={tapStyles.subtitle}
       title={`Tap ${tapNumber} - ${beverage.name}`}
       titleStyle={tapStyles.title}
       subtitle={`$${(pricePerOunce * 12).toFixed(
         2,
       )} for 12 ounces — $${pricePerOunce.toFixed(2)} per ounce`}
-      subtitleStyle={tapStyles.subtitle}
     />
   );
 };
@@ -82,7 +83,7 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   const { closeModal, shouldShowPaymentScreen } = usePourModalContext();
   const router = useRouter();
   const [deviceID] = React.useState<EntityID | null>(null);
-  
+
   const queryOptions = React.useMemo(() => {
     if (!deviceID) return undefined;
     return {
@@ -110,7 +111,7 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   }, [hasCreditCardDetails, closeModal, router]);
 
   const isVisible = shouldShowPaymentScreen;
-  const onHideModal = () => closeModal();
+  const onHideModal = async () => closeModal();
 
   if (!deviceID) return null;
 
@@ -136,9 +137,7 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
               enabled.
             </Text>
             {!hasCreditCardDetails ? null : (
-              <Text style={styles.copy}>
-                Click Continue to start pouring.
-              </Text>
+              <Text style={styles.copy}>Click Continue to start pouring.</Text>
             )}
           </View>
           <ScrollView
@@ -153,10 +152,10 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
           </ScrollView>
           <View style={styles.footer}>
             <Button
-              containerStyle={{ marginLeft: 0, width: '100%' }}
-              onPress={handleContinuePress}
               raised
               secondary
+              containerStyle={{ marginLeft: 0, width: '100%' }}
+              onPress={handleContinuePress}
               title={buttonText}
             />
           </View>

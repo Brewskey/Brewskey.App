@@ -1,10 +1,12 @@
-import { useRouter } from 'expo-router';
 import * as React from 'react';
+
+import { useRouter } from 'expo-router';
+
 import { HeaderIconButton } from './HeaderIconButton';
 
 export const HeaderBackButton: React.FC = () => {
   const router = useRouter();
-  
+
   const handlePress = () => {
     if (router.canGoBack()) {
       router.back();
@@ -14,10 +16,10 @@ export const HeaderBackButton: React.FC = () => {
       router.replace({ pathname: '/(tabs)', params: {} });
     }
   };
-  
+
   return (
-    <HeaderIconButton 
-      name="arrow-back" 
+    <HeaderIconButton
+      name="arrow-back"
       onPress={handlePress}
       testID="header-back-button"
     />

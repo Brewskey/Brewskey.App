@@ -33,7 +33,7 @@ const BEVERAGE_TYPES = [
 
 test.describe('create with each Beverage Type', () => {
   for (const { label, optionIndex } of BEVERAGE_TYPES) {
-    test(`should successfully create beverage with type ${label}`, async ({ page, menuPage }) => {
+    test(`should successfully create beverage with type ${label}`, async ({ page, menuPage, dropDown }) => {
       await setupSrmData(page, 40);
 
       await menuPage.goto();
@@ -45,18 +45,15 @@ test.describe('create with each Beverage Type', () => {
       await page.getByTestId('input-name').fill(`New Beverage - ${label}`);
       await page.getByTestId('input-description').fill(`A new test beverage (${label})`);
 
-      const beverageTypePicker = page.getByTestId('picker-beverage-type');
-      await beverageTypePicker.click();
-      const beverageTypeModal = page.getByTestId('picker-beverage-type-modal');
-      await expect(beverageTypeModal.getByTestId(`option-${optionIndex}`)).toBeVisible();
-      await beverageTypeModal.getByTestId(`option-${optionIndex}`).click();
+      const beverageTypeDd = dropDown.create('picker-beverage-type');
+      await beverageTypeDd.input.click();
+      await beverageTypeDd.scrollToItemByIndex(optionIndex);
+      await beverageTypeDd.select(optionIndex);
 
-      const colorPicker = page.getByTestId('picker-color');
-      await colorPicker.click();
-      await expect(page.getByTestId('picker-color-search')).toBeVisible();
-      const colorModal = page.getByTestId('picker-color-modal');
-      await expect(colorModal.getByTestId('option-0')).toBeVisible();
-      await colorModal.getByTestId('option-0').click();
+      const colorDd = dropDown.create('picker-color');
+      await colorDd.input.click();
+      await expect(colorDd.search).toBeVisible();
+      await colorDd.select(0);
 
       // Beer-only fields (style, abv, og, ibu) are optional; we only assert Beverage Type selection here.
 

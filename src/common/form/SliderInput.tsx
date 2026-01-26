@@ -1,8 +1,11 @@
-import { Slider, SliderProps } from '@rneui/themed';
+import { Slider } from '@rneui/themed';
+import nullthrows from 'nullthrows';
 import { Controller, useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
+
 import { COLORS } from '../../theme';
-import nullthrows from 'nullthrows';
+
+import type { SliderProps } from '@rneui/themed';
 
 export type SliderInputProps = Omit<SliderProps, 'value'> & {
   name: string;
@@ -19,28 +22,31 @@ export const SliderInput = ({
   ...props
 }: SliderInputProps) => {
   const { control } = useFormContext();
-  
+
   return (
     <Controller
       control={control}
-      name={nullthrows(name, 'SliderInput: name prop is required and must be a non-empty string')}
       defaultValue={defaultValue ?? 0}
       rules={{ required }}
+      name={nullthrows(
+        name,
+        'SliderInput: name prop is required and must be a non-empty string',
+      )}
       render={({ field: { onChange, onBlur, value } }) => (
         <View testID={testID}>
           <Slider
             {...props}
+            thumbTintColor={COLORS.primary}
+            value={typeof value === 'number' ? value : 0}
+            onSlidingComplete={(newValue) => {
+              onChange(newValue);
+              onBlur();
+            }}
             onValueChange={(newValue) => {
               onChange(newValue);
               // Ensure form is marked as dirty when slider value changes
               // Controller's onChange should handle this, but we call onBlur to ensure proper form state
             }}
-            onSlidingComplete={(newValue) => {
-              onChange(newValue);
-              onBlur();
-            }}
-            value={typeof value === 'number' ? value : 0}
-            thumbTintColor={COLORS.primary}
             thumbStyle={{
               width: 24,
               height: 24,

@@ -1,24 +1,25 @@
-import React, { PropsWithChildren, useCallback, useContext, useState, useEffect } from 'react';
-import type { EntityID } from '@brewskey/js-api';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import { Platform } from 'react-native';
 import nullthrows from 'nullthrows';
-import { fetchJSON } from '../../utils';
-import CONFIG from '../../config';
-import {
-  useLocationPermission,
-  useDeviceLocation,
-} from '../useGetLocation';
+import { Platform } from 'react-native';
+import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
+
+
+import { useAuthSession } from './AuthContext';
 import { useAddSnackBarMessage } from './SnackBarContext';
-import NfcManager, {
+import CONFIG from '../../config';
+import { fetchJSON } from '../../utils';
+import { useDeviceLocation, useLocationPermission } from '../useGetLocation';
+
+import type { EntityID } from '@brewskey/js-api';
+import type { PropsWithChildren } from 'react';
+import type {
   NfcError,
-  NfcEvents,
   RegisterTagEventOpts,
   TagEvent,
 } from 'react-native-nfc-manager';
-import { useAuthSession } from './AuthContext';
 
-type PourProcessState = {
+interface PourProcessState {
   isVisible: boolean;
   isNFCSupported: boolean;
   isNFCEnabled: boolean;
@@ -26,9 +27,9 @@ type PourProcessState = {
   shouldShowPaymentScreen: boolean;
   hasReadTag: boolean;
   pourErrorText: string | null;
-};
+}
 
-type PourProcessContextValue = {
+interface PourProcessContextValue {
   // State (read-only)
   isVisible: boolean;
   isNFCSupported: boolean;
@@ -37,7 +38,7 @@ type PourProcessContextValue = {
   shouldShowPaymentScreen: boolean;
   hasReadTag: boolean;
   pourErrorText: string | null;
-  
+
   // Actions
   openModal: () => Promise<void>;
   closeModal: () => Promise<void>;
@@ -45,9 +46,11 @@ type PourProcessContextValue = {
   clearError: () => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
-};
+}
 
-const PourProcessContext = React.createContext<PourProcessContextValue | null>(null);
+const PourProcessContext = React.createContext<PourProcessContextValue | null>(
+  null,
+);
 
 const STANDARD_NFC_ERROR_MESSAGE =
   'Could not read the full NFC message.\nTry Again!';
@@ -71,7 +74,7 @@ const onNFCTagDiscovered = (
     payload[0] === 0 ? payload.slice(1) : payload,
   );
 
-  if (tagValue.indexOf(CONFIG.HOST) < 0) {
+  if (!tagValue.includes(CONFIG.HOST)) {
     throw new Error(STANDARD_NFC_ERROR_MESSAGE);
   }
 
@@ -81,18 +84,18 @@ const onNFCTagDiscovered = (
     throw new Error(STANDARD_NFC_ERROR_MESSAGE);
   }
 
-  const result = nullthrows(tagValue.substring(index).match(/\d+/));
+  const result = nullthrows(/\d+/.exec(tagValue.substring(index)));
   return result[0];
 };
 
-type AuthPayloadParams = {
+interface AuthPayloadParams {
   accessToken: string | undefined;
   latitude: number;
   longitude: number;
   deviceId: EntityID | undefined;
   didAuthorizePayment: boolean;
   totp: string;
-};
+}
 
 export const sendPourAuthorization = async (
   authPayloadParams: AuthPayloadParams,
@@ -120,7 +123,7 @@ export const sendPourAuthorization = async (
       );
     } else if (
       error instanceof Error &&
-      error.message.indexOf('API calls quota exceeded') >= 0
+      error.message.includes('API calls quota exceeded')
     ) {
       throw new Error('Too many pour requests. Try again in a minute');
     } else {
@@ -129,7 +132,7 @@ export const sendPourAuthorization = async (
   }
 };
 
-const listenForTagOnce = (
+const listenForTagOnce = async (
   options?: RegisterTagEventOpts,
 ): Promise<TagEvent> => {
   const cleanUp = () => {
@@ -164,6 +167,7 @@ const listenForTagOnce = (
 export const PourProcessProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
+  console.log('PourProcessProvider');
   const [state, setState] = useState<PourProcessState>({
     isVisible: false,
     isNFCSupported: false,
@@ -258,7 +262,7 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
     shouldShowPaymentScreen: state.shouldShowPaymentScreen,
     hasReadTag: state.hasReadTag,
     pourErrorText: state.pourErrorText,
-    
+
     // Actions
     openModal,
     closeModal,
@@ -278,18 +282,20 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
 /**
  * Hook to access pour modal context
  * Provides state and actions for managing the pour authorization flow
- * 
+ *
  * @example
  * ```tsx
  * const { isVisible, openModal, closeModal, startPourAuthorization } = usePourModalContext();
- * 
+ *
  * <Button onPress={() => openModal()}>Pour</Button>
  * ```
  */
 export const usePourModalContext = (): PourProcessContextValue => {
   const context = useContext(PourProcessContext);
   if (!context) {
-    throw new Error('usePourModalContext must be used within PourProcessProvider');
+    throw new Error(
+      'usePourModalContext must be used within PourProcessProvider',
+    );
   }
 
   const { data: session } = useAuthSession();
@@ -309,7 +315,7 @@ export const usePourModalContext = (): PourProcessContextValue => {
     await context.openModal();
 
     // Check geolocation permission
-    if (permission == null || permission.granted === false) {
+    if (!permission?.granted) {
       addSnackBarMessage({
         duration: 3000,
         style: 'danger',
@@ -326,13 +332,13 @@ export const usePourModalContext = (): PourProcessContextValue => {
         didAuthorizePayment: false,
         totp: '',
       };
-      
+
       try {
         await listenForTagOnce({
           alertMessage: 'Tap Brewskey Box',
           invalidateAfterFirstRead: true,
         });
-        
+
         const tag = await NfcManager.getTag();
         const deviceId = await onNFCTagDiscovered(tag, context.hasReadTag);
 
@@ -367,49 +373,52 @@ export const usePourModalContext = (): PourProcessContextValue => {
     addSnackBarMessage,
   ]);
 
-  const startPourAuthorization = useCallback(async (totp: string) => {
-    if (totp.length !== 6) {
-      addSnackBarMessage({
-        duration: 3000,
-        style: 'danger',
-        content: 'Invalid code',
-      });
-      return;
-    }
+  const startPourAuthorization = useCallback(
+    async (totp: string) => {
+      if (totp.length !== 6) {
+        addSnackBarMessage({
+          duration: 3000,
+          style: 'danger',
+          content: 'Invalid code',
+        });
+        return;
+      }
 
-    // Wait for queries to resolve before proceeding
-    if (permissionQuery.isLoading || locationQuery.isLoading) {
-      addSnackBarMessage({
-        duration: 3000,
-        style: 'danger',
-        content: 'Location data is still loading. Please try again.',
-      });
-      return;
-    }
+      // Wait for queries to resolve before proceeding
+      if (permissionQuery.isLoading || locationQuery.isLoading) {
+        addSnackBarMessage({
+          duration: 3000,
+          style: 'danger',
+          content: 'Location data is still loading. Please try again.',
+        });
+        return;
+      }
 
-    try {
-      context.setLoading(true);
-      await sendPourAuthorization({
-        accessToken: session?.accessToken,
-        latitude: location?.coords.latitude ?? 0,
-        longitude: location?.coords.longitude ?? 0,
-        didAuthorizePayment: false,
-        deviceId: undefined,
-        totp,
-      });
-      await context.closeModal();
-    } catch (error) {
-      context.setLoading(false);
-      context.setError((error as Error).message);
-    }
-  }, [
-    addSnackBarMessage,
-    session?.accessToken,
-    location,
-    permissionQuery.isLoading,
-    locationQuery.isLoading,
-    context,
-  ]);
+      try {
+        context.setLoading(true);
+        await sendPourAuthorization({
+          accessToken: session?.accessToken,
+          latitude: location?.coords.latitude ?? 0,
+          longitude: location?.coords.longitude ?? 0,
+          didAuthorizePayment: false,
+          deviceId: undefined,
+          totp,
+        });
+        await context.closeModal();
+      } catch (error) {
+        context.setLoading(false);
+        context.setError((error as Error).message);
+      }
+    },
+    [
+      addSnackBarMessage,
+      session?.accessToken,
+      location,
+      permissionQuery.isLoading,
+      locationQuery.isLoading,
+      context,
+    ],
+  );
 
   return {
     ...context,

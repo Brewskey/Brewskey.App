@@ -1,11 +1,12 @@
-import type { Location } from '@brewskey/js-api';
-
 import * as React from 'react';
+
 import { StyleSheet, Text, View } from 'react-native';
 
-import { COLORS, TYPOGRAPHY } from '../theme';
 import IconButton from '../common/buttons/IconButton';
+import { COLORS, TYPOGRAPHY } from '../theme';
 import LocationMapModal from './modals/LocationMapModal';
+
+import type { Location } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -21,9 +22,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   location: Location;
-};
+}
 
 const LocationAddress: React.FC<Props> = ({ location }) => {
   const [isMapVisible, setIsMapVisible] = React.useState(false);
@@ -44,24 +45,28 @@ const LocationAddress: React.FC<Props> = ({ location }) => {
           state || ''
         ).toUpperCase()} ${zipCode.toString().toUpperCase()}`}
       </Text>
-      <Text style={styles.text} testID="location-address-country">USA</Text>
-      {geolocation && [
-        <View key="mapButton" style={styles.mapButtonContainer}>
-          <IconButton
-            color={COLORS.primary2}
-            onPress={toggleMapModal}
-            name="earth"
-            size={40}
-            type="material-community"
-          />
-        </View>,
-        <LocationMapModal
-          key="mapModal"
-          isVisible={isMapVisible}
-          onHideModal={toggleMapModal}
-          coordinates={geolocation.coordinates}
-        />,
-      ]}
+      <Text style={styles.text} testID="location-address-country">
+        USA
+      </Text>
+      {geolocation
+        ? [
+            <View key="mapButton" style={styles.mapButtonContainer}>
+              <IconButton
+                color={COLORS.primary2}
+                name="earth"
+                onPress={toggleMapModal}
+                size={40}
+                type="material-community"
+              />
+            </View>,
+            <LocationMapModal
+              key="mapModal"
+              coordinates={geolocation.coordinates}
+              isVisible={isMapVisible}
+              onHideModal={toggleMapModal}
+            />,
+          ]
+        : null}
     </View>
   );
 };

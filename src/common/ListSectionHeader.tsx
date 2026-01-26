@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { StyleSheet, Text } from 'react-native';
+
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -10,12 +12,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
-  title: string
-};
+interface Props {
+  title: string;
+}
 
-const ListSectionHeader: React.FC<Props> = ({ title }) => {
-  return <Text style={styles.container}>{title}</Text>;
-};
+const ListSectionHeader: React.FC<Props> = ({ title }) => (
+  <Text style={styles.container}>{title}</Text>
+);
 
 export default ListSectionHeader;

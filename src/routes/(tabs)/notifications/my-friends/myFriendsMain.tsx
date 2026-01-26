@@ -1,9 +1,10 @@
 import * as React from 'react';
+
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
-import ErrorScreen from '../../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../../common/ErrorBoundary';
 
+import { withErrorBoundary } from '../../../../common/ErrorBoundary';
+import ErrorScreen from '../../../../common/ErrorScreen';
 import FriendsList from '../../../../components/FriendsList';
 import { useUserID } from '../../../../hooks/context/AuthContext';
 
@@ -15,13 +16,14 @@ const MyFriendsMainRoute: React.FC = () => {
       queryOptions={{
         filters: [
           createFilter('owningAccount/id').equals(userID),
-          createFilter('friendStatus').equals(
-            FRIEND_STATUSES.APPROVED,
-          ),
+          createFilter('friendStatus').equals(FRIEND_STATUSES.APPROVED),
         ],
       }}
     />
   );
 };
 
-export default withErrorBoundary(MyFriendsMainRoute, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  MyFriendsMainRoute,
+  <ErrorScreen shouldShowBackButton />,
+);

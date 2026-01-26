@@ -1,14 +1,14 @@
 import type { CreditCardDetails } from '@brewskey/js-api';
 
-export type PaymentFormParams = {
+export interface PaymentFormParams {
   cvc: string;
   expMonth: number;
   expYear: number;
   number: string;
-};
+}
 
 class PaymentsScreenStore {
-  _isLoading: boolean = false;
+  _isLoading = false;
 
   get isLoading(): boolean {
     return false;
@@ -69,8 +69,8 @@ class PaymentsScreenStore {
 
   get creditCardDetailsLoader(): Promise<CreditCardDetails> {
     return Promise.reject();
-    //return PaymentsStore.get();
+    // return PaymentsStore.get();
   }
 }
 
-export default new PaymentsScreenStore() as PaymentsScreenStore;
+export default new PaymentsScreenStore();

@@ -1,7 +1,10 @@
-import { Controller, useFormContext } from 'react-hook-form';
-import { CheckBox, CheckBoxProps } from '@rneui/themed';
-import { COLORS } from '../../theme';
+import { CheckBox } from '@rneui/themed';
 import nullthrows from 'nullthrows';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import { COLORS } from '../../theme';
+
+import type { CheckBoxProps } from '@rneui/themed';
 
 export type TextInputProps = Omit<
   CheckBoxProps,
@@ -28,19 +31,22 @@ export const CheckBoxInput = ({
   return (
     <Controller
       control={control}
-      name={nullthrows(name, 'CheckBoxInput: name prop is required and must be a non-empty string')}
       defaultValue={defaultValue ?? false}
       rules={{ required }}
+      name={nullthrows(
+        name,
+        'CheckBoxInput: name prop is required and must be a non-empty string',
+      )}
       render={({ field: { onChange, onBlur, value } }) => (
         <CheckBox
           {...props}
+          checked={value}
           checkedColor={COLORS.primary}
-          title={label}
           containerStyle={{ marginLeft: 24, marginRight: 24 }}
           onBlur={onBlur}
           onPress={() => onChange(!value)}
-          checked={value}
           testID={testID}
+          title={label}
         />
       )}
     />

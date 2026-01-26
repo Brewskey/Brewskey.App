@@ -1,5 +1,11 @@
-import type { AchievementType } from '@brewskey/js-api';
-
+import BackOnTheBusLarge from './resources/badges/150x150/BackOnTheBus.png';
+import BeerAficionadoLarge from './resources/badges/150x150/BeerAficionado.png';
+import BeerAuthorityLarge from './resources/badges/150x150/BeerAuthority.png';
+import BeerBeforeNoonLarge from './resources/badges/150x150/BeerBeforeNoon.png';
+import BeerBuffLarge from './resources/badges/150x150/BeerBuff.png';
+import BeerConnoisseurLarge from './resources/badges/150x150/BeerConnoisseur.png';
+import DrankAKegLarge from './resources/badges/150x150/DrankAKeg.png';
+import DrankFiveKegsLarge from './resources/badges/150x150/DrankFiveKegs.png';
 import BackOnTheBusSmall from './resources/badges/70x70/BackOnTheBus-70x70.png';
 import BeerAficionadoSmall from './resources/badges/70x70/BeerAficionado-70x70.png';
 import BeerAuthoritySmall from './resources/badges/70x70/BeerAuthority-70x70.png';
@@ -20,14 +26,6 @@ import PowerHourSmall from './resources/badges/70x70/PowerHour-70x70.png';
 import SevenDaysStraightSmall from './resources/badges/70x70/SevenDaysStraight-70x70.png';
 import WelcomeSmall from './resources/badges/70x70/Welcome-70x70.png';
 
-import BackOnTheBusLarge from './resources/badges/150x150/BackOnTheBus.png';
-import BeerAficionadoLarge from './resources/badges/150x150/BeerAficionado.png';
-import BeerAuthorityLarge from './resources/badges/150x150/BeerAuthority.png';
-import BeerBeforeNoonLarge from './resources/badges/150x150/BeerBeforeNoon.png';
-import BeerBuffLarge from './resources/badges/150x150/BeerBuff.png';
-import BeerConnoisseurLarge from './resources/badges/150x150/BeerConnoisseur.png';
-import DrankAKegLarge from './resources/badges/150x150/DrankAKeg.png';
-import DrankFiveKegsLarge from './resources/badges/150x150/DrankFiveKegs.png';
 import DrankTenKegsLarge from './resources/badges/150x150/DrankTenKegs.png';
 import Edward40HandsLarge from './resources/badges/150x150/Edward40Hands.png';
 import FirstPourOfTheDayLarge from './resources/badges/150x150/FirstPourOfTheDay.png';
@@ -40,14 +38,16 @@ import PowerHourLarge from './resources/badges/150x150/PowerHour.png';
 import SevenDaysStraightLarge from './resources/badges/150x150/SevenDaysStraight.png';
 import WelcomeLarge from './resources/badges/150x150/Welcome.png';
 
-export type Badge = {
+import type { AchievementType } from '@brewskey/js-api';
+
+export interface Badge {
   description: string;
   image: {
     large: number;
     small: number;
   };
   name: string;
-};
+}
 
 export const BADGE_IMAGE_SIZES = {
   large: 150,

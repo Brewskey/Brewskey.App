@@ -1,20 +1,21 @@
-import type { WifiNetwork } from '../../../types';
-
 import * as React from 'react';
-import WifiListItem from './WifiListItem';
+import { useState } from 'react';
+
 import WifiListEmpty from './WifiListEmpty';
 import WifiListError from './WifiListError';
+import WifiListItem from './WifiListItem';
+import { Form } from '../../../common/form/Form';
 import List from '../../../common/List';
 import LoadingListFooter from '../../../common/LoadingListFooter';
-import { useState } from 'react';
 import { useGetWifiNetworks } from '../../../hooks/queries/SoftApQueries';
-import { Form } from '../../../common/form/Form';
 
-type Props = {
+import type { WifiNetwork } from '../../../types';
+
+interface Props {
   ListHeaderComponent?: React.ReactElement | null | undefined;
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>;
   isSettingUpWifi: boolean;
-};
+}
 
 export const WifiList: React.FC<Props> = ({
   ListHeaderComponent,
@@ -46,7 +47,7 @@ export const WifiList: React.FC<Props> = ({
       <WifiListItem
         error={error}
         index={index}
-        isConnecting={isExpanded && (isLoading || isSettingUpWifi)}
+        isConnecting={isExpanded ? isLoading || isSettingUpWifi : null}
         isExpanded={isExpanded}
         item={item}
         onConnectPress={onConnectPress}
@@ -69,10 +70,10 @@ export const WifiList: React.FC<Props> = ({
         data={{ pages: [wifiNetworks ?? []], pageParams: [{}] }}
         extraData={{ expandedRowKey }}
         keyExtractor={keyExtractor}
-        listType="flatList"
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
+        listType="flatList"
         onRefresh={!isLoading ? refetch : undefined}
         renderItem={renderItem}
         testID="wifi-networks-list"

@@ -1,30 +1,34 @@
-import type { QueryOptions, Location } from '@brewskey/js-api';
-
-import type { RowItemProps } from '../common/SwipeableRow';
-import type { RenderProps } from '../common/SwipeableList';
-import type { ListComponentTypes } from '../common/List';
-
 import * as React from 'react';
-import { View } from 'react-native';
 import { useMemo } from 'react';
-import nullthrows from 'nullthrows';
+
 import { useRouter } from 'expo-router';
+import nullthrows from 'nullthrows';
+import { View } from 'react-native';
 
 import ListEmpty from '../common/ListEmpty';
 import ListItem from '../common/ListItem';
 import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
-import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
+import { SwipeableList } from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
-import { useGetLocations, useDeleteLocation } from '../hooks/queries/LocationQueries';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import {
+  useDeleteLocation,
+  useGetLocations,
+} from '../hooks/queries/LocationQueries';
 
-type Props = {
+import type { Location, QueryOptions } from '@brewskey/js-api';
+
+import type { ListComponentTypes } from '../common/List';
+import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
+import type { RowItemProps } from '../common/SwipeableRow';
+
+interface Props {
   ListEmptyComponent?: ListComponentTypes;
   ListHeaderComponent?: ListComponentTypes;
   queryOptions?: QueryOptions;
-};
+}
 
 const LocationsList: React.FC<Props> = ({
   ListEmptyComponent = <ListEmpty message="No locations" />,
@@ -70,12 +74,18 @@ const LocationsList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Location) => {
-    router.navigate({ pathname: '/(tabs)/locations/[id]/edit', params: { id: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/locations/[id]/edit',
+      params: { id: String(id) },
+    });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Location): void => {
-    router.navigate({ pathname: '/(tabs)/locations/[id]', params: { id: String(item.id) } });
+    router.navigate({
+      pathname: '/(tabs)/locations/[id]',
+      params: { id: String(item.id) },
+    });
   };
 
   const onRefreshList = async () => {
@@ -93,8 +103,8 @@ const LocationsList: React.FC<Props> = ({
       item={item}
       onPress={onItemPress}
       subtitle={item.description || NULL_STRING_PLACEHOLDER}
-      title={item.name}
       testID={`location-item-${item.id}`}
+      title={item.name}
     />
   );
 
@@ -137,22 +147,24 @@ const LocationsList: React.FC<Props> = ({
   }, [locationsData]);
 
   return (
-    <View testID="locations-list" style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} testID="locations-list">
       <SwipeableList
+        ref={swipeableListRef}
         data={flatData}
         keyExtractor={keyExtractor}
-        listType="flatList"
         ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
-        ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
         ListHeaderComponent={ListHeaderComponent as ListComponentTypes}
+        listType="flatList"
+        onRefresh={onRefreshList}
+        renderItem={renderRow}
+        ListFooterComponent={
+          <LoadingListFooter isLoading={isFetchingNextPage} />
+        }
         onEndReached={() => {
           if (hasNextPage) {
             fetchNextPage();
           }
         }}
-        onRefresh={onRefreshList}
-        ref={swipeableListRef}
-        renderItem={renderRow}
       />
     </View>
   );

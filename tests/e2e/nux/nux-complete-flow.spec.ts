@@ -11,6 +11,7 @@ test('should complete full NUX flow', async ({
   locationPage,
   devicePage,
   tapPage,
+  dropDown,
 }) => {
   // New user with no locations/taps/devices; manage taps OFF so we enable it in settings
   await mockNewUserState(page);
@@ -120,15 +121,10 @@ test('should complete full NUX flow', async ({
   // Flow-sensor navigates to keg/new; fill and submit
   await expect(page).toHaveURL(/\/keg\/new/i);
   await expect(page.getByTestId('keg-form')).toBeVisible();
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await beveragePicker.click();
-  await expect(page.getByText(beverage.name)).toBeVisible();
-  await page.getByText(beverage.name).click();
-  const kegTypeDropdown = page.getByTestId('dropdown-kegType');
-  await kegTypeDropdown.click();
-  const kegTypeModal = page.getByTestId('dropdown-kegType-modal');
-  await expect(kegTypeModal.getByTestId('option-0')).toBeVisible();
-  await kegTypeModal.getByTestId('option-0').click();
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await beveragePicker.select(0);
+  const kegTypeDd = dropDown.create('dropdown-kegType');
+  await kegTypeDd.select(0);
   await page.getByTestId('submit-button-create-keg').click();
 
   // Keg submit with onTapSetupFinish goes to (nux)/finish

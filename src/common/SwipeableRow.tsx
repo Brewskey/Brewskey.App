@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import ReanimatedSwipeable, { type SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
+
+import { StyleSheet, View } from 'react-native';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+
+import type { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import type { SharedValue } from 'react-native-reanimated';
 
-export type SwipeableProps = {
+export interface SwipeableProps {
   isOpen: boolean;
   maxSwipeDistance?: number;
   onClose: () => void;
@@ -14,9 +17,9 @@ export type SwipeableProps = {
   rowKey: string;
   shouldBounceOnMount: boolean;
   swipeThreshold?: number;
-};
+}
 
-export type RowItemProps<TEntity> = {
+export interface RowItemProps<TEntity> {
   index: number;
   item: TEntity;
   separators: {
@@ -27,7 +30,7 @@ export type RowItemProps<TEntity> = {
   onDeleteItemPress?: (item: TEntity) => void;
   onEditItemPress?: (item: TEntity) => void;
   onItemPress?: (item: TEntity) => void;
-};
+}
 
 type Props<TEntity> = SwipeableProps &
   RowItemProps<TEntity> & {
@@ -128,33 +131,31 @@ function SwipeableRow<TEntity>(props: Props<TEntity>): React.ReactElement {
       _progress: SharedValue<number>,
       _translation: SharedValue<number>,
       _swipeableMethods: SwipeableMethods,
-    ): React.ReactElement => {
-      return (
-        <View style={[styles.slideoutContainer, { width: maxSwipeDistance }]}>
-          <SlideoutComponent
-            index={index}
-            item={item}
-            separators={separators}
-            {...extraProps}
-          />
-        </View>
-      );
-    },
+    ): React.ReactElement => (
+      <View style={[styles.slideoutContainer, { width: maxSwipeDistance }]}>
+        <SlideoutComponent
+          index={index}
+          item={item}
+          separators={separators}
+          {...extraProps}
+        />
+      </View>
+    ),
     [index, item, separators, SlideoutComponent, maxSwipeDistance, extraProps],
   );
 
   return (
     <ReanimatedSwipeable
       ref={swipeableRef}
+      friction={2}
+      onSwipeableClose={_onSwipeableClose}
+      onSwipeableOpen={_onSwipeableOpen}
+      onSwipeableWillClose={_onSwipeableWillClose}
+      onSwipeableWillOpen={_onSwipeableWillOpen}
+      overshootLeft={!preventSwipeRight}
+      overshootRight={false}
       renderRightActions={renderRightActions}
       rightThreshold={swipeThreshold}
-      overshootRight={false}
-      overshootLeft={preventSwipeRight ? false : true}
-      friction={2}
-      onSwipeableWillOpen={_onSwipeableWillOpen}
-      onSwipeableWillClose={_onSwipeableWillClose}
-      onSwipeableOpen={_onSwipeableOpen}
-      onSwipeableClose={_onSwipeableClose}
     >
       <RowItemComponent
         index={index}

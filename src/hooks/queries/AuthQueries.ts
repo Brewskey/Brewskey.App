@@ -1,30 +1,33 @@
-import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Auth, AuthResponse, ChangePasswordArgs, UserCredentials } from '@brewskey/js-api';
+import { Auth } from '@brewskey/js-api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { setAuthSession } from '../context/AuthContext';
 
+import type {
+  AuthResponse,
+  ChangePasswordArgs,
+  UserCredentials,
+} from '@brewskey/js-api';
+import type { UseMutationResult } from '@tanstack/react-query';
+
 export const useLogin = (): UseMutationResult<
-  AuthResponse, 
+  AuthResponse,
   Error,
   UserCredentials
 > => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (params: UserCredentials) => Auth.login(params),
+    mutationFn: async (params: UserCredentials) => Auth.login(params),
     onSuccess: (data) => {
       setAuthSession(queryClient, data);
     },
   });
 };
 
-export const useLogout = (): UseMutationResult<
-  void,
-  Error,
-  void
-> => {
+export const useLogout = (): UseMutationResult<void, Error, void> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => 
-      setAuthSession(queryClient, null),
+    mutationFn: async () => setAuthSession(queryClient, null),
   });
 };
 
@@ -36,7 +39,8 @@ export const useResetPassword = (): UseMutationResult<
   }
 > =>
   useMutation({
-    mutationFn: (params: { email: string }) => Auth.resetPassword(params.email),
+    mutationFn: async (params: { email: string }) =>
+      Auth.resetPassword(params.email),
   });
 
 export const useRegister = (): UseMutationResult<
@@ -49,8 +53,11 @@ export const useRegister = (): UseMutationResult<
   }
 > =>
   useMutation({
-    mutationFn: (params: { email: string; password: string; userName: string }) =>
-      Auth.register(params),
+    mutationFn: async (params: {
+      email: string;
+      password: string;
+      userName: string;
+    }) => Auth.register(params),
   });
 
 export const useChangePassword = (): UseMutationResult<
@@ -59,5 +66,6 @@ export const useChangePassword = (): UseMutationResult<
   ChangePasswordArgs
 > =>
   useMutation({
-    mutationFn: (params: ChangePasswordArgs) => Auth.changePassword(params),
+    mutationFn: async (params: ChangePasswordArgs) =>
+      Auth.changePassword(params),
   });

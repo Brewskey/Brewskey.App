@@ -1,7 +1,7 @@
-export type StateConfig = {
-  label: string,
-  value: string
-};
+export interface StateConfig {
+  label: string;
+  value: string;
+}
 
 const STATE_LIST: StateConfig[] = [
   {

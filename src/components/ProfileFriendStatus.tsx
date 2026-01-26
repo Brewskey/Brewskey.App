@@ -1,23 +1,24 @@
-import type { Account, Friend } from '@brewskey/js-api';
-
 import * as React from 'react';
-import nullthrows from 'nullthrows';
 import { useState } from 'react';
 
 import { FRIEND_STATUSES } from '@brewskey/js-api';
+import nullthrows from 'nullthrows';
+
 import Fragment from '../common/Fragment';
+import FriendAddModal from './modals/FriendAddModal';
+import FriendApprovedModal from './modals/FriendApprovedModal';
+import FriendPendingModal from './modals/FriendPendingModal';
 import { HeaderIconButton } from '../common/Header/HeaderIconButton';
 import { useAuthSession } from '../hooks/context/AuthContext';
-import FriendApprovedModal from './modals/FriendApprovedModal';
-import FriendAddModal from './modals/FriendAddModal';
-import FriendPendingModal from './modals/FriendPendingModal';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import { useAddFriend, useDeleteFriend } from '../hooks/queries/FriendQueries';
 
-type Props = {
+import type { Account, Friend } from '@brewskey/js-api';
+
+interface Props {
   account: Account;
   friend: Friend | null | undefined;
-};
+}
 
 const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -30,7 +31,7 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
     const { userName } = account;
 
     setIsModalVisible(false);
-    
+
     try {
       await addFriendMutation.mutateAsync(userName);
       addSnackBarMessage({
@@ -38,7 +39,8 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
       });
     } catch (error) {
       addSnackBarMessage({
-        content: error instanceof Error ? error.message : 'Failed to add friend',
+        content:
+          error instanceof Error ? error.message : 'Failed to add friend',
         style: 'danger',
       });
     }
@@ -48,7 +50,7 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
     const { userName } = account;
 
     setIsModalVisible(false);
-    
+
     try {
       await deleteFriendMutation.mutateAsync(nullthrows(friend).id);
       addSnackBarMessage({
@@ -56,7 +58,8 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
       });
     } catch (error) {
       addSnackBarMessage({
-        content: error instanceof Error ? error.message : 'Failed to remove friend',
+        content:
+          error instanceof Error ? error.message : 'Failed to remove friend',
         style: 'danger',
       });
     }

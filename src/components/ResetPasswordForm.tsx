@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { View } from 'react-native';
-import { useForm } from 'react-hook-form';
 
-import SectionContent from '../common/SectionContent';
+import { useForm } from 'react-hook-form';
+import { View } from 'react-native';
+
 import Button from '../common/buttons/Button';
-import { validateEmail } from '../utils';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { TextInput } from '../common/form/TextInput';
-import { SubmitButton } from '../common/form/SubmitButton';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { SubmitButton } from '../common/form/SubmitButton';
+import { TextInput } from '../common/form/TextInput';
+import SectionContent from '../common/SectionContent';
+import { validateEmail } from '../utils';
 
-export type ResetPasswordFormValues = {
+export interface ResetPasswordFormValues {
   email: string;
-};
+}
 
 export const ForgotPasswordForm: React.FC<{
   onSubmit: (values: ResetPasswordFormValues) => void;
@@ -50,7 +51,9 @@ export const ForgotPasswordForm: React.FC<{
     return Object.keys(errors).length === 0;
   };
 
-  const onSubmitHandler = async (values: ResetPasswordFormValues): Promise<void> => {
+  const onSubmitHandler = async (
+    values: ResetPasswordFormValues,
+  ): Promise<void> => {
     if (validate(values)) {
       await onSubmit(values);
     }

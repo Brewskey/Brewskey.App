@@ -5,7 +5,7 @@ import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
-test('should successfully update keg', async ({ page }) => {
+test('should successfully update keg', async ({ page, dropDown }) => {
   // Set up: one tap with keg and a second beverage so we can mutate the beverage field
   const { tap } = await mockTapWithKeg(page);
   const otherBeverage = createMockBeverage({ name: 'Other Keg Beverage' });
@@ -17,17 +17,15 @@ test('should successfully update keg', async ({ page }) => {
 
   // Mutate every form field: beverage, kegType, startingPercentage
 
-  // Beverage - select the other beverage
-  const beveragePicker = page.getByTestId('beverage-picker-beverage');
-  await beveragePicker.click();
-  await expect(page.getByTestId(`beverage-picker-item-${otherBeverage.id}`)).toBeVisible({ timeout: 5000 });
-  await page.getByTestId(`beverage-picker-item-${otherBeverage.id}`).click();
+  // Beverage - select the other beverage (newest by id desc, so index 0)
+  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  await beveragePicker.select(0);
 
-  // Keg type - select a different option (WebDropdown uses option-0, option-1, ...; scope to keg type modal)
-  const kegTypeDropdown = page.getByTestId('dropdown-kegType');
-  await kegTypeDropdown.click();
-  await expect(page.getByTestId('dropdown-kegType-modal').getByTestId('option-1')).toBeVisible({ timeout: 5000 });
-  await page.getByTestId('dropdown-kegType-modal').getByTestId('option-1').click();
+  // Keg type - select a different option (WebDropdown uses option-{index})
+  const kegTypeDd = dropDown.create('dropdown-kegType');
+  await kegTypeDd.input.click();
+  await kegTypeDd.scrollToItemByIndex(1);
+  await kegTypeDd.select(1);
 
   // startingPercentage (Keg Level slider) - use testID on the SliderInput container
   const sliderContainer = page.getByTestId('input-startingPercentage');

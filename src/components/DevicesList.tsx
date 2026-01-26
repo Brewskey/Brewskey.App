@@ -1,25 +1,27 @@
-import type { Device, EntityID, QueryOptions } from '@brewskey/js-api';
-
-import type { RowItemProps } from '../common/SwipeableRow';
-import type { RenderProps } from '../common/SwipeableList';
-import type { ListComponentTypes } from '../common/List';
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import nullthrows from 'nullthrows';
-import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { SwipeableList, type SwipeableListRef } from '../common/SwipeableList';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+import nullthrows from 'nullthrows';
+import { StyleSheet, View } from 'react-native';
+
+import DeviceOnlineIndicator from './DeviceOnlineIndicator';
+import ListEmpty from '../common/ListEmpty';
+import ListItem from '../common/ListItem';
+import LoadingListFooter from '../common/LoadingListFooter';
 import QuickActions from '../common/QuickActions';
+import { SwipeableList  } from '../common/SwipeableList';
+import type {SwipeableListRef} from '../common/SwipeableList';
 import SwipeableRow from '../common/SwipeableRow';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
-import LoadingListFooter from '../common/LoadingListFooter';
-import ListItem from '../common/ListItem';
-import DeviceOnlineIndicator from './DeviceOnlineIndicator';
-import { useGetDevices, useDeleteDevice } from '../hooks/queries/DeviceQueries';
-import ListEmpty from '../common/ListEmpty';
+import { useDeleteDevice, useGetDevices } from '../hooks/queries/DeviceQueries';
+
+import type { Device, EntityID, QueryOptions } from '@brewskey/js-api';
+
+import type { ListComponentTypes } from '../common/List';
+import type { RenderProps } from '../common/SwipeableList';
+import type { RowItemProps } from '../common/SwipeableRow';
 
 const styles = StyleSheet.create({
   onlineIndicatorWrapper: {
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   renderListHeader?: (arg1: {
     isEmpty: boolean;
     isLoading: boolean;
@@ -36,7 +38,7 @@ type Props = {
   ListEmptyComponent?: ListComponentTypes;
   ListHeaderComponent?: ListComponentTypes;
   queryOptions?: QueryOptions;
-};
+}
 
 const DevicesList: React.FC<Props> = ({
   renderListHeader,
@@ -45,7 +47,6 @@ const DevicesList: React.FC<Props> = ({
   queryOptions = {},
 }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const addSnackBarMessage = useAddSnackBarMessage();
   const swipeableListRef = React.useRef<SwipeableListRef>(null);
 
@@ -84,12 +85,18 @@ const DevicesList: React.FC<Props> = ({
   };
 
   const onEditItemPress = ({ id }: Device) => {
-    router.navigate({ pathname: '/(tabs)/devices/[id]/edit', params: { id: String(id) } });
+    router.navigate({
+      pathname: '/(tabs)/devices/[id]/edit',
+      params: { id: String(id) },
+    });
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
   const onItemPress = (item: Device): void => {
-    router.navigate({ pathname: '/(tabs)/devices/[id]', params: { id: String(item.id) } });
+    router.navigate({
+      pathname: '/(tabs)/devices/[id]',
+      params: { id: String(item.id) },
+    });
   };
 
   const keyExtractor = (item: Device): string => item.id.toString();
@@ -101,13 +108,13 @@ const DevicesList: React.FC<Props> = ({
     <ListItem
       item={item}
       onPress={onItemPress}
+      testID={`device-item-${item.id}`}
+      title={item.name}
       rightIcon={
         <View style={styles.onlineIndicatorWrapper}>
           <DeviceOnlineIndicator particleID={item.particleId} />
         </View>
       }
-      title={item.name}
-      testID={`device-item-${item.id}`}
     />
   );
 
@@ -128,29 +135,30 @@ const DevicesList: React.FC<Props> = ({
   const renderRow = ({
     info: { item, index, separators },
     ...swipeableStateProps
-  }: RenderProps<Device>): React.ReactElement => {
+  }: RenderProps<Device>): React.ReactElement => (
     // Since we already have the device from the list query, we can render directly
     // If individual device loading is needed, we can add useGetDeviceById here
-    return (
-      <SwipeableRow
-        index={index}
-        item={item}
-        maxSwipeDistance={150}
-        onDeleteItemPress={onDeleteItemPress}
-        onEditItemPress={onEditItemPress}
-        onItemPress={onItemPress}
-        rowItemComponent={SwipeableRowItem}
-        separators={separators}
-        slideoutComponent={Slideout}
-        {...swipeableStateProps}
-      />
-    );
-  };
-
+    <SwipeableRow
+      index={index}
+      item={item}
+      maxSwipeDistance={150}
+      onDeleteItemPress={onDeleteItemPress}
+      onEditItemPress={onEditItemPress}
+      onItemPress={onItemPress}
+      rowItemComponent={SwipeableRowItem}
+      separators={separators}
+      slideoutComponent={Slideout}
+      {...swipeableStateProps}
+    />
+  );
   const headerComponent = React.useMemo((): ListComponentTypes => {
     if (ListHeaderComponent) {
       // Ensure ListHeaderComponent is a valid ListComponentTypes
-      if (typeof ListHeaderComponent === 'string' || typeof ListHeaderComponent === 'number' || typeof ListHeaderComponent === 'boolean') {
+      if (
+        typeof ListHeaderComponent === 'string' ||
+        typeof ListHeaderComponent === 'number' ||
+        typeof ListHeaderComponent === 'boolean'
+      ) {
         return null;
       }
       return ListHeaderComponent as ListComponentTypes;
@@ -161,7 +169,11 @@ const DevicesList: React.FC<Props> = ({
         isLoading,
       });
       // Ensure rendered is a valid ListComponentTypes
-      if (typeof rendered === 'string' || typeof rendered === 'number' || typeof rendered === 'boolean') {
+      if (
+        typeof rendered === 'string' ||
+        typeof rendered === 'number' ||
+        typeof rendered === 'boolean'
+      ) {
         return null;
       }
       return rendered as ListComponentTypes;
@@ -171,21 +183,21 @@ const DevicesList: React.FC<Props> = ({
 
   return (
     <SwipeableList
+      ref={swipeableListRef}
       data={devicesDataFormatted}
       keyExtractor={keyExtractor}
-      listType="flatList"
       ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
       ListHeaderComponent={headerComponent}
+      listType="flatList"
+      onRefresh={async () => await refetch()}
+      renderItem={renderRow}
+      testID="devices-list"
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();
         }
       }}
-      onRefresh={async () => await refetch()}
-      ref={swipeableListRef}
-      renderItem={renderRow}
-      testID="devices-list"
     />
   );
 };

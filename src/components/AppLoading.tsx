@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+
 import { Image } from 'expo-image';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {

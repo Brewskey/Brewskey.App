@@ -1,10 +1,11 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import {
-  CloudDevice,
-  CloudDeviceDAO,
-  EntityID,
-} from '@brewskey/js-api';
+import { CloudDeviceDAO } from '@brewskey/js-api';
+import { useQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type { CloudDevice, EntityID } from '@brewskey/js-api';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 enum CloudDeviceQueryKeys {
   CloudDevice = 'cloud_device',
@@ -12,10 +13,14 @@ enum CloudDeviceQueryKeys {
 
 export const useGetCloudDevice = (
   particleID: EntityID | undefined | null,
-): UseQueryResult<CloudDevice, Error> =>
+): UseQueryResult<CloudDevice> =>
   useQuery({
-    queryKey: [CloudDeviceQueryKeys.CloudDevice, particleID],
-    queryFn: () => CloudDeviceDAO.getOne(nullthrows(particleID).toString()),
+    queryKey: [
+      CloudDeviceQueryKeys.CloudDevice,
+      getStringFromEntityID(particleID),
+    ],
+    queryFn: async () =>
+      CloudDeviceDAO.getOne(nullthrows(particleID).toString()),
     enabled: particleID != null,
     retry: false,
     retryOnMount: false,

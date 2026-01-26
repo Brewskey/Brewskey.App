@@ -2,7 +2,7 @@ import nullthrows from 'nullthrows';
 
 // Collection of all the API stores. This is used for flushing when
 // logging out.
- 
+
 const STORES: Store<any>[] = [];
 
 export const flushAPIStoreCaches = () =>
@@ -13,7 +13,7 @@ const getCacheKey = (requestArgs: unknown[]): string =>
   `_${JSON.stringify(requestArgs).toLowerCase()}`;
 
 class Store<TResult> {
-  _requestLoaderByKey: Map<string, Promise<TResult>> = new Map();
+  _requestLoaderByKey = new Map<string, Promise<TResult>>();
 
   _iterator = 0;
 
@@ -27,7 +27,7 @@ class Store<TResult> {
   }
 
   fetch(...requestArgs: unknown[]): string {
-    const cacheKey = getCacheKey(requestArgs) + '__' + this._storeIndex;
+    const cacheKey = `${getCacheKey(requestArgs)}__${this._storeIndex}`;
 
     if (!this._requestLoaderByKey.has(cacheKey)) {
       this._setValue(cacheKey, this._getRequestPromise(...requestArgs));
@@ -40,14 +40,13 @@ class Store<TResult> {
     this._requestLoaderByKey.clear();
   };
 
-  get = (...requestArgs: unknown[]): Promise<TResult> => {
+  get = async (...requestArgs: unknown[]): Promise<TResult> => {
     const cacheKey = this.fetch(...requestArgs);
     return nullthrows(this._requestLoaderByKey.get(cacheKey));
   };
 
-  getFromCache = (cacheKey: string): Promise<TResult> => {
-    return this._requestLoaderByKey.get(cacheKey) || Promise.reject();
-  };
+  getFromCache = async (cacheKey: string): Promise<TResult> =>
+    this._requestLoaderByKey.get(cacheKey) || Promise.reject();
 
   _setValue = (cacheKey: string, value: Promise<TResult>) => {
     this._requestLoaderByKey.delete(cacheKey);

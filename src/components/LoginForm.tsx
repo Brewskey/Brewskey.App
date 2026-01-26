@@ -1,15 +1,17 @@
-import type { UserCredentials } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import SectionContent from '../common/SectionContent';
-import Button from '../common/buttons/Button';
-import { COLORS } from '../theme';
-import { TextInput } from '../common/form/TextInput';
+
 import { FormProvider, useForm } from 'react-hook-form';
-import { useLogin } from '../hooks/queries/AuthQueries';
+import { StyleSheet, View } from 'react-native';
+
+import Button from '../common/buttons/Button';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
+import { TextInput } from '../common/form/TextInput';
+import SectionContent from '../common/SectionContent';
+import { useLogin } from '../hooks/queries/AuthQueries';
+import { COLORS } from '../theme';
+
+import type { UserCredentials } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   input: {
@@ -23,10 +25,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type FormProps = {
+interface FormProps {
   userName: string;
   password: string;
-};
+}
 
 export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
   const methods = useForm<FormProps>({
@@ -65,6 +67,7 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
         />
         <TextInput
           required
+          secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
           disabled={!loginMutator.isIdle}
@@ -72,7 +75,6 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
           label="Password"
           labelStyle={isInverse ? styles.label : null}
           name="password"
-          secureTextEntry
           selectionColor={isInverse ? COLORS.textInverse : undefined}
           testID="login-password-input"
           underlineColorAndroid={isInverse ? COLORS.secondary : undefined}

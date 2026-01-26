@@ -1,10 +1,11 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
 
-import { ImageBackground, Image, StyleSheet } from 'react-native';
+import { Image, ImageBackground, StyleSheet } from 'react-native';
 import tinycolor from 'tinycolor2';
+
 import { useGetBeverageById } from '../../hooks/queries/BeverageQueries';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   beerLevel: {
@@ -18,10 +19,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   beverageID: EntityID | null | undefined;
   level?: number;
-};
+}
 
 const BEER_COLOR = '#ffd233';
 const COFFEE_COLOR = '#4D2A22';

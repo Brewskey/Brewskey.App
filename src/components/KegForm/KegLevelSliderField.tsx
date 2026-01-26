@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TYPOGRAPHY } from '../../theme';
-import { SliderInput } from '../../common/form/SliderInput';
+
 import { useFormContext } from 'react-hook-form';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { SliderInput } from '../../common/form/SliderInput';
+import { TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
   container: {

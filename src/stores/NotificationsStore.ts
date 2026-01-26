@@ -1,60 +1,39 @@
-import type { AchievementType, EntityID } from '@brewskey/js-api';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Constants from 'expo-constants';
+import { isDevice } from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { useRouter } from 'expo-router';
 import { Platform, Vibration } from 'react-native';
 
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
-import Storage, { StorageKeys } from '../utils/Storage';
 import CONFIG from '../config';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
-import { useRouter } from 'expo-router';
-import { queryClient } from '../routes/_layout';
-import SnackBarStore from '../hooks/context/SnackBarContext';
-import { KegQueryKeys } from '../hooks/queries/KegQueries';
-import { FriendKeys } from '../hooks/queries/FriendQueries';
-import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
 import { useAuthSession } from '../hooks/context/AuthContext';
+import SnackBarStore from '../hooks/context/SnackBarContext';
+import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
+import { FriendKeys } from '../hooks/queries/FriendQueries';
+import { KegQueryKeys } from '../hooks/queries/KegQueries';
+import { queryClient } from '../utils/queryClient';
+import { getStringFromEntityID } from '../utils/getStringFromEntityID';
+import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
+import Storage, { StorageKeys } from '../utils/Storage';
+
+import type { EntityID } from '@brewskey/js-api';
+
+import type {
+  Notification,
+  NewAchievementNotification,
+} from './NotificationTypes';
+
+export type {
+  BaseNotificationProps,
+  LowKegLevelNotification,
+  NewAchievementNotification,
+  NewFriendRequestNotification,
+  Notification,
+  TextNotification,
+} from './NotificationTypes';
 
 const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
-
-export type BaseNotificationProps = {
-  body: string;
-  date: Date;
-  id: string;
-  isRead: boolean;
-  title: string;
-};
-
-export type LowKegLevelNotification = BaseNotificationProps & {
-  beverageId: EntityID;
-  beverageName: string;
-  kegId: EntityID;
-  tapId: EntityID;
-  type: 'lowKegLevel';
-};
-
-export type NewAchievementNotification = BaseNotificationProps & {
-  achievementType: AchievementType;
-  type: 'newAchievement';
-};
-
-export type NewFriendRequestNotification = BaseNotificationProps & {
-  friendId: EntityID;
-  friendUserName: string;
-  type: 'newFriendRequest';
-};
-
-export type TextNotification = BaseNotificationProps & {
-  type: 'text';
-};
-
-export type Notification =
-  | LowKegLevelNotification
-  | NewAchievementNotification
-  | NewFriendRequestNotification
-  | TextNotification;
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -81,7 +60,7 @@ async function registerForPushNotificationsAsync() {
     });
   }
 
-  if (Device.isDevice) {
+  if (isDevice) {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -123,8 +102,12 @@ const useNotifications = () => {
   const [_notification, setNotification] = useState<
     Notifications.Notification | undefined
   >(undefined);
-  const notificationListener = useRef<Notifications.Subscription | undefined>(undefined);
-  const responseListener = useRef<Notifications.Subscription | undefined>(undefined);
+  const notificationListener = useRef<Notifications.Subscription | undefined>(
+    undefined,
+  );
+  const responseListener = useRef<Notifications.Subscription | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     registerForPushNotificationsAsync()
@@ -155,53 +138,67 @@ const useNotifications = () => {
 
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
   const router = useRouter();
-  const { data: authResponse } = useAuthSession();  
+  const { data: authResponse } = useAuthSession();
   const userId = authResponse?.id;
-  return useCallback((notification: Notification): void => {
-    switch (notification.type) {
-      case 'lowKegLevel': {
-        const { tapId, kegId } = notification;
-        queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
-        router.navigate({ pathname: '/(tabs)/taps/[tapId]/on_tap', params: { tapId: String(tapId) } });
-        break;
-      }
-      case 'newAchievement': {
-        if (userId) {
+  return useCallback(
+    (notification: Notification): void => {
+      switch (notification.type) {
+        case 'lowKegLevel': {
+          const { tapId, kegId } = notification;
           queryClient.invalidateQueries({
-            queryKey: [AchievementQueryKeys.CountsByUserId, userId],
+            queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(kegId)],
           });
+          router.navigate({
+            pathname: '/(tabs)/taps/[tapId]/on_tap',
+            params: { tapId: getStringFromEntityID(tapId) },
+          });
+          break;
         }
-        router.navigate({
-          pathname: '/(tabs)/stats',
-          params: {
-            initialPopUpAchievementType: notification.achievementType,
-          },
-        });
-        break;
+        case 'newAchievement': {
+          if (userId) {
+            queryClient.invalidateQueries({
+              queryKey: [
+                AchievementQueryKeys.CountsByUserId,
+                getStringFromEntityID(userId),
+              ],
+            });
+          }
+          router.navigate({
+            pathname: '/(tabs)/stats',
+            params: {
+              initialPopUpAchievementType: notification.achievementType,
+            },
+          });
+          break;
+        }
+        case 'newFriendRequest': {
+          queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
+          queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
+          router.navigate({
+            pathname: '/(tabs)/notifications/my-friends/myFriendsRequest',
+            params: {},
+          });
+          break;
+        }
+        default: {
+          break;
+        }
       }
-      case 'newFriendRequest': {
-        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
-        queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
-        router.navigate({ pathname: '/(tabs)/notifications/my-friends/myFriendsRequest', params: {} });
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  }, [userId, router]);
+    },
+    [userId, router],
+  );
 };
 
 class NotificationsStore {
-  _isReady: boolean = false;
+  _isReady = false;
 
-  _notificationsByID: Map<string, Notification> = new Map();
+  _notificationsByID = new Map<string, Notification>();
 
   _deviceToken!: string;
 
   // its Map but used as Set since mobx doesn't support Set;
 
-  _notificationsDisabledByTapID: Map<EntityID, boolean> = new Map();
+  _notificationsDisabledByTapID = new Map<EntityID, boolean>();
 
   // constructor() {
   //   AppState.addEventListener('change', (nextAppState) => {
@@ -297,7 +294,10 @@ class NotificationsStore {
     return Array.from(this._notificationsDisabledByTapID.keys());
   }
 
-  onNotificationPress: (arg1: Notification, userId?: string | null) => Promise<void> = async (
+  onNotificationPress: (
+    arg1: Notification,
+    userId?: string | null,
+  ) => Promise<void> = async (
     notification: Notification,
     userId?: string | null,
   ): Promise<void> => {
@@ -407,7 +407,9 @@ class NotificationsStore {
     // }
   };
 
-  _registerToken: (accessToken: string | null) => Promise<void> = async (accessToken: string | null): Promise<void> => {
+  _registerToken: (accessToken: string | null) => Promise<void> = async (
+    accessToken: string | null,
+  ): Promise<void> => {
     const deviceUniqueID = await getUniqueDeviceId();
 
     const body = JSON.stringify({
@@ -417,7 +419,6 @@ class NotificationsStore {
       removeTapIDs: this._disabledTapIDs,
     });
 
-     
     await fetch(`${BASE_PUSH_URL}/`, {
       body,
       headers: {
@@ -442,7 +443,7 @@ class NotificationsStore {
     custom_notification?: string;
     data?: Record<string, unknown>;
     alert?: string | Record<string, unknown>;
-    finish(data: Record<string, unknown>): void;
+    finish: (data: Record<string, unknown>) => void;
   }): void => {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
@@ -500,14 +501,16 @@ class NotificationsStore {
     }
   };
 
-  _handleNotificationPressByType: (arg1: Notification, userId: string | null) => void = (
-    notification: Notification,
+  _handleNotificationPressByType: (
+    arg1: Notification,
     userId: string | null,
-  ): void => {
+  ) => void = (notification: Notification, userId: string | null): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
         const { kegId, tapId } = notification;
-        queryClient.invalidateQueries({ queryKey: [KegQueryKeys.KeyById, kegId] });
+        queryClient.invalidateQueries({
+          queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(kegId)],
+        });
         // NavigationService.navigate('tapDetails', {
         //   backToRouteName: 'notifications',
         //   id: tapId,
@@ -517,7 +520,10 @@ class NotificationsStore {
       case 'newAchievement': {
         if (userId) {
           queryClient.invalidateQueries({
-            queryKey: [AchievementQueryKeys.CountsByUserId, userId],
+            queryKey: [
+              AchievementQueryKeys.CountsByUserId,
+              getStringFromEntityID(userId),
+            ],
           });
         }
         // NavigationService.navigate('stats', {
@@ -544,10 +550,15 @@ const notificationsStore = new NotificationsStore();
 export const useNotificationPress = () => {
   const { data: authResponse } = useAuthSession();
   const userId = authResponse?.id;
-  
-  return useCallback((notification: Notification): Promise<void> => {
-    return notificationsStore.onNotificationPress(notification, userId ? String(userId) : null);
-  }, [userId]);
+
+  return useCallback(
+    async (notification: Notification): Promise<void> =>
+      notificationsStore.onNotificationPress(
+        notification,
+        userId != null ? getStringFromEntityID(userId) : null,
+      ),
+    [userId],
+  );
 };
 
 export default notificationsStore;

@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {
-  ActivityIndicator,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,12 +12,12 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   activitySize?: 'small' | 'large';
   color?: string;
   style?: StyleProp<ViewStyle>;
   testID?: string;
-};
+}
 
 const LoadingContainer = ({
   activitySize = 'large',

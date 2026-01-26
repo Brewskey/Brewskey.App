@@ -1,70 +1,56 @@
-import type { Style, QueryOptions } from '@brewskey/js-api';
 import * as React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { StyleSheet, Text, View } from 'react-native';
+
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetStyles } from '../../hooks/queries/StyleQueries';
-import { createFilter } from '@brewskey/js-api/dist/filters';
 import { COLORS } from '../../theme';
 
-export type PickerValue<TEntity, TMultiple extends boolean> = TMultiple extends true
-  ? TEntity[]
-  : TEntity | null | undefined;
+import type { QueryOptions, ShortenedEntity, Style } from '@brewskey/js-api';
 
-type Props = {
+export type PickerValue<T> = T | null | undefined;
+
+interface Props {
   error?: string | null | undefined;
-  onChange: (value: PickerValue<Style, false>) => void;
   queryOptions?: QueryOptions;
-  value: PickerValue<Style, false>;
-  // Form integration props
   name: string;
-  defaultValue?: PickerValue<Style, false>;
+  defaultValue?: PickerValue<Style | ShortenedEntity>;
   required?: boolean | string;
-};
+}
 
-const StylePicker: React.FC<Props> = ({
+export const StylePicker: React.FC<Props> = ({
   name = 'style',
   defaultValue,
   required,
   ...props
 }) => {
-
-  const onSearchFilter = React.useCallback((searchText: string, baseQueryOptions: QueryOptions) => {
-    return {
+  const onSearchFilter = React.useCallback(
+    (searchText: string, baseQueryOptions: QueryOptions) => ({
       ...baseQueryOptions,
       filters: [
         ...(baseQueryOptions.filters || []),
         createFilter('name').contains(searchText),
       ],
-    };
-  }, []);
+    }),
+    [],
+  );
 
   return (
-    <DropdownInput<Style>
-      name={name}
-      defaultValue={defaultValue ?? undefined}
-      required={required}
-      useQueryHook={useGetStyles}
-      queryOptions={props.queryOptions ?? {}}
-      onSearchFilter={onSearchFilter}
-      labelField="name"
-      valueField="id"
-      multiple={false}
-      
-      headerTitle="Select Style"
+    <DropdownInput<Style | ShortenedEntity>
+      search
       confirmSelectItem={false}
-      inputVariant="picker"
-      search={true}
-      searchPlaceholder="Search styles..."
+      defaultValue={defaultValue ?? undefined}
+      labelField="name"
+      name={name}
+      onSearchFilter={onSearchFilter}
       placeholder="Select Style"
-      onChange={(item) => {
-        if (!Array.isArray(item)) {
-          props.onChange(item as Style);
-        }
-      }}
-      keyExtractor={(item) => String(item.id)}
+      queryOptions={props.queryOptions ?? {}}
+      required={required}
+      searchPlaceholder="Search styles..."
       testID={`style-picker-${name}`}
+      useQueryHook={useGetStyles}
+      valueField="id"
     />
   );
 };
-
-export default StylePicker;

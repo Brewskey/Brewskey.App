@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Icon } from '@rneui/themed';
 
+import { Icon } from '@rneui/themed';
+import * as ImagePicker from 'expo-image-picker';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import UserAvatar from '../common/avatars/UserAvatar';
+import LoadingIndicator from '../common/LoadingIndicator';
+import CONFIG from '../config';
 import { useAuthSession } from '../hooks/context/AuthContext';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
-import UserAvatar from '../common/avatars/UserAvatar';
-import CONFIG from '../config';
-import LoadingIndicator from '../common/LoadingIndicator';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -37,7 +38,8 @@ const AvatarPicker: React.FC = () => {
 
   const onAvatarPress = async () => {
     // Request permissions
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       addSnackBarMessage({
         content: 'Permission to access media library is required.',
@@ -46,13 +48,14 @@ const AvatarPicker: React.FC = () => {
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync(IMAGE_PICKER_OPTIONS);
+    const result =
+      await ImagePicker.launchImageLibraryAsync(IMAGE_PICKER_OPTIONS);
 
-    if (result.canceled || !result.assets || !result.assets[0]) {
+    if (result.canceled || !result.assets?.[0]) {
       return;
     }
 
-    const base64 = result.assets[0].base64;
+    const { base64 } = result.assets[0];
     if (!base64) {
       return;
     }
@@ -73,7 +76,10 @@ const AvatarPicker: React.FC = () => {
       addSnackBarMessage({ content: 'Avatar updated' });
     } catch (fetchError) {
       addSnackBarMessage({
-        content: fetchError instanceof Error ? fetchError.message : 'Failed to update avatar',
+        content:
+          fetchError instanceof Error
+            ? fetchError.message
+            : 'Failed to update avatar',
         style: 'danger',
       });
     } finally {
@@ -87,17 +93,14 @@ const AvatarPicker: React.FC = () => {
 
   return (
     <TouchableOpacity onPress={onAvatarPress}>
-      <UserAvatar
-        size={200}
-        userName={authResponse?.userName || ''}
-      />
+      <UserAvatar size={200} userName={authResponse?.userName || ''} />
       <Icon
+        raised
+        reverse
         color={COLORS.textInverse}
         name="add-a-photo"
-        reverse
         reverseColor={COLORS.primary3}
         size={20}
-        raised={true}
         containerStyle={{
           position: 'absolute',
           bottom: 0,

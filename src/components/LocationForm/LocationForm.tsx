@@ -1,3 +1,27 @@
+import * as React from 'react';
+
+import { useForm, useWatch } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+
+import Button from '../../common/buttons/Button';
+import { Form } from '../../common/form/Form';
+import { FormField } from '../../common/form/FormField';
+import { FormValidationMessage } from '../../common/form/FormValidationMessage';
+import { handleSubmitWithError } from '../../common/form/handleSubmitWithError';
+import { TextInput } from '../../common/form/TextInput';
+import {
+  useGetOrganizationById,
+  useGetOrganizations,
+  useGetSquareLocations,
+} from '../../hooks/queries/OrganizationQueries';
+import { extractShortenedEntityId } from '../../utils';
+import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
+
+import LocationTypePicker from '../pickers/LocationTypePicker';
+import { OrganizationPicker } from '../pickers/OrganizationPicker';
+import SquareLocationPicker from '../pickers/SquareLocationPicker';
+import StatePicker from '../pickers/StatePicker';
+
 import type {
   EntityID,
   Location,
@@ -5,27 +29,6 @@ import type {
   Organization,
   ShortenedEntity,
 } from '@brewskey/js-api';
-
-import * as React from 'react';
-import { useForm, useWatch } from 'react-hook-form';
-import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
-
-import { StyleSheet, View } from 'react-native';
-import { FormValidationMessage } from '../../common/form/FormValidationMessage';
-import STATE_LIST from './stateList';
-import { Form } from '../../common/form/Form';
-import { FormField } from '../../common/form/FormField';
-import { TextInput } from '../../common/form/TextInput';
-import Button from '../../common/buttons/Button';
-import { SimplePicker } from '../pickers';
-import { OrganizationPicker } from '../pickers';
-import {
-  useGetOrganizationById,
-  useGetOrganizations,
-  useGetSquareLocations,
-} from '../../hooks/queries/OrganizationQueries';
-import { extractShortenedEntityId } from '../../utils';
-import { handleSubmitWithError } from '../../common/form/handleSubmitWithError';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -39,11 +42,7 @@ const REQUIRED_FIELDS = [
 const isRequiredMessage = (fieldName: string): string =>
   `${fieldName} is required`;
 
-const validateForm = (
-  values: FormProps,
-): {
-  [key: string]: string;
-} => {
+const validateForm = (values: FormProps): Record<string, string> => {
   const errors: Partial<Record<keyof FormProps, string>> = {};
 
   REQUIRED_FIELDS.forEach((fieldName: string) => {
@@ -62,11 +61,11 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   location?: Location;
   onSubmit: (values: LocationMutator) => undefined | Promise<unknown>;
   submitButtonLabel: string;
-};
+}
 
 type FormProps = Omit<LocationMutator, 'organizationId'> & {
   organization: ShortenedEntity | null | undefined;
@@ -79,7 +78,6 @@ const LocationForm: React.FC<Props> = ({
   submitButtonLabel,
   onSubmit,
 }) => {
-
   const form = useForm<FormProps>({
     defaultValues: {
       id: location.id,
@@ -102,28 +100,28 @@ const LocationForm: React.FC<Props> = ({
     getValues,
   } = form;
 
-  const organizationShort = getValues('organization')
+  const organizationShort = getValues('organization');
 
   const { data: organization } = useGetOrganizationById(organizationShort?.id);
 
   // Get square locations if organization supports payments
-  const { data: squareLocations } = useGetSquareLocations(organizationShort?.id);
+  const { data: squareLocations } = useGetSquareLocations(
+    organizationShort?.id,
+  );
 
   // Only show the organizationField if the user can fetch more than one organization
   const { data: organizationsPages } = useGetOrganizations();
-  const organizations =
-    organizationsPages?.pages?.flat() ?? [];
+  const organizations = organizationsPages?.pages?.flat() ?? [];
 
   const organizationField =
     organizations.length > 1 ? (
       <FormField
         component={OrganizationPicker}
+        defaultValue={location.organization as any}
         label="Organization"
-        initialValue={location.organization}
         name="organization"
       />
     ) : null;
-
 
   const onSubmitForm = async (formValues: FormProps) => {
     const errors = validateForm(formValues);
@@ -154,8 +152,8 @@ const LocationForm: React.FC<Props> = ({
         {organizationField}
         <FormField
           component={TextInput}
+          defaultValue={location.name}
           disabled={isSubmitting}
-          initialValue={location.name}
           label="Name"
           name="name"
           nextFocusTo="description"
@@ -163,27 +161,21 @@ const LocationForm: React.FC<Props> = ({
         />
         <FormField
           component={TextInput}
+          defaultValue={location.description ?? undefined}
           disabled={isSubmitting}
-          initialValue={location.description}
           label="Description"
           name="description"
           testID="input-description"
         />
-        <FormField
-          component={SimplePicker}
-          headerTitle="Select Location Type"
-          initialValue={location.locationType}
-          label="Location type"
+        <LocationTypePicker
+          defaultValue={location.locationType ?? undefined}
+          disabled={isSubmitting}
           name="locationType"
-          pickerValues={[
-            { label: 'Kegerator', value: 'Kegerator' },
-            { label: 'Bar', value: 'Bar' },
-          ]}
         />
         <FormField
           component={TextInput}
+          defaultValue={location.street}
           disabled={isSubmitting}
-          initialValue={location.street}
           label="Street"
           name="street"
           nextFocusTo="suite"
@@ -191,8 +183,8 @@ const LocationForm: React.FC<Props> = ({
         />
         <FormField
           component={TextInput}
+          defaultValue={location.suite}
           disabled={isSubmitting}
-          initialValue={location.suite}
           label="Apt./Suite"
           name="suite"
           nextFocusTo="city"
@@ -200,45 +192,34 @@ const LocationForm: React.FC<Props> = ({
         />
         <FormField
           component={TextInput}
+          defaultValue={location.city}
           disabled={isSubmitting}
-          initialValue={location.city}
           label="City"
           name="city"
           testID="input-city"
         />
-        <FormField
-          component={SimplePicker}
+        <StatePicker
+          defaultValue={location.state ?? undefined}
           disabled={isSubmitting}
-          headerTitle="Select State"
-          initialValue={location.state}
-          label="State"
           name="state"
-          pickerValues={STATE_LIST}
         />
         <FormField
           component={TextInput}
+          defaultValue={location.zipCode.toString()}
           disabled={isSubmitting}
-          initialValue={location.zipCode}
           keyboardType="numeric"
           label="Zip"
           name="zipCode"
           testID="input-zipCode"
         />
-        {organization == null ||
-        !organization.canEnablePayments ||
+        {!organization?.canEnablePayments ||
         !squareLocations ||
         squareLocations.length === 0 ? null : (
-          <FormField
-            component={SimplePicker}
+          <SquareLocationPicker
+            defaultValue={location.squareLocationID}
             disabled={isSubmitting}
-            headerTitle="Select Square Location"
-            initialValue={location.squareLocationID}
-            label="Square Location"
             name="squareLocationID"
-            pickerValues={squareLocations.map((item) => ({
-              label: item.name,
-              value: item.locationID,
-            }))}
+            squareLocations={squareLocations}
           />
         )}
         <MainTabBarFill>
@@ -247,8 +228,12 @@ const LocationForm: React.FC<Props> = ({
             loading={isSubmitting}
             onPress={handleSubmitWithError(form, onSubmitForm)}
             style={{ marginVertical: 12 }}
-            testID={location ? 'submit-button-edit-location' : 'submit-button-create-location'}
             title={submitButtonLabel}
+            testID={
+              location
+                ? 'submit-button-edit-location'
+                : 'submit-button-create-location'
+            }
           />
         </MainTabBarFill>
       </View>

@@ -1,5 +1,7 @@
 import * as React from 'react';
+
 import { StyleSheet, Text } from 'react-native';
+
 import Container from '../../../common/Container';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 

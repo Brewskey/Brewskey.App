@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
-import { COLORS, TYPOGRAPHY } from '../../theme';
 
-import ToggleStore from '../../stores/ToggleStore';
+import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
+
 import { HeaderIconButton } from './HeaderIconButton';
+import ToggleStore from '../../stores/ToggleStore';
+import { COLORS, TYPOGRAPHY } from '../../theme';
 
 // todo expand styles works only when there is only one element in
 // header rightComponent
@@ -31,13 +32,13 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   onChangeText: (value: string) => void;
   onClearPress?: () => void;
   onClosePress?: () => void;
   onExpandPress?: () => void;
   value: string;
-};
+}
 
 export const HeaderSearchBar: React.FC<Props> = ({
   onClosePress,
@@ -82,7 +83,7 @@ export const HeaderSearchBar: React.FC<Props> = ({
         <View style={styles.textInputContainer}>
           <HeaderIconButton name="arrow-back" onPress={_onClosePress} />
           <TextInput
-            autoFocus={true}
+            autoFocus
             onChangeText={onChangeText}
             placeholder="Search"
             placeholderTextColor={COLORS.textInverseFaded}

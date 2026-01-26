@@ -1,14 +1,16 @@
-import type { WifiNetwork } from '../../../types';
-
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Button from '../../../common/buttons/Button';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
-import { WIFI_SECURITIES } from '../../../SoftApService';
+
 import { Icon } from '@rneui/themed';
-import { TextField } from '../../../common/form/TextField';
-import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
 import { useFormContext } from 'react-hook-form';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+import Button from '../../../common/buttons/Button';
+import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
+import { TextField } from '../../../common/form/TextField';
+import { WIFI_SECURITIES } from '../../../SoftApService';
+import { COLORS, TYPOGRAPHY } from '../../../theme';
+
+import type { WifiNetwork } from '../../../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,7 +33,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   error: Error | null | undefined;
   index: number;
   isConnecting: boolean;
@@ -40,7 +42,7 @@ type Props = {
   onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>;
   onPress: (rowKey: string) => void;
   rowKey: string;
-};
+}
 
 const WifiListItem: React.FC<Props> = ({
   index,
@@ -77,29 +79,31 @@ const WifiListItem: React.FC<Props> = ({
     >
       <View style={styles.labelContainer}>
         <Text style={styles.title}>{ssid}</Text>
-        {isPasswordRequired && (
+        {isPasswordRequired ? (
           <Icon containerStyle={styles.iconStyle} name="lock" />
-        )}
+        ) : null}
       </View>
-      {isExpanded && [
-        isPasswordRequired && (
-          <TextField
-            editable={!isConnecting}
-            key="password"
-            label="Password"
-            onSubmitEditing={handleConnectPress}
-            secureTextEntry
-            name={`password_${rowKey}`}
-          />
-        ),
-        <FormValidationMessage fieldName="wifiSetupError" />,
-        <Button
-          disabled={isConnecting}
-          key="connectButton"
-          onPress={handleConnectPress}
-          title="Connect"
-        />,
-      ]}
+      {isExpanded
+        ? [
+            isPasswordRequired && (
+              <TextField
+                key="password"
+                secureTextEntry
+                editable={!isConnecting}
+                label="Password"
+                name={`password_${rowKey}`}
+                onSubmitEditing={handleConnectPress}
+              />
+            ),
+            <FormValidationMessage fieldName="wifiSetupError" />,
+            <Button
+              key="connectButton"
+              disabled={isConnecting}
+              onPress={handleConnectPress}
+              title="Connect"
+            />,
+          ]
+        : null}
     </TouchableOpacity>
   );
 };

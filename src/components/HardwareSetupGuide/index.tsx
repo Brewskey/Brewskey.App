@@ -1,11 +1,12 @@
 import * as React from 'react';
+
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
-
 import Swiper from 'react-native-swiper';
-import { COLORS } from '../../theme';
-import Button from '../../common/buttons/Button';
+
 import SETUP_STEPS from './setupSteps';
+import Button from '../../common/buttons/Button';
+import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
   activeDotStyle: {
@@ -37,9 +38,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+interface Props {
   onClosePress: () => void;
-};
+}
 
 const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
   const swiperRef = React.useRef<Swiper>(null);
@@ -58,18 +59,15 @@ const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
   return (
     <View style={{ flex: 1 }}>
       <Swiper
+        ref={swiperRef}
         activeDotStyle={styles.activeDotStyle}
         dotStyle={styles.dotStyle}
         loop={false}
         onIndexChanged={setStepIndex}
         paginationStyle={styles.paginationStyle}
-        ref={swiperRef}
       >
         {SETUP_STEPS.map(
-          (
-            setupStep: React.ReactNode,
-            index: number,
-          ): React.ReactElement => (
+          (setupStep: React.ReactNode, index: number): React.ReactElement => (
             <View key={index} style={styles.container}>
               {setupStep}
             </View>
@@ -87,9 +85,9 @@ const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
       <Button
         containerStyle={styles.nextButtonContainer}
         onPress={handleNextButtonPress}
+        testID="hardware-setup-guide-next-button"
         title={isLastStep ? 'FINISH' : 'NEXT'}
         type="clear"
-        testID='hardware-setup-guide-next-button'
       />
     </View>
   );

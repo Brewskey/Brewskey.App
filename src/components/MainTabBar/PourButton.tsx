@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { COLORS } from '../../theme';
+
 import { Icon } from '@rneui/themed';
+import { StyleSheet, View } from 'react-native';
 
 // import PourProcessStore from '../../stores/PourProcessStore';
 import TouchableItem from '../../common/buttons/TouchableItem';
 import LoadingIndicator from '../../common/LoadingIndicator';
-import { PourProcessModal } from '../modals/PourProcessModal';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
+import { COLORS } from '../../theme';
+import { PourProcessModal } from '../modals/PourProcessModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,10 +24,10 @@ const styles = StyleSheet.create({
 export const PourButton: React.FC = (_) => {
   const { isLoading, openModal } = usePourModalContext();
   return (
-    <>
+    <React.Fragment>
       {!isLoading ? (
-        <TouchableItem 
-          onPress={() => openModal()} 
+        <TouchableItem
+          onPress={() => openModal()}
           style={styles.container}
           testID="pour-button"
         >
@@ -38,9 +39,13 @@ export const PourButton: React.FC = (_) => {
           />
         </TouchableItem>
       ) : (
-        <LoadingIndicator color="white" style={styles.container} testID="pour-button-loading" />
+        <LoadingIndicator
+          color="white"
+          style={styles.container}
+          testID="pour-button-loading"
+        />
       )}
       <PourProcessModal />
-    </>
+    </React.Fragment>
   );
 };

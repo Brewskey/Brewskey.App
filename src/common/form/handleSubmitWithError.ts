@@ -1,15 +1,19 @@
-import { FieldValues, SubmitHandler, UseFormReturn } from 'react-hook-form';
+import type {
+  FieldValues,
+  SubmitHandler,
+  UseFormReturn,
+} from 'react-hook-form';
 
 /**
  * Wraps handleSubmit to automatically catch errors and store them in form state.
- * 
+ *
  * Usage:
  * ```tsx
  * const form = useForm<FormFields>();
  * const onSubmit = async (values: FormFields) => {
  *   await someMutation.mutateAsync(values);
  * };
- * 
+ *
  * <Button onPress={handleSubmitWithError(form, onSubmit)} />
  * ```
  */

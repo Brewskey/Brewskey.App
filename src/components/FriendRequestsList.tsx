@@ -1,21 +1,27 @@
-import type { Friend } from '@brewskey/js-api';
-import type { Section } from '../types';
-
 import * as React from 'react';
 import { useMemo } from 'react';
-import { useRouter } from 'expo-router';
-import { createFilter } from '@brewskey/js-api/dist/filters';
-import { FRIEND_STATUSES } from '@brewskey/js-api';
 
-import LoadingListFooter from '../common/LoadingListFooter';
-import List from '../common/List';
-import ListSectionHeader from '../common/ListSectionHeader';
-import FriendPendingRequestListItem from './FriendPendingRequestListItem';
-import FriendMyRequestListItem from './FriendMyRequestListItem';
-import ListEmpty from '../common/ListEmpty';
-import { useGetManyFriends, useUpdateFriend, useDeleteFriend } from '../hooks/queries/FriendQueries';
+import { FRIEND_STATUSES } from '@brewskey/js-api';
+import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'expo-router';
+
+import FriendMyRequestListItem from './FriendMyRequestListItem';
+import FriendPendingRequestListItem from './FriendPendingRequestListItem';
+import List from '../common/List';
+import ListEmpty from '../common/ListEmpty';
+import ListSectionHeader from '../common/ListSectionHeader';
+import LoadingListFooter from '../common/LoadingListFooter';
 import { useAuthSession } from '../hooks/context/AuthContext';
+import {
+  useDeleteFriend,
+  useGetManyFriends,
+  useUpdateFriend,
+} from '../hooks/queries/FriendQueries';
+
+import type { Friend } from '@brewskey/js-api';
+
+import type { Section } from '../types';
 
 const FriendRequestsList: React.FC = () => {
   const router = useRouter();
@@ -57,11 +63,17 @@ const FriendRequestsList: React.FC = () => {
   const isLoading = pendingRequestsQuery.isLoading || myRequestsQuery.isLoading;
 
   const onPendingRequestRowPress = (friend: Friend) => {
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.owningAccount.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(friend.owningAccount.id) },
+    });
   };
 
   const onMyRequestRowPress = (friend: Friend) => {
-    router.navigate({ pathname: '/(tabs)/profile/[id]', params: { id: String(friend.friendAccount.id) } });
+    router.navigate({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: String(friend.friendAccount.id) },
+    });
   };
 
   const onFriendAcceptPress = async (friend: Friend) => {
@@ -75,13 +87,17 @@ const FriendRequestsList: React.FC = () => {
   };
 
   const onFriendDeclinePress = async ({ id }: Friend) => {
-    await deleteFriendMutation.mutateAsync(typeof id === 'string' ? parseInt(id, 10) : id);
+    await deleteFriendMutation.mutateAsync(
+      typeof id === 'string' ? parseInt(id, 10) : id,
+    );
     pendingRequestsQuery.refetch();
     myRequestsQuery.refetch();
   };
 
   const onFriendCancelMyRequestPress = async ({ id }: Friend) => {
-    await deleteFriendMutation.mutateAsync(typeof id === 'string' ? parseInt(id, 10) : id);
+    await deleteFriendMutation.mutateAsync(
+      typeof id === 'string' ? parseInt(id, 10) : id,
+    );
     pendingRequestsQuery.refetch();
     myRequestsQuery.refetch();
   };
@@ -128,11 +144,17 @@ const FriendRequestsList: React.FC = () => {
 
   const keyExtractor = (friend: Friend): string => friend.id.toString();
 
-  const renderSectionHeader = ({ section }: { section: Section<Friend> }): React.ReactElement => (
-    <ListSectionHeader title={section.title} />
-  );
+  const renderSectionHeader = ({
+    section,
+  }: {
+    section: Section<Friend>;
+  }): React.ReactElement => <ListSectionHeader title={section.title} />;
 
-  const renderSectionFooter = ({ section: { data } }: { section: Section<Friend> }): React.ReactElement | null =>
+  const renderSectionFooter = ({
+    section: { data },
+  }: {
+    section: Section<Friend>;
+  }): React.ReactElement | null =>
     !data.length ? <ListEmpty message="No requests" /> : null;
 
   return (
@@ -141,8 +163,8 @@ const FriendRequestsList: React.FC = () => {
       ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
       listType="sectionList"
       onRefresh={onRefresh}
-      renderSectionHeader={renderSectionHeader}
       renderSectionFooter={renderSectionFooter}
+      renderSectionHeader={renderSectionHeader}
       sections={sections}
       testID="friend-requests-list"
     />

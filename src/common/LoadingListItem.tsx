@@ -1,8 +1,12 @@
 import * as React from 'react';
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import { getRandomInt } from '../utils';
+
+import { StyleSheet } from 'react-native';
+
 import { COLORS } from '../theme';
+import { getRandomInt } from '../utils';
 import ListItem from './ListItem';
+
+import type { StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -28,24 +32,19 @@ type Props = React.ComponentProps<typeof ListItem> & {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
-const LoadingListItem: React.FC<Props> = ({ containerStyle, ...otherProps }) => {
-  return (
-    <ListItem
-      {...otherProps}
-      chevron={false}
-      subtitle="none"
-      subtitleStyle={[
-        styles.subtitleContainerStyle,
-        styles.subtitleStyle,
-      ]}
-      title="none"
-      titleStyle={[
-        styles.titleContainerStyle,
-        styles.titleStyle,
-      ]}
-      containerStyle={[styles.container, containerStyle]}
-    />
-  );
-};
+const LoadingListItem: React.FC<Props> = ({
+  containerStyle,
+  ...otherProps
+}) => (
+  <ListItem
+    {...otherProps}
+    chevron={false}
+    containerStyle={[styles.container, containerStyle]}
+    subtitle="none"
+    subtitleStyle={[styles.subtitleContainerStyle, styles.subtitleStyle]}
+    title="none"
+    titleStyle={[styles.titleContainerStyle, styles.titleStyle]}
+  />
+);
 
 export default LoadingListItem;

@@ -1,33 +1,39 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
-import { useLocalSearchParams } from 'expo-router';
-import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import BeverageDetailsContent from '../../../components/BeverageDetailsContent';
+import { createFilter } from '@brewskey/js-api/dist/filters';
+import { useLocalSearchParams } from 'expo-router';
+
 import Container from '../../../common/Container';
-import SectionContent from '../../../common/SectionContent';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
+import Fragment from '../../../common/Fragment';
 import Header from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import NotFoundScreen from '../../../common/NotFoundScreen';
+import SectionContent from '../../../common/SectionContent';
 import SectionHeader from '../../../common/SectionHeader';
+import BeverageDetailsContent from '../../../components/BeverageDetailsContent';
 import BeveragePoursList from '../../../components/poursLists/BeveragePoursList';
-import Fragment from '../../../common/Fragment';
 import { useGetBeverageById } from '../../../hooks/queries/BeverageQueries';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const BeverageDetailsScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const beverageId = typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
-  const { data: beverage, isLoading, error } = useGetBeverageById(beverageId as EntityID);
+  const beverageId =
+    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+  const {
+    data: beverage,
+    isLoading,
+    error,
+  } = useGetBeverageById(beverageId as EntityID);
 
   if (!beverageId) {
     return (
       <NotFoundScreen
-        title="Beverage Not Found"
         message="The beverage you're looking for could not be found."
+        title="Beverage Not Found"
       />
     );
   }
@@ -44,8 +50,8 @@ const BeverageDetailsScreen: React.FC = () => {
   if (error || !beverage) {
     return (
       <NotFoundScreen
-        title="Beverage Not Found"
         message="The beverage you're looking for could not be found."
+        title="Beverage Not Found"
       />
     );
   }
@@ -53,33 +59,42 @@ const BeverageDetailsScreen: React.FC = () => {
   return (
     <Container>
       <Header
+        shouldShowBackButton
+        title={beverage.name}
         rightComponent={
           <HeaderNavigationButton
             name="edit"
-            href={{ pathname: '/(tabs)/beverages/[id]/edit', params: { id: beverage.id.toString() } }}
             testID="button-edit-beverage"
+            href={{
+              pathname: '/(tabs)/beverages/[id]/edit',
+              params: { id: beverage.id.toString() },
+            }}
           />
         }
-        shouldShowBackButton
-        title={beverage.name}
       />
       <BeveragePoursList
+        testID="beverage-pours-list"
         ListHeaderComponent={
           <Fragment>
             <SectionContent>
               <BeverageDetailsContent beverage={beverage} />
             </SectionContent>
-            <SectionHeader title="Pour History" testID="section-header-pour-history" />
+            <SectionHeader
+              testID="section-header-pour-history"
+              title="Pour History"
+            />
           </Fragment>
         }
         queryOptions={{
           filters: [createFilter('beverage/id').equals(beverage.id)],
           orderBy: [{ column: 'id', direction: 'desc' }],
         }}
-        testID="beverage-pours-list"
       />
     </Container>
   );
 };
 
-export default withErrorBoundary(BeverageDetailsScreen, <ErrorScreen shouldShowBackButton />);
+export default withErrorBoundary(
+  BeverageDetailsScreen,
+  <ErrorScreen shouldShowBackButton />,
+);

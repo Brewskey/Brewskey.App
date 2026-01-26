@@ -1,17 +1,18 @@
-import type { ResetPasswordFormValues } from '../../components/ResetPasswordForm';
-
 import * as React from 'react';
-import { StyleSheet, Text } from 'react-native';
 
-import Header from '../../common/Header';
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import SectionContent from '../../common/SectionContent';
+
 import Container from '../../common/Container';
+import Header from '../../common/Header';
+import SectionContent from '../../common/SectionContent';
 import ResetPasswordModal from '../../components/modals/ResetPasswordModal';
 import { ResetPasswordForm } from '../../components/ResetPasswordForm';
-import { COLORS, TYPOGRAPHY } from '../../theme';
 import { useResetPassword } from '../../hooks/queries/AuthQueries';
-import { useRouter } from 'expo-router';
+import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import type { ResetPasswordFormValues } from '../../components/ResetPasswordForm';
 
 const styles = StyleSheet.create({
   text: {

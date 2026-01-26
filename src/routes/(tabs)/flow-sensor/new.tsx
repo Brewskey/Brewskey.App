@@ -1,16 +1,17 @@
-import type { EntityID } from '@brewskey/js-api';
-
 import * as React from 'react';
+
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import ErrorScreen from '../../../common/ErrorScreen';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
 import Button from '../../../common/buttons/Button';
 import Container from '../../../common/Container';
+import { withErrorBoundary } from '../../../common/ErrorBoundary';
+import ErrorScreen from '../../../common/ErrorScreen';
 import Header from '../../../common/Header';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useCreateFlowSensor } from '../../../hooks/queries/FlowSensorQueries';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
+import { useCreateFlowSensor } from '../../../hooks/queries/FlowSensorQueries';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const DEFAULT_FLOW_SENSOR = {
   flowSensorType: 'Titan',
@@ -26,18 +27,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewFlowSensorScreen = withErrorBoundary(() => {
+const NewFlowSensorScreen = withErrorBoundary(
+  () => {
     const router = useRouter();
-    const { tapId, shouldReturnOnFinish, onTapSetupFinish, showBackButton } = useLocalSearchParams<{ 
-      tapId: string;
-      shouldReturnOnFinish?: string;
-      onTapSetupFinish?: string;
-      showBackButton?: string;
-    }>();
+    const { tapId, shouldReturnOnFinish, onTapSetupFinish, showBackButton } =
+      useLocalSearchParams<{
+        tapId: string;
+        shouldReturnOnFinish?: string;
+        onTapSetupFinish?: string;
+        showBackButton?: string;
+      }>();
     const createFlowSensor = useCreateFlowSensor();
     const addSnackBarMessage = useAddSnackBarMessage();
 
-    const tapIdValue = typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+    const tapIdValue =
+      typeof tapId === 'string' && !isNaN(Number(tapId))
+        ? Number(tapId)
+        : tapId;
     const shouldReturn = shouldReturnOnFinish === 'true';
 
     const _onFlowSensorCreated = () => {
@@ -68,7 +74,7 @@ const NewFlowSensorScreen = withErrorBoundary(() => {
       router.navigate({
         pathname: '/(tabs)/flow-sensor/custom',
         params: {
-          tapId: tapId as string,
+          tapId,
           onFlowSensorCreated: JSON.stringify(_onFlowSensorCreated),
           ...(onTapSetupFinish ? { onTapSetupFinish } : {}),
         },
@@ -77,7 +83,10 @@ const NewFlowSensorScreen = withErrorBoundary(() => {
 
     return (
       <Container>
-        <Header title="Setup flow sensor" showBackButton={showBackButton !== 'false'} />
+        <Header
+          showBackButton={showBackButton !== 'false'}
+          title="Setup flow sensor"
+        />
         <View style={styles.container}>
           <Button
             containerStyle={styles.buttonContainer}

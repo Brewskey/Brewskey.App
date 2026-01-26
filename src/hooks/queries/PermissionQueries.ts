@@ -1,10 +1,14 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query';
-import {
+import { PermissionDAO } from '@brewskey/js-api';
+import { useQuery } from '@tanstack/react-query';
+
+import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+
+import type {
   EntityID,
   Permission,
-  PermissionDAO,
   PermissionEntityKeysType,
 } from '@brewskey/js-api';
+import type { UseQueryResult } from '@tanstack/react-query';
 
 enum PermissionQueries {
   ByEntityId = 'permission_by_entity_id',
@@ -13,9 +17,13 @@ enum PermissionQueries {
 export const useGetPermissionForEntityById = (
   permissionEntityType: PermissionEntityKeysType,
   entityID: EntityID,
-): UseQueryResult<Permission, Error> =>
+): UseQueryResult<Permission> =>
   useQuery({
-    queryKey: [PermissionQueries.ByEntityId, permissionEntityType, entityID],
-    queryFn: () =>
+    queryKey: [
+      PermissionQueries.ByEntityId,
+      permissionEntityType,
+      getStringFromEntityID(entityID),
+    ],
+    queryFn: async () =>
       PermissionDAO.fetchForEntityId(permissionEntityType, entityID),
   });
