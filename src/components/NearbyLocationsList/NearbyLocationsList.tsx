@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
-import NearbyLocationsListEmpty from './NearbyLocationsListEmpty';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import Fragment from '../../common/Fragment';
-import List from '../../common/List';
-import ListItem from '../../common/ListItem';
-import ListSectionHeader from '../../common/ListSectionHeader';
-import ListSubSectionSeparator from '../../common/ListSubSectionSeparator';
-import LoadingListFooter from '../../common/LoadingListFooter';
+import { NearbyLocationsListEmpty } from './NearbyLocationsListEmpty';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
+import { Fragment } from '../../common/Fragment';
+import { List } from '../../common/List';
+import { ListItem } from '../../common/ListItem';
+import { ListSectionHeader } from '../../common/ListSectionHeader';
+import { ListSubSectionSeparator } from '../../common/ListSubSectionSeparator';
+import { LoadingListFooter } from '../../common/LoadingListFooter';
 import { COLORS } from '../../theme';
 import { calculateKegLevel } from '../../utils';
 
@@ -123,5 +123,3 @@ export const NearbyLocationsList: React.FC<Props> = ({
     </View>
   );
 };
-
-export default NearbyLocationsList;

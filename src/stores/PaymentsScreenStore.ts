@@ -7,7 +7,7 @@ export interface PaymentFormParams {
   number: string;
 }
 
-class PaymentsScreenStore {
+export class PaymentsScreenStore {
   _isLoading = false;
 
   get isLoading(): boolean {
@@ -72,5 +72,3 @@ class PaymentsScreenStore {
     // return PaymentsStore.get();
   }
 }
-
-export default new PaymentsScreenStore();

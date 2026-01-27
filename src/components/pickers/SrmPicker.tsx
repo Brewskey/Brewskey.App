@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import ColorIcon from '../../common/ColorIcon';
+import { ColorIcon } from '../../common/ColorIcon';
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetSrms } from '../../hooks/queries/SrmQueries';
 
@@ -12,7 +12,6 @@ export type PickerValue<T> = T | null | undefined;
 
 interface Props {
   error?: string | null | undefined;
-  label?: string;
   queryOptions?: QueryOptions;
   name: string;
   defaultValue?: PickerValue<Srm | ShortenedEntity>;
@@ -20,8 +19,7 @@ interface Props {
 }
 
 export const SrmPicker: React.FC<Props> = ({
-  label = 'SRM',
-  name = 'srm',
+  name,
   defaultValue,
   required,
   ...props

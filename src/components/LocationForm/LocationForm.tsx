@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import Button from '../../common/buttons/Button';
+import { Button } from '../../common/buttons/Button';
 import { Form } from '../../common/form/Form';
 import { FormField } from '../../common/form/FormField';
 import { FormValidationMessage } from '../../common/form/FormValidationMessage';
@@ -16,17 +16,14 @@ import {
 } from '../../hooks/queries/OrganizationQueries';
 import { extractShortenedEntityId } from '../../utils';
 import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
-
-import LocationTypePicker from '../pickers/LocationTypePicker';
+import { LocationTypePicker } from '../pickers/LocationTypePicker';
 import { OrganizationPicker } from '../pickers/OrganizationPicker';
-import SquareLocationPicker from '../pickers/SquareLocationPicker';
-import StatePicker from '../pickers/StatePicker';
+import { SquareLocationPicker } from '../pickers/SquareLocationPicker';
+import { StatePicker } from '../pickers/StatePicker';
 
 import type {
-  EntityID,
   Location,
   LocationMutator,
-  Organization,
   ShortenedEntity,
 } from '@brewskey/js-api';
 
@@ -95,7 +92,6 @@ const LocationForm: React.FC<Props> = ({
   });
 
   const {
-    handleSubmit,
     formState: { isDirty, isSubmitting, isValid },
     getValues,
   } = form;
@@ -241,4 +237,4 @@ const LocationForm: React.FC<Props> = ({
   );
 };
 
-export default LocationForm;
+export { LocationForm };

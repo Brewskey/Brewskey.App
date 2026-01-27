@@ -1,14 +1,19 @@
 import * as React from 'react';
-import { createContext, useCallback, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 import DAOApi from '@brewskey/js-api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import Storage, { StorageKeys } from '../../utils/Storage';
+import { Storage, StorageKeys } from '../../utils/Storage';
 
 import type { Organization } from '@brewskey/js-api';
 
-const APP_SETTINGS_STORAGE_KEY = 'app_settings';
 export const APP_SETTINGS_QUERY_KEY = ['app', 'settings'] as const;
 
 export interface AppSettings {
@@ -24,7 +29,9 @@ export const loadAppSettingsFromStorage =
     try {
       // Check for Playwright test data first (for e2e tests)
       if (typeof window !== 'undefined') {
-        const playwrightSettings = (window as any).__PLAYWRIGHT_APP_SETTINGS__;
+        const playwrightSettings = (
+          window as Window & { __PLAYWRIGHT_APP_SETTINGS__?: AppSettings }
+        ).__PLAYWRIGHT_APP_SETTINGS__;
         if (playwrightSettings) {
           // Store it in Storage for consistency
           try {
@@ -32,7 +39,7 @@ export const loadAppSettingsFromStorage =
               StorageKeys.AppSettings,
               playwrightSettings,
             );
-          } catch (e) {
+          } catch {
             // Storage might not be ready yet, but we can still return the settings
           }
           return playwrightSettings;
@@ -43,7 +50,7 @@ export const loadAppSettingsFromStorage =
         StorageKeys.AppSettings,
       );
       return storedSettings || null;
-    } catch (error) {
+    } catch {
       return null;
     }
   };
@@ -60,7 +67,7 @@ export const saveAppSettingsToStorage = async (
     } else {
       await Storage.removeForCurrentUser(StorageKeys.AppSettings);
     }
-  } catch (error) {
+  } catch {
     // Ignore storage errors
   }
 };
@@ -101,10 +108,14 @@ const useAppSettingsQuery = () => {
     retry: false,
   });
 
-  const appSettings = query.data || {
-    manageTapsEnabled: false,
-    selectedOrganization: null,
-  };
+  const appSettings = useMemo(
+    () =>
+      query.data ?? {
+        manageTapsEnabled: false,
+        selectedOrganization: null,
+      },
+    [query.data],
+  );
 
   // Set organization ID when settings change
   React.useEffect(() => {
@@ -179,14 +190,24 @@ export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     [updateAppSettings],
   );
 
-  const value: AppSettingsContextValue = {
-    isManageTapsEnabled: appSettings.manageTapsEnabled,
-    selectedOrganization: appSettings.selectedOrganization,
-    updateMetadata,
-    onToggleManageTaps,
-    onOrganizationChange,
-    updateAppSettings,
-  };
+  const value = useMemo<AppSettingsContextValue>(
+    () => ({
+      isManageTapsEnabled: appSettings.manageTapsEnabled,
+      selectedOrganization: appSettings.selectedOrganization,
+      updateMetadata,
+      onToggleManageTaps,
+      onOrganizationChange,
+      updateAppSettings,
+    }),
+    [
+      appSettings.manageTapsEnabled,
+      appSettings.selectedOrganization,
+      updateMetadata,
+      onToggleManageTaps,
+      onOrganizationChange,
+      updateAppSettings,
+    ],
+  );
 
   // Don't render children until settings are loaded to avoid flash of wrong state
   if (isLoading) {

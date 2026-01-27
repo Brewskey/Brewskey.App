@@ -1,11 +1,10 @@
 import * as React from 'react';
 
-import { useForm, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
-import Button from '../../../common/buttons/Button';
+import { Button } from '../../../common/buttons/Button';
 import { DropdownInput } from '../../../common/form/DropdownInput';
-import { Form } from '../../../common/form/Form';
 import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../../../common/form/handleSubmitWithError';
 import { TextField } from '../../../common/form/TextField';
@@ -69,4 +68,4 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
   );
 };
 
-export default HiddenWifiForm;
+export { HiddenWifiForm };

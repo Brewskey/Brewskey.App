@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
+import { CenteredModal } from './CenteredModal';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import FriendAddForm from '../FriendAddForm';
+import { FriendAddForm } from '../FriendAddForm';
 
 import type { FriendAddFormValues } from '../FriendAddForm';
 
@@ -40,4 +40,4 @@ const FriendAddCustomModal: React.FC<Props> = ({
   </CenteredModal>
 );
 
-export default FriendAddCustomModal;
+export { FriendAddCustomModal };

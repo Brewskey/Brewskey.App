@@ -5,12 +5,12 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { View } from 'react-native';
 
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import QuickActions from '../common/QuickActions';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { QuickActions } from '../common/QuickActions';
 import { SwipeableList } from '../common/SwipeableList';
-import SwipeableRow from '../common/SwipeableRow';
+import { SwipeableRow } from '../common/SwipeableRow';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import {
@@ -61,19 +61,14 @@ const LocationsList: React.FC<Props> = ({
     refetch,
   } = useGetLocations(mergedQueryOptions);
 
-  const locations = useMemo(() => {
-    if (!locationsData?.pages) return [];
-    return locationsData.pages.flatMap((page) => page);
-  }, [locationsData]);
-
   const deleteLocationMutation = useDeleteLocation();
 
-  const onDeleteItemPress = async (item: Location): Promise<void> => {
+  const handleDeleteItemPress = async (item: Location): Promise<void> => {
     await deleteLocationMutation.mutateAsync(item.id);
     addSnackBarMessage({ content: 'The location was deleted' });
   };
 
-  const onEditItemPress = ({ id }: Location) => {
+  const handleEditItemPress = ({ id }: Location) => {
     router.navigate({
       pathname: '/(tabs)/locations/[id]/edit',
       params: { id: String(id) },
@@ -81,7 +76,7 @@ const LocationsList: React.FC<Props> = ({
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
-  const onItemPress = (item: Location): void => {
+  const handleItemPress = (item: Location): void => {
     router.navigate({
       pathname: '/(tabs)/locations/[id]',
       params: { id: String(item.id) },
@@ -130,9 +125,9 @@ const LocationsList: React.FC<Props> = ({
       index={index}
       item={item}
       maxSwipeDistance={150}
-      onDeleteItemPress={onDeleteItemPress}
-      onEditItemPress={onEditItemPress}
-      onItemPress={onItemPress}
+      onDeleteItemPress={handleDeleteItemPress}
+      onEditItemPress={handleEditItemPress}
+      onItemPress={handleItemPress}
       rowItemComponent={SwipeableRowItem}
       separators={separators}
       slideoutComponent={Slideout}
@@ -153,7 +148,7 @@ const LocationsList: React.FC<Props> = ({
         data={flatData}
         keyExtractor={keyExtractor}
         ListEmptyComponent={!isLoading ? ListEmptyComponent : undefined}
-        ListHeaderComponent={ListHeaderComponent as ListComponentTypes}
+        ListHeaderComponent={ListHeaderComponent}
         listType="flatList"
         onRefresh={onRefreshList}
         renderItem={renderRow}
@@ -170,4 +165,4 @@ const LocationsList: React.FC<Props> = ({
   );
 };
 
-export default LocationsList;
+export { LocationsList };

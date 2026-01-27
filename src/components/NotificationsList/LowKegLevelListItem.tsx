@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import NotificationListItem from './NotificationListItem';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { NotificationListItem } from './NotificationListItem';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
 
 import type { Props as NotificationListItemProps } from './NotificationListItem';
 import type { LowKegLevelNotification } from '../../stores/NotificationTypes';
@@ -22,4 +22,4 @@ const LowKegLevelListItem = (props: Props): React.ReactElement => {
   );
 };
 
-export default LowKegLevelListItem;
+export { LowKegLevelListItem };

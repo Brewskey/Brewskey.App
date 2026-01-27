@@ -235,7 +235,9 @@ const DropdownListItem = <T,>({
   );
 };
 
-export function WebDropdown<T = any>(props: WebDropdownProps) {
+const WebDropdown = <T = unknown,>(
+  props: WebDropdownProps,
+): React.ReactElement => {
   const {
     data = [],
     labelField,
@@ -415,4 +417,6 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
       </Modal>
     </View>
   );
-}
+};
+
+export { WebDropdown };

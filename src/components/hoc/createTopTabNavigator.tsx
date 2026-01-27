@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Dimensions } from 'react-native';
 
-import theme from '../../theme';
+import { theme } from '../../theme';
 
 import type { NavigationState, Route } from '@react-navigation/native';
 
@@ -16,9 +16,9 @@ type ExportType<TConfig> = React.ComponentType<TConfig> & {
   router: unknown;
 };
 
-export default function createTopTabNavigator<TConfig>(
+export const createTopTabNavigator = <TConfig,>(
   config: TabConfig,
-): ExportType<TConfig> {
+): ExportType<TConfig> => {
   const TopTab = createMaterialTopTabNavigator({
     screens: {},
     ...theme.tabBar,
@@ -99,4 +99,4 @@ export default function createTopTabNavigator<TConfig>(
   };
 
   return NavigatorWrapper as ExportType<TConfig>;
-}
+};

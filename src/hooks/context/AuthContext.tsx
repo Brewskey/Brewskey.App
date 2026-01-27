@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 
 import BrewskeyJSApi from '@brewskey/js-api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import Storage, { StorageKeys } from '../../utils/Storage';
+import { Storage, StorageKeys } from '../../utils/Storage';
 
 import type { AuthResponse } from '@brewskey/js-api';
 import type { QueryClient } from '@tanstack/react-query';
@@ -20,12 +20,14 @@ export const loadAuthStateFromStorage =
       // This needs to be checked synchronously if possible, or we need to ensure
       // it's set before React Query runs
       if (typeof window !== 'undefined') {
-        const playwrightAuth = (window as any).__PLAYWRIGHT_AUTH_DATA__;
+        const playwrightAuth = (
+          window as Window & { __PLAYWRIGHT_AUTH_DATA__?: AuthResponse }
+        ).__PLAYWRIGHT_AUTH_DATA__;
         if (playwrightAuth) {
           // Store it in Storage for consistency
           try {
             await Storage.setItem(StorageKeys.SessionData, playwrightAuth);
-          } catch (e) {
+          } catch {
             // Storage might not be ready yet, but we can still return the auth data
           }
           return playwrightAuth;
@@ -33,7 +35,7 @@ export const loadAuthStateFromStorage =
       }
 
       return await Storage.getItem<AuthResponse>(StorageKeys.SessionData);
-    } catch (error) {
+    } catch {
       return null;
     }
   };
@@ -50,29 +52,8 @@ export const saveAuthStateToStorage = async (
     } else {
       await Storage.removeItem(StorageKeys.SessionData);
     }
-  } catch (error) {
+  } catch {
     // Ignore storage errors
-  }
-};
-
-/**
- * Refresh auth token if refresh token is available
- */
-const refreshAuthToken = async (
-  sessionData: AuthResponse,
-): Promise<AuthResponse | null> => {
-  if (!sessionData.refreshToken) {
-    return sessionData;
-  }
-
-  try {
-    const { Auth } = await import('@brewskey/js-api');
-    const newAuthResponse = await Auth.refreshToken(sessionData.refreshToken);
-    // Merge the refreshed token data with the existing session data
-    return { ...sessionData, ...newAuthResponse };
-  } catch (refreshError) {
-    // If refresh fails, return null to clear session
-    return null;
   }
 };
 

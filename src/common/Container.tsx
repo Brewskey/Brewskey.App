@@ -1,9 +1,8 @@
-import * as React from 'react';
-
 import { StyleSheet, View } from 'react-native';
 
 import { COLORS } from '../theme';
 
+import type { ReactElement, ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   centered?: boolean;
-  children?: React.ReactNode;
+  children?: ReactNode;
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
@@ -29,7 +28,7 @@ const Container = ({
   children,
   style,
   testID,
-}: Props): React.ReactElement => (
+}: Props): ReactElement => (
   <View
     style={[styles.container, centered && styles.centered, style]}
     testID={testID}
@@ -38,4 +37,4 @@ const Container = ({
   </View>
 );
 
-export default Container;
+export { Container };

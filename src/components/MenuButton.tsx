@@ -41,7 +41,7 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
   routeName?: string;
 };
 
-const MenuButton: React.FC<Props> = ({
+const MenuButtonComponent: React.FC<Props> = ({
   icon,
   isActive,
   onPress,
@@ -76,4 +76,4 @@ const MenuButton: React.FC<Props> = ({
   );
 };
 
-export default React.memo(MenuButton);
+export const MenuButton = React.memo(MenuButtonComponent);

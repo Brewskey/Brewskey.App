@@ -66,4 +66,4 @@ const GallonSliderField = ({
   );
 };
 
-export default GallonSliderField;
+export { GallonSliderField };

@@ -18,8 +18,7 @@ import type {
 
 type DropdownProps = React.ComponentProps<typeof RNEDropdown>;
 
-// Disabled query when useQueryHook is not provided (avoids conditional hook calls)
-const usePlaceholderQuery = () =>
+const usePlaceholderQuery = (_options?: unknown) =>
   useInfiniteQuery({
     queryKey: ['dropdown-placeholder'],
     queryFn: async () => [],
@@ -62,6 +61,7 @@ export type DropdownInputProps<TValueType> = Omit<
 };
 
 // Wrapper: WebDropdown on web, react-native-element-dropdown on native. Props match DropdownProps.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- generic used by DropdownInput when rendering <Dropdown<TValueType>>
 const Dropdown = <TValueType,>(props: DropdownProps) => {
   if (Platform.OS === 'web') {
     return <WebDropdown {...props} />;
@@ -129,10 +129,8 @@ export const DropdownInput = <TValueType,>({
     return baseOptions;
   }, [queryOptions, debouncedSearchText, onSearchFilter, search, useQueryHook]);
 
-  // Query hook for async data (use disabled placeholder when not provided to satisfy rules of hooks)
-  const queryResult = useQueryHook
-    ? useQueryHook(finalQueryOptions ?? {})
-    : usePlaceholderQuery();
+  const queryHook = useQueryHook ?? usePlaceholderQuery;
+  const queryResult = queryHook(finalQueryOptions ?? {});
 
   // Flatten data from query or use static data
   const flatData = React.useMemo(() => {
@@ -181,7 +179,10 @@ export const DropdownInput = <TValueType,>({
       defaultValue={defaultValue}
       name={dropdownName}
       rules={{ required }}
-      render={({ field: { onChange, onBlur, value }, formState }) => {
+      render={({
+        field: { onChange, onBlur, value },
+        formState: _formState,
+      }) => {
         const handleBlur = () => {
           setSearchText('');
           onBlur();

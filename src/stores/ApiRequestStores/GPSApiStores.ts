@@ -1,4 +1,4 @@
-import makeRequestApiStore from './makeRequestApiStore';
+import { makeRequestApiStore } from './makeRequestApiStore';
 
 import type { Coordinates } from '../../types';
 

@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
 const StatusBarFake = (): React.ReactElement | null =>
   Platform.OS === 'ios' ? <View style={styles.container} /> : null;
 
-export default StatusBarFake;
+export { StatusBarFake };

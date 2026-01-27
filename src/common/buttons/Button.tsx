@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Button as RNEButton } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import ToggleStore from '../../stores/ToggleStore';
 import { COLORS } from '../../theme';
 
 import type { ViewStyle } from 'react-native';
@@ -30,10 +29,6 @@ type Props = React.ComponentProps<typeof RNEButton> & {
   testID?: string;
   // react-native-elemenets button porps
 };
-
-interface State {
-  isLoading: boolean;
-}
 
 const Button: React.FC<Props> = ({
   backgroundColor = COLORS.primary2,
@@ -90,4 +85,4 @@ const Button: React.FC<Props> = ({
   );
 };
 
-export default Button;
+export { Button };

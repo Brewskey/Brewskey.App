@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import List from '../common/List';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import KegModal from './modals/KegModal';
+import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { KegModal } from './modals/KegModal';
 import { useGetKegs } from '../hooks/queries/KegQueries';
 
 import type { EntityID, Keg, QueryOptions } from '@brewskey/js-api';
@@ -30,7 +30,7 @@ const LoadedRow = ({
     chevron={false}
     item={keg}
     leftAvatar={<BeverageAvatar beverageId={keg.beverage.id} />}
-    onPress={(item) => onPress(item)}
+    onPress={(item: Keg) => onPress(item)}
     testID={`keg-item-${keg.id}`}
     title={keg.beverage.name}
   />
@@ -91,4 +91,4 @@ const KegsList: React.FC<Props> = ({
   );
 };
 
-export default KegsList;
+export { KegsList };

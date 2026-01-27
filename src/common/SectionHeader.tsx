@@ -42,4 +42,4 @@ const SectionHeader = ({
   </View>
 );
 
-export default SectionHeader;
+export { SectionHeader };

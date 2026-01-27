@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Stack } from 'expo-router';
 
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
 
 const KegLayout: React.FC = () => (
   <Stack

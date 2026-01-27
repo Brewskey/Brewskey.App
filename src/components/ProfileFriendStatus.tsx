@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 import nullthrows from 'nullthrows';
 
-import Fragment from '../common/Fragment';
-import FriendAddModal from './modals/FriendAddModal';
-import FriendApprovedModal from './modals/FriendApprovedModal';
-import FriendPendingModal from './modals/FriendPendingModal';
+import { Fragment } from '../common/Fragment';
+import { FriendAddModal } from './modals/FriendAddModal';
+import { FriendApprovedModal } from './modals/FriendApprovedModal';
+import { FriendPendingModal } from './modals/FriendPendingModal';
 import { HeaderIconButton } from '../common/Header/HeaderIconButton';
 import { useAuthSession } from '../hooks/context/AuthContext';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
@@ -125,4 +125,4 @@ const ProfileFriendStatus: React.FC<Props> = ({ account, friend }) => {
   return null;
 };
 
-export default ProfileFriendStatus;
+export { ProfileFriendStatus };

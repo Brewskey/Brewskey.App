@@ -7,24 +7,23 @@ import { BeverageImagePicker } from './BeverageImagePicker';
 import { TextInput } from '../common/form/TextInput';
 import { extractShortenedEntityId } from '../utils';
 import { AvailabilityPicker } from './pickers/AvailabilityPicker';
-import BeverageTypePicker from './pickers/BeverageTypePicker';
+import { BeverageTypePicker } from './pickers/BeverageTypePicker';
 import { GlassPicker } from './pickers/GlassPicker';
-import { StylePicker } from './pickers/StylePicker';
+import { ServingTemperaturePicker } from './pickers/ServingTemperaturePicker';
 import { SrmPicker } from './pickers/SrmPicker';
-import ServingTemperaturePicker from './pickers/ServingTemperaturePicker';
-import YearPicker from './pickers/YearPicker';
-import Button from '../common/buttons/Button';
+import { StylePicker } from './pickers/StylePicker';
+import { YearPicker } from './pickers/YearPicker';
+import { Button } from '../common/buttons/Button';
 import { CheckBoxField } from '../common/form/CheckBoxField';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
 import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import SectionContent from '../common/SectionContent';
+import { SectionContent } from '../common/SectionContent';
 
 import type {
   Beverage,
   BeverageMutator,
-  EntityID,
   ShortenedEntity,
   Srm,
 } from '@brewskey/js-api';
@@ -256,4 +255,4 @@ const BeverageForm: React.FC<Props> = ({
   );
 };
 
-export default BeverageForm;
+export { BeverageForm };

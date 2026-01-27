@@ -4,7 +4,6 @@ import { Slider } from '@rneui/themed';
 import { Controller, useFormContext } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { FormLabel } from '../../common/form/FormLabel';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 import type { SliderProps as RNEUISliderProps } from '@rneui/themed';
@@ -62,4 +61,4 @@ const BrightnessSliderField = ({
   );
 };
 
-export default BrightnessSliderField;
+export { BrightnessSliderField };

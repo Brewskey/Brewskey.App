@@ -2,25 +2,25 @@ import * as React from 'react';
 
 import { View } from 'react-native';
 
-import TextBlock from '../../common/TextBlock';
+import { OrderedText } from '../../common/TextBlock';
 
 const FinishInstructions = () => (
   <View>
-    <TextBlock paddedBottom>
+    <OrderedText paddedBottom>
       The WiFi information has been sent to your Brewskey box!
-    </TextBlock>
-    <TextBlock paddedBottom>
+    </OrderedText>
+    <OrderedText paddedBottom>
       The LED should now turn green, and eventually blue.
-    </TextBlock>
-    <TextBlock paddedBottom>
+    </OrderedText>
+    <OrderedText paddedBottom>
       If the LED continues to flash green for a minute or more, it means the
       password entered incorrectly. You will need to restart the setup process.
-    </TextBlock>
-    <TextBlock paddedBottom>
+    </OrderedText>
+    <OrderedText paddedBottom>
       If your phone not already reverted back to your regular WiFi network,
       re-connect to it now to get back online.
-    </TextBlock>
+    </OrderedText>
   </View>
 );
 
-export default FinishInstructions;
+export { FinishInstructions };

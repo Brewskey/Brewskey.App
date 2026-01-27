@@ -29,4 +29,4 @@ const PhoneConnectInstructions = () => (
   </View>
 );
 
-export default PhoneConnectInstructions;
+export { PhoneConnectInstructions };

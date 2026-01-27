@@ -4,7 +4,7 @@ import { Icon } from '@rneui/themed';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
-import theme, { COLORS } from '../theme';
+import { COLORS, theme } from '../theme';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -74,43 +74,3 @@ export const DeviceOnlineIndicator: React.FC<Props> = ({
     />
   );
 };
-
-interface ExtraProps {
-  iconSize: number;
-  sizeStyle: { borderRadius: number; height: number; width: number };
-}
-
-const LoadingComponent = ({ sizeStyle }: ExtraProps) => (
-  <View style={[styles.container, sizeStyle]}>
-    <ActivityIndicator size="small" />
-  </View>
-);
-
-type LoadedComponentProps = ExtraProps & {
-  value: boolean;
-};
-
-const LoadedComponent = ({
-  sizeStyle,
-  value: connected,
-}: LoadedComponentProps) => (
-  <View
-    style={[
-      styles.container,
-      sizeStyle,
-      connected ? styles.connected : styles.disconnected,
-    ]}
-  />
-);
-
-type ErrorComponentProps = ExtraProps & {
-  error: Error;
-};
-
-const ErrorComponent = ({ iconSize, sizeStyle }: ErrorComponentProps) => (
-  <View style={[styles.container, sizeStyle]}>
-    <Icon color={COLORS.accent} name="priority-high" size={iconSize} />
-  </View>
-);
-
-export default DeviceOnlineIndicator;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Badge } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 
-import TouchableItem from '../../common/buttons/TouchableItem';
+import { TouchableItem } from '../../common/buttons/TouchableItem';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -50,4 +50,4 @@ const BadgeContainer: React.FC<Props> = ({
   </TouchableItem>
 );
 
-export default BadgeContainer;
+export { BadgeContainer };

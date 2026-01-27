@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import MenuButton from './MenuButton';
+import { MenuButton } from './MenuButton';
 
 interface Props {
   onPress: () => void;
@@ -12,5 +12,3 @@ export const MenuNavigationButton = <
   onPress,
   ...otherProps
 }: Props & TOtherProps) => <MenuButton {...otherProps} onPress={onPress} />;
-
-export default MenuNavigationButton;

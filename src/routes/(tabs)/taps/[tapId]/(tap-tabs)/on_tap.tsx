@@ -5,18 +5,18 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
-import Container from '../../../../../common/Container';
-import Fragment from '../../../../../common/Fragment';
-import Header from '../../../../../common/Header';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import Section from '../../../../../common/Section';
-import SectionContent from '../../../../../common/SectionContent';
-import SectionHeader from '../../../../../common/SectionHeader';
-import WarningNotification from '../../../../../common/WarningNotification';
+import { Container } from '../../../../../common/Container';
+import { Fragment } from '../../../../../common/Fragment';
+import { Header } from '../../../../../common/Header';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../../common/NotFoundScreen';
+import { Section } from '../../../../../common/Section';
+import { SectionContent } from '../../../../../common/SectionContent';
+import { SectionHeader } from '../../../../../common/SectionHeader';
+import { WarningNotification } from '../../../../../common/WarningNotification';
 import { BeverageDetailsLoader } from '../../../../../components/BeverageDetailsLoader';
 import { KegLevelBar } from '../../../../../components/KegLevelBar';
-import KegsList from '../../../../../components/KegsList';
+import { KegsList } from '../../../../../components/KegsList';
 import { TapDetailsNoKeg } from '../../../../../components/TapDetailsNoKeg';
 import { useGetFlowSensorByTapId } from '../../../../../hooks/queries/FlowSensorQueries';
 import { useGetKegById } from '../../../../../hooks/queries/KegQueries';
@@ -42,15 +42,7 @@ const OnTapRoute: React.FC = () => {
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
   const router = useRouter();
 
-  if (!id) {
-    return (
-      <NotFoundScreen
-        message="The tap you're looking for could not be found."
-        title="Tap Not Found"
-      />
-    );
-  }
-
+  // All hooks must be called unconditionally before any early returns
   const { data: tap, isLoading } = useGetTapById(id as any);
   const { data: tapPermission } = useGetPermissionForEntityById(
     'tap',
@@ -59,6 +51,15 @@ const OnTapRoute: React.FC = () => {
   const { data: flowSensor } = useGetFlowSensorByTapId(id as any);
   const kegId = tap?.currentKeg?.id ?? null;
   const { data: currentKeg, refetch } = useGetKegById(kegId);
+
+  if (!id) {
+    return (
+      <NotFoundScreen
+        message="The tap you're looking for could not be found."
+        title="Tap Not Found"
+      />
+    );
+  }
 
   if (isLoading) {
     return (

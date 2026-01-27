@@ -30,4 +30,4 @@ const LoadingContainer = ({
   </View>
 );
 
-export default LoadingContainer;
+export { LoadingContainer as LoadingIndicator };

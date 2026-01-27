@@ -3,13 +3,12 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import Button from '../common/buttons/Button';
+import { Button } from '../common/buttons/Button';
 import { Form } from '../common/form/Form';
 import { FormField } from '../common/form/FormField';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 import { TextInput } from '../common/form/TextInput';
-import SectionContent from '../common/SectionContent';
+import { SectionContent } from '../common/SectionContent';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -103,4 +102,4 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
   );
 };
 
-export default FriendAddForm;
+export { FriendAddForm };

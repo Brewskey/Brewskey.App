@@ -1,33 +1,30 @@
 import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
-import nullthrows from 'nullthrows';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
+import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
 import { CheckBoxInput } from '../common/form/CheckBoxInput';
+import { DropdownInput } from '../common/form/DropdownInput';
 import { Form } from '../common/form/Form';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
+import { FormField } from '../common/form/FormField';
 import { SubmitButton } from '../common/form/SubmitButton';
+import { TextInput } from '../common/form/TextInput';
+import { LoadingIndicator } from '../common/LoadingIndicator';
+import { SectionContent } from '../common/SectionContent';
 import {
   useGetDeviceById,
   useGetDevices,
 } from '../hooks/queries/DeviceQueries';
 import { useGetOrganizationById } from '../hooks/queries/OrganizationQueries';
-import SectionContent from '../common/SectionContent';
-import { DropdownInput } from '../common/form/DropdownInput';
-import { TextInput } from '../common/form/TextInput';
-import { FormField } from '../common/form/FormField';
-import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
-import LoadingIndicator from '../common/LoadingIndicator';
-import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
 import { COLORS } from '../theme';
 
 import type {
   Device,
   EntityID,
   QueryOptions,
-  ShortenedEntity,
   Tap,
   TapMutator,
 } from '@brewskey/js-api';

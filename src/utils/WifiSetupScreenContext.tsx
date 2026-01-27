@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 
 export enum WifiSetupSteps {
   Screen1,
@@ -14,8 +14,10 @@ const WifiSetupScreenContext = createContext<
   [ContextValue, (newValue: ContextValue) => void]
 >([{ currentStep: WifiSetupSteps.Screen1 }, () => {}]);
 
-export const useWifiSetupScreenContext = () =>
-  useContext(WifiSetupScreenContext);
+export const useWifiSetupScreenContext = (): [
+  ContextValue,
+  (newValue: ContextValue) => void,
+] => useContext(WifiSetupScreenContext);
 
 export const WifiSetupScreenContextProvider: React.FC<
   React.PropsWithChildren
@@ -24,7 +26,9 @@ export const WifiSetupScreenContextProvider: React.FC<
     currentStep: WifiSetupSteps.Screen1,
   });
   return (
-    <WifiSetupScreenContext.Provider value={[value, setValue]}>
+    <WifiSetupScreenContext.Provider
+      value={useMemo(() => [value, setValue], [value, setValue])}
+    >
       {children}
     </WifiSetupScreenContext.Provider>
   );

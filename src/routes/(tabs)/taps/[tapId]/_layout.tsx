@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
 import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../common/ErrorScreen';
+import { ErrorScreen } from '../../../../common/ErrorScreen';
 
 /**
  * Tap details layout: Stack of index, (tap-tabs), keg, edit.

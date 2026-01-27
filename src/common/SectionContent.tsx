@@ -34,4 +34,4 @@ const SectionContent = ({
   </View>
 );
 
-export default SectionContent;
+export { SectionContent };

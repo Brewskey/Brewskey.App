@@ -1,12 +1,12 @@
-import * as React from 'react';
-
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text } from 'react-native';
 
-import Container from './Container';
-import Fragment from './Fragment';
-import Header from './Header';
+import { Container } from './Container';
+import { Fragment } from './Fragment';
+import { Header } from './Header';
 import { COLORS, TYPOGRAPHY } from '../theme';
+
+import type { ReactElement } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,7 +29,7 @@ const NotFoundScreen = ({
   shouldShowBackButton = true,
   title,
   message,
-}: Props): React.ReactElement => (
+}: Props): ReactElement => (
   <Fragment>
     <Header shouldShowBackButton={shouldShowBackButton} title={title} />
     <Container centered style={styles.container}>
@@ -45,4 +45,4 @@ const NotFoundScreen = ({
   </Fragment>
 );
 
-export default NotFoundScreen;
+export { NotFoundScreen };

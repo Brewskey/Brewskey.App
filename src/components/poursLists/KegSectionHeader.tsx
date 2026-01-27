@@ -3,8 +3,8 @@ import * as React from 'react';
 import moment from 'moment';
 import { StyleSheet, Text, View } from 'react-native';
 
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import LoadingContainer from '../../common/LoadingIndicator';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
+import { LoadingIndicator } from '../../common/LoadingIndicator';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import { useGetKegById } from '../../hooks/queries/KegQueries';
 import { COLORS, TYPOGRAPHY } from '../../theme';
@@ -47,7 +47,7 @@ export const KegSectionHeader: React.FC<Props> = ({ section: { kegId } }) => {
   const keg = useGetKegById(kegId as unknown as EntityID);
 
   if (keg.isLoading) {
-    return <LoadingContainer activitySize="small" style={styles.container} />;
+    return <LoadingIndicator activitySize="small" style={styles.container} />;
   }
 
   if (keg.data == null) {

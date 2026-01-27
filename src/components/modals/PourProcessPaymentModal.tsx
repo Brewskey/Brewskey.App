@@ -4,11 +4,11 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import Button from '../../common/buttons/Button';
-import ListItem from '../../common/ListItem';
-import LoadingIndicator from '../../common/LoadingIndicator';
+import { CenteredModal } from './CenteredModal';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
+import { Button } from '../../common/buttons/Button';
+import { ListItem } from '../../common/ListItem';
+import { LoadingIndicator } from '../../common/LoadingIndicator';
 import { usePourModalContext } from '../../hooks/context/PourProcessContext';
 import { useGetTaps } from '../../hooks/queries/TapQueries';
 import { COLORS } from '../../theme';
@@ -165,4 +165,4 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   );
 };
 
-export default PourProcessPaymentModal;
+export { PourProcessPaymentModal };

@@ -4,17 +4,18 @@ import { useRouter } from 'expo-router';
 import moment from 'moment';
 
 import { KegSectionHeader } from './KegSectionHeader';
-import UserAvatar from '../../common/avatars/UserAvatar';
-import ListItem from '../../common/ListItem';
-import LoadingListFooter from '../../common/LoadingListFooter';
-import QuickActions from '../../common/QuickActions';
+import { UserAvatar } from '../../common/avatars/UserAvatar';
+import { ListItem } from '../../common/ListItem';
+import { LoadingListFooter } from '../../common/LoadingListFooter';
+import { QuickActions } from '../../common/QuickActions';
 import { SwipeableList } from '../../common/SwipeableList';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { useDeletePour, useGetPours } from '../../hooks/queries/PourQueries';
-import PintCounter from '../PintCounter';
+import { PintCounter } from '../PintCounter';
 
-import type { Pour, QueryOptions } from '@brewskey/js-api';
+import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
+import type { SectionListData } from 'react-native';
 
 import type { ListComponentTypes } from '../../common/List';
 import type { RenderProps } from '../../common/SwipeableList';
@@ -24,6 +25,8 @@ interface Props {
   canDeletePours: boolean;
   queryOptions?: QueryOptions;
 }
+
+type KegSection = SectionListData<Pour> & { kegId: EntityID };
 
 export const SectionPoursList: React.FC<Props> = ({
   queryOptions = {},
@@ -105,7 +108,7 @@ export const SectionPoursList: React.FC<Props> = ({
   const allPours = (pours.data?.pages ?? []).flat();
   const kegIds = new Set(allPours.map((pour) => pour.keg.id));
 
-  const kegWithPours = Array.from(kegIds).map((kegId) => ({
+  const kegWithPours: KegSection[] = Array.from(kegIds).map((kegId) => ({
     kegId,
     data: allPours.filter((pour) => pour.keg.id === kegId),
   }));
@@ -117,14 +120,14 @@ export const SectionPoursList: React.FC<Props> = ({
       ListHeaderComponent={ListHeaderComponent}
       listType="sectionList"
       onEndReached={pours.fetchNextPage}
-      onRefresh={pours.refetch}
+      onRefresh={() => {
+        void pours.refetch();
+      }}
       renderItem={_renderRow}
-      sections={kegWithPours as any}
-      renderSectionHeader={(info: {
-        section: import('react-native').SectionListData<Pour>;
-      }) => <KegSectionHeader section={info.section as any} />}
+      sections={kegWithPours}
+      renderSectionHeader={(info) => (
+        <KegSectionHeader section={info.section as KegSection} />
+      )}
     />
   );
 };
-
-export default SectionPoursList;

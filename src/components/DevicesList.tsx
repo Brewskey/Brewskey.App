@@ -1,26 +1,24 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 
-import DeviceOnlineIndicator from './DeviceOnlineIndicator';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import QuickActions from '../common/QuickActions';
-import { SwipeableList  } from '../common/SwipeableList';
-import type {SwipeableListRef} from '../common/SwipeableList';
-import SwipeableRow from '../common/SwipeableRow';
+import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { QuickActions } from '../common/QuickActions';
+import { SwipeableList } from '../common/SwipeableList';
+import { SwipeableRow } from '../common/SwipeableRow';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import { useDeleteDevice, useGetDevices } from '../hooks/queries/DeviceQueries';
 
-import type { Device, EntityID, QueryOptions } from '@brewskey/js-api';
+import type { Device, QueryOptions } from '@brewskey/js-api';
 
 import type { ListComponentTypes } from '../common/List';
-import type { RenderProps } from '../common/SwipeableList';
+import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 const styles = StyleSheet.create({
@@ -79,12 +77,12 @@ const DevicesList: React.FC<Props> = ({
 
   const deleteDeviceMutation = useDeleteDevice();
 
-  const onDeleteItemPress = async (item: Device): Promise<void> => {
+  const handleDeleteItemPress = async (item: Device): Promise<void> => {
     await deleteDeviceMutation.mutateAsync(item.id);
     addSnackBarMessage({ content: 'The Brewskey box was deleted' });
   };
 
-  const onEditItemPress = ({ id }: Device) => {
+  const handleEditItemPress = ({ id }: Device) => {
     router.navigate({
       pathname: '/(tabs)/devices/[id]/edit',
       params: { id: String(id) },
@@ -92,7 +90,7 @@ const DevicesList: React.FC<Props> = ({
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
-  const onItemPress = (item: Device): void => {
+  const handleItemPress = (item: Device): void => {
     router.navigate({
       pathname: '/(tabs)/devices/[id]',
       params: { id: String(item.id) },
@@ -142,9 +140,9 @@ const DevicesList: React.FC<Props> = ({
       index={index}
       item={item}
       maxSwipeDistance={150}
-      onDeleteItemPress={onDeleteItemPress}
-      onEditItemPress={onEditItemPress}
-      onItemPress={onItemPress}
+      onDeleteItemPress={handleDeleteItemPress}
+      onEditItemPress={handleEditItemPress}
+      onItemPress={handleItemPress}
       rowItemComponent={SwipeableRowItem}
       separators={separators}
       slideoutComponent={Slideout}
@@ -190,7 +188,9 @@ const DevicesList: React.FC<Props> = ({
       ListFooterComponent={<LoadingListFooter isLoading={isFetchingNextPage} />}
       ListHeaderComponent={headerComponent}
       listType="flatList"
-      onRefresh={async () => await refetch()}
+      onRefresh={() => {
+        void refetch();
+      }}
       renderItem={renderRow}
       testID="devices-list"
       onEndReached={() => {
@@ -202,4 +202,4 @@ const DevicesList: React.FC<Props> = ({
   );
 };
 
-export default DevicesList;
+export { DevicesList };

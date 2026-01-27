@@ -4,8 +4,8 @@ import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import SETUP_STEPS from './setupSteps';
-import Button from '../../common/buttons/Button';
+import { SETUP_STEPS } from './setupSteps';
+import { Button } from '../../common/buttons/Button';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -93,4 +93,4 @@ const HardwareSetupGuide: React.FC<Props> = ({ onClosePress }) => {
   );
 };
 
-export default HardwareSetupGuide;
+export { HardwareSetupGuide };

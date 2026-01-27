@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Text } from 'react-native';
 
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import ListItem from '../common/ListItem';
+import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
+import { ListItem } from '../common/ListItem';
 import { COLORS } from '../theme';
 import { calculateKegLevel } from '../utils';
 
@@ -48,4 +48,4 @@ const TapListItem = ({ onPress, tap }: Props): React.ReactElement => {
   );
 };
 
-export default TapListItem;
+export { TapListItem };

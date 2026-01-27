@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Button from '../common/buttons/Button';
-import SectionContent from '../common/SectionContent';
-import SectionHeader from '../common/SectionHeader';
-import ParticleIDInput from '../components/ParticleIDInput';
-import DeviceSetupInstructions from '../components/WifiSetup/DeviceSetupInstructions';
+import { Button } from '../common/buttons/Button';
+import { SectionContent } from '../common/SectionContent';
+import { SectionHeader } from '../common/SectionHeader';
+import { ParticleIDInput } from '../components/ParticleIDInput';
+import { DeviceSetupInstructions } from '../components/WifiSetup/DeviceSetupInstructions';
 import { useClearAllQueryCaches } from '../hooks/queries/SoftApQueries';
 
 interface Props {

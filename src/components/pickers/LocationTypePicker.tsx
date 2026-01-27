@@ -27,4 +27,4 @@ const LocationTypePicker = (props: Props): React.ReactElement => (
   />
 );
 
-export default LocationTypePicker;
+export { LocationTypePicker };

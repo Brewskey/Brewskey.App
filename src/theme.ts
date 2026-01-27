@@ -55,7 +55,7 @@ export const getElevationStyle: (arg1: number) => ElevationStyle = (
   shadowRadius: 0.54 * elevation,
 });
 
-const theme = {
+export const theme = {
   button: {
     white: {
       buttonStyle: { backgroundColor: 'white' },
@@ -78,5 +78,3 @@ const theme = {
     },
   },
 } as const;
-
-export default theme;

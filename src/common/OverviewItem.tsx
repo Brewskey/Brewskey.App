@@ -70,4 +70,4 @@ const OverviewItem = ({
   );
 };
 
-export default OverviewItem;
+export { OverviewItem };

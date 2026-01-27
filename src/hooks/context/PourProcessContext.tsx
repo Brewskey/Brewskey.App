@@ -4,10 +4,9 @@ import nullthrows from 'nullthrows';
 import { Platform } from 'react-native';
 import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
 
-
 import { useAuthSession } from './AuthContext';
 import { useAddSnackBarMessage } from './SnackBarContext';
-import CONFIG from '../../config';
+import { CONFIG } from '../../config';
 import { fetchJSON } from '../../utils';
 import { useDeviceLocation, useLocationPermission } from '../useGetLocation';
 

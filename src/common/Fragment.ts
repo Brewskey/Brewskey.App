@@ -1,9 +1,12 @@
-import * as React from 'react';
+import { memo } from 'react';
+
+import type { FC, ReactNode } from 'react';
 
 interface Props {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-const Fragment: React.FC<Props> = async ({ children }) => children ?? null;
+const Fragment: FC<Props> = ({ children }): ReactNode => children ?? null;
 
-export default React.memo(Fragment);
+export const FragmentMemo = memo(Fragment);
+export { FragmentMemo as Fragment };

@@ -2,15 +2,15 @@ import * as React from 'react';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import Section from '../../../common/Section';
-import SectionContent from '../../../common/SectionContent';
-import SectionHeader from '../../../common/SectionHeader';
-import AvatarPicker from '../../../components/AvatarPicker';
-import ChangePasswordForm from '../../../components/ChangePasswordForm';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { Section } from '../../../common/Section';
+import { SectionContent } from '../../../common/SectionContent';
+import { SectionHeader } from '../../../common/SectionHeader';
+import { AvatarPicker } from '../../../components/AvatarPicker';
+import { ChangePasswordForm } from '../../../components/ChangePasswordForm';
 
 const MyProfileScreen: React.FC = () => (
   <Container>

@@ -3,16 +3,16 @@ import * as React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../common/NotFoundScreen';
-import SectionContent from '../../../common/SectionContent';
-import SectionHeader from '../../../common/SectionHeader';
-import LocationAddress from '../../../components/LocationAddress';
+import { LoadingIndicator } from '../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../common/NotFoundScreen';
+import { SectionContent } from '../../../common/SectionContent';
+import { SectionHeader } from '../../../common/SectionHeader';
+import { LocationAddress } from '../../../components/LocationAddress';
 import { useGetLocationById } from '../../../hooks/queries/LocationQueries';
 import { TYPOGRAPHY } from '../../../theme';
 

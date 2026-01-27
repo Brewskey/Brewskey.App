@@ -4,17 +4,16 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { Card } from '@rneui/themed';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
 import { useAuthSession } from '../../hooks/context/AuthContext';
 import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
 import { useGetPoursByBeverageIds } from '../../hooks/queries/PourQueries';
-import BeverageModal from '../modals/BeverageModal';
+import { BeverageModal } from '../modals/BeverageModal';
 
 import type { Beverage, EntityID } from '@brewskey/js-api';
-
 import type { InfiniteData } from '@tanstack/react-query';
-import type { BeverageModalHandle } from '../modals/BeverageModal';
 
+import type { BeverageModalHandle } from '../modals/BeverageModal';
 
 interface Props {
   userID: EntityID;

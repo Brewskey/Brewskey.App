@@ -5,7 +5,7 @@ import { Icon } from '@rneui/themed';
 import moment from 'moment';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-import TouchableItem from '../../common/buttons/TouchableItem';
+import { TouchableItem } from '../../common/buttons/TouchableItem';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 import type { Notification } from '../../stores/NotificationTypes';
@@ -74,7 +74,7 @@ const SlideoutView = () => (
   </View>
 );
 
-const NotificationListItem: React.FC<Props> = ({
+const NotificationListItemComponent: React.FC<Props> = ({
   contentComponent: ContentComponent,
   isSwipeable = true,
   leftComponent: LeftComponent,
@@ -167,4 +167,4 @@ const NotificationListItem: React.FC<Props> = ({
   );
 };
 
-export default React.memo(NotificationListItem);
+export const NotificationListItem = React.memo(NotificationListItemComponent);

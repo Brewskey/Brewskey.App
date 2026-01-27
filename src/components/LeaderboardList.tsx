@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { useRouter } from 'expo-router';
 
-import PintCounter from './PintCounter';
-import UserAvatar from '../common/avatars/UserAvatar';
-import List from '../common/List';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
+import { PintCounter } from './PintCounter';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
 import { useGetTapLeaderboard } from '../hooks/queries/TapQueries';
 
 import type { EntityID, LeaderboardItem } from '@brewskey/js-api';
@@ -64,7 +64,9 @@ export const LeaderboardList: React.FC<Props> = ({
       ListHeaderComponent={ListHeaderComponent}
       listType="flatList"
       onEndReached={leaderboard.fetchNextPage}
-      onRefresh={leaderboard.refetch}
+      onRefresh={() => {
+        void leaderboard.refetch();
+      }}
       renderItem={_renderRow}
       testID="leaderboard-list"
       ListEmptyComponent={
@@ -78,5 +80,3 @@ export const LeaderboardList: React.FC<Props> = ({
     />
   );
 };
-
-export default LeaderboardList;

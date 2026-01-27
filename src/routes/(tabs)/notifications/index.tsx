@@ -3,10 +3,10 @@ import { useCallback, useState } from 'react';
 
 import { useFocusEffect } from 'expo-router';
 
-import Container from '../../../common/Container';
-import Header from '../../../common/Header';
+import { Container } from '../../../common/Container';
+import { Header } from '../../../common/Header';
 import { HeaderIconButton } from '../../../common/Header/HeaderIconButton';
-import DeleteModal from '../../../components/modals/DeleteModal';
+import { DeleteModal } from '../../../components/modals/DeleteModal';
 
 export default function NotificationsIndex() {
   const [isFocused, setIsFocused] = useState(false);

@@ -9,12 +9,12 @@ import {
   View,
 } from 'react-native';
 
-import NotificationComponentByType from '../components/NotificationsList/NotificationComponentByType';
+import { NotificationComponentByType } from '../components/NotificationsList/NotificationComponentByType';
 import {
   useGetCurrentSnackBarMessage,
   useRemoveSnackBarMessage,
 } from '../hooks/context/SnackBarContext';
-import NotificationsStore from '../stores/NotificationsStore';
+import { notificationsStore } from '../stores/NotificationsStore';
 import { COLORS } from '../theme';
 
 import type { LayoutChangeEvent } from 'react-native';
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 const OFFSET = 20;
 
 const onItemOpen = (notification: Notification) => {
-  NotificationsStore.deleteByID(notification.id);
+  notificationsStore.deleteByID(notification.id);
 };
 
 const TextMessage = ({
@@ -121,7 +121,7 @@ const Content = ({
       isSwipeable: false,
       notification: message.notification,
       onOpen: onItemOpen,
-      onPress: NotificationsStore.onNotificationPress,
+      onPress: notificationsStore.onNotificationPress,
       onReadEnd: () => {},
     } as const;
     snackContent = <NotificationComponentByType {...componentProps} />;

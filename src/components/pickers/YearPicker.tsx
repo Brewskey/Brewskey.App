@@ -39,4 +39,4 @@ const YearPicker = (props: Props): React.ReactElement => {
   );
 };
 
-export default YearPicker;
+export { YearPicker };

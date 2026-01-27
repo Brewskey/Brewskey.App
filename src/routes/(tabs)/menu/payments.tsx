@@ -3,20 +3,22 @@ import * as React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import IconButton from '../../../common/buttons/IconButton';
-import Container from '../../../common/Container';
+import { IconButton } from '../../../common/buttons/IconButton';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import Section from '../../../common/Section';
-import SectionHeader from '../../../common/SectionHeader';
-import CardForm from '../../../components/CardForm';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { LoadingIndicator } from '../../../common/LoadingIndicator';
+import { Section } from '../../../common/Section';
+import { SectionHeader } from '../../../common/SectionHeader';
+import { CardForm } from '../../../components/CardForm';
 import StripeImage from '../../../resources/powered_by_stripe.png';
-import PaymentsScreenStore from '../../../stores/PaymentsScreenStore';
+import { PaymentsScreenStore } from '../../../stores/PaymentsScreenStore';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 import type { CreditCardDetails } from '@brewskey/js-api';
+
+const paymentsScreenStore = new PaymentsScreenStore();
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -42,13 +44,13 @@ const styles = StyleSheet.create({
 });
 
 const PaymentsScreen: React.FC = () => {
-  const { isLoading } = PaymentsScreenStore;
+  const { isLoading } = paymentsScreenStore;
   const [creditCardDetails, setCreditCardDetails] =
     React.useState<CreditCardDetails | null>(null);
 
   React.useEffect(() => {
-    PaymentsScreenStore.creditCardDetailsLoader
-      .then((details) => setCreditCardDetails(details))
+    paymentsScreenStore.creditCardDetailsLoader
+      .then((details: CreditCardDetails) => setCreditCardDetails(details))
       .catch(() => setCreditCardDetails(null));
   }, []);
 
@@ -81,7 +83,7 @@ const PaymentsScreen: React.FC = () => {
           <IconButton
             color={COLORS.text}
             name="close"
-            onPress={PaymentsScreenStore.removeCard}
+            onPress={paymentsScreenStore.removeCard}
           />
         </View>
       </React.Fragment>

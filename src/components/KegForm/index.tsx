@@ -5,14 +5,14 @@ import nullthrows from 'nullthrows';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import KegLevelSliderField from './KegLevelSliderField';
-import Button from '../../common/buttons/Button';
+import { KegLevelSliderField } from './KegLevelSliderField';
+import { Button } from '../../common/buttons/Button';
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { Form } from '../../common/form/Form';
 import { FormField } from '../../common/form/FormField';
 import { FormValidationMessage } from '../../common/form/FormValidationMessage';
 import { SubmitButton } from '../../common/form/SubmitButton';
-import SectionContent from '../../common/SectionContent';
+import { SectionContent } from '../../common/SectionContent';
 import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
 import { COLORS } from '../../theme';
 import { calculateKegLevel, extractShortenedEntityId } from '../../utils';
@@ -27,9 +27,6 @@ import type {
   ShortenedEntity,
 } from '@brewskey/js-api';
 import type { SubmitHandler } from 'react-hook-form';
-
-
-
 
 const KEG_VALUES = (Object.keys(KEG_NAME_BY_KEG_TYPE) as KegType[])
   .sort((a, b) =>
@@ -88,13 +85,12 @@ export const KegForm: React.FC<Props> = ({
   });
 
   const {
-    formState: { isDirty, isSubmitting, isValid },
+    formState: { isSubmitting, isValid },
   } = form;
 
   const kegType = form.watch('kegType');
 
   const selectedKegTypeMaxOunces = MAX_OUNCES_BY_KEG_TYPE[kegType] || 0;
-  const isInitialKegType = keg?.kegType === kegType;
 
   const currentPercentage = !keg ? 100 : calculateKegLevel(keg);
   const shouldShowFloatedButton =
@@ -191,5 +187,3 @@ export const KegForm: React.FC<Props> = ({
     </Form>
   );
 };
-
-export default KegForm;

@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import BeveragesList from '../../../components/BeveragesList';
+import { BeveragesList } from '../../../components/BeveragesList';
 import { useUserID } from '../../../hooks/context/AuthContext';
 
 const MyBeveragesScreen: React.FC = () => {

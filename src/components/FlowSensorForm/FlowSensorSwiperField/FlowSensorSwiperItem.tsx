@@ -42,4 +42,4 @@ const FlowSensorSwiperItem = ({
   </View>
 );
 
-export default FlowSensorSwiperItem;
+export { FlowSensorSwiperItem };

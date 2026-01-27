@@ -3,7 +3,7 @@ import * as React from 'react';
 import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
 import { Dimensions, Platform, StatusBar } from 'react-native';
 
-import type { EntityID, KegType, ShortenedEntity } from '@brewskey/js-api';
+import type { EntityID, KegType } from '@brewskey/js-api';
 
 const EMAIL_REGEXP =
   /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
@@ -108,7 +108,7 @@ export const fetchJSON = async <TResult extends Record<string, unknown>>(
   let responseJson;
   try {
     responseJson = await response.json();
-  } catch (error) {
+  } catch (_) {
     responseJson = null;
   }
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { ScrollView, View } from 'react-native';
 
-import BadgeIcon from '../BadgeIcon';
-import EmptyUserBadges from './EmptyUserBadges';
-import { BadgeModal } from '../modals/BadgeModal';
+import { BadgeIcon } from '../BadgeIcon';
+import { EmptyUserBadges } from './EmptyUserBadges';
 import { styles } from './UserBadgesStyles';
+import { BadgeModal } from '../modals/BadgeModal';
 
 import type { AchievementCounter, AchievementType } from '@brewskey/js-api';
 
@@ -71,4 +71,4 @@ const LoadedUserBadges = React.forwardRef<LoadedUserBadgesHandle, Props>(
   },
 );
 
-export default LoadedUserBadges;
+export { LoadedUserBadges };

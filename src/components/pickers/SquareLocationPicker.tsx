@@ -37,4 +37,4 @@ const SquareLocationPicker = (props: Props): React.ReactElement => {
   );
 };
 
-export default SquareLocationPicker;
+export { SquareLocationPicker };

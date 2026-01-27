@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import ListItem from './ListItem';
+import { ListItem } from './ListItem';
 import { COLORS } from '../theme';
 
 const styles = StyleSheet.create({
@@ -21,7 +21,7 @@ interface Props<TEntity> {
   testID?: string;
 }
 
-function SelectableListItem<TEntity>({
+const SelectableListItem = <TEntity,>({
   isSelected,
   item,
   title,
@@ -29,18 +29,16 @@ function SelectableListItem<TEntity>({
   chevron,
   onPress,
   testID,
-}: Props<TEntity>): React.ReactElement {
-  return (
-    <ListItem
-      chevron={chevron}
-      containerStyle={isSelected ? styles.selected : undefined}
-      item={item}
-      onPress={onPress}
-      subtitle={subtitle}
-      testID={testID}
-      title={title}
-    />
-  );
-}
+}: Props<TEntity>): React.ReactElement => (
+  <ListItem
+    chevron={chevron}
+    containerStyle={isSelected ? styles.selected : undefined}
+    item={item}
+    onPress={onPress}
+    subtitle={subtitle}
+    testID={testID}
+    title={title}
+  />
+);
 
-export default SelectableListItem;
+export { SelectableListItem };

@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import QuickActions from '../common/QuickActions';
+import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { QuickActions } from '../common/QuickActions';
 import { SwipeableList } from '../common/SwipeableList';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import {
@@ -103,7 +103,9 @@ export const BeveragesList: React.FC<Props> = ({
         ListHeaderComponent={ListHeaderComponent}
         listType="flatList"
         onEndReached={beverages.fetchNextPage}
-        onRefresh={beverages.refetch}
+        onRefresh={() => {
+          void beverages.refetch();
+        }}
         renderItem={renderRow}
         ListEmptyComponent={
           !isLoading ? <ListEmpty message="No beverages" /> : null
@@ -112,5 +114,3 @@ export const BeveragesList: React.FC<Props> = ({
     </View>
   );
 };
-
-export default BeveragesList;

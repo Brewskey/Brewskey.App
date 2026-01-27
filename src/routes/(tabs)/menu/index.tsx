@@ -6,20 +6,20 @@ import { Badge } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import Section from '../../../common/Section';
-import MenuLogoutButton from '../../../components/MenuLogoutButton';
-import MenuSeparator from '../../../components/MenuSeparator';
+import { Section } from '../../../common/Section';
+import { MenuLogoutButton } from '../../../components/MenuLogoutButton';
+import { MenuNavigationButton } from '../../../components/MenuNavigationButton';
+import { DrawerSeparator } from '../../../components/MenuSeparator';
+import { MenuUserBlock } from '../../../components/MenuUserBlock';
 import { useAppSettings } from '../../../hooks/context/AppSettingsContext';
-import MenuNavigationButton from '../../../components/MenuNavigationButton';
 import { useAuthSession } from '../../../hooks/context/AuthContext';
 import { useGetFriendsCount } from '../../../hooks/queries/FriendQueries';
 import { COLORS } from '../../../theme';
-import { MenuUserBlock } from '../../../components/MenuUserBlock';
 
 const styles = StyleSheet.create({
   badge: {
@@ -96,7 +96,7 @@ const MenuScreen = withErrorBoundary(
             </View>
             {isManageTapsEnabled
               ? [
-                  <MenuSeparator key="separator1" />,
+                  <DrawerSeparator key="separator1" />,
                   <MenuNavigationButton
                     key="locations"
                     icon={{ name: 'map-marker', type: 'material-community' }}
@@ -146,7 +146,7 @@ const MenuScreen = withErrorBoundary(
                       });
                     }}
                   />,
-                  <MenuSeparator key="separator2" />,
+                  <DrawerSeparator key="separator2" />,
                 ]
               : null}
             {Platform.OS !== 'android' ? null : (
@@ -177,7 +177,7 @@ const MenuScreen = withErrorBoundary(
                 router.navigate({ pathname: '/(tabs)/menu/help', params: {} });
               }}
             />
-            <MenuSeparator />
+            <DrawerSeparator />
             <MenuLogoutButton />
           </Section>
         </ScrollView>

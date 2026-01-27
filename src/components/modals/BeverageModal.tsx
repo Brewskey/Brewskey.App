@@ -3,15 +3,15 @@ import { useImperativeHandle } from 'react';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import Modal from './Modal';
-import Button from '../../common/buttons/Button';
-import IconButton from '../../common/buttons/IconButton';
-import Section from '../../common/Section';
-import SectionContent from '../../common/SectionContent';
-import SectionHeader from '../../common/SectionHeader';
+import { Modal } from './Modal';
+import { Button } from '../../common/buttons/Button';
+import { IconButton } from '../../common/buttons/IconButton';
+import { Section } from '../../common/Section';
+import { SectionContent } from '../../common/SectionContent';
+import { SectionHeader } from '../../common/SectionHeader';
 import { useGetBeverageById } from '../../hooks/queries/BeverageQueries';
 import { COLORS } from '../../theme';
-import BeverageDetailsContent from '../BeverageDetailsContent';
+import { BeverageDetailsContent } from '../BeverageDetailsContent';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -104,5 +104,3 @@ export const BeverageModal = React.forwardRef<
     </Modal>
   );
 });
-
-export default BeverageModal;

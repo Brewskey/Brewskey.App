@@ -44,4 +44,4 @@ const OrderedText = ({
   </View>
 );
 
-export default OrderedText;
+export { OrderedText };

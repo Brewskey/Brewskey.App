@@ -29,4 +29,4 @@ const ServingTemperaturePicker = (props: Props): React.ReactElement => (
   />
 );
 
-export default ServingTemperaturePicker;
+export { ServingTemperaturePicker };

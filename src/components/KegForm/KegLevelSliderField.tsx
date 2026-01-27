@@ -55,4 +55,4 @@ const KegLevelSliderField = ({
   );
 };
 
-export default KegLevelSliderField;
+export { KegLevelSliderField };

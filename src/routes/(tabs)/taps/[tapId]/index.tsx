@@ -1,6 +1,6 @@
 import { Redirect, useLocalSearchParams } from 'expo-router';
 
-import NotFoundScreen from '../../../../common/NotFoundScreen';
+import { NotFoundScreen } from '../../../../common/NotFoundScreen';
 
 // Redirect to the on_tap tab (default tab)
 export default function TapDetailsIndex() {

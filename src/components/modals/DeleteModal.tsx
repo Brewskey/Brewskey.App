@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import Button from '../../common/buttons/Button';
+import { CenteredModal } from './CenteredModal';
+import { Button } from '../../common/buttons/Button';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -79,4 +79,4 @@ const DeleteModal = ({
   </CenteredModal>
 );
 
-export default DeleteModal;
+export { DeleteModal };

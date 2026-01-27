@@ -1,13 +1,8 @@
 import DAOApi, { TapDAO } from '@brewskey/js-api';
 
-import type {
-  CreditCardDetails,
-  EntityID,
-  QueryOptions,
-  Tap,
-} from '@brewskey/js-api';
+import type { EntityID, QueryOptions, Tap } from '@brewskey/js-api';
 
-class PourPaymentStore {
+export class PourPaymentStore {
   _queryOptions: QueryOptions;
 
   constructor(deviceID: EntityID) {
@@ -32,5 +27,3 @@ class PourPaymentStore {
     // );
   }
 }
-
-export default PourPaymentStore;

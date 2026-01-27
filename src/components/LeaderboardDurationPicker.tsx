@@ -7,8 +7,6 @@ import { FormLabel } from '../common/form/FormLabel';
 
 export type LeaderboardDurationValue = 'P0D' | 'P30D' | 'P0DT12H';
 
-type DurationKeys = 'TWELVE_HOURS' | 'MONTH' | 'ALL_TIME';
-
 interface LeaderboardDurationOptions {
   label: string;
   value: LeaderboardDurationValue;
@@ -56,4 +54,4 @@ const LeaderBoardDurationPicker = ({
   </View>
 );
 
-export default LeaderBoardDurationPicker;
+export { LeaderBoardDurationPicker };

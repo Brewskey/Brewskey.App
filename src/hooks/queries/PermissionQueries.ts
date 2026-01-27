@@ -1,5 +1,6 @@
 import { PermissionDAO } from '@brewskey/js-api';
 import { useQuery } from '@tanstack/react-query';
+import nullthrows from 'nullthrows';
 
 import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
 
@@ -16,7 +17,7 @@ enum PermissionQueries {
 
 export const useGetPermissionForEntityById = (
   permissionEntityType: PermissionEntityKeysType,
-  entityID: EntityID,
+  entityID: EntityID | null | undefined,
 ): UseQueryResult<Permission> =>
   useQuery({
     queryKey: [
@@ -25,5 +26,9 @@ export const useGetPermissionForEntityById = (
       getStringFromEntityID(entityID),
     ],
     queryFn: async () =>
-      PermissionDAO.fetchForEntityId(permissionEntityType, entityID),
+      PermissionDAO.fetchForEntityId(
+        permissionEntityType,
+        nullthrows(entityID),
+      ),
+    enabled: !!entityID,
   });

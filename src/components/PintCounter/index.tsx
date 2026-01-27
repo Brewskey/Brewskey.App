@@ -1,13 +1,11 @@
 import * as React from 'react';
 
+import { EntityID } from '@brewskey/js-api';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Pint from './Pint';
-import Fragment from '../../common/Fragment';
+import { Pint } from './Pint';
 import { COLORS } from '../../theme';
 import { createRange } from '../../utils';
-
-import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,10 +34,10 @@ const PintCounter = ({ beverageID, ounces }: Props): React.ReactElement => {
   return (
     <View style={styles.container}>
       {wholePints.length > 3 ? (
-        <Fragment>
+        <React.Fragment>
           <Text style={styles.countText}>x{wholePints.length}</Text>
           <Pint beverageID={beverageID} />
-        </Fragment>
+        </React.Fragment>
       ) : (
         wholePints.map(
           (index: number): React.ReactElement => (
@@ -54,4 +52,4 @@ const PintCounter = ({ beverageID, ounces }: Props): React.ReactElement => {
   );
 };
 
-export default PintCounter;
+export { PintCounter };

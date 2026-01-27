@@ -1,8 +1,8 @@
-import * as React from 'react';
-
 import { StyleSheet, Text } from 'react-native';
 
 import { COLORS } from '../theme';
+
+import type { FC } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,8 +16,8 @@ interface Props {
   title: string;
 }
 
-const ListSectionHeader: React.FC<Props> = ({ title }) => (
+const ListSectionHeader: FC<Props> = ({ title }) => (
   <Text style={styles.container}>{title}</Text>
 );
 
-export default ListSectionHeader;
+export { ListSectionHeader };

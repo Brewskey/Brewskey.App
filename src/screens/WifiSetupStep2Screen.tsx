@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import Container from '../common/Container';
-import LoadingIndicator from '../common/LoadingIndicator';
-import SectionContent from '../common/SectionContent';
-import SectionHeader from '../common/SectionHeader';
-import PhoneConnectInstructions from '../components/WifiSetup/PhoneConnectInstructions';
+import { Container } from '../common/Container';
+import { LoadingIndicator } from '../common/LoadingIndicator';
+import { SectionContent } from '../common/SectionContent';
+import { SectionHeader } from '../common/SectionHeader';
+import { PhoneConnectInstructions } from '../components/WifiSetup/PhoneConnectInstructions';
 import {
   useGetParticleId,
   useGetWifiNetworks,

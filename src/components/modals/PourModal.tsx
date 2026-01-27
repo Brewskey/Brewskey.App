@@ -4,16 +4,16 @@ import { useImperativeHandle } from 'react';
 import moment from 'moment';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import Modal from './Modal';
-import Button from '../../common/buttons/Button';
-import IconButton from '../../common/buttons/IconButton';
-import Section from '../../common/Section';
-import SectionContent from '../../common/SectionContent';
-import SectionHeader from '../../common/SectionHeader';
+import { Modal } from './Modal';
+import { Button } from '../../common/buttons/Button';
+import { IconButton } from '../../common/buttons/IconButton';
+import { Section } from '../../common/Section';
+import { SectionContent } from '../../common/SectionContent';
+import { SectionHeader } from '../../common/SectionHeader';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import { useGetPourById } from '../../hooks/queries/PourQueries';
 import { COLORS } from '../../theme';
-import PourDetailsContent from '../PourDetailsContent';
+import { PourDetailsContent } from '../PourDetailsContent';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -124,5 +124,3 @@ export const PourModal = React.forwardRef<
     </Modal>
   );
 });
-
-export default PourModal;

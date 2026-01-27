@@ -4,25 +4,24 @@ import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
+import { ErrorScreen } from '../../../common/ErrorScreen';
 import { FormField } from '../../../common/form/FormField';
-import Header from '../../../common/Header';
-import ListItem from '../../../common/ListItem';
-import Section from '../../../common/Section';
+import { Header } from '../../../common/Header';
+import { ListItem } from '../../../common/ListItem';
+import { Section } from '../../../common/Section';
+import { SectionContent } from '../../../common/SectionContent';
+import { SectionHeader } from '../../../common/SectionHeader';
+import { ChangePasswordForm } from '../../../components/ChangePasswordForm';
+import { OrganizationPicker } from '../../../components/pickers/OrganizationPicker';
 import { useAppSettings } from '../../../hooks/context/AppSettingsContext';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
 import { useChangePassword } from '../../../hooks/queries/AuthQueries';
 import { useGetOrganizations } from '../../../hooks/queries/OrganizationQueries';
-import SectionContent from '../../../common/SectionContent';
-import SectionHeader from '../../../common/SectionHeader';
-import ChangePasswordForm from '../../../components/ChangePasswordForm';
+import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 import type { ChangePasswordFormFields } from '../../../components/ChangePasswordForm';
-
-import { OrganizationPicker } from '../../../components/pickers/OrganizationPicker';
 
 const styles = StyleSheet.create({
   versionText: {

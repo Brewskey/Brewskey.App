@@ -47,4 +47,4 @@ const FLOW_SENSOR_ITEMS: FlowSensorItem[] = [
   },
 ];
 
-export default FLOW_SENSOR_ITEMS;
+export { FLOW_SENSOR_ITEMS };

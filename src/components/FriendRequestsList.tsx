@@ -3,15 +3,14 @@ import { useMemo } from 'react';
 
 import { FRIEND_STATUSES } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 
-import FriendMyRequestListItem from './FriendMyRequestListItem';
-import FriendPendingRequestListItem from './FriendPendingRequestListItem';
-import List from '../common/List';
-import ListEmpty from '../common/ListEmpty';
-import ListSectionHeader from '../common/ListSectionHeader';
-import LoadingListFooter from '../common/LoadingListFooter';
+import { FriendMyRequestListItem } from './FriendMyRequestListItem';
+import { FriendPendingRequestListItem } from './FriendPendingRequestListItem';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListSectionHeader } from '../common/ListSectionHeader';
+import { LoadingListFooter } from '../common/LoadingListFooter';
 import { useAuthSession } from '../hooks/context/AuthContext';
 import {
   useDeleteFriend,
@@ -171,4 +170,4 @@ const FriendRequestsList: React.FC = () => {
   );
 };
 
-export default FriendRequestsList;
+export { FriendRequestsList };

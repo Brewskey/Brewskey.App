@@ -28,6 +28,6 @@ export const useCreateFlowSensor = (): UseMutationResult<
   FlowSensorMutator
 > =>
   useMutation({
-    mutationFn: (mutator) => FlowSensorDAO.post(mutator),
+    mutationFn: async (mutator) => FlowSensorDAO.post(mutator),
     onSuccess: () => {},
   });

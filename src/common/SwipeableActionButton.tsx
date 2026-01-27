@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import IconButton from './buttons/IconButton';
+import { IconButton } from './buttons/IconButton';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 
@@ -35,4 +35,4 @@ const SwipeableActionButton = <TIconProps extends object>({
   />
 );
 
-export default SwipeableActionButton;
+export { SwipeableActionButton };

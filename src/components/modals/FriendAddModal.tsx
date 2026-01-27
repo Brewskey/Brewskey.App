@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import Button from '../../common/buttons/Button';
+import { CenteredModal } from './CenteredModal';
+import { Button } from '../../common/buttons/Button';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 import type { Account } from '@brewskey/js-api';
@@ -38,7 +38,7 @@ interface Props {
   onHideModal: () => void;
 }
 
-const FriendApprovedModal: React.FC<Props> = ({
+const FriendAddModal: React.FC<Props> = ({
   account,
   isVisible,
   onHideModal,
@@ -72,4 +72,4 @@ const FriendApprovedModal: React.FC<Props> = ({
   </CenteredModal>
 );
 
-export default FriendApprovedModal;
+export { FriendAddModal };

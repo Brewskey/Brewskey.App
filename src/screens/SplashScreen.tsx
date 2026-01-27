@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { hideAsync } from 'expo-splash-screen';
 
-import Container from '../common/Container';
-import AppLoading from '../components/AppLoading';
+import { Container } from '../common/Container';
+import { AppLoading } from '../components/AppLoading';
 
 const SplashScreenComponent: React.FC = () => {
   React.useEffect(() => {
@@ -17,4 +17,4 @@ const SplashScreenComponent: React.FC = () => {
   );
 };
 
-export default SplashScreenComponent;
+export { SplashScreenComponent };

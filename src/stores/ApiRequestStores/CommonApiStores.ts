@@ -1,7 +1,7 @@
 import { deepIdCast } from '@brewskey/js-api';
 
-import makeApiRequestStore from './makeRequestApiStore';
-import CONFIG from '../../config';
+import { makeRequestApiStore } from './makeRequestApiStore';
+import { CONFIG } from '../../config';
 import { fetchJSON } from '../../utils';
 
 import type { EntityID } from '@brewskey/js-api';
@@ -46,7 +46,7 @@ export const updateAvatar = async (
     method: 'PUT',
   });
 
-export const UpdateBeverageImageStore = makeApiRequestStore<void>(
+export const UpdateBeverageImageStore = makeRequestApiStore<void>(
   async (...args: unknown[]) => {
     const beverageID = args[0] as EntityID;
     const beverageData = args[1] as string;

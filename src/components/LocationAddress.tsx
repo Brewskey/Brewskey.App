@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import IconButton from '../common/buttons/IconButton';
+import { IconButton } from '../common/buttons/IconButton';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import LocationMapModal from './modals/LocationMapModal';
+import { LocationMapModal } from './modals/LocationMapModal';
 
 import type { Location } from '@brewskey/js-api';
 
@@ -71,4 +71,4 @@ const LocationAddress: React.FC<Props> = ({ location }) => {
   );
 };
 
-export default LocationAddress;
+export { LocationAddress };

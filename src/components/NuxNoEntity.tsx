@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-import Button from '../common/buttons/Button';
-import TextBlock from '../common/TextBlock';
+import { Button } from '../common/buttons/Button';
+import { OrderedText } from '../common/TextBlock';
 import { COLORS, TYPOGRAPHY } from '../theme';
-import HardwareSetupModal from './modals/HardwareSetupModal';
-import { useGetLocations } from '../hooks/queries/LocationQueries';
+import { HardwareSetupModal } from './modals/HardwareSetupModal';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,18 +62,18 @@ const NuxNoEntity: React.FC = () => {
       />
       <Text style={styles.headingText}>and set up the Brewskey box by:</Text>
       <View style={styles.stepsContainer}>
-        <TextBlock index={1} textStyle={styles.stepsText}>
+        <OrderedText index={1} textStyle={styles.stepsText}>
           Create a location and set up the address
-        </TextBlock>
-        <TextBlock index={2} textStyle={styles.stepsText}>
+        </OrderedText>
+        <OrderedText index={2} textStyle={styles.stepsText}>
           Connect the box to you local Wifi
-        </TextBlock>
-        <TextBlock index={3} textStyle={styles.stepsText}>
+        </OrderedText>
+        <OrderedText index={3} textStyle={styles.stepsText}>
           Set up your taps
-        </TextBlock>
-        <TextBlock index={4} textStyle={styles.stepsText}>
+        </OrderedText>
+        <OrderedText index={4} textStyle={styles.stepsText}>
           Assign a beverage to your tap
-        </TextBlock>
+        </OrderedText>
       </View>
       <Button
         backgroundColor={COLORS.accent}
@@ -92,4 +91,4 @@ const NuxNoEntity: React.FC = () => {
   );
 };
 
-export default NuxNoEntity;
+export { NuxNoEntity };

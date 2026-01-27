@@ -1,10 +1,8 @@
-import * as React from 'react';
-
 import { COLORS } from '../../theme';
-import IconButton from '../buttons/IconButton';
+import { IconButton } from '../buttons/IconButton';
 
-export const HeaderIconButton: React.FC<
-  React.ComponentProps<typeof IconButton>
-> = (props: React.ComponentProps<typeof IconButton>): React.ReactElement => (
-  <IconButton color={COLORS.textInverse} {...props} />
-);
+import type { ComponentProps, FC, ReactElement } from 'react';
+
+export const HeaderIconButton: FC<ComponentProps<typeof IconButton>> = (
+  props: ComponentProps<typeof IconButton>,
+): ReactElement => <IconButton color={COLORS.textInverse} {...props} />;

@@ -1,10 +1,12 @@
-import * as React from 'react';
+import { memo } from 'react';
 
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
-import HeaderBackButton from './HeaderBackButton';
+import { HeaderBackButton } from './HeaderBackButton';
 import { COLORS, getElevationStyle, TYPOGRAPHY } from '../../theme';
 import { getElementFromComponentProp } from '../../utils';
+
+import type { FC } from 'react';
 
 import type { ListComponentTypes } from '../List';
 
@@ -50,7 +52,7 @@ interface Props {
   testID?: string;
 }
 
-const Header: React.FC<Props> = ({
+const Header: FC<Props> = ({
   leftComponent = <FakeHeaderButton />,
   rightComponent = <FakeHeaderButton />,
   showBackButton,
@@ -58,7 +60,7 @@ const Header: React.FC<Props> = ({
   title,
   testID,
 }) => {
-  const shouldShow = showBackButton || shouldShowBackButton;
+  const shouldShow = showBackButton ?? shouldShowBackButton;
   const leftElement = shouldShow ? (
     <HeaderBackButton />
   ) : (
@@ -83,4 +85,5 @@ const Header: React.FC<Props> = ({
   );
 };
 
-export default React.memo(Header);
+export const HeaderMemo = memo(Header);
+export { HeaderMemo as Header };

@@ -1,10 +1,10 @@
-import * as React from 'react';
-
 import { useRouter } from 'expo-router';
 
 import { HeaderIconButton } from './HeaderIconButton';
 
-export const HeaderBackButton: React.FC = () => {
+import type { FC } from 'react';
+
+export const HeaderBackButton: FC = () => {
   const router = useRouter();
 
   const handlePress = () => {
@@ -25,5 +25,3 @@ export const HeaderBackButton: React.FC = () => {
     />
   );
 };
-
-export default HeaderBackButton;

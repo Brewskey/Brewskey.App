@@ -28,12 +28,10 @@ export interface Contact {
   thumbnailPath: string | null | undefined;
 }
 
-class ContactsStore {
-  contacts: Contact[] = [];
+export class ContactsStore {
+  static contacts: Contact[] = [];
 
-  setContacts = (contacts: Contact[]) => {
-    this.contacts = contacts;
+  static setContacts = (contacts: Contact[]) => {
+    ContactsStore.contacts = contacts;
   };
 }
-
-export default new ContactsStore();

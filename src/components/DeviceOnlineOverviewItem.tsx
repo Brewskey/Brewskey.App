@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import DeviceOnlineIndicator from './DeviceOnlineIndicator';
-import OverviewItem from '../common/OverviewItem2';
+import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
+import { OverviewItem2 } from '../common/OverviewItem2';
 import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
 
 import type { EntityID } from '@brewskey/js-api';
@@ -19,7 +19,7 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
 
   if (isLoading) {
     return (
-      <OverviewItem
+      <OverviewItem2
         leftComponent={undefined}
         particleID={particleID}
         rightComponent={DeviceOnlineIndicator}
@@ -31,7 +31,7 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
 
   if (error) {
     return (
-      <OverviewItem
+      <OverviewItem2
         description="Oops! There was an error on checking online status."
         leftComponent={undefined}
         particleID={particleID}
@@ -45,7 +45,7 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
   const connected = cloudDevice?.connected ?? false;
 
   return (
-    <OverviewItem
+    <OverviewItem2
       leftComponent={undefined}
       particleID={particleID}
       rightComponent={DeviceOnlineIndicator}
@@ -61,54 +61,4 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
   );
 };
 
-interface LoadingComponentProps {
-  particleID: EntityID;
-}
-
-const LoadingComponent = ({ particleID }: LoadingComponentProps) => (
-  <OverviewItem
-    particleID={particleID}
-    rightComponent={DeviceOnlineIndicator}
-    title="Online Status"
-    value="Loading..."
-  />
-);
-
-interface ErrorComponentProps {
-  particleID: EntityID;
-  error: Error;
-}
-
-const ErrorComponent = ({ particleID }: ErrorComponentProps) => (
-  <OverviewItem
-    description="Oops! There was an error on checking online status."
-    particleID={particleID}
-    rightComponent={DeviceOnlineIndicator}
-    title="Online Status"
-    value="Error!"
-  />
-);
-
-interface LoadedComponentProps {
-  particleID: EntityID;
-  value: boolean;
-}
-
-const LoadedComponent = ({
-  particleID,
-  value: connected,
-}: LoadedComponentProps) => (
-  <OverviewItem
-    particleID={particleID}
-    rightComponent={DeviceOnlineIndicator}
-    title="Online Status"
-    value={connected ? 'Connected' : 'Disconnected'}
-    description={
-      !connected
-        ? 'Check that your device is powerd on and connected to WiFi'
-        : undefined
-    }
-  />
-);
-
-export default DeviceOnlineOverviewItem;
+export { DeviceOnlineOverviewItem };

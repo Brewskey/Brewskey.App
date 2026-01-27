@@ -3,19 +3,19 @@ import * as React from 'react';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
 import { HeaderNavigationButton } from '../../../common/Header/HeaderNavigationButton';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../common/NotFoundScreen';
-import OverviewItem from '../../../common/OverviewItem2';
-import DeviceOnlineOverviewItem from '../../../components/DeviceOnlineOverviewItem';
-import Section from '../../../common/Section';
-import SectionHeader from '../../../common/SectionHeader';
-import DeviceStateOverviewItem from '../../../components/DeviceStateOverviewItem';
-import TapsList from '../../../components/TapsList';
+import { LoadingIndicator } from '../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../common/NotFoundScreen';
+import { OverviewItem2 } from '../../../common/OverviewItem2';
+import { Section } from '../../../common/Section';
+import { SectionHeader } from '../../../common/SectionHeader';
+import { DeviceOnlineOverviewItem } from '../../../components/DeviceOnlineOverviewItem';
+import { DeviceStatusOverviewItem } from '../../../components/DeviceStateOverviewItem';
+import { TapsList } from '../../../components/TapsList';
 import { useGetDeviceById } from '../../../hooks/queries/DeviceQueries';
 
 import type { EntityID } from '@brewskey/js-api';
@@ -93,12 +93,12 @@ const DeviceDetailsScreen = withErrorBoundary(
           ListHeaderComponent={
             <Container>
               <Section bottomPadded>
-                <OverviewItem
+                <OverviewItem2
                   testID="overview-item-box-id"
                   title="Box ID"
                   value={device.particleId}
                 />
-                <DeviceStateOverviewItem deviceState={device.deviceStatus} />
+                <DeviceStatusOverviewItem deviceState={device.deviceStatus} />
                 <DeviceOnlineOverviewItem particleID={device.particleId} />
               </Section>
               <SectionHeader testID="section-header-taps" title="Taps" />

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import SectionContent from './SectionContent';
+import { SectionContent } from './SectionContent';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -101,4 +101,5 @@ const OverviewItem = <TExtraProps,>({
   </SectionContent>
 );
 
-export default React.memo(OverviewItem) as typeof OverviewItem;
+const OverviewItem2 = React.memo(OverviewItem) as typeof OverviewItem;
+export { OverviewItem2 };

@@ -14,11 +14,11 @@ interface ApiResult {
 export const useGetCoordinatesFromAddress = (address: string | undefined) =>
   useQuery({
     queryKey: [QUERY_KEY_BASE, address],
-    queryFn: () => {
+    queryFn: async () => {
       const url = new URL('https://maps.googleapis.com/maps/api/geocode/json');
       url.searchParams.set('key', GOOGLE_MAPS_API_KEY);
       url.searchParams.set('address', nullthrows(address));
-      return fetchJSON(url.toString()) as Promise<ApiResult>;
+      return fetchJSON(url.toString()) as unknown as Promise<ApiResult>;
     },
     enabled: address != null,
     select: ({ status, results }: ApiResult) => {

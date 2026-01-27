@@ -3,8 +3,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import { COLORS } from '../theme';
-import { getRandomInt } from '../utils';
-import ListItem from './ListItem';
+import { ListItem } from './ListItem';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 
@@ -47,4 +46,4 @@ const LoadingListItem: React.FC<Props> = ({
   />
 );
 
-export default LoadingListItem;
+export { LoadingListItem };

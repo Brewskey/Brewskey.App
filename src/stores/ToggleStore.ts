@@ -1,4 +1,4 @@
-class ToggleStore {
+export class ToggleStore {
   isToggled = false;
 
   toggleOn: () => void = (): void => {
@@ -13,5 +13,3 @@ class ToggleStore {
     this.isToggled = !this.isToggled;
   };
 }
-
-export default ToggleStore;

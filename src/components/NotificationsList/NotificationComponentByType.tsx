@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { Text } from 'react-native';
 
-import AchievementListItem from './AchievementListItem';
-import FriendRequestListItem from './FriendRequestListItem';
-import LowKegLevelListItem from './LowKegLevelListItem';
-import TextListItem from './TextListItem';
+import { AchievementListItem } from './AchievementListItem';
+import { FriendRequestListItem } from './FriendRequestListItem';
+import { LowKegLevelListItem } from './LowKegLevelListItem';
+import { TextListItem } from './TextListItem';
 
 import type { Props as NotificationListItemProps } from './NotificationListItem';
 
@@ -85,4 +85,4 @@ const NotificationComponentByType = (
   }
 };
 
-export default NotificationComponentByType;
+export { NotificationComponentByType };

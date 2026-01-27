@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import Button from '../../common/buttons/Button';
+import { CenteredModal } from './CenteredModal';
+import { Button } from '../../common/buttons/Button';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 import type { Account } from '@brewskey/js-api';
@@ -49,4 +49,4 @@ const FriendPendingModal: React.FC<Props> = ({
   </CenteredModal>
 );
 
-export default FriendPendingModal;
+export { FriendPendingModal };

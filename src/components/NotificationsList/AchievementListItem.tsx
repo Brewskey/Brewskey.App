@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import NotificationListItem from './NotificationListItem';
-import BADGE_BY_TYPE from '../../badges';
+import { NotificationListItem } from './NotificationListItem';
+import { BADGE_BY_TYPE } from '../../badges';
 import { COLORS, TYPOGRAPHY } from '../../theme';
-import BadgeIcon from '../BadgeIcon';
+import { BadgeIcon } from '../BadgeIcon';
 
 import type { Props as NotificationListItemProps } from './NotificationListItem';
 import type { NewAchievementNotification } from '../../stores/NotificationTypes';
@@ -43,4 +43,4 @@ const AchievementListItem = (props: Props): React.ReactElement => {
   );
 };
 
-export default AchievementListItem;
+export { AchievementListItem };

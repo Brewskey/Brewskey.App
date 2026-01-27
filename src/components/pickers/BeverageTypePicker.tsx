@@ -29,4 +29,4 @@ const BeverageTypePicker = (props: Props): React.ReactElement => (
   />
 );
 
-export default BeverageTypePicker;
+export { BeverageTypePicker };

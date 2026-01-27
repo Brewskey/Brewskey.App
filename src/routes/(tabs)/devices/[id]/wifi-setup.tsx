@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
-import Container from '../../../../common/Container';
-import Header from '../../../../common/Header';
+import { Container } from '../../../../common/Container';
+import { Header } from '../../../../common/Header';
 import { WifiSetupStep1Screen } from '../../../../screens/WifiSetupStep1Screen';
 import { WifiSetupStep2Screen } from '../../../../screens/WifiSetupStep2Screen';
 import { WifiSetupStep3Screen } from '../../../../screens/WifiSetupStep3Screen';
@@ -63,9 +63,12 @@ const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
     case WifiSetupSteps.Screen4: {
       return (
         <WifiSetupStep4Screen
-          onSetupFinish={() => onFinish(value.particleID)}
+          onSetupFinish={() => onFinish(value.particleID!)}
         />
       );
+    }
+    default: {
+      return null;
     }
   }
 };

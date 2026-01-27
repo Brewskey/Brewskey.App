@@ -26,7 +26,7 @@ type Props = BaseAvatarProps & {
   uri: string;
   testID?: string;
 };
-const BaseAvatar: React.FC<Props> = ({
+const BaseAvatarComponent: React.FC<Props> = ({
   containerStyle,
   onPress,
   rounded = true,
@@ -62,4 +62,4 @@ const BaseAvatar: React.FC<Props> = ({
   );
 };
 
-export default React.memo(BaseAvatar);
+export const BaseAvatar = React.memo(BaseAvatarComponent);

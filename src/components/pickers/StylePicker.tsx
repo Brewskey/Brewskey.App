@@ -1,11 +1,9 @@
 import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
-import { StyleSheet, Text, View } from 'react-native';
 
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetStyles } from '../../hooks/queries/StyleQueries';
-import { COLORS } from '../../theme';
 
 import type { QueryOptions, ShortenedEntity, Style } from '@brewskey/js-api';
 

@@ -4,12 +4,12 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import LoadingIndicator from '../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../common/NotFoundScreen';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { LoadingIndicator } from '../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../common/NotFoundScreen';
 import { TapForm } from '../../../components/TapForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { useGetDeviceById } from '../../../hooks/queries/DeviceQueries';

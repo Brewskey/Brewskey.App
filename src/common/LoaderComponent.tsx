@@ -4,7 +4,7 @@ import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { COLORS } from '../theme';
-import LoadingIndicator from './LoadingIndicator';
+import { LoadingIndicator } from './LoadingIndicator';
 import { useMultipleQueryResults } from '../utils/useMultipleQueryResults';
 
 import type { UseQueryResult } from '@tanstack/react-query';
@@ -12,7 +12,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { UseMultipleQueryResultsData } from '../utils/useMultipleQueryResults';
 
 interface Props<
-  TQueries extends Record<string, UseQueryResult<unknown, Error>>,
+  TQueries extends Record<string, UseQueryResult>,
   TComponentProps extends {
     value: UseMultipleQueryResultsData<TQueries>;
   },
@@ -60,7 +60,7 @@ const Error = () => (
 );
 
 export const LoaderComponent = <
-  TQueries extends Record<string, UseQueryResult<unknown>>,
+  TQueries extends Record<string, UseQueryResult>,
   TComponentProps extends {
     value: UseMultipleQueryResultsData<TQueries>;
   },

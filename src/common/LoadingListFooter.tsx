@@ -27,4 +27,4 @@ const LoadingListFooter: React.FC<Props> = ({ isLoading }) => {
   );
 };
 
-export default LoadingListFooter;
+export { LoadingListFooter };

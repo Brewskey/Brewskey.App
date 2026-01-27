@@ -13,7 +13,7 @@ export enum StorageKeys {
 
 type PerUserStorageKeys = `${string}/${StorageKeys}`;
 
-class Storage {
+export class Storage {
   // Basic storage methods (use SecureStore on native, AsyncStorage on web)
   static async setItem<TResult>(
     key: StorageKeys,
@@ -85,8 +85,10 @@ class Storage {
   };
 
   static _getUserID = async (): Promise<string> => {
-    const authResponse = await Storage.get(StorageKeys.SessionData);
-    return authResponse?.id?.toString() || '';
+    const authResponse = await Storage.get<AuthResponse>(
+      StorageKeys.SessionData,
+    );
+    return authResponse?.id?.toString() ?? '';
   };
 
   static _getKeyForCurrentUser = async (
@@ -101,5 +103,3 @@ class Storage {
 if (Platform.OS === 'web' && typeof window !== 'undefined') {
   (window as any).Storage = Storage;
 }
-
-export default Storage;

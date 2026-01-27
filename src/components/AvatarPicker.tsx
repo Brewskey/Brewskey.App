@@ -5,9 +5,9 @@ import { Icon } from '@rneui/themed';
 import * as ImagePicker from 'expo-image-picker';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import UserAvatar from '../common/avatars/UserAvatar';
-import LoadingIndicator from '../common/LoadingIndicator';
-import CONFIG from '../config';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { LoadingIndicator } from '../common/LoadingIndicator';
+import { CONFIG } from '../config';
 import { useAuthSession } from '../hooks/context/AuthContext';
 import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
 import { COLORS } from '../theme';
@@ -111,4 +111,4 @@ const AvatarPicker: React.FC = () => {
   );
 };
 
-export default AvatarPicker;
+export { AvatarPicker };

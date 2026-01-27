@@ -46,7 +46,7 @@ class SoftAPService {
     security,
     ssid,
   }: WifiNetwork): Promise<void> => {
-    const publicKey = await SoftAPService._getPublicKey();
+    const publicKey = await SoftAPService.getPublicKey();
     const encryptedPassword = password
       ? publicKey.encrypt(password, 'hex')
       : '';
@@ -71,6 +71,7 @@ class SoftAPService {
       },
     );
 
+    // eslint-disable-next-line no-console
     console.log('Configure Wifi', responseCode, otherData);
 
     if (responseCode === INCORRECT_WIFI_PASSWORD_CODE) {
@@ -113,35 +114,45 @@ class SoftAPService {
     return scans.map(translateWifiFromApi);
   };
 
-  static _getPublicKey = async (): Promise<NodeRSA> =>
-    new Promise(async (resolve, reject) => {
-      setTimeout(
-        () =>
-          reject(
-            new Error(
-              "Can't get public key from Brewskey Box." +
-                'Please repeat the whole setup from the beginning.',
+  static getPublicKey = async (): Promise<NodeRSA> =>
+    new Promise((resolve, reject) => {
+      const fetchKey = async (): Promise<void> => {
+        setTimeout(
+          () =>
+            reject(
+              new Error(
+                "Can't get public key from Brewskey Box." +
+                  'Please repeat the whole setup from the beginning.',
+              ),
             ),
-          ),
-        PUBLIC_KEY_TIMEOUT,
-      );
+          PUBLIC_KEY_TIMEOUT,
+        );
 
-      const { b: rawDerPublicKey, r: responseCode } = await fetchJSON<{
-        b: string;
-        r: number;
-      }>(`${BASE_URL}/public-key`);
+        fetchJSON<{
+          b: string;
+          r: number;
+        }>(`${BASE_URL}/public-key`)
+          .then(({ b: rawDerPublicKey, r: responseCode }) => {
+            if (responseCode !== SUCCESS_RESPONSE_CODE) {
+              reject(new Error('Error on getting public Brewskey box key!'));
+              return;
+            }
 
-      if (responseCode !== SUCCESS_RESPONSE_CODE) {
-        reject(new Error('Error on getting public Brewskey box key!'));
-      }
+            const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
+            const publicKey = new NodeRSA(
+              derBuffer.slice(22),
+              'pkcs1-public-der',
+              {
+                encryptionScheme: 'pkcs1',
+              },
+            );
 
-      const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
-      const publicKey = new NodeRSA(derBuffer.slice(22), 'pkcs1-public-der', {
-        encryptionScheme: 'pkcs1',
-      });
-
-      resolve(publicKey);
+            resolve(publicKey);
+          })
+          .catch(reject);
+      };
+      fetchKey();
     });
 }
 
-export default SoftAPService;
+export { SoftAPService };

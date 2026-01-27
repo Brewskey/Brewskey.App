@@ -1,13 +1,13 @@
-import * as React from 'react';
-
 import { View } from 'react-native';
+
+import type { ReactElement } from 'react';
 
 interface Props {
   color: string;
   size?: number;
 }
 
-const ColorIcon = ({ size = 45, color }: Props): React.ReactElement => (
+const ColorIcon = ({ size = 45, color }: Props): ReactElement => (
   <View
     style={{
       backgroundColor: color,
@@ -18,4 +18,4 @@ const ColorIcon = ({ size = 45, color }: Props): React.ReactElement => (
   />
 );
 
-export default ColorIcon;
+export { ColorIcon };

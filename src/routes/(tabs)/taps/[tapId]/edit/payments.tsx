@@ -7,23 +7,21 @@ import nullthrows from 'nullthrows';
 import { useFormContext } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Button from '../../../../../common/buttons/Button';
-import Container from '../../../../../common/Container';
+import { Button } from '../../../../../common/buttons/Button';
+import { Container } from '../../../../../common/Container';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
 import { Form } from '../../../../../common/form/Form';
 import { FormField } from '../../../../../common/form/FormField';
 import { handleSubmitWithError } from '../../../../../common/form/handleSubmitWithError';
-
-
 import { TextInput } from '../../../../../common/form/TextInput';
-import Header from '../../../../../common/Header';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import Section from '../../../../../common/Section';
-import SectionHeader from '../../../../../common/SectionHeader';
+import { Header } from '../../../../../common/Header';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../../common/NotFoundScreen';
+import { Section } from '../../../../../common/Section';
+import { SectionHeader } from '../../../../../common/SectionHeader';
 import { MainTabBarFill } from '../../../../../components/MainTabBar/MainTabBarSlot';
-import SquareLocationPicker from '../../../../../components/pickers/SquareLocationPicker';
+import { SquareLocationPicker } from '../../../../../components/pickers/SquareLocationPicker';
 import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarContext';
 import {
   useGetLocationById,
@@ -68,15 +66,7 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   const tapIdValue =
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
 
-  if (!tapIdValue) {
-    return (
-      <NotFoundScreen
-        message="The tap you're looking for could not be found."
-        title="Tap Not Found"
-      />
-    );
-  }
-
+  // All hooks must be called unconditionally before any early returns
   const form = useFormContext<PriceVariantMutator>();
   const isFormReady = form.formState != null;
   const {
@@ -248,19 +238,22 @@ const EditTapPaymentsRouteContent: React.FC = () => {
           title={formValue == null ? 'Create Price' : 'Update Price'}
           onPress={
             isFormReady
-              ? handleSubmitWithError(form, (values: PriceVariantMutator) =>
-                  onFormSubmit({
-                    ...values,
-                    price: Number.parseInt(
-                      (
-                        (typeof values.price === 'string'
-                          ? parseFloat(values.price)
-                          : typeof values.price === 'number'
-                            ? values.price
-                            : 0) * 100
-                      ).toFixed(0),
-                    ),
-                  }),
+              ? handleSubmitWithError(
+                  form,
+                  async (values: PriceVariantMutator) =>
+                    onFormSubmit({
+                      ...values,
+                      price: Number.parseInt(
+                        (
+                          (typeof values.price === 'string'
+                            ? parseFloat(values.price)
+                            : typeof values.price === 'number'
+                              ? values.price
+                              : 0) * 100
+                        ).toFixed(0),
+                        10,
+                      ),
+                    }),
                 )
               : undefined
           }
@@ -274,10 +267,6 @@ const EditTapPaymentsRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
   const tapIdValue =
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
-
-  if (!tapIdValue) {
-    return null;
-  }
 
   const { data: priceVariant } = useGetPriceVariantSingle({
     filters: [createFilter('tap/id').equals(tapIdValue as EntityID)],

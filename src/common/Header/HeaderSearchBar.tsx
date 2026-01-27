@@ -1,10 +1,11 @@
-import * as React from 'react';
+import { useState } from 'react';
 
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 
 import { HeaderIconButton } from './HeaderIconButton';
-import ToggleStore from '../../stores/ToggleStore';
 import { COLORS, TYPOGRAPHY } from '../../theme';
+
+import type { FC } from 'react';
 
 // todo expand styles works only when there is only one element in
 // header rightComponent
@@ -40,29 +41,28 @@ interface Props {
   value: string;
 }
 
-export const HeaderSearchBar: React.FC<Props> = ({
+export const HeaderSearchBar: FC<Props> = ({
   onClosePress,
   onClearPress,
   onChangeText,
   onExpandPress,
   value,
 }) => {
-  const [isTextbarVisible, setIsTextBarVisible] =
-    React.useState<boolean>(false);
+  const [isTextbarVisible, setIsTextBarVisible] = useState<boolean>(false);
 
-  const _onClosePress = () => {
+  const onClosePressHandler = () => {
     setIsTextBarVisible(false);
     Keyboard.dismiss();
     onChangeText('');
     onClosePress?.();
   };
 
-  const _onClearPress = () => {
+  const onClearPressHandler = () => {
     onChangeText('');
     onClearPress?.();
   };
 
-  const _onExpandPress = () => {
+  const onExpandPressHandler = () => {
     setIsTextBarVisible(true);
     onExpandPress?.();
 
@@ -81,7 +81,7 @@ export const HeaderSearchBar: React.FC<Props> = ({
     >
       {isTextbarVisible ? (
         <View style={styles.textInputContainer}>
-          <HeaderIconButton name="arrow-back" onPress={_onClosePress} />
+          <HeaderIconButton name="arrow-back" onPress={onClosePressHandler} />
           <TextInput
             autoFocus
             onChangeText={onChangeText}
@@ -91,10 +91,10 @@ export const HeaderSearchBar: React.FC<Props> = ({
             underlineColorAndroid="transparent"
             value={value}
           />
-          <HeaderIconButton name="close" onPress={_onClearPress} />
+          <HeaderIconButton name="close" onPress={onClearPressHandler} />
         </View>
       ) : (
-        <HeaderIconButton name="search" onPress={_onExpandPress} />
+        <HeaderIconButton name="search" onPress={onExpandPressHandler} />
       )}
     </View>
   );

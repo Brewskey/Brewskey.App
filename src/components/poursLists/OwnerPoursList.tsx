@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
 
-import BasePoursList from './BasePoursList';
-import UserAvatar from '../../common/avatars/UserAvatar';
-import ListEmpty from '../../common/ListEmpty';
-import ListItem from '../../common/ListItem';
-import QuickActions from '../../common/QuickActions';
+import { BasePoursList } from './BasePoursList';
+import { UserAvatar } from '../../common/avatars/UserAvatar';
+import { ListEmpty } from '../../common/ListEmpty';
+import { ListItem } from '../../common/ListItem';
+import { QuickActions } from '../../common/QuickActions';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { useDeletePour } from '../../hooks/queries/PourQueries';
@@ -138,4 +138,4 @@ const OwnerPoursList: React.FC<Props> = ({
   );
 };
 
-export default OwnerPoursList;
+export { OwnerPoursList };

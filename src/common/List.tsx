@@ -1,8 +1,7 @@
-import * as React from 'react';
+import { useCallback, useState } from 'react';
 
 import {
   FlatList,
-  FlatListProps,
   RefreshControl,
   SectionList,
   StyleSheet,
@@ -11,14 +10,13 @@ import {
 import { ON_END_REACHED_THRESHOLD } from '../constants';
 
 import type { InfiniteData } from '@tanstack/react-query';
+import type { LegacyRef, ReactElement } from 'react';
 import type {
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
   SectionListData,
 } from 'react-native';
-
-import type { Section } from '../types';
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
 });
 
 export type ListComponentTypes =
-  | React.ComponentType<any>
+  | React.ComponentType<Record<string, unknown>>
   | React.ReactElement
   | null
   | undefined;
@@ -44,39 +42,38 @@ export type ListProps<TEntity> = {
   keyExtractor: (arg1: TEntity, arg2: number) => string;
   maxToRenderPerBatch?: number;
   onEndReached?: () => void;
-  onRefresh?: () => Promise<unknown> | unknown;
+  onRefresh?: () => void | Promise<void>;
   onScroll?: (arg1: NativeSyntheticEvent<NativeScrollEvent>) => void;
   stickySectionHeadersEnabled?: boolean;
 } & (
   | {
-      innerRef?: React.LegacyRef<FlatList<TEntity>> | undefined;
+      innerRef?: LegacyRef<FlatList<TEntity>> | undefined;
       listType: 'flatList';
       data: InfiniteData<TEntity[]> | undefined;
     }
   | {
-      innerRef?: React.LegacyRef<SectionList<TEntity>> | undefined;
+      innerRef?: LegacyRef<SectionList<TEntity>> | undefined;
       listType: 'sectionList';
       renderSectionHeader?: (info: {
         section: SectionListData<TEntity>;
-      }) => React.ReactElement | null;
+      }) => ReactElement | null;
       renderSectionFooter?: (info: {
         section: SectionListData<TEntity>;
-      }) => React.ReactElement | null;
+      }) => ReactElement | null;
       sections: readonly SectionListData<TEntity>[];
     }
 );
 
 type Props<TEntity> = ListProps<TEntity> & {
-  renderItem?: (arg1: ListRenderItemInfo<TEntity>) => React.ReactElement;
+  renderItem?: (arg1: ListRenderItemInfo<TEntity>) => ReactElement;
   testID?: string;
 };
 
-function List<TEntity>(props: Props<TEntity>): React.ReactElement {
+const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
   const {
     bounceFirstRowOnMount,
     innerRef,
     onRefresh,
-    renderItem: _,
     ListEmptyComponent,
     ListFooterComponent,
     ListHeaderComponent,
@@ -95,9 +92,9 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
   const sections = 'sections' in props ? props.sections : undefined;
   const data = 'data' in props ? props.data : undefined;
 
-  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const _onRefresh = React.useCallback(async (): Promise<void> => {
+  const onRefreshHandler = useCallback(async (): Promise<void> => {
     if (!onRefresh) {
       return;
     }
@@ -106,8 +103,8 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
     setIsRefreshing(false);
   }, [onRefresh]);
 
-  const _renderFlatList = React.useCallback(
-    (info: ListRenderItemInfo<TEntity>): React.ReactElement | null => {
+  const renderFlatList = useCallback(
+    (info: ListRenderItemInfo<TEntity>): ReactElement | null => {
       if (renderItem == null) {
         return null;
       }
@@ -129,7 +126,7 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
         {...rest}
         // ref={innerRef}
         onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
-        onRefresh={onRefresh ? _onRefresh : null}
+        onRefresh={onRefresh ? onRefreshHandler : null}
         refreshing={isRefreshing}
         renderItem={renderItem}
         sections={sections}
@@ -146,18 +143,19 @@ function List<TEntity>(props: Props<TEntity>): React.ReactElement {
       ListHeaderComponent={ListHeaderComponent}
       {...rest}
       bounces={bounceFirstRowOnMount}
+      contentContainerStyle={styles.contentContainerStyle}
       data={flatData}
+      onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
       onScroll={onScroll}
-      renderItem={_renderFlatList}
-      testID={testID}
+      renderItem={renderFlatList}
       refreshControl={
         <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }
-      contentContainerStyle={styles.contentContainerStyle}
-      //ref={innerRef}
-      onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
+      testID={testID}
+
+      // ref={innerRef}
     />
   );
-}
+};
 
-export default List;
+export { List };

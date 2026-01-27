@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { useMemo } from 'react';
 
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import BaseAvatar from '../common/avatars/BaseAvatar';
-import UserAvatar from '../common/avatars/UserAvatar';
-import List from '../common/List';
-import ListEmpty from '../common/ListEmpty';
-import LoadingListFooter from '../common/LoadingListFooter';
+import { BaseAvatar } from '../common/avatars/BaseAvatar';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { LoadingListFooter } from '../common/LoadingListFooter';
 import { useGetFriends } from '../hooks/queries/FriendQueries';
 import { COLORS } from '../theme';
 
@@ -128,11 +127,4 @@ const FriendsHorizontalList: React.FC<Props> = ({
   );
 };
 
-const LoadingRow = () => (
-  <View style={styles.friendContainer}>
-    <BaseAvatar rounded size={100} uri="" />
-    <View style={styles.userNameLoadingPlaceholder} />
-  </View>
-);
-
-export default FriendsHorizontalList;
+export { FriendsHorizontalList };

@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import ErrorListItem from './ErrorListItem';
+import { ErrorListItem } from './ErrorListItem';
 import { LoaderComponent } from './LoaderComponent';
-import LoadingListItem from './LoadingListItem';
+import { LoadingListItem } from './LoadingListItem';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 
@@ -63,7 +63,7 @@ export const LoaderRow = <TEntity, TExtraProps>({
   const ErrorRowComponent = errorRow || ErrorListItem;
   const queries = React.useMemo(() => ({ entity: query }), [query]) as Record<
     string,
-    UseQueryResult<TEntity, Error>
+    UseQueryResult<TEntity>
   >;
 
   return (

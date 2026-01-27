@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
 import { COLORS } from '../../theme';
@@ -60,7 +60,7 @@ export const BeveragePicker = ({
   );
 
   return (
-    <DropdownInput<Beverage>
+    <DropdownInput<Beverage | ShortenedEntity>
       {...props}
       search
       shouldUseSearchQuery

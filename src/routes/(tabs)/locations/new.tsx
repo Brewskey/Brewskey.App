@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import LocationForm from '../../../components/LocationForm/LocationForm';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { LocationForm } from '../../../components/LocationForm/LocationForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { useCreateLocation } from '../../../hooks/queries/LocationQueries';
 

@@ -3,10 +3,10 @@ import * as React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import Button from '../common/buttons/Button';
+import { Button } from '../common/buttons/Button';
 import { FormField } from '../common/form/FormField';
 import { TextInput } from '../common/form/TextInput';
-import TextBlock from '../common/TextBlock';
+import { OrderedText } from '../common/TextBlock';
 import { TYPOGRAPHY } from '../theme';
 
 const styles = StyleSheet.create({
@@ -45,10 +45,10 @@ const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
         </TouchableOpacity>
       ) : (
         <React.Fragment>
-          <TextBlock paddedBottom textStyle={styles.descriptionText}>
+          <OrderedText paddedBottom textStyle={styles.descriptionText}>
             Enter the hardware ID of your Brewskey box. We'll skip the WiFi
             setup for now but you'll still be able to setup your taps.
-          </TextBlock>
+          </OrderedText>
           <FormField
             component={TextInput}
             defaultValue=""
@@ -63,4 +63,4 @@ const ParticleIDInput: React.FC<Props> = ({ onContinuePress }) => {
   );
 };
 
-export default ParticleIDInput;
+export { ParticleIDInput };

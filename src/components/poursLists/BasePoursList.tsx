@@ -2,17 +2,16 @@ import * as React from 'react';
 
 import nullthrows from 'nullthrows';
 
-import List from '../../common/List';
-import LoadingListFooter from '../../common/LoadingListFooter';
+import { List } from '../../common/List';
+import { LoadingListFooter } from '../../common/LoadingListFooter';
 import { useGetPours } from '../../hooks/queries/PourQueries';
-import BeverageModal from '../modals/BeverageModal';
-import PourModal from '../modals/PourModal';
+import { BeverageModal } from '../modals/BeverageModal';
+import { PourModal } from '../modals/PourModal';
 
 import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
 import type { ListRenderItemInfo } from 'react-native';
 
 import type { ListComponentTypes } from '../../common/List';
-
 import type { BeverageModalHandle } from '../modals/BeverageModal';
 import type { PourModalHandle } from '../modals/PourModal';
 
@@ -137,5 +136,3 @@ export const BasePoursList = ({
     </React.Fragment>
   );
 };
-
-export default BasePoursList;

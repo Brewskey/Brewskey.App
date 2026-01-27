@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import TouchableItem from '../../common/buttons/TouchableItem';
+import { TouchableItem } from '../../common/buttons/TouchableItem';
 import { COLORS } from '../../theme';
 
 import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
@@ -21,9 +21,7 @@ interface Props {
     name: string;
     type?: string;
   };
-  iconContainerComponent?: React.ComponentType<
-    React.ComponentProps<typeof TouchableItem>
-  >;
+  iconContainerComponent?: React.ComponentType<Record<string, unknown>>;
   isFocused: boolean;
   onPress: (
     route: NavigationRoute<ParamListBase, string>,
@@ -46,7 +44,7 @@ export const TabBarButton = (props: Props) => {
   return (
     <Icon
       color={isFocused ? COLORS.primary2 : COLORS.secondary3}
-      Component={iconContainerComponent}
+      Component={iconContainerComponent as unknown as typeof React.Component}
       containerStyle={styles.container}
       name={name}
       onPress={_onPress}

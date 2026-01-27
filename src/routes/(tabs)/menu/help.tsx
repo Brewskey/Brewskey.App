@@ -8,11 +8,11 @@ import {
   View,
 } from 'react-native';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import Section from '../../../common/Section';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { Section } from '../../../common/Section';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 

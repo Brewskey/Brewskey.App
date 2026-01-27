@@ -4,11 +4,11 @@ import { useRouter } from 'expo-router';
 import moment from 'moment';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import PintCounter from './PintCounter';
-import BeverageAvatar from '../common/avatars/BeverageAvatar';
-import UserAvatar from '../common/avatars/UserAvatar';
-import Fragment from '../common/Fragment';
-import OverviewItem from '../common/OverviewItem';
+import { PintCounter } from './PintCounter';
+import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { Fragment } from '../common/Fragment';
+import { OverviewItem } from '../common/OverviewItem';
 import { NULL_STRING_PLACEHOLDER } from '../constants';
 import { COLORS, TYPOGRAPHY } from '../theme';
 
@@ -200,4 +200,4 @@ const PourDetailsContent: React.FC<Props> = ({
   );
 };
 
-export default PourDetailsContent;
+export { PourDetailsContent };

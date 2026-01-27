@@ -3,17 +3,18 @@ import * as React from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View } from 'react-native';
 
-import Container from '../../../../../common/Container';
+import { Container } from '../../../../../common/Container';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
-import Header from '../../../../../common/Header';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import WarningNotification from '../../../../../common/WarningNotification';
-import LeaderboardDurationPicker, {
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
+import { Header } from '../../../../../common/Header';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../../common/NotFoundScreen';
+import { WarningNotification } from '../../../../../common/WarningNotification';
+import {
   LEADERBOARD_DURATION_OPTIONS,
+  LeaderBoardDurationPicker,
 } from '../../../../../components/LeaderboardDurationPicker';
-import LeaderboardList from '../../../../../components/LeaderboardList';
+import { LeaderboardList } from '../../../../../components/LeaderboardList';
 import { useGetFlowSensorByTapId } from '../../../../../hooks/queries/FlowSensorQueries';
 import { useGetPermissionForEntityById } from '../../../../../hooks/queries/PermissionQueries';
 import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
@@ -98,7 +99,7 @@ const LeaderboardRoute: React.FC = () => {
       ListHeaderComponent={
         <View>
           {noFlowSensorWarning}
-          <LeaderboardDurationPicker
+          <LeaderBoardDurationPicker
             onChange={_onChangeLeaderboardDuration}
             value={leaderboardDuration}
           />

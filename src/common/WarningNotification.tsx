@@ -4,7 +4,7 @@ import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { COLORS, TYPOGRAPHY } from '../theme';
-import TouchableItem from './buttons/TouchableItem';
+import { TouchableItem } from './buttons/TouchableItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,4 +45,4 @@ const WarningNotification: React.FC<Props> = ({ message, onPress }) => (
   </TouchableItem>
 );
 
-export default WarningNotification;
+export { WarningNotification };

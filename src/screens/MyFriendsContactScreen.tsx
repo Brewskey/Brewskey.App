@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import { withErrorBoundary } from '../common/ErrorBoundary';
-import ErrorScreen from '../common/ErrorScreen';
-import ContactsList from '../components/ContactsList';
+import { ErrorScreen } from '../common/ErrorScreen';
+import { ContactsList } from '../components/ContactsList';
 
-const MyFriendsContactScreen: React.FC = () => <ContactsList />;
+const MyFriendsContactScreenComponent: React.FC = () => <ContactsList />;
 
-export default withErrorBoundary(
-  MyFriendsContactScreen,
+const MyFriendsContactScreen = withErrorBoundary(
+  MyFriendsContactScreenComponent,
   <ErrorScreen shouldShowBackButton />,
 );
+export { MyFriendsContactScreen };

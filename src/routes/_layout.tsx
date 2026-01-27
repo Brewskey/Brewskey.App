@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import BrewskeyJSApi, { AuthResponse } from '@brewskey/js-api';
+import BrewskeyJSApi from '@brewskey/js-api';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Stack } from 'expo-router';
 
 import { SnackBar } from '../common/SnackBar';
 import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
@@ -12,16 +12,13 @@ import {
   loadAppSettingsFromStorage,
 } from '../hooks/context/AppSettingsContext';
 import {
-  AUTH_QUERY_KEY,
   loadAuthStateFromStorage,
-  saveAuthStateToStorage,
   setAuthSession,
   useAuthSession,
 } from '../hooks/context/AuthContext';
 import { PourProcessProvider } from '../hooks/context/PourProcessContext';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
 import { queryClient } from '../utils/queryClient';
-import Storage from '../utils/Storage';
 
 BrewskeyJSApi.initialize('https://brewskey.com');
 

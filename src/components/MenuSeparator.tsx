@@ -16,4 +16,4 @@ const DrawerSeparator = (): React.ReactElement => (
   <View style={styles.separator} />
 );
 
-export default DrawerSeparator;
+export { DrawerSeparator };

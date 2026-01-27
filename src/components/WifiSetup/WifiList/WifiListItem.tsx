@@ -4,7 +4,7 @@ import { Icon } from '@rneui/themed';
 import { useFormContext } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import Button from '../../../common/buttons/Button';
+import { Button } from '../../../common/buttons/Button';
 import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
 import { TextField } from '../../../common/form/TextField';
 import { WIFI_SECURITIES } from '../../../SoftApService';
@@ -108,4 +108,4 @@ const WifiListItem: React.FC<Props> = ({
   );
 };
 
-export default WifiListItem;
+export { WifiListItem };

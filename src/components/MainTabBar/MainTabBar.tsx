@@ -5,15 +5,16 @@ import nullthrows from 'nullthrows';
 import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import BadgeContainer from './BadgeContainer';
+import { BadgeContainer } from './BadgeContainer';
 import { useMainTabBarSlot } from './MainTabBarSlot';
 import { PourButton } from './PourButton';
 import { TabBarButton } from './TabBarButton';
 import { COLORS } from '../../theme';
+
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
 
-import type TouchableItem from '../../common/buttons/TouchableItem';
+import type { TouchableItem } from '../../common/buttons/TouchableItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +35,6 @@ const getRouteByRouteName = (
   routes: NavigationRoute<ParamListBase, string>[],
 ): NavigationRoute<ParamListBase, string> =>
   nullthrows(routes.find((route): boolean => route.name === routeName));
-
-const getIndexByRouteName = (
-  routeName: string,
-  routes: NavigationRoute<ParamListBase, string>[],
-): number => routes.findIndex((route): boolean => route.name === routeName);
 
 const NotificationBadges: React.FC<
   React.ComponentProps<typeof TouchableItem>

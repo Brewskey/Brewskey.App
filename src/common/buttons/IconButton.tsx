@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import TouchableItem from './TouchableItem';
+import { TouchableItem } from './TouchableItem';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 
@@ -39,4 +39,4 @@ const IconButton = ({
   </TouchableItem>
 );
 
-export default IconButton;
+export { IconButton };

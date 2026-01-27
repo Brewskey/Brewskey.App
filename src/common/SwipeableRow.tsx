@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function SwipeableRow<TEntity>(props: Props<TEntity>): React.ReactElement {
+const SwipeableRow = <TEntity,>(props: Props<TEntity>): React.ReactElement => {
   const {
     index,
     item,
@@ -79,6 +79,7 @@ function SwipeableRow<TEntity>(props: Props<TEntity>): React.ReactElement {
       }, 100);
       return () => clearTimeout(timeoutId);
     }
+    return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -165,6 +166,7 @@ function SwipeableRow<TEntity>(props: Props<TEntity>): React.ReactElement {
       />
     </ReanimatedSwipeable>
   );
-}
+};
 
-export default React.memo(SwipeableRow) as typeof SwipeableRow;
+export const SwipeableRowMemo = React.memo(SwipeableRow) as typeof SwipeableRow;
+export { SwipeableRowMemo as SwipeableRow };

@@ -4,10 +4,10 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../common/Container';
-import Header from '../../common/Header';
-import SectionContent from '../../common/SectionContent';
-import ResetPasswordModal from '../../components/modals/ResetPasswordModal';
+import { Container } from '../../common/Container';
+import { Header } from '../../common/Header';
+import { SectionContent } from '../../common/SectionContent';
+import { ResetPasswordModal } from '../../components/modals/ResetPasswordModal';
 import { ResetPasswordForm } from '../../components/ResetPasswordForm';
 import { useResetPassword } from '../../hooks/queries/AuthQueries';
 import { COLORS, TYPOGRAPHY } from '../../theme';

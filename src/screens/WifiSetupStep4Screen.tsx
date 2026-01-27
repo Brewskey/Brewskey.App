@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import Button from '../common/buttons/Button';
-import Container from '../common/Container';
-import SectionContent from '../common/SectionContent';
-import SectionHeader from '../common/SectionHeader';
-import FinishInstructions from '../components/WifiSetup/FinishInstructions';
+import { Button } from '../common/buttons/Button';
+import { Container } from '../common/Container';
+import { SectionContent } from '../common/SectionContent';
+import { SectionHeader } from '../common/SectionHeader';
+import { FinishInstructions } from '../components/WifiSetup/FinishInstructions';
 
 interface Props {
   onSetupFinish: () => void;

@@ -8,8 +8,6 @@ import { FormField } from '../../common/form/FormField';
 import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
-type NFCStatusValue = 'PhoneOnly' | 'CardOnly' | 'PhoneAndCard' | 'Disabled';
-
 const styles = StyleSheet.create({
   descriptionText: {
     ...TYPOGRAPHY.small,
@@ -132,4 +130,4 @@ const DeviceNFCStatusPicker = (props: Props): React.ReactElement => {
   );
 };
 
-export default DeviceNFCStatusPicker;
+export { DeviceNFCStatusPicker };

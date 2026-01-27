@@ -1,16 +1,14 @@
 import * as React from 'react';
 
 import { Icon } from '@rneui/themed';
-import { useLocalSearchParams } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import Button from '../../../common/buttons/Button';
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
+import { ErrorScreen } from '../../../common/ErrorScreen';
 import { SubmitButton } from '../../../common/form/SubmitButton';
-import Header from '../../../common/Header';
+import { Header } from '../../../common/Header';
 import { LocationPicker } from '../../../components/pickers/LocationPicker';
 import {
   useGetLocationById,
@@ -18,7 +16,7 @@ import {
 } from '../../../hooks/queries/LocationQueries';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
-import type { EntityID, Location, ShortenedEntity } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   container: {
@@ -108,7 +106,7 @@ const NuxLocationScreen: React.FC<Props> = ({ onContinuePress }) => {
           </FormProvider>
         ) : null}
         <SubmitButton<FormData>
-          disabled={hasManyLocations ? !selectedLocation : null}
+          disabled={hasManyLocations ? !selectedLocation : false}
           onSubmit={onContinuePress}
           testID="button-next"
           title="Next"
@@ -119,6 +117,6 @@ const NuxLocationScreen: React.FC<Props> = ({ onContinuePress }) => {
 };
 
 export default withErrorBoundary(
-  NuxLocationScreen,
+  NuxLocationScreen as unknown as React.ComponentType<Record<string, unknown>>,
   <ErrorScreen shouldShowBackButton />,
 );

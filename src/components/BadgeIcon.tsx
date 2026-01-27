@@ -2,7 +2,10 @@ import * as React from 'react';
 
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import BADGE_BY_ACHIEVEMENT_TYPE, { BADGE_IMAGE_SIZES } from '../badges';
+import {
+  BADGE_BY_TYPE as BADGE_BY_ACHIEVEMENT_TYPE,
+  BADGE_IMAGE_SIZES,
+} from '../badges';
 import { COLORS } from '../theme';
 
 import type { AchievementType } from '@brewskey/js-api';
@@ -50,7 +53,7 @@ interface Props {
   size: SizeType;
 }
 
-const BadgeIcon: React.FC<Props> = ({
+const BadgeIconComponent: React.FC<Props> = ({
   achievementType,
   count,
   onPress,
@@ -93,4 +96,4 @@ const BadgeIcon: React.FC<Props> = ({
   );
 };
 
-export default React.memo(BadgeIcon);
+export const BadgeIcon = React.memo(BadgeIconComponent);

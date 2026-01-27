@@ -8,11 +8,11 @@ import EditTapFlowSensorRoute from './flow-sensor';
 import EditTapFeedRoute from './keg';
 import EditTapPaymentsRoute from './payments';
 import EditTapBasicRoute from './tap';
-import Container from '../../../../../common/Container';
+import { Container } from '../../../../../common/Container';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
-import Header from '../../../../../common/Header';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
+import { Header } from '../../../../../common/Header';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
 import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 
 import type { EntityID } from '@brewskey/js-api';
@@ -24,7 +24,10 @@ interface EditTapRouterParamList {
   payments: undefined;
 }
 
-const EditTapRouter = createMaterialTopTabNavigator<EditTapRouterParamList>();
+// EditTapRouterParamList extends ParamListBase; conditional tab (payments) causes generic inference issues
+const EditTapRouter = createMaterialTopTabNavigator<
+  EditTapRouterParamList & Record<string, object | undefined>
+>();
 
 const EditTapLayout: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();

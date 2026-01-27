@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../../../common/Container';
+import { Container } from '../../../../../common/Container';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
-import Header from '../../../../../common/Header';
-import ListItem from '../../../../../common/ListItem';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../../common/NotFoundScreen';
-import Section from '../../../../../common/Section';
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
+import { Header } from '../../../../../common/Header';
+import { ListItem } from '../../../../../common/ListItem';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../../common/NotFoundScreen';
+import { Section } from '../../../../../common/Section';
 import { TapForm } from '../../../../../components/TapForm';
 import { useAddSnackBarMessage } from '../../../../../hooks/context/SnackBarContext';
 import {
@@ -29,6 +29,15 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(
         ? Number(tapId)
         : tapId;
 
+    // All hooks must be called unconditionally before any early returns
+    const { data: tap, isLoading } = useGetTapById(tapIdValue as EntityID);
+    const createTap = useCreateTap();
+    const updateTap = useUpdateTap();
+
+    const [areNotificationEnabled, setAreNotificationsEnabled] =
+      React.useState<boolean>(true);
+    const addSnackbarMessage = useAddSnackBarMessage();
+
     if (!tapIdValue) {
       return (
         <NotFoundScreen
@@ -37,14 +46,6 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(
         />
       );
     }
-
-    const { data: tap, isLoading } = useGetTapById(tapIdValue as EntityID);
-    const createTap = useCreateTap();
-    const updateTap = useUpdateTap();
-
-    const [areNotificationEnabled, setAreNotificationsEnabled] =
-      React.useState<boolean>(true);
-    const addSnackbarMessage = useAddSnackBarMessage();
 
     const onTapFormSubmit = async (values: TapMutator): Promise<void> => {
       if (tap?.id) {

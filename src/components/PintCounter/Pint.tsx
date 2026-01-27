@@ -29,7 +29,7 @@ const COFFEE_COLOR = '#4D2A22';
 const CIDER_COLOR = '#e1c336';
 const SODA_COLOR = '#711F25';
 
-export const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
+const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
   const { data: beverage } = useGetBeverageById(beverageID);
   const _tintColor = (): string => {
     if (beverage == null) {
@@ -93,4 +93,4 @@ export const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
   );
 };
 
-export default Pint;
+export { Pint };

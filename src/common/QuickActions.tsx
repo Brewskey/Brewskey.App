@@ -1,13 +1,15 @@
-import * as React from 'react';
+import { useCallback, useRef } from 'react';
 
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 
-import Fragment from './Fragment';
-import SwipeableActionButton from './SwipeableActionButton';
-import DeleteModal from '../components/modals/DeleteModal';
-import ToggleStore from '../stores/ToggleStore';
+import { Fragment } from './Fragment';
+import { SwipeableActionButton } from './SwipeableActionButton';
+import { DeleteModal } from '../components/modals/DeleteModal';
+import { ToggleStore } from '../stores/ToggleStore';
 import { COLORS } from '../theme';
+
+import type { ReactElement } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +42,7 @@ interface Props<TItem> {
   onEditItemPress?: (item: TItem) => void;
 }
 
-function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
+const QuickActions = <TItem,>(props: Props<TItem>): ReactElement => {
   const {
     deleteModalTitle,
     deleteModalMessage,
@@ -49,14 +51,14 @@ function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
     item,
   } = props;
 
-  const _modalToggleStore = React.useRef(new ToggleStore()).current;
+  const modalToggleStore = useRef(new ToggleStore()).current;
 
-  const _onDeleteModalConfirm = React.useCallback(() => {
-    _modalToggleStore.toggleOff();
+  const onDeleteModalConfirm = useCallback(() => {
+    modalToggleStore.toggleOff();
     nullthrows(onDeleteItemPress)(item);
-  }, [_modalToggleStore, onDeleteItemPress, item]);
+  }, [modalToggleStore, onDeleteItemPress, item]);
 
-  const _onEditItemPress = React.useCallback((): void => {
+  const onEditItemPressHandler = useCallback((): void => {
     nullthrows(onEditItemPress)(item);
   }, [onEditItemPress, item]);
 
@@ -67,7 +69,7 @@ function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
           containerStyle={styles.editButtonContainer}
           iconName="create"
           iconStyle={styles.editIcon}
-          onPress={_onEditItemPress}
+          onPress={onEditItemPressHandler}
         />
       )}
       {!onDeleteItemPress ? null : (
@@ -76,19 +78,19 @@ function QuickActions<TItem>(props: Props<TItem>): React.ReactElement {
             containerStyle={styles.deleteButtonContainer}
             iconName="delete"
             iconStyle={styles.deleteIcon}
-            onPress={_modalToggleStore.toggleOn}
+            onPress={modalToggleStore.toggleOn}
           />
           <DeleteModal
-            isVisible={_modalToggleStore.isToggled}
+            isVisible={modalToggleStore.isToggled}
             message={deleteModalMessage}
-            onCancelButtonPress={_modalToggleStore.toggleOff}
-            onDeleteButtonPress={_onDeleteModalConfirm}
+            onCancelButtonPress={modalToggleStore.toggleOff}
+            onDeleteButtonPress={onDeleteModalConfirm}
             title={deleteModalTitle}
           />
         </Fragment>
       )}
     </View>
   );
-}
+};
 
-export default QuickActions;
+export { QuickActions };

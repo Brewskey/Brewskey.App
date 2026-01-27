@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { useMemo } from 'react';
 
 import { useRouter } from 'expo-router';
 
-import UserAvatar from '../common/avatars/UserAvatar';
-import List from '../common/List';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
 import { useGetFriends } from '../hooks/queries/FriendQueries';
 
 import type { Friend, QueryOptions } from '@brewskey/js-api';
@@ -102,4 +101,4 @@ const FriendsList: React.FC<Props> = ({
   );
 };
 
-export default FriendsList;
+export { FriendsList };

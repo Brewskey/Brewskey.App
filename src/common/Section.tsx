@@ -54,4 +54,4 @@ const Section: React.FC<Props> = ({
   );
 };
 
-export default Section;
+export { Section };

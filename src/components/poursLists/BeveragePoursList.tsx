@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import moment from 'moment';
 
-import BasePoursList from './BasePoursList';
-import BeverageAvatar from '../../common/avatars/BeverageAvatar';
-import ListEmpty from '../../common/ListEmpty';
-import ListItem from '../../common/ListItem';
+import { BasePoursList } from './BasePoursList';
+import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
+import { ListEmpty } from '../../common/ListEmpty';
+import { ListItem } from '../../common/ListItem';
 import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import PintCounter from '../PintCounter';
+import { PintCounter } from '../PintCounter';
 
 import type { Pour, QueryOptions } from '@brewskey/js-api';
 
@@ -58,4 +58,4 @@ const BeveragePoursList = ({
   />
 );
 
-export default BeveragePoursList;
+export { BeveragePoursList };

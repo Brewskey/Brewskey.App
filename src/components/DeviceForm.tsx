@@ -3,17 +3,17 @@ import * as React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { View } from 'react-native';
 
-import BrightnessSliderField from './DeviceForm/BrightnessSliderField';
-import DeviceNFCStatusPicker from './DeviceForm/DeviceNFCStatusPicker';
-import DeviceTimeOpenPicker from './DeviceForm/DeviceTimeOpenPicker';
+import { BrightnessSliderField } from './DeviceForm/BrightnessSliderField';
+import { DeviceNFCStatusPicker } from './DeviceForm/DeviceNFCStatusPicker';
+import { DeviceTimeOpenPicker } from './DeviceForm/DeviceTimeOpenPicker';
 import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
 import { LocationPicker } from './pickers/LocationPicker';
-import Button from '../common/buttons/Button';
+import { Button } from '../common/buttons/Button';
 import { CheckBoxField } from '../common/form/CheckBoxField';
 import { DropdownInput } from '../common/form/DropdownInput';
 import { Form } from '../common/form/Form';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { FormField } from '../common/form/FormField';
+import { FormValidationMessage } from '../common/form/FormValidationMessage';
 import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
 import { TextInput } from '../common/form/TextInput';
 import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
@@ -242,7 +242,7 @@ const DeviceForm: React.FC<Props> = ({
             loading={isSubmitting}
             style={{ marginVertical: 12 }}
             title={submitButtonLabel}
-            onPress={handleSubmitWithError(form, (formData) =>
+            onPress={handleSubmitWithError(form, async (formData) =>
               onSubmitForm({
                 ...formData,
                 timeForValveOpen: Math.max(
@@ -263,4 +263,4 @@ const DeviceForm: React.FC<Props> = ({
   );
 };
 
-export default DeviceForm;
+export { DeviceForm };

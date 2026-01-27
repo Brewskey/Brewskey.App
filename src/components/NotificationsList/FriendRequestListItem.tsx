@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import NotificationListItem from './NotificationListItem';
-import UserAvatar from '../../common/avatars/UserAvatar';
+import { NotificationListItem } from './NotificationListItem';
+import { UserAvatar } from '../../common/avatars/UserAvatar';
 
 import type { Props as NotificationListItemProps } from './NotificationListItem';
 import type { NewFriendRequestNotification } from '../../stores/NotificationTypes';
@@ -22,4 +22,4 @@ const FriendRequestListItem = (props: Props): React.ReactElement => {
   );
 };
 
-export default FriendRequestListItem;
+export { FriendRequestListItem };

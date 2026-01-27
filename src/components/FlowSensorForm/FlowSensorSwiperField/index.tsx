@@ -1,14 +1,13 @@
 import * as React from 'react';
 
 // import Swiper from '../../../common/Swiper';
-import { ButtonGroup } from '@rneui/themed';
 import { Controller, useFormContext } from 'react-hook-form';
 import { Platform, StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import FlowSensorSwiperItem from './FlowSensorSwiperItem';
-import Button from '../../../common/buttons/Button';
-import FLOW_SENSOR_ITEMS, { FlowSensorItem } from '../flowSensorItems';
+import { FlowSensorSwiperItem } from './FlowSensorSwiperItem';
+import { Button } from '../../../common/buttons/Button';
+import { FLOW_SENSOR_ITEMS } from '../flowSensorItems';
 
 import type { FlowSensorType } from '@brewskey/js-api';
 
@@ -61,7 +60,6 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
 
         const onChangeCallback = (index: number) => {
           const item = FLOW_SENSOR_ITEMS[index];
-          console.log('onChange', item.value);
           onChange(item.value);
           onChangeController(item.value);
         };
@@ -105,5 +103,3 @@ export const FlowSensorSwiperField: React.FC<Props> = ({
     />
   );
 };
-
-export default FlowSensorSwiperField;

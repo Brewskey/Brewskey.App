@@ -6,16 +6,16 @@ import { useLocalSearchParams } from 'expo-router';
 import LeaderboardRoute from './leaderboard';
 import OnTapRoute from './on_tap';
 import StatsRoute from './stats';
-import Container from '../../../../../common/Container';
+import { Container } from '../../../../../common/Container';
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../../common/ErrorScreen';
-import Header from '../../../../../common/Header';
+import { ErrorScreen } from '../../../../../common/ErrorScreen';
+import { Header } from '../../../../../common/Header';
 import { HeaderNavigationButton } from '../../../../../common/Header/HeaderNavigationButton';
-import LoadingIndicator from '../../../../../common/LoadingIndicator';
+import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
 import { useGetPermissionForEntityById } from '../../../../../hooks/queries/PermissionQueries';
 import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 import { checkCanEdit } from '../../../../../permissionHelpers';
-import theme from '../../../../../theme';
+import { theme } from '../../../../../theme';
 
 import type { EntityID } from '@brewskey/js-api';
 

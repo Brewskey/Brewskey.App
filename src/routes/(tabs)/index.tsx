@@ -2,12 +2,12 @@ import * as React from 'react';
 
 import { StyleSheet, Text } from 'react-native';
 
-import Button from '../../common/buttons/Button';
-import Container from '../../common/Container';
+import { Button } from '../../common/buttons/Button';
+import { Container } from '../../common/Container';
 import { withErrorBoundary } from '../../common/ErrorBoundary';
-import ErrorScreen from '../../common/ErrorScreen';
-import Header from '../../common/Header';
-import NearbyLocationsList from '../../components/NearbyLocationsList/NearbyLocationsList';
+import { ErrorScreen } from '../../common/ErrorScreen';
+import { Header } from '../../common/Header';
+import { NearbyLocationsList } from '../../components/NearbyLocationsList/NearbyLocationsList';
 import { useGetNearbyLocations } from '../../hooks/queries/LocationQueries';
 import {
   useDeviceLocation,

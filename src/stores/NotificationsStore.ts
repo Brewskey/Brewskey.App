@@ -6,23 +6,20 @@ import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 import { Platform, Vibration } from 'react-native';
 
-import CONFIG from '../config';
+import { CONFIG } from '../config';
 import { useAuthSession } from '../hooks/context/AuthContext';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { SnackBarStore } from '../hooks/context/SnackBarContext';
 import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
 import { FriendKeys } from '../hooks/queries/FriendQueries';
 import { KegQueryKeys } from '../hooks/queries/KegQueries';
-import { queryClient } from '../utils/queryClient';
 import { getStringFromEntityID } from '../utils/getStringFromEntityID';
 import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
-import Storage, { StorageKeys } from '../utils/Storage';
+import { queryClient } from '../utils/queryClient';
+import { Storage, StorageKeys } from '../utils/Storage';
 
 import type { EntityID } from '@brewskey/js-api';
 
-import type {
-  Notification,
-  NewAchievementNotification,
-} from './NotificationTypes';
+import type { Notification } from './NotificationTypes';
 
 export type {
   BaseNotificationProps,
@@ -561,4 +558,4 @@ export const useNotificationPress = () => {
   );
 };
 
-export default notificationsStore;
+export { notificationsStore };

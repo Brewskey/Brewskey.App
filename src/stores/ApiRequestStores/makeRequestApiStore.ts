@@ -64,4 +64,4 @@ const makeRequestApiStore: <TResult>(
   return store;
 };
 
-export default makeRequestApiStore;
+export { makeRequestApiStore };

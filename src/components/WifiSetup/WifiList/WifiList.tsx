@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import WifiListEmpty from './WifiListEmpty';
-import WifiListError from './WifiListError';
-import WifiListItem from './WifiListItem';
+import { WifiListEmpty } from './WifiListEmpty';
+import { WifiListError } from './WifiListError';
+import { WifiListItem } from './WifiListItem';
 import { Form } from '../../../common/form/Form';
-import List from '../../../common/List';
-import LoadingListFooter from '../../../common/LoadingListFooter';
+import { List } from '../../../common/List';
+import { LoadingListFooter } from '../../../common/LoadingListFooter';
 import { useGetWifiNetworks } from '../../../hooks/queries/SoftApQueries';
 
 import type { WifiNetwork } from '../../../types';
@@ -47,7 +47,7 @@ export const WifiList: React.FC<Props> = ({
       <WifiListItem
         error={error}
         index={index}
-        isConnecting={isExpanded ? isLoading || isSettingUpWifi : null}
+        isConnecting={isExpanded ? isLoading || isSettingUpWifi : false}
         isExpanded={isExpanded}
         item={item}
         onConnectPress={onConnectPress}
@@ -74,12 +74,16 @@ export const WifiList: React.FC<Props> = ({
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
         ListHeaderComponent={ListHeaderComponent}
         listType="flatList"
-        onRefresh={!isLoading ? refetch : undefined}
+        onRefresh={
+          !isLoading
+            ? () => {
+                void refetch();
+              }
+            : undefined
+        }
         renderItem={renderItem}
         testID="wifi-networks-list"
       />
     </Form>
   );
 };
-
-export default WifiList;

@@ -3,12 +3,12 @@ import * as React from 'react';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { StyleSheet, View } from 'react-native';
 
-import UserAvatar from '../common/avatars/UserAvatar';
+import { UserAvatar } from '../common/avatars/UserAvatar';
 import { withErrorBoundary } from '../common/ErrorBoundary';
-import ErrorScreen from '../common/ErrorScreen';
-import LoadingIndicator from '../common/LoadingIndicator';
-import SectionHeader from '../common/SectionHeader';
-import BeveragePoursList from '../components/poursLists/BeveragePoursList';
+import { ErrorScreen } from '../common/ErrorScreen';
+import { LoadingIndicator } from '../common/LoadingIndicator';
+import { SectionHeader } from '../common/SectionHeader';
+import { BeveragePoursList } from '../components/poursLists/BeveragePoursList';
 import { UserBadges } from '../components/UserBadges/UserBadges';
 import { useGetAccountById } from '../hooks/queries/AccountQueries';
 
@@ -28,7 +28,7 @@ type Props = StaticScreenProps<{
   accountId?: EntityID;
 }>;
 
-const ProfileOverviewScreen: React.FC<Props> = ({
+const ProfileOverviewScreenComponent: React.FC<Props> = ({
   route: {
     params: { account: accountFromParams, accountId: accountIdParam },
   },
@@ -66,7 +66,8 @@ const ProfileOverviewScreen: React.FC<Props> = ({
   );
 };
 
-export default withErrorBoundary(
-  ProfileOverviewScreen,
+const ProfileOverviewScreen = withErrorBoundary(
+  ProfileOverviewScreenComponent,
   <ErrorScreen shouldShowBackButton />,
 );
+export { ProfileOverviewScreen };

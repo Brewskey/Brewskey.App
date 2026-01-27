@@ -1,49 +1,64 @@
-import * as React from 'react';
+import { memo, PureComponent } from 'react';
 
 import { getElementFromComponentProp } from '../utils';
 
+import type {
+  ComponentClass,
+  ComponentType,
+  ErrorInfo,
+  ReactElement,
+  ReactNode,
+} from 'react';
+
 interface Props {
-  children: React.ReactNode;
-  fallbackComponent: React.ReactNode | null | undefined | React.ComponentType;
+  children: ReactNode;
+  fallbackComponent: ReactNode | null | undefined | ComponentType;
 }
 
 interface State {
   error: Error | null | undefined;
 }
 
-export class ErrorBoundary extends React.PureComponent<Props, State> {
-  state: State = {
-    error: null,
-  };
+export class ErrorBoundary extends PureComponent<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      error: null,
+    };
+  }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    // eslint-disable-next-line no-console
     console.error('ErrorBoundary caught an error:', error);
+    // eslint-disable-next-line no-console
     console.error('Error info:', errorInfo);
+    // eslint-disable-next-line no-console
     console.error('Error stack:', error.stack);
     this.setState(() => ({ error }));
   }
 
-  async render() {
-    const { fallbackComponent } = this.props;
+  render(): React.ReactNode {
+    const { fallbackComponent, children } = this.props;
+    const { error } = this.state;
 
-    if (this.state.error) {
+    if (error) {
       return getElementFromComponentProp(fallbackComponent) ?? null;
     }
-    return this.props.children;
+    return children;
   }
 }
 
 export const withErrorBoundary = <
   TProps extends Record<string, unknown>,
-  TComponent extends React.ComponentType<TProps>,
+  TComponent extends ComponentType<TProps>,
 >(
-  Component: React.ComponentType<TProps>,
-  fallbackComponent: React.ReactNode | null | undefined | React.ComponentType,
+  ComponentToWrap: ComponentType<TProps>,
+  fallbackComponent: ReactNode | null | undefined | ComponentType,
 ): TComponent => {
-  const WithErrorBoundary = React.memo(
-    (props: TProps): React.ReactElement => (
+  const WithErrorBoundary = memo(
+    (props: TProps): ReactElement => (
       <ErrorBoundary fallbackComponent={fallbackComponent}>
-        <Component {...props} />
+        <ComponentToWrap {...props} />
       </ErrorBoundary>
     ),
   );
@@ -52,8 +67,8 @@ export const withErrorBoundary = <
 };
 
 export const errorBoundary =
-  <TComponent extends React.ComponentClass<any>>(
-    fallbackComponent?: React.ReactNode | React.ComponentType,
+  <TComponent extends ComponentClass<Record<string, unknown>>>(
+    fallbackComponent?: ReactNode | ComponentType,
   ): ((c: TComponent) => TComponent) =>
-  (Component: TComponent): TComponent =>
-    withErrorBoundary(Component, fallbackComponent);
+  (WrappedComponent: TComponent): TComponent =>
+    withErrorBoundary(WrappedComponent, fallbackComponent);

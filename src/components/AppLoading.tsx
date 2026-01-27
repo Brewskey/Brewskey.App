@@ -24,4 +24,4 @@ const AppLoading = (): React.ReactElement => (
   </View>
 );
 
-export default AppLoading;
+export { AppLoading };

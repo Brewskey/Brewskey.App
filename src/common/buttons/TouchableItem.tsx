@@ -75,4 +75,4 @@ const TouchableItem: React.FC<Props> = ({
   );
 };
 
-export default TouchableItem;
+export { TouchableItem };

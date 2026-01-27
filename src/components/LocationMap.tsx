@@ -3,8 +3,6 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
-import { GOOGLE_MAPS_API_KEY } from '../constants';
-
 import type { Coordinates } from '@brewskey/js-api';
 
 interface Region {
@@ -72,4 +70,4 @@ const LocationMap = ({
   </MapView>
 );
 
-export default LocationMap;
+export { LocationMap };

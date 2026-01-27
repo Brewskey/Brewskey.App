@@ -67,4 +67,4 @@ const CenteredModal: React.FC<Props> = ({
   </Modal>
 );
 
-export default CenteredModal;
+export { CenteredModal };

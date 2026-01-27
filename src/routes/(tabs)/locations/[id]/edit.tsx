@@ -6,13 +6,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Container from '../../../../common/Container';
+import { Container } from '../../../../common/Container';
 import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../common/ErrorScreen';
-import Header from '../../../../common/Header';
-import LoadingIndicator from '../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../common/NotFoundScreen';
-import LocationForm from '../../../../components/LocationForm/LocationForm';
+import { ErrorScreen } from '../../../../common/ErrorScreen';
+import { Header } from '../../../../common/Header';
+import { LoadingIndicator } from '../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../common/NotFoundScreen';
+import { LocationForm } from '../../../../components/LocationForm/LocationForm';
 import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import { useGetLocationById } from '../../../../hooks/queries/LocationQueries';
 import { getStringFromEntityID } from '../../../../utils/getStringFromEntityID';
@@ -24,21 +24,14 @@ const EditLocationScreen: React.FC = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const locationId =
     typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+
+  // All hooks must be called unconditionally before any early returns
   const queryClient = useQueryClient();
   const addSnackBarMessage = useAddSnackBarMessage();
 
   const { data: location, isLoading } = useGetLocationById(
     locationId as EntityID,
   );
-
-  if (!locationId) {
-    return (
-      <NotFoundScreen
-        message="The location you're looking for could not be found."
-        title="Location Not Found"
-      />
-    );
-  }
 
   const updateMutation = useMutation({
     mutationFn: async (values: LocationMutator) => {
@@ -57,6 +50,15 @@ const EditLocationScreen: React.FC = () => {
   const onFormSubmit = async (values: LocationMutator): Promise<void> => {
     await updateMutation.mutateAsync(values);
   };
+
+  if (!locationId) {
+    return (
+      <NotFoundScreen
+        message="The location you're looking for could not be found."
+        title="Location Not Found"
+      />
+    );
+  }
 
   if (isLoading || !location) {
     return (

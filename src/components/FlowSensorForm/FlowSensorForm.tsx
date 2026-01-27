@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import FLOW_SENSOR_ITEMS from './flowSensorItems';
-import FlowSensorSwiperField from './FlowSensorSwiperField';
-import GallonSliderField from './GallonSliderField';
+import { FLOW_SENSOR_ITEMS } from './flowSensorItems';
+import { FlowSensorSwiperField } from './FlowSensorSwiperField';
+import { GallonSliderField } from './GallonSliderField';
 import { GallonTextField } from './GallonTextField';
 import { Form } from '../../common/form/Form';
 import { FormValidationMessage } from '../../common/form/FormValidationMessage';
 import { SubmitButton } from '../../common/form/SubmitButton';
-import SectionContent from '../../common/SectionContent';
+import { SectionContent } from '../../common/SectionContent';
 
 import type {
   EntityID,
@@ -99,5 +99,3 @@ export const FlowSensorForm: React.FC<Props> = ({
     </Form>
   );
 };
-
-export default FlowSensorForm;

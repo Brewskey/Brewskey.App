@@ -30,7 +30,10 @@ export const useGetKegById = (
 ): UseQueryResult<Keg> =>
   useQuery({
     queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(id)],
-    queryFn: async () => KegDAO.fetchByID(id),
+    queryFn: async () => {
+      if (id == null) throw new Error('id required');
+      return KegDAO.fetchByID(id);
+    },
     enabled: id != null,
   });
 

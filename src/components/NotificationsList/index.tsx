@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import NotificationComponentByType from './NotificationComponentByType';
+import { NotificationComponentByType } from './NotificationComponentByType';
 import { ErrorBoundary } from '../../common/ErrorBoundary';
-import ErrorListItem from '../../common/ErrorListItem';
-import List from '../../common/List';
-import ListEmpty from '../../common/ListEmpty';
-import NotificationsStore from '../../stores/NotificationsStore';
+import { ErrorListItem } from '../../common/ErrorListItem';
+import { List } from '../../common/List';
+import { ListEmpty } from '../../common/ListEmpty';
+import { notificationsStore } from '../../stores/NotificationsStore';
 
 import type { Notification } from '../../stores/NotificationTypes';
 
@@ -16,12 +16,12 @@ const NotificationsList: React.FC = () => {
   );
 
   const handleItemOpen = React.useCallback((notification: Notification) => {
-    NotificationsStore.deleteByID(notification.id);
+    notificationsStore.deleteByID(notification.id);
   }, []);
 
   const handleNotificationReadEnd = React.useCallback(
     (notification: Notification) => {
-      NotificationsStore.setRead(notification.id);
+      notificationsStore.setRead(notification.id);
     },
     [],
   );
@@ -37,7 +37,7 @@ const NotificationsList: React.FC = () => {
           isSwipeable: true,
           notification: item,
           onOpen: handleItemOpen,
-          onPress: NotificationsStore.onNotificationPress,
+          onPress: notificationsStore.onNotificationPress,
           onReadEnd: handleNotificationReadEnd,
         })}
       </ErrorBoundary>
@@ -52,10 +52,10 @@ const NotificationsList: React.FC = () => {
       listType="flatList"
       renderItem={renderItem}
       data={
-        { pages: [NotificationsStore.notifications], pageParams: [0] } as any
+        { pages: [notificationsStore.notifications], pageParams: [0] } as any
       }
     />
   );
 };
 
-export default NotificationsList;
+export { NotificationsList };

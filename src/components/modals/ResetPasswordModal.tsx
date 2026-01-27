@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import Button from '../../common/buttons/Button';
+import { CenteredModal } from './CenteredModal';
+import { Button } from '../../common/buttons/Button';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 const styles = StyleSheet.create({
@@ -29,7 +29,10 @@ interface Props {
   onHideModal: () => void;
 }
 
-const ResetPasswordModal: React.FC<Props> = ({ isVisible, onHideModal }) => (
+const ResetPasswordModalComponent: React.FC<Props> = ({
+  isVisible,
+  onHideModal,
+}) => (
   <CenteredModal
     isVisible={isVisible}
     onHideModal={onHideModal}
@@ -55,4 +58,4 @@ const ResetPasswordModal: React.FC<Props> = ({ isVisible, onHideModal }) => (
   </CenteredModal>
 );
 
-export default React.memo(ResetPasswordModal);
+export const ResetPasswordModal = React.memo(ResetPasswordModalComponent);

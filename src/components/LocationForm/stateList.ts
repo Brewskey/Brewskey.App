@@ -210,4 +210,4 @@ const STATE_LIST: StateConfig[] = [
   },
 ];
 
-export default STATE_LIST;
+export { STATE_LIST };

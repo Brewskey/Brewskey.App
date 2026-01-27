@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import MenuButton from './MenuButton';
-import Fragment from '../common/Fragment';
-import LogoutModal from './modals/LogoutModal';
+import { MenuButton } from './MenuButton';
+import { Fragment } from '../common/Fragment';
+import { DeleteModal } from './modals/DeleteModal';
 import { useLogout } from '../hooks/queries/AuthQueries';
 
 const MenuLogoutButton: React.FC = () => {
@@ -23,13 +23,15 @@ const MenuLogoutButton: React.FC = () => {
         testID="menu-item-logout"
         title="Log Out"
       />
-      <LogoutModal
+      <DeleteModal
         isVisible={isModalVisible}
+        message="Are you sure you want to logout?"
         onCancelButtonPress={() => setIsModalVisible(false)}
-        onLogoutButtonPress={onLogoutConfirm}
+        onDeleteButtonPress={onLogoutConfirm}
+        title="Logout"
       />
     </Fragment>
   );
 };
 
-export default MenuLogoutButton;
+export { MenuLogoutButton };

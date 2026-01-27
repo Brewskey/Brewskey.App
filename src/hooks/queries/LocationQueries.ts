@@ -67,7 +67,7 @@ export const useGetLocations = (
 export const useGetLocationsCount = (queryOptions?: QueryOptions) =>
   useQuery({
     queryKey: [LocationQueryKeys.LocationsCount, queryOptions],
-    queryFn: () => LocationDAO.count(queryOptions),
+    queryFn: async () => LocationDAO.count(queryOptions),
   });
 
 export const useGetNearbyLocations = (
@@ -80,7 +80,7 @@ export const useGetNearbyLocations = (
 ) =>
   useQuery({
     queryKey: [NEARBY_LOCATIONS_QUERY_KEY_BASE, parameters],
-    queryFn: () =>
+    queryFn: async () =>
       LocationDAO.getNearbyLocations({
         radius: 15_000,
         ...parameters,

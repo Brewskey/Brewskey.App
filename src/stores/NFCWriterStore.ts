@@ -1,14 +1,14 @@
 import { Auth } from '@brewskey/js-api';
 import NfcManager, { Ndef } from 'react-native-nfc-manager';
 
-import CONFIG from '../config';
-import SnackBarStore from '../hooks/context/SnackBarContext';
+import { CONFIG } from '../config';
+import { SnackBarStore } from '../hooks/context/SnackBarContext';
 
 import type { UserCredentials } from '@brewskey/js-api';
 
 type NFCWriterStoreStatus = 'instructions' | 'login' | 'writing';
 
-class NFCWriterStore {
+export class NFCWriterStore {
   isNFCSupported = true;
 
   status: NFCWriterStoreStatus = 'instructions';
@@ -115,5 +115,3 @@ class NFCWriterStore {
     await NfcManager.unregisterTagEvent();
   };
 }
-
-export default NFCWriterStore;

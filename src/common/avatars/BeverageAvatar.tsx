@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import BaseAvatar from './BaseAvatar';
-import CONFIG from '../../config';
+import { BaseAvatar } from './BaseAvatar';
+import { CONFIG } from '../../config';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -27,7 +27,7 @@ const BeverageAvatar: React.FC<Props> = ({
 }) => {
   const beverageIdString = beverageId != null ? beverageId.toString() : '';
 
-  if (beverageIdString == '') {
+  if (beverageIdString === '') {
     return null;
   }
 
@@ -49,4 +49,5 @@ const BeverageAvatar: React.FC<Props> = ({
   );
 };
 
-export default React.memo(BeverageAvatar);
+export const BeverageAvatarMemo = React.memo(BeverageAvatar);
+export { BeverageAvatarMemo as BeverageAvatar };

@@ -5,13 +5,13 @@ type Entries<T> = {
 }[keyof T][];
 
 export type UseMultipleQueryResultsData<
-  T extends Record<string, UseQueryResult<unknown>>,
+  T extends Record<string, UseQueryResult>,
 > = {
   [K in keyof T]: Exclude<T[K]['data'], undefined>;
 };
 
 export const useMultipleQueryResults = <
-  TQueries extends Record<string, UseQueryResult<unknown>>,
+  TQueries extends Record<string, UseQueryResult>,
 >(
   queries: TQueries,
 ): UseQueryResult<UseMultipleQueryResultsData<TQueries>> => {

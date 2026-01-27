@@ -1,12 +1,12 @@
-import * as React from 'react';
-
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text } from 'react-native';
 
-import Container from './Container';
-import Fragment from './Fragment';
-import Header from './Header';
+import { Container } from './Container';
+import { Fragment } from './Fragment';
+import { Header } from './Header';
 import { COLORS, TYPOGRAPHY } from '../theme';
+
+import type { ReactElement } from 'react';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ interface Props {
   shouldShowBackButton?: boolean;
 }
 
-const ErrorScreen = ({ shouldShowBackButton }: Props): React.ReactElement => (
+const ErrorScreen = ({ shouldShowBackButton }: Props): ReactElement => (
   <Fragment>
     <Header
       shouldShowBackButton={shouldShowBackButton}
@@ -38,10 +38,10 @@ const ErrorScreen = ({ shouldShowBackButton }: Props): React.ReactElement => (
         size={45}
       />
       <Text style={styles.text}>
-        Whoa! Brewskey had an error. We'll try to get it fixed soon.
+        Whoa! Brewskey had an error. We&apos;ll try to get it fixed soon.
       </Text>
     </Container>
   </Fragment>
 );
 
-export default ErrorScreen;
+export { ErrorScreen };

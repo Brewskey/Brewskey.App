@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, Text } from 'react-native';
 
-import Container from '../../../common/Container';
+import { Container } from '../../../common/Container';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 const styles = StyleSheet.create({
@@ -23,4 +23,4 @@ const WifiListEmpty = () => (
   </Container>
 );
 
-export default WifiListEmpty;
+export { WifiListEmpty };

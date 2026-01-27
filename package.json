@@ -5,6 +5,9 @@
   "scripts": {
     "start": "expo start",
     "build": "tsc --noEmit",
+    "lint": "expo lint",
+    "lint:fix": "expo lint --fix --quiet",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -15,9 +18,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report",
     "test:e2e:expo": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test\"",
-    "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\"",
-    "lint": "expo lint",
-    "lint:fix": "expo lint --fix"
+    "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\""
   },
   "dependencies": {
     "@brewskey/js-api": "^2.0.5",

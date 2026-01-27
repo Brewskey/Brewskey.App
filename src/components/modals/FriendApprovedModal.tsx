@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import CenteredModal from './CenteredModal';
-import DeleteModal from './DeleteModal';
-import Button from '../../common/buttons/Button';
-import Fragment from '../../common/Fragment';
+import { CenteredModal } from './CenteredModal';
+import { DeleteModal } from './DeleteModal';
+import { Button } from '../../common/buttons/Button';
+import { Fragment } from '../../common/Fragment';
 import { COLORS, TYPOGRAPHY } from '../../theme';
 
 import type { Account } from '@brewskey/js-api';
@@ -50,7 +50,7 @@ const FriendApprovedModal: React.FC<Props> = ({
     <Fragment>
       <CenteredModal
         header={<Text style={styles.headerText}>You are friends!</Text>}
-        isVisible={isVisible ? !isDeleteModalVisible : null}
+        isVisible={isVisible ? !isDeleteModalVisible : false}
         onHideModal={onHideModal}
       >
         <View style={styles.root}>
@@ -75,4 +75,4 @@ const FriendApprovedModal: React.FC<Props> = ({
   );
 };
 
-export default FriendApprovedModal;
+export { FriendApprovedModal };

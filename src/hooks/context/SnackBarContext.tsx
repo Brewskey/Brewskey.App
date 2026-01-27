@@ -173,4 +173,4 @@ const SnackBarStore = {
   },
 };
 
-export default SnackBarStore;
+export { SnackBarStore };

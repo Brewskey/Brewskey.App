@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Button from '../../common/buttons/Button';
+import { Button } from '../../common/buttons/Button';
 import { LoginForm } from '../../components/LoginForm';
 import { COLORS } from '../../theme';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { DropdownInput } from '../../common/form/DropdownInput';
 import { FormField } from '../../common/form/FormField';
-import STATE_LIST from '../LocationForm/stateList';
+import { STATE_LIST } from '../LocationForm/stateList';
 
 interface Props {
   name?: string;
@@ -25,4 +25,4 @@ const StatePicker = (props: Props): React.ReactElement => (
   />
 );
 
-export default StatePicker;
+export { StatePicker };

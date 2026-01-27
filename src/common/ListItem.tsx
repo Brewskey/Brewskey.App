@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { Fragment, isValidElement, memo, useCallback } from 'react';
 
 import { Badge, Icon, ListItem as RNEListItem, Switch } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 import { COLORS } from '../theme';
 
 import type { BadgeProps, IconProps } from '@rneui/themed';
+import type { ComponentProps, ReactElement, ReactNode } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -19,10 +20,10 @@ const styles = StyleSheet.create({
 type Props<TItem> = (
   | ({
       swipeable: true;
-      slideoutComponent: React.ReactNode;
+      slideoutComponent: ReactNode;
       item: TItem;
       onPress?: ((item: TItem) => void) | undefined;
-    } & Omit<React.ComponentProps<typeof RNEListItem.Swipeable>, 'onPress'>)
+    } & Omit<ComponentProps<typeof RNEListItem.Swipeable>, 'onPress'>)
   | ({ swipeable?: false } & (
       | {
           item: TItem;
@@ -30,15 +31,15 @@ type Props<TItem> = (
         }
       | { item?: never; onPress?: (() => void) | undefined }
     ) &
-      Omit<React.ComponentProps<typeof RNEListItem>, 'onPress'>)
+      Omit<ComponentProps<typeof RNEListItem>, 'onPress'>)
 ) & {
   containerStyle?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   subtitleStyle?: StyleProp<TextStyle>;
-  leftAvatar?: React.ReactNode;
-  title: React.ReactNode;
-  subtitle?: React.ReactNode;
-  rightIcon?: IconProps | React.ReactElement;
+  leftAvatar?: ReactNode;
+  title: ReactNode;
+  subtitle?: ReactNode;
+  rightIcon?: IconProps | ReactElement;
   chevron?: boolean;
   badge?: BadgeProps | undefined;
   switch?: {
@@ -48,10 +49,9 @@ type Props<TItem> = (
   testID?: string;
 };
 
-function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
+const ListItem = <TItem,>(props: Props<TItem>): ReactElement => {
   const {
     item,
-    onPress: _2,
     rightIcon,
     swipeable,
     switch: switchParams,
@@ -67,20 +67,39 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
     ...otherProps
   } = props;
 
-  const _onPress = React.useCallback((): void => {
+  const onPressHandler = useCallback((): void => {
+    const { onPress } = props;
     if (swipeable) {
-      props.onPress?.(props.item);
+      const swipeableProps = props;
+      onPress?.(swipeableProps.item);
     } else if (item != null) {
-      props.onPress?.(item);
+      const itemProps = props as Extract<
+        Props<TItem>,
+        { swipeable?: false; item: TItem }
+      >;
+      itemProps.onPress?.(item);
     } else {
       // For non-swipeable items without an item, onPress should be () => void
-      const onPress = props.onPress as (() => void) | undefined;
-      onPress?.();
+      const noItemProps = props as Extract<
+        Props<TItem>,
+        { swipeable?: false; item?: never }
+      >;
+      const fn = noItemProps.onPress as (() => void) | undefined;
+      fn?.();
     }
   }, [swipeable, item, props]);
 
+  const rightIconElement =
+    rightIcon != null ? (
+      isValidElement(rightIcon) ? (
+        rightIcon
+      ) : (
+        <Icon {...rightIcon} />
+      )
+    ) : null;
+
   const content = (
-    <React.Fragment>
+    <Fragment>
       {leftAvatar}
       <RNEListItem.Content>
         <RNEListItem.Title style={[styles.title, titleStyle]}>
@@ -92,14 +111,8 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
 
         {chevron === true ? <RNEListItem.Chevron /> : null}
       </RNEListItem.Content>
-      <React.Fragment>
-        {rightIcon != null ? (
-          React.isValidElement(rightIcon) ? (
-            rightIcon
-          ) : (
-            <Icon {...(rightIcon as IconProps)} />
-          )
-        ) : null}
+      <Fragment>
+        {rightIconElement}
         {switchParams != null ? (
           <Switch
             onValueChange={switchParams.onValueChange}
@@ -107,9 +120,9 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
             value={switchParams.value}
           />
         ) : null}
-      </React.Fragment>
+      </Fragment>
       {badge ? <Badge {...badge} /> : null}
-    </React.Fragment>
+    </Fragment>
   );
 
   if (swipeable) {
@@ -120,7 +133,7 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
         {...otherProps}
         bottomDivider
         containerStyle={[styles.container, containerStyle]}
-        onPress={_onPress}
+        onPress={onPressHandler}
         testID={testID}
       >
         {content}
@@ -133,12 +146,13 @@ function ListItem<TItem>(props: Props<TItem>): React.ReactElement {
       {...otherProps}
       bottomDivider
       containerStyle={[styles.container, containerStyle]}
-      onPress={_onPress}
+      onPress={onPressHandler}
       testID={testID}
     >
       {content}
     </RNEListItem>
   );
-}
+};
 
-export default React.memo(ListItem) as typeof ListItem;
+const ListItemMemo = memo(ListItem) as typeof ListItem;
+export { ListItemMemo as ListItem };

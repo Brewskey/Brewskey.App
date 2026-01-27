@@ -6,6 +6,7 @@ import type { PropsWithChildren } from 'react';
 import type {
   DefaultValues,
   FieldValues,
+  Path,
   UseFormReturn,
 } from 'react-hook-form';
 
@@ -21,17 +22,14 @@ export const Form = <TFormFields extends FieldValues>({
   form: outerFormSetup,
   validate,
 }: PropsWithChildren<FormProps<TFormFields>>) => {
-  const form =
-    outerFormSetup ??
-    useForm<TFormFields>({
-      defaultValues,
-    });
+  const innerForm = useForm<TFormFields>({ defaultValues });
+  const form = outerFormSetup ?? innerForm;
 
   // Register fields with validation if validate prop is provided
   React.useEffect(() => {
     if (validate && !outerFormSetup) {
       Object.keys(validate).forEach((fieldName) => {
-        form.register(fieldName, {
+        form.register(fieldName as unknown as Path<TFormFields>, {
           validate: validate[fieldName],
         });
       });

@@ -38,4 +38,4 @@ const DeviceTimeOpenPicker = (props: Props): React.ReactElement => (
   />
 );
 
-export default DeviceTimeOpenPicker;
+export { DeviceTimeOpenPicker };

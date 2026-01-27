@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { useMemo } from 'react';
 
-import { TapDAO } from '@brewskey/js-api';
-import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 
-import DeviceTapListEmpty from './DeviceTapListEmpty';
-import TapListItem from './TapListItem';
-import LoadingListFooter from '../common/LoadingListFooter';
-import QuickActions from '../common/QuickActions';
+import { DeviceTapListEmpty } from './DeviceTapListEmpty';
+import { TapListItem } from './TapListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { QuickActions } from '../common/QuickActions';
 import { SwipeableList } from '../common/SwipeableList';
-import SwipeableRow from '../common/SwipeableRow';
+import { SwipeableRow } from '../common/SwipeableRow';
 import { useDeleteTap, useGetTaps } from '../hooks/queries/TapQueries';
 
 import type { QueryOptions, Tap } from '@brewskey/js-api';
 
-import type { SwipeableListRef, RenderProps  } from '../common/SwipeableList';
+import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
 import type { RowItemProps } from '../common/SwipeableRow';
 
 interface Props {
@@ -33,7 +31,6 @@ const TapsList: React.FC<Props> = ({
   queryOptions = {},
 }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const swipeableListRef = React.useRef<SwipeableListRef>(null);
 
   const mergedQueryOptions = useMemo(
@@ -60,11 +57,11 @@ const TapsList: React.FC<Props> = ({
 
   const deleteTapMutation = useDeleteTap();
 
-  const onDeleteItemPress = async (item: Tap): Promise<void> => {
+  const handleDeleteItemPress = async (item: Tap): Promise<void> => {
     await deleteTapMutation.mutateAsync(item.id);
   };
 
-  const onEditItemPress = ({ id }: Tap) => {
+  const handleEditItemPress = ({ id }: Tap) => {
     router.navigate({
       pathname: '/(tabs)/taps/[tapId]/edit/feed',
       params: { tapId: String(id) },
@@ -72,7 +69,7 @@ const TapsList: React.FC<Props> = ({
     nullthrows(swipeableListRef.current).resetOpenRow();
   };
 
-  const onItemPress = (item: Tap): void => {
+  const handleItemPress = (item: Tap): void => {
     router.navigate({
       pathname: '/(tabs)/taps/[tapId]/on_tap',
       params: { tapId: String(item.id) },
@@ -116,9 +113,9 @@ const TapsList: React.FC<Props> = ({
       index={index}
       item={item}
       maxSwipeDistance={150}
-      onDeleteItemPress={onDeleteItemPress}
-      onEditItemPress={onEditItemPress}
-      onItemPress={onItemPress}
+      onDeleteItemPress={handleDeleteItemPress}
+      onEditItemPress={handleEditItemPress}
+      onItemPress={handleItemPress}
       rowItemComponent={SwipeableRowItem}
       separators={separators}
       slideoutComponent={Slideout}
@@ -157,4 +154,4 @@ const TapsList: React.FC<Props> = ({
   );
 };
 
-export default TapsList;
+export { TapsList };

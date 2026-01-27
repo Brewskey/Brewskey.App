@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import SetupStep from './SetupStep';
+import { SetupStep } from './SetupStep';
 import CutBeerLineImage from '../../resources/installation/1_cut-beer-line.png';
 import InstallSensorImage from '../../resources/installation/2_install-sensor.png';
 import DetachTowerImage from '../../resources/installation/3_detach-tower.png';
@@ -75,4 +75,4 @@ const SETUP_STEPS: React.ReactNode[] = [
   />,
 ];
 
-export default SETUP_STEPS;
+export { SETUP_STEPS };

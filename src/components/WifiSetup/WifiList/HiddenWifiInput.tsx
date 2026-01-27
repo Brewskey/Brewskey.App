@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import HiddenWifiForm from './HiddenWifiForm';
-import Container from '../../../common/Container';
+import { HiddenWifiForm } from './HiddenWifiForm';
+import { Container } from '../../../common/Container';
 import { COLORS, TYPOGRAPHY } from '../../../theme';
 
 import type { WifiNetwork } from '../../../types';

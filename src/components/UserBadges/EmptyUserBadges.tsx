@@ -19,4 +19,4 @@ const EmptyUserBadges = () => (
   </View>
 );
 
-export default EmptyUserBadges;
+export { EmptyUserBadges };

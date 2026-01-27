@@ -1,10 +1,9 @@
-import * as React from 'react';
-
 import { Icon, ListItem } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
 import { COLORS } from '../theme';
 
+import type { FC } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
 import type { LoaderErrorRowProps } from './LoaderRowTypes';
@@ -25,8 +24,8 @@ type Props = LoaderErrorRowProps<{
   containerStyle?: StyleProp<ViewStyle>;
 }>;
 
-const ErrorListItem: React.FC<Props> = ({
-  error: _,
+const ErrorListItem: FC<Props> = ({
+  error: unusedError,
   containerStyle,
   ...otherProps
 }) => (
@@ -38,4 +37,4 @@ const ErrorListItem: React.FC<Props> = ({
   </ListItem>
 );
 
-export default ErrorListItem;
+export { ErrorListItem };

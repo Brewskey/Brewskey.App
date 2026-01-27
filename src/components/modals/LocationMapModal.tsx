@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 
-import Modal from './Modal';
-import IconButton from '../../common/buttons/IconButton';
+import { Modal } from './Modal';
+import { IconButton } from '../../common/buttons/IconButton';
 import { COLORS } from '../../theme';
-import LocationMap from '../LocationMap';
+import { LocationMap } from '../LocationMap';
 
 import type { Coordinates } from '@brewskey/js-api';
 
@@ -48,4 +48,4 @@ const LocationMapModal = ({
   </Modal>
 );
 
-export default LocationMapModal;
+export { LocationMapModal };

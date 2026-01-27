@@ -7,10 +7,10 @@ import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { withErrorBoundary } from '../../../../common/ErrorBoundary';
-import ErrorScreen from '../../../../common/ErrorScreen';
-import LoadingIndicator from '../../../../common/LoadingIndicator';
-import NotFoundScreen from '../../../../common/NotFoundScreen';
-import FlowSensorForm from '../../../../components/FlowSensorForm/FlowSensorForm';
+import { ErrorScreen } from '../../../../common/ErrorScreen';
+import { LoadingIndicator } from '../../../../common/LoadingIndicator';
+import { NotFoundScreen } from '../../../../common/NotFoundScreen';
+import { FlowSensorForm } from '../../../../components/FlowSensorForm/FlowSensorForm';
 import { useAddSnackBarMessage } from '../../../../hooks/context/SnackBarContext';
 import {
   useCreateFlowSensor,
@@ -77,6 +77,7 @@ const EditFlowSensorRoute: React.FC = () => {
   const tapIdValue =
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
 
+  // All hooks must be called unconditionally before any early returns
   const queryClient = useQueryClient();
 
   const {
@@ -86,15 +87,6 @@ const EditFlowSensorRoute: React.FC = () => {
   } = useGetFlowSensorByTapId(tapIdValue as EntityID);
   const createMutation = useCreateFlowSensor();
   const addSnackBarMessage = useAddSnackBarMessage();
-
-  if (!tapIdValue) {
-    return (
-      <NotFoundScreen
-        message="The tap you're looking for could not be found."
-        title="Tap Not Found"
-      />
-    );
-  }
 
   const updateMutation = useMutation<
     FlowSensor,
@@ -118,6 +110,15 @@ const EditFlowSensorRoute: React.FC = () => {
       addSnackBarMessage({ content: 'The flow sensor set' });
     },
   });
+
+  if (!tapIdValue) {
+    return (
+      <NotFoundScreen
+        message="The tap you're looking for could not be found."
+        title="Tap Not Found"
+      />
+    );
+  }
 
   if (isLoading) {
     return (

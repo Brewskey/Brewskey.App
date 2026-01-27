@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Linking, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import Button from '../../../common/buttons/Button';
-import Container from '../../../common/Container';
+import { Button } from '../../../common/buttons/Button';
+import { Container } from '../../../common/Container';
 import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import ErrorScreen from '../../../common/ErrorScreen';
-import Header from '../../../common/Header';
-import Section from '../../../common/Section';
+import { ErrorScreen } from '../../../common/ErrorScreen';
+import { Header } from '../../../common/Header';
+import { Section } from '../../../common/Section';
 import { LoginForm } from '../../../components/LoginForm';
 import { TYPOGRAPHY } from '../../../theme';
 

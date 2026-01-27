@@ -12,21 +12,20 @@ import {
 } from 'react-native';
 
 import { BeverageDetailsLoader } from './BeverageDetailsLoader';
-import PintCounter from './PintCounter';
-import UserAvatar from '../common/avatars/UserAvatar';
-import Fragment from '../common/Fragment';
-import ListEmpty from '../common/ListEmpty';
-import ListItem from '../common/ListItem';
-import OverviewItem from '../common/OverviewItem';
-import { COLORS, TYPOGRAPHY } from '../theme';
-import { calculateKegLevel } from '../utils';
+import { PintCounter } from './PintCounter';
+import { UserAvatar } from '../common/avatars/UserAvatar';
+import { Fragment } from '../common/Fragment';
+import { List } from '../common/List';
+import { ListEmpty } from '../common/ListEmpty';
+import { ListItem } from '../common/ListItem';
+import { LoadingListFooter } from '../common/LoadingListFooter';
+import { OverviewItem } from '../common/OverviewItem';
+import { Section } from '../common/Section';
+import { SectionContent } from '../common/SectionContent';
 import { KEG_NAME_BY_KEG_TYPE, NULL_STRING_PLACEHOLDER } from '../constants';
 import { useGetPours } from '../hooks/queries/PourQueries';
-import LoadingListFooter from '../common/LoadingListFooter';
-import Section from '../common/Section';
-import SectionHeader from '../common/SectionHeader';
-import SectionContent from '../common/SectionContent';
-import List from '../common/List';
+import { COLORS, TYPOGRAPHY } from '../theme';
+import { calculateKegLevel } from '../utils';
 
 import type { EntityID, Keg, Pour } from '@brewskey/js-api';
 import type { ListRenderItemInfo } from 'react-native';
@@ -160,7 +159,9 @@ const KegPoursList: React.FC<{
       data={pours.data}
       keyExtractor={keyExtractor}
       listType="flatList"
-      onRefresh={pours.refetch}
+      onRefresh={() => {
+        void pours.refetch();
+      }}
       renderItem={renderRow}
       ListEmptyComponent={
         !pours.isLoading ? <ListEmpty message="No pours" /> : null
@@ -180,16 +181,7 @@ const KegPoursList: React.FC<{
 };
 
 const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
-  const {
-    beverage,
-    kegType,
-    maxOunces,
-    ounces,
-    tapDate,
-    floatedDate,
-    location,
-    pulses,
-  } = keg;
+  const { beverage, kegType, ounces, tapDate, floatedDate, location } = keg;
 
   const [activeTab, setActiveTab] = React.useState<'details' | 'pours'>(
     'details',
@@ -258,4 +250,4 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
   );
 };
 
-export default KegDetailsContent;
+export { KegDetailsContent };

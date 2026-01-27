@@ -1,12 +1,13 @@
 import * as React from 'react';
 
-import List from './List';
+import { List } from './List';
 
 import type { InfiniteData } from '@tanstack/react-query';
 import type {
   ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  SectionListData,
 } from 'react-native';
 
 import type { ListProps } from './List';
@@ -29,9 +30,9 @@ type Props<TEntity> = ListProps<TEntity> & {
   listType?: 'flatList' | 'sectionList';
   renderItem: (arg1: RenderProps<TEntity>) => React.ReactElement;
   renderSectionHeader?: (info: {
-    section: import('react-native').SectionListData<TEntity>;
+    section: SectionListData<TEntity>;
   }) => React.ReactElement | null;
-  sections?: readonly import('react-native').SectionListData<TEntity>[];
+  sections?: readonly SectionListData<TEntity>[];
   data?: InfiniteData<TEntity[]> | undefined;
   testID?: string;
 };
@@ -41,10 +42,7 @@ export interface SwipeableListRef {
 }
 
 export const SwipeableList = React.forwardRef<SwipeableListRef, Props<any>>(
-  (
-    props: Props<TEntity>,
-    ref: React.Ref<SwipeableListRef>,
-  ): React.ReactElement => {
+  (props: Props<any>, ref: React.Ref<SwipeableListRef>): React.ReactElement => {
     const {
       renderItem: _,
       listType = 'flatList',
@@ -115,7 +113,7 @@ export const SwipeableList = React.forwardRef<SwipeableListRef, Props<any>>(
     );
 
     const _renderItem = React.useCallback(
-      (info: ListRenderItemInfo<TEntity>): React.ReactElement => {
+      (info: ListRenderItemInfo<any>): React.ReactElement => {
         const key = keyExtractor(info.item, info.index);
         return renderItem({
           info,

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
-import EmptyUserBadges from './EmptyUserBadges';
-import LoadedUserBadges from './LoadedUserBadges';
+import { EmptyUserBadges } from './EmptyUserBadges';
+import { LoadedUserBadges } from './LoadedUserBadges';
 import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
 
 import type {
