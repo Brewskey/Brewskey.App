@@ -5,11 +5,7 @@ import { EmptyUserBadges } from './EmptyUserBadges';
 import { LoadedUserBadges } from './LoadedUserBadges';
 import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
 
-import type {
-  AchievementCounter,
-  AchievementType,
-  EntityID,
-} from '@brewskey/js-api';
+import type { AchievementType, EntityID } from '@brewskey/js-api';
 
 import type { LoadedUserBadgesHandle } from './LoadedUserBadges';
 

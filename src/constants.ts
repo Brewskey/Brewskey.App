@@ -1,7 +1,5 @@
 import { Platform } from 'react-native';
 
-import type { DeviceStatus, KegType } from '@brewskey/js-api';
-
 export const NULL_STRING_PLACEHOLDER = '–';
 
 export const UNAUTH_ERROR_CODE = 401;

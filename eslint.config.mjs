@@ -7,6 +7,7 @@ import { defineConfig } from 'eslint/config';
 import { configs, plugins, rules } from 'eslint-config-airbnb-extended';
 import { rules as prettierConfigRules } from 'eslint-config-prettier';
 import prettierPlugin from 'eslint-plugin-prettier';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 const require = createRequire(import.meta.url);
 const expoConfig = require('eslint-config-expo/flat');
@@ -51,6 +52,30 @@ const typescriptConfig = defineConfig([
   ...configs.react.typescript,
 ]);
 
+const unusedImportsConfig = defineConfig([
+  // Unused imports plugin
+  {
+    name: 'unused-imports/config',
+    plugins: {
+      'unused-imports': unusedImports,
+    },
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
+]);
+
 const prettierConfig = defineConfig([
   // Prettier plugin
   {
@@ -80,6 +105,8 @@ export default defineConfig([
   ...reactConfig,
   // TypeScript config
   ...typescriptConfig,
+  // Unused imports config
+  ...unusedImportsConfig,
   // Prettier config (must come last to override formatting rules)
   ...prettierConfig,
   // Prefer named exports over default exports

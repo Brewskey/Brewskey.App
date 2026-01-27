@@ -11,7 +11,7 @@ import { LocationForm } from '../../../components/LocationForm/LocationForm';
 import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { useCreateLocation } from '../../../hooks/queries/LocationQueries';
 
-import type { EntityID, Location, LocationMutator } from '@brewskey/js-api';
+import type { LocationMutator } from '@brewskey/js-api';
 
 const NewLocationScreen: React.FC = () => {
   const router = useRouter();

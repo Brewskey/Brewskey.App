@@ -15,7 +15,7 @@ import { useAddSnackBarMessage } from '../../../hooks/context/SnackBarContext';
 import { useGetDeviceById } from '../../../hooks/queries/DeviceQueries';
 import { useCreateTap } from '../../../hooks/queries/TapQueries';
 
-import type { EntityID, TapMutator } from '@brewskey/js-api';
+import type { TapMutator } from '@brewskey/js-api';
 
 const NewTapScreen: React.FC = () => {
   const router = useRouter();

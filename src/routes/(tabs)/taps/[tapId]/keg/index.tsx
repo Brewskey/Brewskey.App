@@ -25,8 +25,6 @@ import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 import { checkCanEdit } from '../../../../../permissionHelpers';
 import { COLORS, TYPOGRAPHY } from '../../../../../theme';
 
-import type { Beverage, Keg, Permission, Tap } from '@brewskey/js-api';
-
 const styles = StyleSheet.create({
   text: {
     ...TYPOGRAPHY.secondary,

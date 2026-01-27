@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { Text } from 'react-native';
-
 import { AchievementListItem } from './AchievementListItem';
 import { FriendRequestListItem } from './FriendRequestListItem';
 import { LowKegLevelListItem } from './LowKegLevelListItem';

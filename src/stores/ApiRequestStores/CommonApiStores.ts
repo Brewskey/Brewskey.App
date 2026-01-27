@@ -1,12 +1,7 @@
-import { deepIdCast } from '@brewskey/js-api';
-
 import { makeRequestApiStore } from './makeRequestApiStore';
 import { CONFIG } from '../../config';
-import { fetchJSON } from '../../utils';
 
 import type { EntityID } from '@brewskey/js-api';
-
-import type { Coordinates, NearbyLocation } from '../../types';
 
 // const makeNearbyLocationsStore = () => {
 //   const store = makeApiRequestStore<Array<NearbyLocation>>(

@@ -17,7 +17,6 @@ import { handleSubmitWithError } from '../../../../../common/form/handleSubmitWi
 import { TextInput } from '../../../../../common/form/TextInput';
 import { Header } from '../../../../../common/Header';
 import { LoadingIndicator } from '../../../../../common/LoadingIndicator';
-import { NotFoundScreen } from '../../../../../common/NotFoundScreen';
 import { Section } from '../../../../../common/Section';
 import { SectionHeader } from '../../../../../common/SectionHeader';
 import { MainTabBarFill } from '../../../../../components/MainTabBar/MainTabBarSlot';
@@ -40,9 +39,7 @@ import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 
 import type {
   EntityID,
-  Location,
   LocationMutator,
-  PriceVariant,
   PriceVariantMutator,
 } from '@brewskey/js-api';
 

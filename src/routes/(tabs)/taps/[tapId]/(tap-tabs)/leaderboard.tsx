@@ -20,8 +20,6 @@ import { useGetPermissionForEntityById } from '../../../../../hooks/queries/Perm
 import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 import { checkCanEdit } from '../../../../../permissionHelpers';
 
-import type { Tap } from '@brewskey/js-api';
-
 import type { LeaderboardDurationValue } from '../../../../../components/LeaderboardDurationPicker';
 
 const LeaderboardRoute: React.FC = () => {

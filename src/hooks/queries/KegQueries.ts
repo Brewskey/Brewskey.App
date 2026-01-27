@@ -1,4 +1,4 @@
-import { KegDAO, PourDAO } from '@brewskey/js-api';
+import { KegDAO } from '@brewskey/js-api';
 import {
   useInfiniteQuery,
   useMutation,

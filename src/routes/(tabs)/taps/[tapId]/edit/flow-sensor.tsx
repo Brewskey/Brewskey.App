@@ -1,11 +1,9 @@
 import * as React from 'react';
 
 import { FlowSensorDAO } from '@brewskey/js-api';
-import { Icon } from '@rneui/themed';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import nullthrows from 'nullthrows';
-import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { withErrorBoundary } from '../../../../../common/ErrorBoundary';

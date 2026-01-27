@@ -1,4 +1,4 @@
-import type { Permission, PermissionType } from '@brewskey/js-api';
+import type { Permission } from '@brewskey/js-api';
 
 const PERMISSION_RANG_BY_TYPE = {
   Administrator: 3,

@@ -1,9 +1,8 @@
 import * as React from 'react';
 
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { BaseAvatar } from '../common/avatars/BaseAvatar';
 import { UserAvatar } from '../common/avatars/UserAvatar';
 import { List } from '../common/List';
 import { ListEmpty } from '../common/ListEmpty';

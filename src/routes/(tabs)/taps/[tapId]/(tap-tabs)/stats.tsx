@@ -18,8 +18,6 @@ import { useGetPermissionForEntityById } from '../../../../../hooks/queries/Perm
 import { useGetTapById } from '../../../../../hooks/queries/TapQueries';
 import { checkCanEdit, checkIsAdmin } from '../../../../../permissionHelpers';
 
-import type { Permission, Tap } from '@brewskey/js-api';
-
 const StatsRoute: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
   const id =

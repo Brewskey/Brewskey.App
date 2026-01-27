@@ -16,7 +16,7 @@ import { LocationAddress } from '../../../components/LocationAddress';
 import { useGetLocationById } from '../../../hooks/queries/LocationQueries';
 import { TYPOGRAPHY } from '../../../theme';
 
-import type { EntityID, Location } from '@brewskey/js-api';
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   description: {

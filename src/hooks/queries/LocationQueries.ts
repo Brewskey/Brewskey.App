@@ -7,7 +7,6 @@ import {
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { NearbyLocation } from '../../types';
 import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
 
 import type {
