@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Modal as RNModal, TouchableWithoutFeedback } from 'react-native';
 
-import { StatusBarFake } from './StatusBarFake';
-import { Fragment } from '../../common/Fragment';
+import { StatusBarFake } from 'components/modals/StatusBarFake';
+import { Fragment } from 'common/Fragment';
 
 const emptyFunction = () => {};
 

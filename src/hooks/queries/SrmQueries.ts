@@ -2,7 +2,7 @@ import { SrmDAO } from '@brewskey/js-api';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { EntityID, QueryOptions, Srm } from '@brewskey/js-api';
 import type {

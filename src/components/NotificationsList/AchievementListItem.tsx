@@ -2,13 +2,13 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { NotificationListItem } from './NotificationListItem';
-import { BADGE_BY_TYPE } from '../../badges';
-import { COLORS, TYPOGRAPHY } from '../../theme';
-import { BadgeIcon } from '../BadgeIcon';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
+import { BADGE_BY_TYPE } from 'badges';
+import { COLORS, TYPOGRAPHY } from 'theme';
+import { BadgeIcon } from 'components/BadgeIcon';
 
-import type { Props as NotificationListItemProps } from './NotificationListItem';
-import type { NewAchievementNotification } from '../../stores/NotificationTypes';
+import type { Props as NotificationListItemProps } from 'components/NotificationsList/NotificationListItem';
+import type { NewAchievementNotification } from 'stores/NotificationTypes';
 
 const styles = StyleSheet.create({
   badgeNameText: {

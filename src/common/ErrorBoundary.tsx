@@ -1,6 +1,6 @@
 import { memo, PureComponent } from 'react';
 
-import { getElementFromComponentProp } from '../utils';
+import { getElementFromComponentProp } from 'utils';
 
 import type {
   ComponentClass,

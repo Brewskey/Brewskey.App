@@ -3,7 +3,7 @@ import { Fragment, isValidElement, memo, useCallback } from 'react';
 import { Badge, Icon, ListItem as RNEListItem, Switch } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 import type { BadgeProps, IconProps } from '@rneui/themed';
 import type { ComponentProps, ReactElement, ReactNode } from 'react';

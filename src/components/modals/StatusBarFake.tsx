@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Platform, StyleSheet, View } from 'react-native';
 
-import { COLORS } from '../../theme';
-import { getStatusBarHeight } from '../../utils';
+import { COLORS } from 'theme';
+import { getStatusBarHeight } from 'utils';
 
 const styles = StyleSheet.create({
   container: {

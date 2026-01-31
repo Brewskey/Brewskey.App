@@ -12,7 +12,10 @@ test.use({
   organizationCount: 1,
 });
 
-test('should populate stores based on configuration', async ({ page, mockStore }) => {
+test('should populate stores based on configuration', async ({
+  page,
+  mockStore,
+}) => {
   // Verify locations were created
   const locations = mockStore.getLocations();
   expect(locations.length).toBe(2);
@@ -22,10 +25,10 @@ test('should populate stores based on configuration', async ({ page, mockStore }
   // Verify taps were created (3 per location = 6 total)
   const taps = mockStore.getTaps();
   expect(taps.length).toBe(6);
-  
+
   // Verify all taps belong to the created locations
-  const locationIds = locations.map(l => l.id);
-  taps.forEach(tap => {
+  const locationIds = locations.map((l) => l.id);
+  taps.forEach((tap) => {
     expect(tap.location).toBeTruthy();
     if (tap.location) {
       expect(locationIds).toContain(tap.location.id);

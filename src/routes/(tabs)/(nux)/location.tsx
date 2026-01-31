@@ -4,17 +4,17 @@ import { Icon } from '@rneui/themed';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Container } from '../../../common/Container';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import { ErrorScreen } from '../../../common/ErrorScreen';
-import { SubmitButton } from '../../../common/form/SubmitButton';
-import { Header } from '../../../common/Header';
-import { LocationPicker } from '../../../components/pickers/LocationPicker';
+import { Container } from 'common/Container';
+import { withErrorBoundary } from 'common/ErrorBoundary';
+import { ErrorScreen } from 'common/ErrorScreen';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { Header } from 'common/Header';
+import { LocationPicker } from 'components/pickers/LocationPicker';
 import {
   useGetLocationById,
   useGetLocationsCount,
-} from '../../../hooks/queries/LocationQueries';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
+} from 'hooks/queries/LocationQueries';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { EntityID } from '@brewskey/js-api';
 

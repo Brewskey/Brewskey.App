@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 import type { PressableProps } from 'react-native';
 

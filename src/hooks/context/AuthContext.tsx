@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import BrewskeyJSApi from '@brewskey/js-api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { Storage, StorageKeys } from '../../utils/Storage';
+import { Storage, StorageKeys } from 'utils/Storage';
 
 import type { AuthResponse } from '@brewskey/js-api';
 import type { QueryClient } from '@tanstack/react-query';

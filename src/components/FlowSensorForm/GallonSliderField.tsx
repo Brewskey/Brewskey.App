@@ -3,8 +3,8 @@ import * as React from 'react';
 import { useWatch } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { SliderInput } from '../../common/form/SliderInput';
-import { TYPOGRAPHY } from '../../theme';
+import { SliderInput } from 'common/form/SliderInput';
+import { TYPOGRAPHY } from 'theme';
 
 const BOUNDARIES_PERCENT = 10;
 
@@ -51,7 +51,7 @@ const GallonSliderField = ({
           maximumValue={maxValue}
           minimumValue={minValue}
           name={name}
-          testID="input-gallons"
+          testID="pulses-per-gallon-slider"
         />
         <View style={styles.sliderLabelContainer}>
           <Text style={styles.textSlider}>-{BOUNDARIES_PERCENT}%</Text>

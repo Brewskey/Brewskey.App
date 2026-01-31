@@ -35,6 +35,6 @@ test('should navigate to add tap', async ({ page }) => {
   const addButton = page.getByTestId('button-add-tap');
   await expect(addButton).toBeVisible();
   await addButton.click();
-  
+
   await expect(page).toHaveURL(/.*tap.*new/i);
 });

@@ -9,10 +9,10 @@ import {
   View,
 } from 'react-native';
 
-import { Fragment } from '../common/Fragment';
-import { OverviewItem } from '../common/OverviewItem';
-import { CONFIG } from '../config';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { Fragment } from 'common/Fragment';
+import { OverviewItem } from 'common/OverviewItem';
+import { CONFIG } from 'config';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { Beverage } from '@brewskey/js-api';
 

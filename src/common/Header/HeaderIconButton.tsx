@@ -1,5 +1,5 @@
-import { COLORS } from '../../theme';
-import { IconButton } from '../buttons/IconButton';
+import { COLORS } from 'theme';
+import { IconButton } from 'common/buttons/IconButton';
 
 import type { ComponentProps, FC, ReactElement } from 'react';
 

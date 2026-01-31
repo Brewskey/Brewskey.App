@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 import type { ReactElement } from 'react';
 

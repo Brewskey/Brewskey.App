@@ -4,15 +4,15 @@ import { useImperativeHandle } from 'react';
 import moment from 'moment';
 import { StyleSheet, View } from 'react-native';
 
-import { Modal } from './Modal';
-import { Button } from '../../common/buttons/Button';
-import { IconButton } from '../../common/buttons/IconButton';
-import { Section } from '../../common/Section';
-import { SectionHeader } from '../../common/SectionHeader';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { useGetKegById } from '../../hooks/queries/KegQueries';
-import { COLORS } from '../../theme';
-import { KegDetailsContent } from '../KegDetailsContent';
+import { Modal } from 'components/modals/Modal';
+import { Button } from 'common/buttons/Button';
+import { IconButton } from 'common/buttons/IconButton';
+import { Section } from 'common/Section';
+import { SectionHeader } from 'common/SectionHeader';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useGetKegById } from 'hooks/queries/KegQueries';
+import { COLORS } from 'theme';
+import { KegDetailsContent } from 'components/KegDetailsContent';
 
 import type { EntityID } from '@brewskey/js-api';
 

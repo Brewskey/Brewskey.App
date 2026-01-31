@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CenteredModal } from './CenteredModal';
-import { DeleteModal } from './DeleteModal';
-import { Button } from '../../common/buttons/Button';
-import { Fragment } from '../../common/Fragment';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { DeleteModal } from 'components/modals/DeleteModal';
+import { Button } from 'common/buttons/Button';
+import { Fragment } from 'common/Fragment';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { Account } from '@brewskey/js-api';
 

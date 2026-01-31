@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
+import { FieldValues } from 'react-hook-form';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { useGetAvailabilities } from '../../hooks/queries/AvailabilityQueries';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { useGetAvailabilities } from 'hooks/queries/AvailabilityQueries';
 
 import type {
   Availability,
@@ -17,12 +18,14 @@ interface Props {
   error?: string | null | undefined;
   queryOptions?: QueryOptions;
   name: string;
+  testID?: string;
   defaultValue?: PickerValue<Availability | ShortenedEntity>;
   required?: boolean | string;
 }
 
 export const AvailabilityPicker: React.FC<Props> = ({
-  name = 'availability',
+  name,
+  testID,
   defaultValue,
   required,
   ...props
@@ -39,7 +42,7 @@ export const AvailabilityPicker: React.FC<Props> = ({
   );
 
   return (
-    <DropdownInput<Availability | ShortenedEntity>
+    <DropdownInput<FieldValues, Availability | ShortenedEntity>
       search
       confirmSelectItem={false}
       defaultValue={defaultValue ?? undefined}
@@ -50,7 +53,7 @@ export const AvailabilityPicker: React.FC<Props> = ({
       queryOptions={props.queryOptions ?? {}}
       required={required}
       searchPlaceholder="Search availability..."
-      testID={`availability-picker-${name}`}
+      testID={testID}
       useQueryHook={useGetAvailabilities}
       valueField="id"
     />

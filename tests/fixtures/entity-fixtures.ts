@@ -104,7 +104,14 @@ export async function mockLocationWithTaps(
 export async function mockTapWithKeg(
   page: Page,
   description?: string,
-): Promise<{ tap: Tap; keg: Keg; beverage: Beverage; organization: Organization; location: Location; device: Device }> {
+): Promise<{
+  tap: Tap;
+  keg: Keg;
+  beverage: Beverage;
+  organization: Organization;
+  location: Location;
+  device: Device;
+}> {
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
 
@@ -113,7 +120,11 @@ export async function mockTapWithKeg(
 
   const device = createMockDevice({
     location: { id: location.id, name: location.name, isDeleted: false },
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
   });
   mockStore.setDevice(device);
 
@@ -123,7 +134,11 @@ export async function mockTapWithKeg(
   const tap = createMockTap({
     locationId: location.id,
     deviceId: device.id,
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
     isPaymentEnabled: false, // Ensure this field exists
     description,
   });
@@ -224,7 +239,12 @@ export async function mockLocationOnly(
 export async function mockDeviceWithTaps(
   page: Page,
   tapCount: number = 2,
-): Promise<{ device: Device; taps: Tap[]; location: Location; organization: Organization }> {
+): Promise<{
+  device: Device;
+  taps: Tap[];
+  location: Location;
+  organization: Organization;
+}> {
   // Create organization first (required for device)
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
@@ -236,7 +256,11 @@ export async function mockDeviceWithTaps(
   // Create device with location and organization
   const device = createMockDevice({
     location: { id: location.id, name: location.name, isDeleted: false },
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
   });
   mockStore.setDevice(device);
 
@@ -269,7 +293,7 @@ export async function mockBeverageWithPours(
   // Get the authenticated user from mockStore if userID not provided
   let finalUserID = userID;
   let finalUserName = userName;
-  
+
   if (!finalUserID) {
     const users = mockStore.getUsers();
     if (users.length > 0) {
@@ -277,20 +301,22 @@ export async function mockBeverageWithPours(
       finalUserName = users[0].userName;
     }
   }
-  
+
   // Create SRM for the beverage (required field)
   const srm = createMockSrm();
   mockStore.setSrm(srm);
-  
+
   const beverage = createMockBeverage({
     beverageType: 'Beer',
     srm: srm,
-    ...(finalUserID && finalUserName ? { 
-      createdBy: { 
-        id: finalUserID, 
-        userName: finalUserName 
-      } 
-    } : {}),
+    ...(finalUserID && finalUserName
+      ? {
+          createdBy: {
+            id: finalUserID,
+            userName: finalUserName,
+          },
+        }
+      : {}),
     ...beverageOverrides,
   });
   mockStore.setBeverage(beverage);
@@ -339,7 +365,13 @@ export async function mockUserWithOrganizations(
 export async function mockTapWithFlowSensor(
   page: Page,
   flowSensorType: 'Titan' | 'Custom' = 'Titan',
-): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
+): Promise<{
+  tap: Tap;
+  flowSensor: FlowSensor;
+  organization: Organization;
+  location: Location;
+  device: Device;
+}> {
   const organization = createMockOrganization();
   mockStore.setOrganization(organization);
 
@@ -348,14 +380,22 @@ export async function mockTapWithFlowSensor(
 
   const device = createMockDevice({
     location: { id: location.id, name: location.name, isDeleted: false },
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
   });
   mockStore.setDevice(device);
 
   const tap = createMockTap({
     locationId: location.id,
     deviceId: device.id,
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
   });
   mockStore.setTap(tap);
 
@@ -369,15 +409,23 @@ export async function mockTapWithFlowSensor(
   return { tap, flowSensor, organization, location, device };
 }
 
-export async function mockTapWithCustomFlowSensor(
-  page: Page,
-): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
+export async function mockTapWithCustomFlowSensor(page: Page): Promise<{
+  tap: Tap;
+  flowSensor: FlowSensor;
+  organization: Organization;
+  location: Location;
+  device: Device;
+}> {
   return mockTapWithFlowSensor(page, 'Custom');
 }
 
-export async function mockTapWithStandardFlowSensor(
-  page: Page,
-): Promise<{ tap: Tap; flowSensor: FlowSensor; organization: Organization; location: Location; device: Device }> {
+export async function mockTapWithStandardFlowSensor(page: Page): Promise<{
+  tap: Tap;
+  flowSensor: FlowSensor;
+  organization: Organization;
+  location: Location;
+  device: Device;
+}> {
   return mockTapWithFlowSensor(page, 'Titan');
 }
 
@@ -448,18 +496,23 @@ export async function setupStatsData(
  * Sets up SRM data for beverage forms
  * Creates common SRM values (1-40) that are typically used
  */
-export async function setupSrmData(page: Page, count: number = 40): Promise<Srm[]> {
+export async function setupSrmData(
+  page: Page,
+  count: number = 40,
+): Promise<Srm[]> {
   const srms: Srm[] = [];
-  
+
   // Create SRMs with names 1-40 (typical SRM range)
   for (let i = 1; i <= count; i++) {
-    const srm = createMockSrm({ 
+    const srm = createMockSrm({
       name: i.toString(),
-      hex: `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`,
+      hex: `#${Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, '0')}`,
     });
     mockStore.setSrm(srm);
     srms.push(srm);
   }
-  
+
   return srms;
 }

@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { GOOGLE_MAPS_API_KEY } from '../../constants';
-import { fetchJSON } from '../../utils';
+import { GOOGLE_MAPS_API_KEY } from '@/constants';
+import { fetchJSON } from 'utils';
 
 const QUERY_KEY_BASE = 'GET_COORDINATES_FROM_ADDRESS';
 

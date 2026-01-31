@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { Text } from 'react-native';
 
-import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
-import { ListItem } from '../common/ListItem';
-import { COLORS } from '../theme';
-import { calculateKegLevel } from '../utils';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { ListItem } from 'common/ListItem';
+import { COLORS } from 'theme';
+import { calculateKegLevel } from 'utils';
 
 import type { Tap } from '@brewskey/js-api';
 

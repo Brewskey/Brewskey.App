@@ -18,7 +18,6 @@ test('should allow custom calibration input', async ({ page }) => {
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
 
   // Navigate to Custom sensor type (last item in swiper)
   // On web, use Previous/Next buttons to navigate to Custom
@@ -27,12 +26,12 @@ test('should allow custom calibration input', async ({ page }) => {
   for (let i = 0; i < 4; i++) {
     await nextButton.click();
   }
-  
+
   // Verify Custom sensor is selected
   await expect(page.getByTestId('flow-sensor-item-custom')).toBeVisible();
-  
-  // Calibration input should be visible for custom sensors
-  const calibrationInput = page.getByTestId('input-calibration');
+
+  // Custom sensor uses text input with testID pulses-per-gallon-input
+  const calibrationInput = page.getByTestId('pulses-per-gallon-input');
   await expect(calibrationInput).toBeVisible();
   await calibrationInput.fill('1.5');
 });
@@ -42,7 +41,6 @@ test('should successfully create custom flow sensor', async ({ page }) => {
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
 
   // Navigate to Custom sensor type (last item in swiper)
   const nextButton = page.getByTestId('button-flow-sensor-next');
@@ -50,22 +48,26 @@ test('should successfully create custom flow sensor', async ({ page }) => {
   for (let i = 0; i < 4; i++) {
     await nextButton.click();
   }
-  
+
   // Verify Custom sensor is selected
   await expect(page.getByTestId('flow-sensor-item-custom')).toBeVisible();
-  
-  // Fill out form: calibration input is required for custom sensors
-  const calibrationInput = page.getByTestId('input-calibration');
+
+  // Custom sensor uses text input with testID pulses-per-gallon-input
+  const calibrationInput = page.getByTestId('pulses-per-gallon-input');
   await expect(calibrationInput).toBeVisible();
   await calibrationInput.fill('1500');
 
   // Verify form is ready to submit
   await expect(page.getByTestId('submit-button-save')).toBeVisible();
   await expect(page.getByTestId('submit-button-save')).toBeEnabled();
-  
+
   await page.getByTestId('submit-button-save').click();
 
   // Form submission completes - verify success via snackbar or form state
   // Since form doesn't navigate without callback, verify snackbar appears or form resets
-  await expect(page.getByTestId('snackbar-message').or(page.getByTestId('submit-button-save'))).toBeVisible();
+  await expect(
+    page
+      .getByTestId('snackbar-message')
+      .or(page.getByTestId('submit-button-save')),
+  ).toBeVisible();
 });

@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { ON_END_REACHED_THRESHOLD } from '../constants';
+import { ON_END_REACHED_THRESHOLD } from '@/constants';
 
 import type { InfiniteData } from '@tanstack/react-query';
 import type { LegacyRef, ReactElement } from 'react';

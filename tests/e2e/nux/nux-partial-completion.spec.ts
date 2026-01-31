@@ -9,12 +9,12 @@ import { setAppSettingsStorage } from '../../fixtures/storage-helper';
 
 /**
  * Tests to verify that NUX persists when user stops partway through setup
- * 
+ *
  * The NUX flow should continue to appear until the user has completed:
  * 1. Created at least one location
- * 2. Created at least one device  
+ * 2. Created at least one device
  * 3. Created at least one tap
- * 
+ *
  * If a user stops at any point, they should see NUX when navigating to screens
  * that require the missing entities.
  */
@@ -40,7 +40,9 @@ test.describe('NUX Partial Completion - Location Only', () => {
 
     // Wait for the devices list query to complete (loading finishes)
     // The list shows ListEmptyComponent only when !isLoading
-    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('devices-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Should show NUX because no devices exist
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
@@ -188,7 +190,9 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
     await devicePage.goto();
 
     // Wait for the devices list query to complete (loading finishes)
-    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('devices-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -240,7 +244,9 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
     await devicePage.goto();
 
     // Wait for the devices list query to complete (loading finishes)
-    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('devices-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -252,7 +258,9 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
     await devicePage.goto();
 
     // Wait for the devices list query to complete again
-    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('devices-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
   });
@@ -306,7 +314,9 @@ test.describe('NUX Progressive Completion', () => {
     await locationPage.goto();
 
     // Wait for the locations list query to complete (loading finishes)
-    await expect(page.getByTestId('locations-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('locations-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -322,7 +332,9 @@ test.describe('NUX Progressive Completion', () => {
     await devicePage.goto();
 
     // Wait for the devices list query to complete (loading finishes)
-    await expect(page.getByTestId('devices-list')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('devices-list')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 

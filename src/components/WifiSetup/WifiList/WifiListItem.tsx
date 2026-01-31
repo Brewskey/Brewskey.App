@@ -4,13 +4,14 @@ import { Icon } from '@rneui/themed';
 import { useFormContext } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Button } from '../../../common/buttons/Button';
-import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
-import { TextField } from '../../../common/form/TextField';
-import { WIFI_SECURITIES } from '../../../SoftApService';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
+import { Button } from 'common/buttons/Button';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { TextInput } from 'common/form/TextInput';
+import { WIFI_SECURITIES } from 'SoftApService';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
-import type { WifiNetwork } from '../../../types';
+import type { WifiNetwork } from 'types';
 
 const styles = StyleSheet.create({
   container: {
@@ -86,13 +87,15 @@ const WifiListItem: React.FC<Props> = ({
       {isExpanded
         ? [
             isPasswordRequired && (
-              <TextField
+              <FormField<Record<string, string>, typeof TextInput>
                 key="password"
-                secureTextEntry
+                component={TextInput}
                 editable={!isConnecting}
                 label="Password"
                 name={`password_${rowKey}`}
                 onSubmitEditing={handleConnectPress}
+                required
+                secureTextEntry
               />
             ),
             <FormValidationMessage fieldName="wifiSetupError" />,

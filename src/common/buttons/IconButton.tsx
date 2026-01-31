@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import { TouchableItem } from './TouchableItem';
+import { TouchableItem } from 'common/buttons/TouchableItem';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 

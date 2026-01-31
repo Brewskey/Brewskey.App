@@ -6,6 +6,8 @@ import js from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import { configs, plugins, rules } from 'eslint-config-airbnb-extended';
 import { rules as prettierConfigRules } from 'eslint-config-prettier';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import { createNodeResolver } from 'eslint-plugin-import-x';
 import prettierPlugin from 'eslint-plugin-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
 
@@ -99,6 +101,20 @@ export default defineConfig([
   ...expoConfig,
   // Ignore files and folders listed in .gitignore
   includeIgnoreFile(gitignorePath),
+  // Import resolver for absolute imports (tsconfig baseUrl/paths)
+  {
+    name: 'import-x/resolver',
+    settings: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          project: './tsconfig.json',
+        }),
+        createNodeResolver({
+          extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        }),
+      ],
+    },
+  },
   // JavaScript config
   ...jsConfig,
   // React config
@@ -118,6 +134,14 @@ export default defineConfig([
       'import/no-default-export': 'error',
       'import-x/no-namespace': 'off',
       'no-underscore-dangle': 'off',
+    },
+  },
+  // Allow default exports in config files (required by ESLint, Babel, etc.)
+  {
+    name: 'config-allow-default-export',
+    files: ['*.config.{js,mjs,cjs,ts}', 'eslint.config.*'],
+    rules: {
+      'import/no-default-export': 'off',
     },
   },
   // Allow default exports in route files (required by Expo Router)

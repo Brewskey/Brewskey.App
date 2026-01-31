@@ -3,22 +3,25 @@ import { mockBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to beverage details', async ({ page, menuPage, authenticatedUser }) => {
+test('should navigate to beverage details', async ({
+  page,
+  menuPage,
+  authenticatedUser,
+}) => {
   // Set up explicit data: one beverage created by the authenticated user
   const { beverage } = await mockBeverageWithPours(
-    page, 
-    0, 
+    page,
+    0,
     authenticatedUser?.user.id,
-    authenticatedUser?.user.userName
+    authenticatedUser?.user.userName,
   );
 
   // Navigate through menu to beverages
   await menuPage.goto();
   await menuPage.clickBeverages();
-  
+
   // Wait for beverages list to be visible
   await expect(page.getByTestId('beverages-list')).toBeVisible();
-  
 
   // Beverage item has testID - use that instead of text-based locator
   await page.getByTestId(`beverage-item-${beverage.id}`).click();
@@ -30,10 +33,10 @@ test('should navigate to create beverage', async ({ page, menuPage }) => {
   // Navigate through menu to beverages
   await menuPage.goto();
   await menuPage.clickBeverages();
-  
+
   // Wait for page to load
   await expect(page.getByTestId('beverages-list')).toBeVisible();
-  
+
   // Click the add button using testID
   await page.getByTestId('header-add-button').click();
 

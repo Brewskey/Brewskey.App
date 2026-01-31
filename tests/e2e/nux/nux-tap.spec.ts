@@ -5,7 +5,6 @@ test('should display tap creation prompt', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoTapStep();
-  
 
   await expect(page).toHaveURL(/.*nux.*tap/i);
   // Tap screen has testID - use that instead of text-based locator
@@ -17,7 +16,6 @@ test('should show tap setup instructions', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoTapStep();
-  
 
   // Instructions text has testID - use that instead of text-based locator
   await expect(page.getByTestId('nux-tap-description')).toBeVisible();
@@ -27,7 +25,6 @@ test('should navigate to tap creation', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoTapStep();
-  
 
   // The NUX tap screen only has a "Next" button, not a create button
   // The navigation to tap creation happens after clicking Next

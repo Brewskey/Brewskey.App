@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 
-import { Modal } from './Modal';
-import { COLORS } from '../../theme';
-import { HardwareSetupGuide } from '../HardwareSetupGuide';
+import { Modal } from 'components/modals/Modal';
+import { COLORS } from 'theme';
+import { HardwareSetupGuide } from 'components/HardwareSetupGuide';
 
 const styles = StyleSheet.create({
   container: {

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { List } from './List';
+import { List } from 'common/List';
 
 import type { InfiniteData } from '@tanstack/react-query';
 import type {
@@ -10,7 +10,7 @@ import type {
   SectionListData,
 } from 'react-native';
 
-import type { ListProps } from './List';
+import type { ListProps } from 'common/List';
 
 export interface RenderProps<TEntity> {
   info: ListRenderItemInfo<TEntity>;

@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { ScrollView, View } from 'react-native';
 
-import { BadgeIcon } from '../BadgeIcon';
-import { EmptyUserBadges } from './EmptyUserBadges';
-import { styles } from './UserBadgesStyles';
-import { BadgeModal } from '../modals/BadgeModal';
+import { BadgeIcon } from 'components/BadgeIcon';
+import { EmptyUserBadges } from 'components/UserBadges/EmptyUserBadges';
+import { styles } from 'components/UserBadges/UserBadgesStyles';
+import { BadgeModal } from 'components/modals/BadgeModal';
 
 import type { AchievementCounter, AchievementType } from '@brewskey/js-api';
 

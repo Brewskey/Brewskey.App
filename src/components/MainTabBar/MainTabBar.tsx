@@ -1,20 +1,20 @@
 import * as React from 'react';
 
-// import NotificationsStore from '../../stores/NotificationsStore';
+// import NotificationsStore from 'stores/NotificationsStore';
 import nullthrows from 'nullthrows';
 import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { BadgeContainer } from './BadgeContainer';
-import { useMainTabBarSlot } from './MainTabBarSlot';
-import { PourButton } from './PourButton';
-import { TabBarButton } from './TabBarButton';
-import { COLORS } from '../../theme';
+import { BadgeContainer } from 'components/MainTabBar/BadgeContainer';
+import { useMainTabBarSlot } from 'components/MainTabBar/MainTabBarSlot';
+import { PourButton } from 'components/MainTabBar/PourButton';
+import { TabBarButton } from 'components/MainTabBar/TabBarButton';
+import { COLORS } from 'theme';
 
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
 
-import type { TouchableItem } from '../../common/buttons/TouchableItem';
+import type { TouchableItem } from 'common/buttons/TouchableItem';
 
 const styles = StyleSheet.create({
   container: {
@@ -89,13 +89,13 @@ export const MainTabBar: React.FC<BottomTabBarProps> = ({
           icon={{ name: 'home' }}
           isFocused={state.index === 0}
           onPress={_onTabPress}
-          route={getRouteByRouteName('home', state.routes)}
+          route={getRouteByRouteName('(feed)', state.routes)}
         />
         <TabBarButton
           icon={{ name: 'chart-pie', type: 'material-community' }}
           isFocused={state.index === 1}
           onPress={_onTabPress}
-          route={getRouteByRouteName('stats', state.routes)}
+          route={getRouteByRouteName('(stats)', state.routes)}
         />
         <PourButton />
         <TabBarButton
@@ -103,14 +103,14 @@ export const MainTabBar: React.FC<BottomTabBarProps> = ({
           iconContainerComponent={NotificationBadges}
           isFocused={state.index === 2}
           onPress={_onTabPress}
-          route={getRouteByRouteName('notifications', state.routes)}
+          route={getRouteByRouteName('(notifications)', state.routes)}
         />
         <TabBarButton
           icon={{ name: 'menu' }}
           iconContainerComponent={FriendRequestBadge}
           isFocused={state.index === 3}
           onPress={_onTabPress}
-          route={getRouteByRouteName('menu', state.routes)}
+          route={getRouteByRouteName('(menu)', state.routes)}
         />
       </View>
     </View>

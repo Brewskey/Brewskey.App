@@ -3,16 +3,16 @@ import nullthrows from 'nullthrows';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import type { InputProps } from '@rneui/themed';
-import type { Validate } from 'react-hook-form';
+import type { FieldValues, Validate } from 'react-hook-form';
 import type { StyleProp, TextStyle } from 'react-native';
 
-export type TextInputProps = Omit<
+export type TextInputProps<TFormFields extends FieldValues> = Omit<
   InputProps,
-  'onBlur' | 'onChangeText' | 'value'
+  'onBlur' | 'onChangeText' | 'value' | 'name'
 > & {
   inputStyle?: StyleProp<TextStyle>;
   underlineColorAndroid?: string;
-  name: string;
+  name: Extract<keyof TFormFields, string>;
   defaultValue?: string;
   nextFocusTo?: string;
   validationTextStyle?: StyleProp<TextStyle>;
@@ -21,7 +21,7 @@ export type TextInputProps = Omit<
   testID?: string;
 };
 
-export const TextInput: React.FC<TextInputProps> = ({
+export const TextInput = <TFormFields extends FieldValues>({
   nextFocusTo,
   defaultValue,
   inputStyle,
@@ -30,7 +30,7 @@ export const TextInput: React.FC<TextInputProps> = ({
   name,
   testID,
   ...props
-}: TextInputProps) => {
+}: TextInputProps<TFormFields>) => {
   const { control, setFocus } = useFormContext();
 
   return (
@@ -39,7 +39,7 @@ export const TextInput: React.FC<TextInputProps> = ({
       defaultValue={defaultValue ?? ''}
       rules={{ required }}
       name={nullthrows(
-        name,
+        name.toString(),
         'TextInput: name prop is required and must be a non-empty string',
       )}
       render={({ field: { onChange, onBlur, value } }) => (

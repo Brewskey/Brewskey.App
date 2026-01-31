@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 
-import { HeaderIconButton } from './HeaderIconButton';
+import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 
 import type { FC } from 'react';
 

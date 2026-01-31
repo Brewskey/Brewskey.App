@@ -238,17 +238,22 @@ function parseODataQuery(url: string): {
   orderBy?: string;
 } {
   const urlObj = new URL(url);
-  
+
   // Check for OData format: /api/v2/entity(id) or /api/v2/entity/id
   // Handle URLs like: /api/v2/taps(4)/?$format=json&$expand=...
-  const idMatch = url.match(/\/api\/v2\/([^/(?]+)(?:\((\d+)\)|\/(\d+))(?:\/|\?|$)/);
+  const idMatch = url.match(
+    /\/api\/v2\/([^/(?]+)(?:\((\d+)\)|\/(\d+))(?:\/|\?|$)/,
+  );
   let entity = '';
   let id: EntityID | undefined = undefined;
-  
+
   if (idMatch) {
     // Format: /api/v2/taps(1) or /api/v2/taps/1 or /api/v2/taps(1)/?query
     entity = idMatch[1];
-    id = idMatch[2] || idMatch[3] ? parseInt(idMatch[2] || idMatch[3]!, 10) : undefined;
+    id =
+      idMatch[2] || idMatch[3]
+        ? parseInt(idMatch[2] || idMatch[3]!, 10)
+        : undefined;
   } else {
     // Format: /api/v2/taps (list endpoint)
     const pathParts = urlObj.pathname.split('/');
@@ -271,7 +276,10 @@ function parseODataQuery(url: string): {
 }
 
 // Helper to get nested property value from an object (e.g., "tap/id" -> obj.tap.id)
-function getNestedProperty(obj: Record<string, unknown>, path: string): unknown {
+function getNestedProperty(
+  obj: Record<string, unknown>,
+  path: string,
+): unknown {
   const parts = path.split('/');
   let current: unknown = obj;
   for (const part of parts) {
@@ -301,16 +309,21 @@ function filterEntities<T extends { id: EntityID }>(
         const fieldName = field.trim().replace(/[()']/g, '');
         const fieldValue = value.trim().replace(/[()']/g, '');
         const entityRecord = entity as Record<string, unknown>;
-        
+
         // Handle nested properties (e.g., "tap/id" -> entity.tap.id)
         // Also handle flat properties (e.g., "tapId" -> entity.tapId)
         let fieldValueToCompare: string | undefined;
         if (fieldName.includes('/')) {
           // Nested property like "tap/id" - try nested first, then camelCase fallback
-          fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+          fieldValueToCompare = getNestedProperty(
+            entityRecord,
+            fieldName,
+          )?.toString();
           if (!fieldValueToCompare) {
             // Fallback to camelCase property (e.g., "tap/id" -> "tapId")
-            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) => letter.toUpperCase());
+            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) =>
+              letter.toUpperCase(),
+            );
             fieldValueToCompare = entityRecord[camelCaseField]?.toString();
           }
         } else {
@@ -324,16 +337,21 @@ function filterEntities<T extends { id: EntityID }>(
         const fieldName = field.trim().replace(/[()']/g, '');
         const fieldValue = value.trim().replace(/[()']/g, '');
         const entityRecord = entity as Record<string, unknown>;
-        
+
         // Handle nested properties (e.g., "tap/id" -> entity.tap.id)
         // Also handle flat properties (e.g., "tapId" -> entity.tapId)
         let fieldValueToCompare: string | undefined;
         if (fieldName.includes('/')) {
           // Nested property like "tap/id" - try nested first, then camelCase fallback
-          fieldValueToCompare = getNestedProperty(entityRecord, fieldName)?.toString();
+          fieldValueToCompare = getNestedProperty(
+            entityRecord,
+            fieldName,
+          )?.toString();
           if (!fieldValueToCompare) {
             // Fallback to camelCase property (e.g., "tap/id" -> "tapId")
-            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) => letter.toUpperCase());
+            const camelCaseField = fieldName.replace(/\/(\w)/g, (_, letter) =>
+              letter.toUpperCase(),
+            );
             fieldValueToCompare = entityRecord[camelCaseField]?.toString();
           }
         } else {
@@ -351,29 +369,29 @@ function filterEntities<T extends { id: EntityID }>(
 function normalizeEntityName(entityName: string): string {
   // Map common variations to EntityType values
   const entityMap: Record<string, EntityType> = {
-    'locations': 'locations',
-    'location': 'locations',
-    'taps': 'taps',
-    'tap': 'taps',
-    'devices': 'devices',
-    'device': 'devices',
-    'beverages': 'beverages',
-    'beverage': 'beverages',
-    'kegs': 'kegs',
-    'keg': 'kegs',
-    'accounts': 'accounts',
-    'account': 'accounts',
-    'pours': 'pours',
-    'pour': 'pours',
-    'friends': 'friends',
-    'friend': 'friends',
-    'permissions': 'permissions',
-    'permission': 'permissions',
+    locations: 'locations',
+    location: 'locations',
+    taps: 'taps',
+    tap: 'taps',
+    devices: 'devices',
+    device: 'devices',
+    beverages: 'beverages',
+    beverage: 'beverages',
+    kegs: 'kegs',
+    keg: 'kegs',
+    accounts: 'accounts',
+    account: 'accounts',
+    pours: 'pours',
+    pour: 'pours',
+    friends: 'friends',
+    friend: 'friends',
+    permissions: 'permissions',
+    permission: 'permissions',
     'flow-sensors': 'flow-sensors',
     'flow-sensor': 'flow-sensors',
-    'flowSensors': 'flow-sensors',
-    'organizations': 'organizations',
-    'organization': 'organizations',
+    flowSensors: 'flow-sensors',
+    organizations: 'organizations',
+    organization: 'organizations',
     'beverage-srms': 'beverage-srms',
     'beverage-srm': 'beverage-srms',
     'price-variants': 'price-variants',
@@ -397,7 +415,11 @@ function parseFormData(body: string): Record<string, string> {
 }
 
 // Helper to create AuthResponse from user
-function createAuthResponseFromUser(user: Account, accessToken?: string, refreshToken?: string): AuthResponse {
+function createAuthResponseFromUser(
+  user: Account,
+  accessToken?: string,
+  refreshToken?: string,
+): AuthResponse {
   const now = Date.now();
   return {
     accessToken: accessToken || `mock_token_${user.id}`,
@@ -416,7 +438,9 @@ function createAuthResponseFromUser(user: Account, accessToken?: string, refresh
 }
 
 // Helper to convert AuthResponse to LoginResponse format (snake_case)
-function authResponseToLoginResponse(authResponse: AuthResponse): Record<string, string> {
+function authResponseToLoginResponse(
+  authResponse: AuthResponse,
+): Record<string, string> {
   return {
     email: authResponse.email,
     id: authResponse.id.toString(),
@@ -478,38 +502,64 @@ type EntityType =
 // Helper to get entity by ID from store
 function getEntityById(entityType: EntityType, id: EntityID): any {
   switch (entityType) {
-    case 'accounts': return mockStore.getUser(id);
-    case 'locations': return mockStore.getLocation(id);
-    case 'taps': return mockStore.getTap(id);
-    case 'beverages': return mockStore.getBeverage(id);
-    case 'kegs': return mockStore.getKeg(id);
-    case 'devices': return mockStore.getDevice(id);
-    case 'pours': return mockStore.getPour(id);
-    case 'friends': return mockStore.getFriend(id);
-    case 'permissions': return mockStore.getPermission(id);
-    case 'flow-sensors': return mockStore.getFlowSensor(id);
-    case 'organizations': return mockStore.getOrganization(id);
-    case 'price-variants': return undefined;
-    default: return undefined;
+    case 'accounts':
+      return mockStore.getUser(id);
+    case 'locations':
+      return mockStore.getLocation(id);
+    case 'taps':
+      return mockStore.getTap(id);
+    case 'beverages':
+      return mockStore.getBeverage(id);
+    case 'kegs':
+      return mockStore.getKeg(id);
+    case 'devices':
+      return mockStore.getDevice(id);
+    case 'pours':
+      return mockStore.getPour(id);
+    case 'friends':
+      return mockStore.getFriend(id);
+    case 'permissions':
+      return mockStore.getPermission(id);
+    case 'flow-sensors':
+      return mockStore.getFlowSensor(id);
+    case 'organizations':
+      return mockStore.getOrganization(id);
+    case 'price-variants':
+      return undefined;
+    default:
+      return undefined;
   }
 }
 
 // Helper to get all entities of a type from store
 function getAllEntities(entityType: EntityType): any[] {
   switch (entityType) {
-    case 'accounts': return mockStore.getUsers();
-    case 'locations': return mockStore.getLocations();
-    case 'taps': return mockStore.getTaps();
-    case 'beverages': return mockStore.getBeverages();
-    case 'kegs': return mockStore.getKegs();
-    case 'devices': return mockStore.getDevices();
-    case 'pours': return mockStore.getPours();
-    case 'friends': return mockStore.getFriends();
-    case 'permissions': return mockStore.getPermissions();
-    case 'flow-sensors': return mockStore.getFlowSensors();
-    case 'organizations': return mockStore.getOrganizations();
-    case 'beverage-srms': return mockStore.getSrms();
-    default: return [];
+    case 'accounts':
+      return mockStore.getUsers();
+    case 'locations':
+      return mockStore.getLocations();
+    case 'taps':
+      return mockStore.getTaps();
+    case 'beverages':
+      return mockStore.getBeverages();
+    case 'kegs':
+      return mockStore.getKegs();
+    case 'devices':
+      return mockStore.getDevices();
+    case 'pours':
+      return mockStore.getPours();
+    case 'friends':
+      return mockStore.getFriends();
+    case 'permissions':
+      return mockStore.getPermissions();
+    case 'flow-sensors':
+      return mockStore.getFlowSensors();
+    case 'organizations':
+      return mockStore.getOrganizations();
+    case 'beverage-srms':
+      return mockStore.getSrms();
+    default:
+      return [];
   }
 }
 
@@ -539,21 +589,33 @@ export function setupAPIMocks(page: Page): void {
         if (grantType === 'password') {
           // Login request
           const userName = params.userName;
-          const user = mockStore.getUsers().find((u) => u.userName === userName);
-          
+          const user = mockStore
+            .getUsers()
+            .find((u) => u.userName === userName);
+
           if (user) {
             const authResponse = createAuthResponseFromUser(user);
             mockStore.setAuthToken(authResponse.accessToken, authResponse);
-            return fulfillJSONResponse(route, 200, authResponseToLoginResponse(authResponse));
+            return fulfillJSONResponse(
+              route,
+              200,
+              authResponseToLoginResponse(authResponse),
+            );
           }
 
-          return fulfillErrorResponse(route, 400, 'invalid_grant', 'Invalid credentials');
+          return fulfillErrorResponse(
+            route,
+            400,
+            'invalid_grant',
+            'Invalid credentials',
+          );
         }
 
         if (grantType === 'refresh_token') {
           // Token refresh request
           const refreshToken = params.refresh_token;
-          const authResponse = mockStore.getAuthTokenByRefreshToken(refreshToken);
+          const authResponse =
+            mockStore.getAuthTokenByRefreshToken(refreshToken);
 
           if (authResponse) {
             // Generate new tokens
@@ -569,10 +631,19 @@ export function setupAPIMocks(page: Page): void {
               issuedAt: new Date(now),
             };
             mockStore.setAuthToken(newAccessToken, newAuthResponse);
-            return fulfillJSONResponse(route, 200, authResponseToLoginResponse(newAuthResponse));
+            return fulfillJSONResponse(
+              route,
+              200,
+              authResponseToLoginResponse(newAuthResponse),
+            );
           }
 
-          return fulfillErrorResponse(route, 400, 'invalid_grant', 'Invalid refresh token');
+          return fulfillErrorResponse(
+            route,
+            400,
+            'invalid_grant',
+            'Invalid refresh token',
+          );
         }
 
         return fulfillErrorResponse(route, 400, 'unsupported_grant_type');
@@ -596,17 +667,32 @@ export function setupAPIMocks(page: Page): void {
     if (method === 'POST') {
       try {
         const body = await route.request().postDataJSON();
-        
+
         // Validate TOTP format (6 digits) if provided
-        if (body.totp && (typeof body.totp !== 'string' || body.totp.length !== 6 || !/^\d+$/.test(body.totp))) {
-          return fulfillErrorResponse(route, 400, 'Invalid code', 'The passcode you entered was incorrect or expired. Please try a new code.');
+        if (
+          body.totp &&
+          (typeof body.totp !== 'string' ||
+            body.totp.length !== 6 ||
+            !/^\d+$/.test(body.totp))
+        ) {
+          return fulfillErrorResponse(
+            route,
+            400,
+            'Invalid code',
+            'The passcode you entered was incorrect or expired. Please try a new code.',
+          );
         }
-        
+
         // Validate deviceId if provided
         if (body.deviceId && typeof body.deviceId !== 'number') {
-          return fulfillErrorResponse(route, 400, 'Invalid device', 'Invalid device ID');
+          return fulfillErrorResponse(
+            route,
+            400,
+            'Invalid device',
+            'Invalid device ID',
+          );
         }
-        
+
         // Success response
         return fulfillJSONResponse(route, 200, { success: true });
       } catch (error) {
@@ -630,19 +716,33 @@ export function setupAPIMocks(page: Page): void {
       if (method === 'POST') {
         if (url.includes('/api/account/register/')) {
           const body = await route.request().postDataJSON();
-          
+
           // Check for duplicate email
-          const existingUser = mockStore.getUsers().find((u) => u.email === body.email);
+          const existingUser = mockStore
+            .getUsers()
+            .find((u) => u.email === body.email);
           if (existingUser) {
-            return fulfillErrorResponse(route, 400, 'Duplicate email', 'A user with this email already exists');
+            return fulfillErrorResponse(
+              route,
+              400,
+              'Duplicate email',
+              'A user with this email already exists',
+            );
           }
-          
+
           // Check for duplicate userName
-          const existingUserName = mockStore.getUsers().find((u) => u.userName === body.userName);
+          const existingUserName = mockStore
+            .getUsers()
+            .find((u) => u.userName === body.userName);
           if (existingUserName) {
-            return fulfillErrorResponse(route, 400, 'Duplicate userName', 'A user with this user name already exists');
+            return fulfillErrorResponse(
+              route,
+              400,
+              'Duplicate userName',
+              'A user with this user name already exists',
+            );
           }
-          
+
           const newUser = createMockUser({
             userName: body.userName,
             email: body.email,
@@ -652,7 +752,10 @@ export function setupAPIMocks(page: Page): void {
         }
 
         // Both change-password and reset-password return empty success
-        if (url.includes('/api/account/change-password/') || url.includes('/api/account/reset-password/')) {
+        if (
+          url.includes('/api/account/change-password/') ||
+          url.includes('/api/account/reset-password/')
+        ) {
           return fulfillJSONResponse(route, 200, {});
         }
       }
@@ -671,41 +774,57 @@ export function setupAPIMocks(page: Page): void {
   page.route('**/api/v2/**', async (route: Route) => {
     const url = route.request().url();
     const method = route.request().method();
-    
+
     const query = parseODataQuery(url);
 
     try {
       // Handle authentication endpoints
       if (url.includes('/Auth/login') && method === 'POST') {
         const body = await route.request().postDataJSON();
-        const user = mockStore.getUsers().find((u) => u.userName === body.userName);
-        
+        const user = mockStore
+          .getUsers()
+          .find((u) => u.userName === body.userName);
+
         if (user) {
           const authResponse = createAuthResponseFromUser(user);
           mockStore.setAuthToken(authResponse.accessToken, authResponse);
           return fulfillJSONResponse(route, 200, authResponse);
           return;
         }
-        
+
         return fulfillErrorResponse(route, 401, 'Invalid credentials');
         return;
       }
 
       if (url.includes('/Auth/register') && method === 'POST') {
         const body = await route.request().postDataJSON();
-        
+
         // Check for duplicate email
-        const existingUser = mockStore.getUsers().find((u) => u.email === body.email);
+        const existingUser = mockStore
+          .getUsers()
+          .find((u) => u.email === body.email);
         if (existingUser) {
-          return fulfillErrorResponse(route, 400, 'Duplicate email', 'A user with this email already exists');
+          return fulfillErrorResponse(
+            route,
+            400,
+            'Duplicate email',
+            'A user with this email already exists',
+          );
         }
-        
+
         // Check for duplicate userName
-        const existingUserName = mockStore.getUsers().find((u) => u.userName === body.userName);
+        const existingUserName = mockStore
+          .getUsers()
+          .find((u) => u.userName === body.userName);
         if (existingUserName) {
-          return fulfillErrorResponse(route, 400, 'Duplicate userName', 'A user with this user name already exists');
+          return fulfillErrorResponse(
+            route,
+            400,
+            'Duplicate userName',
+            'A user with this user name already exists',
+          );
         }
-        
+
         const newUser = createMockUser({
           userName: body.userName,
           email: body.email,
@@ -719,16 +838,18 @@ export function setupAPIMocks(page: Page): void {
       if (url.includes('Default.leaderboard') && method === 'GET') {
         // Extract tap ID from URL - handle both patterns: taps(123) and taps/123
         const tapIdMatch = url.match(/\/taps(?:\((\d+)\)|\/(\d+))\/?/);
-        const tapId = tapIdMatch ? parseInt(tapIdMatch[1] || tapIdMatch[2], 10) : null;
-        
+        const tapId = tapIdMatch
+          ? parseInt(tapIdMatch[1] || tapIdMatch[2], 10)
+          : null;
+
         if (!tapId) {
           return fulfillErrorResponse(route, 400, 'Invalid tap ID');
         }
-        
+
         // Return empty leaderboard array for now
         // In a real scenario, you'd query pours and aggregate by user
         const leaderboard: any[] = [];
-        
+
         return fulfillJSONResponse(route, 200, leaderboard);
       }
 
@@ -747,52 +868,64 @@ export function setupAPIMocks(page: Page): void {
         // Parse query params for latitude, longitude, radius
         const urlObj = new URL(url);
         const latitude = parseFloat(urlObj.searchParams.get('latitude') || '0');
-        const longitude = parseFloat(urlObj.searchParams.get('longitude') || '0');
-        
+        const longitude = parseFloat(
+          urlObj.searchParams.get('longitude') || '0',
+        );
+
         // Get all locations from mock store
         const allLocations = getAllEntities('locations');
         const allTaps = getAllEntities('taps');
         const allDevices = getAllEntities('devices');
         const allKegs = getAllEntities('kegs');
         const allBeverages = getAllEntities('beverages');
-        
+
         // Convert to NearbyLocation format
         const nearbyLocations = allLocations.map((location: any) => {
           // Find taps for this location
-          const locationTaps = allTaps.filter((tap: any) => 
-            tap.location?.id === location.id || tap.locationId === location.id
+          const locationTaps = allTaps.filter(
+            (tap: any) =>
+              tap.location?.id === location.id ||
+              tap.locationId === location.id,
           );
-          
+
           // Convert taps to NearbyTap format
           const nearbyTaps = locationTaps.map((tap: any) => {
-            const device = allDevices.find((d: any) => 
-              d.id === tap.device?.id || d.id === tap.deviceId
+            const device = allDevices.find(
+              (d: any) => d.id === tap.device?.id || d.id === tap.deviceId,
             );
-            const keg = allKegs.find((k: any) => 
-              k.tap?.id === tap.id || k.tapId === tap.id
+            const keg = allKegs.find(
+              (k: any) => k.tap?.id === tap.id || k.tapId === tap.id,
             );
-            const beverage = keg ? allBeverages.find((b: any) => 
-              b.id === keg.beverage?.id || b.id === keg.beverageId
-            ) : null;
-            
+            const beverage = keg
+              ? allBeverages.find(
+                  (b: any) =>
+                    b.id === keg.beverage?.id || b.id === keg.beverageId,
+                )
+              : null;
+
             return {
               id: tap.id,
               name: tap.name || '',
               tapNumber: tap.tapNumber || 1,
-              currentKeg: keg && beverage ? {
-                beverageId: beverage.id,
-                beverageName: beverage.name,
-                kegType: keg.kegType || 'HalfBarrel',
-                maxOunces: keg.maxOunces || keg.ouncesTotal || 1984,
-                ounces: keg.ounces || keg.ouncesRemaining || 0,
-              } : null,
-              device: device ? {
-                id: device.id,
-                name: device.name || '',
-              } : { id: 0, name: '' },
+              currentKeg:
+                keg && beverage
+                  ? {
+                      beverageId: beverage.id,
+                      beverageName: beverage.name,
+                      kegType: keg.kegType || 'HalfBarrel',
+                      maxOunces: keg.maxOunces || keg.ouncesTotal || 1984,
+                      ounces: keg.ounces || keg.ouncesRemaining || 0,
+                    }
+                  : null,
+              device: device
+                ? {
+                    id: device.id,
+                    name: device.name || '',
+                  }
+                : { id: 0, name: '' },
             };
           });
-          
+
           return {
             id: location.id,
             name: location.name,
@@ -800,7 +933,7 @@ export function setupAPIMocks(page: Page): void {
             taps: nearbyTaps,
           };
         });
-        
+
         return fulfillJSONResponse(route, 200, nearbyLocations);
       }
 
@@ -831,6 +964,19 @@ export function setupAPIMocks(page: Page): void {
         const skip = query.skip || 0;
         const take = query.take || 20;
         const paginatedEntities = entities.slice(skip, skip + take);
+        const totalCount = entities.length;
+
+        // Check for $inlinecount (OData count requests)
+        const hasInlineCount =
+          url.includes('$inlinecount') || url.includes('$count');
+        if (hasInlineCount) {
+          // OData format with inlinecount for LocationDAO.count() and similar
+          return fulfillJSONResponse(route, 200, {
+            value: paginatedEntities,
+            '@odata.count': totalCount,
+            inlinecount: totalCount,
+          });
+        }
 
         // If take is 1 (fetchSingle) and no results, return 404
         if (take === 1 && paginatedEntities.length === 0) {
@@ -861,7 +1007,7 @@ export function setupAPIMocks(page: Page): void {
             const tapBody = body as any;
             let deviceId = tapBody.deviceId;
             let locationId = tapBody.locationId;
-            
+
             // If deviceId is provided, get the device and ensure it has a location
             if (deviceId && !locationId) {
               const device = mockStore.getDevice(deviceId);
@@ -869,19 +1015,23 @@ export function setupAPIMocks(page: Page): void {
                 locationId = device.location.id;
               }
             }
-            
+
             // If locationId is provided but no deviceId, create a device for that location
             if (locationId && !deviceId) {
               const location = mockStore.getLocation(locationId);
               if (location) {
                 const newDevice = createMockDevice({
-                  location: { id: location.id, name: location.name, isDeleted: false },
+                  location: {
+                    id: location.id,
+                    name: location.name,
+                    isDeleted: false,
+                  },
                 });
                 mockStore.setDevice(newDevice);
                 deviceId = newDevice.id;
               }
             }
-            
+
             // Create tap with both deviceId and locationId
             newEntity = createMockTap({
               ...tapBody,

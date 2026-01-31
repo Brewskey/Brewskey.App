@@ -1,8 +1,8 @@
 import { Auth } from '@brewskey/js-api';
 import NfcManager, { Ndef } from 'react-native-nfc-manager';
 
-import { CONFIG } from '../config';
-import { SnackBarStore } from '../hooks/context/SnackBarContext';
+import { CONFIG } from 'config';
+import { SnackBarStore } from 'hooks/context/SnackBarContext';
 
 import type { UserCredentials } from '@brewskey/js-api';
 

@@ -5,21 +5,21 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 
-import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
-import { ListEmpty } from '../common/ListEmpty';
-import { ListItem } from '../common/ListItem';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { QuickActions } from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
-import { SwipeableRow } from '../common/SwipeableRow';
-import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
-import { useDeleteDevice, useGetDevices } from '../hooks/queries/DeviceQueries';
+import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { QuickActions } from 'common/QuickActions';
+import { SwipeableList } from 'common/SwipeableList';
+import { SwipeableRow } from 'common/SwipeableRow';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { useDeleteDevice, useGetDevices } from 'hooks/queries/DeviceQueries';
 
 import type { Device, QueryOptions } from '@brewskey/js-api';
 
-import type { ListComponentTypes } from '../common/List';
-import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
-import type { RowItemProps } from '../common/SwipeableRow';
+import type { ListComponentTypes } from 'common/List';
+import type { RenderProps, SwipeableListRef } from 'common/SwipeableList';
+import type { RowItemProps } from 'common/SwipeableRow';
 
 const styles = StyleSheet.create({
   onlineIndicatorWrapper: {

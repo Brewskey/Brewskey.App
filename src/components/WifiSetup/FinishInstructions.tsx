@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { View } from 'react-native';
 
-import { OrderedText } from '../../common/TextBlock';
+import { OrderedText } from 'common/OrderedText';
 
 const FinishInstructions = () => (
   <View>

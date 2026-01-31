@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { MenuButton } from './MenuButton';
-import { Fragment } from '../common/Fragment';
-import { DeleteModal } from './modals/DeleteModal';
-import { useLogout } from '../hooks/queries/AuthQueries';
+import { MenuButton } from 'components/MenuButton';
+import { Fragment } from 'common/Fragment';
+import { DeleteModal } from 'components/modals/DeleteModal';
+import { useLogout } from 'hooks/queries/AuthQueries';
 
 const MenuLogoutButton: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);

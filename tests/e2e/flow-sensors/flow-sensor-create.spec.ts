@@ -11,7 +11,9 @@ test('should navigate to create flow sensor', async ({ page }) => {
 
   await expect(page).toHaveURL(/.*flow.*sensor.*new|new.*flow.*sensor/i);
   // Wait for buttons to load
-  await expect(page.getByTestId('button-i-got-my-sensor-from-brewskey')).toBeVisible();
+  await expect(
+    page.getByTestId('button-i-got-my-sensor-from-brewskey'),
+  ).toBeVisible();
 });
 
 test('should allow selecting sensor type', async ({ page }) => {
@@ -19,7 +21,6 @@ test('should allow selecting sensor type', async ({ page }) => {
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
 
   // FlowSensorSwiperField has testID for type selector
   await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
@@ -30,66 +31,68 @@ test('should allow setting gallon calibration', async ({ page }) => {
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
 
-  // Gallons input should be visible for standard sensors (default is Titan which uses slider)
-  const gallonsInput = page.getByTestId('input-gallons');
-  await expect(gallonsInput).toBeVisible();
+  // Standard sensor (Titan) uses slider with testID pulses-per-gallon-slider
+  const gallonsSlider = page.getByTestId('pulses-per-gallon-slider');
+  await expect(gallonsSlider).toBeVisible();
 });
 
-test('should successfully create flow sensor with default sensor type', async ({ page }) => {
+test('should successfully create flow sensor with default sensor type', async ({
+  page,
+}) => {
   // Set up explicit data: one tap
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
 
   // Mutate every form field: flowSensorType (swiper), pulsesPerGallon (slider for default Titan)
   // Change flowSensorType to next sensor (e.g. FT330) by clicking Next
   const nextButton = page.getByTestId('button-flow-sensor-next');
   if (await nextButton.isEnabled()) {
     await nextButton.click();
-    await page.waitForTimeout(100);
   }
 
-  const gallonsInput = page.getByTestId('input-gallons');
-  await expect(gallonsInput).toBeVisible();
+  const sliderContainer = page.getByTestId('pulses-per-gallon-slider');
+  await expect(sliderContainer).toBeVisible();
   await expect(page.getByTestId('submit-button-save')).toBeVisible();
 
-  const sliderContainer = page.getByTestId('input-gallons');
   const sliderBounds = await sliderContainer.boundingBox();
-  
+
   if (sliderBounds) {
     // Drag the slider thumb to change the value
     // Start from center (current position) and drag to 70% to change the value
     const startX = sliderBounds.x + sliderBounds.width * 0.5;
     const endX = sliderBounds.x + sliderBounds.width * 0.7;
     const y = sliderBounds.y + sliderBounds.height / 2;
-    
+
     // Drag from center to 70% to change the slider value
     await page.mouse.move(startX, y);
     await page.mouse.down();
     await page.mouse.move(endX, y, { steps: 10 });
     await page.mouse.up();
-    // Wait for the slider's onValueChange to fire and form state to update
-    await page.waitForTimeout(500);
   }
-  
-  // Verify form is ready to submit (form should be dirty after slider interaction)
+
+  // Verify form is ready to submit (Playwright auto-waits for enabled) (form should be dirty after slider interaction)
   await expect(page.getByTestId('submit-button-save')).toBeEnabled();
-  
+
   await page.getByTestId('submit-button-save').click();
 
   // Form submission completes - verify success via navigation or snackbar
-  await expect(page.getByTestId('snackbar-message').or(page.getByTestId('submit-button-save'))).toBeVisible();
+  await expect(
+    page
+      .getByTestId('snackbar-message')
+      .or(page.getByTestId('submit-button-save')),
+  ).toBeVisible();
 });
 
-test('should successfully create flow sensor with custom sensor', async ({ page }) => {
+test('should successfully create flow sensor with custom sensor', async ({
+  page,
+}) => {
   // Set up explicit data: one tap
   const { tap } = await mockTapWithKeg(page);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
-  
+
   // Navigate to Custom sensor type (last item in the list)
   // Click Next multiple times to reach Custom sensor
   const nextButton = page.getByTestId('button-flow-sensor-next');
@@ -98,24 +101,25 @@ test('should successfully create flow sensor with custom sensor', async ({ page 
   for (let i = 0; i < 4; i++) {
     if (await nextButton.isEnabled()) {
       await nextButton.click();
-      await page.waitForTimeout(100);
     }
   }
 
-  // Mutate every form field: flowSensorType (swiper - we changed to Custom), pulsesPerGallon (text input)
-  const calibrationInput = page.getByTestId('input-calibration');
+  // Custom sensor uses text input with testID pulses-per-gallon-input
+  const calibrationInput = page.getByTestId('pulses-per-gallon-input');
   await expect(calibrationInput).toBeVisible();
 
   await calibrationInput.clear();
-  await page.waitForTimeout(100);
   await calibrationInput.fill('5000');
-  await page.waitForTimeout(200);
-  
+
   // Verify form is ready to submit (form is dirty because pulsesPerGallon changed)
   await expect(page.getByTestId('submit-button-save')).toBeEnabled();
-  
+
   await page.getByTestId('submit-button-save').click();
 
   // Form submission completes - verify success via navigation or snackbar
-  await expect(page.getByTestId('snackbar-message').or(page.getByTestId('submit-button-save'))).toBeVisible();
+  await expect(
+    page
+      .getByTestId('snackbar-message')
+      .or(page.getByTestId('submit-button-save')),
+  ).toBeVisible();
 });

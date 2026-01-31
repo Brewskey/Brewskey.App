@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type {
   EntityID,
@@ -22,7 +22,7 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query';
 
-import type { LeaderboardDurationValue } from '../../components/LeaderboardDurationPicker';
+import type { LeaderboardDurationValue } from 'components/LeaderboardDurationPicker';
 
 export enum TapQueryKeys {
   TapById = 'tap_by_id',

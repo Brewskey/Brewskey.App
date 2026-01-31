@@ -1,41 +1,41 @@
 /**
  * Playwright Test Fixtures with Dependency Injection
- * 
+ *
  * This module provides custom Playwright test fixtures that automatically:
  * - Reset mock data stores before each test
  * - Set up API monitoring and mocking
  * - Provide authenticated user sessions
  * - Configure mock data via test.use()
- * 
+ *
  * @example Basic usage with auto-authentication
  * ```ts
  * import { test, expect } from '../fixtures/test-fixtures';
- * 
+ *
  * test.use({ autoAuthenticate: true });
- * 
+ *
  * test('my test', async ({ page, authenticatedUser }) => {
  *   // authenticatedUser is automatically available
  *   await page.goto('/home');
  * });
  * ```
- * 
+ *
  * @example Configure mock data via test.use()
  * ```ts
  * import { test, expect } from '../fixtures/test-fixtures';
- * 
+ *
  * test.use({
  *   autoAuthenticate: true,
  *   user: { userName: 'customuser' },
  *   locationCount: 2,
  *   tapCount: 3,
  * });
- * 
+ *
  * test('my test', async ({ page }) => {
  *   // 2 locations with 3 taps each are automatically created
  *   await page.goto('/taps');
  * });
  * ```
- * 
+ *
  * @example Per-test configuration
  * ```ts
  * test('specific test', async ({ page, mockStore }) => {
@@ -135,22 +135,22 @@ type TestFixtures = {
 
 /**
  * Custom Playwright test fixtures with dependency injection
- * 
+ *
  * Usage:
  * ```ts
  * import { test, expect } from '../fixtures/test-fixtures';
- * 
+ *
  * test('my test', async ({ page, authenticatedUser }) => {
  *   // authenticatedUser is automatically set up if autoAuthenticate is true
  * });
- * 
+ *
  * // Configure via test.use()
  * test.use({ autoAuthenticate: true, user: { userName: 'customuser' } });
  * ```
  */
 export const test = base.extend<TestOptions & TestFixtures>({
   permissions: ['geolocation'],
-  geolocation: { latitude: 40.7128, longitude: -74.0060 },
+  geolocation: { latitude: 40.7128, longitude: -74.006 },
   // Default options
   user: [undefined, { option: true }],
   autoAuthenticate: [false, { option: true }],
@@ -210,7 +210,14 @@ export const test = base.extend<TestOptions & TestFixtures>({
   // Auto fixture: Reset stores and set up API monitoring for every test
   resetStores: [
     async (
-      { page, locationCount, tapCount, deviceCount, beverageCount, organizationCount },
+      {
+        page,
+        locationCount,
+        tapCount,
+        deviceCount,
+        beverageCount,
+        organizationCount,
+      },
       use: () => Promise<void>,
       testInfo: TestInfo,
     ) => {
@@ -230,7 +237,7 @@ export const test = base.extend<TestOptions & TestFixtures>({
       // Hierarchy: Organization => Location => Devices => Taps => Kegs
       const locations: Location[] = [];
       const devicesCreatedForLocations: Device[] = [];
-      
+
       for (let i = 0; i < (locationCount || 0); i++) {
         const location = createMockLocation({ name: `Location ${i + 1}` });
         mockStore.setLocation(location);
@@ -256,9 +263,14 @@ export const test = base.extend<TestOptions & TestFixtures>({
 
       // Create additional devices (beyond those created for locations)
       // Only create if deviceCount > devicesCreatedForLocations.length
-      const additionalDeviceCount = Math.max(0, (deviceCount || 0) - devicesCreatedForLocations.length);
+      const additionalDeviceCount = Math.max(
+        0,
+        (deviceCount || 0) - devicesCreatedForLocations.length,
+      );
       for (let i = 0; i < additionalDeviceCount; i++) {
-        const device = createMockDevice({ name: `Device ${devicesCreatedForLocations.length + i + 1}` });
+        const device = createMockDevice({
+          name: `Device ${devicesCreatedForLocations.length + i + 1}`,
+        });
         mockStore.setDevice(device);
       }
 
@@ -281,11 +293,7 @@ export const test = base.extend<TestOptions & TestFixtures>({
       // After test: Write failure report if there were failures
       const failedRequests = getFailedRequests();
       if (failedRequests.length > 0) {
-        const reportPath = path.join(
-          process.cwd(),
-          'tests',
-          'API_FAILURES.md',
-        );
+        const reportPath = path.join(process.cwd(), 'tests', 'API_FAILURES.md');
         await writeFailureReport(reportPath);
       }
     },

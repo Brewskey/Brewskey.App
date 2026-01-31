@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Image, StyleSheet, Text, View } from 'react-native';
 
-import { TYPOGRAPHY } from '../../../theme';
+import { TYPOGRAPHY } from 'theme';
 
 import type { ImageSourcePropType } from 'react-native';
 

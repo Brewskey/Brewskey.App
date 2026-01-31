@@ -2,7 +2,7 @@ import { FlowSensorDAO } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { EntityID, FlowSensor, FlowSensorMutator } from '@brewskey/js-api';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';

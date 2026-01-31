@@ -3,22 +3,22 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
 
-import { KegSectionHeader } from './KegSectionHeader';
-import { UserAvatar } from '../../common/avatars/UserAvatar';
-import { ListItem } from '../../common/ListItem';
-import { LoadingListFooter } from '../../common/LoadingListFooter';
-import { QuickActions } from '../../common/QuickActions';
-import { SwipeableList } from '../../common/SwipeableList';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
-import { useDeletePour, useGetPours } from '../../hooks/queries/PourQueries';
-import { PintCounter } from '../PintCounter';
+import { KegSectionHeader } from 'components/poursLists/KegSectionHeader';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { ListItem } from 'common/ListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { QuickActions } from 'common/QuickActions';
+import { SwipeableList } from 'common/SwipeableList';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { useDeletePour, useGetPours } from 'hooks/queries/PourQueries';
+import { PintCounter } from 'components/PintCounter';
 
 import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
 import type { SectionListData } from 'react-native';
 
-import type { ListComponentTypes } from '../../common/List';
-import type { RenderProps } from '../../common/SwipeableList';
+import type { ListComponentTypes } from 'common/List';
+import type { RenderProps } from 'common/SwipeableList';
 
 interface Props {
   ListHeaderComponent?: ListComponentTypes;

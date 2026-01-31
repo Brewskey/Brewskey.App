@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
-import { List } from '../common/List';
-import { ListEmpty } from '../common/ListEmpty';
-import { ListItem } from '../common/ListItem';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { KegModal } from './modals/KegModal';
-import { useGetKegs } from '../hooks/queries/KegQueries';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { List } from 'common/List';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { KegModal } from 'components/modals/KegModal';
+import { useGetKegs } from 'hooks/queries/KegQueries';
 
 import type { EntityID, Keg, QueryOptions } from '@brewskey/js-api';
 import type { ListRenderItemInfo } from 'react-native';
 
-import type { ListComponentTypes } from '../common/List';
+import type { ListComponentTypes } from 'common/List';
 
 interface Props {
   ListHeaderComponent?: ListComponentTypes;

@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 

@@ -1,7 +1,7 @@
 import { AchievementDAO } from '@brewskey/js-api';
 import { useQuery } from '@tanstack/react-query';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { AchievementCounter, EntityID } from '@brewskey/js-api';
 import type { UseQueryResult } from '@tanstack/react-query';

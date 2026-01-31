@@ -6,20 +6,20 @@ import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
 import { Platform, Vibration } from 'react-native';
 
-import { CONFIG } from '../config';
-import { useAuthSession } from '../hooks/context/AuthContext';
-import { SnackBarStore } from '../hooks/context/SnackBarContext';
-import { AchievementQueryKeys } from '../hooks/queries/AchievementQueries';
-import { FriendKeys } from '../hooks/queries/FriendQueries';
-import { KegQueryKeys } from '../hooks/queries/KegQueries';
-import { getStringFromEntityID } from '../utils/getStringFromEntityID';
-import { getUniqueDeviceId } from '../utils/getUniqueDeviceId';
-import { queryClient } from '../utils/queryClient';
-import { Storage, StorageKeys } from '../utils/Storage';
+import { CONFIG } from 'config';
+import { useAuthSession } from 'hooks/context/AuthContext';
+import { SnackBarStore } from 'hooks/context/SnackBarContext';
+import { AchievementQueryKeys } from 'hooks/queries/AchievementQueries';
+import { FriendKeys } from 'hooks/queries/FriendQueries';
+import { KegQueryKeys } from 'hooks/queries/KegQueries';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
+import { getUniqueDeviceId } from 'utils/getUniqueDeviceId';
+import { queryClient } from 'utils/queryClient';
+import { Storage, StorageKeys } from 'utils/Storage';
 
 import type { EntityID } from '@brewskey/js-api';
 
-import type { Notification } from './NotificationTypes';
+import type { Notification } from 'stores/NotificationTypes';
 
 export type {
   BaseNotificationProps,

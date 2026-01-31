@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Button as RNEButton } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { ViewStyle } from 'react-native';
 

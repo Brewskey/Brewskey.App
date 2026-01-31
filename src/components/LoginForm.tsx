@@ -3,13 +3,13 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { SectionContent } from '../common/SectionContent';
-import { useLogin } from '../hooks/queries/AuthQueries';
-import { COLORS } from '../theme';
+import { Button } from 'common/buttons/Button';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
+import { useLogin } from 'hooks/queries/AuthQueries';
+import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   input: {

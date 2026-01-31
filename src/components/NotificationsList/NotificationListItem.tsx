@@ -5,10 +5,10 @@ import { Icon } from '@rneui/themed';
 import moment from 'moment';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-import { TouchableItem } from '../../common/buttons/TouchableItem';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { TouchableItem } from 'common/buttons/TouchableItem';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
-import type { Notification } from '../../stores/NotificationTypes';
+import type { Notification } from 'stores/NotificationTypes';
 
 const READ_TIMEOUT = 2000;
 

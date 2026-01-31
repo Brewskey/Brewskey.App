@@ -9,19 +9,22 @@ test('should validate required fields', async ({ page, menuPage }) => {
   await menuPage.goto();
   await menuPage.clickBeverages();
   await page.getByTestId('header-add-button').click();
-  
+
   await expect(page.getByTestId('input-name')).toBeVisible();
 
-  // Submit button should be visible but disabled when form is invalid
-  // Button is disabled when !isValid || !isDirty || isSubmitting
-  // Form requires: name, beverageType, and srm to be valid
+  // Verify required fields are present (name, beverage type, color/SRM)
+  await expect(page.getByTestId('input-name')).toBeVisible();
+  await expect(page.getByTestId('beverage-type-dropdown')).toBeVisible();
+  await expect(page.getByTestId('color-dropdown')).toBeVisible();
+
+  // Submit with empty required fields: custom validate() should set errors and prevent navigation
   const submitButton = page.getByTestId('submit-button-create-beverage');
   await expect(submitButton).toBeVisible();
-  await expect(submitButton).toBeDisabled();
+  await submitButton.click();
 
-  // Verify that required fields are present (form structure validation)
-  // The button being disabled indicates validation is working
-  // We don't need to check for error messages since they only appear after submission attempt
+  // Should still be on create screen (form visible; no navigation to detail)
+  await expect(page.getByTestId('input-name')).toBeVisible();
+  await expect(page.getByTestId('submit-button-create-beverage')).toBeVisible();
 });
 
 const BEVERAGE_TYPES = [
@@ -33,7 +36,11 @@ const BEVERAGE_TYPES = [
 
 test.describe('create with each Beverage Type', () => {
   for (const { label, optionIndex } of BEVERAGE_TYPES) {
-    test(`should successfully create beverage with type ${label}`, async ({ page, menuPage, dropDown }) => {
+    test(`should successfully create beverage with type ${label}`, async ({
+      page,
+      menuPage,
+      dropDown,
+    }) => {
       await setupSrmData(page, 40);
 
       await menuPage.goto();
@@ -43,14 +50,16 @@ test.describe('create with each Beverage Type', () => {
       await expect(page.getByTestId('input-name')).toBeVisible();
 
       await page.getByTestId('input-name').fill(`New Beverage - ${label}`);
-      await page.getByTestId('input-description').fill(`A new test beverage (${label})`);
+      await page
+        .getByTestId('input-description')
+        .fill(`A new test beverage (${label})`);
 
-      const beverageTypeDd = dropDown.create('picker-beverage-type');
+      const beverageTypeDd = dropDown.create('beverage-type-dropdown');
       await beverageTypeDd.input.click();
       await beverageTypeDd.scrollToItemByIndex(optionIndex);
       await beverageTypeDd.select(optionIndex);
 
-      const colorDd = dropDown.create('picker-color');
+      const colorDd = dropDown.create('color-dropdown');
       await colorDd.input.click();
       await expect(colorDd.search).toBeVisible();
       await colorDd.select(0);
@@ -62,8 +71,12 @@ test.describe('create with each Beverage Type', () => {
       await submitButton.click();
 
       await expect(page).toHaveURL(/.*beverages\/\d+/, { timeout: 10000 });
-      await expect(page.getByTestId('snackbar-message')).toBeVisible({ timeout: 10000 });
-      await expect(page.getByTestId('snackbar-message')).toHaveText('New beverage created.');
+      await expect(page.getByTestId('snackbar-message')).toBeVisible({
+        timeout: 10000,
+      });
+      await expect(page.getByTestId('snackbar-message')).toHaveText(
+        'New beverage created.',
+      );
     });
   }
 });

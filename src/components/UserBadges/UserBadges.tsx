@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
-import { EmptyUserBadges } from './EmptyUserBadges';
-import { LoadedUserBadges } from './LoadedUserBadges';
-import { useGetAchievementCountsByUserId } from '../../hooks/queries/AchievementQueries';
+import { EmptyUserBadges } from 'components/UserBadges/EmptyUserBadges';
+import { LoadedUserBadges } from 'components/UserBadges/LoadedUserBadges';
+import { useGetAchievementCountsByUserId } from 'hooks/queries/AchievementQueries';
 
 import type { AchievementType, EntityID } from '@brewskey/js-api';
 
-import type { LoadedUserBadgesHandle } from './LoadedUserBadges';
+import type { LoadedUserBadgesHandle } from 'components/UserBadges/LoadedUserBadges';
 
 interface Props {
   userID: EntityID;

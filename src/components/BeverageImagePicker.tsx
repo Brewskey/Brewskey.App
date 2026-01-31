@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
 
 import type { EntityID } from '@brewskey/js-api';
 import type { StyleProp, ViewStyle } from 'react-native';

@@ -1,31 +1,31 @@
 import { CheckBox } from '@rneui/themed';
 import nullthrows from 'nullthrows';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { CheckBoxProps } from '@rneui/themed';
 
-export type TextInputProps = Omit<
+export type CheckBoxInputProps<TFormFields extends FieldValues> = Omit<
   CheckBoxProps,
-  'checked' | 'children' | 'onBlur' | 'title'
+  'checked' | 'children' | 'onBlur' | 'title' | 'name'
 > & {
   label: string;
-  name: string;
+  name: Extract<keyof TFormFields, string>;
   defaultValue?: boolean;
   // validationTextStyle?: StyleProp<TextStyle>;
   required?: boolean;
   testID?: string;
 };
 
-export const CheckBoxInput = ({
+export const CheckBoxInput = <TFormFields extends FieldValues>({
   defaultValue,
   required = false,
   name,
   label,
   testID,
   ...props
-}: TextInputProps) => {
+}: CheckBoxInputProps<TFormFields>) => {
   const { control } = useFormContext();
 
   return (
@@ -34,7 +34,7 @@ export const CheckBoxInput = ({
       defaultValue={defaultValue ?? false}
       rules={{ required }}
       name={nullthrows(
-        name,
+        name.toString(),
         'CheckBoxInput: name prop is required and must be a non-empty string',
       )}
       render={({ field: { onChange, onBlur, value } }) => (

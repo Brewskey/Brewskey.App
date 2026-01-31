@@ -16,7 +16,7 @@ export async function mockLocationPermission(
         success({
           coords: {
             latitude: 40.7128,
-            longitude: -74.0060,
+            longitude: -74.006,
             accuracy: 10,
             altitude: null,
             altitudeAccuracy: null,
@@ -35,7 +35,9 @@ export async function mockLocationPermission(
         } as GeolocationPositionError);
       }
     };
-    Object.assign(navigator.geolocation, { getCurrentPosition: mockGetCurrentPosition });
+    Object.assign(navigator.geolocation, {
+      getCurrentPosition: mockGetCurrentPosition,
+    });
   }, granted);
 }
 

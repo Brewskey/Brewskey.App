@@ -1,5 +1,8 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockDeviceWithTaps, mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+import {
+  mockDeviceWithTaps,
+  mockLocationWithTaps,
+} from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
@@ -27,7 +30,7 @@ test('should successfully update device', async ({ page, dropDown }) => {
   await page.getByTestId('input-name').fill('Updated Device Name');
 
   // Location (required) - select the second location (index 1: device's is 0, location2 is 1)
-  const locationPicker = dropDown.create('picker-location');
+  const locationPicker = dropDown.create('location-dropdown');
   await locationPicker.input.click();
   await expect(locationPicker.modal).toBeVisible();
   await locationPicker.scrollToItemByIndex(1);
@@ -35,12 +38,12 @@ test('should successfully update device', async ({ page, dropDown }) => {
   await expect(locationPicker.modal).not.toBeVisible();
 
   // Device status (required) - WebDropdown uses option-{index}
-  const deviceStatusDd = dropDown.create('picker-device-status');
+  const deviceStatusDd = dropDown.create('device-status-dropdown');
   await deviceStatusDd.select(1);
 
   // secondsToStayOpen: when Active/Inactive shows TextInput; after selecting Cleaning it becomes DeviceTimeOpenPicker
   // Keep deviceStatus as Cleaning (option 1) - secondsToStayOpen is now DeviceTimeOpenPicker
-  const secondsDd = dropDown.create('picker-time-to-stay-in-device-state-(will-keep-valve-open)');
+  const secondsDd = dropDown.create('time-to-stay-open-dropdown');
   await secondsDd.input.click();
   await secondsDd.scrollToItemByIndex(2);
   await secondsDd.select(2);
@@ -52,14 +55,21 @@ test('should successfully update device', async ({ page, dropDown }) => {
   await expect(ledSlider).toBeVisible();
   const ledBox = await ledSlider.boundingBox();
   if (ledBox) {
-    await page.mouse.move(ledBox.x + ledBox.width * 0.5, ledBox.y + ledBox.height / 2);
+    await page.mouse.move(
+      ledBox.x + ledBox.width * 0.5,
+      ledBox.y + ledBox.height / 2,
+    );
     await page.mouse.down();
-    await page.mouse.move(ledBox.x + ledBox.width * 0.8, ledBox.y + ledBox.height / 2, { steps: 5 });
+    await page.mouse.move(
+      ledBox.x + ledBox.width * 0.8,
+      ledBox.y + ledBox.height / 2,
+      { steps: 5 },
+    );
     await page.mouse.up();
   }
 
   // NFC status - WebDropdown uses option-{index}
-  const nfcDd = dropDown.create('picker-nfc-configuration');
+  const nfcDd = dropDown.create('nfc-status-dropdown');
   await nfcDd.input.click();
   await nfcDd.scrollToItemByIndex(1);
   await nfcDd.select(1);
@@ -75,5 +85,7 @@ test('should successfully update device', async ({ page, dropDown }) => {
 
   await expect(page).toHaveURL(new RegExp(`/devices/${device.id}(?:/edit)?$`));
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
-  await expect(page.getByTestId('snackbar-message')).toHaveText('The Brewskey box was edited');
+  await expect(page.getByTestId('snackbar-message')).toHaveText(
+    'The Brewskey box was edited',
+  );
 });

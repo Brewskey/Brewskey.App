@@ -3,14 +3,14 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { SectionContent } from '../common/SectionContent';
-import { validateEmail } from '../utils';
+import { Button } from 'common/buttons/Button';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
+import { validateEmail } from 'utils';
 
 export interface ResetPasswordFormValues {
   email: string;
@@ -64,13 +64,14 @@ export const ForgotPasswordForm: React.FC<{
     <Form form={form}>
       <View testID="reset-password-form">
         <FormValidationMessage testID="reset-password-error-message" />
-        <FormField
+        <FormField<ResetPasswordFormValues, typeof TextInput>
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
           disabled={isSubmitting}
           label="Email"
           name="email"
+          required
           testID="input-email"
         />
         <SectionContent paddedVertical>

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { BaseAvatar } from './BaseAvatar';
-import { CONFIG } from '../../config';
+import { BaseAvatar } from 'common/avatars/BaseAvatar';
+import { CONFIG } from 'config';
 
-import type { BaseAvatarProps } from './BaseAvatar';
+import type { BaseAvatarProps } from 'common/avatars/BaseAvatar';
 
 type Props = Omit<BaseAvatarProps, 'rounded' | 'size'> & {
   rounded?: boolean;

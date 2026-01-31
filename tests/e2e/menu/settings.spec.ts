@@ -6,17 +6,17 @@ test.use({ autoAuthenticate: true });
 test('should display settings screen', async ({ page, settingsPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await settingsPage.goto();
-  
 
   await expect(page).toHaveURL(/.*settings/i);
   await expect(page.getByTestId('header-settings')).toBeVisible();
-  await expect(page.getByTestId('header-settings-title')).toHaveText('Settings');
+  await expect(page.getByTestId('header-settings-title')).toHaveText(
+    'Settings',
+  );
 });
 
 test('should show change password form', async ({ page, settingsPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await settingsPage.goto();
-  
 
   await expect(settingsPage.getChangePasswordForm()).toBeVisible();
 });
@@ -24,7 +24,6 @@ test('should show change password form', async ({ page, settingsPage }) => {
 test('should validate password form', async ({ page, settingsPage }) => {
   // Set up explicit data: authenticated user with weak password
   await settingsPage.goto();
-  
 
   await settingsPage.fillPasswordForm({
     oldPassword: 'oldpass',
@@ -36,14 +35,15 @@ test('should validate password form', async ({ page, settingsPage }) => {
   // The error message testID is form-validation-error-{fieldName} or change-password-error-message
   // Check for newPassword validation error (password too short)
   await expect(
-    page.getByTestId('form-validation-error-newPassword').or(page.getByTestId('change-password-error-message'))
+    page
+      .getByTestId('form-validation-error-newPassword')
+      .or(page.getByTestId('change-password-error-message')),
   ).toBeVisible();
 });
 
 test('should successfully change password', async ({ page, settingsPage }) => {
   // Set up explicit data: authenticated user with valid password
   await settingsPage.goto();
-  
 
   await settingsPage.fillPasswordForm({
     oldPassword: 'oldpassword123',
@@ -58,7 +58,6 @@ test('should successfully change password', async ({ page, settingsPage }) => {
 test('should toggle manage taps setting', async ({ page, settingsPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await settingsPage.goto();
-  
 
   const toggle = settingsPage.getManageTapsToggle();
   await expect(toggle).toBeVisible();
@@ -68,11 +67,13 @@ test('should toggle manage taps setting', async ({ page, settingsPage }) => {
   await expect(toggle).toBeVisible();
 });
 
-test('should show organization picker when user has organizations', async ({ page, settingsPage }) => {
+test('should show organization picker when user has organizations', async ({
+  page,
+  settingsPage,
+}) => {
   // Set up explicit data: user with 2 organizations
   await mockUserWithOrganizations(page, 2);
   await settingsPage.goto();
-  
 
   await expect(settingsPage.getOrganizationPicker()).toBeVisible();
 });
@@ -81,7 +82,6 @@ test('should allow selecting organization', async ({ page, settingsPage }) => {
   // Set up explicit data: user with 2 organizations
   const { organizations } = await mockUserWithOrganizations(page, 2);
   await settingsPage.goto();
-  
 
   // Organization name is dynamic content, so text-based locator is acceptable
   await settingsPage.selectOrganization(organizations[0].name);

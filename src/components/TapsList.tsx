@@ -4,18 +4,18 @@ import { useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 
-import { DeviceTapListEmpty } from './DeviceTapListEmpty';
-import { TapListItem } from './TapListItem';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { QuickActions } from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
-import { SwipeableRow } from '../common/SwipeableRow';
-import { useDeleteTap, useGetTaps } from '../hooks/queries/TapQueries';
+import { DeviceTapListEmpty } from 'components/DeviceTapListEmpty';
+import { TapListItem } from 'components/TapListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { QuickActions } from 'common/QuickActions';
+import { SwipeableList } from 'common/SwipeableList';
+import { SwipeableRow } from 'common/SwipeableRow';
+import { useDeleteTap, useGetTaps } from 'hooks/queries/TapQueries';
 
 import type { QueryOptions, Tap } from '@brewskey/js-api';
 
-import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
-import type { RowItemProps } from '../common/SwipeableRow';
+import type { RenderProps, SwipeableListRef } from 'common/SwipeableList';
+import type { RowItemProps } from 'common/SwipeableRow';
 
 interface Props {
   ListHeaderComponent?: React.ReactNode;

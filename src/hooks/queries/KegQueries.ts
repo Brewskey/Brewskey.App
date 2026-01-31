@@ -7,9 +7,9 @@ import {
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { NEARBY_LOCATIONS_QUERY_KEY_BASE } from './LocationQueries';
-import { TapQueryKeys } from './TapQueries';
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { NEARBY_LOCATIONS_QUERY_KEY_BASE } from 'hooks/queries/LocationQueries';
+import { TapQueryKeys } from 'hooks/queries/TapQueries';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { EntityID, Keg, KegMutator, QueryOptions } from '@brewskey/js-api';
 import type {

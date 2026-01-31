@@ -3,13 +3,13 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { COLORS } from '../theme';
-import { LoadingIndicator } from './LoadingIndicator';
-import { useMultipleQueryResults } from '../utils/useMultipleQueryResults';
+import { COLORS } from 'theme';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { useMultipleQueryResults } from 'utils/useMultipleQueryResults';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 
-import type { UseMultipleQueryResultsData } from '../utils/useMultipleQueryResults';
+import type { UseMultipleQueryResultsData } from 'utils/useMultipleQueryResults';
 
 interface Props<
   TQueries extends Record<string, UseQueryResult>,

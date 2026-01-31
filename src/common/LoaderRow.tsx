@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-import { ErrorListItem } from './ErrorListItem';
-import { LoaderComponent } from './LoaderComponent';
-import { LoadingListItem } from './LoadingListItem';
+import { ErrorListItem } from 'common/ErrorListItem';
+import { LoaderComponent } from 'common/LoaderComponent';
+import { LoadingListItem } from 'common/LoadingListItem';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 
-import type { LoaderErrorRowProps } from './LoaderRowTypes';
-import type { RowItemProps } from './SwipeableRow';
+import type { LoaderErrorRowProps } from 'common/LoaderRowTypes';
+import type { RowItemProps } from 'common/SwipeableRow';
 
 type LoadedRowComponentProps<TEntity, TExtraProps> = TExtraProps & {
   loadedRow: React.ComponentType<RowItemProps<TEntity>>;

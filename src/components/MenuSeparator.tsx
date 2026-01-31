@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   separator: {

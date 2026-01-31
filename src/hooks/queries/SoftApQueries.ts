@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { SoftAPService } from '../../SoftApService';
+import { SoftAPService } from 'SoftApService';
 
 import type { UseMutationResult } from '@tanstack/react-query';
 
-import type { WifiNetwork } from '../../types';
+import type { WifiNetwork } from 'types';
 
 enum SoftApQueryKeys {
   GetParticleId = 'get_particle_id',

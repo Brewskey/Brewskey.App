@@ -15,14 +15,18 @@ test('should allow filtering by time period', async ({ page }) => {
   // Stats screen likely uses a similar dropdown or picker for time period filters
   // Look for filter controls - they might be buttons or a dropdown
   // Try to find by text first (common filter labels)
-  const filterControls = page.getByRole('button', { name: /day|week|month|all/i }).or(
-    page.locator('[placeholder*="time"]').or(page.locator('[placeholder*="period"]'))
-  );
-  
+  const filterControls = page
+    .getByRole('button', { name: /day|week|month|all/i })
+    .or(
+      page
+        .locator('[placeholder*="time"]')
+        .or(page.locator('[placeholder*="period"]')),
+    );
+
   // If no filters found, the test might need to be updated based on actual implementation
   // For now, just verify the stats screen loaded correctly
   await expect(page.getByTestId('section-header-recent-pours')).toBeVisible();
-  
+
   // If filters are found, interact with them
   const firstFilter = filterControls.first();
   if (await firstFilter.isVisible().catch(() => false)) {

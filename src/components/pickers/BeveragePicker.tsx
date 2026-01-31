@@ -1,28 +1,24 @@
 import * as React from 'react';
 
+import { FieldValues } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { useGetBeverages } from '../../hooks/queries/BeverageQueries';
-import { COLORS } from '../../theme';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { useGetBeverages } from 'hooks/queries/BeverageQueries';
+import { COLORS } from 'theme';
 
 import type { Beverage, QueryOptions, ShortenedEntity } from '@brewskey/js-api';
 
 export type PickerValue<T> = T | null | undefined;
 
-interface Props {
+interface Props<TFormFields extends FieldValues = FieldValues> {
   error?: string | null | undefined;
   queryOptions?: QueryOptions;
-  name: string;
+  name: Extract<keyof TFormFields, string>;
   defaultValue?: PickerValue<Beverage | ShortenedEntity>;
   required?: boolean | string;
   testID?: string;
-}
-
-interface BeveragePickerItemProps {
-  item: Beverage;
-  selected?: boolean;
 }
 
 export const BeveragePickerItem = (
@@ -44,13 +40,13 @@ export const BeveragePickerItem = (
   </View>
 );
 
-export const BeveragePicker = ({
-  name = 'beverage',
+export const BeveragePicker = <TFormFields extends FieldValues = FieldValues>({
+  name,
   defaultValue,
   required,
   testID,
   ...props
-}: Props): React.ReactElement => {
+}: Props<TFormFields>): React.ReactElement => {
   const queryOptions = React.useMemo(
     () => ({
       orderBy: [{ column: 'id', direction: 'desc' as const }],
@@ -60,7 +56,7 @@ export const BeveragePicker = ({
   );
 
   return (
-    <DropdownInput<Beverage | ShortenedEntity>
+    <DropdownInput<TFormFields, Beverage | ShortenedEntity>
       {...props}
       search
       shouldUseSearchQuery

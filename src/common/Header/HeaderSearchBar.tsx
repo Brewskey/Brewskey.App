@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 
-import { HeaderIconButton } from './HeaderIconButton';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { HeaderIconButton } from 'common/Header/HeaderIconButton';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { FC } from 'react';
 

@@ -3,23 +3,21 @@ import * as React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { BrightnessSliderField } from './DeviceForm/BrightnessSliderField';
-import { DeviceNFCStatusPicker } from './DeviceForm/DeviceNFCStatusPicker';
-import { DeviceTimeOpenPicker } from './DeviceForm/DeviceTimeOpenPicker';
-import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
-import { LocationPicker } from './pickers/LocationPicker';
-import { Button } from '../common/buttons/Button';
-import { CheckBoxField } from '../common/form/CheckBoxField';
-import { DropdownInput } from '../common/form/DropdownInput';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
-import { extractShortenedEntityId } from '../utils';
+import { BrightnessSliderField } from 'components/DeviceForm/BrightnessSliderField';
+import { DeviceNFCStatusPicker } from 'components/DeviceForm/DeviceNFCStatusPicker';
+import { DeviceTimeOpenPicker } from 'components/DeviceForm/DeviceTimeOpenPicker';
+import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
+import { LocationPicker } from 'components/pickers/LocationPicker';
+import { CheckBoxInput } from 'common/form/CheckBoxInput';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { TextInput } from 'common/form/TextInput';
+import { DESCRIPTION_BY_DEVICE_STATE } from '@/constants';
 
-import type { Device, DeviceMutator, ShortenedEntity } from '@brewskey/js-api';
+import type { Device, DeviceMutator } from '@brewskey/js-api';
 
 export const validate = (
   values: FormProps,
@@ -30,7 +28,7 @@ export const validate = (
     errors.deviceStatus = 'Status is required!';
   }
 
-  if (!values.location) {
+  if (!values.locationId) {
     errors.locationId = 'Location is required!';
   }
 
@@ -52,9 +50,7 @@ interface Props {
   submitButtonLabel: string;
 }
 
-type FormProps = Omit<DeviceMutator, 'locationId'> & {
-  location: ShortenedEntity | null | undefined;
-};
+type FormProps = DeviceMutator;
 
 const DeviceForm: React.FC<Props> = ({
   device,
@@ -68,7 +64,7 @@ const DeviceForm: React.FC<Props> = ({
       particleId: device.particleId,
       name: device.name,
       deviceType: 'BrewskeyBox',
-      location: device.location,
+      locationId: device.location?.id,
       deviceStatus: device.id ? device.deviceStatus : 'Active',
       secondsToStayOpen: device.secondsToStayOpen || 3600,
       timeForValveOpen: device.timeForValveOpen,
@@ -79,10 +75,6 @@ const DeviceForm: React.FC<Props> = ({
       shouldInvertScreen: device.shouldInvertScreen,
     },
   });
-
-  const {
-    formState: { isDirty, isSubmitting, isValid },
-  } = form;
 
   const values = useWatch({ control: form.control });
   const { deviceStatus } = values;
@@ -104,10 +96,7 @@ const DeviceForm: React.FC<Props> = ({
 
   const onSubmitForm = async (formValues: FormProps) => {
     if (validateForm(formValues)) {
-      await onSubmit({
-        ...formValues,
-        locationId: extractShortenedEntityId(formValues.location),
-      });
+      await onSubmit(formValues);
     }
   };
 
@@ -117,37 +106,43 @@ const DeviceForm: React.FC<Props> = ({
     <Form form={form}>
       <View>
         <FormValidationMessage testID="device-form-error-message" />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={device.name}
           label="Name"
           name="name"
+          required
           testID="input-name"
         />
         {!device.id && (
-          <FormField
+          <FormField<FormProps, typeof TextInput>
             component={TextInput}
             defaultValue={device.particleId}
             label="Particle ID"
             name="particleId"
+            required
             testID="input-particleId"
           />
         )}
         {!hideLocation && (
-          <FormField
+          <FormField<FormProps, typeof LocationPicker>
             component={LocationPicker}
             defaultValue={device.location}
             label="Location"
-            name="location"
+            name="locationId"
+            required
+            testID="location-dropdown"
           />
         )}
         {device.id ? (
-          <FormField
+          <FormField<FormProps, typeof DropdownInput>
             component={DropdownInput}
             defaultValue={device.deviceStatus}
             label="Device Status"
             labelField="label"
             name="deviceStatus"
+            required
+            testID="device-status-dropdown"
             valueField="value"
             data={[
               { label: 'Active', value: 'Active' },
@@ -165,7 +160,7 @@ const DeviceForm: React.FC<Props> = ({
           />
         ) : null}
         {['Active', 'Inactive'].includes(deviceStatus || '') ? (
-          <FormField
+          <FormField<FormProps, typeof TextInput>
             component={TextInput}
             label="Seconds To Stay Open"
             name="secondsToStayOpen"
@@ -175,9 +170,10 @@ const DeviceForm: React.FC<Props> = ({
           <DeviceTimeOpenPicker
             defaultValue={device.secondsToStayOpen}
             name="secondsToStayOpen"
+            testID="time-to-stay-open-dropdown"
           />
         )}
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={device.timeForValveOpen?.toString()}
           description="Time in seconds before and after a pour that the pour remains authorized and the LEDs are green."
@@ -186,15 +182,15 @@ const DeviceForm: React.FC<Props> = ({
           name="timeForValveOpen"
           testID="input-timeForValveOpen"
         />
-        <FormField
+        <FormField<FormProps, typeof BrightnessSliderField>
           component={BrightnessSliderField}
           label="LED Brightness"
           name="ledBrightness"
           testID="input-ledBrightness"
         />
-        <DeviceNFCStatusPicker name="nfcStatus" />
-        <FormField
-          component={CheckBoxField}
+        <DeviceNFCStatusPicker name="nfcStatus" testID="nfc-status-dropdown" />
+        <FormField<FormProps, typeof CheckBoxInput>
+          component={CheckBoxInput}
           defaultValue={device.isScreenDisabled}
           label="Is Screen Disabled"
           name="isScreenDisabled"
@@ -202,15 +198,15 @@ const DeviceForm: React.FC<Props> = ({
         />
         {values.isScreenDisabled ? (
           <React.Fragment>
-            <FormField
-              component={CheckBoxField}
+            <FormField<FormProps, typeof CheckBoxInput>
+              component={CheckBoxInput}
               defaultValue={device.isTotpDisabled}
               label="Is Passcode Disabled"
               name="isTotpDisabled"
               testID="input-isTotpDisabled"
             />
-            <FormField
-              component={CheckBoxField}
+            <FormField<FormProps, typeof CheckBoxInput>
+              component={CheckBoxInput}
               defaultValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
@@ -219,16 +215,16 @@ const DeviceForm: React.FC<Props> = ({
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <FormField
-              component={CheckBoxField}
+            <FormField<FormProps, typeof CheckBoxInput>
+              component={CheckBoxInput}
               defaultValue={device.isTotpDisabled}
               description="Disable the passcode shown on the Brewskey box"
               label="Is Passcode Disabled"
               name="isTotpDisabled"
               testID="input-isTotpDisabled"
             />
-            <FormField
-              component={CheckBoxField}
+            <FormField<FormProps, typeof CheckBoxInput>
+              component={CheckBoxInput}
               defaultValue={device.shouldInvertScreen}
               label="Invert Screen"
               name="shouldInvertScreen"
@@ -237,20 +233,19 @@ const DeviceForm: React.FC<Props> = ({
           </React.Fragment>
         )}
         <MainTabBarFill>
-          <Button
-            disabled={!isValid || !isDirty || isSubmitting}
-            loading={isSubmitting}
-            style={{ marginVertical: 12 }}
-            title={submitButtonLabel}
-            onPress={handleSubmitWithError(form, async (formData) =>
+          <SubmitButton<FormProps>
+            allowSubmitWhenValid={!device.id}
+            onSubmit={async (formData) =>
               onSubmitForm({
                 ...formData,
                 timeForValveOpen: Math.max(
                   Number(formData.timeForValveOpen ?? '0') || 0,
                   5,
                 ),
-              }),
-            )}
+              })
+            }
+            style={{ marginVertical: 12 }}
+            title={submitButtonLabel}
             testID={
               device.id
                 ? 'submit-button-edit-device'

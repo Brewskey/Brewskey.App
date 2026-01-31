@@ -27,7 +27,10 @@ test('should show keg level visualization', async ({ page }) => {
   await expect(page.getByTestId('keg-level-text')).toBeVisible();
 });
 
-test('should navigate to create new keg', async ({ page, authenticatedUser }) => {
+test('should navigate to create new keg', async ({
+  page,
+  authenticatedUser,
+}) => {
   // Set up explicit data: one tap WITHOUT keg; Edit permission so create path is valid
   const { createMockTap } = await import('../../fixtures/test-data');
   const { mockStore } = await import('../../fixtures/api-mocks');
@@ -44,7 +47,9 @@ test('should navigate to create new keg', async ({ page, authenticatedUser }) =>
     currentKeg: null as any,
   });
   mockStore.setTap(tap);
-  await setupTapPermissions(authenticatedUser.user, tap, organization, ['Edit']);
+  await setupTapPermissions(authenticatedUser.user, tap, organization, [
+    'Edit',
+  ]);
 
   await page.goto(`/taps/${tap.id}/keg/new`);
   await expect(page.getByTestId('keg-form')).toBeVisible();

@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CenteredModal } from './CenteredModal';
-import { Button } from '../../common/buttons/Button';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { Button } from 'common/buttons/Button';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

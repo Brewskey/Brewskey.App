@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import { ListItem } from './ListItem';
-import { COLORS } from '../theme';
+import { ListItem } from 'common/ListItem';
+import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   selected: {

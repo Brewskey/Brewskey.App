@@ -9,18 +9,18 @@ import {
   View,
 } from 'react-native';
 
-import { NotificationComponentByType } from '../components/NotificationsList/NotificationComponentByType';
+import { NotificationComponentByType } from 'components/NotificationsList/NotificationComponentByType';
 import {
   useGetCurrentSnackBarMessage,
   useRemoveSnackBarMessage,
-} from '../hooks/context/SnackBarContext';
-import { notificationsStore } from '../stores/NotificationsStore';
-import { COLORS } from '../theme';
+} from 'hooks/context/SnackBarContext';
+import { notificationsStore } from 'stores/NotificationsStore';
+import { COLORS } from 'theme';
 
 import type { LayoutChangeEvent } from 'react-native';
 
-import type { SnackBarMessage } from '../hooks/context/SnackBarContext';
-import type { Notification } from '../stores/NotificationTypes';
+import type { SnackBarMessage } from 'hooks/context/SnackBarContext';
+import type { Notification } from 'stores/NotificationTypes';
 
 const ENTER_ANIMATION_DURATION = 300;
 const EXIT_ANIMATION_DURATION = 300;

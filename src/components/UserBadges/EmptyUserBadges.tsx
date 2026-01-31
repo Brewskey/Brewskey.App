@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { styles as baseStyles } from './UserBadgesStyles';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { styles as baseStyles } from 'components/UserBadges/UserBadgesStyles';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   text: {

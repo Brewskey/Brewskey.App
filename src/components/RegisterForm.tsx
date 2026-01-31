@@ -3,15 +3,15 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { SectionContent } from '../common/SectionContent';
-import { useLogin, useRegister } from '../hooks/queries/AuthQueries';
-import { validateEmail } from '../utils';
+import { Button } from 'common/buttons/Button';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
+import { useLogin, useRegister } from 'hooks/queries/AuthQueries';
+import { validateEmail } from 'utils';
 
 export interface RegisterFormFields {
   email: string;
@@ -93,7 +93,7 @@ const RegisterForm: React.FC = () => {
     <Form form={form}>
       <View testID="register-form">
         <FormValidationMessage testID="register-error-message" />
-        <FormField
+        <FormField<RegisterFormFields, typeof TextInput>
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
@@ -101,9 +101,10 @@ const RegisterForm: React.FC = () => {
           label="User name"
           name="userName"
           nextFocusTo="email"
+          required
           testID="input-userName"
         />
-        <FormField
+        <FormField<RegisterFormFields, typeof TextInput>
           autoCapitalize="none"
           autoCorrect={false}
           component={TextInput}
@@ -111,9 +112,10 @@ const RegisterForm: React.FC = () => {
           label="Email"
           name="email"
           nextFocusTo="password"
+          required
           testID="input-email"
         />
-        <FormField
+        <FormField<RegisterFormFields, typeof TextInput>
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -122,6 +124,7 @@ const RegisterForm: React.FC = () => {
           label="Password"
           name="password"
           onSubmitEditing={onSubmitButtonPress}
+          required
           testID="input-password"
         />
         <SectionContent paddedVertical>

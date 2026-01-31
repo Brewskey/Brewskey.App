@@ -11,5 +11,5 @@ test('should allow filtering by duration', async ({ page }) => {
 
   await expect(page.getByTestId('leaderboard-list')).toBeVisible();
   // LeaderboardDurationPicker has testID; verify filters are present
-  await expect(page.getByTestId('leaderboard-duration-picker')).toBeVisible();
+  await expect(page.getByTestId('leaderboard-duration-dropdown')).toBeVisible();
 });

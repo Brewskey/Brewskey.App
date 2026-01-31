@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { BeverageDetailsContent } from './BeverageDetailsContent';
-import { useGetBeverageById } from '../hooks/queries/BeverageQueries';
+import { BeverageDetailsContent } from 'components/BeverageDetailsContent';
+import { useGetBeverageById } from 'hooks/queries/BeverageQueries';
 
 import type { EntityID } from '@brewskey/js-api';
 

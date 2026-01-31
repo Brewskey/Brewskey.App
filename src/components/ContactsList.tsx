@@ -1,15 +1,15 @@
 import * as React from 'react';
 
-import { BaseAvatar } from '../common/avatars/BaseAvatar';
-import { List } from '../common/List';
-import { ListEmpty } from '../common/ListEmpty';
-import { ListItem } from '../common/ListItem';
-import { ContactsStore } from '../stores/ContactsStore';
+import { BaseAvatar } from 'common/avatars/BaseAvatar';
+import { List } from 'common/List';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { ContactsStore } from 'stores/ContactsStore';
 
 import type { InfiniteData } from '@tanstack/react-query';
 import type { ListRenderItemInfo } from 'react-native';
 
-import type { Contact } from '../stores/ContactsStore';
+import type { Contact } from 'stores/ContactsStore';
 
 interface Props {
   ListHeaderComponent?:

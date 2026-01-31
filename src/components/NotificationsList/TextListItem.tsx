@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { NotificationListItem } from './NotificationListItem';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 
-import type { Props as NotificationListItemProps } from './NotificationListItem';
-import type { TextNotification } from '../../stores/NotificationTypes';
+import type { Props as NotificationListItemProps } from 'components/NotificationsList/NotificationListItem';
+import type { TextNotification } from 'stores/NotificationTypes';
 
 type Props = NotificationListItemProps & {
   notification: TextNotification;

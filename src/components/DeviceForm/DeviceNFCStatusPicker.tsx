@@ -3,10 +3,12 @@ import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { Linking, StyleSheet, Text } from 'react-native';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { FormField } from '../../common/form/FormField';
-import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { COLORS, TYPOGRAPHY } from 'theme';
+
+import type { FieldValues } from 'react-hook-form';
 
 const styles = StyleSheet.create({
   descriptionText: {
@@ -102,18 +104,20 @@ const DESCRIPTION_BY_VALUE = {
 
 interface Props {
   name: string;
+  testID?: string;
 }
 
 const DeviceNFCStatusPicker = (props: Props): React.ReactElement => {
   const { getValues } = useFormContext();
-  const value = getValues(props.name || 'nfcStatus');
+  const value = getValues(props.name);
   return (
-    <FormField
+    <FormField<FieldValues, typeof DropdownInput>
       required
       component={DropdownInput}
       label="NFC Status"
       labelField="label"
-      name={props.name || 'nfcStatus'}
+      name={props.name}
+      testID={props.testID}
       valueField="value"
       data={[
         { label: 'Phone Only', value: 'PhoneOnly' },

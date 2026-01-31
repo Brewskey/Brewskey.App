@@ -3,9 +3,9 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import { Container } from '../../../common/Container';
-import { OrderedText } from '../../../common/TextBlock';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
+import { Container } from 'common/Container';
+import { OrderedText } from 'common/OrderedText';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   textInstructions: {

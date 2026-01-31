@@ -3,14 +3,15 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { FLOW_SENSOR_ITEMS } from './flowSensorItems';
-import { FlowSensorSwiperField } from './FlowSensorSwiperField';
-import { GallonSliderField } from './GallonSliderField';
-import { GallonTextField } from './GallonTextField';
-import { Form } from '../../common/form/Form';
-import { FormValidationMessage } from '../../common/form/FormValidationMessage';
-import { SubmitButton } from '../../common/form/SubmitButton';
-import { SectionContent } from '../../common/SectionContent';
+import { FLOW_SENSOR_ITEMS } from 'components/FlowSensorForm/flowSensorItems';
+import { FlowSensorSwiperField } from 'components/FlowSensorForm/FlowSensorSwiperField';
+import { GallonSliderField } from 'components/FlowSensorForm/GallonSliderField';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
 
 import type {
   EntityID,
@@ -19,7 +20,7 @@ import type {
   FlowSensorType,
 } from '@brewskey/js-api';
 
-import type { FlowSensorItem } from './flowSensorItems';
+import type { FlowSensorItem } from 'components/FlowSensorForm/flowSensorItems';
 
 const DEFAULT_FLOW_SENSOR_ITEM = FLOW_SENSOR_ITEMS[0];
 
@@ -62,9 +63,21 @@ export const FlowSensorForm: React.FC<Props> = ({
     ) || DEFAULT_FLOW_SENSOR_ITEM;
   const isCustomSensor = selectedFlowSensorItem.value === 'Custom';
 
-  const PulsesPerGallonComponent = isCustomSensor
-    ? GallonTextField
-    : GallonSliderField;
+  const pulsesPerGallon = isCustomSensor ? (
+    <FormField<FlowSensorMutator, typeof TextInput>
+      component={TextInput}
+      description="Find out number of pulses per gallon for your flow sensor and type it here"
+      keyboardType="numeric"
+      label="Set custom pulses"
+      name="pulsesPerGallon"
+      testID="pulses-per-gallon-input"
+    />
+  ) : (
+    <GallonSliderField
+      defaultPulses={selectedFlowSensorItem.defaultPulses}
+      name="pulsesPerGallon"
+    />
+  );
 
   return (
     <Form form={form}>
@@ -83,12 +96,10 @@ export const FlowSensorForm: React.FC<Props> = ({
             );
           }}
         />
-        <PulsesPerGallonComponent
-          defaultPulses={selectedFlowSensorItem.defaultPulses}
-          name="pulsesPerGallon"
-        />
+        {pulsesPerGallon}
         <SectionContent paddedVertical>
           <SubmitButton
+            allowSubmitWhenValid={!flowSensor}
             disabled={!isFormReady}
             onSubmit={onSubmit}
             testID="submit-button-save"

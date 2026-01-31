@@ -1,6 +1,6 @@
-import { makeRequestApiStore } from './makeRequestApiStore';
+import { makeRequestApiStore } from 'stores/ApiRequestStores/makeRequestApiStore';
 
-import type { Coordinates } from '../../types';
+import type { Coordinates } from 'types';
 
 // const getGPSPosition = (): Promise<Position> => new Promise((resolve, reject: (error: PositionError) => void) => {
 //   Geolocation.getCurrentPosition(

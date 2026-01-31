@@ -5,6 +5,7 @@ This directory contains Playwright test fixtures with dependency injection for t
 ## Overview
 
 The test fixtures automatically handle:
+
 - **Mock data store reset** - Automatically resets before each test
 - **API monitoring** - Tracks failed API requests during tests
 - **API mocking** - Sets up route handlers for all API endpoints
@@ -60,7 +61,7 @@ test('specific test', async ({ page, mockStore }) => {
   // Use mockStore to manually add data
   const customLocation = createMockLocation({ name: 'Custom Location' });
   mockStore.setLocation(customLocation);
-  
+
   await page.goto('/locations');
 });
 ```
@@ -75,7 +76,7 @@ import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
 test('my test', async ({ page }) => {
   const { location, taps } = await mockLocationWithTaps(page, 3);
   // 1 location with 3 taps is now available
-  
+
   await page.goto('/taps');
 });
 ```
@@ -125,25 +126,32 @@ Configure via `test.use()`:
 ```typescript
 test.use({
   // User configuration
-  user: { userName: 'testuser' },        // Partial<Account>
-  autoAuthenticate: true,                // boolean, default: false
-  
+  user: { userName: 'testuser' }, // Partial<Account>
+  autoAuthenticate: true, // boolean, default: false
+
   // Data counts (automatically populates stores)
-  locationCount: 2,                      // number - creates 2 locations
-  tapCount: 3,                           // number - creates 3 taps per location
-  deviceCount: 1,                        // number - creates 1 device
-  beverageCount: 5,                      // number - creates 5 beverages
-  organizationCount: 2,                  // number - creates 2 organizations
+  locationCount: 2, // number - creates 2 locations
+  tapCount: 3, // number - creates 3 taps per location
+  deviceCount: 1, // number - creates 1 device
+  beverageCount: 5, // number - creates 5 beverages
+  organizationCount: 2, // number - creates 2 organizations
 });
 ```
 
 ## Migration from test.beforeEach
 
 **Before:**
+
 ```typescript
 import { test, expect } from '@playwright/test';
-import { setupAPIMonitoring, clearFailedRequests } from '../../fixtures/api-monitoring';
-import { mockAuthenticatedUser, resetMockStore } from '../../fixtures/entity-fixtures';
+import {
+  setupAPIMonitoring,
+  clearFailedRequests,
+} from '../../fixtures/api-monitoring';
+import {
+  mockAuthenticatedUser,
+  resetMockStore,
+} from '../../fixtures/entity-fixtures';
 
 test.beforeEach(async ({ page }) => {
   setupAPIMonitoring(page, test.info().file, test.info().title);
@@ -154,6 +162,7 @@ test.beforeEach(async ({ page }) => {
 ```
 
 **After:**
+
 ```typescript
 import { test, expect } from '../../fixtures/test-fixtures';
 
@@ -200,7 +209,7 @@ test.use({ autoAuthenticate: true });
 
 test('should display taps', async ({ page }) => {
   const { location, taps } = await mockLocationWithTaps(page, 3);
-  
+
   await page.goto('/taps');
   await expect(page.getByText(location.name)).toBeVisible();
   for (const tap of taps) {
@@ -220,7 +229,7 @@ test.use({ autoAuthenticate: true });
 test('should handle custom location', async ({ page, mockStore }) => {
   const customLocation = createMockLocation({ name: 'My Custom Location' });
   mockStore.setLocation(customLocation);
-  
+
   await page.goto('/locations');
   await expect(page.getByText('My Custom Location')).toBeVisible();
 });

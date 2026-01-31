@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { StyleSheet, Text } from 'react-native';
 
-import { CenteredModal } from './CenteredModal';
-import { BADGE_BY_TYPE } from '../../badges';
-import { Button } from '../../common/buttons/Button';
-import { COLORS, TYPOGRAPHY } from '../../theme';
-import { BadgeIcon } from '../BadgeIcon';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { BADGE_BY_TYPE } from 'badges';
+import { Button } from 'common/buttons/Button';
+import { COLORS, TYPOGRAPHY } from 'theme';
+import { BadgeIcon } from 'components/BadgeIcon';
 
 import type { AchievementCounter } from '@brewskey/js-api';
 

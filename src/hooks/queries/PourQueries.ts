@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
 import type {

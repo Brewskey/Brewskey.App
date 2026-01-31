@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

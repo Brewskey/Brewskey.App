@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { Container } from '../common/Container';
-import { LoadingIndicator } from '../common/LoadingIndicator';
-import { SectionContent } from '../common/SectionContent';
-import { SectionHeader } from '../common/SectionHeader';
-import { PhoneConnectInstructions } from '../components/WifiSetup/PhoneConnectInstructions';
+import { Container } from 'common/Container';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { SectionContent } from 'common/SectionContent';
+import { SectionHeader } from 'common/SectionHeader';
+import { PhoneConnectInstructions } from 'components/WifiSetup/PhoneConnectInstructions';
 import {
   useGetParticleId,
   useGetWifiNetworks,
-} from '../hooks/queries/SoftApQueries';
+} from 'hooks/queries/SoftApQueries';
 import {
   useWifiSetupScreenContext,
   WifiSetupSteps,
-} from '../utils/WifiSetupScreenContext';
+} from 'utils/WifiSetupScreenContext';
 
 export const WifiSetupStep2Screen: React.FC = () => {
   const [value, setValue] = useWifiSetupScreenContext();

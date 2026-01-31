@@ -3,18 +3,18 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
 
-import { BasePoursList } from './BasePoursList';
-import { UserAvatar } from '../../common/avatars/UserAvatar';
-import { ListEmpty } from '../../common/ListEmpty';
-import { ListItem } from '../../common/ListItem';
-import { QuickActions } from '../../common/QuickActions';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { useAddSnackBarMessage } from '../../hooks/context/SnackBarContext';
-import { useDeletePour } from '../../hooks/queries/PourQueries';
+import { BasePoursList } from 'components/poursLists/BasePoursList';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { QuickActions } from 'common/QuickActions';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { useDeletePour } from 'hooks/queries/PourQueries';
 
 import type { Pour, QueryOptions } from '@brewskey/js-api';
 
-import type { ListComponentTypes } from '../../common/List';
+import type { ListComponentTypes } from 'common/List';
 
 interface Props {
   canDeletePours: boolean;

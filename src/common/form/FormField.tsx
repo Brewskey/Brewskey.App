@@ -1,25 +1,39 @@
 import * as React from 'react';
 
+import { FieldValues } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { FormLabel } from './FormLabel';
-import { FormValidationMessage } from './FormValidationMessage';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { FormLabel } from 'common/form/FormLabel';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 export type Props<
+  TFormFields extends FieldValues,
   TComponent extends React.ComponentType<any>,
-  TProps extends React.ComponentProps<TComponent>,
-> = TProps & {
+> = React.ComponentProps<TComponent> & {
   description?: string | React.ReactNode;
   label?: string;
-  name: string;
+  name: Extract<keyof TFormFields, string>;
+  required?: boolean | string;
   containerStyle?: StyleProp<ViewStyle>;
   labelStyle?: StyleProp<TextStyle>;
   descriptionStyle?: StyleProp<TextStyle>;
   component: TComponent;
 };
+
+type FormFieldPropsOrError<TFormFields, TComponent> = [TFormFields] extends [
+  never,
+]
+  ? {
+      __FORM_FIELD_REQUIRES_EXPLICIT_GENERICS: 'FormField<TFormFields, TComponent>({...})';
+    }
+  : [TComponent] extends [never]
+    ? {
+        __FORM_FIELD_REQUIRES_EXPLICIT_GENERICS: 'FormField<TFormFields, TComponent>({...})';
+      }
+    : Props<TFormFields & FieldValues, TComponent & React.ComponentType<any>>;
 
 const styles = StyleSheet.create({
   description: {
@@ -28,18 +42,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
 });
+/**
+ * Renders a form control with optional label, description, and validation message.
+ * Both TFormFields and TComponent must be passed explicitly as type arguments.
+ *
+ * @typeParam TFormFields - Form values type (required; pass explicitly e.g. FormField<MyFormValues, MyComponent>({...}))
+ * @typeParam TComponent - Component type (required; pass explicitly e.g. typeof TextInput)
+ */
 export const FormField = <
-  TComponent extends React.ComponentType<any>,
-  TProps extends React.ComponentProps<TComponent>,
+  TFormFields extends FieldValues = never,
+  TComponent extends React.ComponentType<any> = never,
 >({
   description,
   label,
   labelStyle,
+  required,
   containerStyle,
   descriptionStyle,
   component: Component,
   ...props
-}: Props<TComponent, TProps>) => (
+}: FormFieldPropsOrError<TFormFields, TComponent>) => (
   <View
     style={
       containerStyle ?? {
@@ -47,13 +69,25 @@ export const FormField = <
       }
     }
   >
-    {label ? <FormLabel labelStyle={labelStyle}>{label}</FormLabel> : null}
+    {label ? (
+      <FormLabel labelStyle={labelStyle}>
+        {label}
+        {required ? ' *' : ''}
+      </FormLabel>
+    ) : null}
     <Component {...props} />
-    {description == null ? null : typeof description === 'string' ? (
-      <Text style={descriptionStyle ?? styles.description}>{description}</Text>
-    ) : (
-      description
-    )}
-    {label ? <FormValidationMessage fieldName={props.name} /> : null}
+    {description != null &&
+      (typeof description === 'string' ? (
+        <Text style={descriptionStyle ?? styles.description}>
+          {description}
+        </Text>
+      ) : (
+        <React.Fragment>{description}</React.Fragment>
+      ))}
+    {label ? (
+      <FormValidationMessage
+        fieldName={props.name as Extract<keyof TFormFields, string>}
+      />
+    ) : null}
   </View>
 );

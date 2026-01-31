@@ -1,10 +1,13 @@
 import * as React from 'react';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { FormField } from '../../common/form/FormField';
+import { FieldValues } from 'react-hook-form';
+
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
 
 interface Props {
-  name?: string;
+  name: string;
+  testID?: string;
   defaultValue?: number;
   required?: boolean | string;
 }
@@ -13,15 +16,15 @@ const SECONDS_PER_MINUTE = 60;
 const SECONDS_PER_HOUR = SECONDS_PER_MINUTE * 60;
 
 const DeviceTimeOpenPicker = (props: Props): React.ReactElement => (
-  <FormField
+  <FormField<FieldValues, typeof DropdownInput>
     component={DropdownInput}
     defaultValue={props.defaultValue}
     headerTitle="Select Time to Keep Valve Open"
     label="Time to stay in device state (will keep valve open)"
     labelField="label"
-    name={props.name || 'secondsToStayOpen'}
+    name={props.name}
     required={props.required}
-    testID={`picker-${props.name || 'secondsToStayOpen'}`}
+    testID={props.testID}
     valueField="value"
     data={[
       { label: '1 minute', value: SECONDS_PER_MINUTE },

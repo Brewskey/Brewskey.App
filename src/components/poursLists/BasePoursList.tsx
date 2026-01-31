@@ -2,18 +2,18 @@ import * as React from 'react';
 
 import nullthrows from 'nullthrows';
 
-import { List } from '../../common/List';
-import { LoadingListFooter } from '../../common/LoadingListFooter';
-import { useGetPours } from '../../hooks/queries/PourQueries';
-import { BeverageModal } from '../modals/BeverageModal';
-import { PourModal } from '../modals/PourModal';
+import { List } from 'common/List';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { useGetPours } from 'hooks/queries/PourQueries';
+import { BeverageModal } from 'components/modals/BeverageModal';
+import { PourModal } from 'components/modals/PourModal';
 
 import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
 import type { ListRenderItemInfo } from 'react-native';
 
-import type { ListComponentTypes } from '../../common/List';
-import type { BeverageModalHandle } from '../modals/BeverageModal';
-import type { PourModalHandle } from '../modals/PourModal';
+import type { ListComponentTypes } from 'common/List';
+import type { BeverageModalHandle } from 'components/modals/BeverageModal';
+import type { PourModalHandle } from 'components/modals/PourModal';
 
 interface Props {
   ListEmptyComponent?: ListComponentTypes;

@@ -3,14 +3,15 @@ import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from '../../../common/buttons/Button';
-import { DropdownInput } from '../../../common/form/DropdownInput';
-import { FormValidationMessage } from '../../../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../../../common/form/handleSubmitWithError';
-import { TextField } from '../../../common/form/TextField';
-import { WIFI_SECURITIES } from '../../../SoftApService';
+import { Button } from 'common/buttons/Button';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { WIFI_SECURITIES } from 'SoftApService';
 
-import type { WifiNetwork } from '../../../types';
+import type { WifiNetwork } from 'types';
 
 interface Props {
   onSubmit: (values: WifiNetwork) => Promise<void>;
@@ -48,7 +49,12 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
   return (
     <View>
       <FormValidationMessage />
-      <TextField required label="SSID" name="ssid" />
+      <FormField<FormProps, typeof TextInput>
+        component={TextInput}
+        required
+        label="SSID"
+        name="ssid"
+      />
       <DropdownInput
         data={SECURITY_OPTIONS}
         defaultValue={SECURITY_OPTIONS[0]}
@@ -57,7 +63,13 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
         valueField="value"
       />
       {security !== WIFI_SECURITIES.OPEN && (
-        <TextField secureTextEntry label="Password" name="password" />
+        <FormField<FormProps, typeof TextInput>
+          component={TextInput}
+          label="Password"
+          name="password"
+          required
+          secureTextEntry
+        />
       )}
       <Button
         disabled={!isValid || !isDirty || isSubmitting}

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { WifiListEmpty } from './WifiListEmpty';
-import { WifiListError } from './WifiListError';
-import { WifiListItem } from './WifiListItem';
-import { Form } from '../../../common/form/Form';
-import { List } from '../../../common/List';
-import { LoadingListFooter } from '../../../common/LoadingListFooter';
-import { useGetWifiNetworks } from '../../../hooks/queries/SoftApQueries';
+import { WifiListEmpty } from 'components/WifiSetup/WifiList/WifiListEmpty';
+import { WifiListError } from 'components/WifiSetup/WifiList/WifiListError';
+import { WifiListItem } from 'components/WifiSetup/WifiList/WifiListItem';
+import { Form } from 'common/form/Form';
+import { List } from 'common/List';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { useGetWifiNetworks } from 'hooks/queries/SoftApQueries';
 
-import type { WifiNetwork } from '../../../types';
+import type { WifiNetwork } from 'types';
 
 interface Props {
   ListHeaderComponent?: React.ReactElement | null | undefined;

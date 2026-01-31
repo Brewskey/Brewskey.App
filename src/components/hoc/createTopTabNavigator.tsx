@@ -3,7 +3,7 @@ import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Dimensions } from 'react-native';
 
-import { theme } from '../../theme';
+import { theme } from 'theme';
 
 import type { NavigationState, Route } from '@react-navigation/native';
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Image, ImageBackground, StyleSheet } from 'react-native';
 import tinycolor from 'tinycolor2';
 
-import { useGetBeverageById } from '../../hooks/queries/BeverageQueries';
+import { useGetBeverageById } from 'hooks/queries/BeverageQueries';
 
 import type { EntityID } from '@brewskey/js-api';
 

@@ -5,7 +5,6 @@ test('should display WiFi setup instructions', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoWifiStep();
-  
 
   await expect(page).toHaveURL(/.*nux.*wifi/i);
   // WiFi screen has testID - use that instead of text-based locator
@@ -17,7 +16,6 @@ test('should navigate to WiFi setup screen', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoWifiStep();
-  
 
   // The NUX WiFi screen only has a "Next" button, not a setup button
   // The navigation to WiFi setup happens after clicking Next
@@ -30,7 +28,6 @@ test('should have continue button', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoWifiStep();
-  
 
   await expect(nuxPage.getContinueButton()).toBeVisible();
   await expect(nuxPage.getContinueButton()).toBeEnabled();

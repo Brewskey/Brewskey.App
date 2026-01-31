@@ -11,14 +11,17 @@ test('should display login screen', async ({ page, loginPage }) => {
   await expect(page.getByTestId('login-submit-button')).toBeVisible();
 });
 
-test('should successfully login with valid credentials', async ({ page, loginPage }) => {
+test('should successfully login with valid credentials', async ({
+  page,
+  loginPage,
+}) => {
   // Set up explicit data: user exists in mock store (but NOT authenticated in localStorage)
   // This allows the login flow to work properly
   const user = createMockUser({
     userName: 'testuser',
   });
   mockStore.setUser(user);
-  
+
   await loginPage.goto();
   await loginPage.login('testuser', 'password123');
 
@@ -27,7 +30,10 @@ test('should successfully login with valid credentials', async ({ page, loginPag
   await expect(page).toHaveURL(/.*home|\/$/);
 });
 
-test('should show error with invalid credentials', async ({ page, loginPage }) => {
+test('should show error with invalid credentials', async ({
+  page,
+  loginPage,
+}) => {
   // Set up explicit data: no user exists (empty store)
   // Store is already empty from resetStores fixture
   await loginPage.goto();
@@ -44,7 +50,10 @@ test('should navigate to register screen', async ({ page, loginPage }) => {
   await expect(page).toHaveURL(/.*register/);
 });
 
-test('should navigate to password reset screen', async ({ page, loginPage }) => {
+test('should navigate to password reset screen', async ({
+  page,
+  loginPage,
+}) => {
   await loginPage.goto();
   await loginPage.clickForgotPassword();
 
@@ -57,7 +66,7 @@ test('should persist session on page reload', async ({ page, loginPage }) => {
     userName: 'testuser',
   });
   mockStore.setUser(user);
-  
+
   await loginPage.goto();
   await loginPage.login('testuser', 'password123');
 

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { TYPOGRAPHY } from '../theme';
+import { TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

@@ -4,10 +4,10 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { UserAvatar } from '../common/avatars/UserAvatar';
-import { TouchableItem } from '../common/buttons/TouchableItem';
-import { useAuthSession } from '../hooks/context/AuthContext';
-import { COLORS, getElevationStyle, TYPOGRAPHY } from '../theme';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { TouchableItem } from 'common/buttons/TouchableItem';
+import { useAuthSession } from 'hooks/context/AuthContext';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

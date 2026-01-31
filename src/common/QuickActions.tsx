@@ -3,11 +3,11 @@ import { useCallback, useRef } from 'react';
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 
-import { Fragment } from './Fragment';
-import { SwipeableActionButton } from './SwipeableActionButton';
-import { DeleteModal } from '../components/modals/DeleteModal';
-import { ToggleStore } from '../stores/ToggleStore';
-import { COLORS } from '../theme';
+import { Fragment } from 'common/Fragment';
+import { SwipeableActionButton } from 'common/SwipeableActionButton';
+import { DeleteModal } from 'components/modals/DeleteModal';
+import { ToggleStore } from 'stores/ToggleStore';
+import { COLORS } from 'theme';
 
 import type { ReactElement } from 'react';
 

@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { Animated, StyleSheet, Text, View } from 'react-native';
 
-import { LoadingIndicator } from '../common/LoadingIndicator';
-import { useGetKegById } from '../hooks/queries/KegQueries';
-import { COLORS, getElevationStyle, TYPOGRAPHY } from '../theme';
-import { calculateKegLevel } from '../utils';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { useGetKegById } from 'hooks/queries/KegQueries';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from 'theme';
+import { calculateKegLevel } from 'utils';
 
 import type { EntityID, Keg } from '@brewskey/js-api';
 

@@ -1,6 +1,6 @@
 import { StyleSheet, Text } from 'react-native';
 
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 import type { FC } from 'react';
 

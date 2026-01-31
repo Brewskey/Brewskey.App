@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { OrderedText } from '../common/TextBlock';
-import { COLORS, TYPOGRAPHY } from '../theme';
-import { HardwareSetupModal } from './modals/HardwareSetupModal';
+import { Button } from 'common/buttons/Button';
+import { OrderedText } from 'common/OrderedText';
+import { COLORS, TYPOGRAPHY } from 'theme';
+import { HardwareSetupModal } from 'components/modals/HardwareSetupModal';
 
 const styles = StyleSheet.create({
   container: {

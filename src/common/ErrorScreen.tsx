@@ -1,10 +1,10 @@
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text } from 'react-native';
 
-import { Container } from './Container';
-import { Fragment } from './Fragment';
-import { Header } from './Header';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { Container } from 'common/Container';
+import { Fragment } from 'common/Fragment';
+import { Header } from 'common/Header';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { ReactElement } from 'react';
 

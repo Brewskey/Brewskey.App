@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 
-import { COLORS, getElevationStyle } from '../theme';
+import { COLORS, getElevationStyle } from 'theme';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 

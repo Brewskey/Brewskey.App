@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-// import PourProcessStore from '../../stores/PourProcessStore';
-import { TouchableItem } from '../../common/buttons/TouchableItem';
-import { LoadingIndicator } from '../../common/LoadingIndicator';
-import { usePourModalContext } from '../../hooks/context/PourProcessContext';
-import { COLORS } from '../../theme';
-import { PourProcessModal } from '../modals/PourProcessModal';
+// import PourProcessStore from 'stores/PourProcessStore';
+import { TouchableItem } from 'common/buttons/TouchableItem';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { usePourModalContext } from 'hooks/context/PourProcessContext';
+import { COLORS } from 'theme';
+import { PourProcessModal } from 'components/modals/PourProcessModal';
 
 const styles = StyleSheet.create({
   container: {

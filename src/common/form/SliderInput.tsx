@@ -1,26 +1,29 @@
 import { Slider } from '@rneui/themed';
 import nullthrows from 'nullthrows';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { SliderProps } from '@rneui/themed';
 
-export type SliderInputProps = Omit<SliderProps, 'value'> & {
-  name: string;
+export type SliderInputProps<TFormFields extends FieldValues> = Omit<
+  SliderProps,
+  'value' | 'name'
+> & {
+  name: Extract<keyof TFormFields, string>;
   defaultValue?: number;
   required?: boolean;
   testID?: string;
 };
 
-export const SliderInput = ({
+export const SliderInput = <TFormFields extends FieldValues>({
   defaultValue,
   required = false,
   name,
   testID,
   ...props
-}: SliderInputProps) => {
+}: SliderInputProps<TFormFields>) => {
   const { control } = useFormContext();
 
   return (
@@ -29,7 +32,7 @@ export const SliderInput = ({
       defaultValue={defaultValue ?? 0}
       rules={{ required }}
       name={nullthrows(
-        name,
+        name.toString(),
         'SliderInput: name prop is required and must be a non-empty string',
       )}
       render={({ field: { onChange, onBlur, value } }) => (

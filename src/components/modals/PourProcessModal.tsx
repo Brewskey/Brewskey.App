@@ -6,11 +6,11 @@ import NfcManager from 'react-native-nfc-manager';
 import * as Progress from 'react-native-progress';
 import { useInterval } from 'usehooks-ts';
 
-import { CenteredModal } from './CenteredModal';
-import { TouchableItem } from '../../common/buttons/TouchableItem';
-import { LoadingIndicator } from '../../common/LoadingIndicator';
-import { usePourModalContext } from '../../hooks/context/PourProcessContext';
-import { COLORS } from '../../theme';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { TouchableItem } from 'common/buttons/TouchableItem';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { usePourModalContext } from 'hooks/context/PourProcessContext';
+import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   enableNFCContainer: {

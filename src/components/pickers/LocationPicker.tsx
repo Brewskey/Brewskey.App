@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
+import { FieldValues } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { useGetLocations } from '../../hooks/queries/LocationQueries';
-import { COLORS } from '../../theme';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useGetLocations } from 'hooks/queries/LocationQueries';
+import { COLORS } from 'theme';
 
 import type { Location, QueryOptions, ShortenedEntity } from '@brewskey/js-api';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
@@ -27,7 +28,7 @@ interface Props {
   testID?: string;
 }
 
-interface LocationPickerItemProps {
+interface _LocationPickerItemProps {
   item: Location;
   selected?: boolean;
 }
@@ -47,8 +48,8 @@ const LocationPickerItem = (
 );
 
 export const LocationPicker = ({
-  name = 'location',
-  label,
+  name,
+  label: _label,
   defaultValue,
   required,
   testID,
@@ -65,14 +66,8 @@ export const LocationPicker = ({
     [],
   );
 
-  const pickerTestID =
-    testID ??
-    (label
-      ? `picker-${label.toLowerCase().replace(/\s+/g, '-')}`
-      : `location-picker-${name}`);
-
   return (
-    <DropdownInput<Location | ShortenedEntity>
+    <DropdownInput<FieldValues, Location | ShortenedEntity>
       {...props}
       search
       confirmSelectItem={false}
@@ -85,7 +80,7 @@ export const LocationPicker = ({
       renderItem={LocationPickerItem}
       required={required}
       searchPlaceholder="Search locations..."
-      testID={pickerTestID}
+      testID={testID}
       useQueryHook={useGetLocations}
       valueField="id"
     />

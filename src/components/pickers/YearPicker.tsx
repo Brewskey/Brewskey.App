@@ -1,12 +1,15 @@
 import * as React from 'react';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { FormField } from '../../common/form/FormField';
+import { FieldValues } from 'react-hook-form';
+
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
 
 const YEARS_RANGE_LENGTH = 10;
 
 interface Props {
-  name?: string;
+  name: string;
+  testID?: string;
   defaultValue?: string;
 }
 
@@ -25,15 +28,15 @@ const YearPicker = (props: Props): React.ReactElement => {
   }));
 
   return (
-    <FormField
+    <FormField<FieldValues, typeof DropdownInput>
       component={DropdownInput}
       data={pickerValues}
       defaultValue={props.defaultValue}
       headerTitle="Select Year"
       label="Year"
       labelField="label"
-      name={props.name || 'year'}
-      testID={`picker-${props.name || 'year'}`}
+      name={props.name}
+      testID={props.testID}
       valueField="value"
     />
   );

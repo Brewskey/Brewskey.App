@@ -5,24 +5,24 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { View } from 'react-native';
 
-import { ListEmpty } from '../common/ListEmpty';
-import { ListItem } from '../common/ListItem';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { QuickActions } from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
-import { SwipeableRow } from '../common/SwipeableRow';
-import { NULL_STRING_PLACEHOLDER } from '../constants';
-import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { QuickActions } from 'common/QuickActions';
+import { SwipeableList } from 'common/SwipeableList';
+import { SwipeableRow } from 'common/SwipeableRow';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import {
   useDeleteLocation,
   useGetLocations,
-} from '../hooks/queries/LocationQueries';
+} from 'hooks/queries/LocationQueries';
 
 import type { Location, QueryOptions } from '@brewskey/js-api';
 
-import type { ListComponentTypes } from '../common/List';
-import type { RenderProps, SwipeableListRef } from '../common/SwipeableList';
-import type { RowItemProps } from '../common/SwipeableRow';
+import type { ListComponentTypes } from 'common/List';
+import type { RenderProps, SwipeableListRef } from 'common/SwipeableList';
+import type { RowItemProps } from 'common/SwipeableRow';
 
 interface Props {
   ListEmptyComponent?: ListComponentTypes;

@@ -3,9 +3,9 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { Container } from '../common/Container';
-import { Fragment } from '../common/Fragment';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { Container } from 'common/Container';
+import { Fragment } from 'common/Fragment';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { EntityID } from '@brewskey/js-api';
 

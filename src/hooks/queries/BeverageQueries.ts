@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
-import { getStringFromEntityID } from '../../utils/getStringFromEntityID';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type {
   Beverage,

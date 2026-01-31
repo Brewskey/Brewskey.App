@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { Dimensions, Image, StyleSheet, Text } from 'react-native';
 
-import { Fragment } from '../../common/Fragment';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { Fragment } from 'common/Fragment';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   image: {

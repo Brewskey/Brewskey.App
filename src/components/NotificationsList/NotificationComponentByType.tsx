@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { AchievementListItem } from './AchievementListItem';
-import { FriendRequestListItem } from './FriendRequestListItem';
-import { LowKegLevelListItem } from './LowKegLevelListItem';
-import { TextListItem } from './TextListItem';
+import { AchievementListItem } from 'components/NotificationsList/AchievementListItem';
+import { FriendRequestListItem } from 'components/NotificationsList/FriendRequestListItem';
+import { LowKegLevelListItem } from 'components/NotificationsList/LowKegLevelListItem';
+import { TextListItem } from 'components/NotificationsList/TextListItem';
 
-import type { Props as NotificationListItemProps } from './NotificationListItem';
+import type { Props as NotificationListItemProps } from 'components/NotificationsList/NotificationListItem';
 
 const NotificationComponentByType = (
   props: NotificationListItemProps,

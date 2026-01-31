@@ -3,29 +3,23 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from '../../common/buttons/Button';
-import { Form } from '../../common/form/Form';
-import { FormField } from '../../common/form/FormField';
-import { FormValidationMessage } from '../../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../../common/form/handleSubmitWithError';
-import { TextInput } from '../../common/form/TextInput';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { TextInput } from 'common/form/TextInput';
 import {
   useGetOrganizationById,
   useGetOrganizations,
   useGetSquareLocations,
-} from '../../hooks/queries/OrganizationQueries';
-import { extractShortenedEntityId } from '../../utils';
-import { MainTabBarFill } from '../MainTabBar/MainTabBarSlot';
-import { LocationTypePicker } from '../pickers/LocationTypePicker';
-import { OrganizationPicker } from '../pickers/OrganizationPicker';
-import { SquareLocationPicker } from '../pickers/SquareLocationPicker';
-import { StatePicker } from '../pickers/StatePicker';
+} from 'hooks/queries/OrganizationQueries';
+import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
+import { LocationTypePicker } from 'components/pickers/LocationTypePicker';
+import { OrganizationPicker } from 'components/pickers/OrganizationPicker';
+import { SquareLocationPicker } from 'components/pickers/SquareLocationPicker';
+import { StatePicker } from 'components/pickers/StatePicker';
 
-import type {
-  Location,
-  LocationMutator,
-  ShortenedEntity,
-} from '@brewskey/js-api';
+import type { Location, LocationMutator } from '@brewskey/js-api';
 
 const REQUIRED_FIELDS = [
   'city',
@@ -64,9 +58,7 @@ interface Props {
   submitButtonLabel: string;
 }
 
-type FormProps = Omit<LocationMutator, 'organizationId'> & {
-  organization: ShortenedEntity | null | undefined;
-};
+type FormProps = LocationMutator;
 
 const LocationForm: React.FC<Props> = ({
   location = {
@@ -78,7 +70,7 @@ const LocationForm: React.FC<Props> = ({
   const form = useForm<FormProps>({
     defaultValues: {
       id: location.id,
-      organization: location.organization,
+      organizationId: location.organization?.id,
       name: location.name,
       description: location.description,
       locationType: location.locationType,
@@ -92,18 +84,16 @@ const LocationForm: React.FC<Props> = ({
   });
 
   const {
-    formState: { isDirty, isSubmitting, isValid },
+    formState: { isSubmitting },
     getValues,
   } = form;
 
-  const organizationShort = getValues('organization');
+  const organizationId = getValues('organizationId');
 
-  const { data: organization } = useGetOrganizationById(organizationShort?.id);
+  const { data: organization } = useGetOrganizationById(organizationId);
 
   // Get square locations if organization supports payments
-  const { data: squareLocations } = useGetSquareLocations(
-    organizationShort?.id,
-  );
+  const { data: squareLocations } = useGetSquareLocations(organizationId);
 
   // Only show the organizationField if the user can fetch more than one organization
   const { data: organizationsPages } = useGetOrganizations();
@@ -111,21 +101,19 @@ const LocationForm: React.FC<Props> = ({
 
   const organizationField =
     organizations.length > 1 ? (
-      <FormField
+      <FormField<FormProps, typeof OrganizationPicker>
         component={OrganizationPicker}
-        defaultValue={location.organization as any}
+        defaultValue={location.organization}
         label="Organization"
-        name="organization"
+        name="organizationId"
+        testID="organization-dropdown"
       />
     ) : null;
 
   const onSubmitForm = async (formValues: FormProps) => {
     const errors = validateForm(formValues);
     if (Object.keys(errors).length === 0) {
-      await onSubmit({
-        ...formValues,
-        organizationId: extractShortenedEntityId(formValues.organization),
-      });
+      await onSubmit(formValues);
     } else {
       // Set form errors for react-hook-form
       Object.keys(errors).forEach((key) => {
@@ -146,16 +134,17 @@ const LocationForm: React.FC<Props> = ({
       <View style={styles.container} testID="location-form">
         <FormValidationMessage testID="location-form-error-message" />
         {organizationField}
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={location.name}
           disabled={isSubmitting}
           label="Name"
           name="name"
           nextFocusTo="description"
+          required
           testID="input-name"
         />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={location.description ?? undefined}
           disabled={isSubmitting}
@@ -167,17 +156,20 @@ const LocationForm: React.FC<Props> = ({
           defaultValue={location.locationType ?? undefined}
           disabled={isSubmitting}
           name="locationType"
+          required
+          testID="location-type-dropdown"
         />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={location.street}
           disabled={isSubmitting}
           label="Street"
           name="street"
           nextFocusTo="suite"
+          required
           testID="input-street"
         />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={location.suite}
           disabled={isSubmitting}
@@ -186,26 +178,30 @@ const LocationForm: React.FC<Props> = ({
           nextFocusTo="city"
           testID="input-suite"
         />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
           defaultValue={location.city}
           disabled={isSubmitting}
           label="City"
           name="city"
+          required
           testID="input-city"
         />
         <StatePicker
           defaultValue={location.state ?? undefined}
           disabled={isSubmitting}
           name="state"
+          required
+          testID="state-dropdown"
         />
-        <FormField
+        <FormField<FormProps, typeof TextInput>
           component={TextInput}
-          defaultValue={location.zipCode.toString()}
+          defaultValue={location.zipCode?.toString()}
           disabled={isSubmitting}
           keyboardType="numeric"
           label="Zip"
           name="zipCode"
+          required
           testID="input-zipCode"
         />
         {!organization?.canEnablePayments ||
@@ -219,14 +215,13 @@ const LocationForm: React.FC<Props> = ({
           />
         )}
         <MainTabBarFill>
-          <Button
-            disabled={!isValid || !isDirty || isSubmitting}
-            loading={isSubmitting}
-            onPress={handleSubmitWithError(form, onSubmitForm)}
+          <SubmitButton<FormProps>
+            allowSubmitWhenValid={!location?.id}
+            onSubmit={onSubmitForm}
             style={{ marginVertical: 12 }}
             title={submitButtonLabel}
             testID={
-              location
+              location?.id
                 ? 'submit-button-edit-location'
                 : 'submit-button-create-location'
             }

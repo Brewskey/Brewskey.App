@@ -3,9 +3,9 @@ import * as React from 'react';
 import { EntityID } from '@brewskey/js-api';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Pint } from './Pint';
-import { COLORS } from '../../theme';
-import { createRange } from '../../utils';
+import { Pint } from 'components/PintCounter/Pint';
+import { COLORS } from 'theme';
+import { createRange } from 'utils';
 
 const styles = StyleSheet.create({
   container: {

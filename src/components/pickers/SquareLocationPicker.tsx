@@ -1,7 +1,9 @@
 import * as React from 'react';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { FormField } from '../../common/form/FormField';
+import { FieldValues } from 'react-hook-form';
+
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
 
 interface SquareLocation {
   name: string;
@@ -9,7 +11,8 @@ interface SquareLocation {
 }
 
 interface Props {
-  name?: string;
+  name: string;
+  testID?: string;
   defaultValue?: string;
   disabled?: boolean;
   squareLocations: SquareLocation[];
@@ -22,16 +25,16 @@ const SquareLocationPicker = (props: Props): React.ReactElement => {
   }));
 
   return (
-    <FormField
+    <FormField<FieldValues, typeof DropdownInput>
       component={DropdownInput}
       data={pickerValues}
       defaultValue={props.defaultValue}
-      disabled={props.disabled}
+      disable={props.disabled}
       headerTitle="Select Square Location"
       label="Square Location"
       labelField="label"
-      name={props.name || 'squareLocationID'}
-      testID={`picker-${props.name || 'squareLocationID'}`}
+      name={props.name}
+      testID={props.testID}
       valueField="value"
     />
   );

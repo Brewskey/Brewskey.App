@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { SectionContent } from './SectionContent';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { SectionContent } from 'common/SectionContent';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

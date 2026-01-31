@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Image } from 'expo-image';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 

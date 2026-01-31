@@ -1,9 +1,10 @@
 import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
+import { FieldValues } from 'react-hook-form';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { useGetGlasses } from '../../hooks/queries/GlassQueries';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { useGetGlasses } from 'hooks/queries/GlassQueries';
 
 import type { Glass, QueryOptions, ShortenedEntity } from '@brewskey/js-api';
 
@@ -13,12 +14,14 @@ interface Props {
   error?: string | null | undefined;
   queryOptions?: QueryOptions;
   name: string;
+  testID?: string;
   defaultValue?: PickerValue<Glass | ShortenedEntity>;
   required?: boolean | string;
 }
 
 export const GlassPicker: React.FC<Props> = ({
-  name = 'glass',
+  name,
+  testID,
   defaultValue,
   required,
   ...props
@@ -35,7 +38,7 @@ export const GlassPicker: React.FC<Props> = ({
   );
 
   return (
-    <DropdownInput<Glass | ShortenedEntity>
+    <DropdownInput<FieldValues, Glass | ShortenedEntity>
       search
       confirmSelectItem={false}
       defaultValue={defaultValue ?? undefined}
@@ -46,7 +49,7 @@ export const GlassPicker: React.FC<Props> = ({
       queryOptions={props.queryOptions ?? {}}
       required={required}
       searchPlaceholder="Search glasses..."
-      testID={`glass-picker-${name}`}
+      testID={testID}
       useQueryHook={useGetGlasses}
       valueField="id"
     />

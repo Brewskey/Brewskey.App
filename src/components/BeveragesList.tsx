@@ -3,21 +3,21 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
-import { BeverageAvatar } from '../common/avatars/BeverageAvatar';
-import { ListEmpty } from '../common/ListEmpty';
-import { ListItem } from '../common/ListItem';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { QuickActions } from '../common/QuickActions';
-import { SwipeableList } from '../common/SwipeableList';
-import { useAddSnackBarMessage } from '../hooks/context/SnackBarContext';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListItem } from 'common/ListItem';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { QuickActions } from 'common/QuickActions';
+import { SwipeableList } from 'common/SwipeableList';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import {
   useDeleteBeverageById,
   useGetBeverages,
-} from '../hooks/queries/BeverageQueries';
+} from 'hooks/queries/BeverageQueries';
 
 import type { Beverage, QueryOptions } from '@brewskey/js-api';
 
-import type { RenderProps } from '../common/SwipeableList';
+import type { RenderProps } from 'common/SwipeableList';
 
 interface Props {
   ListHeaderComponent?:

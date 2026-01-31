@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-
-import { COLORS } from '../theme';
+import { COLORS } from 'theme';
 
 import type { ReactElement, ReactNode } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';

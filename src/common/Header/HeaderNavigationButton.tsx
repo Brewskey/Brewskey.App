@@ -1,11 +1,11 @@
 import { useRouter } from 'expo-router';
 
-import { HeaderIconButton } from './HeaderIconButton';
+import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 
 import type { Href } from 'expo-router';
 import type { ComponentProps, FC } from 'react';
 
-import type { IconButton } from '../buttons/IconButton';
+import type { IconButton } from 'common/buttons/IconButton';
 
 type HeaderNavigationButtonProps = ComponentProps<typeof IconButton> & {
   href: Href;

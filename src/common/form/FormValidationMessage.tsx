@@ -4,7 +4,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { Text } from '@rneui/themed';
 import { useFormContext } from 'react-hook-form';
 
-import { COLORS } from '../../theme';
+import { COLORS } from 'theme';
 
 import type { PropsWithChildren } from 'react';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet } from 'react-native';
 
-import { IconButton } from './buttons/IconButton';
+import { IconButton } from 'common/buttons/IconButton';
 
 import type { StyleProp, ViewStyle } from 'react-native';
 

@@ -6,22 +6,32 @@
 import { Page, expect } from '@playwright/test';
 import { mockStore } from './api-mocks';
 import { createMockPermission } from './test-data';
-import type { Account, Tap, Location, Device, Organization } from '@brewskey/js-api';
-
+import type {
+  Account,
+  Tap,
+  Location,
+  Device,
+  Organization,
+} from '@brewskey/js-api';
 
 /**
  * Submit a form by clicking the submit button (create or edit)
  */
 export async function submitForm(
   page: Page,
-  entityType: 'location' | 'tap' | 'device' | 'beverage' | 'keg' | 'flow-sensor',
+  entityType:
+    | 'location'
+    | 'tap'
+    | 'device'
+    | 'beverage'
+    | 'keg'
+    | 'flow-sensor',
   action: 'create' | 'edit',
 ): Promise<void> {
   const testId = `submit-button-${action}-${entityType}`;
   await expect(page.getByTestId(testId)).toBeVisible();
   await page.getByTestId(testId).click();
 }
-
 
 /**
  * Set up permissions for a tap
@@ -30,7 +40,9 @@ export async function setupTapPermissions(
   authenticatedUser: Account,
   tap: Tap,
   organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = ['Read'],
+  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
+    'Read',
+  ],
 ): Promise<void> {
   for (const permissionType of permissionTypes) {
     const permission = createMockPermission({
@@ -44,7 +56,11 @@ export async function setupTapPermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: { id: organization.id, name: organization.name, isDeleted: false },
+      organization: {
+        id: organization.id,
+        name: organization.name,
+        isDeleted: false,
+      },
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),
@@ -60,7 +76,9 @@ export async function setupLocationPermissions(
   authenticatedUser: Account,
   location: Location,
   organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = ['Read'],
+  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
+    'Read',
+  ],
 ): Promise<void> {
   for (const permissionType of permissionTypes) {
     const permission = createMockPermission({
@@ -74,7 +92,11 @@ export async function setupLocationPermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: { id: organization.id, name: organization.name, isDeleted: false },
+      organization: {
+        id: organization.id,
+        name: organization.name,
+        isDeleted: false,
+      },
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),
@@ -90,7 +112,9 @@ export async function setupDevicePermissions(
   authenticatedUser: Account,
   device: Device,
   organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = ['Read'],
+  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
+    'Read',
+  ],
 ): Promise<void> {
   for (const permissionType of permissionTypes) {
     const permission = createMockPermission({
@@ -104,7 +128,11 @@ export async function setupDevicePermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: { id: organization.id, name: organization.name, isDeleted: false },
+      organization: {
+        id: organization.id,
+        name: organization.name,
+        isDeleted: false,
+      },
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),
@@ -131,7 +159,13 @@ export async function navigateToDetailPage(
  */
 export async function navigateToCreatePage(
   page: Page,
-  entityType: 'location' | 'tap' | 'device' | 'beverage' | 'keg' | 'flow-sensor',
+  entityType:
+    | 'location'
+    | 'tap'
+    | 'device'
+    | 'beverage'
+    | 'keg'
+    | 'flow-sensor',
   inputTestId: string,
 ): Promise<void> {
   await page.goto(`/${entityType}s/new`);
@@ -143,7 +177,13 @@ export async function navigateToCreatePage(
  */
 export async function navigateToEditPage(
   page: Page,
-  entityType: 'location' | 'tap' | 'device' | 'beverage' | 'keg' | 'flow-sensor',
+  entityType:
+    | 'location'
+    | 'tap'
+    | 'device'
+    | 'beverage'
+    | 'keg'
+    | 'flow-sensor',
   id: number,
   inputTestId: string,
 ): Promise<void> {

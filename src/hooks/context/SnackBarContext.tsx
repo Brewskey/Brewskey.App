@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from 'react';
 
 import type { PropsWithChildren, ReactElement } from 'react';
 
-import type { Notification } from '../../stores/NotificationTypes';
+import type { Notification } from 'stores/NotificationTypes';
 
 type TextStyleType = 'danger' | 'default' | 'success';
 

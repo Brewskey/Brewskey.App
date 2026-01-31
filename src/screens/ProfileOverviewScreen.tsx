@@ -3,14 +3,14 @@ import * as React from 'react';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { StyleSheet, View } from 'react-native';
 
-import { UserAvatar } from '../common/avatars/UserAvatar';
-import { withErrorBoundary } from '../common/ErrorBoundary';
-import { ErrorScreen } from '../common/ErrorScreen';
-import { LoadingIndicator } from '../common/LoadingIndicator';
-import { SectionHeader } from '../common/SectionHeader';
-import { BeveragePoursList } from '../components/poursLists/BeveragePoursList';
-import { UserBadges } from '../components/UserBadges/UserBadges';
-import { useGetAccountById } from '../hooks/queries/AccountQueries';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { withErrorBoundary } from 'common/ErrorBoundary';
+import { ErrorScreen } from 'common/ErrorScreen';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { SectionHeader } from 'common/SectionHeader';
+import { BeveragePoursList } from 'components/poursLists/BeveragePoursList';
+import { UserBadges } from 'components/UserBadges/UserBadges';
+import { useGetAccountById } from 'hooks/queries/AccountQueries';
 
 import type { Account, EntityID } from '@brewskey/js-api';
 import type { StaticScreenProps } from '@react-navigation/native';

@@ -8,7 +8,7 @@ test.use({ autoAuthenticate: true });
 test('should navigate between tabs', async ({ page, authenticatedUser }) => {
   // Set up tap with stats and leaderboard tabs visible (explicit data setup)
   const { tap } = await mockTapWithKeg(page);
-  
+
   // Update tap to show stats and leaderboard tabs
   const tapWithTabs = {
     ...tap,
@@ -57,10 +57,13 @@ test('should show flow sensor warning when missing', async ({ page }) => {
   await expect(beverageName.or(onTapTab).first()).toBeVisible();
 });
 
-test('should show edit button when user has permissions', async ({ page, authenticatedUser }) => {
+test('should show edit button when user has permissions', async ({
+  page,
+  authenticatedUser,
+}) => {
   // Set up tap with Edit permission explicitly (explicit data setup)
   const { tap, beverage, organization } = await mockTapWithKeg(page);
-  
+
   // Create Edit permission for the authenticated user with all required fields
   const permission = createMockPermission({
     permissionType: 'Edit',
@@ -73,7 +76,11 @@ test('should show edit button when user has permissions', async ({ page, authent
       id: authenticatedUser!.user.id,
       userName: authenticatedUser!.user.userName,
     },
-    organization: { id: organization.id, name: organization.name, isDeleted: false },
+    organization: {
+      id: organization.id,
+      name: organization.name,
+      isDeleted: false,
+    },
     invalid: false,
     isDeleted: false,
     createdDate: new Date(),
@@ -87,7 +94,7 @@ test('should show edit button when user has permissions', async ({ page, authent
 
   // Edit button should be visible because user has Edit permission (explicit assertion)
   await expect(page.getByTestId('button-edit-tap')).toBeVisible();
-  
+
   // Verify page loads correctly by checking for beverage name using testID, or "On Tap" tab
   const beverageName = page.getByTestId('beverage-name');
   const onTapTab = page.getByRole('tab', { name: /on tap/i });

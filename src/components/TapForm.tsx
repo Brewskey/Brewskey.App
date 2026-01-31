@@ -4,22 +4,22 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DeviceOnlineIndicator } from './DeviceOnlineIndicator';
-import { MainTabBarFill } from './MainTabBar/MainTabBarSlot';
-import { CheckBoxInput } from '../common/form/CheckBoxInput';
-import { DropdownInput } from '../common/form/DropdownInput';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { SubmitButton } from '../common/form/SubmitButton';
-import { TextInput } from '../common/form/TextInput';
-import { LoadingIndicator } from '../common/LoadingIndicator';
-import { SectionContent } from '../common/SectionContent';
+import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
+import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
+import { CheckBoxInput } from 'common/form/CheckBoxInput';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { TextInput } from 'common/form/TextInput';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { SectionContent } from 'common/SectionContent';
 import {
   useGetDeviceById,
   useGetDevices,
-} from '../hooks/queries/DeviceQueries';
-import { useGetOrganizationById } from '../hooks/queries/OrganizationQueries';
-import { COLORS } from '../theme';
+} from 'hooks/queries/DeviceQueries';
+import { useGetOrganizationById } from 'hooks/queries/OrganizationQueries';
+import { COLORS } from 'theme';
 
 import type {
   Device,
@@ -87,13 +87,13 @@ export const TapForm: React.FC<Props> = ({
         <LoadingIndicator testID="tap-form-loading" />
       ) : (
         <View testID="tap-form">
-          <FormField
+          <FormField<TapMutator, typeof TextInput>
             component={TextInput}
             label="Description"
             name="description"
             testID="input-description"
           />
-          <FormField
+          <FormField<TapMutator, typeof DropdownInput>
             search
             component={DropdownInput}
             defaultValue={tap?.device}
@@ -102,7 +102,9 @@ export const TapForm: React.FC<Props> = ({
             name="deviceId"
             placeholder="Select Device"
             renderItem={RenderDeviceItem}
+            required
             searchPlaceholder="Search device..."
+            testID="device-dropdown"
             useQueryHook={useGetDevices}
             valueField="id"
             onSearchFilter={(

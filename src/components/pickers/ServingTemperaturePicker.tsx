@@ -1,22 +1,25 @@
 import * as React from 'react';
 
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { FormField } from '../../common/form/FormField';
+import { FieldValues } from 'react-hook-form';
+
+import { DropdownInput } from 'common/form/DropdownInput';
+import { FormField } from 'common/form/FormField';
 
 interface Props {
-  name?: string;
+  name: string;
+  testID?: string;
   defaultValue?: string;
 }
 
 const ServingTemperaturePicker = (props: Props): React.ReactElement => (
-  <FormField
+  <FormField<FieldValues, typeof DropdownInput>
     component={DropdownInput}
     defaultValue={props.defaultValue}
     headerTitle="Select Serving Temperature"
     label="Serving temperature"
     labelField="label"
-    name={props.name || 'servingTemperature'}
-    testID={`picker-${props.name || 'servingTemperature'}`}
+    name={props.name}
+    testID={props.testID}
     valueField="value"
     data={[
       { label: 'Cellar', value: 'cellar' },

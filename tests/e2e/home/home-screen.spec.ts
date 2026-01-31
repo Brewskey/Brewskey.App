@@ -11,7 +11,7 @@ test('should display nearby locations', async ({ page, homePage }) => {
   await homePage.goto();
 
   await expect(homePage.getNearbyLocationsList()).toBeVisible();
-  
+
   // Location name is dynamic content, but we can check within the nearby-locations-list
   // NearbyLocationsList shows location names in section headers
   const nearbyList = page.getByTestId('nearby-locations-list');
@@ -33,7 +33,7 @@ test.describe(() => {
   test.use({
     permissions: [],
     geolocation: undefined,
-  })
+  });
   test('should show permission request button', async ({ page, homePage }) => {
     // Set up explicit data: location permission denied
     // Clear permissions to test permission request flow
@@ -46,8 +46,11 @@ test.describe(() => {
 test.describe(() => {
   test.use({
     geolocation: undefined,
-  })
-  test('should show empty state when no nearby locations', async ({ page, homePage }) => {
+  });
+  test('should show empty state when no nearby locations', async ({
+    page,
+    homePage,
+  }) => {
     // Set up explicit data: no locations nearby
     // Geolocation permission is already granted via test-fixtures.ts
     // Store is already empty from resetStores fixture

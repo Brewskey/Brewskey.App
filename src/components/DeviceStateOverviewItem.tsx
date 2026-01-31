@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { OverviewItem2 } from '../common/OverviewItem2';
-import { DESCRIPTION_BY_DEVICE_STATE } from '../constants';
+import { OverviewItem2 } from 'common/OverviewItem2';
+import { DESCRIPTION_BY_DEVICE_STATE } from '@/constants';
 
 import type { DeviceStatus } from '@brewskey/js-api';
 

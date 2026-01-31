@@ -9,45 +9,48 @@ test('should allow selecting beverage', async ({ page, dropDown }) => {
 
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
-  
+
   // KegForm uses BeveragePicker2 with name="beverage"
-  // BeveragePicker2 generates testID as: beverage-picker-${name} = beverage-picker-beverage
-  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  // Beverage dropdown: testID convention beverage-dropdown
+  const beveragePicker = dropDown.create('beverage-dropdown');
   await expect(beveragePicker.input).toBeVisible();
   await beveragePicker.select(0);
   await expect(beveragePicker.modal).toBeHidden();
 });
 
-test('should render beverage picker with images', async ({ page, dropDown }) => {
+test('should render beverage picker with images', async ({
+  page,
+  dropDown,
+}) => {
   // Set up explicit data: one tap with beverage available
   const { tap, beverage } = await mockTapWithKeg(page);
 
   // Navigate to keg creation form
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
-  
+
   // Wait for form to load
   await expect(page.getByTestId('keg-form')).toBeVisible();
-  
+
   // Open beverage picker
-  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  const beveragePicker = dropDown.create('beverage-dropdown');
   await expect(beveragePicker.input).toBeVisible();
   await beveragePicker.input.click();
   const beverageRow = beveragePicker.getItemByIndex(0);
   await expect(beverageRow).toBeVisible();
-  
+
   // Verify the beverage name is displayed
   await expect(beverageRow.getByText(beverage.name)).toBeVisible();
-  
+
   // Verify an image element is present in the beverage row
   // BeverageAvatar renders an Image component (expo-image) which becomes an <img> tag on web
   // Check for image element within the beverage row
   const beverageImage = beverageRow.getByTestId('beverage-avatar');
   await expect(beverageImage.first()).toBeVisible();
-  
+
   // Select the beverage
   await beverageRow.click();
   // Selection is confirmed immediately (no confirmation button needed)
-  
+
   // Verify the selection was successful - the picker should show the selected beverage
   await expect(page.getByTestId('keg-form')).toBeVisible();
 
@@ -61,16 +64,16 @@ test('should successfully create keg', async ({ page, dropDown }) => {
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   // NewKegScreen expects tapId as a query parameter
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new?tapId=${tap.id}`);
-  
+
   // Wait for form to load
   await expect(page.getByTestId('keg-form')).toBeVisible();
   // KegForm uses BeveragePicker2 with name="beverage"
-  const beveragePicker = dropDown.create('beverage-picker-beverage');
+  const beveragePicker = dropDown.create('beverage-dropdown');
   await expect(beveragePicker.input).toBeVisible();
   await beveragePicker.select(0);
   await expect(page.getByTestId('keg-form')).toBeVisible();
 
-  const kegTypeDd = dropDown.create('dropdown-kegType');
+  const kegTypeDd = dropDown.create('keg-type-dropdown');
   await kegTypeDd.select(0);
 
   // Mutate startingPercentage (Keg Level slider)
@@ -78,7 +81,9 @@ test('should successfully create keg', async ({ page, dropDown }) => {
   await expect(startingSlider).toBeVisible();
   const sliderBox = await startingSlider.boundingBox();
   if (sliderBox) {
-    await startingSlider.click({ position: { x: sliderBox.width * 0.8, y: sliderBox.height / 2 } });
+    await startingSlider.click({
+      position: { x: sliderBox.width * 0.8, y: sliderBox.height / 2 },
+    });
   }
 
   const submitButton = page.getByTestId('submit-button-create-keg');
@@ -88,5 +93,7 @@ test('should successfully create keg', async ({ page, dropDown }) => {
   // Success messages use SnackBar component with testID
   // Verify exact success message text
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
-  await expect(page.getByTestId('snackbar-message')).toHaveText('New keg added');
+  await expect(page.getByTestId('snackbar-message')).toHaveText(
+    'New keg added',
+  );
 });

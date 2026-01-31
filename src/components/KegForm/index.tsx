@@ -5,18 +5,18 @@ import nullthrows from 'nullthrows';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { KegLevelSliderField } from './KegLevelSliderField';
-import { Button } from '../../common/buttons/Button';
-import { DropdownInput } from '../../common/form/DropdownInput';
-import { Form } from '../../common/form/Form';
-import { FormField } from '../../common/form/FormField';
-import { FormValidationMessage } from '../../common/form/FormValidationMessage';
-import { SubmitButton } from '../../common/form/SubmitButton';
-import { SectionContent } from '../../common/SectionContent';
-import { KEG_NAME_BY_KEG_TYPE } from '../../constants';
-import { COLORS } from '../../theme';
-import { calculateKegLevel, extractShortenedEntityId } from '../../utils';
-import { BeveragePicker } from '../pickers/BeveragePicker';
+import { KegLevelSliderField } from 'components/KegForm/KegLevelSliderField';
+import { Button } from 'common/buttons/Button';
+import { DropdownInput } from 'common/form/DropdownInput';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { SubmitButton } from 'common/form/SubmitButton';
+import { SectionContent } from 'common/SectionContent';
+import { KEG_NAME_BY_KEG_TYPE } from '@/constants';
+import { COLORS } from 'theme';
+import { calculateKegLevel } from 'utils';
+import { BeveragePicker } from 'components/pickers/BeveragePicker';
 
 import type {
   Beverage,
@@ -47,9 +47,7 @@ interface Props {
   tapId: EntityID;
 }
 
-type FormFields = Omit<KegMutator, 'beverageId'> & {
-  beverage: Beverage | ShortenedEntity | null;
-};
+type FormFields = KegMutator;
 
 export const KegForm: React.FC<Props> = ({
   keg,
@@ -78,7 +76,7 @@ export const KegForm: React.FC<Props> = ({
     defaultValues: {
       tapId,
       id: keg?.id,
-      beverage: initialBeverage,
+      beverageId: initialBeverage?.id,
       kegType: initialKegType,
       startingPercentage: initialStartingPercentage,
     },
@@ -97,40 +95,28 @@ export const KegForm: React.FC<Props> = ({
     currentPercentage < 10 && keg?.floatedDate === null;
   const shouldReplaceBeDisnabled = currentPercentage === 100;
 
-  // Transform form values to convert beverage to beverageId
-  const transformValues = (values: FormFields): KegMutator => {
-    const { beverage, ...rest } = values;
-
-    return {
-      ...rest,
-      beverageId: extractShortenedEntityId(beverage),
-    } as KegMutator;
-  };
-
   const onSubmitForm: SubmitHandler<FormFields> = (values) => {
-    onSubmit(transformValues(values));
+    onSubmit(values);
   };
   const onReplaceSubmitForm = onReplaceSubmit
-    ? form.handleSubmit(async (values) =>
-        nullthrows(onReplaceSubmit)(transformValues(values)),
-      )
+    ? form.handleSubmit(async (values) => nullthrows(onReplaceSubmit)(values))
     : undefined;
   const onFloatKegForm = form.handleSubmit(async (values) =>
-    nullthrows(onFloatedSubmit)(transformValues(values)),
+    nullthrows(onFloatedSubmit)(values),
   );
   return (
     <Form form={form}>
       <View testID="keg-form">
         <FormValidationMessage />
-        <FormField
+        <FormField<FormFields, typeof BeveragePicker>
           component={BeveragePicker}
           defaultValue={initialBeverage}
           label="Select Beverage"
-          name="beverage"
+          name="beverageId"
           required="Beverage is required"
-          testID="beverage-picker-beverage"
+          testID="beverage-dropdown"
         />
-        <FormField
+        <FormField<FormFields, typeof DropdownInput>
           component={DropdownInput}
           confirmSelectItem={false}
           data={KEG_VALUES}
@@ -140,10 +126,10 @@ export const KegForm: React.FC<Props> = ({
           mode="default"
           name="kegType"
           required="Keg type is required"
-          testID="dropdown-kegType"
+          testID="keg-type-dropdown"
           valueField="value"
         />
-        <FormField
+        <FormField<FormFields, typeof KegLevelSliderField>
           component={KegLevelSliderField}
           label="Keg Level"
           maxOunces={selectedKegTypeMaxOunces}

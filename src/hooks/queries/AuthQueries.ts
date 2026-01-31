@@ -1,7 +1,7 @@
 import { Auth } from '@brewskey/js-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { setAuthSession } from '../context/AuthContext';
+import { setAuthSession } from 'hooks/context/AuthContext';
 
 import type {
   AuthResponse,

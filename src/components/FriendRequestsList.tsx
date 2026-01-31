@@ -5,22 +5,22 @@ import { FRIEND_STATUSES } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
 
-import { FriendMyRequestListItem } from './FriendMyRequestListItem';
-import { FriendPendingRequestListItem } from './FriendPendingRequestListItem';
-import { List } from '../common/List';
-import { ListEmpty } from '../common/ListEmpty';
-import { ListSectionHeader } from '../common/ListSectionHeader';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { useAuthSession } from '../hooks/context/AuthContext';
+import { FriendMyRequestListItem } from 'components/FriendMyRequestListItem';
+import { FriendPendingRequestListItem } from 'components/FriendPendingRequestListItem';
+import { List } from 'common/List';
+import { ListEmpty } from 'common/ListEmpty';
+import { ListSectionHeader } from 'common/ListSectionHeader';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { useAuthSession } from 'hooks/context/AuthContext';
 import {
   useDeleteFriend,
   useGetManyFriends,
   useUpdateFriend,
-} from '../hooks/queries/FriendQueries';
+} from 'hooks/queries/FriendQueries';
 
 import type { Friend } from '@brewskey/js-api';
 
-import type { Section } from '../types';
+import type { Section } from 'types';
 
 const FriendRequestsList: React.FC = () => {
   const router = useRouter();

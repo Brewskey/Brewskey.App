@@ -5,7 +5,6 @@ test.use({ autoAuthenticate: true });
 test('should show user block', async ({ page, menuPage }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   await menuPage.goto();
-  
 
   // User block has testID - use that instead of text-based locator
   await expect(page.getByTestId('menu-user-block')).toBeVisible();

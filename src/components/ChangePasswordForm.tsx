@@ -3,13 +3,13 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { FormValidationMessage } from '../common/form/FormValidationMessage';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { SectionContent } from '../common/SectionContent';
+import { Button } from 'common/buttons/Button';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
 
 export interface ChangePasswordFormFields {
   newPassword: string;
@@ -72,7 +72,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
     <Form form={form}>
       <View testID="change-password-form">
         <FormValidationMessage testID="change-password-error-message" />
-        <FormField
+        <FormField<ChangePasswordFormFields, typeof TextInput>
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -81,9 +81,10 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           label="Old password"
           name="oldPassword"
           nextFocusTo="newPassword"
+          required
           testID="input-oldPassword"
         />
-        <FormField
+        <FormField<ChangePasswordFormFields, typeof TextInput>
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
@@ -92,6 +93,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           label="New password"
           name="newPassword"
           onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
+          required
           testID="input-newPassword"
         />
         <SectionContent paddedVertical>

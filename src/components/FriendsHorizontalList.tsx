@@ -3,12 +3,12 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
-import { UserAvatar } from '../common/avatars/UserAvatar';
-import { List } from '../common/List';
-import { ListEmpty } from '../common/ListEmpty';
-import { LoadingListFooter } from '../common/LoadingListFooter';
-import { useGetFriends } from '../hooks/queries/FriendQueries';
-import { COLORS } from '../theme';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { List } from 'common/List';
+import { ListEmpty } from 'common/ListEmpty';
+import { LoadingListFooter } from 'common/LoadingListFooter';
+import { useGetFriends } from 'hooks/queries/FriendQueries';
+import { COLORS } from 'theme';
 
 import type { Friend, QueryOptions } from '@brewskey/js-api';
 

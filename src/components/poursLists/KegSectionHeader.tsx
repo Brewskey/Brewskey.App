@@ -3,11 +3,11 @@ import * as React from 'react';
 import moment from 'moment';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { BeverageAvatar } from '../../common/avatars/BeverageAvatar';
-import { LoadingIndicator } from '../../common/LoadingIndicator';
-import { NULL_STRING_PLACEHOLDER } from '../../constants';
-import { useGetKegById } from '../../hooks/queries/KegQueries';
-import { COLORS, TYPOGRAPHY } from '../../theme';
+import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { useGetKegById } from 'hooks/queries/KegQueries';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { EntityID, Pour } from '@brewskey/js-api';
 import type { SectionListData } from 'react-native';

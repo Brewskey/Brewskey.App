@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 
-import { CustomTabBar } from '../../components/MainTabBar/CustomTabBar';
+import { CustomTabBar } from 'components/MainTabBar/CustomTabBar';
 
 export default function TabsLayout() {
   return (
@@ -11,74 +11,38 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(feed)"
         options={{
           title: 'Home',
           tabBarIcon: () => null, // Handled by CustomTabBar
         }}
       />
       <Tabs.Screen
-        name="stats"
+        name="(stats)"
         options={{
           title: 'Stats',
           tabBarIcon: () => null, // Handled by CustomTabBar
         }}
       />
       <Tabs.Screen
-        name="notifications"
+        name="(notifications)"
         options={{
           title: 'Notifications',
+          headerShown: false,
           tabBarIcon: () => null, // Handled by CustomTabBar
         }}
       />
       <Tabs.Screen
-        name="menu"
+        name="(menu)"
         options={{
           title: 'Menu',
           tabBarIcon: () => null, // Handled by CustomTabBar
         }}
       />
-      {/* Hidden routes - accessible via navigation but not shown in tab bar */}
-      <Tabs.Screen
-        name="locations"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="taps"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="devices"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="beverages"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="flow-sensor"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
       <Tabs.Screen
         name="(nux)"
         options={{
-          href: null, // Hide from tab bar
+          href: null,
         }}
       />
     </Tabs>

@@ -3,13 +3,13 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from '../common/buttons/Button';
-import { Form } from '../common/form/Form';
-import { FormField } from '../common/form/FormField';
-import { handleSubmitWithError } from '../common/form/handleSubmitWithError';
-import { TextInput } from '../common/form/TextInput';
-import { SectionContent } from '../common/SectionContent';
-import { COLORS } from '../theme';
+import { Button } from 'common/buttons/Button';
+import { Form } from 'common/form/Form';
+import { FormField } from 'common/form/FormField';
+import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { TextInput } from 'common/form/TextInput';
+import { SectionContent } from 'common/SectionContent';
+import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   input: {
@@ -69,7 +69,7 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
   return (
     <Form form={form}>
       <View>
-        <FormField
+        <FormField<FriendAddFormValues, typeof TextInput>
           autoFocus
           autoCapitalize="none"
           autoCorrect={false}
@@ -82,6 +82,7 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
           labelStyle={styles.label}
           name="userName"
           onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
+          required
           selectionColor={COLORS.textInverse}
           style={styles.input}
           testID="input-userName"

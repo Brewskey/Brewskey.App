@@ -3,7 +3,7 @@ import * as React from 'react';
 import { View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
-import { FormLabel } from '../common/form/FormLabel';
+import { FormLabel } from 'common/form/FormLabel';
 
 export type LeaderboardDurationValue = 'P0D' | 'P30D' | 'P0DT12H';
 
@@ -35,7 +35,7 @@ const LeaderBoardDurationPicker = ({
   value,
 }: Props): React.ReactElement => (
   <View
-    testID="leaderboard-duration-picker"
+    testID="leaderboard-duration-dropdown"
     style={{
       marginHorizontal: 16,
     }}

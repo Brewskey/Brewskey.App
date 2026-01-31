@@ -2,19 +2,20 @@ import * as React from 'react';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 
-import { WebDropdown } from './WebDropdown';
-import { useDebounce } from '../../hooks/useDebounce';
-import { COLORS } from '../../theme';
+import { WebDropdown } from 'common/form/WebDropdown';
+import { useDebounce } from 'hooks/useDebounce';
+import { COLORS } from 'theme';
 
 import type { QueryOptions } from '@brewskey/js-api';
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
 } from '@tanstack/react-query';
+import type { GestureResponderEvent } from 'react-native';
 
 type DropdownProps = React.ComponentProps<typeof RNEDropdown>;
 
@@ -27,13 +28,13 @@ const usePlaceholderQuery = (_options?: unknown) =>
     enabled: false,
   });
 
-export type DropdownInputProps<TValueType> = Omit<
-  DropdownProps,
-  'onChange' | 'data'
-> & {
+export type DropdownInputProps<
+  TFormFields extends FieldValues = FieldValues,
+  TValueType = unknown,
+> = Omit<DropdownProps, 'onChange' | 'data' | 'name'> & {
   // Form integration
   defaultValue?: TValueType;
-  name: string;
+  name: Extract<keyof TFormFields, string>;
   required?: boolean | string;
   onChange?: DropdownProps['onChange'];
   testID?: string;
@@ -41,9 +42,9 @@ export type DropdownInputProps<TValueType> = Omit<
   // Data source - either static array or async query
   data?: TValueType[];
   useQueryHook?: (
-    options?: any,
+    options?: Record<string, unknown>,
   ) => UseInfiniteQueryResult<InfiniteData<TValueType[]>>;
-  queryOptions?: any;
+  queryOptions?: Record<string, unknown>;
   onSearchFilter?: (
     searchText: string,
     baseQueryOptions: QueryOptions,
@@ -61,22 +62,24 @@ export type DropdownInputProps<TValueType> = Omit<
 };
 
 // Wrapper: WebDropdown on web, react-native-element-dropdown on native. Props match DropdownProps.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- generic used by DropdownInput when rendering <Dropdown<TValueType>>
-const Dropdown = <TValueType,>(props: DropdownProps) => {
+
+const Dropdown = <_TValueType,>(props: DropdownProps) => {
   if (Platform.OS === 'web') {
     return <WebDropdown {...props} />;
   }
 
-  const nativeProps: any = { ...props };
+  const nativeProps: DropdownProps & {
+    renderRightIcon?: () => React.ReactNode;
+  } = { ...props };
   if (props.value != null && !props.renderRightIcon) {
     nativeProps.renderRightIcon = () => {
       if (props.value == null) return null;
       return (
         <TouchableOpacity
           style={{ padding: 8 }}
-          onPress={(e: any) => {
+          onPress={(e: GestureResponderEvent) => {
             e.stopPropagation();
-            props.onChange?.(null as any);
+            props.onChange?.(null);
           }}
         >
           <Text style={{ fontSize: 16, color: COLORS.textFaded }}>×</Text>
@@ -87,7 +90,10 @@ const Dropdown = <TValueType,>(props: DropdownProps) => {
   return <RNEDropdown {...nativeProps} />;
 };
 
-export const DropdownInput = <TValueType,>({
+export const DropdownInput = <
+  TFormFields extends FieldValues = FieldValues,
+  TValueType = unknown,
+>({
   defaultValue,
   name,
   required = false,
@@ -96,7 +102,7 @@ export const DropdownInput = <TValueType,>({
   labelField,
   testID,
   mode = 'default',
-  headerTitle,
+  headerTitle: _headerTitle,
   confirmSelectItem = false,
   onConfirmSelectItem,
   useQueryHook,
@@ -106,7 +112,7 @@ export const DropdownInput = <TValueType,>({
   data: staticData,
   search,
   ...props
-}: DropdownInputProps<TValueType>) => {
+}: DropdownInputProps<TFormFields, TValueType>) => {
   const { control, setValue } = useFormContext();
   const [searchText, setSearchText] = React.useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
@@ -210,13 +216,17 @@ export const DropdownInput = <TValueType,>({
                 if (!confirmSelectItem) {
                   onChange(item);
                   onChangeOuter?.(item);
-                  setValue(name, item[valueField as string]);
+                  setValue(name, item[valueField as string], {
+                    shouldDirty: true,
+                  });
                 }
               }}
               onConfirmSelectItem={(item) => {
                 onConfirmSelectItem?.(item);
                 onChange(item);
-                setValue(name, item[valueField as string]);
+                setValue(name, item[valueField as string], {
+                  shouldDirty: true,
+                });
               }}
             />
           </View>

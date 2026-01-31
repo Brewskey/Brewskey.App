@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
-import { useGetParticleAttributes } from '../hooks/queries/CloudDeviceQueries';
-import { COLORS, theme } from '../theme';
+import { useGetParticleAttributes } from 'hooks/queries/CloudDeviceQueries';
+import { COLORS, theme } from 'theme';
 
 import type { EntityID } from '@brewskey/js-api';
 

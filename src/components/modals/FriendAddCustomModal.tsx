@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CenteredModal } from './CenteredModal';
-import { COLORS, TYPOGRAPHY } from '../../theme';
-import { FriendAddForm } from '../FriendAddForm';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { COLORS, TYPOGRAPHY } from 'theme';
+import { FriendAddForm } from 'components/FriendAddForm';
 
-import type { FriendAddFormValues } from '../FriendAddForm';
+import type { FriendAddFormValues } from 'components/FriendAddForm';
 
 const styles = StyleSheet.create({
   headerText: {

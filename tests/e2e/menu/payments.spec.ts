@@ -20,10 +20,12 @@ test('should show card form when no card exists', async ({ page }) => {
 
   // Wait for payments content to load
   await expect(page.getByTestId('payments-content')).toBeVisible();
-  
+
   // Note: CardForm component currently has PaymentCardTextField commented out
   // When no card exists, the payment section header should be visible
-  await expect(page.getByTestId('section-header-payment-default')).toBeVisible();
+  await expect(
+    page.getByTestId('section-header-payment-default'),
+  ).toBeVisible();
 });
 
 test('should show existing card when available', async ({ page }) => {
@@ -33,6 +35,8 @@ test('should show existing card when available', async ({ page }) => {
 
   // May show existing card or form - check for payment section header or card form
   await expect(
-    page.getByTestId('section-header-payment-default').or(page.getByTestId('input-cardNumber'))
+    page
+      .getByTestId('section-header-payment-default')
+      .or(page.getByTestId('input-cardNumber')),
   ).toBeVisible();
 });

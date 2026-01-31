@@ -1,7 +1,7 @@
 import { StyleSheet, Text } from 'react-native';
 
-import { Container } from './Container';
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { Container } from 'common/Container';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { FC } from 'react';
 

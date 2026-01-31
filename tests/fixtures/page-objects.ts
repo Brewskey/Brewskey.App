@@ -1,4 +1,6 @@
-import { Page, Locator, expect } from '@playwright/test';
+/* eslint-disable max-classes-per-file */
+/* eslint-disable import-x/no-extraneous-dependencies */
+import { expect, Locator, Page } from '@playwright/test';
 
 export class LoginPage {
   constructor(private page: Page) {}
@@ -96,8 +98,8 @@ export class LocationPage {
       await this.page.getByTestId('input-suite').fill(data.suite);
     }
     await this.page.getByTestId('input-city').fill(data.city);
-    // State is a StatePicker (DropdownInput), not a TextInput - use picker-state testID
-    const statePicker = this.page.getByTestId('picker-state');
+    // StatePicker: testID convention {name}-dropdown (state-dropdown in LocationForm)
+    const statePicker = this.page.getByTestId('state-dropdown');
     await statePicker.click();
     // StatePicker uses default mode (inline), options appear in positioned container
     // Find state by full label (not abbreviation) to avoid strict mode violations
@@ -106,29 +108,42 @@ export class LocationPage {
     // Options have testID format: option-{index}, but we need to find by label
     // Use filter to find option containing the state text, scoped to visible dropdown
     // Playwright's auto-waiting will handle timing
-    const stateOption = this.page.locator('[data-testid^="option-"]').filter({ hasText: new RegExp(data.state, 'i') }).first();
+    const stateOption = this.page
+      .locator('[data-testid^="option-"]')
+      .filter({ hasText: new RegExp(data.state, 'i') })
+      .first();
     await expect(stateOption).toBeVisible();
     await stateOption.click();
     // State picker doesn't require confirmation (doesRequireConfirmation={false})
     // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
     await this.page.getByTestId('input-zipCode').fill(data.zipCode);
     // Location type is required - fill it if provided, otherwise use default 'Kegerator'
-    // LocationTypePicker uses testID: "picker-location-type"
+    // LocationTypePicker: testID convention {name}-dropdown (location-type-dropdown in LocationForm)
     if (data.locationType) {
-      const locationTypePicker = this.page.getByTestId('picker-location-type');
+      const locationTypePicker = this.page.getByTestId(
+        'location-type-dropdown',
+      );
       await locationTypePicker.click();
       // Use scoped locator to avoid strict mode violations
       // Playwright's auto-waiting will handle timing
-      const locationTypeOption = this.page.locator('[data-testid^="option-"]').filter({ hasText: new RegExp(data.locationType, 'i') }).first();
+      const locationTypeOption = this.page
+        .locator('[data-testid^="option-"]')
+        .filter({ hasText: new RegExp(data.locationType, 'i') })
+        .first();
       await expect(locationTypeOption).toBeVisible();
       await locationTypeOption.click();
       // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
     } else {
       // Default to 'Kegerator' if not provided
-      const locationTypePicker = this.page.getByTestId('picker-location-type');
+      const locationTypePicker = this.page.getByTestId(
+        'location-type-dropdown',
+      );
       await locationTypePicker.click();
       // Playwright's auto-waiting will handle timing
-      const kegeratorOption = this.page.locator('[data-testid^="option-"]').filter({ hasText: /Kegerator/i }).first();
+      const kegeratorOption = this.page
+        .locator('[data-testid^="option-"]')
+        .filter({ hasText: /Kegerator/i })
+        .first();
       await expect(kegeratorOption).toBeVisible();
       await kegeratorOption.click();
       // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
@@ -138,7 +153,8 @@ export class LocationPage {
   async submitForm(): Promise<void> {
     // Use or() locator to automatically wait for whichever button is visible
     // Tests should set up data explicitly to determine which button should exist
-    const submitButton = this.page.getByTestId('submit-button-create-location')
+    const submitButton = this.page
+      .getByTestId('submit-button-create-location')
       .or(this.page.getByTestId('submit-button-edit-location'));
     await submitButton.click();
   }
@@ -162,9 +178,10 @@ export class TapPage {
   async clickTap(tapIdentifier: string | number): Promise<void> {
     // TapListItem displays as "${tapNumber} - ${beverageName}"
     // Accept either tapNumber or full display text
-    const searchText = typeof tapIdentifier === 'number' 
-      ? tapIdentifier.toString() 
-      : tapIdentifier;
+    const searchText =
+      typeof tapIdentifier === 'number'
+        ? tapIdentifier.toString()
+        : tapIdentifier;
     await this.page.getByText(searchText).first().click();
   }
 
@@ -176,13 +193,13 @@ export class TapPage {
     await this.page.getByTestId('input-description').fill(data.name);
     if (data.deviceId) {
       // DropdownInput uses WebDropdown which needs to be clicked and then option selected
-      // Now that TapForm has testID="dropdown-deviceId", we can find it directly
-      const deviceDropdown = this.page.getByTestId('dropdown-deviceId');
+      // TapForm device dropdown: testID convention device-dropdown
+      const deviceDropdown = this.page.getByTestId('device-dropdown');
       await expect(deviceDropdown).toBeVisible({ timeout: 5000 });
-      
+
       // Click to open the dropdown
       await deviceDropdown.click();
-      
+
       // Find and click the device option - options have testID format: option-{index}
       // We need to find the option that matches the deviceId
       // Since devices are objects with name and id, try to find by device name
@@ -190,7 +207,8 @@ export class TapPage {
       // Or we could find by device name if we had access to device data
       const firstOption = this.page.locator('[data-testid^="option-"]').first();
       await expect(firstOption).toBeVisible();
-      await firstOption.click({ force: true });
+      await firstOption.scrollIntoViewIfNeeded();
+      await firstOption.click();
     }
     // Note: locationId is not a field in TapForm, so we skip it
     // The test might be passing locationId incorrectly, but it won't break the test
@@ -199,7 +217,8 @@ export class TapPage {
   async submitForm(): Promise<void> {
     // Use or() locator to automatically wait for whichever button is visible
     // Tests should set up data explicitly to determine which button should exist
-    const submitButton = this.page.getByTestId('submit-button-create-tap')
+    const submitButton = this.page
+      .getByTestId('submit-button-create-tap')
       .or(this.page.getByTestId('submit-button-edit-tap'));
     await submitButton.click();
   }
@@ -217,9 +236,13 @@ export class DevicePage {
   }
 
   getAddDeviceButton(): Locator {
-    return this.page.getByTestId('button-add-device').or(
-      this.page.getByTestId('header-brewskey-boxes').getByRole('button', { name: /add/i })
-    );
+    return this.page
+      .getByTestId('button-add-device')
+      .or(
+        this.page
+          .getByTestId('header-brewskey-boxes')
+          .getByRole('button', { name: /add/i }),
+      );
   }
 
   async clickDevice(deviceName: string): Promise<void> {
@@ -237,7 +260,8 @@ export class DevicePage {
   async submitForm(): Promise<void> {
     // Use or() locator to automatically wait for whichever button is visible
     // Tests should set up data explicitly to determine which button should exist
-    const submitButton = this.page.getByTestId('submit-button-create-device')
+    const submitButton = this.page
+      .getByTestId('submit-button-create-device')
       .or(this.page.getByTestId('submit-button-edit-device'))
       .or(this.page.getByRole('button', { name: /save|submit/i }));
     await submitButton.first().click();
@@ -278,15 +302,12 @@ export class SettingsPage {
   }
 
   getOrganizationPicker(): Locator {
-    // OrganizationPicker uses testID format: organization-picker-{name}
-    // For name="organization", it's organization-picker-organization
-    return this.page.getByTestId('organization-picker-organization');
+    // OrganizationPicker: testID convention organization-dropdown
+    return this.page.getByTestId('organization-dropdown');
   }
 
   async selectOrganization(organizationName: string): Promise<void> {
-    // OrganizationPicker uses testID format: organization-picker-{name}
-    // For name="organization", it's organization-picker-organization
-    const picker = this.page.getByTestId('organization-picker-organization');
+    const picker = this.page.getByTestId('organization-dropdown');
     await picker.click();
     // Wait for modal to open and select the organization by text
     await this.page.getByText(organizationName).click();
@@ -297,24 +318,22 @@ export class NUXPage {
   constructor(private page: Page) {}
 
   async gotoLocationStep(locationsCount?: number): Promise<void> {
-    const countParam = locationsCount !== undefined ? `?locationsCount=${locationsCount}` : '';
-    await this.page.goto(`/(tabs)/(nux)/location${countParam}`);
+    const countParam =
+      locationsCount !== undefined ? `?locationsCount=${locationsCount}` : '';
+    // Expo Router internal path for (tabs)/nux/location
+    await this.page.goto(`/(tabs)/locations/nux/location${countParam}`);
   }
 
   async gotoWifiStep(): Promise<void> {
-    await this.page.goto('/(tabs)/(nux)/wifi');
+    await this.page.goto('/(tabs)/nux/wifi');
   }
 
   async gotoDeviceStep(): Promise<void> {
-    await this.page.goto('/(tabs)/(nux)/device');
+    await this.page.goto('/(tabs)/devices/nux/device');
   }
 
   async gotoTapStep(): Promise<void> {
-    await this.page.goto('/(tabs)/(nux)/tap');
-  }
-
-  async gotoFinishStep(): Promise<void> {
-    await this.page.goto('/(tabs)/(nux)/finish');
+    await this.page.goto('/(tabs)/taps/nux/tap');
   }
 
   getContinueButton(): Locator {
@@ -334,11 +353,11 @@ export class NUXPage {
   }
 
   getLocationPicker(): Locator {
-    return this.page.getByTestId('picker-location-nux');
+    return this.page.getByTestId('location-dropdown');
   }
 
   async selectLocation(locationName: string): Promise<void> {
-    const picker = this.page.getByTestId('picker-location-nux');
+    const picker = this.page.getByTestId('location-dropdown');
     await picker.click();
     // Wait for modal to open and select the location by text
     await this.page.getByText(locationName).click();
@@ -382,7 +401,8 @@ export class WiFiSetupPage {
   async submitWiFiSetup(): Promise<void> {
     // Use or() locator to automatically wait for whichever button is visible
     // Tests should set up data explicitly to determine which button should exist
-    const submitButton = this.page.getByTestId('submit-button-connect')
+    const submitButton = this.page
+      .getByTestId('submit-button-connect')
       .or(this.page.getByRole('button', { name: /connect|submit/i }));
     await submitButton.first().click();
   }
@@ -481,12 +501,11 @@ export class StatsPage {
 }
 
 // Helper functions for common interactions
-export async function waitForQuery(page: Page, timeout: number = 5000): Promise<void> {
+export async function waitForQuery(page: Page, timeout = 5000): Promise<void> {
   await page.waitForFunction(
-    () => {
+    () =>
       // Check if React Query is done loading
-      return !document.querySelector('[data-loading="true"]');
-    },
+      !document.querySelector('[data-loading="true"]'),
     { timeout },
   );
 }
@@ -494,11 +513,9 @@ export async function waitForQuery(page: Page, timeout: number = 5000): Promise<
 export async function assertToast(
   page: Page,
   message: string,
-  timeout: number = 5000,
+  timeout = 5000,
 ): Promise<void> {
-  await expect(
-    page.getByText(message).first(),
-  ).toBeVisible({ timeout });
+  await expect(page.getByText(message).first()).toBeVisible({ timeout });
 }
 
 export async function fillForm(

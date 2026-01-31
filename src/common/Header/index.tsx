@@ -2,13 +2,13 @@ import { memo } from 'react';
 
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 
-import { HeaderBackButton } from './HeaderBackButton';
-import { COLORS, getElevationStyle, TYPOGRAPHY } from '../../theme';
-import { getElementFromComponentProp } from '../../utils';
+import { HeaderBackButton } from 'common/Header/HeaderBackButton';
+import { COLORS, getElevationStyle, TYPOGRAPHY } from 'theme';
+import { getElementFromComponentProp } from 'utils';
 
 import type { FC } from 'react';
 
-import type { ListComponentTypes } from '../List';
+import type { ListComponentTypes } from 'common/List';
 
 // todo title have slight offset to the left when there are more than one
 // button in the right component. Need to figure better solution to position

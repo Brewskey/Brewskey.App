@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet } from 'react-native';
 
-import { TouchableItem } from '../../common/buttons/TouchableItem';
-import { COLORS } from '../../theme';
+import { TouchableItem } from 'common/buttons/TouchableItem';
+import { COLORS } from 'theme';
 
 import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
 

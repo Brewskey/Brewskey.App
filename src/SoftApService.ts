@@ -1,8 +1,8 @@
 import NodeRSA from 'node-rsa';
 
-import { fetchJSON } from './utils';
+import { fetchJSON } from 'utils';
 
-import type { WifiNetwork } from './types';
+import type { WifiNetwork } from 'types';
 
 const BASE_URL = 'http://192.168.0.1:80';
 const DEFAULT_WIFI_CHANNEL = 3;
@@ -70,9 +70,6 @@ class SoftAPService {
         method: 'POST',
       },
     );
-
-    // eslint-disable-next-line no-console
-    console.log('Configure Wifi', responseCode, otherData);
 
     if (responseCode === INCORRECT_WIFI_PASSWORD_CODE) {
       throw new Error('Incorrect Wifi password!');

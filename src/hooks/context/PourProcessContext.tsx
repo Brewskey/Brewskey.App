@@ -4,11 +4,11 @@ import nullthrows from 'nullthrows';
 import { Platform } from 'react-native';
 import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
 
-import { useAuthSession } from './AuthContext';
-import { useAddSnackBarMessage } from './SnackBarContext';
-import { CONFIG } from '../../config';
-import { fetchJSON } from '../../utils';
-import { useDeviceLocation, useLocationPermission } from '../useGetLocation';
+import { CONFIG } from 'config';
+import { useAuthSession } from 'hooks/context/AuthContext';
+import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { useDeviceLocation, useLocationPermission } from 'hooks/useGetLocation';
+import { fetchJSON } from 'utils';
 
 import type { EntityID } from '@brewskey/js-api';
 import type { PropsWithChildren } from 'react';
@@ -209,7 +209,11 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
 
     void bootstrap();
     return () => {
-      void NfcManager.close();
+      try {
+        void NfcManager.close();
+      } catch (error) {
+        console.error(error);
+      }
     };
   }, []);
 

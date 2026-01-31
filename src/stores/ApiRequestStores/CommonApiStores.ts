@@ -1,5 +1,5 @@
-import { makeRequestApiStore } from './makeRequestApiStore';
-import { CONFIG } from '../../config';
+import { makeRequestApiStore } from 'stores/ApiRequestStores/makeRequestApiStore';
+import { CONFIG } from 'config';
 
 import type { EntityID } from '@brewskey/js-api';
 

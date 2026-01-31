@@ -62,8 +62,14 @@ async function setupPageMonitoring(page: Page) {
         // Exclude:
         // - 401: Authorization issues (user doesn't have permission)
         // - 400 on cloud-devices: Invalid device IDs (expected for some devices)
-        const isCloudDevice400 = url.includes('/cloud-devices/') && status === 400;
-        if (method === 'GET' && status >= 400 && status !== 401 && !isCloudDevice400) {
+        const isCloudDevice400 =
+          url.includes('/cloud-devices/') && status === 400;
+        if (
+          method === 'GET' &&
+          status >= 400 &&
+          status !== 401 &&
+          !isCloudDevice400
+        ) {
           failedRequests.push({
             url,
             status,
@@ -84,13 +90,17 @@ async function setupPageMonitoring(page: Page) {
   });
 
   // Monitor for routing errors in console
-  page.on('console', msg => {
+  page.on('console', (msg) => {
     const text = msg.text();
     if (msg.type() === 'error') {
       // Check for common routing error patterns
-      if (text.includes('route') || text.includes('navigation') || 
-          text.includes('404') || text.includes('not found') ||
-          text.includes('Cannot read') && text.includes('route')) {
+      if (
+        text.includes('route') ||
+        text.includes('navigation') ||
+        text.includes('404') ||
+        text.includes('not found') ||
+        (text.includes('Cannot read') && text.includes('route'))
+      ) {
         routingErrors.push({
           url: page.url(),
           error: text,
@@ -102,10 +112,14 @@ async function setupPageMonitoring(page: Page) {
   });
 
   // Monitor for page errors
-  page.on('pageerror', error => {
+  page.on('pageerror', (error) => {
     const errorMessage = error.message || String(error);
-    if (errorMessage.includes('route') || errorMessage.includes('navigation') ||
-        errorMessage.includes('404') || errorMessage.includes('not found')) {
+    if (
+      errorMessage.includes('route') ||
+      errorMessage.includes('navigation') ||
+      errorMessage.includes('404') ||
+      errorMessage.includes('not found')
+    ) {
       routingErrors.push({
         url: page.url(),
         error: errorMessage,
@@ -120,14 +134,16 @@ async function login(page: Page): Promise<boolean> {
   try {
     console.log('Navigating to login page...');
     await page.goto(`${APP_URL}/`, { waitUntil: 'networkidle' });
-    
+
     // Wait a bit for React to render
     await page.waitForTimeout(2000);
 
     // Wait for login form - try multiple selectors
     console.log('Waiting for login form...');
     try {
-      await page.getByTestId('login-username-input').waitFor({ timeout: 15000 });
+      await page
+        .getByTestId('login-username-input')
+        .waitFor({ timeout: 15000 });
     } catch (e) {
       // Try alternative selectors
       console.log('Primary selector failed, trying alternatives...');
@@ -137,7 +153,7 @@ async function login(page: Page): Promise<boolean> {
         'input[placeholder*="User name" i]',
         'input[placeholder*="username" i]',
       ];
-      
+
       let found = false;
       for (const selector of altSelectors) {
         try {
@@ -149,7 +165,7 @@ async function login(page: Page): Promise<boolean> {
           // Continue to next selector
         }
       }
-      
+
       if (!found) {
         // Take screenshot for debugging
         await page.screenshot({ path: 'login-debug.png' });
@@ -169,44 +185,55 @@ async function login(page: Page): Promise<boolean> {
     // Wait for navigation or error - check multiple times
     let loginSuccess = false;
     const initialUrl = page.url();
-    
+
     for (let i = 0; i < 15; i++) {
       await page.waitForTimeout(1000);
       const currentUrl = page.url();
       console.log(`Check ${i + 1}: Current URL: ${currentUrl}`);
-      
+
       // Check if we navigated away from login page
       // After successful login, we should be redirected to /(tabs) which might be /, /home, /taps, etc.
       const isStillOnLogin = currentUrl.includes('/login');
-      
+
       // Also check if login form is still visible
-      const loginFormVisible = await page.getByTestId('login-form').isVisible().catch(() => false);
-      
+      const loginFormVisible = await page
+        .getByTestId('login-form')
+        .isVisible()
+        .catch(() => false);
+
       // If we're not on login page and login form is not visible, login succeeded
       if (!isStillOnLogin && !loginFormVisible) {
         loginSuccess = true;
         console.log(`Login successful! Navigated to: ${currentUrl}`);
         break;
       }
-      
+
       // Check for error message
-      const errorMessage = await page.getByTestId('login-error-message').textContent().catch(() => null);
+      const errorMessage = await page
+        .getByTestId('login-error-message')
+        .textContent()
+        .catch(() => null);
       if (errorMessage && errorMessage.trim()) {
         console.log(`Login failed: ${errorMessage}`);
         return false;
       }
-      
+
       // If URL changed from initial URL and we're not on login, likely success
       if (currentUrl !== initialUrl && !isStillOnLogin) {
         loginSuccess = true;
-        console.log(`Login successful! URL changed from ${initialUrl} to ${currentUrl}`);
+        console.log(
+          `Login successful! URL changed from ${initialUrl} to ${currentUrl}`,
+        );
         break;
       }
     }
 
     if (!loginSuccess) {
       // Final check for error message
-      const errorMessage = await page.getByTestId('login-error-message').textContent().catch(() => null);
+      const errorMessage = await page
+        .getByTestId('login-error-message')
+        .textContent()
+        .catch(() => null);
       if (errorMessage && errorMessage.trim()) {
         console.log(`Login failed: ${errorMessage}`);
       } else {
@@ -232,14 +259,14 @@ async function login(page: Page): Promise<boolean> {
 async function enableLocationPermissions(page: Page) {
   try {
     console.log('\n=== Enabling Location Permissions ===\n');
-    
+
     // Set geolocation in browser context
     await page.context().grantPermissions(['geolocation'], { origin: APP_URL });
     await page.context().setGeolocation({
       latitude: TEST_LOCATION.latitude,
       longitude: TEST_LOCATION.longitude,
     });
-    
+
     // Mock Expo Location API to return our test coordinates
     await page.addInitScript((location) => {
       if (typeof window !== 'undefined') {
@@ -270,10 +297,10 @@ async function enableLocationPermissions(page: Page) {
             timestamp: Date.now(),
           }),
         };
-        
+
         // Store mock in window for expo-location to use
         (window as any).__EXPO_LOCATION_MOCK__ = mockLocation;
-        
+
         // Also mock navigator.geolocation for compatibility
         const mockGetCurrentPosition: Geolocation['getCurrentPosition'] = (
           success: PositionCallback,
@@ -292,17 +319,19 @@ async function enableLocationPermissions(page: Page) {
             timestamp: Date.now(),
           } as GeolocationPosition);
         };
-        Object.assign(navigator.geolocation, { getCurrentPosition: mockGetCurrentPosition });
+        Object.assign(navigator.geolocation, {
+          getCurrentPosition: mockGetCurrentPosition,
+        });
       }
     }, TEST_LOCATION);
-    
+
     // Navigate to home
     await page.goto(`${APP_URL}/`);
 
     // Check if permission button exists
     const permissionButton = page.getByTestId('button-provide-permissions');
     const isVisible = await permissionButton.isVisible().catch(() => false);
-    
+
     if (isVisible) {
       console.log('Clicking "Provide permissions" button...');
       await permissionButton.click();
@@ -318,18 +347,18 @@ async function enableLocationPermissions(page: Page) {
 async function navigateToSettings(page: Page) {
   try {
     console.log('\n=== Navigating to Settings ===\n');
-    
+
     // Try direct navigation first
     console.log('Navigating directly to settings...');
     await page.goto(`${APP_URL}/menu/settings`);
-    
+
     // Check if we're on settings page
     const currentUrl = page.url();
     if (currentUrl.includes('/settings')) {
       console.log('Successfully navigated to settings');
       return true;
     }
-    
+
     // If direct navigation didn't work, try via menu
     console.log('Direct navigation failed, trying via menu...');
     await page.goto(`${APP_URL}/menu`);
@@ -339,11 +368,11 @@ async function navigateToSettings(page: Page) {
       // Try multiple ways to find the button
       const settingsButton = page.getByTestId('header-settings-button');
       const isVisible = await settingsButton.isVisible({ timeout: 5000 });
-      
+
       if (isVisible) {
         console.log('Found settings button, clicking...');
         await settingsButton.click();
-        
+
         const newUrl = page.url();
         if (newUrl.includes('/settings')) {
           console.log('Successfully navigated to settings via button');
@@ -353,7 +382,7 @@ async function navigateToSettings(page: Page) {
     } catch (e) {
       console.log('Could not find settings button:', e);
     }
-    
+
     return false;
   } catch (error) {
     console.error('Error navigating to settings:', error);
@@ -364,19 +393,24 @@ async function navigateToSettings(page: Page) {
 async function toggleManageTaps(page: Page) {
   try {
     console.log('\n=== Toggling Manage Taps ===\n');
-    
+
     // Wait for page to load
     await page.waitForTimeout(2000);
-    
+
     // Debug: Check current URL
     const currentUrl = page.url();
     console.log(`Current URL: ${currentUrl}`);
-    
+
     // Wait for the settings page to be visible
-    await page.waitForSelector('[data-testid="header-settings"], [testid="header-settings"]', { timeout: 5000 }).catch(() => {
-      console.log('Settings header not found, but continuing...');
-    });
-    
+    await page
+      .waitForSelector(
+        '[data-testid="header-settings"], [testid="header-settings"]',
+        { timeout: 5000 },
+      )
+      .catch(() => {
+        console.log('Settings header not found, but continuing...');
+      });
+
     // Approach 1: Try using Playwright's getByTestId (handles data-testid automatically)
     console.log('Looking for switch-manage-taps using getByTestId...');
     try {
@@ -390,14 +424,14 @@ async function toggleManageTaps(page: Page) {
     } catch (e) {
       console.log('getByTestId failed, trying alternatives...');
     }
-    
+
     // Approach 2: Find by text (most reliable for React Native Web)
     console.log('Looking for "Manage taps" text...');
     try {
       const manageTapsText = page.getByText('Manage taps', { exact: false });
       await manageTapsText.waitFor({ timeout: 5000 });
       await manageTapsText.scrollIntoViewIfNeeded();
-      
+
       // Try clicking the text element itself
       try {
         await manageTapsText.click({ force: true, timeout: 3000 });
@@ -407,7 +441,9 @@ async function toggleManageTaps(page: Page) {
       } catch (clickError) {
         console.log('Text click failed, trying to find switch element...');
         // Try to find the switch element
-        const switchElement = page.locator('input[type="checkbox"], [role="switch"]').first();
+        const switchElement = page
+          .locator('input[type="checkbox"], [role="switch"]')
+          .first();
         const switchCount = await switchElement.count();
         if (switchCount > 0) {
           await switchElement.click({ force: true });
@@ -419,7 +455,7 @@ async function toggleManageTaps(page: Page) {
     } catch (e) {
       console.log('Text-based approach failed');
     }
-    
+
     // Approach 3: Try direct selectors
     console.log('Trying direct selectors...');
     const selectors = [
@@ -428,7 +464,7 @@ async function toggleManageTaps(page: Page) {
       '[data-testid="switch-manage-taps-switch"]',
       '[testid="switch-manage-taps-switch"]',
     ];
-    
+
     for (const selector of selectors) {
       try {
         const element = page.locator(selector);
@@ -445,7 +481,7 @@ async function toggleManageTaps(page: Page) {
         // Continue to next selector
       }
     }
-    
+
     console.log('Could not toggle manage taps - element not found');
     // Take screenshot for debugging
     await page.screenshot({ path: 'manage-taps-debug.png' });
@@ -459,26 +495,30 @@ async function toggleManageTaps(page: Page) {
 
 async function testDynamicRoutes(page: Page) {
   console.log('\n=== Testing Dynamic Routes ===\n');
-  
+
   try {
     // Try to navigate to detail pages by clicking on list items
     // First, go to locations and try to click a location
     console.log('Testing location detail routes...');
     await page.goto(`${APP_URL}/locations`);
     await page.waitForTimeout(2000);
-    
+
     // Wait for list to load
     try {
       await page.getByTestId('locations-list').waitFor({ timeout: 5000 });
     } catch (e) {
       console.log('  ⚠ Locations list not found, skipping...');
     }
-    
+
     // Try to find and click a location item using testID pattern
-    const locationItems = await page.locator('[data-testid^="location-item-"]').all();
+    const locationItems = await page
+      .locator('[data-testid^="location-item-"]')
+      .all();
     if (locationItems.length > 0) {
       try {
-        console.log(`  Found ${locationItems.length} location items, clicking first...`);
+        console.log(
+          `  Found ${locationItems.length} location items, clicking first...`,
+        );
         await locationItems[0].click({ timeout: 3000 });
         await page.waitForTimeout(2000);
         const url = page.url();
@@ -495,19 +535,19 @@ async function testDynamicRoutes(page: Page) {
     } else {
       console.log('  ⚠ No location items found');
     }
-    
+
     // Try taps detail
     console.log('\nTesting tap detail routes...');
     await page.goto(`${APP_URL}/taps`);
     await page.waitForTimeout(2000);
-    
+
     // Wait for list to load
     try {
       await page.getByTestId('taps-list').waitFor({ timeout: 5000 });
     } catch (e) {
       console.log('  ⚠ Taps list not found, skipping...');
     }
-    
+
     const tapItems = await page.locator('[data-testid^="tap-item-"]').all();
     if (tapItems.length > 0) {
       try {
@@ -519,7 +559,7 @@ async function testDynamicRoutes(page: Page) {
           console.log(`  ✓ Successfully navigated to tap detail: ${url}`);
           const check = await verifyPageRenders(page, url.replace(APP_URL, ''));
           routeChecks.push(check);
-          
+
           // Try navigating to tap sub-routes
           const tapSubRoutes = ['/stats', '/leaderboard', '/keg', '/on_tap'];
           for (const subRoute of tapSubRoutes) {
@@ -527,7 +567,10 @@ async function testDynamicRoutes(page: Page) {
               const fullUrl = url + subRoute;
               await page.goto(fullUrl);
               await page.waitForTimeout(2000);
-              const check = await verifyPageRenders(page, fullUrl.replace(APP_URL, ''));
+              const check = await verifyPageRenders(
+                page,
+                fullUrl.replace(APP_URL, ''),
+              );
               routeChecks.push(check);
             } catch (e) {
               console.log(`  ✗ Could not navigate to ${subRoute}: ${e}`);
@@ -542,23 +585,27 @@ async function testDynamicRoutes(page: Page) {
     } else {
       console.log('  ⚠ No tap items found');
     }
-    
+
     // Try devices detail
     console.log('\nTesting device detail routes...');
     await page.goto(`${APP_URL}/devices`);
     await page.waitForTimeout(2000);
-    
+
     // Wait for list to load
     try {
       await page.getByTestId('devices-list').waitFor({ timeout: 5000 });
     } catch (e) {
       console.log('  ⚠ Devices list not found, skipping...');
     }
-    
-    const deviceItems = await page.locator('[data-testid^="device-item-"]').all();
+
+    const deviceItems = await page
+      .locator('[data-testid^="device-item-"]')
+      .all();
     if (deviceItems.length > 0) {
       try {
-        console.log(`  Found ${deviceItems.length} device items, clicking first...`);
+        console.log(
+          `  Found ${deviceItems.length} device items, clicking first...`,
+        );
         await deviceItems[0].click({ timeout: 3000 });
         await page.waitForTimeout(2000);
         const url = page.url();
@@ -575,24 +622,28 @@ async function testDynamicRoutes(page: Page) {
     } else {
       console.log('  ⚠ No device items found');
     }
-    
+
     // Try beverages detail
     console.log('\nTesting beverage detail routes...');
     await page.goto(`${APP_URL}/beverages`);
     await page.waitForTimeout(2000);
-    
+
     // Wait for list to load
     try {
       await page.getByTestId('beverages-list').waitFor({ timeout: 5000 });
     } catch (e) {
       console.log('  ⚠ Beverages list not found, skipping...');
     }
-    
+
     // Beverages might not have testIDs yet, try both approaches
-    const beverageItems = await page.locator('[data-testid^="beverage-item-"], [data-testid*="beverage"]').all();
+    const beverageItems = await page
+      .locator('[data-testid^="beverage-item-"], [data-testid*="beverage"]')
+      .all();
     if (beverageItems.length > 0) {
       try {
-        console.log(`  Found ${beverageItems.length} beverage items, clicking first...`);
+        console.log(
+          `  Found ${beverageItems.length} beverage items, clicking first...`,
+        );
         await beverageItems[0].click({ timeout: 3000 });
         await page.waitForTimeout(2000);
         const url = page.url();
@@ -609,16 +660,18 @@ async function testDynamicRoutes(page: Page) {
     } else {
       console.log('  ⚠ No beverage items found');
     }
-    
+
     // Try pours detail (from stats page)
     console.log('\nTesting pour detail routes...');
     await page.goto(`${APP_URL}/stats`);
     await page.waitForTimeout(2000);
-    
+
     const pourItems = await page.locator('[data-testid^="pour-item-"]').all();
     if (pourItems.length > 0) {
       try {
-        console.log(`  Found ${pourItems.length} pour items, clicking first...`);
+        console.log(
+          `  Found ${pourItems.length} pour items, clicking first...`,
+        );
         await pourItems[0].click({ timeout: 3000 });
         await page.waitForTimeout(2000);
         const url = page.url();
@@ -635,7 +688,6 @@ async function testDynamicRoutes(page: Page) {
     } else {
       console.log('  ⚠ No pour items found');
     }
-    
   } catch (error) {
     console.error('Error testing dynamic routes:', error);
   }
@@ -643,13 +695,13 @@ async function testDynamicRoutes(page: Page) {
 
 async function testNavigationFlow(page: Page) {
   console.log('\n=== Testing Navigation Flow ===\n');
-  
+
   try {
     // Test menu navigation
     console.log('Testing menu navigation...');
     await page.goto(`${APP_URL}/menu`);
     await page.waitForTimeout(2000);
-    
+
     const menuItems = [
       { testId: 'menu-item-friends', route: '/menu/my-friends' },
       { testId: 'menu-item-locations', route: '/locations' },
@@ -658,25 +710,29 @@ async function testNavigationFlow(page: Page) {
       { testId: 'menu-item-beverages', route: '/beverages' },
       { testId: 'menu-item-help', route: '/menu/help' },
     ];
-    
+
     for (const item of menuItems) {
       try {
         const button = page.getByTestId(item.testId);
-        const isVisible = await button.isVisible({ timeout: 2000 }).catch(() => false);
-        
+        const isVisible = await button
+          .isVisible({ timeout: 2000 })
+          .catch(() => false);
+
         if (isVisible) {
           const text = await button.textContent().catch(() => '');
           console.log(`  Clicking ${text || item.testId}...`);
           await button.click();
           await page.waitForTimeout(2000);
-          
+
           const currentUrl = page.url();
           if (currentUrl.includes(item.route.split('/').pop() || '')) {
             console.log(`    ✓ Navigated to ${currentUrl}`);
           } else {
-            console.log(`    ✗ Expected route containing ${item.route}, got ${currentUrl}`);
+            console.log(
+              `    ✗ Expected route containing ${item.route}, got ${currentUrl}`,
+            );
           }
-          
+
           // Go back to menu
           await page.goto(`${APP_URL}/menu`);
           await page.waitForTimeout(1000);
@@ -685,15 +741,17 @@ async function testNavigationFlow(page: Page) {
         console.log(`  ✗ Error clicking ${item.testId}: ${e}`);
       }
     }
-    
+
     // Test header navigation buttons
     console.log('\nTesting header navigation...');
     await page.goto(`${APP_URL}/menu`);
     await page.waitForTimeout(2000);
-    
+
     try {
       const settingsButton = page.getByTestId('header-settings-button');
-      const isVisible = await settingsButton.isVisible({ timeout: 2000 }).catch(() => false);
+      const isVisible = await settingsButton
+        .isVisible({ timeout: 2000 })
+        .catch(() => false);
       if (isVisible) {
         console.log('  Clicking settings button...');
         await settingsButton.click();
@@ -706,7 +764,6 @@ async function testNavigationFlow(page: Page) {
     } catch (e) {
       console.log(`  ✗ Could not find settings button: ${e}`);
     }
-    
   } catch (error) {
     console.error('Error testing navigation flow:', error);
   }
@@ -723,7 +780,10 @@ interface RouteCheck {
 
 const routeChecks: RouteCheck[] = [];
 
-async function verifyPageRenders(page: Page, route: string): Promise<RouteCheck> {
+async function verifyPageRenders(
+  page: Page,
+  route: string,
+): Promise<RouteCheck> {
   const check: RouteCheck = {
     route,
     success: false,
@@ -732,14 +792,19 @@ async function verifyPageRenders(page: Page, route: string): Promise<RouteCheck>
 
   try {
     console.log(`  Navigating to ${route}...`);
-    await page.goto(`${APP_URL}${route}`, { waitUntil: 'networkidle', timeout: 10000 });
-    
+    await page.goto(`${APP_URL}${route}`, {
+      waitUntil: 'networkidle',
+      timeout: 10000,
+    });
+
     // Wait for React to render
     await page.waitForTimeout(2000);
-    
+
     const currentUrl = page.url();
-    check.success = currentUrl.includes(route.split('?')[0]) || currentUrl === `${APP_URL}${route}`;
-    
+    check.success =
+      currentUrl.includes(route.split('?')[0]) ||
+      currentUrl === `${APP_URL}${route}`;
+
     if (!check.success) {
       check.error = `Expected URL to contain ${route}, got ${currentUrl}`;
       return check;
@@ -747,41 +812,70 @@ async function verifyPageRenders(page: Page, route: string): Promise<RouteCheck>
 
     // Check for common page elements that indicate rendering
     // Look for headers, containers, or main content areas
-    const hasHeader = await page.locator('[data-testid*="header"], [testid*="header"], header, [role="banner"]').count().then(count => count > 0).catch(() => false);
-    const hasContainer = await page.locator('[data-testid*="container"], [testid*="container"], main, [role="main"]').count().then(count => count > 0).catch(() => false);
-    const hasText = await page.locator('body').textContent().then(text => text && text.trim().length > 50).catch(() => false);
-    
+    const hasHeader = await page
+      .locator(
+        '[data-testid*="header"], [testid*="header"], header, [role="banner"]',
+      )
+      .count()
+      .then((count) => count > 0)
+      .catch(() => false);
+    const hasContainer = await page
+      .locator(
+        '[data-testid*="container"], [testid*="container"], main, [role="main"]',
+      )
+      .count()
+      .then((count) => count > 0)
+      .catch(() => false);
+    const hasText = await page
+      .locator('body')
+      .textContent()
+      .then((text) => text && text.trim().length > 50)
+      .catch(() => false);
+
     check.hasHeader = Boolean(hasHeader);
     check.hasContent = Boolean(hasContainer || hasText);
     check.rendered = Boolean(hasHeader || hasContainer || hasText);
-    
+
     // Check for error messages or error screens
-    const hasError = await page.locator('text=/error|404|not found|routing error/i').count().then(count => count > 0).catch(() => false);
+    const hasError = await page
+      .locator('text=/error|404|not found|routing error/i')
+      .count()
+      .then((count) => count > 0)
+      .catch(() => false);
     if (hasError) {
-      const errorText = await page.locator('text=/error|404|not found|routing error/i').first().textContent().catch(() => 'Unknown error');
+      const errorText = await page
+        .locator('text=/error|404|not found|routing error/i')
+        .first()
+        .textContent()
+        .catch(() => 'Unknown error');
       check.error = `Page shows error: ${errorText}`;
       check.rendered = false;
     }
 
     // Check console for errors
     const consoleErrors: string[] = [];
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       if (msg.type() === 'error') {
         consoleErrors.push(msg.text());
       }
     });
 
     if (check.rendered) {
-      console.log(`    ✓ Page rendered (header: ${hasHeader}, content: ${check.hasContent})`);
+      console.log(
+        `    ✓ Page rendered (header: ${hasHeader}, content: ${check.hasContent})`,
+      );
     } else {
       console.log(`    ✗ Page may not have rendered properly`);
-      await page.screenshot({ path: `route-error-${route.replace(/\//g, '-')}.png` });
+      await page.screenshot({
+        path: `route-error-${route.replace(/\//g, '-')}.png`,
+      });
     }
-
   } catch (error: any) {
     check.error = error.message || String(error);
     console.log(`    ✗ Error: ${check.error}`);
-    await page.screenshot({ path: `route-error-${route.replace(/\//g, '-')}.png` });
+    await page.screenshot({
+      path: `route-error-${route.replace(/\//g, '-')}.png`,
+    });
   }
 
   return check;
@@ -825,29 +919,41 @@ async function navigateApp(page: Page) {
 
   // Try to navigate to list pages and check if we can see items
   console.log('\n=== Checking List Pages ===\n');
-  
+
   // Check taps list
   await page.goto(`${APP_URL}/taps`);
   await page.waitForTimeout(2000);
-  const tapsList = await page.getByTestId('taps-list').isVisible().catch(() => false);
+  const tapsList = await page
+    .getByTestId('taps-list')
+    .isVisible()
+    .catch(() => false);
   console.log(`  Taps list visible: ${tapsList}`);
-  
+
   // Check locations list
   await page.goto(`${APP_URL}/locations`);
   await page.waitForTimeout(2000);
-  const locationsList = await page.getByTestId('locations-list').isVisible().catch(() => false);
+  const locationsList = await page
+    .getByTestId('locations-list')
+    .isVisible()
+    .catch(() => false);
   console.log(`  Locations list visible: ${locationsList}`);
-  
+
   // Check devices list
   await page.goto(`${APP_URL}/devices`);
   await page.waitForTimeout(2000);
-  const devicesList = await page.getByTestId('devices-list').isVisible().catch(() => false);
+  const devicesList = await page
+    .getByTestId('devices-list')
+    .isVisible()
+    .catch(() => false);
   console.log(`  Devices list visible: ${devicesList}`);
-  
+
   // Check beverages list
   await page.goto(`${APP_URL}/beverages`);
   await page.waitForTimeout(2000);
-  const beveragesList = await page.getByTestId('beverages-list').isVisible().catch(() => false);
+  const beveragesList = await page
+    .getByTestId('beverages-list')
+    .isVisible()
+    .catch(() => false);
   console.log(`  Beverages list visible: ${beveragesList}`);
 }
 
@@ -872,7 +978,7 @@ async function main() {
 
     // Set up monitoring
     setupPageMonitoring(page);
-    
+
     // Enable location permissions before login
     await enableLocationPermissions(page);
 
@@ -904,13 +1010,15 @@ async function main() {
 
     // Report results
     console.log('\n=== Test Results ===\n');
-    
+
     // Route verification results
     console.log('=== Route Verification Results ===\n');
-    const successfulRoutes = routeChecks.filter(r => r.success && r.rendered);
-    const failedRoutes = routeChecks.filter(r => !r.success || !r.rendered);
-    
-    console.log(`✅ Successfully rendered: ${successfulRoutes.length}/${routeChecks.length} routes`);
+    const successfulRoutes = routeChecks.filter((r) => r.success && r.rendered);
+    const failedRoutes = routeChecks.filter((r) => !r.success || !r.rendered);
+
+    console.log(
+      `✅ Successfully rendered: ${successfulRoutes.length}/${routeChecks.length} routes`,
+    );
     if (failedRoutes.length > 0) {
       console.log(`\n❌ Failed routes:\n`);
       failedRoutes.forEach((check) => {
@@ -923,7 +1031,7 @@ async function main() {
         }
       });
     }
-    
+
     // Routing errors
     console.log('\n=== Routing Error Results ===\n');
     if (routingErrors.length === 0) {
@@ -936,14 +1044,20 @@ async function main() {
         console.log('');
       });
     }
-    
+
     // HTTP errors
     console.log('\n=== HTTP Error Results ===\n');
     if (failedRequests.length === 0) {
-      console.log('✅ No HTTP errors (400/500) found on GET requests to brewskey.com');
-      console.log('   (Note: 401 authorization errors are excluded as they may be expected)');
+      console.log(
+        '✅ No HTTP errors (400/500) found on GET requests to brewskey.com',
+      );
+      console.log(
+        '   (Note: 401 authorization errors are excluded as they may be expected)',
+      );
     } else {
-      console.log(`❌ Found ${failedRequests.length} failed GET requests (400/500):\n`);
+      console.log(
+        `❌ Found ${failedRequests.length} failed GET requests (400/500):\n`,
+      );
       failedRequests.forEach((req, index) => {
         console.log(`${index + 1}. ${req.status} ${req.method} ${req.url}`);
         if (req.responseText) {

@@ -4,12 +4,12 @@ import { Icon } from '@rneui/themed';
 import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { Button } from '../../../common/buttons/Button';
-import { Container } from '../../../common/Container';
-import { withErrorBoundary } from '../../../common/ErrorBoundary';
-import { ErrorScreen } from '../../../common/ErrorScreen';
-import { Header } from '../../../common/Header';
-import { COLORS, TYPOGRAPHY } from '../../../theme';
+import { Button } from 'common/buttons/Button';
+import { Container } from 'common/Container';
+import { withErrorBoundary } from 'common/ErrorBoundary';
+import { ErrorScreen } from 'common/ErrorScreen';
+import { Header } from 'common/Header';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

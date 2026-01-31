@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { COLORS, TYPOGRAPHY } from '../theme';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 // todo make better styles, may be add borders etc
 const styles = StyleSheet.create({

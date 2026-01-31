@@ -73,29 +73,31 @@ type TapOverrides = Partial<Tap> & {
 
 export function createMockTap(overrides?: TapOverrides): Tap {
   const id = generateId();
-  const { locationId, deviceId, tapNumber, description, ...restOverrides } = overrides || {};
-  
+  const { locationId, deviceId, tapNumber, description, ...restOverrides } =
+    overrides || {};
+
   // Ensure both deviceId and locationId are present (required hierarchy: Organization => Location => Devices => Taps => Kegs)
   // If deviceId is provided but no locationId, generate a locationId
   // If locationId is provided but no deviceId, generate a deviceId
   // If neither is provided, generate both
-  const finalLocationId = locationId ?? (restOverrides.location?.id ?? generateId());
-  const finalDeviceId = deviceId ?? (restOverrides.device?.id ?? generateId());
-  
+  const finalLocationId =
+    locationId ?? restOverrides.location?.id ?? generateId();
+  const finalDeviceId = deviceId ?? restOverrides.device?.id ?? generateId();
+
   // Convert locationId to ShortenedEntity
   const location: ShortenedEntity = restOverrides.location ?? {
     id: finalLocationId,
     name: faker.company.name(),
     isDeleted: false,
   };
-  
+
   // Convert deviceId to ShortenedEntity
   const device: ShortenedEntity = restOverrides.device ?? {
     id: finalDeviceId,
     name: faker.commerce.productName(),
     isDeleted: false,
   };
-  
+
   const base: Partial<Tap> = {
     id,
     location,
@@ -105,7 +107,7 @@ export function createMockTap(overrides?: TapOverrides): Tap {
     tapNumber: tapNumber ?? faker.number.int({ min: 1, max: 20 }),
     description: description ?? faker.lorem.sentence(),
   };
-  
+
   return { ...base, ...restOverrides } as Tap;
 }
 
@@ -130,18 +132,19 @@ type KegOverrides = Partial<Keg> & {
 
 export function createMockKeg(overrides?: KegOverrides): Keg {
   const id = generateId();
-  const { tapId, beverageId, ouncesTotal, ouncesRemaining, ...restOverrides } = overrides || {};
-  
+  const { tapId, beverageId, ouncesTotal, ouncesRemaining, ...restOverrides } =
+    overrides || {};
+
   // Convert tapId to ShortenedTap if provided
-  const tap: ShortenedTap | undefined = tapId 
+  const tap: ShortenedTap | undefined = tapId
     ? { id: tapId, isDeleted: false }
     : (restOverrides.tap ?? undefined);
-  
+
   // Convert beverageId to ShortenedEntity if provided
-  const beverage: ShortenedEntity | undefined = beverageId 
+  const beverage: ShortenedEntity | undefined = beverageId
     ? { id: beverageId, name: faker.commerce.productName(), isDeleted: false }
     : (restOverrides.beverage ?? undefined);
-  
+
   // Map ouncesTotal to maxOunces and ouncesRemaining to ounces
   const mappedOverrides: any = { ...restOverrides };
   if (ouncesTotal !== undefined) {
@@ -150,14 +153,14 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
   if (ouncesRemaining !== undefined) {
     mappedOverrides.ounces = ouncesRemaining;
   }
-  
+
   const base: Partial<Keg> = {
     id,
     tap,
     beverage,
     kegType: 'HalfBarrel' as KegType,
   };
-  
+
   return { ...base, ...mappedOverrides } as Keg;
 }
 
@@ -194,7 +197,9 @@ export function createMockFriend(overrides?: Partial<Friend>): Friend {
   return { ...base, ...overrides } as Friend;
 }
 
-export function createMockPermission(overrides?: Partial<Permission>): Permission {
+export function createMockPermission(
+  overrides?: Partial<Permission>,
+): Permission {
   const id = generateId();
   const base: Partial<Permission> = {
     id,
@@ -203,7 +208,9 @@ export function createMockPermission(overrides?: Partial<Permission>): Permissio
   return { ...base, ...overrides } as Permission;
 }
 
-export function createMockFlowSensor(overrides?: Partial<FlowSensor>): FlowSensor {
+export function createMockFlowSensor(
+  overrides?: Partial<FlowSensor>,
+): FlowSensor {
   const id = generateId();
   const base: Partial<FlowSensor> = {
     id,
@@ -212,7 +219,9 @@ export function createMockFlowSensor(overrides?: Partial<FlowSensor>): FlowSenso
   return { ...base, ...overrides } as FlowSensor;
 }
 
-export function createMockOrganization(overrides?: Partial<Organization>): Organization {
+export function createMockOrganization(
+  overrides?: Partial<Organization>,
+): Organization {
   const id = generateId();
   const base: Partial<Organization> = {
     id,
@@ -226,7 +235,11 @@ export function createMockSrm(overrides?: Partial<Srm>): Srm {
   const id = generateId();
   const srmNumber = overrides?.name ? parseInt(overrides.name, 10) : id;
   // Generate a hex color code (format: #RRGGBB)
-  const hexColor = overrides?.hex ?? `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+  const hexColor =
+    overrides?.hex ??
+    `#${Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0')}`;
   const base: Partial<Srm> = {
     id,
     name: srmNumber.toString(),
@@ -235,7 +248,9 @@ export function createMockSrm(overrides?: Partial<Srm>): Srm {
   return { ...base, ...overrides } as Srm;
 }
 
-export function createMockAchievement(overrides?: Partial<Achievement>): Achievement {
+export function createMockAchievement(
+  overrides?: Partial<Achievement>,
+): Achievement {
   const id = generateId();
   const base: Partial<Achievement> = {
     id,
@@ -244,7 +259,9 @@ export function createMockAchievement(overrides?: Partial<Achievement>): Achieve
   return { ...base, ...overrides } as Achievement;
 }
 
-export function createMockWiFiNetwork(overrides?: Partial<{ ssid: string; signal: number; security: string }>) {
+export function createMockWiFiNetwork(
+  overrides?: Partial<{ ssid: string; signal: number; security: string }>,
+) {
   return {
     ssid: `WiFi_Network_${generateId()}`,
     signal: -50,
@@ -253,7 +270,9 @@ export function createMockWiFiNetwork(overrides?: Partial<{ ssid: string; signal
   };
 }
 
-export function createMockParticleDevice(overrides?: Partial<{ id: string; name: string; online: boolean }>) {
+export function createMockParticleDevice(
+  overrides?: Partial<{ id: string; name: string; online: boolean }>,
+) {
   return {
     id: faker.string.alphanumeric({ length: 24 }),
     name: faker.commerce.productName(),

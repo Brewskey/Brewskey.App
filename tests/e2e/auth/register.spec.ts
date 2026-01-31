@@ -55,7 +55,9 @@ test('should show validation error for weak password', async ({ page }) => {
   await page.getByTestId('register-submit-button').click();
 
   // Validation error messages - field-level error testID
-  await expect(page.getByTestId('form-validation-error-password')).toBeVisible();
+  await expect(
+    page.getByTestId('form-validation-error-password'),
+  ).toBeVisible();
 });
 
 test('should handle duplicate email error', async ({ page, mockStore }) => {
@@ -65,7 +67,7 @@ test('should handle duplicate email error', async ({ page, mockStore }) => {
     userName: 'existinguser',
   });
   mockStore.setUser(existingUser);
-  
+
   await page.goto('/register');
   await expect(page.getByTestId('input-email')).toBeVisible();
 

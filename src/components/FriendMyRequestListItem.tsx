@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { UserAvatar } from '../common/avatars/UserAvatar';
-import { IconButton } from '../common/buttons/IconButton';
-import { ListItem } from '../common/ListItem';
+import { UserAvatar } from 'common/avatars/UserAvatar';
+import { IconButton } from 'common/buttons/IconButton';
+import { ListItem } from 'common/ListItem';
 
 import type { Friend } from '@brewskey/js-api';
 
