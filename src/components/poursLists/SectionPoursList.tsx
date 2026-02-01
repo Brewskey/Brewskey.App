@@ -48,7 +48,7 @@ export const SectionPoursList: React.FC<Props> = ({
 
   const _onItemPress = (pour: Pour) => {
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(pour.owner.id) },
     });
   };

@@ -38,7 +38,7 @@ const NuxTapScreen: React.FC = () => {
   const handlePress = () => {
     if (deviceId) {
       router.navigate({
-        pathname: '/(tabs)/(feed,stats,notifications,menu)/taps/new',
+        pathname: '/taps/new',
         params: {
           deviceId,
           returnTo: 'nux-finish',
@@ -47,7 +47,7 @@ const NuxTapScreen: React.FC = () => {
       });
     } else {
       router.navigate({
-        pathname: '/(tabs)/(feed,stats,notifications,menu)/devices',
+        pathname: '/devices',
       });
     }
   };

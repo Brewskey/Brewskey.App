@@ -60,7 +60,7 @@ const StatsRoute: React.FC = () => {
 
   const onWarningPress = () => {
     router.navigate({
-      pathname: '/(tabs)/flow-sensor/new',
+      pathname: '/flow-sensor/new',
       params: {
         tapId: tap.id.toString(),
         shouldReturnOnFinish: 'true',

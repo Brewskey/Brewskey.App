@@ -74,7 +74,7 @@ const LocationDetailsScreen: React.FC = () => {
             name="edit"
             testID="button-edit-location"
             href={{
-              pathname: '/(tabs)/locations/[id]/edit',
+              pathname: '/locations/[id]/edit',
               params: { id: String(locId) },
             }}
           />

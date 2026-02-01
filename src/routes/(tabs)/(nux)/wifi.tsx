@@ -38,13 +38,12 @@ const NuxWifiScreen: React.FC = () => {
 
   const handlePress = () => {
     router.navigate({
-      pathname:
-        '/(tabs)/(feed,stats,notifications,menu)/devices/[id]/wifi-setup',
+      pathname: '/devices/[id]/wifi-setup',
       params: {
         id: 'new',
         forNewDevice: 'true',
         returnTo: 'nux-device',
-        ...(locationId ? { locationId } : {}),
+        locationId,
       },
     });
   };

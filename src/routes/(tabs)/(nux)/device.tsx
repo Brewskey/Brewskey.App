@@ -38,7 +38,7 @@ const NuxDeviceScreen: React.FC = () => {
 
   const handlePress = () => {
     router.navigate({
-      pathname: '/(tabs)/(feed,stats,notifications,menu)/devices/new',
+      pathname: '/devices/new',
       params: {
         particleId,
         locationId: locationId ? String(locationId) : undefined,

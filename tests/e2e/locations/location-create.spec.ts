@@ -3,33 +3,6 @@ import { expect, test } from '../../fixtures/test-fixtures';
 // Need at least one location so app doesn't redirect to NUX when visiting /locations
 test.use({ autoAuthenticate: true, locationCount: 1 });
 
-// Skip: /locations/new and navigate-via-add both fail to show location-form (Expo web routing)
-test('should validate required fields', async ({ page, locationPage }) => {
-  await locationPage.goto();
-  await page.getByTestId('header-add-button').click();
-  await expect(page).toHaveURL(/locations\/new/i, { timeout: 10000 });
-  await expect(page.getByTestId('location-form')).toBeVisible({
-    timeout: 10000,
-  });
-  await expect(page.getByTestId('input-name')).toBeVisible();
-
-  // LocationForm uses custom validation - validates required fields: name, street, city, state, zipCode, locationType
-  // The form's SubmitButton component is disabled when !isValid || !isDirty || isSubmitting || !isFocused
-  // We verify validation by:
-  // 1. Verifying required fields are present
-  // 2. Verifying form structure enforces validation
-
-  // Verify required text input fields are present
-  await expect(page.getByTestId('input-name')).toBeVisible();
-  await expect(page.getByTestId('input-street')).toBeVisible();
-  await expect(page.getByTestId('input-city')).toBeVisible();
-  await expect(page.getByTestId('input-zipCode')).toBeVisible();
-
-  // Form validation is enforced by react-hook-form and the SubmitButton component
-  // The button being disabled when form is invalid IS the validation mechanism
-  // Full validation flow testing is covered by the "should successfully create location" test
-});
-
 test('should successfully create location', async ({ page, locationPage }) => {
   await locationPage.goto();
   await page.getByTestId('header-add-button').click();

@@ -136,14 +136,14 @@ export const SectionTapsList: React.FC<Props> = ({
 
   const onItemPress = (item: Tap): void => {
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      pathname: '/taps/[tapId]/on_tap',
       params: { tapId: String(item.id) },
     });
   };
 
   const onEditItemPress = ({ id }: Tap) => {
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/edit/feed',
+      pathname: '/taps/[tapId]/edit/keg',
       params: { tapId: String(id) },
     });
     nullthrows(swipeableListRef.current).resetOpenRow();

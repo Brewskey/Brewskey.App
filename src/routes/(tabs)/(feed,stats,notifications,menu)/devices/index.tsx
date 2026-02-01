@@ -45,7 +45,7 @@ const DevicesScreen: React.FC = () => {
 
   const onWifiSetupButtonPress = () => {
     router.navigate({
-      pathname: '/(tabs)/devices/new',
+      pathname: '/devices/new',
       params: { wifiSetup: 'true' },
     });
   };
@@ -83,7 +83,7 @@ const DevicesScreen: React.FC = () => {
             name="add"
             testID="button-add-device"
             href={{
-              pathname: '/(tabs)/devices/new',
+              pathname: '/devices/new',
               params: { forNewDevice: 'true' },
             }}
           />

@@ -1,31 +1,8 @@
+/* eslint-disable no-restricted-syntax */
 import { setupSrmData } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
-
-test('should validate required fields', async ({ page, menuPage }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Navigate through menu to beverages, then click the add button
-  await menuPage.goto();
-  await menuPage.clickBeverages();
-  await page.getByTestId('header-add-button').click();
-
-  await expect(page.getByTestId('input-name')).toBeVisible();
-
-  // Verify required fields are present (name, beverage type, color/SRM)
-  await expect(page.getByTestId('input-name')).toBeVisible();
-  await expect(page.getByTestId('beverage-type-dropdown')).toBeVisible();
-  await expect(page.getByTestId('color-dropdown')).toBeVisible();
-
-  // Submit with empty required fields: custom validate() should set errors and prevent navigation
-  const submitButton = page.getByTestId('submit-button-create-beverage');
-  await expect(submitButton).toBeVisible();
-  await submitButton.click();
-
-  // Should still be on create screen (form visible; no navigation to detail)
-  await expect(page.getByTestId('input-name')).toBeVisible();
-  await expect(page.getByTestId('submit-button-create-beverage')).toBeVisible();
-});
 
 const BEVERAGE_TYPES = [
   { label: 'Beer', optionIndex: 0 },

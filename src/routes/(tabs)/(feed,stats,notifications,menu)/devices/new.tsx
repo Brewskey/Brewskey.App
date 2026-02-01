@@ -25,7 +25,7 @@ const NewDeviceScreen: React.FC = () => {
       showBackButton?: string;
     }>();
 
-  const { data: location, isPending: isLoadingLocation } = useGetLocationById(
+  const { data: location, isLoading: isLoadingLocation } = useGetLocationById(
     locationId ? Number(locationId) : undefined,
   );
 
@@ -38,7 +38,7 @@ const NewDeviceScreen: React.FC = () => {
 
     if (returnTo === 'nux-tap') {
       router.replace({
-        pathname: '/(tabs)/(nux)/tap',
+        pathname: '/tap',
         params: { deviceId: device.id.toString() },
       });
       return;
@@ -46,7 +46,7 @@ const NewDeviceScreen: React.FC = () => {
 
     // Navigate to device details
     router.navigate({
-      pathname: '/(tabs)/devices/[id]',
+      pathname: '/devices/[id]',
       params: { id: device.id.toString() },
     });
   };

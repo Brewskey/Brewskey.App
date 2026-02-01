@@ -54,7 +54,7 @@ const FriendsList: React.FC<Props> = ({
 
   const onItemPress = (friend: Friend) => {
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(friend.friendAccount.id) },
     });
   };

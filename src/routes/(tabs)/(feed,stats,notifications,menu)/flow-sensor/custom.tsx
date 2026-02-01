@@ -30,7 +30,7 @@ const NewFlowSensorCustomScreen = withErrorBoundary(
       await createFlowSensor.mutateAsync(values);
       router.navigate({
         pathname:
-          '/(tabs)/(feed,stats,notifications,menu)/taps/[tapId]/keg/new',
+          '/taps/[tapId]/keg/new',
         params: {
           tapId: String(tapId),
           ...(returnTo ? { returnTo } : {}),

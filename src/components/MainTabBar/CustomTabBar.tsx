@@ -86,12 +86,14 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({
           isFocused={state.index === 0}
           onPress={_onTabPress}
           route={state.routes[0]}
+          testID="tab-feed"
         />
         <TabBarButton
           icon={{ name: 'chart-pie', type: 'material-community' }}
           isFocused={state.index === 1}
           onPress={_onTabPress}
           route={state.routes[1]}
+          testID="tab-stats"
         />
         <View style={{ width: 100 }} />
         <TabBarButton
@@ -100,6 +102,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({
           isFocused={state.index === 2}
           onPress={_onTabPress}
           route={state.routes[2]}
+          testID="tab-notifications"
         />
         <TabBarButton
           icon={{ name: 'menu' }}
@@ -107,6 +110,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({
           isFocused={state.index === 3}
           onPress={_onTabPress}
           route={state.routes[3]}
+          testID="tab-menu"
         />
       </View>
     </View>

@@ -1,10 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { ROUTES } from '../../fixtures/routes';
 
 test.use({ autoAuthenticate: true });
 
 test('should show delete all button', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/notifications');
+  await page.goto(ROUTES.NOTIFICATIONS);
 
   // Delete button has testID - use that instead of role-based locator
   await expect(
@@ -32,7 +33,7 @@ test('should show delete all modal', async ({ page }) => {
 
 test('should allow canceling delete', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/notifications');
+  await page.goto(ROUTES.NOTIFICATIONS);
 
   // Delete button has testID - use that instead of role-based locator
   const deleteButton = page.getByTestId('button-delete-all-notifications');

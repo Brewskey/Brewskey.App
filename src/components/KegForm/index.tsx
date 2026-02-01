@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
 import { KegLevelSliderField } from 'components/KegForm/KegLevelSliderField';
-import { Button } from 'common/buttons/Button';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
@@ -82,9 +81,6 @@ export const KegForm: React.FC<Props> = ({
     },
   });
 
-  const {
-    formState: { isSubmitting, isValid },
-  } = form;
 
   const kegType = form.watch('kegType');
 
@@ -98,12 +94,12 @@ export const KegForm: React.FC<Props> = ({
   const onSubmitForm: SubmitHandler<FormFields> = (values) => {
     onSubmit(values);
   };
-  const onReplaceSubmitForm = onReplaceSubmit
-    ? form.handleSubmit(async (values) => nullthrows(onReplaceSubmit)(values))
-    : undefined;
-  const onFloatKegForm = form.handleSubmit(async (values) =>
-    nullthrows(onFloatedSubmit)(values),
-  );
+  const onReplaceSubmitForm: SubmitHandler<FormFields> | undefined =
+    onReplaceSubmit
+      ? async (values) => nullthrows(onReplaceSubmit)(values)
+      : undefined;
+  const onFloatKegForm: SubmitHandler<FormFields> = async (values) =>
+    nullthrows(onFloatedSubmit)(values);
   return (
     <Form form={form}>
       <View testID="keg-form">
@@ -139,22 +135,22 @@ export const KegForm: React.FC<Props> = ({
         {!showReplaceButton ? null : (
           <SectionContent paddedVertical>
             {!shouldShowFloatedButton ? null : (
-              <Button
-                backgroundColor={COLORS.accent}
-                disabled={isSubmitting}
-                loading={isSubmitting}
-                onPress={onFloatKegForm}
-                style={{ marginBottom: 4 }}
+              <SubmitButton<FormFields>
+                allowSubmitWhenValid
+                buttonStyle={{ backgroundColor: COLORS.accent, marginBottom: 4 }}
+                onSubmit={onFloatKegForm}
                 title="Keg Floated"
               />
             )}
-            <Button
-              disabled={shouldReplaceBeDisnabled || !isValid || isSubmitting}
-              loading={isSubmitting}
-              onPress={onReplaceSubmitForm}
-              testID="button-replace-keg"
-              title="Replace keg"
-            />
+            {onReplaceSubmitForm != null ? (
+              <SubmitButton<FormFields>
+                allowSubmitWhenValid
+                disabled={shouldReplaceBeDisnabled}
+                onSubmit={onReplaceSubmitForm}
+                testID="button-replace-keg"
+                title="Replace keg"
+              />
+            ) : null}
           </SectionContent>
         )}
         <SectionContent paddedVertical>

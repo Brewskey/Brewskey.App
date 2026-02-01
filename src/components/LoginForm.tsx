@@ -3,9 +3,8 @@ import * as React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
-import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
 import { useLogin } from 'hooks/queries/AuthQueries';
@@ -43,7 +42,6 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
     await loginMutator.mutateAsync(formData);
   };
 
-  const { isSubmitting, isDirty, isValid } = methods.formState;
   return (
     <FormProvider {...methods}>
       <View testID="login-form">
@@ -79,13 +77,13 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
           validationTextStyle={styles.validationText}
         />
         <SectionContent paddedVertical>
-          <Button
-            disabled={!isDirty || !isValid}
-            loading={isSubmitting}
-            onPress={handleSubmitWithError(methods, onSubmit)}
-            secondary={isInverse}
+          <SubmitButton<FormProps>
+            allowSubmitWhenValid
+            buttonStyle={isInverse ? { backgroundColor: COLORS.secondary } : undefined}
+            onSubmit={onSubmit}
             testID="login-submit-button"
             title="Log in"
+            titleStyle={isInverse ? { color: COLORS.text } : undefined}
           />
         </SectionContent>
       </View>

@@ -94,7 +94,7 @@ const EditBeverageScreen: React.FC = () => {
 
     addSnackBarMessage({ content: 'The beverage edited.' });
     router.push({
-      pathname: '/(tabs)/beverages/[id]',
+      pathname: '/beverages/[id]',
       params: { id: beverageIdValue.toString() },
     });
   };

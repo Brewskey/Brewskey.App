@@ -44,7 +44,7 @@ const NewTapScreen: React.FC = () => {
     queryClient.invalidateQueries({ queryKey: ['taps'] });
 
     router.navigate({
-      pathname: '/(tabs)/flow-sensor/new',
+      pathname: '/flow-sensor/new',
       params: {
         tapId: tap.id.toString(),
         shouldReturnOnFinish: 'false',

@@ -17,7 +17,7 @@ export const TapsScreen: React.FC = withErrorBoundary(
         title="Taps"
         rightComponent={
           <HeaderNavigationButton
-            href={{ pathname: '/(tabs)/taps/new', params: {} }}
+            href={{ pathname: '/taps/new', params: {} }}
             name="add"
             testID="header-add-button"
           />

@@ -63,7 +63,7 @@ const TapsList: React.FC<Props> = ({
 
   const handleEditItemPress = ({ id }: Tap) => {
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/edit/feed',
+      pathname: '/taps/[tapId]/edit/keg',
       params: { tapId: String(id) },
     });
     nullthrows(swipeableListRef.current).resetOpenRow();
@@ -71,7 +71,7 @@ const TapsList: React.FC<Props> = ({
 
   const handleItemPress = (item: Tap): void => {
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      pathname: '/taps/[tapId]/on_tap',
       params: { tapId: String(item.id) },
     });
   };

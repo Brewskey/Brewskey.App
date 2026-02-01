@@ -183,7 +183,11 @@ test.describe('WiFi Setup', () => {
   test('forNewDevice: step 4 Continue redirects to devices/new with particleId when no returnTo', async ({
     page,
   }) => {
-    await page.goto('/devices/new/wifi-setup?forNewDevice=true&id=new');
+    const { device } = await mockDeviceWithTaps(page, 0);
+    await page.goto(`/devices/${device.id}/wifi-setup?forNewDevice=true`);
+    await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible({
+      timeout: 10000,
+    });
     await page.getByTestId('button-expand-particle-id').click();
     await page.getByTestId('input-particleId').fill('particle_redirect_test');
     await page.getByRole('button', { name: 'Continue' }).click();
@@ -197,13 +201,14 @@ test.describe('WiFi Setup', () => {
   test('returnTo=nux-device: step 4 Continue redirects to nux/device with particleId', async ({
     page,
   }) => {
-    const { mockLocationWithTaps } =
-      await import('../../fixtures/entity-fixtures');
-    const { location } = await mockLocationWithTaps(page, 0);
+    const { device, location } = await mockDeviceWithTaps(page, 0);
 
     await page.goto(
-      `/devices/new/wifi-setup?forNewDevice=true&returnTo=nux-device&locationId=${location.id}`,
+      `/devices/${device.id}/wifi-setup?forNewDevice=true&returnTo=nux-device&locationId=${location.id}`,
     );
+    await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible({
+      timeout: 10000,
+    });
     await page.getByTestId('button-expand-particle-id').click();
     await page.getByTestId('input-particleId').fill('particle_nux_device');
     await page.getByRole('button', { name: 'Continue' }).click();

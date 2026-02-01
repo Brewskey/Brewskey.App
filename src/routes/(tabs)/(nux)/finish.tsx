@@ -38,11 +38,11 @@ const NuxFinishScreen: React.FC = () => {
   const handlePress = () => {
     if (tapId) {
       router.replace({
-        pathname: '/(tabs)/(feed,stats,notifications,menu)/taps/[tapId]/on_tap',
+        pathname: '/taps/[tapId]/on_tap',
         params: { tapId },
       });
     } else {
-      router.replace({ pathname: '/(tabs)', params: {} });
+      router.replace('/');
     }
   };
 

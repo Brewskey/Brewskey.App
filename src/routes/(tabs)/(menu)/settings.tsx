@@ -115,6 +115,7 @@ const SettingsScreen: React.FC = () => {
                   defaultValue={selectedOrganization}
                   label="Organization"
                   name="organization"
+                  testID="organization-dropdown"
                 />
               </FormProvider>
             </SectionContent>

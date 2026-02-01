@@ -48,7 +48,7 @@ const DeviceDetailsScreen = withErrorBoundary(
     const onAddTapPress = () => {
       if (device) {
         router.navigate({
-          pathname: '/(tabs)/taps/new',
+          pathname: '/taps/new',
           params: { deviceId: device.id.toString() },
         });
       }
@@ -81,7 +81,7 @@ const DeviceDetailsScreen = withErrorBoundary(
             <HeaderNavigationButton
               name="edit"
               href={{
-                pathname: '/(tabs)/devices/[id]/edit',
+                pathname: '/devices/[id]/edit',
                 params: { id: device.id.toString() },
               }}
             />

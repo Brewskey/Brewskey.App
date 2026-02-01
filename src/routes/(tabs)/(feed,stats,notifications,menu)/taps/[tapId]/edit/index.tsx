@@ -18,7 +18,7 @@ export default function EditTapIndex() {
   return (
     <Redirect
       href={{
-        pathname: '/(tabs)/taps/[tapId]/edit/feed',
+        pathname: '/taps/[tapId]/edit/keg',
         params: { tapId: String(tapId) },
       }}
     />

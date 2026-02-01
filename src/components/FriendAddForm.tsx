@@ -3,10 +3,10 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
 import { COLORS } from 'theme';
@@ -40,7 +40,7 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
   });
 
   const {
-    formState: { isDirty, isSubmitting, isValid },
+    formState: { isSubmitting },
   } = form;
 
   const validate = (values: FriendAddFormValues): boolean => {
@@ -90,12 +90,13 @@ const FriendAddForm: React.FC<Props> = ({ onSubmit }) => {
           validationTextStyle={styles.validationText}
         />
         <SectionContent paddedVertical>
-          <Button
-            secondary
-            disabled={!isDirty || isSubmitting || !isValid}
-            loading={isSubmitting}
-            onPress={handleSubmitWithError(form, onSubmitForm)}
+          <SubmitButton<FriendAddFormValues>
+            allowSubmitWhenValid
+            buttonStyle={{ backgroundColor: COLORS.secondary }}
+            onSubmit={onSubmitForm}
+            testID="button-add-friend"
             title="Add Friend"
+            titleStyle={{ color: COLORS.text }}
           />
         </SectionContent>
       </View>

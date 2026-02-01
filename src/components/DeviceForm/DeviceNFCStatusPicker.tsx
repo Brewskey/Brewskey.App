@@ -118,6 +118,7 @@ const DeviceNFCStatusPicker = (props: Props): React.ReactElement => {
       labelField="label"
       name={props.name}
       testID={props.testID}
+      defaultValue="PhoneOnly"
       valueField="value"
       data={[
         { label: 'Phone Only', value: 'PhoneOnly' },

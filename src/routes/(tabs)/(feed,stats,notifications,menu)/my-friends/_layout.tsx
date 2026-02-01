@@ -41,6 +41,7 @@ const MyFriendsLayout: React.FC = () => {
           <HeaderIconButton
             name="person-add"
             onPress={() => setIsFriendModalVisible(true)}
+            testID="button-add-friend"
             type="material-icons"
           />
         }

@@ -63,14 +63,14 @@ const FriendRequestsList: React.FC = () => {
 
   const onPendingRequestRowPress = (friend: Friend) => {
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(friend.owningAccount.id) },
     });
   };
 
   const onMyRequestRowPress = (friend: Friend) => {
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(friend.friendAccount.id) },
     });
   };

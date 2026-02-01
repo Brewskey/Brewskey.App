@@ -113,7 +113,7 @@ const OwnerPoursList: React.FC<Props> = ({
     }
 
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(pour.owner.id) },
     });
   };

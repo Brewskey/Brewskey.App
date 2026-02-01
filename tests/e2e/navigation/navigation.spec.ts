@@ -20,19 +20,20 @@ test('should navigate between bottom tabs', async ({ page }) => {
   const statsTab = page.getByTestId('tab-stats');
   await expect(statsTab).toBeVisible();
   await statsTab.click();
-  await expect(page).toHaveURL(/.*stats/i);
+  // Expo Router may keep URL at / when switching tabs; assert on stats content
+  await expect(page.getByTestId('badges-section')).toBeVisible();
 
   // Notifications tab has testID - use that instead of text-based locator
   const notificationsTab = page.getByTestId('tab-notifications');
   await expect(notificationsTab).toBeVisible();
   await notificationsTab.click();
-  await expect(page).toHaveURL(/.*notifications/i);
+  await expect(page.getByTestId('button-delete-all-notifications')).toBeVisible();
 
   // Menu tab has testID - use that instead of text-based locator
   const menuTab = page.getByTestId('tab-menu');
   await expect(menuTab).toBeVisible();
   await menuTab.click();
-  await expect(page).toHaveURL(/.*menu/i);
+  await expect(page.getByTestId('menu-user-block')).toBeVisible();
 });
 
 test('should redirect to login when signed out', async ({ page }) => {

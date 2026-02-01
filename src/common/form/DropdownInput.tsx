@@ -6,16 +6,15 @@ import { Controller, FieldValues, useFormContext } from 'react-hook-form';
 import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 
-import { WebDropdown } from 'common/form/WebDropdown';
-import { useDebounce } from 'hooks/useDebounce';
-import { COLORS } from 'theme';
+import { WebDropdown } from './WebDropdown';
+import { useDebounce } from '../../hooks/useDebounce';
+import { COLORS } from '../../theme';
 
 import type { QueryOptions } from '@brewskey/js-api';
 import type {
   InfiniteData,
   UseInfiniteQueryResult,
 } from '@tanstack/react-query';
-import type { GestureResponderEvent } from 'react-native';
 
 type DropdownProps = React.ComponentProps<typeof RNEDropdown>;
 
@@ -29,8 +28,8 @@ const usePlaceholderQuery = (_options?: unknown) =>
   });
 
 export type DropdownInputProps<
-  TFormFields extends FieldValues = FieldValues,
-  TValueType = unknown,
+  TFormFields extends FieldValues,
+  TValueType,
 > = Omit<DropdownProps, 'onChange' | 'data' | 'name'> & {
   // Form integration
   defaultValue?: TValueType;
@@ -42,9 +41,9 @@ export type DropdownInputProps<
   // Data source - either static array or async query
   data?: TValueType[];
   useQueryHook?: (
-    options?: Record<string, unknown>,
+    options?: any,
   ) => UseInfiniteQueryResult<InfiniteData<TValueType[]>>;
-  queryOptions?: Record<string, unknown>;
+  queryOptions?: any;
   onSearchFilter?: (
     searchText: string,
     baseQueryOptions: QueryOptions,
@@ -63,23 +62,21 @@ export type DropdownInputProps<
 
 // Wrapper: WebDropdown on web, react-native-element-dropdown on native. Props match DropdownProps.
 
-const Dropdown = <_TValueType,>(props: DropdownProps) => {
+const Dropdown = <TValueType,>(props: DropdownProps) => {
   if (Platform.OS === 'web') {
     return <WebDropdown {...props} />;
   }
 
-  const nativeProps: DropdownProps & {
-    renderRightIcon?: () => React.ReactNode;
-  } = { ...props };
+  const nativeProps: any = { ...props };
   if (props.value != null && !props.renderRightIcon) {
     nativeProps.renderRightIcon = () => {
       if (props.value == null) return null;
       return (
         <TouchableOpacity
           style={{ padding: 8 }}
-          onPress={(e: GestureResponderEvent) => {
+          onPress={(e: any) => {
             e.stopPropagation();
-            props.onChange?.(null);
+            props.onChange?.(null as any);
           }}
         >
           <Text style={{ fontSize: 16, color: COLORS.textFaded }}>×</Text>
@@ -90,10 +87,7 @@ const Dropdown = <_TValueType,>(props: DropdownProps) => {
   return <RNEDropdown {...nativeProps} />;
 };
 
-export const DropdownInput = <
-  TFormFields extends FieldValues = FieldValues,
-  TValueType = unknown,
->({
+export const DropdownInput = <TFormFields extends FieldValues, TValueType>({
   defaultValue,
   name,
   required = false,
@@ -102,7 +96,7 @@ export const DropdownInput = <
   labelField,
   testID,
   mode = 'default',
-  headerTitle: _headerTitle,
+  headerTitle,
   confirmSelectItem = false,
   onConfirmSelectItem,
   useQueryHook,
@@ -179,17 +173,10 @@ export const DropdownInput = <
   );
   const dropdownName = `${name}-hidden`;
 
-  const resolvedDefaultValue =
-    filteredData.find(
-      (item) =>
-        item[valueField as keyof typeof item] === defaultValue ||
-        item === defaultValue,
-    ) ?? defaultValue;
-
   return (
     <Controller
       control={control}
-      defaultValue={resolvedDefaultValue}
+      defaultValue={defaultValue}
       name={dropdownName}
       rules={{ required }}
       render={({
@@ -223,17 +210,13 @@ export const DropdownInput = <
                 if (!confirmSelectItem) {
                   onChange(item);
                   onChangeOuter?.(item);
-                  setValue(name, item[valueField as string], {
-                    shouldDirty: true,
-                  });
+                  setValue(name, item[valueField as string]);
                 }
               }}
               onConfirmSelectItem={(item) => {
                 onConfirmSelectItem?.(item);
                 onChange(item);
-                setValue(name, item[valueField as string], {
-                  shouldDirty: true,
-                });
+                setValue(name, item[valueField as string]);
               }}
             />
           </View>

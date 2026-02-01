@@ -64,7 +64,7 @@ const NewBeverageScreen: React.FC = () => {
     }
 
     router.navigate({
-      pathname: '/(tabs)/beverages/[id]',
+      pathname: '/beverages/[id]',
       params: { id: String(id) },
     });
     addSnackBarMessage({ content: 'New beverage created.' });

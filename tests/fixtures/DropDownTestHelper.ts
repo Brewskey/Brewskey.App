@@ -23,6 +23,23 @@ class DropDownTestHelperInternal {
     }
   }
 
+  /** Select option by visible label text (e.g. state name "Texas"). */
+  async selectByLabel(label: string | RegExp) {
+    if (!(await this.modal.isVisible())) {
+      await this.input.click();
+    }
+    const option = this.modal
+      .locator('[data-testid^="option-"]')
+      .filter({ hasText: typeof label === 'string' ? new RegExp(label, 'i') : label })
+      .first();
+    await option.scrollIntoViewIfNeeded();
+    try {
+      await option.click({ timeout: 5000 });
+    } catch {
+      await option.dispatchEvent('click');
+    }
+  }
+
   get input() {
     return this.page.getByTestId(this.dropdownTestId);
   }

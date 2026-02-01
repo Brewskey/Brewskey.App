@@ -34,7 +34,7 @@ const NewLocationScreen: React.FC = () => {
 
     if (mergedProps.returnTo === 'nux-wifi') {
       router.replace({
-        pathname: '/(tabs)/(nux)/wifi',
+        pathname: '/wifi',
         params: { locationId: location.id.toString() },
       });
       return;
@@ -42,7 +42,7 @@ const NewLocationScreen: React.FC = () => {
 
     // Navigate to location details
     router.navigate({
-      pathname: '/(tabs)/locations/[id]',
+      pathname: '/locations/[id]',
       params: { id: location.id.toString() },
     });
   };

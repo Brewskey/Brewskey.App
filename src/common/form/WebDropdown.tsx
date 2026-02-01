@@ -10,10 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 
-import { COLORS } from 'theme';
-
-import type { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
+import { COLORS } from '../../theme';
 
 type DropdownProps = React.ComponentProps<typeof RNEDropdown>;
 
@@ -92,22 +91,6 @@ const styles = StyleSheet.create({
 /** API-compatible with react-native-element-dropdown Dropdown. */
 export type WebDropdownProps = DropdownProps;
 
-/**
- * Wraps renderItem so any hooks inside it (e.g. useGetDeviceById in a custom renderItem)
- * run in this component's scope rather than the parent's. This keeps the parent's hook
- * count stable and avoids "Rendered fewer hooks than expected" when renderItem is only
- * called conditionally (e.g. when selectedItem != null).
- */
-const RenderItemWrapper = <T,>({
-  item,
-  selected,
-  renderItem,
-}: {
-  item: T;
-  selected: boolean;
-  renderItem: (item: T, selected?: boolean) => React.ReactElement | null;
-}) => renderItem(item, selected) ?? null;
-
 const DropdownTrigger = ({
   displayText,
   placeholder,
@@ -141,11 +124,11 @@ const DropdownTrigger = ({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
-      disabled={disabled}
-      onPress={onPress}
       style={triggerStyle}
+      onPress={onPress}
+      disabled={disabled}
       testID={testID}
+      activeOpacity={0.7}
     >
       {selectedContent != null ? (
         <View
@@ -157,19 +140,19 @@ const DropdownTrigger = ({
           {selectedContent}
         </View>
       ) : (
-        <Text numberOfLines={1} style={textStyle}>
+        <Text style={textStyle} numberOfLines={1}>
           {hasSelection ? displayText : (placeholder ?? 'Select item')}
         </Text>
       )}
       <View style={styles.triggerIconContainer}>
         {hasSelection && onClear ? (
           <TouchableOpacity
-            style={styles.clearButton}
-            testID={testID ? `${testID}-clear` : undefined}
             onPress={(e: any) => {
               e.stopPropagation?.();
               onClear?.();
             }}
+            style={styles.clearButton}
+            testID={testID ? `${testID}-clear` : undefined}
           >
             <Text style={styles.clearIcon}>×</Text>
           </TouchableOpacity>
@@ -215,19 +198,15 @@ const DropdownListItem = <T,>({
 
   return (
     <TouchableOpacity
-      activeOpacity={0.7}
+      style={itemStyle}
       onPress={onPress}
       onPressIn={onHoverIn}
       onPressOut={onHoverOut}
-      style={itemStyle}
       testID={`option-${index}`}
+      activeOpacity={0.7}
     >
       {renderItem ? (
-        <RenderItemWrapper<T>
-          item={item}
-          renderItem={renderItem}
-          selected={isSelected}
-        />
+        renderItem(item, isSelected)
       ) : (
         <Text style={styles.listItemText}>{label}</Text>
       )}
@@ -235,9 +214,7 @@ const DropdownListItem = <T,>({
   );
 };
 
-const WebDropdown = <T = unknown,>(
-  props: WebDropdownProps,
-): React.ReactElement => {
+export function WebDropdown<T = any>(props: WebDropdownProps) {
   const {
     data = [],
     labelField,
@@ -271,6 +248,36 @@ const WebDropdown = <T = unknown,>(
     height: 0,
   });
   const triggerRef = React.useRef<View>(null);
+
+  const getItemKey = (item: T, index: number) =>
+    String(
+      (item as Record<string, unknown>)[valueField as string] ??
+        (item as Record<string, unknown>).id ??
+        index,
+    );
+
+  const resolveToItem = React.useCallback(
+    (val: T | string | null | undefined): T | null => {
+      if (val == null) return null;
+      if (
+        valueField &&
+        data.length > 0 &&
+        (typeof val === 'string' || typeof val === 'number')
+      ) {
+        const m = data.find(
+          (i) =>
+            (i as Record<string, unknown>)[valueField as string] === val ||
+            String((i as Record<string, unknown>)[valueField as string]) ===
+              String(val),
+        );
+        return m ?? null;
+      }
+      return val as T;
+    },
+    [valueField, data],
+  );
+
+  const selectedItem = resolveToItem(value);
 
   const measureTrigger = React.useCallback(() => {
     (triggerRef.current as any)?.measureInWindow?.(
@@ -332,13 +339,29 @@ const WebDropdown = <T = unknown,>(
   );
 
   const displayText =
-    value != null ? String(value[labelField as string] ?? '') : '';
+    selectedItem != null
+      ? String(
+          (selectedItem as Record<string, unknown>)[labelField as string] ?? '',
+        )
+      : '';
 
+  console.log('selectedItem', selectedItem);
   const selectedContent =
-    renderItem && value != null ? (
-      <RenderItemWrapper<T> selected item={value} renderItem={renderItem} />
-    ) : undefined;
-  const hasSelection = value != null;
+    renderItem && selectedItem != null
+      ? renderItem(selectedItem, true)
+      : undefined;
+  const hasSelection = selectedItem != null;
+
+  const checkIsSelected = (item: T, index: number) => {
+    if (selectedItem == null) return false;
+    const k = getItemKey(item, index);
+    const sk = getItemKey(selectedItem, -1);
+    return (
+      k === sk ||
+      (item as Record<string, unknown>)[valueField as string] ===
+        (selectedItem as Record<string, unknown>)[valueField as string]
+    );
+  };
 
   const panelStyle = {
     ...styles.dropdownPanel,
@@ -353,70 +376,71 @@ const WebDropdown = <T = unknown,>(
   return (
     <View ref={triggerRef} collapsable={false}>
       <DropdownTrigger
-        disabled={disable}
         displayText={displayText}
+        placeholder={placeholder}
         hasSelection={hasSelection}
         isOpen={isOpen}
-        onClear={hasSelection ? handleClear : undefined}
-        onPress={handleToggle}
-        placeholder={placeholder}
-        selectedContent={selectedContent}
+        disabled={disable}
         testID={testID}
+        onPress={handleToggle}
+        onClear={hasSelection ? handleClear : undefined}
+        selectedContent={selectedContent}
       />
 
       <Modal
+        visible={isOpen}
         transparent
         animationType="none"
         onRequestClose={handleClose}
         testID={testID ? `${testID}-modal` : undefined}
-        visible={isOpen}
       >
-        <Pressable onPress={handleClose} style={styles.modalBackdrop} />
+        <Pressable style={styles.modalBackdrop} onPress={handleClose} />
         <View style={panelStyle}>
           {search ? (
             <TextInput
-              autoFocus
-              onChangeText={handleSearchChange}
-              placeholder={searchPlaceholder ?? 'Search...'}
               style={styles.searchInput}
-              testID={testID ? `${testID}-search` : undefined}
-              value={searchText}
+              placeholder={searchPlaceholder ?? 'Search...'}
               placeholderTextColor={
                 searchPlaceholderTextColor ?? COLORS.textInputPlaceholder
               }
+              value={searchText}
+              onChangeText={handleSearchChange}
+              testID={testID ? `${testID}-search` : undefined}
+              autoFocus
             />
           ) : null}
 
           <ScrollView
-            nestedScrollEnabled
-            keyboardShouldPersistTaps="handled"
             style={{ maxHeight: scrollH }}
+            keyboardShouldPersistTaps="handled"
+            nestedScrollEnabled
             testID={testID ? `${testID}-scroll-view` : undefined}
           >
-            {!isOpen || data.length === 0 ? (
+            {data.length === 0 ? (
               <Text style={styles.emptyText}>No results found</Text>
             ) : (
-              data.map((item, index) => (
-                <DropdownListItem<T>
-                  key={index}
-                  activeColor={activeColor}
-                  index={index}
-                  isHovered={hoveredKey === item[valueField as string]}
-                  isSelected={item === value}
-                  item={item}
-                  labelField={String(labelField)}
-                  onHoverIn={() => setHoveredKey(item[valueField as string])}
-                  onHoverOut={() => setHoveredKey(null)}
-                  onPress={() => handleSelectItem(item)}
-                  renderItem={renderItem}
-                />
-              ))
+              data.map((item, index) => {
+                const itemKey = getItemKey(item, index);
+                return (
+                  <DropdownListItem<T>
+                    key={itemKey}
+                    item={item}
+                    index={index}
+                    isSelected={checkIsSelected(item, index)}
+                    isHovered={hoveredKey === itemKey}
+                    labelField={String(labelField)}
+                    activeColor={activeColor}
+                    renderItem={renderItem}
+                    onPress={() => handleSelectItem(item)}
+                    onHoverIn={() => setHoveredKey(itemKey)}
+                    onHoverOut={() => setHoveredKey(null)}
+                  />
+                );
+              })
             )}
           </ScrollView>
         </View>
       </Modal>
     </View>
   );
-};
-
-export { WebDropdown };
+}

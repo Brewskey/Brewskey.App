@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
 
@@ -29,7 +29,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
   });
 
   const {
-    formState: { isSubmitting, isValid },
+    formState: { isSubmitting },
   } = form;
 
   const validate = (values: ChangePasswordFormFields): boolean => {
@@ -97,10 +97,9 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           testID="input-newPassword"
         />
         <SectionContent paddedVertical>
-          <Button
-            disabled={isSubmitting || !isValid}
-            loading={isSubmitting}
-            onPress={handleSubmitWithError(form, onSubmitForm)}
+          <SubmitButton<ChangePasswordFormFields>
+            allowSubmitWhenValid
+            onSubmit={onSubmitForm}
             testID="button-change-password"
             title="Change password"
           />

@@ -5,7 +5,7 @@ export default function MyFriendsIndex() {
   return (
     <Redirect
       href={{
-        pathname: '/(tabs)/(notifications)/my-friends/myFriendsMain',
+        pathname: '/my-friends/myFriendsMain',
         params: {},
       }}
     />

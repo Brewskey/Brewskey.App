@@ -106,7 +106,7 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
       // PourProcessStore.startPaymentPour();
     } else {
       closeModal();
-      router.navigate({ pathname: '/(tabs)/menu/payments', params: {} });
+      router.navigate({ pathname: '/payments', params: {} });
     }
   }, [hasCreditCardDetails, closeModal, router]);
 

@@ -22,10 +22,10 @@ const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
 
     if (returnTo === 'nux-device') {
       router.replace({
-        pathname: '/(tabs)/(nux)/device',
+        pathname: '/device',
         params: {
           particleId: particleID,
-          ...(props.locationId ? { locationId: props.locationId } : {}),
+          locationId: props.locationId,
         },
       });
       return;
@@ -33,7 +33,7 @@ const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
 
     if (forNewDevice) {
       router.navigate({
-        pathname: '/(tabs)/devices/new',
+        pathname: '/devices/new',
         params: {
           particleId: particleID,
         },
@@ -47,6 +47,7 @@ const WifiSetupScreenContent: React.FC<InjectedProps> = (props) => {
     case WifiSetupSteps.Screen1: {
       return (
         <WifiSetupStep1Screen
+          isForNewDevice={props.forNewDevice}
           onReadyClick={function (): void {
             setValue({ ...value, currentStep: WifiSetupSteps.Screen2 });
           }}

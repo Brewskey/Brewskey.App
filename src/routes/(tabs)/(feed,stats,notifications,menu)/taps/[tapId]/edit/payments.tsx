@@ -4,16 +4,15 @@ import { useMemo } from 'react';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useLocalSearchParams } from 'expo-router';
 import nullthrows from 'nullthrows';
-import { useFormContext } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
 import { withErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorScreen } from 'common/ErrorScreen';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
-import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
@@ -43,21 +42,6 @@ import type {
   PriceVariantMutator,
 } from '@brewskey/js-api';
 
-const validate = {
-  ounces: (value: unknown) => {
-    if (!value || !parseFloat(String(value))) {
-      return 'Ounces is required';
-    }
-    return true;
-  },
-  price: (value: unknown) => {
-    if (!value || !parseFloat(String(value))) {
-      return 'Price is required';
-    }
-    return true;
-  },
-};
-
 const EditTapPaymentsRouteContent: React.FC = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
   const tapIdValue =
@@ -68,9 +52,7 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   // All hooks must be called unconditionally before any early returns
   const form = useFormContext<PriceVariantMutator>();
   const isFormReady = form.formState != null;
-  const {
-    formState: { isSubmitting, isValid, isDirty, errors },
-  } = form;
+  const { formState: { errors, isSubmitting } } = form;
 
   const addSnackBarMessage = useAddSnackBarMessage();
 
@@ -211,17 +193,19 @@ const EditTapPaymentsRouteContent: React.FC = () => {
           />
 
           <FormField<PriceVariantMutator, typeof TextInput>
-            component={TextInput}
-            defaultValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
-            keyboardType="numeric"
-            label="Ounces"
-            name="ounces"
-          />
+              component={TextInput}
+              defaultValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
+              keyboardType="numeric"
+              label="Ounces"
+              name="ounces"
+              required="Ounces is required"
+            />
           <FormField<PriceVariantMutator, typeof TextInput>
             component={TextInput}
             keyboardType="numeric"
             label="Price"
             name="price"
+            required="Price is required"
             defaultValue={(formValue != null
               ? formValue.price / 100
               : 0
@@ -229,30 +213,27 @@ const EditTapPaymentsRouteContent: React.FC = () => {
           />
         </Section>
       </KeyboardAwareScrollView>
-      <Button
-        disabled={!isFormReady || isSubmitting || !isValid || !isDirty}
-        loading={isSubmitting}
-        style={{ marginVertical: 12 }}
-        title={formValue == null ? 'Create Price' : 'Update Price'}
-        onPress={
-          isFormReady
-            ? handleSubmitWithError(form, async (values: PriceVariantMutator) =>
-                onFormSubmit({
-                  ...values,
-                  price: Number.parseInt(
-                    (
-                      (typeof values.price === 'string'
-                        ? parseFloat(values.price)
-                        : typeof values.price === 'number'
-                          ? values.price
-                          : 0) * 100
-                    ).toFixed(0),
-                    10,
-                  ),
-                }),
-              )
-            : undefined
+      <SubmitButton<PriceVariantMutator>
+        allowSubmitWhenValid={formValue == null}
+        disabled={!isFormReady}
+        onSubmit={async (values: PriceVariantMutator) =>
+          onFormSubmit({
+            ...values,
+            price: Number.parseInt(
+              (
+                (typeof values.price === 'string'
+                  ? parseFloat(values.price)
+                  : typeof values.price === 'number'
+                    ? values.price
+                    : 0) * 100
+              ).toFixed(0),
+              10,
+            ),
+          })
         }
+        containerStyle={{ marginVertical: 12 }}
+        testID="submit-button-tap-payments"
+        title={formValue == null ? 'Create Price' : 'Update Price'}
       />
     </Container>
   );
@@ -277,11 +258,13 @@ const EditTapPaymentsRoute: React.FC = () => {
     [tapIdValue, priceVariant],
   );
 
+  const form = useForm<PriceVariantMutator>({
+    defaultValues,
+    mode: 'onChange',
+  });
+
   return (
-    <Form<PriceVariantMutator>
-      defaultValues={defaultValues}
-      validate={validate}
-    >
+    <Form<PriceVariantMutator> form={form}>
       <EditTapPaymentsRouteContent />
     </Form>
   );

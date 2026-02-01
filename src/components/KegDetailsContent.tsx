@@ -141,7 +141,7 @@ const KegPoursList: React.FC<{
 
     onClose?.();
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(pour.owner.id) },
     });
   };

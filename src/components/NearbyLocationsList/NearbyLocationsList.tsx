@@ -45,7 +45,7 @@ export const NearbyLocationsList: React.FC<Props> = ({
 
   const onItemPress = ({ id }: NearbyTap) =>
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/on_tap',
+      pathname: '/taps/[tapId]/on_tap',
       params: { tapId: String(id) },
     });
 

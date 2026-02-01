@@ -3,11 +3,10 @@ import * as React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
-import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { WIFI_SECURITIES } from 'SoftApService';
 
@@ -32,7 +31,6 @@ const SECURITY_OPTIONS = Object.entries(WIFI_SECURITIES).map(
 
 const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
   const form = useFormContext<FormProps>();
-  const { isValid, isDirty, isSubmitting } = form.formState;
   const security = form.watch('security');
 
   const handleSubmit = React.useCallback(
@@ -71,9 +69,10 @@ const HiddenWifiForm: React.FC<Props> = ({ onSubmit }) => {
           secureTextEntry
         />
       )}
-      <Button
-        disabled={!isValid || !isDirty || isSubmitting}
-        onPress={handleSubmitWithError(form, handleSubmit)}
+      <SubmitButton<FormProps>
+        allowSubmitWhenValid
+        onSubmit={handleSubmit}
+        testID="button-connect-hidden-wifi"
         title="Connect"
       />
     </View>

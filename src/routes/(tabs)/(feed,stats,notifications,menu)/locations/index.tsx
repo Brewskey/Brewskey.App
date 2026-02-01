@@ -16,7 +16,7 @@ const LocationsScreen: React.FC = () => (
       title="Locations"
       rightComponent={
         <HeaderNavigationButton
-          href={{ pathname: '/(tabs)/locations/new', params: {} }}
+          href={{ pathname: '/locations/new', params: {} }}
           name="add"
           testID="header-add-button"
         />

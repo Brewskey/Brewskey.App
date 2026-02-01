@@ -10,6 +10,7 @@ import { withErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorScreen } from 'common/ErrorScreen';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { Header } from 'common/Header';
+import { SectionContent } from 'common/SectionContent';
 import { LocationPicker } from 'components/pickers/LocationPicker';
 import {
   useGetLocationById,
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingVertical: 30,
+    paddingHorizontal: 16,
   },
   descriptionText: {
     ...TYPOGRAPHY.heading,
@@ -73,7 +75,7 @@ const NuxLocationScreen: React.FC = () => {
   const handleContinuePress = (formData: FormData) => {
     if (hasNoLocation) {
       router.navigate({
-        pathname: '/(tabs)/(feed,stats,notifications,menu)/locations/new',
+        pathname: '/locations/new',
         params: { returnTo: 'nux-wifi', showBackButton: 'false' },
       });
       return;
@@ -85,58 +87,64 @@ const NuxLocationScreen: React.FC = () => {
 
     if (locationId != null) {
       router.navigate({
-        pathname: '/(tabs)/(nux)/wifi',
+        pathname: '/wifi',
         params: { locationId: String(locationId) },
       });
     }
   };
 
   return (
-    <Container>
-      <Header shouldShowBackButton title="1. Setup location" />
-      <View style={styles.container} testID="nux-location-content">
-        <Icon
-          color={COLORS.textInverse}
-          containerStyle={styles.iconContainer}
-          name="map-marker"
-          size={200}
-          type="material-community"
-        />
-        <Text style={styles.descriptionText} testID="nux-location-description">
-          {hasNoLocation
-            ? 'Okay, the first thing we need to do ' +
-              'is to set up a location for your Brewskey box.'
-            : null}
-          {hasOneLocation
-            ? `You've already set up the location ${
-                selectedLocation && 'name' in selectedLocation
-                  ? selectedLocation.name
-                  : ''
-              }`
-            : null}
-          {hasManyLocations
-            ? 'You already created some locations, you need to choose one ' +
-              'for further setup.'
-            : null}
-        </Text>
-        {hasManyLocations ? (
-          <FormProvider {...form}>
+    <FormProvider {...form}>
+      <Container>
+        <Header shouldShowBackButton title="1. Setup location" />
+        <View style={styles.container} testID="nux-location-content">
+          <Icon
+            color={COLORS.textInverse}
+            containerStyle={styles.iconContainer}
+            name="map-marker"
+            size={200}
+            type="material-community"
+          />
+          <Text
+            style={styles.descriptionText}
+            testID="nux-location-description"
+          >
+            {hasNoLocation
+              ? 'Okay, the first thing we need to do ' +
+                'is to set up a location for your Brewskey box.'
+              : null}
+            {hasOneLocation
+              ? `You've already set up the location ${
+                  selectedLocation && 'name' in selectedLocation
+                    ? selectedLocation.name
+                    : ''
+                }`
+              : null}
+            {hasManyLocations
+              ? 'You already created some locations, you need to choose one ' +
+                'for further setup.'
+              : null}
+          </Text>
+          {hasManyLocations ? (
             <LocationPicker
               defaultValue={selectedLocation}
-              name="location"
+              name="locationId"
               required="Location is required"
               testID="picker-location-nux"
             />
-          </FormProvider>
-        ) : null}
-        <SubmitButton<FormData>
-          disabled={hasManyLocations ? !selectedLocation : false}
-          onSubmit={handleContinuePress}
-          testID="button-next"
-          title="Next"
-        />
-      </View>
-    </Container>
+          ) : null}
+          <SectionContent paddedVertical>
+            <SubmitButton<FormData>
+              allowSubmitWhenValid={hasNoLocation || hasOneLocation}
+              disabled={hasManyLocations ? !selectedLocation : false}
+              onSubmit={handleContinuePress}
+              testID="button-next"
+              title="Next"
+            />
+          </SectionContent>
+        </View>
+      </Container>
+    </FormProvider>
   );
 };
 

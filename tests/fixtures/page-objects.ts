@@ -2,6 +2,7 @@
 /* eslint-disable import-x/no-extraneous-dependencies */
 import { expect, Locator, Page } from '@playwright/test';
 
+import { DropDownTestHelper } from './DropDownTestHelper';
 import { ROUTES } from './routes';
 
 export class LoginPage {
@@ -100,24 +101,10 @@ export class LocationPage {
       await this.page.getByTestId('input-suite').fill(data.suite);
     }
     await this.page.getByTestId('input-city').fill(data.city);
-    // StatePicker: testID convention {name}-dropdown (state-dropdown in LocationForm)
-    const statePicker = this.page.getByTestId('state-dropdown');
-    await statePicker.click();
-    // StatePicker uses default mode (inline), options appear in positioned container
-    // Find state by full label (not abbreviation) to avoid strict mode violations
-    // State list uses full names like "Texas" not "TX", so find by label
-    // Scope to dropdown options to avoid matching other text on page
-    // Options have testID format: option-{index}, but we need to find by label
-    // Use filter to find option containing the state text, scoped to visible dropdown
-    // Playwright's auto-waiting will handle timing
-    const stateOption = this.page
-      .locator('[data-testid^="option-"]')
-      .filter({ hasText: new RegExp(data.state, 'i') })
-      .first();
-    await expect(stateOption).toBeVisible();
-    await stateOption.click();
-    // State picker doesn't require confirmation (doesRequireConfirmation={false})
-    // Form state updates after dropdown closes (WebDropdown ensures dropdown is hidden before updating)
+    // StatePicker: use dropdown fixture (state-dropdown in LocationForm)
+    const dropDownHelper = new DropDownTestHelper(this.page);
+    const stateDd = dropDownHelper.create('state-dropdown');
+    await stateDd.selectByLabel(data.state);
     await this.page.getByTestId('input-zipCode').fill(data.zipCode);
     // Location type is required - fill it if provided, otherwise use default 'Kegerator'
     // LocationTypePicker: testID convention {name}-dropdown (location-type-dropdown in LocationForm)
@@ -166,7 +153,7 @@ export class TapPage {
   constructor(private page: Page) {}
 
   async goto(): Promise<void> {
-    await this.page.goto('/taps');
+    await this.page.goto(ROUTES.TAPS);
   }
 
   getTapsList(): Locator {
@@ -353,11 +340,11 @@ export class NUXPage {
   }
 
   getLocationPicker(): Locator {
-    return this.page.getByTestId('location-dropdown');
+    return this.page.getByTestId('picker-location-nux');
   }
 
   async selectLocation(locationName: string): Promise<void> {
-    const picker = this.page.getByTestId('location-dropdown');
+    const picker = this.page.getByTestId('picker-location-nux');
     await picker.click();
     // Wait for modal to open and select the location by text
     await this.page.getByText(locationName).click();
@@ -484,7 +471,9 @@ export class StatsPage {
   constructor(private page: Page) {}
 
   async goto(): Promise<void> {
-    await this.page.goto('/stats');
+    await this.page.goto(ROUTES.STATS);
+    // Wait for stats screen to render (session and queries)
+    await this.page.getByTestId('header-stats').waitFor({ state: 'visible', timeout: 10000 });
   }
 
   getBadgesSection(): Locator {

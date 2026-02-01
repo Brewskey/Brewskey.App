@@ -13,7 +13,7 @@ export const HeaderBackButton: FC = () => {
     } else {
       // Fallback to home if there's no navigation history
       // This can happen with deep links or when the screen is the first in the stack
-      router.replace({ pathname: '/(tabs)', params: {} });
+      router.replace('/');
     }
   };
 

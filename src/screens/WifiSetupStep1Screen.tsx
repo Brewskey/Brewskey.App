@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { FormProvider, useForm } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Button } from 'common/buttons/Button';
@@ -20,8 +21,10 @@ export const WifiSetupStep1Screen: React.FC<Props> = ({
   onSetupFinish,
   onReadyClick,
 }) => {
-  // Initial purge so multiple setups have zero data
   useClearAllQueryCaches();
+  const particleForm = useForm({
+    defaultValues: { particleIDInput: '' },
+  });
 
   return (
     <KeyboardAwareScrollView
@@ -42,7 +45,9 @@ export const WifiSetupStep1Screen: React.FC<Props> = ({
       />
       {isForNewDevice ? (
         <SectionContent paddedHorizontal paddedVertical>
-          <ParticleIDInput onContinuePress={onSetupFinish} />
+          <FormProvider {...particleForm}>
+            <ParticleIDInput onContinuePress={onSetupFinish} />
+          </FormProvider>
         </SectionContent>
       ) : null}
     </KeyboardAwareScrollView>

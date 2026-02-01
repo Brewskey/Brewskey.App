@@ -2,12 +2,10 @@ import { test, expect } from '../../fixtures/test-fixtures';
 import { mockNewUserState } from '../../fixtures/entity-fixtures';
 
 test('should display WiFi setup instructions', async ({ page, nuxPage }) => {
-  // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoWifiStep();
 
-  await expect(page).toHaveURL(/.*nux.*wifi/i);
-  // WiFi screen has testID - use that instead of text-based locator
+  await expect(page).toHaveURL(/\/wifi/i);
   await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
   await expect(page.getByTestId('nux-wifi-description')).toBeVisible();
 });

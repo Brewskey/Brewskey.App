@@ -20,7 +20,7 @@ const MyBeveragesScreen: React.FC = () => {
         title="Homebrew"
         rightComponent={
           <HeaderNavigationButton
-            href={{ pathname: '/(tabs)/beverages/new', params: {} }}
+            href={{ pathname: '/beverages/new', params: {} }}
             name="add"
             testID="header-add-button"
           />

@@ -54,7 +54,7 @@ const NewFlowSensorScreen = withErrorBoundary(
       } else {
         router.navigate({
           pathname:
-            '/(tabs)/(feed,stats,notifications,menu)/taps/[tapId]/keg/new',
+            '/taps/[tapId]/keg/new',
           params: {
             tapId: String(tapId),
             ...(returnTo ? { returnTo } : {}),
@@ -73,7 +73,7 @@ const NewFlowSensorScreen = withErrorBoundary(
 
     const _onCustomButtonPress = () => {
       router.navigate({
-        pathname: '/(tabs)/(feed,stats,notifications,menu)/flow-sensor/custom',
+        pathname: '/flow-sensor/custom',
         params: {
           tapId,
           ...(returnTo ? { returnTo } : {}),

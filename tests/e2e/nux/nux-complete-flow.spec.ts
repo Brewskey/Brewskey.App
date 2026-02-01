@@ -38,13 +38,13 @@ test('should complete full NUX flow', async ({
   // 2. Click "Manage taps" (toggle ON so Taps menu item appears)
   await settingsPage.toggleManageTaps();
 
-  // 3. Go back to menu and click "Taps" – NUX shows because user has no locations/taps/devices
-  // Use goBack() so in-memory app settings (manageTapsEnabled: true) are preserved
+  // 3. Go back to menu then to taps – NUX shows because user has no locations/taps/devices
   await page.goBack();
-  await expect(page.getByTestId('menu-item-taps')).toBeVisible();
-  await page.getByTestId('menu-item-taps').click();
+  await page.goto(ROUTES.TAPS);
   await expect(page).toHaveURL(/\/taps/i);
-
+  await expect(page.getByTestId('button-see-instructions')).toBeVisible({
+    timeout: 15000,
+  });
   await page.getByTestId('button-see-instructions').click();
 
   // Click through hardware guide slides; re-query button each time to avoid detached element

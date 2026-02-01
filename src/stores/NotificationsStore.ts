@@ -146,7 +146,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
             queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(kegId)],
           });
           router.navigate({
-            pathname: '/(tabs)/taps/[tapId]/on_tap',
+            pathname: '/taps/[tapId]/on_tap',
             params: { tapId: getStringFromEntityID(tapId) },
           });
           break;
@@ -161,7 +161,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
             });
           }
           router.navigate({
-            pathname: '/(tabs)/stats',
+            pathname: '/',
             params: {
               initialPopUpAchievementType: notification.achievementType,
             },
@@ -172,7 +172,7 @@ const useOnPressNotification = (): ((arg1: Notification) => void) => {
           queryClient.invalidateQueries({ queryKey: [FriendKeys.GetMany] });
           queryClient.invalidateQueries({ queryKey: [FriendKeys.GetSingle] });
           router.navigate({
-            pathname: '/(tabs)/notifications/my-friends/myFriendsRequest',
+            pathname: '/my-friends/myFriendsRequest',
             params: {},
           });
           break;

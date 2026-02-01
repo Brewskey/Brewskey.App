@@ -84,7 +84,7 @@ const DevicesList: React.FC<Props> = ({
 
   const handleEditItemPress = ({ id }: Device) => {
     router.navigate({
-      pathname: '/(tabs)/devices/[id]/edit',
+      pathname: '/devices/[id]/edit',
       params: { id: String(id) },
     });
     nullthrows(swipeableListRef.current).resetOpenRow();
@@ -92,7 +92,7 @@ const DevicesList: React.FC<Props> = ({
 
   const handleItemPress = (item: Device): void => {
     router.navigate({
-      pathname: '/(tabs)/devices/[id]',
+      pathname: '/devices/[id]',
       params: { id: String(item.id) },
     });
   };

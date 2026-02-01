@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
 import { validateEmail } from 'utils';
@@ -75,10 +75,9 @@ export const ForgotPasswordForm: React.FC<{
           testID="input-email"
         />
         <SectionContent paddedVertical>
-          <Button
-            disabled={isSubmitting}
-            loading={isSubmitting}
-            onPress={onSubmitButtonPress}
+          <SubmitButton<ResetPasswordFormValues>
+            allowSubmitWhenValid
+            onSubmit={onSubmitHandler}
             testID="button-reset-password"
             title="Request password reset"
           />

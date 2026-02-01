@@ -60,7 +60,7 @@ const MenuScreen = withErrorBoundary(
           title="Brewskey"
           rightComponent={
             <HeaderNavigationButton
-              href={{ pathname: '/(tabs)/(menu)/settings', params: {} }}
+              href={{ pathname: '/settings', params: {} }}
               name="settings"
               testID="header-settings-button"
             />
@@ -79,7 +79,7 @@ const MenuScreen = withErrorBoundary(
                 title="Friends"
                 onPress={() => {
                   router.navigate({
-                    pathname: '/(tabs)/(menu)/my-friends',
+                    pathname: '/my-friends',
                     params: {},
                   });
                 }}
@@ -105,7 +105,7 @@ const MenuScreen = withErrorBoundary(
                     title="Locations"
                     onPress={() => {
                       router.navigate({
-                        pathname: '/(tabs)/(menu)/locations',
+                        pathname: '/locations',
                         params: {},
                       });
                     }}
@@ -118,7 +118,7 @@ const MenuScreen = withErrorBoundary(
                     title="Taps"
                     onPress={() => {
                       router.navigate({
-                        pathname: '/(tabs)/(menu)/taps',
+                        pathname: '/taps',
                         params: {},
                       });
                     }}
@@ -131,7 +131,7 @@ const MenuScreen = withErrorBoundary(
                     title="Brewskey boxes"
                     onPress={() => {
                       router.navigate({
-                        pathname: '/(tabs)/(menu)/devices',
+                        pathname: '/devices',
                         params: {},
                       });
                     }}
@@ -144,7 +144,7 @@ const MenuScreen = withErrorBoundary(
                     title="Homebrew"
                     onPress={() => {
                       router.navigate({
-                        pathname: '/(tabs)/(menu)/beverages',
+                        pathname: '/beverages',
                         params: {},
                       });
                     }}
@@ -160,7 +160,7 @@ const MenuScreen = withErrorBoundary(
                 title="Setup NFC Cards"
                 onPress={() => {
                   router.navigate({
-                    pathname: '/(tabs)/menu/write-nfc',
+                    pathname: '/write-nfc',
                     params: {},
                   });
                 }}
@@ -178,7 +178,7 @@ const MenuScreen = withErrorBoundary(
               title="Help"
               onPress={() => {
                 router.navigate({
-                  pathname: '/(tabs)/(menu)/help',
+                  pathname: '/help',
                   params: {},
                 });
               }}

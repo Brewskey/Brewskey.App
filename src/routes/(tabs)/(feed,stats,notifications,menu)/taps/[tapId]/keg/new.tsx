@@ -39,7 +39,7 @@ const NewKegScreen: React.FC = () => {
 
     if (returnTo === 'nux-finish') {
       router.replace({
-        pathname: '/(tabs)/(nux)/finish',
+        pathname: '/finish',
         params: {
           tapId: tapIdValue.toString(),
         },
@@ -51,7 +51,7 @@ const NewKegScreen: React.FC = () => {
       router.back();
     } else {
       router.navigate({
-        pathname: '/(tabs)/taps/[tapId]/on_tap',
+        pathname: '/taps/[tapId]/on_tap',
         params: { tapId: tapIdValue.toString() },
       });
     }

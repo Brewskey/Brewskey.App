@@ -38,7 +38,7 @@ const Slideout = ({ item }: { item: Beverage }): React.ReactElement => {
   };
   const onEditItemPress = ({ id }: Beverage) => {
     router.navigate({
-      pathname: '/(tabs)/beverages/[id]/edit',
+      pathname: '/beverages/[id]/edit',
       params: { id: String(id) },
     });
   };
@@ -73,7 +73,7 @@ export const BeveragesList: React.FC<Props> = ({
 
   const onItemPress = (item: Beverage): void =>
     router.navigate({
-      pathname: '/(tabs)/beverages/[id]',
+      pathname: '/beverages/[id]',
       params: { id: String(item.id) },
     });
 

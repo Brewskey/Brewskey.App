@@ -3,11 +3,11 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
 import { useLogin, useRegister } from 'hooks/queries/AuthQueries';
@@ -31,7 +31,7 @@ const RegisterForm: React.FC = () => {
   });
 
   const {
-    formState: { isDirty, isSubmitting, isValid },
+    formState: { isSubmitting },
   } = form;
 
   const validate = (values: RegisterFormFields): boolean => {
@@ -128,10 +128,9 @@ const RegisterForm: React.FC = () => {
           testID="input-password"
         />
         <SectionContent paddedVertical>
-          <Button
-            disabled={isSubmitting || !isValid || !isDirty}
-            loading={isSubmitting}
-            onPress={onSubmitButtonPress}
+          <SubmitButton<RegisterFormFields>
+            allowSubmitWhenValid
+            onSubmit={onSubmit}
             testID="register-submit-button"
             title="Register"
           />

@@ -50,7 +50,7 @@ const TapTabsLayout = withErrorBoundary(() => {
               name="edit"
               testID="button-edit-tap"
               href={{
-                pathname: '/(tabs)/taps/[tapId]/edit',
+                pathname: '/taps/[tapId]/edit',
                 params: { tapId: String(tapId) },
               }}
             />

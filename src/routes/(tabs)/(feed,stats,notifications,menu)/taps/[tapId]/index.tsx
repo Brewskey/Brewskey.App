@@ -18,7 +18,7 @@ export default function TapDetailsIndex() {
   return (
     <Redirect
       href={{
-        pathname: '/(tabs)/taps/[tapId]/on_tap',
+        pathname: '/taps/[tapId]/on_tap',
         params: { tapId: String(tapId) },
       }}
     />

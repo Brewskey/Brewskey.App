@@ -28,6 +28,8 @@ interface Props {
     isFocused: boolean,
   ) => void;
   route: NavigationRoute<ParamListBase, string>;
+  /** Optional override for testID (e.g. tab-feed, tab-stats). Defaults to tab-${route.name}. */
+  testID?: string;
 }
 
 export const TabBarButton = (props: Props) => {
@@ -39,7 +41,7 @@ export const TabBarButton = (props: Props) => {
     isFocused,
   } = props;
 
-  const testID = `tab-${props.route.name}`;
+  const testID = props.testID ?? `tab-${props.route.name}`;
 
   return (
     <Icon

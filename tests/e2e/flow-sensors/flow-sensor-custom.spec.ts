@@ -63,11 +63,6 @@ test('should successfully create custom flow sensor', async ({ page }) => {
 
   await page.getByTestId('submit-button-save').click();
 
-  // Form submission completes - verify success via snackbar or form state
-  // Since form doesn't navigate without callback, verify snackbar appears or form resets
-  await expect(
-    page
-      .getByTestId('snackbar-message')
-      .or(page.getByTestId('submit-button-save')),
-  ).toBeVisible();
+  // Form submission navigates to keg/new - verify navigation completed
+  await expect(page).toHaveURL(/\/keg\/new/i, { timeout: 10000 });
 });

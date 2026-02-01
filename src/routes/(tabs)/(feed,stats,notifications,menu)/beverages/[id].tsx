@@ -66,7 +66,7 @@ const BeverageDetailsScreen: React.FC = () => {
             name="edit"
             testID="button-edit-beverage"
             href={{
-              pathname: '/(tabs)/beverages/[id]/edit',
+              pathname: '/beverages/[id]/edit',
               params: { id: beverage.id.toString() },
             }}
           />

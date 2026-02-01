@@ -45,7 +45,7 @@ const NuxNoEntity: React.FC = () => {
   const onGetStartedButtonPress = () => {
     // Navigate to nuxLocation screen with locations count
     router.navigate({
-      pathname: '/(tabs)/(nux)/location',
+      pathname: '/location',
     });
   };
 

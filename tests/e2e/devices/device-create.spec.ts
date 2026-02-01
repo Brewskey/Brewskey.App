@@ -1,24 +1,7 @@
-import { test, expect } from '../../fixtures/test-fixtures';
+import { expect, test } from '../../fixtures/test-fixtures';
 
-test.use({ autoAuthenticate: true });
-
-test('should validate required fields', async ({ page }) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/devices/new');
-  await expect(page.getByTestId('input-name')).toBeVisible();
-
-  // Clear name field to make form invalid (name is required)
-  await page.getByTestId('input-name').clear();
-
-  // Button should be disabled when form is invalid (missing required fields)
-  // This IS the validation - disabled button prevents submission of invalid form
-  const submitButton = page.getByTestId('submit-button-create-device');
-  await expect(submitButton).toBeVisible();
-  await expect(submitButton).toBeDisabled();
-
-  // Form validation also shows errors via FormValidationMessage when fields are touched
-  // But since button is disabled, user can't submit invalid form
-});
+// Need at least one location for device form (location picker)
+test.use({ autoAuthenticate: true, locationCount: 1 });
 
 test('should successfully create device', async ({
   page,

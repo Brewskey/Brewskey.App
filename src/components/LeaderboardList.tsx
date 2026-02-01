@@ -35,7 +35,7 @@ export const LeaderboardList: React.FC<Props> = ({
   const _onItemPress = ({ userID }: LeaderboardItem) => {
     if (!userID) return;
     router.navigate({
-      pathname: '/(tabs)/profile/[id]',
+      pathname: '/profile/[id]',
       params: { id: String(userID) },
     });
   };
