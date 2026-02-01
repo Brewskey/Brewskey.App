@@ -179,4 +179,38 @@ test.describe('WiFi Setup', () => {
     await page.getByTestId('button-expand-particle-id').click();
     await expect(page.getByTestId('input-particleId')).toBeVisible();
   });
+
+  test('forNewDevice: step 4 Continue redirects to devices/new with particleId when no returnTo', async ({
+    page,
+  }) => {
+    await page.goto('/devices/new/wifi-setup?forNewDevice=true&id=new');
+    await page.getByTestId('button-expand-particle-id').click();
+    await page.getByTestId('input-particleId').fill('particle_redirect_test');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByTestId('button-wifi-setup-continue').click();
+
+    // Should navigate to devices/new with particleId param (no returnTo)
+    await expect(page).toHaveURL(/\/devices\/new/i);
+    await expect(page.getByTestId('input-name')).toBeVisible();
+  });
+
+  test('returnTo=nux-device: step 4 Continue redirects to nux/device with particleId', async ({
+    page,
+  }) => {
+    const { mockLocationWithTaps } =
+      await import('../../fixtures/entity-fixtures');
+    const { location } = await mockLocationWithTaps(page, 0);
+
+    await page.goto(
+      `/devices/new/wifi-setup?forNewDevice=true&returnTo=nux-device&locationId=${location.id}`,
+    );
+    await page.getByTestId('button-expand-particle-id').click();
+    await page.getByTestId('input-particleId').fill('particle_nux_device');
+    await page.getByRole('button', { name: 'Continue' }).click();
+    await page.getByTestId('button-wifi-setup-continue').click();
+
+    // Should redirect to nux/device (returnTo=nux-device)
+    await expect(page).toHaveURL(/\/device/i);
+    await expect(page.getByTestId('nux-device-content')).toBeVisible();
+  });
 });

@@ -14,7 +14,7 @@ test('should show delete all button', async ({ page }) => {
 
 test('should show delete all modal', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/notifications');
+  await page.goto(ROUTES.NOTIFICATIONS);
 
   // Delete button has testID - use that instead of role-based locator
   const deleteButton = page.getByTestId('button-delete-all-notifications');
@@ -55,7 +55,7 @@ test('should allow canceling delete', async ({ page }) => {
 
 test('should allow confirming delete all', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/notifications');
+  await page.goto(ROUTES.NOTIFICATIONS);
 
   // Delete button has testID - use that instead of role-based locator
   const deleteButton = page.getByTestId('button-delete-all-notifications');

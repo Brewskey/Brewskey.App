@@ -2,6 +2,8 @@
 /* eslint-disable import-x/no-extraneous-dependencies */
 import { expect, Locator, Page } from '@playwright/test';
 
+import { ROUTES } from './routes';
+
 export class LoginPage {
   constructor(private page: Page) {}
 
@@ -272,8 +274,7 @@ export class SettingsPage {
   constructor(private page: Page) {}
 
   async goto(): Promise<void> {
-    // Route path: /(tabs)/menu/settings.tsx
-    await this.page.goto('/menu/settings');
+    await this.page.goto(ROUTES.MENU_SETTINGS);
   }
 
   getChangePasswordForm(): Locator {
@@ -320,20 +321,19 @@ export class NUXPage {
   async gotoLocationStep(locationsCount?: number): Promise<void> {
     const countParam =
       locationsCount !== undefined ? `?locationsCount=${locationsCount}` : '';
-    // Expo Router internal path for (tabs)/nux/location
-    await this.page.goto(`/(tabs)/locations/nux/location${countParam}`);
+    await this.page.goto(`${ROUTES.NUX_LOCATION}${countParam}`);
   }
 
   async gotoWifiStep(): Promise<void> {
-    await this.page.goto('/(tabs)/nux/wifi');
+    await this.page.goto(ROUTES.NUX_WIFI);
   }
 
   async gotoDeviceStep(): Promise<void> {
-    await this.page.goto('/(tabs)/devices/nux/device');
+    await this.page.goto(ROUTES.NUX_DEVICE);
   }
 
   async gotoTapStep(): Promise<void> {
-    await this.page.goto('/(tabs)/taps/nux/tap');
+    await this.page.goto(ROUTES.NUX_TAP);
   }
 
   getContinueButton(): Locator {
@@ -412,7 +412,7 @@ export class MenuPage {
   constructor(private page: Page) {}
 
   async goto(): Promise<void> {
-    await this.page.goto('/menu');
+    await this.page.goto(ROUTES.MENU);
   }
 
   getFriendsButton(): Locator {

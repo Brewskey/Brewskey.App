@@ -97,3 +97,25 @@ test('should successfully create keg', async ({ page, dropDown }) => {
     'New keg added',
   );
 });
+
+test('should redirect to nux/finish when returnTo=nux-finish after create', async ({
+  page,
+  dropDown,
+}) => {
+  const { tap } = await mockTapWithKeg(page);
+
+  await page.goto(
+    `/(tabs)/taps/${tap.id}/keg/new?tapId=${tap.id}&returnTo=nux-finish`,
+  );
+  await expect(page.getByTestId('keg-form')).toBeVisible();
+
+  const beveragePicker = dropDown.create('beverage-dropdown');
+  await beveragePicker.select(0);
+  const kegTypeDd = dropDown.create('keg-type-dropdown');
+  await kegTypeDd.select(0);
+  await page.getByTestId('submit-button-create-keg').click();
+
+  // Should redirect to nux/finish with tapId (returnTo=nux-finish)
+  await expect(page).toHaveURL(/\/finish/i);
+  await expect(page.getByTestId('button-finish')).toBeVisible();
+});

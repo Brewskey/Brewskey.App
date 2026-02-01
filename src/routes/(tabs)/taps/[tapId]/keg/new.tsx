@@ -14,9 +14,9 @@ import type { EntityID, KegMutator } from '@brewskey/js-api';
 
 const NewKegScreen: React.FC = () => {
   const router = useRouter();
-  const { tapId, onTapSetupFinish } = useLocalSearchParams<{
+  const { tapId, returnTo } = useLocalSearchParams<{
     tapId: string;
-    onTapSetupFinish?: string;
+    returnTo?: string;
   }>();
   const tapIdValue =
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
@@ -37,11 +37,7 @@ const NewKegScreen: React.FC = () => {
     await createKeg.mutateAsync(values);
     addSnackBarMessage({ content: 'New keg added' });
 
-    // If onTapSetupFinish is provided (from NUX flow), navigate to nuxFinish instead of normal navigation
-    // In NUX flow, onTapSetupFinish indicates we should navigate to the finish screen
-    if (onTapSetupFinish) {
-      // Navigate to nuxFinish screen - this completes the NUX flow
-      // The finish screen will handle the final navigation to tap details
+    if (returnTo === 'nux-finish') {
       router.replace({
         pathname: '/(tabs)/(nux)/finish',
         params: {

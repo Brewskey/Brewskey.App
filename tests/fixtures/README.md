@@ -2,6 +2,23 @@
 
 This directory contains Playwright test fixtures with dependency injection for the Brewskey app tests.
 
+## Routes
+
+Use Expo Router deep link paths from `routes.ts` so tests match the app routing:
+
+- **Tab screens**: `/(menu)`, `/(feed)`, `/(stats)`, `/(notifications)` – use group names in parentheses
+- **Menu sub-routes**: `/(menu)/settings`, `/(menu)/my-friends`, `/(menu)/help`, etc.
+- **Shared routes**: `/locations`, `/taps`, `/devices`, `/beverages` – same path from any tab
+- **Nux**: `/(nux)/location`, `/(nux)/wifi`, etc.
+
+```typescript
+import { ROUTES } from '../fixtures/routes';
+
+test('menu screen', async ({ page }) => {
+  await page.goto(ROUTES.MENU);
+});
+```
+
 ## Overview
 
 The test fixtures automatically handle:

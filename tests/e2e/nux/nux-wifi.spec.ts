@@ -12,16 +12,18 @@ test('should display WiFi setup instructions', async ({ page, nuxPage }) => {
   await expect(page.getByTestId('nux-wifi-description')).toBeVisible();
 });
 
-test('should navigate to WiFi setup screen', async ({ page, nuxPage }) => {
-  // Set up explicit data: new user
+test('should navigate to WiFi setup screen when Next is clicked', async ({
+  page,
+  nuxPage,
+}) => {
   await mockNewUserState(page);
   await nuxPage.gotoWifiStep();
-
-  // The NUX WiFi screen only has a "Next" button, not a setup button
-  // The navigation to WiFi setup happens after clicking Next
-  // For now, just verify the screen loads correctly
   await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
-  await expect(nuxPage.getContinueButton()).toBeVisible();
+
+  await nuxPage.getContinueButton().click();
+
+  // Next should navigate to wifi-setup (devices/new/wifi-setup)
+  await expect(page).toHaveURL(/\/wifi-setup/i);
 });
 
 test('should have continue button', async ({ page, nuxPage }) => {

@@ -52,8 +52,7 @@ test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
 
   // Navigate to new tap screen with deviceId parameter
   // NewTapScreen gets organizationId from the device, so we only need deviceId
-  const url = `/(tabs)/taps/new?deviceId=${device.id}`;
-  await page.goto(url);
+  await page.goto(`/taps/new?deviceId=${device.id}`);
 
   // Wait for the form to load - TapForm queries organization by ID from device
   // The form container has testID="tap-form" when organization is loaded

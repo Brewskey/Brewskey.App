@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
 import { BadgeContainer } from 'components/MainTabBar/BadgeContainer';
@@ -54,18 +53,10 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({
   state,
   navigation,
 }) => {
-  const { content, formContext } = useMainTabBarSlot();
+  const { hideTabBar } = useMainTabBarSlot();
 
-  // When content is set (e.g., Location form), render content instead of tab bar.
-  // Slot content (e.g. submit button) needs FormProvider when it uses useFormContext.
-  if (content !== null) {
-    const slot =
-      formContext != null ? (
-        <FormProvider {...formContext}>{content}</FormProvider>
-      ) : (
-        content
-      );
-    return <View style={styles.container}>{slot}</View>;
+  if (hideTabBar) {
+    return null;
   }
 
   const _onTabPress = (

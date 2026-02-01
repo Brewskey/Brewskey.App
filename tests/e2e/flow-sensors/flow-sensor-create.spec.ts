@@ -1,5 +1,6 @@
-import { test, expect } from '../../fixtures/test-fixtures';
+/* eslint-disable no-await-in-loop */
 import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
@@ -39,6 +40,7 @@ test('should allow setting gallon calibration', async ({ page }) => {
 
 test('should successfully create flow sensor with default sensor type', async ({
   page,
+  dropDown,
 }) => {
   // Set up explicit data: one tap
   const { tap } = await mockTapWithKeg(page);
@@ -77,16 +79,24 @@ test('should successfully create flow sensor with default sensor type', async ({
 
   await page.getByTestId('submit-button-save').click();
 
-  // Form submission completes - verify success via navigation or snackbar
-  await expect(
-    page
-      .getByTestId('snackbar-message')
-      .or(page.getByTestId('submit-button-save')),
-  ).toBeVisible();
+  // Flow sensor creation navigates to keg/new - fill and submit create keg form
+  await expect(page).toHaveURL(/\/keg\/new/i);
+  await expect(page.getByTestId('keg-form')).toBeVisible();
+  const beveragePicker = dropDown.create('beverage-dropdown');
+  await beveragePicker.select(0);
+  const kegTypeDd = dropDown.create('keg-type-dropdown');
+  await kegTypeDd.select(0);
+  await page.getByTestId('submit-button-create-keg').click();
+
+  // Keg creation completes - verify we navigated away from keg form
+  await expect(page.getByTestId('keg-form')).not.toBeVisible({
+    timeout: 10000,
+  });
 });
 
 test('should successfully create flow sensor with custom sensor', async ({
   page,
+  dropDown,
 }) => {
   // Set up explicit data: one tap
   const { tap } = await mockTapWithKeg(page);
@@ -116,10 +126,17 @@ test('should successfully create flow sensor with custom sensor', async ({
 
   await page.getByTestId('submit-button-save').click();
 
-  // Form submission completes - verify success via navigation or snackbar
-  await expect(
-    page
-      .getByTestId('snackbar-message')
-      .or(page.getByTestId('submit-button-save')),
-  ).toBeVisible();
+  // Flow sensor creation navigates to keg/new - fill and submit create keg form
+  await expect(page).toHaveURL(/\/keg\/new/i);
+  await expect(page.getByTestId('keg-form')).toBeVisible();
+  const beveragePicker = dropDown.create('beverage-dropdown');
+  await beveragePicker.select(0);
+  const kegTypeDd = dropDown.create('keg-type-dropdown');
+  await kegTypeDd.select(0);
+  await page.getByTestId('submit-button-create-keg').click();
+
+  // Keg creation completes - verify we navigated away from keg form
+  await expect(page.getByTestId('keg-form')).not.toBeVisible({
+    timeout: 10000,
+  });
 });

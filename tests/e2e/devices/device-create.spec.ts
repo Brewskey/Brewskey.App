@@ -61,3 +61,30 @@ test('should successfully create device', async ({
     'New Brewskey box created',
   );
 });
+
+test('should redirect to nux/tap when returnTo=nux-tap after create', async ({
+  page,
+  devicePage,
+  dropDown,
+}) => {
+  const { mockLocationWithTaps } =
+    await import('../../fixtures/entity-fixtures');
+  const { location } = await mockLocationWithTaps(page, 0);
+
+  await page.goto('/devices/new?returnTo=nux-tap&showBackButton=false');
+  await expect(page.getByTestId('input-name')).toBeVisible();
+
+  await devicePage.fillDeviceForm({
+    name: 'Nux Redirect Device',
+    particleId: 'particle_nux_redirect',
+  });
+  const locationPicker = dropDown.create('location-dropdown');
+  await locationPicker.select(0);
+  const submitButton = page.getByTestId('submit-button-create-device');
+  await expect(submitButton).toBeEnabled({ timeout: 15000 });
+  await submitButton.click();
+
+  // Should redirect to nux/tap with deviceId (returnTo=nux-tap)
+  await expect(page).toHaveURL(/\/tap/i);
+  await expect(page.getByTestId('nux-tap-content')).toBeVisible();
+});

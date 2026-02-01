@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { ROUTES } from '../../fixtures/routes';
 
 test.use({ autoAuthenticate: true });
 
 test('should display help screen', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/help.tsx
-  await page.goto('/menu/help');
+  await page.goto(ROUTES.MENU_HELP);
 
   await expect(page).toHaveURL(/.*help/i);
   // Help content has testIDs - use those instead of text-based locators
@@ -15,8 +15,7 @@ test('should display help screen', async ({ page }) => {
 
 test('should show FAQ link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/help.tsx
-  await page.goto('/menu/help');
+  await page.goto(ROUTES.MENU_HELP);
 
   // FAQ link has testID - use that instead of text-based locator
   await expect(page.getByTestId('help-link-faq')).toBeVisible();
@@ -25,8 +24,7 @@ test('should show FAQ link', async ({ page }) => {
 
 test('should show Facebook Messenger link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/help.tsx
-  await page.goto('/menu/help');
+  await page.goto(ROUTES.MENU_HELP);
 
   // Messenger link has testID - use that instead of text-based locator
   await expect(page.getByTestId('help-link-messenger')).toBeVisible();
@@ -35,8 +33,7 @@ test('should show Facebook Messenger link', async ({ page }) => {
 
 test('should show email link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/help.tsx
-  await page.goto('/menu/help');
+  await page.goto(ROUTES.MENU_HELP);
 
   // Email link has testID - use that instead of text-based locator
   await expect(page.getByTestId('help-link-email')).toBeVisible();

@@ -3,14 +3,6 @@ import * as React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 
-import { BeverageImagePicker } from 'components/BeverageImagePicker';
-import { AvailabilityPicker } from 'components/pickers/AvailabilityPicker';
-import { BeverageTypePicker } from 'components/pickers/BeverageTypePicker';
-import { GlassPicker } from 'components/pickers/GlassPicker';
-import { ServingTemperaturePicker } from 'components/pickers/ServingTemperaturePicker';
-import { SrmPicker } from 'components/pickers/SrmPicker';
-import { StylePicker } from 'components/pickers/StylePicker';
-import { YearPicker } from 'components/pickers/YearPicker';
 import { CheckBoxInput } from 'common/form/CheckBoxInput';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
@@ -19,6 +11,14 @@ import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
+import { BeverageImagePicker } from 'components/BeverageImagePicker';
+import { AvailabilityPicker } from 'components/pickers/AvailabilityPicker';
+import { BeverageTypePicker } from 'components/pickers/BeverageTypePicker';
+import { GlassPicker } from 'components/pickers/GlassPicker';
+import { ServingTemperaturePicker } from 'components/pickers/ServingTemperaturePicker';
+import { SrmPicker } from 'components/pickers/SrmPicker';
+import { StylePicker } from 'components/pickers/StylePicker';
+import { YearPicker } from 'components/pickers/YearPicker';
 
 import type { Beverage, BeverageMutator } from '@brewskey/js-api';
 

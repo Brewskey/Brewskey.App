@@ -22,6 +22,7 @@ This document serves as the foundational guide for all AI assistants and develop
 **CRITICAL**: Always use `testID` props for components when creating locators in tests. Never use text-based locators (`has-text`, `text=`, etc.) or DOM-specific attributes unless absolutely necessary.
 
 #### ✅ DO:
+
 ```typescript
 // In component
 <Button testID="submit-button" onPress={handleSubmit} title="Submit" />
@@ -31,6 +32,7 @@ await page.getByTestId('submit-button').click();
 ```
 
 #### ❌ DON'T:
+
 ```typescript
 // In test - AVOID text-based locators
 await page.locator('button:has-text("Submit")').click();
@@ -38,11 +40,13 @@ await page.locator('text=Submit').click();
 ```
 
 #### When Text-Based Locators Are Acceptable:
+
 - **Only** for dynamic content that cannot be predicted (e.g., user-generated content, API responses)
 - **Only** when no testID exists and cannot be added (legacy code)
 - **Always** prefer adding a testID to the component first
 
 #### TestID Naming Conventions:
+
 - Use kebab-case: `submit-button`, `login-form`, `tap-details-header`
 - Be descriptive: `submit-button-create-location` not just `submit-button`
 - Include context: `input-name` not just `name`
@@ -63,6 +67,7 @@ await page.locator('text=Submit').click();
 **CRITICAL**: Rely on Playwright's built-in auto-waiting and timeouts. Do not add explicit waits for page loads or network idle.
 
 #### ✅ DO:
+
 ```typescript
 // Playwright automatically waits for elements to be actionable
 await page.getByTestId('submit-button').click();
@@ -74,6 +79,7 @@ await page.waitForResponse(/api\/taps\/\d+/); // Wait for specific API call if n
 ```
 
 #### ❌ DON'T:
+
 ```typescript
 // AVOID explicit waits for page loads or network idle
 await page.waitForLoadState('networkidle');
@@ -82,6 +88,7 @@ await page.waitForTimeout(1000);
 ```
 
 #### Principles:
+
 - **Trust Playwright's auto-waiting**: All actions (click, fill, etc.) automatically wait for elements to be ready
 - **Use assertions**: `expect().toBeVisible()` automatically waits for the element
 - **Rely on built-in timeouts**: Playwright's default timeouts handle most cases
@@ -101,11 +108,12 @@ await page.waitForTimeout(1000);
 **CRITICAL**: All e2e tests must set up mocked data so they actually test functionality. Tests should not use conditional logic based on test data visibility.
 
 #### ✅ DO:
+
 ```typescript
 // Set up mocked data with specific permissions/state
 const { tap } = await mockTapWithKeg(page, {
   permissions: ['EditTap'], // Explicitly set permissions
-  hasFlowSensor: true,      // Explicitly set state
+  hasFlowSensor: true, // Explicitly set state
 });
 
 await page.goto(`/tap/${tap.id}`);
@@ -113,10 +121,13 @@ await expect(page.getByTestId('button-edit-tap')).toBeVisible();
 ```
 
 #### ❌ DON'T:
+
 ```typescript
 // AVOID conditional logic based on test data
 const editButton = page.getByTestId('button-edit-tap');
-const isEditButtonVisible = await editButton.isVisible({ timeout: 2000 }).catch(() => false);
+const isEditButtonVisible = await editButton
+  .isVisible({ timeout: 2000 })
+  .catch(() => false);
 if (isEditButtonVisible) {
   // Test behavior...
 }
@@ -128,29 +139,33 @@ if (await statsTab.isVisible({ timeout: 2000 }).catch(() => false)) {
 ```
 
 #### Principles:
+
 - **Set up data explicitly**: Mock the exact state needed for the test (permissions, data presence, etc.)
 - **Assert expected behavior**: Based on the mocked data, assert what should be true
 - **No conditional logic**: Don't branch test logic based on what's visible - control visibility through mocked data
 - **Predictable tests**: Each test should have a single, predictable outcome based on its setup
 
 #### Example: Testing with and without permissions
+
 ```typescript
 // Test WITH permissions - set up data to have permissions
 test('should show edit button when user has permissions', async ({ page }) => {
   const { tap } = await mockTapWithKeg(page, {
     permissions: ['EditTap'],
   });
-  
+
   await page.goto(`/tap/${tap.id}`);
   await expect(page.getByTestId('button-edit-tap')).toBeVisible();
 });
 
 // Test WITHOUT permissions - set up data to NOT have permissions
-test('should hide edit button when user lacks permissions', async ({ page }) => {
+test('should hide edit button when user lacks permissions', async ({
+  page,
+}) => {
   const { tap } = await mockTapWithKeg(page, {
     permissions: [], // Explicitly no permissions
   });
-  
+
   await page.goto(`/tap/${tap.id}`);
   await expect(page.getByTestId('button-edit-tap')).not.toBeVisible();
 });
@@ -175,6 +190,7 @@ test('should hide edit button when user lacks permissions', async ({ page }) => 
 - Document complex props with JSDoc comments
 
 ### Component Example:
+
 ```typescript
 interface ButtonProps {
   title: string;
@@ -240,6 +256,7 @@ export const Button: React.FC<ButtonProps> = ({ title, onPress, testID, type = '
 - Use mutations for create/update/delete operations
 
 ### Data Fetching Pattern:
+
 ```typescript
 // In hooks/queries/TapQueries.ts
 export const useTap = (tapId: number) => {
@@ -390,6 +407,7 @@ When reviewing or writing code, ensure:
 ## Updates to This Document
 
 This constitution should evolve with the project. When updating:
+
 1. Document the reason for the change
 2. Update relevant code examples
 3. Notify the team of significant changes

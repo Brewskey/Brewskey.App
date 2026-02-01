@@ -54,6 +54,7 @@ These screen components are defined but never imported or used:
 ## Recommendation
 
 Before deleting:
+
 1. Check if any of these screens are referenced in routing configuration (expo-router might auto-discover them)
 2. Verify that `isClassBasedComponent` isn't needed for future use
 3. Confirm that Flow types aren't being used by any tooling

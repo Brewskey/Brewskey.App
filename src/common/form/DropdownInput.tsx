@@ -179,10 +179,17 @@ export const DropdownInput = <
   );
   const dropdownName = `${name}-hidden`;
 
+  const resolvedDefaultValue =
+    filteredData.find(
+      (item) =>
+        item[valueField as keyof typeof item] === defaultValue ||
+        item === defaultValue,
+    ) ?? defaultValue;
+
   return (
     <Controller
       control={control}
-      defaultValue={defaultValue}
+      defaultValue={resolvedDefaultValue}
       name={dropdownName}
       rules={{ required }}
       render={({

@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
-import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
+import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
 import { CheckBoxInput } from 'common/form/CheckBoxInput';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { Form } from 'common/form/Form';
@@ -14,10 +14,7 @@ import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { SectionContent } from 'common/SectionContent';
-import {
-  useGetDeviceById,
-  useGetDevices,
-} from 'hooks/queries/DeviceQueries';
+import { useGetDeviceById, useGetDevices } from 'hooks/queries/DeviceQueries';
 import { useGetOrganizationById } from 'hooks/queries/OrganizationQueries';
 import { COLORS } from 'theme';
 
@@ -68,6 +65,7 @@ export const TapForm: React.FC<Props> = ({
   onSubmit,
   submitButtonLabel,
 }) => {
+  useHideMainTabBar();
   const form = useForm<TapMutator>({
     defaultValues: tap,
   });
@@ -140,18 +138,16 @@ export const TapForm: React.FC<Props> = ({
             name="disableBadges"
             testID="input-disableBadges"
           />
-          <MainTabBarFill>
-            <SectionContent paddedVertical>
-              <SubmitButton
-                disabled={!isFormReady}
-                onSubmit={onSubmit}
-                title={submitButtonLabel}
-                testID={
-                  tap ? 'submit-button-edit-tap' : 'submit-button-create-tap'
-                }
-              />
-            </SectionContent>
-          </MainTabBarFill>
+          <SectionContent paddedVertical>
+            <SubmitButton
+              disabled={!isFormReady}
+              onSubmit={onSubmit}
+              title={submitButtonLabel}
+              testID={
+                tap ? 'submit-button-edit-tap' : 'submit-button-create-tap'
+              }
+            />
+          </SectionContent>
         </View>
       )}
     </Form>

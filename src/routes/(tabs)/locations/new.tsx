@@ -15,22 +15,13 @@ import type { LocationMutator } from '@brewskey/js-api';
 
 const NewLocationScreen: React.FC = () => {
   const router = useRouter();
-  const { onLocationCreated, showBackButton } = useLocalSearchParams<{
-    onLocationCreated?: string;
+  const { returnTo, showBackButton } = useLocalSearchParams<{
+    returnTo?: string;
     showBackButton?: string;
   }>();
 
   const mergedProps = {
-    onLocationCreated: onLocationCreated
-      ? (() => {
-          try {
-            return JSON.parse(onLocationCreated);
-          } catch (error) {
-            console.error('Failed to parse onLocationCreated:', error);
-            return undefined;
-          }
-        })()
-      : undefined,
+    returnTo,
     showBackButton: showBackButton !== 'false',
   };
 
@@ -41,8 +32,11 @@ const NewLocationScreen: React.FC = () => {
     const location = await createMutation.mutateAsync(values);
     addSnackBarMessage({ content: 'New location created' });
 
-    if (mergedProps.onLocationCreated) {
-      await mergedProps.onLocationCreated(location);
+    if (mergedProps.returnTo === 'nux-wifi') {
+      router.replace({
+        pathname: '/(tabs)/(nux)/wifi',
+        params: { locationId: location.id.toString() },
+      });
       return;
     }
 

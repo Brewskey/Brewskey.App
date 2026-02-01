@@ -15,7 +15,7 @@ test('should validate required fields', async ({ page, locationPage }) => {
 
   // LocationForm uses custom validation - validates required fields: name, street, city, state, zipCode, locationType
   // The form's SubmitButton component is disabled when !isValid || !isDirty || isSubmitting || !isFocused
-  // Due to MainTabBarFill rendering issues in tests, we verify validation by:
+  // We verify validation by:
   // 1. Verifying required fields are present
   // 2. Verifying form structure enforces validation
 
@@ -92,4 +92,30 @@ test('should handle API errors', async ({ page, locationPage }) => {
   await expect(page.getByTestId('snackbar-message')).toHaveText(
     'New location created',
   );
+});
+
+test('should redirect to nux/wifi when returnTo=nux-wifi after create', async ({
+  page,
+  locationPage,
+}) => {
+  // Visit locations/new with returnTo param (e.g. from NUX flow)
+  await locationPage.goto();
+  await page.goto('/locations/new?returnTo=nux-wifi&showBackButton=false');
+
+  await expect(page.getByTestId('location-form')).toBeVisible({
+    timeout: 10000,
+  });
+  await locationPage.fillLocationForm({
+    name: 'Redirect Test Location',
+    address: '456 Redirect St',
+    city: 'Redirect City',
+    state: 'Texas',
+    zipCode: '54321',
+    locationType: 'Kegerator',
+  });
+  await locationPage.submitForm();
+
+  // Should redirect to nux/wifi with locationId (returnTo=nux-wifi)
+  await expect(page).toHaveURL(/\/wifi/i);
+  await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
 });

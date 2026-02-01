@@ -1,10 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { ROUTES } from '../../fixtures/routes';
 
 test.use({ autoAuthenticate: true });
 
 test('should display my profile screen', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-profile');
+  await page.goto(ROUTES.MENU_MY_PROFILE);
 
   await expect(page).toHaveURL(/.*my.*profile/i);
   // My profile screen has testID - use that instead of text-based locator
@@ -14,7 +15,7 @@ test('should display my profile screen', async ({ page }) => {
 
 test('should show avatar picker', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-profile');
+  await page.goto(ROUTES.MENU_MY_PROFILE);
 
   // Avatar picker - use testID if available, otherwise role-based or type-based locator
   const avatarPicker = page
@@ -29,7 +30,7 @@ test('should show avatar picker', async ({ page }) => {
 
 test('should show change password form', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-profile');
+  await page.goto(ROUTES.MENU_MY_PROFILE);
 
   // Password form inputs should be visible
   const passwordInput = page

@@ -73,18 +73,33 @@ test('should enable continue button when location selected', async ({
   await expect(nuxPage.getContinueButton()).toBeEnabled();
 });
 
-test('should navigate to location creation if needed', async ({
+test('should navigate to locations/new when Next is clicked with no locations', async ({
   page,
   nuxPage,
 }) => {
-  // Set up explicit data: new user with no locations
   await mockNewUserState(page);
   await nuxPage.gotoLocationStep();
-
-  // The NUX location screen doesn't have a create button when no locations exist
-  // It just shows a message. The navigation to location creation happens elsewhere
-  // For now, just verify the screen loads correctly and shows the no-location message
   await expect(page.getByTestId('nux-location-content')).toBeVisible();
-  await expect(page.getByTestId('nux-location-description')).toBeVisible();
-  await expect(nuxPage.getContinueButton()).toBeVisible();
+
+  await nuxPage.getContinueButton().click();
+
+  // With no locations, Next navigates to locations/new with returnTo=nux-wifi
+  await expect(page).toHaveURL(/\/locations\/new/i);
+});
+
+test('should navigate to nux/wifi when Next is clicked with location selected', async ({
+  page,
+  nuxPage,
+}) => {
+  await mockNewUserState(page);
+  const { location } = await mockLocationWithTaps(page, 0);
+  await mockLocationWithTaps(page, 0);
+  await nuxPage.gotoLocationStep(2);
+  await expect(nuxPage.getLocationPicker()).toBeVisible();
+  await nuxPage.selectLocation(location.name);
+
+  await nuxPage.getContinueButton().click();
+
+  await expect(page).toHaveURL(/\/wifi/i);
+  await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
 });

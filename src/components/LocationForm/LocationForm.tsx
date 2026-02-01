@@ -13,7 +13,7 @@ import {
   useGetOrganizations,
   useGetSquareLocations,
 } from 'hooks/queries/OrganizationQueries';
-import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
+import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
 import { LocationTypePicker } from 'components/pickers/LocationTypePicker';
 import { OrganizationPicker } from 'components/pickers/OrganizationPicker';
 import { SquareLocationPicker } from 'components/pickers/SquareLocationPicker';
@@ -67,6 +67,7 @@ const LocationForm: React.FC<Props> = ({
   submitButtonLabel,
   onSubmit,
 }) => {
+  useHideMainTabBar();
   const form = useForm<FormProps>({
     defaultValues: {
       id: location.id,
@@ -214,19 +215,17 @@ const LocationForm: React.FC<Props> = ({
             squareLocations={squareLocations}
           />
         )}
-        <MainTabBarFill>
-          <SubmitButton<FormProps>
-            allowSubmitWhenValid={!location?.id}
-            onSubmit={onSubmitForm}
-            style={{ marginVertical: 12 }}
-            title={submitButtonLabel}
-            testID={
-              location?.id
-                ? 'submit-button-edit-location'
-                : 'submit-button-create-location'
-            }
-          />
-        </MainTabBarFill>
+        <SubmitButton<FormProps>
+          allowSubmitWhenValid={!location?.id}
+          onSubmit={onSubmitForm}
+          style={{ marginVertical: 12 }}
+          title={submitButtonLabel}
+          testID={
+            location?.id
+              ? 'submit-button-edit-location'
+              : 'submit-button-create-location'
+          }
+        />
       </View>
     </Form>
   );

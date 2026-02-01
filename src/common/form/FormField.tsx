@@ -75,7 +75,7 @@ export const FormField = <
         {required ? ' *' : ''}
       </FormLabel>
     ) : null}
-    <Component {...props} />
+    <Component {...props} required={required} />
     {description != null &&
       (typeof description === 'string' ? (
         <Text style={descriptionStyle ?? styles.description}>

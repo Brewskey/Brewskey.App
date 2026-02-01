@@ -3,11 +3,7 @@ import * as React from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { BrightnessSliderField } from 'components/DeviceForm/BrightnessSliderField';
-import { DeviceNFCStatusPicker } from 'components/DeviceForm/DeviceNFCStatusPicker';
-import { DeviceTimeOpenPicker } from 'components/DeviceForm/DeviceTimeOpenPicker';
-import { MainTabBarFill } from 'components/MainTabBar/MainTabBarSlot';
-import { LocationPicker } from 'components/pickers/LocationPicker';
+import { DESCRIPTION_BY_DEVICE_STATE } from '@/constants';
 import { CheckBoxInput } from 'common/form/CheckBoxInput';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { Form } from 'common/form/Form';
@@ -15,7 +11,11 @@ import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
-import { DESCRIPTION_BY_DEVICE_STATE } from '@/constants';
+import { BrightnessSliderField } from 'components/DeviceForm/BrightnessSliderField';
+import { DeviceNFCStatusPicker } from 'components/DeviceForm/DeviceNFCStatusPicker';
+import { DeviceTimeOpenPicker } from 'components/DeviceForm/DeviceTimeOpenPicker';
+import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
+import { LocationPicker } from 'components/pickers/LocationPicker';
 
 import type { Device, DeviceMutator } from '@brewskey/js-api';
 
@@ -58,6 +58,7 @@ const DeviceForm: React.FC<Props> = ({
   submitButtonLabel,
   onSubmit,
 }) => {
+  useHideMainTabBar();
   const form = useForm<FormProps>({
     defaultValues: {
       id: device.id,
@@ -232,27 +233,25 @@ const DeviceForm: React.FC<Props> = ({
             />
           </React.Fragment>
         )}
-        <MainTabBarFill>
-          <SubmitButton<FormProps>
-            allowSubmitWhenValid={!device.id}
-            onSubmit={async (formData) =>
-              onSubmitForm({
-                ...formData,
-                timeForValveOpen: Math.max(
-                  Number(formData.timeForValveOpen ?? '0') || 0,
-                  5,
-                ),
-              })
-            }
-            style={{ marginVertical: 12 }}
-            title={submitButtonLabel}
-            testID={
-              device.id
-                ? 'submit-button-edit-device'
-                : 'submit-button-create-device'
-            }
-          />
-        </MainTabBarFill>
+        <SubmitButton<FormProps>
+          allowSubmitWhenValid={!device.id}
+          onSubmit={async (formData) =>
+            onSubmitForm({
+              ...formData,
+              timeForValveOpen: Math.max(
+                Number(formData.timeForValveOpen ?? '0') || 0,
+                5,
+              ),
+            })
+          }
+          style={{ marginVertical: 12 }}
+          title={submitButtonLabel}
+          testID={
+            device.id
+              ? 'submit-button-edit-device'
+              : 'submit-button-create-device'
+          }
+        />
       </View>
     </Form>
   );

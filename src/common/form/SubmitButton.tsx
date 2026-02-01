@@ -1,4 +1,5 @@
 import { Button } from '@rneui/themed';
+import nullthrows from 'nullthrows';
 import { useFormContext } from 'react-hook-form';
 
 import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
@@ -19,14 +20,10 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
   disabled?: boolean;
   allowSubmitWhenValid?: boolean;
 }) => {
-  const form = useFormContext<TFieldValues>();
-
-  if (!form) {
-    console.warn(
-      'Form context not found. This component must be used within a Form component.',
-    );
-    return null;
-  }
+  const form = nullthrows(
+    useFormContext<TFieldValues>(),
+    'Form context not found. This component must be used within a Form component.',
+  );
 
   const {
     formState: { isSubmitting, isValid, isDirty },

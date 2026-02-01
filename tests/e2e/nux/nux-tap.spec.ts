@@ -21,16 +21,36 @@ test('should show tap setup instructions', async ({ page, nuxPage }) => {
   await expect(page.getByTestId('nux-tap-description')).toBeVisible();
 });
 
-test('should navigate to tap creation', async ({ page, nuxPage }) => {
-  // Set up explicit data: new user
+test('should navigate to devices list when Next is clicked without deviceId', async ({
+  page,
+  nuxPage,
+}) => {
   await mockNewUserState(page);
   await nuxPage.gotoTapStep();
-
-  // The NUX tap screen only has a "Next" button, not a create button
-  // The navigation to tap creation happens after clicking Next
-  // For now, just verify the screen loads correctly
   await expect(page.getByTestId('nux-tap-content')).toBeVisible();
-  await expect(nuxPage.getContinueButton()).toBeVisible();
+
+  await nuxPage.getContinueButton().click();
+
+  // Without deviceId, Next navigates to devices list
+  await expect(page).toHaveURL(/\/devices/i);
+});
+
+test('should navigate to taps/new when Next is clicked with deviceId', async ({
+  page,
+  nuxPage,
+}) => {
+  const { mockDeviceWithTaps } =
+    await import('../../fixtures/entity-fixtures');
+  await mockNewUserState(page);
+  const { device } = await mockDeviceWithTaps(page, 0);
+
+  await page.goto(`/(nux)/tap?deviceId=${device.id}`);
+  await expect(page.getByTestId('nux-tap-content')).toBeVisible();
+
+  await nuxPage.getContinueButton().click();
+
+  // With deviceId, Next navigates to taps/new
+  await expect(page).toHaveURL(/\/taps\/new/i);
 });
 
 test('should have continue button', async ({ page, nuxPage }) => {

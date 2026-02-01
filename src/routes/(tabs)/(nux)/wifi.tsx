@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Icon } from '@rneui/themed';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
@@ -31,15 +31,22 @@ const styles = StyleSheet.create({
 });
 
 const NuxWifiScreen: React.FC = () => {
-  const { onContinuePress } = useLocalSearchParams<{
-    onContinuePress?: string;
+  const router = useRouter();
+  const { locationId } = useLocalSearchParams<{
+    locationId?: string;
   }>();
 
   const handlePress = () => {
-    if (onContinuePress) {
-      const callback = JSON.parse(onContinuePress);
-      callback();
-    }
+    router.navigate({
+      pathname:
+        '/(tabs)/(feed,stats,notifications,menu)/devices/[id]/wifi-setup',
+      params: {
+        id: 'new',
+        forNewDevice: 'true',
+        returnTo: 'nux-device',
+        ...(locationId ? { locationId } : {}),
+      },
+    });
   };
 
   return (

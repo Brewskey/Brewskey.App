@@ -1,5 +1,5 @@
-import { test, expect } from '../../fixtures/test-fixtures';
 import { setupSrmData } from '../../fixtures/entity-fixtures';
+import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 

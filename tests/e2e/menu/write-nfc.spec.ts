@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { ROUTES } from '../../fixtures/routes';
 
 test.use({ autoAuthenticate: true });
 
 test('should display NFC setup screen', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/write-nfc.tsx
-  await page.goto('/menu/write-nfc');
+  await page.goto(ROUTES.MENU_WRITE_NFC);
 
   await expect(page).toHaveURL(/.*nfc/i);
   // NFC screen has testID - use that instead of text-based locator
@@ -15,8 +15,7 @@ test('should display NFC setup screen', async ({ page }) => {
 
 test('should show NFC setup instructions', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/write-nfc.tsx
-  await page.goto('/menu/write-nfc');
+  await page.goto(ROUTES.MENU_WRITE_NFC);
 
   // Instructions text has testID - use that instead of text-based locator
   await expect(page.getByTestId('nfc-instructions-section')).toBeVisible();
@@ -25,8 +24,7 @@ test('should show NFC setup instructions', async ({ page }) => {
 
 test('should show supported cards link', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Route path: /(tabs)/menu/write-nfc.tsx
-  await page.goto('/menu/write-nfc');
+  await page.goto(ROUTES.MENU_WRITE_NFC);
 
   // Supported cards link has testID - use that instead of text-based locator
   await expect(page.getByTestId('nfc-supported-cards-link')).toBeVisible();

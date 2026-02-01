@@ -1,10 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
+import { ROUTES } from '../../fixtures/routes';
 
 test.use({ autoAuthenticate: true });
 
 test('should allow sending friend request', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-friends');
+  await page.goto(ROUTES.MENU_MY_FRIENDS);
 
   // Add friend button should be visible - use testID
   const addButton = page.getByTestId('button-add-friend');
@@ -21,7 +22,7 @@ test('should allow sending friend request', async ({ page }) => {
 
 test('should show pending friend requests', async ({ page }) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  await page.goto('/menu/my-friends/myFriendsRequest');
+  await page.goto(ROUTES.MENU_MY_FRIENDS_REQUEST);
 
   // FriendRequestsList component always renders the List with testID="friend-requests-list"
   // The list is visible even when empty (shows "No requests" message)
@@ -31,7 +32,7 @@ test('should show pending friend requests', async ({ page }) => {
 test('should allow accepting friend requests', async ({ page }) => {
   // Set up explicit data: authenticated user with pending friend requests
   // Note: This would require mocking friend requests in the store
-  await page.goto('/menu/my-friends/myFriendsRequest');
+  await page.goto(ROUTES.MENU_MY_FRIENDS_REQUEST);
 
   // FriendRequestsList component always renders the List with testID="friend-requests-list"
   // The list is visible even when empty

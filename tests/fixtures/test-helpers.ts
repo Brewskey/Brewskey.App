@@ -1,17 +1,20 @@
+/* eslint-disable no-restricted-syntax */
 /**
  * Reusable test helpers for common patterns
  * These helpers follow the constitution: use testID, explicit data setup, no conditional logic
  */
 
-import { Page, expect } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
+
 import { mockStore } from './api-mocks';
 import { createMockPermission } from './test-data';
+
 import type {
   Account,
-  Tap,
-  Location,
   Device,
+  Location,
   Organization,
+  Tap,
 } from '@brewskey/js-api';
 
 /**
@@ -141,6 +144,44 @@ export async function setupDevicePermissions(
   }
 }
 
+/** URL path segment per entity type (Expo Router shared routes) */
+const DETAIL_PATH: Record<
+  'location' | 'tap' | 'device' | 'beverage' | 'keg',
+  string
+> = {
+  location: 'locations',
+  tap: 'taps',
+  device: 'devices',
+  beverage: 'beverages',
+  keg: 'taps', // keg detail is under taps
+};
+
+/** URL path segment for create (flow-sensor is singular in routes) */
+const CREATE_PATH: Record<
+  'location' | 'tap' | 'device' | 'beverage' | 'keg' | 'flow-sensor',
+  string
+> = {
+  location: 'locations',
+  tap: 'taps',
+  device: 'devices',
+  beverage: 'beverages',
+  keg: 'kegs', // keg create is taps/[tapId]/keg/new – use navigate via UI for keg
+  'flow-sensor': 'flow-sensor',
+};
+
+/** URL path segment for edit (flow-sensor is singular) */
+const EDIT_PATH: Record<
+  'location' | 'tap' | 'device' | 'beverage' | 'keg' | 'flow-sensor',
+  string
+> = {
+  location: 'locations',
+  tap: 'taps',
+  device: 'devices',
+  beverage: 'beverages',
+  keg: 'kegs',
+  'flow-sensor': 'flow-sensor',
+};
+
 /**
  * Navigate to a detail page and wait for it to load
  */
@@ -150,7 +191,8 @@ export async function navigateToDetailPage(
   id: number,
   headerTestId: string,
 ): Promise<void> {
-  await page.goto(`/${entityType}s/${id}`);
+  const segment = DETAIL_PATH[entityType];
+  await page.goto(`/${segment}/${id}`);
   await expect(page.getByTestId(headerTestId)).toBeVisible();
 }
 
@@ -168,7 +210,8 @@ export async function navigateToCreatePage(
     | 'flow-sensor',
   inputTestId: string,
 ): Promise<void> {
-  await page.goto(`/${entityType}s/new`);
+  const segment = CREATE_PATH[entityType];
+  await page.goto(`/${segment}/new`);
   await expect(page.getByTestId(inputTestId)).toBeVisible();
 }
 
@@ -187,6 +230,7 @@ export async function navigateToEditPage(
   id: number,
   inputTestId: string,
 ): Promise<void> {
-  await page.goto(`/${entityType}s/${id}/edit`);
+  const segment = EDIT_PATH[entityType];
+  await page.goto(`/${segment}/${id}/edit`);
   await expect(page.getByTestId(inputTestId)).toBeVisible();
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
@@ -30,15 +30,22 @@ const styles = StyleSheet.create({
 });
 
 const NuxDeviceScreen: React.FC = () => {
-  const { onContinuePress } = useLocalSearchParams<{
-    onContinuePress?: string;
+  const router = useRouter();
+  const { locationId, particleId } = useLocalSearchParams<{
+    locationId?: string;
+    particleId?: string;
   }>();
 
   const handlePress = () => {
-    if (onContinuePress) {
-      const callback = JSON.parse(onContinuePress);
-      callback();
-    }
+    router.navigate({
+      pathname: '/(tabs)/(feed,stats,notifications,menu)/devices/new',
+      params: {
+        particleId,
+        locationId: locationId ? String(locationId) : undefined,
+        returnTo: 'nux-tap',
+        showBackButton: 'false',
+      },
+    });
   };
 
   return (

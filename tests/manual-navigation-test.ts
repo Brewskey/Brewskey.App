@@ -6,6 +6,8 @@
 
 import { chromium, Browser, Page } from 'playwright';
 
+import { ROUTES } from './fixtures/routes';
+
 const APP_URL = 'http://localhost:8081';
 const USERNAME = 'test';
 const PASSWORD = 'password';
@@ -348,20 +350,20 @@ async function navigateToSettings(page: Page) {
   try {
     console.log('\n=== Navigating to Settings ===\n');
 
-    // Try direct navigation first
+    // Try direct navigation first (Expo Router: /(menu)/settings)
     console.log('Navigating directly to settings...');
-    await page.goto(`${APP_URL}/menu/settings`);
+    await page.goto(`${APP_URL}${ROUTES.MENU_SETTINGS}`);
 
     // Check if we're on settings page
     const currentUrl = page.url();
-    if (currentUrl.includes('/settings')) {
+    if (currentUrl.includes('settings')) {
       console.log('Successfully navigated to settings');
       return true;
     }
 
     // If direct navigation didn't work, try via menu
     console.log('Direct navigation failed, trying via menu...');
-    await page.goto(`${APP_URL}/menu`);
+    await page.goto(`${APP_URL}${ROUTES.MENU}`);
 
     // Try to find and click settings button
     try {
@@ -663,7 +665,7 @@ async function testDynamicRoutes(page: Page) {
 
     // Try pours detail (from stats page)
     console.log('\nTesting pour detail routes...');
-    await page.goto(`${APP_URL}/stats`);
+    await page.goto(`${APP_URL}${ROUTES.STATS}`);
     await page.waitForTimeout(2000);
 
     const pourItems = await page.locator('[data-testid^="pour-item-"]').all();
@@ -697,18 +699,18 @@ async function testNavigationFlow(page: Page) {
   console.log('\n=== Testing Navigation Flow ===\n');
 
   try {
-    // Test menu navigation
+    // Test menu navigation (Expo Router: /(menu) for menu tab)
     console.log('Testing menu navigation...');
-    await page.goto(`${APP_URL}/menu`);
+    await page.goto(`${APP_URL}${ROUTES.MENU}`);
     await page.waitForTimeout(2000);
 
     const menuItems = [
-      { testId: 'menu-item-friends', route: '/menu/my-friends' },
-      { testId: 'menu-item-locations', route: '/locations' },
-      { testId: 'menu-item-taps', route: '/taps' },
-      { testId: 'menu-item-devices', route: '/devices' },
-      { testId: 'menu-item-beverages', route: '/beverages' },
-      { testId: 'menu-item-help', route: '/menu/help' },
+      { testId: 'menu-item-friends', route: ROUTES.MENU_MY_FRIENDS },
+      { testId: 'menu-item-locations', route: ROUTES.LOCATIONS },
+      { testId: 'menu-item-taps', route: ROUTES.TAPS },
+      { testId: 'menu-item-devices', route: ROUTES.DEVICES },
+      { testId: 'menu-item-beverages', route: ROUTES.BEVERAGES },
+      { testId: 'menu-item-help', route: ROUTES.MENU_HELP },
     ];
 
     for (const item of menuItems) {
@@ -734,7 +736,7 @@ async function testNavigationFlow(page: Page) {
           }
 
           // Go back to menu
-          await page.goto(`${APP_URL}/menu`);
+          await page.goto(`${APP_URL}${ROUTES.MENU}`);
           await page.waitForTimeout(1000);
         }
       } catch (e) {
@@ -744,7 +746,7 @@ async function testNavigationFlow(page: Page) {
 
     // Test header navigation buttons
     console.log('\nTesting header navigation...');
-    await page.goto(`${APP_URL}/menu`);
+    await page.goto(`${APP_URL}${ROUTES.MENU}`);
     await page.waitForTimeout(2000);
 
     try {
@@ -884,16 +886,16 @@ async function verifyPageRenders(
 async function navigateApp(page: Page) {
   console.log('\n=== Navigating and Verifying Routes ===\n');
 
-  // Main tab routes
+  // Main tab routes (Expo Router: use /(group) for tabs)
   const mainRoutes = [
     '/',
-    '/taps',
-    '/locations',
-    '/devices',
-    '/beverages',
-    '/menu',
-    '/stats',
-    '/notifications',
+    ROUTES.TAPS,
+    ROUTES.LOCATIONS,
+    ROUTES.DEVICES,
+    ROUTES.BEVERAGES,
+    ROUTES.MENU,
+    ROUTES.STATS,
+    ROUTES.NOTIFICATIONS,
   ];
 
   for (const route of mainRoutes) {
@@ -902,13 +904,13 @@ async function navigateApp(page: Page) {
     await page.waitForTimeout(1000); // Brief pause between routes
   }
 
-  // Menu sub-routes
+  // Menu sub-routes (Expo Router: /(menu)/...)
   const menuRoutes = [
-    '/menu/help',
-    '/menu/settings',
-    '/menu/my-profile',
-    '/menu/payments',
-    '/menu/write-nfc',
+    ROUTES.MENU_HELP,
+    ROUTES.MENU_SETTINGS,
+    ROUTES.MENU_MY_PROFILE,
+    ROUTES.MENU_PAYMENTS,
+    ROUTES.MENU_WRITE_NFC,
   ];
 
   for (const route of menuRoutes) {

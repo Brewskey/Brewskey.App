@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Icon } from '@rneui/themed';
+import { useRouter } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -12,6 +13,7 @@ import { Header } from 'common/Header';
 import { LocationPicker } from 'components/pickers/LocationPicker';
 import {
   useGetLocationById,
+  useGetLocations,
   useGetLocationsCount,
 } from 'hooks/queries/LocationQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
@@ -46,16 +48,14 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props {
-  onContinuePress: (formData: FormData) => void;
-}
-
 interface FormData {
   locationId: EntityID;
 }
 
-const NuxLocationScreen: React.FC<Props> = ({ onContinuePress }) => {
+const NuxLocationScreen: React.FC = () => {
+  const router = useRouter();
   const { data: locationsCount } = useGetLocationsCount();
+  const { data: locationsData } = useGetLocations({ take: 1 });
 
   const form = useForm<FormData>();
 
@@ -63,9 +63,33 @@ const NuxLocationScreen: React.FC<Props> = ({ onContinuePress }) => {
   const selectedLocationId = form.watch('locationId');
   const { data: selectedLocation } = useGetLocationById(selectedLocationId);
 
+  const singleLocation =
+    locationsData?.pages?.[0]?.[0] ?? selectedLocation ?? null;
+
   const hasNoLocation = locationsCount === 0;
   const hasOneLocation = locationsCount === 1;
   const hasManyLocations = locationsCount != null && locationsCount > 1;
+
+  const handleContinuePress = (formData: FormData) => {
+    if (hasNoLocation) {
+      router.navigate({
+        pathname: '/(tabs)/(feed,stats,notifications,menu)/locations/new',
+        params: { returnTo: 'nux-wifi', showBackButton: 'false' },
+      });
+      return;
+    }
+
+    const locationId = hasOneLocation
+      ? singleLocation?.id
+      : (formData.locationId ?? selectedLocationId ?? selectedLocation?.id);
+
+    if (locationId != null) {
+      router.navigate({
+        pathname: '/(tabs)/(nux)/wifi',
+        params: { locationId: String(locationId) },
+      });
+    }
+  };
 
   return (
     <Container>
@@ -107,7 +131,7 @@ const NuxLocationScreen: React.FC<Props> = ({ onContinuePress }) => {
         ) : null}
         <SubmitButton<FormData>
           disabled={hasManyLocations ? !selectedLocation : false}
-          onSubmit={onContinuePress}
+          onSubmit={handleContinuePress}
           testID="button-next"
           title="Next"
         />

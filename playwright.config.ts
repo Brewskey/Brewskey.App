@@ -14,7 +14,7 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/results.json' }],
     ...(process.env.CI ? [] : [['list'] as ReporterDescription]),
   ],
-  
+
   use: {
     baseURL: 'http://localhost:8081',
     trace: 'on-first-retry',
