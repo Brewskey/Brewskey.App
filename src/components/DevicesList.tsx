@@ -5,13 +5,13 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 
-import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListItem } from 'common/ListItem';
 import { LoadingListFooter } from 'common/LoadingListFooter';
 import { QuickActions } from 'common/QuickActions';
 import { SwipeableList } from 'common/SwipeableList';
 import { SwipeableRow } from 'common/SwipeableRow';
+import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeleteDevice, useGetDevices } from 'hooks/queries/DeviceQueries';
 

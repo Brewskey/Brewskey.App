@@ -9,7 +9,7 @@ import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 import { DeleteModal } from 'components/modals/DeleteModal';
 
 export default function NotificationsIndex() {
-  const [isFocused, setIsFocused] = useState(false);
+  const [, setIsFocused] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   useFocusEffect(

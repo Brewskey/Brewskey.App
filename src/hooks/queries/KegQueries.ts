@@ -111,7 +111,7 @@ export const useUpdateKeg = (): UseMutationResult<Keg, Error, KegMutator> => {
   return useMutation({
     mutationFn: async (mutator) =>
       KegDAO.put(nullthrows(mutator.id, 'keg ID was not defined'), mutator),
-    onSuccess: async (keg) => {
+    onSuccess: async (_keg) => {
       // Invalidate all keg queries - this will match all queries that start with these keys
       // Using refetchType: 'active' ensures active queries refetch immediately
       await queryClient.invalidateQueries({

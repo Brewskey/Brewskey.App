@@ -5,10 +5,10 @@ import { Card } from '@rneui/themed';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
 import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { BeverageModal } from 'components/modals/BeverageModal';
 import { useAuthSession } from 'hooks/context/AuthContext';
 import { useGetBeverages } from 'hooks/queries/BeverageQueries';
 import { useGetPoursByBeverageIds } from 'hooks/queries/PourQueries';
-import { BeverageModal } from 'components/modals/BeverageModal';
 
 import type { Beverage, EntityID } from '@brewskey/js-api';
 import type { InfiniteData } from '@tanstack/react-query';

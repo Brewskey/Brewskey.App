@@ -3,15 +3,15 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { FLOW_SENSOR_ITEMS } from 'components/FlowSensorForm/flowSensorItems';
-import { FlowSensorSwiperField } from 'components/FlowSensorForm/FlowSensorSwiperField';
-import { GallonSliderField } from 'components/FlowSensorForm/GallonSliderField';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
+import { FLOW_SENSOR_ITEMS } from 'components/FlowSensorForm/flowSensorItems';
+import { FlowSensorSwiperField } from 'components/FlowSensorForm/FlowSensorSwiperField';
+import { GallonSliderField } from 'components/FlowSensorForm/GallonSliderField';
 
 import type {
   EntityID,

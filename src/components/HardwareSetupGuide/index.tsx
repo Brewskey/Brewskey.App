@@ -4,8 +4,8 @@ import nullthrows from 'nullthrows';
 import { StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { SETUP_STEPS } from 'components/HardwareSetupGuide/setupSteps';
 import { Button } from 'common/buttons/Button';
+import { SETUP_STEPS } from 'components/HardwareSetupGuide/setupSteps';
 import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({

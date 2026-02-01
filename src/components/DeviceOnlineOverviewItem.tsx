@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
 import { OverviewItem2 } from 'common/OverviewItem2';
+import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
 import { useGetParticleAttributes } from 'hooks/queries/CloudDeviceQueries';
 
 import type { EntityID } from '@brewskey/js-api';

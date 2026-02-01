@@ -5,12 +5,12 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { View } from 'react-native';
 
-import { TapListItem } from 'components/TapListItem';
 import { ListSectionHeader } from 'common/ListSectionHeader';
 import { LoadingListFooter } from 'common/LoadingListFooter';
 import { QuickActions } from 'common/QuickActions';
 import { SwipeableList } from 'common/SwipeableList';
 import { SwipeableRow } from 'common/SwipeableRow';
+import { TapListItem } from 'components/TapListItem';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeleteTap, useGetTaps } from 'hooks/queries/TapQueries';
 

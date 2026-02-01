@@ -5,17 +5,17 @@ import nullthrows from 'nullthrows';
 import { useForm } from 'react-hook-form';
 import { View } from 'react-native';
 
-import { KegLevelSliderField } from 'components/KegForm/KegLevelSliderField';
+import { KEG_NAME_BY_KEG_TYPE } from '@/constants';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { SectionContent } from 'common/SectionContent';
-import { KEG_NAME_BY_KEG_TYPE } from '@/constants';
+import { KegLevelSliderField } from 'components/KegForm/KegLevelSliderField';
+import { BeveragePicker } from 'components/pickers/BeveragePicker';
 import { COLORS } from 'theme';
 import { calculateKegLevel } from 'utils';
-import { BeveragePicker } from 'components/pickers/BeveragePicker';
 
 import type {
   Beverage,

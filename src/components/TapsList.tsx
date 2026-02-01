@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 
-import { DeviceTapListEmpty } from 'components/DeviceTapListEmpty';
-import { TapListItem } from 'components/TapListItem';
 import { LoadingListFooter } from 'common/LoadingListFooter';
 import { QuickActions } from 'common/QuickActions';
 import { SwipeableList } from 'common/SwipeableList';
 import { SwipeableRow } from 'common/SwipeableRow';
+import { DeviceTapListEmpty } from 'components/DeviceTapListEmpty';
+import { TapListItem } from 'components/TapListItem';
 import { useDeleteTap, useGetTaps } from 'hooks/queries/TapQueries';
 
 import type { QueryOptions, Tap } from '@brewskey/js-api';

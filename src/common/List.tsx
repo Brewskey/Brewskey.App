@@ -72,7 +72,7 @@ type Props<TEntity> = ListProps<TEntity> & {
 const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
   const {
     bounceFirstRowOnMount,
-    innerRef,
+    innerRef: _innerRef,
     onRefresh,
     ListEmptyComponent,
     ListFooterComponent,

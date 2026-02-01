@@ -198,7 +198,7 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
             isNFCEnabled: isSupported, // iOS doesn't have separate enabled check
           }));
         }
-      } catch (_) {
+      } catch {
         setState((prev) => ({
           ...prev,
           isNFCSupported: false,

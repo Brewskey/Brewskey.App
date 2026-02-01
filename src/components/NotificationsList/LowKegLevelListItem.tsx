@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 
 import type { Props as NotificationListItemProps } from 'components/NotificationsList/NotificationListItem';
 import type { LowKegLevelNotification } from 'stores/NotificationTypes';

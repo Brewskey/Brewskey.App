@@ -6,7 +6,6 @@ import { View } from 'react-native';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
-import { handleSubmitWithError } from 'common/form/handleSubmitWithError';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { SectionContent } from 'common/SectionContent';
@@ -57,8 +56,6 @@ export const ForgotPasswordForm: React.FC<{
       await onSubmit(values);
     }
   };
-
-  const onSubmitButtonPress = handleSubmitWithError(form, onSubmitHandler);
 
   return (
     <Form form={form}>

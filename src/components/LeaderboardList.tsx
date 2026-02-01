@@ -2,18 +2,18 @@ import * as React from 'react';
 
 import { useRouter } from 'expo-router';
 
-import { PintCounter } from 'components/PintCounter';
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { List } from 'common/List';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListItem } from 'common/ListItem';
 import { LoadingListFooter } from 'common/LoadingListFooter';
+import { PintCounter } from 'components/PintCounter';
 import { useGetTapLeaderboard } from 'hooks/queries/TapQueries';
 
 import type { EntityID, LeaderboardItem } from '@brewskey/js-api';
 
-import type { LeaderboardDurationValue } from 'components/LeaderboardDurationPicker';
 import type { ListComponentTypes } from 'common/List';
+import type { LeaderboardDurationValue } from 'components/LeaderboardDurationPicker';
 
 interface Props {
   duration: LeaderboardDurationValue;

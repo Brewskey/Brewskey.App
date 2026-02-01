@@ -42,12 +42,15 @@ Notifications.setNotificationHandler({
   }),
 });
 
-function handleRegistrationError(errorMessage: string) {
+function handleRegistrationError(errorMessage: string): never {
+  /* eslint-disable-next-line no-alert -- intentional user feedback for permission errors */
   alert(errorMessage);
   throw new Error(errorMessage);
 }
 
-async function registerForPushNotificationsAsync() {
+async function registerForPushNotificationsAsync(): Promise<
+  string | undefined
+> {
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {
       name: 'default',
@@ -69,14 +72,14 @@ async function registerForPushNotificationsAsync() {
       handleRegistrationError(
         'Permission not granted to get push token for push notification!',
       );
-      return;
+      return undefined;
     }
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
     if (!projectId) {
       handleRegistrationError('Project ID not found');
-      return;
+      return undefined;
     }
     try {
       const pushTokenString = (
@@ -84,16 +87,20 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
+      // eslint-disable-next-line no-console -- push token for debugging registration
       console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);
+      return undefined;
     }
   } else {
     handleRegistrationError('Must use physical device for push notifications');
   }
+  return undefined;
 }
 
+/* eslint-disable-next-line unused-imports/no-unused-vars -- reserved for future use; must be named use* for hooks */
 const useNotifications = () => {
   const [_expoPushToken, setExpoPushToken] = useState('');
   const [_notification, setNotification] = useState<
@@ -118,6 +125,7 @@ const useNotifications = () => {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
+        // eslint-disable-next-line no-console -- notification response for debugging
         console.log(response);
       });
 
@@ -133,6 +141,8 @@ const useNotifications = () => {
   }, []);
 };
 
+// Unused but kept for API; hooks must be named "use*"
+// eslint-disable-next-line unused-imports/no-unused-vars -- reserved for future use
 const useOnPressNotification = (): ((arg1: Notification) => void) => {
   const router = useRouter();
   const { data: authResponse } = useAuthSession();
@@ -375,7 +385,7 @@ class NotificationsStore {
     //   );
     // }
 
-    const notificationEntries = notifications
+    const _notificationEntries = notifications
       ? notifications.map(
           (notification: Notification): [string, Notification] => [
             notification.id,
@@ -388,7 +398,7 @@ class NotificationsStore {
       StorageKeys.NotificationsDisabledTaps,
     );
 
-    const disabledTapsIDsEntries = disabledTapIDs
+    const _disabledTapsIDsEntries = disabledTapIDs
       ? disabledTapIDs.map((tapID: EntityID): [EntityID, true] => [tapID, true])
       : [];
 
@@ -445,30 +455,32 @@ class NotificationsStore {
     // ignore empty callbackNotification call when open the app
     // from main icon when the app is in background currently
 
+    // eslint-disable-next-line no-console -- raw notification for debugging
     console.log(rawNotification);
 
-    let parsedNotification = null;
+    let parsedNotification: Record<string, unknown> | null = null;
     if (Platform.OS === 'android') {
       parsedNotification = rawNotification.custom_notification
         ? JSON.parse(rawNotification.custom_notification)
-        : rawNotification.data;
+        : (rawNotification.data ?? null);
     } else {
+      let alertValue: string | Record<string, unknown> | undefined =
+        rawNotification.alert;
       if (
-        typeof rawNotification.alert === 'string' ||
-        (rawNotification.alert != null &&
-          rawNotification.alert instanceof String)
+        typeof alertValue === 'string' ||
+        (alertValue != null && alertValue instanceof String)
       ) {
-        rawNotification.alert = {
+        alertValue = {
           date: new Date(),
           id: Date.now(),
-          title: rawNotification.alert,
+          title: alertValue,
           type: 'text',
         };
       }
 
       parsedNotification = {
         ...rawNotification.data,
-        ...rawNotification.alert,
+        ...alertValue,
       };
       // rawNotification.finish(PushNotificationIOS.FetchResult.NoData);
     }
@@ -504,7 +516,7 @@ class NotificationsStore {
   ) => void = (notification: Notification, userId: string | null): void => {
     switch (notification.type) {
       case 'lowKegLevel': {
-        const { kegId, tapId } = notification;
+        const { kegId, tapId: _tapId } = notification;
         queryClient.invalidateQueries({
           queryKey: [KegQueryKeys.KeyById, getStringFromEntityID(kegId)],
         });

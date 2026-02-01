@@ -5,12 +5,12 @@ import { FRIEND_STATUSES } from '@brewskey/js-api';
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
 
-import { FriendMyRequestListItem } from 'components/FriendMyRequestListItem';
-import { FriendPendingRequestListItem } from 'components/FriendPendingRequestListItem';
 import { List } from 'common/List';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListSectionHeader } from 'common/ListSectionHeader';
 import { LoadingListFooter } from 'common/LoadingListFooter';
+import { FriendMyRequestListItem } from 'components/FriendMyRequestListItem';
+import { FriendPendingRequestListItem } from 'components/FriendPendingRequestListItem';
 import { useAuthSession } from 'hooks/context/AuthContext';
 import {
   useDeleteFriend,

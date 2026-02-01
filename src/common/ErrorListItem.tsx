@@ -25,7 +25,7 @@ type Props = LoaderErrorRowProps<{
 }>;
 
 const ErrorListItem: FC<Props> = ({
-  error: unusedError,
+  error: _error,
   containerStyle,
   ...otherProps
 }) => (

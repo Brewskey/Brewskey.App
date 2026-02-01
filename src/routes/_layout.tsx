@@ -29,7 +29,7 @@ const hydrateAuthState = async () => {
     if (authState) {
       setAuthSession(queryClient, authState);
     }
-  } catch (error) {
+  } catch {
     // Ignore hydration errors
   }
 };
@@ -46,7 +46,7 @@ const hydrateAppSettings = async () => {
         selectedOrganization: null,
       },
     );
-  } catch (error) {
+  } catch {
     // Ignore hydration errors, set default values
     queryClient.setQueryData(APP_SETTINGS_QUERY_KEY, {
       manageTapsEnabled: false,
@@ -88,13 +88,13 @@ export default function RootLayout() {
     hydrate();
   }, []);
   React.useEffect(() => {
-    BrewskeyJSApi.setOnSessionUpdated((session, error) => {
-      if (error) {
-        console.error(error);
+    BrewskeyJSApi.setOnSessionUpdated((session, err) => {
+      if (err) {
+        console.error(err);
       }
       setAuthSession(queryClient, session ?? null);
     });
-  }, [queryClient]);
+  }, []);
 
   if (!isHydrated) {
     // Return null or a loading screen while hydrating

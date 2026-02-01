@@ -6,8 +6,8 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { OrderedText } from 'common/OrderedText';
-import { COLORS, TYPOGRAPHY } from 'theme';
 import { HardwareSetupModal } from 'components/modals/HardwareSetupModal';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

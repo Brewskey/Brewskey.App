@@ -3,8 +3,6 @@ import { useState } from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import MyFriendsMainRoute from './myFriendsMain';
-import MyFriendsRequestRoute from './myFriendsRequest';
 import { Container } from 'common/Container';
 import { withErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorScreen } from 'common/ErrorScreen';
@@ -14,6 +12,9 @@ import { FriendAddCustomModal } from 'components/modals/FriendAddCustomModal';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useAddFriend } from 'hooks/queries/FriendQueries';
 import { theme } from 'theme';
+
+import MyFriendsMainRoute from './myFriendsMain';
+import MyFriendsRequestRoute from './myFriendsRequest';
 
 import type { FriendAddFormValues } from 'components/FriendAddForm';
 

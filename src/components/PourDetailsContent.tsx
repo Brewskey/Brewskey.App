@@ -4,12 +4,12 @@ import { useRouter } from 'expo-router';
 import moment from 'moment';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { PintCounter } from 'components/PintCounter';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { Fragment } from 'common/Fragment';
 import { OverviewItem } from 'common/OverviewItem';
-import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { PintCounter } from 'components/PintCounter';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { Pour } from '@brewskey/js-api';

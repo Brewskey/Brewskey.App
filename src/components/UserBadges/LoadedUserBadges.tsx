@@ -3,9 +3,9 @@ import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { BadgeIcon } from 'components/BadgeIcon';
+import { BadgeModal } from 'components/modals/BadgeModal';
 import { EmptyUserBadges } from 'components/UserBadges/EmptyUserBadges';
 import { styles } from 'components/UserBadges/UserBadgesStyles';
-import { BadgeModal } from 'components/modals/BadgeModal';
 
 import type { AchievementCounter, AchievementType } from '@brewskey/js-api';
 

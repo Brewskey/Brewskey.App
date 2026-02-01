@@ -4,16 +4,16 @@ import { useImperativeHandle } from 'react';
 import moment from 'moment';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Modal } from 'components/modals/Modal';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { Button } from 'common/buttons/Button';
 import { IconButton } from 'common/buttons/IconButton';
 import { Section } from 'common/Section';
 import { SectionContent } from 'common/SectionContent';
 import { SectionHeader } from 'common/SectionHeader';
-import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { Modal } from 'components/modals/Modal';
+import { PourDetailsContent } from 'components/PourDetailsContent';
 import { useGetPourById } from 'hooks/queries/PourQueries';
 import { COLORS } from 'theme';
-import { PourDetailsContent } from 'components/PourDetailsContent';
 
 import type { EntityID } from '@brewskey/js-api';
 

@@ -3,10 +3,10 @@ import { useState } from 'react';
 
 import { StyleSheet, Text, View } from 'react-native';
 
-import { CenteredModal } from 'components/modals/CenteredModal';
-import { DeleteModal } from 'components/modals/DeleteModal';
 import { Button } from 'common/buttons/Button';
 import { Fragment } from 'common/Fragment';
+import { CenteredModal } from 'components/modals/CenteredModal';
+import { DeleteModal } from 'components/modals/DeleteModal';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { Account } from '@brewskey/js-api';

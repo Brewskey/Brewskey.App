@@ -144,7 +144,7 @@ export default defineConfig([
       'import/no-default-export': 'off',
     },
   },
-  // Allow default exports in route files (required by Expo Router)
+  // Allow default exports and function declarations in route files (required by Expo Router)
   {
     name: 'routes-allow-default-export',
     files: [
@@ -156,6 +156,14 @@ export default defineConfig([
     rules: {
       'import/no-default-export': 'off',
       'import-x/no-named-as-default': 'off',
+      'react/function-component-definition': 'off',
+    },
+  },
+  // Allow function declaration for generic form components (arrow + generic is awkward in TSX)
+  {
+    name: 'form-components-allow-function',
+    files: ['**/common/form/*.tsx'],
+    rules: {
       'react/function-component-definition': 'off',
     },
   },
@@ -201,6 +209,7 @@ export default defineConfig([
       '@typescript-eslint/consistent-type-imports': 'off',
       'no-void': 'off',
       'no-restricted-globals': 'off',
+      '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'off',
     },
   },
   // Import / React structural

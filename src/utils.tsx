@@ -6,7 +6,7 @@ import { Dimensions, Platform, StatusBar } from 'react-native';
 import type { EntityID, KegType } from '@brewskey/js-api';
 
 const EMAIL_REGEXP =
-  /^[a-z0-9][a-z0-9-_\.]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
+  /^[a-z0-9][a-z0-9_.-]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
 
 export const createRange = (start: number, end: number): number[] =>
   Array(end - start)
@@ -77,10 +77,9 @@ export const parseError = (error: unknown): string => {
       Array.from(Object.values(errorObj.ModelState)).forEach(
         (fieldErrorArray) => {
           if (Array.isArray(fieldErrorArray)) {
-            new Set(fieldErrorArray).forEach(
-              (fieldError: string): string =>
-                (resultErrorMessage = `${resultErrorMessage}\n${fieldError}`),
-            );
+            new Set(fieldErrorArray).forEach((fieldError: string) => {
+              resultErrorMessage = `${resultErrorMessage}\n${fieldError}`;
+            });
           }
         },
       );
@@ -108,7 +107,7 @@ export const fetchJSON = async <TResult extends Record<string, unknown>>(
   let responseJson;
   try {
     responseJson = await response.json();
-  } catch (_) {
+  } catch {
     responseJson = null;
   }
 

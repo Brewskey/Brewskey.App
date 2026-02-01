@@ -1,5 +1,5 @@
-import { makeRequestApiStore } from 'stores/ApiRequestStores/makeRequestApiStore';
 import { CONFIG } from 'config';
+import { makeRequestApiStore } from 'stores/ApiRequestStores/makeRequestApiStore';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -26,7 +26,6 @@ import type { EntityID } from '@brewskey/js-api';
 
 // export const NearbyLocationsStore = makeNearbyLocationsStore();
 
-const iter = 0;
 export const updateAvatar = async (
   avatarData: string,
   accessToken: string | null,

@@ -11,8 +11,7 @@ import {
   View,
 } from 'react-native';
 
-import { BeverageDetailsLoader } from 'components/BeverageDetailsLoader';
-import { PintCounter } from 'components/PintCounter';
+import { KEG_NAME_BY_KEG_TYPE, NULL_STRING_PLACEHOLDER } from '@/constants';
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { Fragment } from 'common/Fragment';
 import { List } from 'common/List';
@@ -22,7 +21,8 @@ import { LoadingListFooter } from 'common/LoadingListFooter';
 import { OverviewItem } from 'common/OverviewItem';
 import { Section } from 'common/Section';
 import { SectionContent } from 'common/SectionContent';
-import { KEG_NAME_BY_KEG_TYPE, NULL_STRING_PLACEHOLDER } from '@/constants';
+import { BeverageDetailsLoader } from 'components/BeverageDetailsLoader';
+import { PintCounter } from 'components/PintCounter';
 import { useGetPours } from 'hooks/queries/PourQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
 import { calculateKegLevel } from 'utils';

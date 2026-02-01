@@ -8,16 +8,16 @@ import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
-import {
-  useGetOrganizationById,
-  useGetOrganizations,
-  useGetSquareLocations,
-} from 'hooks/queries/OrganizationQueries';
 import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
 import { LocationTypePicker } from 'components/pickers/LocationTypePicker';
 import { OrganizationPicker } from 'components/pickers/OrganizationPicker';
 import { SquareLocationPicker } from 'components/pickers/SquareLocationPicker';
 import { StatePicker } from 'components/pickers/StatePicker';
+import {
+  useGetOrganizationById,
+  useGetOrganizations,
+  useGetSquareLocations,
+} from 'hooks/queries/OrganizationQueries';
 
 import type { Location, LocationMutator } from '@brewskey/js-api';
 

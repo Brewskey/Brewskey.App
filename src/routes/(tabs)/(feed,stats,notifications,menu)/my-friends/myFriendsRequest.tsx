@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Badges: React.FC<{ tintColor: string }> = ({ tintColor }) => {
+const Badges: React.FC<{ tintColor: string }> = ({ tintColor: _tintColor }) => {
   const userID = useUserID();
   const pendingRequestsQuery = useGetManyFriends({
     filters: [
@@ -56,7 +56,7 @@ const Badges: React.FC<{ tintColor: string }> = ({ tintColor }) => {
   );
 };
 
-const TabBarLabel: React.FC<{ tintColor: string }> = ({ tintColor }) => (
+const _TabBarLabel: React.FC<{ tintColor: string }> = ({ tintColor }) => (
   <View>
     <Text style={{ color: tintColor }}>Requests</Text>
     <Badges tintColor={tintColor} />

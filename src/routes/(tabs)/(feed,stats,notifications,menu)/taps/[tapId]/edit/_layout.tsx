@@ -4,16 +4,17 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useLocalSearchParams } from 'expo-router';
 import { Dimensions } from 'react-native';
 
-import EditTapFlowSensorRoute from './flow-sensor';
-import EditTapFeedRoute from './keg';
-import EditTapPaymentsRoute from './payments';
-import EditTapBasicRoute from './tap';
 import { Container } from 'common/Container';
 import { withErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { useGetTapById } from 'hooks/queries/TapQueries';
+
+import EditTapFlowSensorRoute from './flow-sensor';
+import EditTapFeedRoute from './keg';
+import EditTapPaymentsRoute from './payments';
+import EditTapBasicRoute from './tap';
 
 import type { EntityID } from '@brewskey/js-api';
 

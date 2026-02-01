@@ -5,13 +5,13 @@ import { useRouter } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { View } from 'react-native';
 
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListItem } from 'common/ListItem';
 import { LoadingListFooter } from 'common/LoadingListFooter';
 import { QuickActions } from 'common/QuickActions';
 import { SwipeableList } from 'common/SwipeableList';
 import { SwipeableRow } from 'common/SwipeableRow';
-import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import {
   useDeleteLocation,

@@ -4,8 +4,8 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { FieldValues } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DropdownInput } from 'common/form/DropdownInput';
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { DropdownInput } from 'common/form/DropdownInput';
 import { useGetLocations } from 'hooks/queries/LocationQueries';
 import { COLORS } from 'theme';
 

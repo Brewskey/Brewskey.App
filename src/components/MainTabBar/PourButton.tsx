@@ -6,9 +6,9 @@ import { StyleSheet } from 'react-native';
 // import PourProcessStore from 'stores/PourProcessStore';
 import { TouchableItem } from 'common/buttons/TouchableItem';
 import { LoadingIndicator } from 'common/LoadingIndicator';
+import { PourProcessModal } from 'components/modals/PourProcessModal';
 import { usePourModalContext } from 'hooks/context/PourProcessContext';
 import { COLORS } from 'theme';
-import { PourProcessModal } from 'components/modals/PourProcessModal';
 
 const styles = StyleSheet.create({
   container: {

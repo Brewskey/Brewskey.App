@@ -47,7 +47,7 @@ const MenuButtonComponent: React.FC<Props> = ({
   onPress,
   title,
   testID,
-  routeName,
+  routeName: _routeName,
   ...pressableProps
 }) => {
   const { pointerEvents, ...restProps } = pressableProps;

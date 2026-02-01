@@ -52,7 +52,7 @@ export class NFCWriterStore {
 
       const { token } = await response.json();
       this._token = token;
-    } catch (error) {
+    } catch {
       SnackBarStore.showMessage({
         style: 'danger',
         content: 'There was an error getting your NFC token ready.',
@@ -71,7 +71,9 @@ export class NFCWriterStore {
 
     await NfcManager.registerTagEvent();
     // Artificial wait to allow Android to get ready.
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 300);
+    });
 
     this._requestWriteTag();
   };
@@ -94,7 +96,7 @@ export class NFCWriterStore {
         style: 'success',
         content: "You've successfully written to your card.",
       });
-    } catch (error) {
+    } catch {
       if (this._token == null) {
         return;
       }
@@ -105,7 +107,9 @@ export class NFCWriterStore {
       });
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
     this._requestWriteTag();
   };
 

@@ -155,7 +155,7 @@ const EditTapPaymentsRouteContent: React.FC = () => {
     );
   }
 
-  const formError = errors.root?.message;
+  const _formError = errors.root?.message;
 
   return (
     <Container>
@@ -218,21 +218,18 @@ const EditTapPaymentsRouteContent: React.FC = () => {
       <SubmitButton<PriceVariantMutator>
         allowSubmitWhenValid={formValue == null}
         disabled={!isFormReady}
-        onSubmit={async (values: PriceVariantMutator) =>
-          onFormSubmit({
+        onSubmit={async (values: PriceVariantMutator) => {
+          let priceNum = 0;
+          if (typeof values.price === 'string') {
+            priceNum = parseFloat(values.price);
+          } else if (typeof values.price === 'number') {
+            priceNum = values.price;
+          }
+          return onFormSubmit({
             ...values,
-            price: Number.parseInt(
-              (
-                (typeof values.price === 'string'
-                  ? parseFloat(values.price)
-                  : typeof values.price === 'number'
-                    ? values.price
-                    : 0) * 100
-              ).toFixed(0),
-              10,
-            ),
-          })
-        }
+            price: Number.parseInt((priceNum * 100).toFixed(0), 10),
+          });
+        }}
         containerStyle={{ marginVertical: 12 }}
         testID="submit-button-tap-payments"
         title={formValue == null ? 'Create Price' : 'Update Price'}

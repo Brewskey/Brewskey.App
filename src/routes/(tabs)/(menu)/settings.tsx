@@ -22,11 +22,12 @@ import { useGetOrganizations } from 'hooks/queries/OrganizationQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
 import type { Organization } from '@brewskey/js-api';
+
 import type { ChangePasswordFormFields } from 'components/ChangePasswordForm';
 
-type SettingsOrganizationForm = {
+interface SettingsOrganizationForm {
   organization: Organization | null | undefined;
-};
+}
 
 const styles = StyleSheet.create({
   versionText: {

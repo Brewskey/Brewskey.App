@@ -3,9 +3,6 @@ import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useLocalSearchParams } from 'expo-router';
 
-import LeaderboardRoute from './leaderboard';
-import OnTapRoute from './on_tap';
-import StatsRoute from './stats';
 import { Container } from 'common/Container';
 import { withErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorScreen } from 'common/ErrorScreen';
@@ -16,6 +13,10 @@ import { useGetPermissionForEntityById } from 'hooks/queries/PermissionQueries';
 import { useGetTapById } from 'hooks/queries/TapQueries';
 import { checkCanEdit } from 'permissionHelpers';
 import { theme } from 'theme';
+
+import LeaderboardRoute from './leaderboard';
+import OnTapRoute from './on_tap';
+import StatsRoute from './stats';
 
 import type { EntityID } from '@brewskey/js-api';
 

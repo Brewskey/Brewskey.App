@@ -59,10 +59,6 @@ export interface Props {
   onReadEnd: (notification: Notification) => void;
 }
 
-interface State {
-  readAnimationValue: Animated.Value;
-}
-
 const SlideoutView = () => (
   <View style={styles.slideoutContainer}>
     <Icon

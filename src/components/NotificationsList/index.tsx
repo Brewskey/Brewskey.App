@@ -1,10 +1,10 @@
 import * as React from 'react';
 
-import { NotificationComponentByType } from 'components/NotificationsList/NotificationComponentByType';
 import { ErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorListItem } from 'common/ErrorListItem';
 import { List } from 'common/List';
 import { ListEmpty } from 'common/ListEmpty';
+import { NotificationComponentByType } from 'components/NotificationsList/NotificationComponentByType';
 import { notificationsStore } from 'stores/NotificationsStore';
 
 import type { Notification } from 'stores/NotificationTypes';

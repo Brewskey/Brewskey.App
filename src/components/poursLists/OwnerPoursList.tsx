@@ -3,12 +3,12 @@ import * as React from 'react';
 import { useRouter } from 'expo-router';
 import moment from 'moment';
 
-import { BasePoursList } from 'components/poursLists/BasePoursList';
+import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListItem } from 'common/ListItem';
 import { QuickActions } from 'common/QuickActions';
-import { NULL_STRING_PLACEHOLDER } from '@/constants';
+import { BasePoursList } from 'components/poursLists/BasePoursList';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeletePour } from 'hooks/queries/PourQueries';
 

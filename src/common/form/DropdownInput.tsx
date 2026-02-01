@@ -62,7 +62,7 @@ export type DropdownInputProps<
 
 // Wrapper: WebDropdown on web, react-native-element-dropdown on native. Props match DropdownProps.
 
-const Dropdown = <TValueType,>(props: DropdownProps) => {
+const Dropdown = <_TValueType,>(props: DropdownProps) => {
   if (Platform.OS === 'web') {
     return <WebDropdown {...props} />;
   }
@@ -96,7 +96,7 @@ export const DropdownInput = <TFormFields extends FieldValues, TValueType>({
   labelField,
   testID,
   mode = 'default',
-  headerTitle,
+  headerTitle: _headerTitle,
   confirmSelectItem = false,
   onConfirmSelectItem,
   useQueryHook,

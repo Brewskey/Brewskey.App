@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 import { UserAvatar } from 'common/avatars/UserAvatar';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 
 import type { Props as NotificationListItemProps } from 'components/NotificationsList/NotificationListItem';
 import type { NewFriendRequestNotification } from 'stores/NotificationTypes';

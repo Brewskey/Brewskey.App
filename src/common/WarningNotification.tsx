@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { COLORS, TYPOGRAPHY } from 'theme';
 import { TouchableItem } from 'common/buttons/TouchableItem';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   container: {

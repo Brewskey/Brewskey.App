@@ -84,7 +84,7 @@ export const useUpdateFriend = () => {
   return useMutation({
     mutationFn: async (mutator: FriendMutator) => {
       const friendId = nullthrows(mutator.id);
-      const { createdDate, ...mutatorWithoutDate } = mutator;
+      const { createdDate: _createdDate, ...mutatorWithoutDate } = mutator;
       await FriendDAO.put(friendId, mutatorWithoutDate as Friend);
       return FriendDAO.fetchByID(friendId);
     },

@@ -2,10 +2,10 @@ import * as React from 'react';
 
 import { StyleSheet, View } from 'react-native';
 
-import { Modal } from 'components/modals/Modal';
 import { IconButton } from 'common/buttons/IconButton';
-import { COLORS } from 'theme';
 import { LocationMap } from 'components/LocationMap';
+import { Modal } from 'components/modals/Modal';
+import { COLORS } from 'theme';
 
 import type { Coordinates } from '@brewskey/js-api';
 

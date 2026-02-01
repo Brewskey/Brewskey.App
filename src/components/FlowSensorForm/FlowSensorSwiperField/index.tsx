@@ -5,9 +5,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { Platform, StyleSheet, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 
-import { FlowSensorSwiperItem } from 'components/FlowSensorForm/FlowSensorSwiperField/FlowSensorSwiperItem';
 import { Button } from 'common/buttons/Button';
 import { FLOW_SENSOR_ITEMS } from 'components/FlowSensorForm/flowSensorItems';
+import { FlowSensorSwiperItem } from 'components/FlowSensorForm/FlowSensorSwiperField/FlowSensorSwiperItem';
 
 import type { FlowSensorType } from '@brewskey/js-api';
 

@@ -89,14 +89,14 @@ const ListItem = <TItem,>(props: Props<TItem>): ReactElement => {
     }
   }, [swipeable, item, props]);
 
-  const rightIconElement =
-    rightIcon != null ? (
-      isValidElement(rightIcon) ? (
-        rightIcon
-      ) : (
-        <Icon {...rightIcon} />
-      )
-    ) : null;
+  let rightIconElement: React.ReactNode = null;
+  if (rightIcon != null) {
+    rightIconElement = isValidElement(rightIcon) ? (
+      rightIcon
+    ) : (
+      <Icon {...rightIcon} />
+    );
+  }
 
   const content = (
     <Fragment>
