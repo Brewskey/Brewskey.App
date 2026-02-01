@@ -1,6 +1,9 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
-import { createMockPermission } from '../../fixtures/test-data';
+import {
+  createMockPermission,
+  createShortenedEntity,
+} from '../../fixtures/test-data';
 import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
@@ -76,11 +79,7 @@ test('should show edit button when user has permissions', async ({
       id: authenticatedUser!.user.id,
       userName: authenticatedUser!.user.userName,
     },
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    organization: createShortenedEntity(organization.id, organization.name),
     invalid: false,
     isDeleted: false,
     createdDate: new Date(),

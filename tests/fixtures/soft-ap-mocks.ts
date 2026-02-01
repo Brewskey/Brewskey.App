@@ -6,7 +6,7 @@
 
 import { Page, Route } from '@playwright/test';
 
-const SOFT_AP_BASE = 'http://192.168.0.1:80';
+const SOFT_AP_BASE = new URL('http://192.168.0.1:80');
 const SUCCESS_RESPONSE_CODE = 0;
 
 /** Scan result item shape matching SoftApService translateWifiFromApi */
@@ -28,14 +28,11 @@ const defaultWifiNetworks: WifiScanItem[] = [
 ];
 
 /**
- * Minimal RSA 512-bit public key in PKCS#1 DER format (hex).
- * 22-byte prefix (device header) + DER key so SoftApService's slice(22) yields valid key.
- * Generated so NodeRSA can parse and encrypt (used by configureWifi).
+ * Valid RSA 512-bit public key in PKCS#1 DER format (hex).
+ * 22-byte prefix (device header) + DER key so SoftApService's slice(44) yields valid key.
+ * Used with node-forge so configureWifi can encrypt the password (React Native/Expo compatible).
  */
-const MOCK_PUBLIC_KEY_HEX =
-  '00'.repeat(22) +
-  '305c300d06092a864886f70d0101010500034b003048024100' +
-  'b3a0f7e0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e9f4d1a0d1e90203010001';
+const MOCK_PUBLIC_KEY_HEX = `${'00'.repeat(22)}3048024100ec02422ca9be3727c861a9ae1ca7d72031af94a534d2011458d0f95943cd2441e1656f4c23494013ac95655e6c09563b2763f94d0934e73c4c535f8cdcf8f4670203010001`;
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -44,7 +41,7 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Private-Network': 'true',
 };
 
-function fulfillJSON(
+async function fulfillJSON(
   route: Route,
   status: number,
   body: Record<string, unknown>,
@@ -70,8 +67,8 @@ export function setupSoftApMocks(
   const wifiNetworks = options.wifiNetworks ?? defaultWifiNetworks;
 
   const handleSoftAp = async (route: Route): Promise<void> => {
-    const url = route.request().url();
-    if (!url.startsWith(SOFT_AP_BASE)) {
+    const url = new URL(route.request().url());
+    if (!url.hostname.startsWith(SOFT_AP_BASE.hostname)) {
       await route.continue();
       return;
     }
@@ -88,7 +85,12 @@ export function setupSoftApMocks(
       return;
     }
 
-    const path = url.slice(SOFT_AP_BASE.length).replace(/\?.*$/, '');
+    const path = url.pathname;
+
+    // Short delay to simulate network; 100ms keeps tests fast while allowing UI to update
+    await new Promise((resolve) => {
+      setTimeout(resolve, 100);
+    });
 
     try {
       if (path === '/device-id' && method === 'GET') {
@@ -125,5 +127,6 @@ export function setupSoftApMocks(
     }
   };
 
-  page.route(/192\.168\.0\.1/, handleSoftAp);
+  // Match by hostname so all SoftAP requests are intercepted (configure, connect, etc.)
+  page.route((url) => url.hostname === '192.168.0.1', handleSoftAp);
 }

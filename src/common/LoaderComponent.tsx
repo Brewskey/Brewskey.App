@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Icon } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { COLORS } from 'theme';
 import { LoadingIndicator } from 'common/LoadingIndicator';
+import { COLORS } from 'theme';
 import { useMultipleQueryResults } from 'utils/useMultipleQueryResults';
 
 import type { UseQueryResult } from '@tanstack/react-query';

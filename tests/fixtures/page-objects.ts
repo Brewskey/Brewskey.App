@@ -179,28 +179,25 @@ export class TapPage {
     deviceId?: number;
     locationId?: number;
   }): Promise<void> {
-    await this.page.getByTestId('input-description').fill(data.name);
+    // Scope to tap-form so we don't match location-form fields (e.g. on NUX taps/new)
+    const tapForm = this.page.getByTestId('tap-form');
+    await tapForm.getByTestId('input-description').fill(data.name);
     if (data.deviceId) {
       // DropdownInput uses WebDropdown which needs to be clicked and then option selected
       // TapForm device dropdown: testID convention device-dropdown
-      const deviceDropdown = this.page.getByTestId('device-dropdown');
+      const deviceDropdown = tapForm.getByTestId('device-dropdown');
       await expect(deviceDropdown).toBeVisible({ timeout: 5000 });
 
       // Click to open the dropdown
       await deviceDropdown.click();
 
       // Find and click the device option - options have testID format: option-{index}
-      // We need to find the option that matches the deviceId
-      // Since devices are objects with name and id, try to find by device name
-      // For now, click the first option (assuming devices are ordered and first matches)
-      // Or we could find by device name if we had access to device data
       const firstOption = this.page.locator('[data-testid^="option-"]').first();
       await expect(firstOption).toBeVisible();
       await firstOption.scrollIntoViewIfNeeded();
       await firstOption.click();
     }
     // Note: locationId is not a field in TapForm, so we skip it
-    // The test might be passing locationId incorrectly, but it won't break the test
   }
 
   async submitForm(): Promise<void> {
@@ -238,12 +235,8 @@ export class DevicePage {
     await this.page.getByText(deviceName).first().click();
   }
 
-  async fillDeviceForm(data: {
-    name: string;
-    particleId: string;
-  }): Promise<void> {
+  async fillDeviceForm(data: { name: string }): Promise<void> {
     await this.page.getByTestId('input-name').fill(data.name);
-    await this.page.getByTestId('input-particleId').fill(data.particleId);
   }
 
   async submitForm(): Promise<void> {
@@ -473,7 +466,9 @@ export class StatsPage {
   async goto(): Promise<void> {
     await this.page.goto(ROUTES.STATS);
     // Wait for stats screen to render (session and queries)
-    await this.page.getByTestId('header-stats').waitFor({ state: 'visible', timeout: 10000 });
+    await this.page
+      .getByTestId('header-stats')
+      .waitFor({ state: 'visible', timeout: 10000 });
   }
 
   getBadgesSection(): Locator {

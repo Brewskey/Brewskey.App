@@ -4,8 +4,6 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
-import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
 import { CheckBoxInput } from 'common/form/CheckBoxInput';
 import { DropdownInput } from 'common/form/DropdownInput';
 import { Form } from 'common/form/Form';
@@ -14,6 +12,8 @@ import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { SectionContent } from 'common/SectionContent';
+import { DeviceOnlineIndicator } from 'components/DeviceOnlineIndicator';
+import { useHideMainTabBar } from 'components/MainTabBar/MainTabBarSlot';
 import { useGetDeviceById, useGetDevices } from 'hooks/queries/DeviceQueries';
 import { useGetOrganizationById } from 'hooks/queries/OrganizationQueries';
 import { COLORS } from 'theme';
@@ -31,6 +31,7 @@ interface Props {
   submitButtonLabel: string;
   organizationId: EntityID;
   tap?: Tap;
+  device?: Device;
 }
 
 const styles = StyleSheet.create({
@@ -64,6 +65,7 @@ export const TapForm: React.FC<Props> = ({
   tap,
   onSubmit,
   submitButtonLabel,
+  device,
 }) => {
   useHideMainTabBar();
   const form = useForm<TapMutator>({
@@ -94,7 +96,7 @@ export const TapForm: React.FC<Props> = ({
           <FormField<TapMutator, typeof DropdownInput>
             search
             component={DropdownInput}
-            defaultValue={tap?.device}
+            defaultValue={tap?.device ?? device}
             label="Device"
             labelField="name"
             name="deviceId"

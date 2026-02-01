@@ -24,6 +24,7 @@ import {
   createMockPour,
   createMockFlowSensor,
   createMockSrm,
+  createShortenedEntity,
 } from './test-data';
 import { mockStore } from './api-mocks';
 
@@ -77,7 +78,7 @@ export async function mockLocationWithTaps(
 
   // Create a device for this location (required for taps)
   const device = createMockDevice({
-    location: { id: location.id, name: location.name, isDeleted: false },
+    location: createShortenedEntity(location.id, location.name),
   });
   mockStore.setDevice(device);
 
@@ -119,12 +120,8 @@ export async function mockTapWithKeg(
   mockStore.setLocation(location);
 
   const device = createMockDevice({
-    location: { id: location.id, name: location.name, isDeleted: false },
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    location: createShortenedEntity(location.id, location.name),
+    organization: createShortenedEntity(organization.id, organization.name),
   });
   mockStore.setDevice(device);
 
@@ -134,11 +131,7 @@ export async function mockTapWithKeg(
   const tap = createMockTap({
     locationId: location.id,
     deviceId: device.id,
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    organization: createShortenedEntity(organization.id, organization.name),
     isPaymentEnabled: false, // Ensure this field exists
     description,
   });
@@ -146,7 +139,7 @@ export async function mockTapWithKeg(
 
   const keg = createMockKeg({
     tapId: tap.id,
-    beverage: { id: beverage.id, name: beverage.name, isDeleted: false },
+    beverage: createShortenedEntity(beverage.id, beverage.name),
     ouncesTotal: 1984, // Half barrel
     ouncesRemaining: 1500,
   });
@@ -255,12 +248,8 @@ export async function mockDeviceWithTaps(
 
   // Create device with location and organization
   const device = createMockDevice({
-    location: { id: location.id, name: location.name, isDeleted: false },
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    location: createShortenedEntity(location.id, location.name),
+    organization: createShortenedEntity(organization.id, organization.name),
   });
   mockStore.setDevice(device);
 
@@ -324,7 +313,7 @@ export async function mockBeverageWithPours(
   const pours: Pour[] = [];
   for (let i = 0; i < pourCount; i++) {
     const pour = createMockPour({
-      beverage: { id: beverage.id, name: beverage.name, isDeleted: false },
+      beverage: createShortenedEntity(beverage.id, beverage.name),
       ounces: 16,
       pourDate: new Date(Date.now() - i * 86400000).toISOString(), // Days ago
     });
@@ -379,23 +368,15 @@ export async function mockTapWithFlowSensor(
   mockStore.setLocation(location);
 
   const device = createMockDevice({
-    location: { id: location.id, name: location.name, isDeleted: false },
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    location: createShortenedEntity(location.id, location.name),
+    organization: createShortenedEntity(organization.id, organization.name),
   });
   mockStore.setDevice(device);
 
   const tap = createMockTap({
     locationId: location.id,
     deviceId: device.id,
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
+    organization: createShortenedEntity(organization.id, organization.name),
   });
   mockStore.setTap(tap);
 
@@ -481,7 +462,7 @@ export async function setupStatsData(
   for (let i = 0; i < pourCount; i++) {
     const beverage = beverages[i % beverageCount];
     const pour = createMockPour({
-      beverage: { id: beverage.id, name: beverage.name, isDeleted: false },
+      beverage: createShortenedEntity(beverage.id, beverage.name),
       ounces: 16,
       pourDate: new Date(Date.now() - i * 3600000).toISOString(), // Hours ago
     });

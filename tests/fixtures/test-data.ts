@@ -1,25 +1,21 @@
 import { faker } from '@faker-js/faker';
+
 import type {
-  EntityID,
   Account,
-  Location,
-  Tap,
-  Beverage,
-  Keg,
-  Device,
-  Pour,
-  Friend,
-  Permission,
-  FlowSensor,
-  Organization,
   Achievement,
+  Beverage,
+  Device,
+  EntityID,
+  FlowSensor,
+  Friend,
+  Keg,
+  Location,
+  Organization,
+  Permission,
+  Pour,
   ShortenedEntity,
   ShortenedTap,
-  KegType,
-  DeviceStatus,
-  PermissionType,
-  FriendStatus,
-  AchievementType,
+  Tap,
 } from '@brewskey/js-api';
 import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
 
@@ -27,6 +23,15 @@ let idCounter = 1;
 
 function generateId(): EntityID {
   return idCounter++;
+}
+
+/** Build a ShortenedEntity (id, isDeleted, name) for use in mocks. */
+export function createShortenedEntity(
+  id: EntityID,
+  name: string,
+  isDeleted = false,
+): ShortenedEntity {
+  return { id, name, isDeleted };
 }
 
 export function createMockUser(overrides?: Partial<Account>): Account {
@@ -53,15 +58,23 @@ export function createMockUser(overrides?: Partial<Account>): Account {
 
 export function createMockLocation(overrides?: Partial<Location>): Location {
   const id = generateId();
-  const base: Partial<Location> = {
+  const base: Location = {
     id,
     name: `Test Location ${id}`,
     city: 'Test City',
     state: 'TS',
     zipCode: 12345,
     description: null,
+    createdDate: faker.date.past(),
+    isDeleted: false,
+    locationType: 'Bar',
+    organization: createShortenedEntity(1, 'Test Organization'),
+    squareLocationID: '',
+    street: '',
+    suite: '',
+    timeZone: 'UTC',
   };
-  return { ...base, ...overrides } as Location;
+  return { ...base, ...overrides } satisfies Location;
 }
 
 type TapOverrides = Partial<Tap> & {
@@ -85,20 +98,23 @@ export function createMockTap(overrides?: TapOverrides): Tap {
   const finalDeviceId = deviceId ?? restOverrides.device?.id ?? generateId();
 
   // Convert locationId to ShortenedEntity
-  const location: ShortenedEntity = restOverrides.location ?? {
-    id: finalLocationId,
-    name: faker.company.name(),
-    isDeleted: false,
-  };
+  const location: ShortenedEntity =
+    restOverrides.location ??
+    createShortenedEntity(finalLocationId, faker.company.name());
 
   // Convert deviceId to ShortenedEntity
-  const device: ShortenedEntity = restOverrides.device ?? {
-    id: finalDeviceId,
-    name: faker.commerce.productName(),
-    isDeleted: false,
-  };
+  const device: ShortenedEntity =
+    restOverrides.device ??
+    createShortenedEntity(finalDeviceId, faker.commerce.productName());
 
-  const base: Partial<Tap> = {
+  const defaultCurrentKeg: Tap['currentKeg'] = {
+    id: '0',
+    beverage: { id: '0', name: '' },
+    kegType: 'HalfBarrel',
+    maxOunces: 1984,
+    ounces: 0,
+  };
+  const base: Tap = {
     id,
     location,
     device,
@@ -106,21 +122,48 @@ export function createMockTap(overrides?: TapOverrides): Tap {
     hideLeaderboard: false,
     tapNumber: tapNumber ?? faker.number.int({ min: 1, max: 20 }),
     description: description ?? faker.lorem.sentence(),
+    createdDate: faker.date.past(),
+    currentKeg: defaultCurrentKeg,
+    disableBadges: false,
+    isPaymentEnabled: false,
+    organization:
+      restOverrides.organization ??
+      createShortenedEntity(1, 'Test Organization'),
+    requiresPourPrivilege: false,
   };
 
-  return { ...base, ...restOverrides } as Tap;
+  return { ...base, ...restOverrides } satisfies Tap;
 }
 
 export function createMockBeverage(overrides?: Partial<Beverage>): Beverage {
   const id = generateId();
-  const base: Partial<Beverage> = {
+  const now = faker.date.recent();
+  const base: Beverage = {
     id,
     name: faker.commerce.productName(),
     description: faker.lorem.paragraph(),
     abv: faker.number.float({ min: 3, max: 12, fractionDigits: 1 }),
     ibu: faker.number.int({ min: 10, max: 100 }),
+    beverageType: 'Beer',
+    createDate: now,
+    createdBy: { id: 1, userName: 'testuser' },
+    isDeleted: false,
+    isOrganic: false,
+    labels: { icon: '', large: '', medium: '' },
+    updateDate: now,
+    availability: undefined,
+    beerVariationId: undefined,
+    externalId: undefined,
+    foodPairings: undefined,
+    glass: undefined,
+    originalGravity: undefined,
+    servingTemperature: undefined,
+    servingTemperatureDisplay: undefined,
+    srm: undefined,
+    style: undefined,
+    year: undefined,
   };
-  return { ...base, ...overrides } as Beverage;
+  return { ...base, ...overrides } satisfies Beverage;
 }
 
 type KegOverrides = Partial<Keg> & {
@@ -141,12 +184,13 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
     : (restOverrides.tap ?? undefined);
 
   // Convert beverageId to ShortenedEntity if provided
-  const beverage: ShortenedEntity | undefined = beverageId
-    ? { id: beverageId, name: faker.commerce.productName(), isDeleted: false }
-    : (restOverrides.beverage ?? undefined);
+  const beverage: ShortenedEntity = beverageId
+    ? createShortenedEntity(beverageId, faker.commerce.productName())
+    : (restOverrides.beverage ??
+      createShortenedEntity(generateId(), faker.commerce.productName()));
 
   // Map ouncesTotal to maxOunces and ouncesRemaining to ounces
-  const mappedOverrides: any = { ...restOverrides };
+  const mappedOverrides: Record<string, unknown> = { ...restOverrides };
   if (ouncesTotal !== undefined) {
     mappedOverrides.maxOunces = ouncesTotal;
   }
@@ -154,81 +198,138 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
     mappedOverrides.ounces = ouncesRemaining;
   }
 
-  const base: Partial<Keg> = {
+  const now = faker.date.recent();
+  const base: Keg = {
     id,
-    tap,
+    tap: tap ?? null,
     beverage,
-    kegType: 'HalfBarrel' as KegType,
+    kegType: 'HalfBarrel',
+    floatedDate: now,
+    isDeleted: false,
+    location: undefined,
+    maxOunces: ouncesTotal ?? 1984,
+    organization: createShortenedEntity(1, 'Test Organization'),
+    ounces: ouncesRemaining ?? 0,
+    pulses: 0,
+    tapDate: now,
   };
 
-  return { ...base, ...mappedOverrides } as Keg;
+  return { ...base, ...mappedOverrides } satisfies Keg;
 }
+
+/** Default org id for mock devices when organization is not provided */
+const DEFAULT_DEVICE_ORG_ID = 1;
 
 export function createMockDevice(overrides?: Partial<Device>): Device {
   const id = generateId();
-  const base: Partial<Device> = {
+  const now = faker.date.recent();
+  const base: Device = {
     id,
     name: `Device ${id}`,
     particleId: `particle_${id}`,
     location: undefined,
-    deviceStatus: 'Online' as DeviceStatus,
+    deviceStatus: 'Active',
+    deviceType: 'BrewskeyBox',
+    isDeleted: false,
+    isScreenDisabled: false,
+    isTotpDisabled: false,
+    lastEdited: now,
+    lastEditedBy: { id: 1, userName: 'testuser' },
+    ledBrightness: 100,
+    nfcStatus: 'PhoneAndCard',
+    organization: createShortenedEntity(
+      DEFAULT_DEVICE_ORG_ID,
+      'Test Organization',
+    ),
+    secondsToStayOpen: 5,
+    shouldInvertScreen: false,
+    temperature: 38,
+    timeForValveOpen: 2,
+    createdBy: { id: 1, userName: 'testuser' },
   };
-  return { ...base, ...overrides } as Device;
+  return { ...base, ...overrides } satisfies Device;
 }
 
 export function createMockPour(overrides?: Partial<Pour>): Pour {
   const id = generateId();
-  const base: Partial<Pour> = {
+  const base: Pour = {
     id,
     ounces: faker.number.float({ min: 4, max: 32, fractionDigits: 2 }),
     pourDate: faker.date.recent().toISOString(),
+    total: 0,
+    beverage: undefined,
+    device: undefined,
+    isDeleted: false,
+    keg: { id: 1 },
+    location: undefined,
+    organization: createShortenedEntity(1, 'Test Organization'),
+    owner: { id: 1, userName: 'testuser' },
+    pulses: 0,
+    tap: undefined,
   };
-  return { ...base, ...overrides } as Pour;
+  return { ...base, ...overrides } satisfies Pour;
 }
 
 export function createMockFriend(overrides?: Partial<Friend>): Friend {
   const id = generateId();
-  const base: Partial<Friend> = {
+  const base: Friend = {
     id,
-    friendAccount: undefined,
-    owningAccount: undefined,
-    friendStatus: 'Pending' as FriendStatus,
+    friendAccount: { id: 0, userName: '' },
+    owningAccount: { id: 0, userName: '' },
+    friendStatus: 'Pending',
+    createdDate: faker.date.past(),
   };
-  return { ...base, ...overrides } as Friend;
+  return { ...base, ...overrides } satisfies Friend;
 }
 
 export function createMockPermission(
   overrides?: Partial<Permission>,
 ): Permission {
   const id = generateId();
-  const base: Partial<Permission> = {
+  const base: Permission = {
     id,
-    permissionType: 'Read' as PermissionType,
+    permissionType: 'Read',
+    createdBy: { id: 1, userName: 'testuser' },
+    createdDate: faker.date.past(),
+    device: undefined,
+    expiresDate: undefined,
+    forUser: { id: 1, userName: 'testuser' },
+    invalid: false,
+    isDeleted: false,
+    location: undefined,
+    organization: undefined,
+    startDate: undefined,
+    tap: undefined,
   };
-  return { ...base, ...overrides } as Permission;
+  return { ...base, ...overrides } satisfies Permission;
 }
 
 export function createMockFlowSensor(
   overrides?: Partial<FlowSensor>,
 ): FlowSensor {
   const id = generateId();
-  const base: Partial<FlowSensor> = {
+  const base: FlowSensor = {
     id,
-    tap: undefined,
+    tap: { id: 1, isDeleted: false },
+    flowSensorType: 'Titan',
+    isDeleted: false,
+    pulsesPerGallon: 5375,
   };
-  return { ...base, ...overrides } as FlowSensor;
+  return { ...base, ...overrides } satisfies FlowSensor;
 }
 
 export function createMockOrganization(
   overrides?: Partial<Organization>,
 ): Organization {
   const id = generateId();
-  const base: Partial<Organization> = {
+  const base: Organization = {
     id,
     name: faker.company.name(),
     canEnablePayments: false,
+    createdDate: faker.date.past(),
+    isDeleted: false,
   };
-  return { ...base, ...overrides } as Organization;
+  return { ...base, ...overrides } satisfies Organization;
 }
 
 export function createMockSrm(overrides?: Partial<Srm>): Srm {
@@ -240,23 +341,24 @@ export function createMockSrm(overrides?: Partial<Srm>): Srm {
     `#${Math.floor(Math.random() * 16777215)
       .toString(16)
       .padStart(6, '0')}`;
-  const base: Partial<Srm> = {
+  const base: Srm = {
     id,
     name: srmNumber.toString(),
     hex: hexColor,
   };
-  return { ...base, ...overrides } as Srm;
+  return { ...base, ...overrides } satisfies Srm;
 }
 
 export function createMockAchievement(
   overrides?: Partial<Achievement>,
 ): Achievement {
   const id = generateId();
-  const base: Partial<Achievement> = {
+  const base: Achievement = {
     id,
-    achievementType: 'FirstPour' as AchievementType,
+    achievementType: 'FirstPourOfTheDay',
+    createdDate: faker.date.past(),
   };
-  return { ...base, ...overrides } as Achievement;
+  return { ...base, ...overrides } satisfies Achievement;
 }
 
 export function createMockWiFiNetwork(

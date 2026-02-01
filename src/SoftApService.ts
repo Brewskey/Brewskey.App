@@ -1,8 +1,13 @@
-import NodeRSA from 'node-rsa';
+import forge from 'node-forge';
 
 import { fetchJSON } from 'utils';
 
 import type { WifiNetwork } from 'types';
+
+/** Public key wrapper that encrypts with PKCS#1 v1.5 and returns hex (React Native/Expo compatible). */
+export interface RsaPublicKeyWrapper {
+  encrypt: (plaintext: string) => string;
+}
 
 const BASE_URL = 'http://192.168.0.1:80';
 const DEFAULT_WIFI_CHANNEL = 3;
@@ -47,9 +52,7 @@ class SoftAPService {
     ssid,
   }: WifiNetwork): Promise<void> => {
     const publicKey = await SoftAPService.getPublicKey();
-    const encryptedPassword = password
-      ? publicKey.encrypt(password, 'hex')
-      : '';
+    const encryptedPassword = password ? publicKey.encrypt(password) : '';
 
     const body = JSON.stringify({
       ch: channel,
@@ -59,7 +62,7 @@ class SoftAPService {
       ssid,
     });
 
-    const { r: responseCode, ...otherData } = await fetchJSON(
+    const { r: responseCode, ..._otherData } = await fetchJSON(
       `${BASE_URL}/configure-ap`,
       {
         body,
@@ -111,7 +114,7 @@ class SoftAPService {
     return scans.map(translateWifiFromApi);
   };
 
-  static getPublicKey = async (): Promise<NodeRSA> =>
+  static getPublicKey = async (): Promise<RsaPublicKeyWrapper> =>
     new Promise((resolve, reject) => {
       const fetchKey = async (): Promise<void> => {
         setTimeout(
@@ -135,18 +138,30 @@ class SoftAPService {
               return;
             }
 
-            const derBuffer = Buffer.from(rawDerPublicKey, 'hex');
-            const publicKey = new NodeRSA(
-              derBuffer.slice(22),
-              'pkcs1-public-der',
-              {
-                encryptionScheme: 'pkcs1',
-              },
-            );
+            // Device sends DER with 22-byte prefix; remainder is PKCS#1 public key DER
+            const pkcs1DerHex = rawDerPublicKey.slice(44); // 22 bytes = 44 hex chars
+            const pkcs1DerBytes = forge.util.hexToBytes(pkcs1DerHex);
+            const pem = forge.pem.encode({
+              type: 'RSA PUBLIC KEY',
+              body: pkcs1DerBytes,
+            });
+            const publicKey = forge.pki.publicKeyFromPem(pem);
 
-            resolve(publicKey);
+            resolve({
+              encrypt: (plaintext: string): string => {
+                const encrypted = publicKey.encrypt(
+                  plaintext,
+                  'RSAES-PKCS1-V1_5',
+                );
+                return forge.util.bytesToHex(encrypted);
+              },
+            });
           })
-          .catch(reject);
+          .catch((error) => {
+            // eslint-disable-next-line no-console -- user-visible error context
+            console.error('Error on getting public Brewskey box key!', error);
+            reject(error);
+          });
       };
       fetchKey();
     });

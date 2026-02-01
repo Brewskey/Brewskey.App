@@ -15,26 +15,15 @@ import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useGetDeviceById } from 'hooks/queries/DeviceQueries';
 import { useCreateTap } from 'hooks/queries/TapQueries';
 
-import type { TapMutator } from '@brewskey/js-api';
+import type { Device, TapMutator } from '@brewskey/js-api';
 
-const NewTapScreen: React.FC = () => {
+const NewTapScreen: React.FC<{
+  device: Device;
+  returnTo?: string;
+  showBackButton?: string;
+}> = ({ device, returnTo, showBackButton }) => {
   const router = useRouter();
-  const {
-    deviceId: deviceIdParam,
-    returnTo,
-    showBackButton,
-  } = useLocalSearchParams<{
-    deviceId: string;
-    returnTo?: string;
-    showBackButton?: string;
-  }>();
 
-  const deviceId =
-    typeof deviceIdParam === 'string' && !isNaN(Number(deviceIdParam))
-      ? Number(deviceIdParam)
-      : deviceIdParam;
-
-  const { data: device, isLoading, error } = useGetDeviceById(deviceId);
   const queryClient = useQueryClient();
   const addSnackBarMessage = useAddSnackBarMessage();
   const createTap = useCreateTap();
@@ -54,6 +43,30 @@ const NewTapScreen: React.FC = () => {
     });
     addSnackBarMessage({ content: 'New tap created' });
   };
+
+  return (
+    <Container>
+      <Header showBackButton={showBackButton !== 'false'} title="New tap" />
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <TapForm
+          onSubmit={onFormSubmit}
+          organizationId={device.organization?.id}
+          submitButtonLabel="Create tap"
+          device={device}
+        />
+      </KeyboardAwareScrollView>
+    </Container>
+  );
+};
+
+const LoadingNewTapScreen: React.FC = () => {
+  const { deviceId, returnTo, showBackButton } = useLocalSearchParams<{
+    deviceId: string;
+    returnTo?: string;
+    showBackButton?: string;
+  }>();
+
+  const { data: device, isLoading, error } = useGetDeviceById(deviceId);
 
   if (!deviceId) {
     return (
@@ -102,20 +115,15 @@ const NewTapScreen: React.FC = () => {
   }
 
   return (
-    <Container>
-      <Header showBackButton={showBackButton !== 'false'} title="New tap" />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <TapForm
-          onSubmit={onFormSubmit}
-          organizationId={organizationId}
-          submitButtonLabel="Create tap"
-        />
-      </KeyboardAwareScrollView>
-    </Container>
+    <NewTapScreen
+      device={device}
+      returnTo={returnTo}
+      showBackButton={showBackButton}
+    />
   );
 };
 
 export default withErrorBoundary(
-  NewTapScreen,
+  LoadingNewTapScreen,
   <ErrorScreen shouldShowBackButton />,
 );

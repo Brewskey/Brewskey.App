@@ -33,7 +33,7 @@ export const TapDetailsNoKeg: React.FC<Props> = ({ tapId, canEdit }) => {
   const router = useRouter();
   const _onSetupPress = () =>
     router.navigate({
-      pathname: '/(tabs)/taps/[tapId]/keg/new',
+      pathname: '/taps/[tapId]/keg/new',
       params: { tapId: tapId.toString() },
     });
 

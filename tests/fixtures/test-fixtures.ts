@@ -65,6 +65,7 @@ import {
   createMockKeg,
   createMockDevice,
   createMockOrganization,
+  createShortenedEntity,
   resetIdCounter,
 } from './test-data';
 import { mockStore, setupAPIMocks, resetMockStore } from './api-mocks';
@@ -246,7 +247,7 @@ export const test = base.extend<TestOptions & TestFixtures>({
         // Create a device for this location (required for taps)
         const device = createMockDevice({
           name: `Device ${i + 1}`,
-          location: { id: location.id, name: location.name, isDeleted: false },
+          location: createShortenedEntity(location.id, location.name),
         });
         mockStore.setDevice(device);
         devicesCreatedForLocations.push(device);

@@ -14,12 +14,11 @@ test('should successfully create device', async ({
     await import('../../fixtures/entity-fixtures');
   const { location } = await mockLocationWithTaps(page, 0);
 
-  await page.goto('/devices/new');
+  await page.goto('/devices/new?particleId=test_particle_1');
   await expect(page.getByTestId('input-name')).toBeVisible();
 
   await devicePage.fillDeviceForm({
     name: 'New Device',
-    particleId: 'particle_12345',
   });
 
   // Select location (required field) - one location from mock, use index 0
@@ -54,12 +53,13 @@ test('should redirect to nux/tap when returnTo=nux-tap after create', async ({
     await import('../../fixtures/entity-fixtures');
   const { location } = await mockLocationWithTaps(page, 0);
 
-  await page.goto('/devices/new?returnTo=nux-tap&showBackButton=false');
+  await page.goto(
+    '/devices/new?particleId=test_particle_2&returnTo=nux-tap&showBackButton=false',
+  );
   await expect(page.getByTestId('input-name')).toBeVisible();
 
   await devicePage.fillDeviceForm({
     name: 'Nux Redirect Device',
-    particleId: 'particle_nux_redirect',
   });
   const locationPicker = dropDown.create('location-dropdown');
   await locationPicker.select(0);

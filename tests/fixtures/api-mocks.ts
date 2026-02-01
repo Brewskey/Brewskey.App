@@ -1,51 +1,65 @@
 import { Page, Route } from '@playwright/test';
+
+import {
+  createMockBeverage,
+  createMockDevice,
+  createMockFlowSensor,
+  createMockFriend,
+  createMockKeg,
+  createMockLocation,
+  createMockOrganization,
+  createMockPermission,
+  createMockPour,
+  createMockTap,
+  createMockUser,
+} from './test-data';
+
 import type {
-  EntityID,
   Account,
-  Location,
-  Tap,
-  Beverage,
-  Keg,
-  Device,
-  Pour,
-  Friend,
-  Permission,
-  FlowSensor,
-  Organization,
   AuthResponse,
+  Beverage,
+  Device,
+  EntityID,
+  FlowSensor,
+  Friend,
+  Keg,
+  Location,
+  Organization,
+  Permission,
+  Pour,
+  Tap,
 } from '@brewskey/js-api';
 import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
-import {
-  createMockUser,
-  createMockLocation,
-  createMockTap,
-  createMockBeverage,
-  createMockKeg,
-  createMockDevice,
-  createMockPour,
-  createMockFriend,
-  createMockPermission,
-  createMockFlowSensor,
-  createMockOrganization,
-  createMockSrm,
-} from './test-data';
 
 // In-memory data store
 class MockDataStore {
-  private users: Map<EntityID, Account> = new Map();
-  private locations: Map<EntityID, Location> = new Map();
-  private taps: Map<EntityID, Tap> = new Map();
-  private beverages: Map<EntityID, Beverage> = new Map();
-  private kegs: Map<EntityID, Keg> = new Map();
-  private devices: Map<EntityID, Device> = new Map();
-  private pours: Map<EntityID, Pour> = new Map();
-  private friends: Map<EntityID, Friend> = new Map();
-  private permissions: Map<EntityID, Permission> = new Map();
-  private flowSensors: Map<EntityID, FlowSensor> = new Map();
-  private organizations: Map<EntityID, Organization> = new Map();
-  private srms: Map<EntityID, Srm> = new Map();
-  private authTokens: Map<string, AuthResponse> = new Map();
-  private refreshTokens: Map<string, AuthResponse> = new Map();
+  private users = new Map<EntityID, Account>();
+
+  private locations = new Map<EntityID, Location>();
+
+  private taps = new Map<EntityID, Tap>();
+
+  private beverages = new Map<EntityID, Beverage>();
+
+  private kegs = new Map<EntityID, Keg>();
+
+  private devices = new Map<EntityID, Device>();
+
+  private pours = new Map<EntityID, Pour>();
+
+  private friends = new Map<EntityID, Friend>();
+
+  private permissions = new Map<EntityID, Permission>();
+
+  private flowSensors = new Map<EntityID, FlowSensor>();
+
+  private organizations = new Map<EntityID, Organization>();
+
+  private srms = new Map<EntityID, Srm>();
+
+  private authTokens = new Map<string, AuthResponse>();
+
+  private refreshTokens = new Map<string, AuthResponse>();
 
   clear(): void {
     this.users.clear();
@@ -241,11 +255,11 @@ function parseODataQuery(url: string): {
 
   // Check for OData format: /api/v2/entity(id) or /api/v2/entity/id
   // Handle URLs like: /api/v2/taps(4)/?$format=json&$expand=...
-  const idMatch = url.match(
-    /\/api\/v2\/([^/(?]+)(?:\((\d+)\)|\/(\d+))(?:\/|\?|$)/,
+  const idMatch = /\/api\/v2\/([^/(?]+)(?:\((\d+)\)|\/(\d+))(?:\/|\?|$)/.exec(
+    url,
   );
   let entity = '';
-  let id: EntityID | undefined = undefined;
+  let id: EntityID | undefined;
 
   if (idMatch) {
     // Format: /api/v2/taps(1) or /api/v2/taps/1 or /api/v2/taps(1)/?query
@@ -302,8 +316,8 @@ function filterEntities<T extends { id: EntityID }>(
   // Simple filter parsing - can be extended for complex filters
   // For now, handle common cases like eq, ne, contains
   const filters = filter.split(' and ');
-  return entities.filter((entity) => {
-    return filters.every((f) => {
+  return entities.filter((entity) =>
+    filters.every((f) => {
       if (f.includes(' eq ')) {
         const [field, value] = f.split(' eq ');
         const fieldName = field.trim().replace(/[()']/g, '');
@@ -361,8 +375,8 @@ function filterEntities<T extends { id: EntityID }>(
         return fieldValueToCompare !== fieldValue;
       }
       return true;
-    });
-  });
+    }),
+  );
 }
 
 // Normalize entity name to match EntityType
@@ -458,7 +472,7 @@ function authResponseToLoginResponse(
 }
 
 // Helper to fulfill JSON responses
-function fulfillJSONResponse(
+async function fulfillJSONResponse(
   route: Route,
   status: number,
   body: Record<string, unknown> | unknown[],
@@ -471,7 +485,7 @@ function fulfillJSONResponse(
 }
 
 // Helper to fulfill error responses
-function fulfillErrorResponse(
+async function fulfillErrorResponse(
   route: Route,
   status: number,
   error: string,
@@ -588,7 +602,7 @@ export function setupAPIMocks(page: Page): void {
 
         if (grantType === 'password') {
           // Login request
-          const userName = params.userName;
+          const { userName } = params;
           const user = mockStore
             .getUsers()
             .find((u) => u.userName === userName);
@@ -837,7 +851,7 @@ export function setupAPIMocks(page: Page): void {
       // The URL pattern can be: /api/v2/taps(123)/Default.leaderboard(...) or /api/v2/taps/123/Default.leaderboard(...)
       if (url.includes('Default.leaderboard') && method === 'GET') {
         // Extract tap ID from URL - handle both patterns: taps(123) and taps/123
-        const tapIdMatch = url.match(/\/taps(?:\((\d+)\)|\/(\d+))\/?/);
+        const tapIdMatch = /\/taps(?:\((\d+)\)|\/(\d+))\/?/.exec(url);
         const tapId = tapIdMatch
           ? parseInt(tapIdMatch[1] || tapIdMatch[2], 10)
           : null;
@@ -921,8 +935,9 @@ export function setupAPIMocks(page: Page): void {
                 ? {
                     id: device.id,
                     name: device.name || '',
+                    isDeleted: device.isDeleted ?? false,
                   }
-                : { id: 0, name: '' },
+                : { id: 0, name: '', isDeleted: false },
             };
           });
 
@@ -942,13 +957,28 @@ export function setupAPIMocks(page: Page): void {
         // GET by ID
         // Normalize entity name to match EntityType (handle plural/singular variations)
         const normalizedEntity = normalizeEntityName(query.entity);
-        const entity = getEntityById(normalizedEntity as EntityType, query.id);
+        let entity = getEntityById(normalizedEntity as EntityType, query.id);
+
+        // Fallback: organizations(id) often requested by id (e.g. device.organization.id);
+        // return a default organization so the app does not 404
+        if (
+          !entity &&
+          (normalizedEntity === 'organizations' ||
+            query.entity === 'organizations')
+        ) {
+          const defaultOrg = createMockOrganization({
+            id: query.id,
+            name: 'Test Organization',
+            canEnablePayments: false,
+          });
+          mockStore.setOrganization(defaultOrg);
+          entity = defaultOrg;
+        }
 
         if (entity) {
           return fulfillJSONResponse(route, 200, entity);
-        } else {
-          return fulfillErrorResponse(route, 404, 'Not found');
         }
+        return fulfillErrorResponse(route, 404, 'Not found');
       }
 
       // Handle GET many
@@ -1005,8 +1035,8 @@ export function setupAPIMocks(page: Page): void {
           case 'taps':
             // Ensure tap has both device and location (hierarchy: Organization => Location => Devices => Taps => Kegs)
             const tapBody = body as any;
-            let deviceId = tapBody.deviceId;
-            let locationId = tapBody.locationId;
+            let { deviceId } = tapBody;
+            let { locationId } = tapBody;
 
             // If deviceId is provided, get the device and ensure it has a location
             if (deviceId && !locationId) {
@@ -1072,9 +1102,8 @@ export function setupAPIMocks(page: Page): void {
 
         if (newEntity) {
           return fulfillJSONResponse(route, 201, newEntity);
-        } else {
-          return fulfillErrorResponse(route, 400, 'Invalid entity type');
         }
+        return fulfillErrorResponse(route, 400, 'Invalid entity type');
       }
 
       // Handle PUT (update)
@@ -1099,9 +1128,8 @@ export function setupAPIMocks(page: Page): void {
             // Add other entities as needed
           }
           return fulfillJSONResponse(route, 200, updated);
-        } else {
-          return fulfillErrorResponse(route, 404, 'Not found');
         }
+        return fulfillErrorResponse(route, 404, 'Not found');
       }
 
       // Handle DELETE

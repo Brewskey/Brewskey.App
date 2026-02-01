@@ -1,28 +1,21 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { WifiListEmpty } from 'components/WifiSetup/WifiList/WifiListEmpty';
-import { WifiListError } from 'components/WifiSetup/WifiList/WifiListError';
-import { WifiListItem } from 'components/WifiSetup/WifiList/WifiListItem';
 import { Form } from 'common/form/Form';
 import { List } from 'common/List';
 import { LoadingListFooter } from 'common/LoadingListFooter';
+import { WifiListEmpty } from 'components/WifiSetup/WifiList/WifiListEmpty';
+import { WifiListError } from 'components/WifiSetup/WifiList/WifiListError';
+import { WifiListItem } from 'components/WifiSetup/WifiList/WifiListItem';
 import { useGetWifiNetworks } from 'hooks/queries/SoftApQueries';
+
+import { HiddenWifiInput } from './HiddenWifiInput';
 
 import type { WifiNetwork } from 'types';
 
-interface Props {
-  ListHeaderComponent?: React.ReactElement | null | undefined;
-  onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>;
-  isSettingUpWifi: boolean;
-}
-
-export const WifiList: React.FC<Props> = ({
-  ListHeaderComponent,
-  isSettingUpWifi,
-  onConnectPress,
-}) => {
+export const WifiList: React.FC = () => {
   const [expandedRowKey, setExpandedRowKey] = useState<string | undefined>();
+
   const {
     data: wifiNetworks,
     error,
@@ -47,10 +40,8 @@ export const WifiList: React.FC<Props> = ({
       <WifiListItem
         error={error}
         index={index}
-        isConnecting={isExpanded ? isLoading || isSettingUpWifi : false}
         isExpanded={isExpanded}
         item={item}
-        onConnectPress={onConnectPress}
         onPress={setExpandedRowKey}
         rowKey={rowKey}
       />
@@ -72,7 +63,7 @@ export const WifiList: React.FC<Props> = ({
         keyExtractor={keyExtractor}
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<LoadingListFooter isLoading={isLoading} />}
-        ListHeaderComponent={ListHeaderComponent}
+        ListHeaderComponent={<HiddenWifiInput />}
         listType="flatList"
         onRefresh={
           !isLoading

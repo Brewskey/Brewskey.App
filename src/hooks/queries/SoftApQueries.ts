@@ -52,6 +52,7 @@ export const useConnectToWifi = () =>
 export const useSetupWifi = (): UseMutationResult<void, Error, WifiNetwork> =>
   useMutation({
     mutationFn: async (wifiNetwork) => {
+      console.log('wifiNetwork', wifiNetwork);
       const key = await SoftAPService.configureWifi(wifiNetwork);
       console.log('key', key);
       await SoftAPService.connectWifi().then(console.log).catch(console.error);

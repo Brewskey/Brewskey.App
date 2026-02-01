@@ -8,7 +8,7 @@ import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
 import { NuxNoEntity } from 'components/NuxNoEntity';
 import { SectionTapsList } from 'components/SectionTapsList';
 
-export const TapsScreen: React.FC = withErrorBoundary(
+const TapsScreen: React.FC = withErrorBoundary(
   () => (
     <Container>
       <Header
@@ -28,3 +28,5 @@ export const TapsScreen: React.FC = withErrorBoundary(
   ),
   <ErrorScreen shouldShowBackButton />,
 );
+
+export default TapsScreen;

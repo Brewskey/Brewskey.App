@@ -1,12 +1,10 @@
-import { test, expect } from '../../fixtures/test-fixtures';
 import {
-  mockNewUserState,
-  mockLocationWithTaps,
   mockDeviceWithTaps,
   mockLocationOnly,
+  mockNewUserState,
 } from '../../fixtures/entity-fixtures';
-import { ROUTES } from '../../fixtures/routes';
 import { setAppSettingsStorage } from '../../fixtures/storage-helper';
+import { expect, test } from '../../fixtures/test-fixtures';
 
 /**
  * Tests to verify that NUX persists when user stops partway through setup
@@ -59,14 +57,13 @@ test.describe('NUX Partial Completion - Location Only', () => {
     await mockNewUserState(page);
     await mockLocationOnly(page); // Location only, no devices
 
-    // Load menu first so tab context is set, then navigate to taps (same path as menu Taps link)
+    // Navigate to taps screen through menu
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for the taps list or NUX empty state (list shows ListEmptyComponent when !isLoading)
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for the taps list query to complete (loading finishes)
+    // The list shows ListEmptyComponent only when !isLoading
+    await expect(page.getByTestId('taps-list')).toBeVisible({ timeout: 10000 });
 
     // Should show NUX because no taps exist (and likely no devices)
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
@@ -103,12 +100,12 @@ test.describe('NUX Partial Completion - Location and Device', () => {
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for taps list or NUX empty state
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for NUX empty state (no taps exist)
+    await expect(page.getByTestId('nux-no-entity-content')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Should show NUX because no taps exist
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
@@ -173,11 +170,9 @@ test.describe('NUX Partial Completion - Complete Setup', () => {
 
     // Navigate to taps: menu first then taps
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
     await expect(page.getByTestId('nux-no-entity-content')).not.toBeVisible();
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible();
+    await expect(page.getByTestId('taps-list')).toBeVisible();
   });
 });
 
@@ -218,12 +213,12 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for taps list or NUX empty state
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for NUX empty state (no taps exist)
+    await expect(page.getByTestId('nux-no-entity-content')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -281,12 +276,12 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for taps list or NUX empty state
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for NUX empty state (no taps exist)
+    await expect(page.getByTestId('nux-no-entity-content')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -296,12 +291,12 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
 
     // Navigate back to taps screen - should STILL show NUX
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for taps list or NUX empty state again
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for NUX empty state again
+    await expect(page.getByTestId('nux-no-entity-content')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
   });
@@ -355,12 +350,12 @@ test.describe('NUX Progressive Completion', () => {
 
     // Step 5: Check taps screen - should show NUX (no taps yet)
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
 
-    // Wait for taps list or NUX empty state
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible({ timeout: 10000 });
+    // Wait for NUX empty state (no taps yet)
+    await expect(page.getByTestId('nux-no-entity-content')).toBeVisible({
+      timeout: 10000,
+    });
 
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
@@ -369,11 +364,9 @@ test.describe('NUX Progressive Completion', () => {
 
     // Step 6: Check taps screen again - should NOT show NUX (tap exists)
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
     await expect(page.getByTestId('nux-no-entity-content')).not.toBeVisible();
-    await expect(
-      page.getByTestId('taps-list').or(page.getByTestId('nux-no-entity-content')),
-    ).toBeVisible();
+    await expect(page.getByTestId('taps-list')).toBeVisible();
 
     // Step 7: Verify NUX no longer appears on any screen
     await locationPage.goto();
@@ -383,7 +376,7 @@ test.describe('NUX Progressive Completion', () => {
     await expect(page.getByTestId('nux-no-entity-content')).not.toBeVisible();
 
     await menuPage.goto();
-    await page.goto(ROUTES.TAPS);
+    await menuPage.clickTaps();
     await expect(page.getByTestId('nux-no-entity-content')).not.toBeVisible();
   });
 });

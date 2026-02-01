@@ -7,7 +7,7 @@
 import { expect, Page } from '@playwright/test';
 
 import { mockStore } from './api-mocks';
-import { createMockPermission } from './test-data';
+import { createMockPermission, createShortenedEntity } from './test-data';
 
 import type {
   Account,
@@ -59,11 +59,7 @@ export async function setupTapPermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        isDeleted: false,
-      },
+      organization: createShortenedEntity(organization.id, organization.name),
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),
@@ -95,11 +91,7 @@ export async function setupLocationPermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        isDeleted: false,
-      },
+      organization: createShortenedEntity(organization.id, organization.name),
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),
@@ -131,11 +123,7 @@ export async function setupDevicePermissions(
         id: authenticatedUser.id,
         userName: authenticatedUser.userName,
       },
-      organization: {
-        id: organization.id,
-        name: organization.name,
-        isDeleted: false,
-      },
+      organization: createShortenedEntity(organization.id, organization.name),
       invalid: false,
       isDeleted: false,
       createdDate: new Date(),

@@ -1,15 +1,21 @@
 import * as React from 'react';
 
 import { Icon } from '@rneui/themed';
-import { useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { Button } from 'common/buttons/Button';
+import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { FormValidationMessage } from 'common/form/FormValidationMessage';
+import { SubmitButton } from 'common/form/SubmitButton';
 import { TextInput } from 'common/form/TextInput';
+import { useSetupWifi } from 'hooks/queries/SoftApQueries';
 import { WIFI_SECURITIES } from 'SoftApService';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import {
+  useWifiSetupScreenContext,
+  WifiSetupSteps,
+} from 'utils/WifiSetupScreenContext';
 
 import type { WifiNetwork } from 'types';
 
@@ -37,33 +43,41 @@ const styles = StyleSheet.create({
 interface Props {
   error: Error | null | undefined;
   index: number;
-  isConnecting: boolean;
   isExpanded: boolean;
   item: WifiNetwork;
-  onConnectPress: (wifiNetwork: WifiNetwork) => Promise<void>;
   onPress: (rowKey: string) => void;
   rowKey: string;
 }
 
+interface FormValues {
+  password: string;
+}
+
 const WifiListItem: React.FC<Props> = ({
   index,
-  isConnecting,
   isExpanded,
   item,
-  onConnectPress,
   onPress,
   rowKey,
 }) => {
-  const form = useFormContext();
-  const password = form.watch(`password_${rowKey}`) || '';
-
-  const handleConnectPress = React.useCallback(() => {
-    onConnectPress({
-      ...item,
-      index,
-      password,
-    });
-  }, [index, item, onConnectPress, password, rowKey]);
+  const [value, setValue] = useWifiSetupScreenContext();
+  const setupWifiMutator = useSetupWifi();
+  const form = useForm<FormValues>();
+  const setupWifi = React.useCallback(
+    async (values: FormValues) => {
+      const wifiNetwork = {
+        ...item,
+        index,
+        password: values.password,
+      };
+      await setupWifiMutator.mutateAsync(wifiNetwork);
+      setValue({
+        ...value,
+        currentStep: WifiSetupSteps.Screen4,
+      });
+    },
+    [item, index, setupWifiMutator, setValue, value],
+  );
 
   const handlePress = React.useCallback(() => {
     onPress(rowKey);
@@ -73,41 +87,41 @@ const WifiListItem: React.FC<Props> = ({
   const isPasswordRequired = security !== WIFI_SECURITIES.OPEN;
 
   return (
-    <TouchableOpacity
-      disabled={isExpanded}
-      onPress={handlePress}
-      style={styles.container}
-    >
-      <View style={styles.labelContainer}>
-        <Text style={styles.title}>{ssid}</Text>
-        {isPasswordRequired ? (
-          <Icon containerStyle={styles.iconStyle} name="lock" />
-        ) : null}
-      </View>
-      {isExpanded
-        ? [
-            isPasswordRequired && (
-              <FormField<Record<string, string>, typeof TextInput>
-                key="password"
-                component={TextInput}
-                editable={!isConnecting}
-                label="Password"
-                name={`password_${rowKey}`}
-                onSubmitEditing={handleConnectPress}
-                required
-                secureTextEntry
-              />
-            ),
-            <FormValidationMessage fieldName="wifiSetupError" />,
-            <Button
-              key="connectButton"
-              disabled={isConnecting}
-              onPress={handleConnectPress}
-              title="Connect"
-            />,
-          ]
-        : null}
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity
+        disabled={isExpanded}
+        onPress={handlePress}
+        testID={`wifi-network-item-${rowKey}`}
+      >
+        <View style={styles.labelContainer}>
+          <Text style={styles.title}>{ssid}</Text>
+          {isPasswordRequired ? (
+            <Icon containerStyle={styles.iconStyle} name="lock" />
+          ) : null}
+        </View>
+      </TouchableOpacity>
+      {isExpanded ? (
+        <Form form={form}>
+          {isPasswordRequired ? (
+            <FormField<FormValues, typeof TextInput>
+              component={TextInput}
+              label="Password"
+              name="password"
+              testID={`wifi-network-item-password-${rowKey}`}
+              required
+              secureTextEntry
+            />
+          ) : null}
+          <FormValidationMessage key="wifiSetupError" />
+          <SubmitButton<FormValues>
+            key="connectButton"
+            onSubmit={setupWifi}
+            testID={`wifi-network-item-connect-${rowKey}`}
+            title="Connect"
+          />
+        </Form>
+      ) : null}
+    </View>
   );
 };
 

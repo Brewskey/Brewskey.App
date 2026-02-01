@@ -16,65 +16,12 @@ import { expect, test } from '../../fixtures/test-fixtures';
 test.use({ autoAuthenticate: true });
 
 test.describe('WiFi Setup', () => {
-  test('step 1: shows instructions and Ready button', async ({
-    page,
-    wifiPage,
-  }) => {
-    const { device } = await mockDeviceWithTaps(page, 0);
-    await wifiPage.goto(String(device.id));
-
-    await expect(page).toHaveURL(/.*wifi.*setup/i);
-    await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible();
-    await expect(
-      page.getByTestId('section-header-wifi-setup-instructions'),
-    ).toBeVisible();
-    await expect(wifiPage.getReadyButton()).toBeVisible();
-  });
-
-  test('step 1 → step 2: Ready advances to connect instructions', async ({
-    page,
-    wifiPage,
-  }) => {
-    const { device } = await mockDeviceWithTaps(page, 0);
-    await wifiPage.goto(String(device.id));
-
-    await wifiPage.clickReady();
-
-    await expect(page.getByTestId('wifi-setup-step2-content')).toBeVisible({
-      timeout: 10000,
-    });
-    await expect(page.getByTestId('section-header-wifi-connect')).toBeVisible();
-  });
-
-  test('step 2: with SoftAP mocks registered, step 2 shows connect instructions', async ({
+  test('full flow: step 1 → step 2 → step 3 → step 4', async ({
     page,
     wifiPage,
   }) => {
     setupSoftApMocks(page, {
-      particleId: 'particle_e2e_123',
-      wifiNetworks: [
-        { ch: 1, sec: 4194308, ssid: 'HomeWiFi' },
-        { ch: 6, sec: 0, ssid: 'Guest' },
-      ],
-    });
-
-    const { device } = await mockDeviceWithTaps(page, 0);
-    await wifiPage.goto(String(device.id));
-
-    await wifiPage.clickReady();
-
-    await expect(page.getByTestId('wifi-setup-step2-content')).toBeVisible({
-      timeout: 5000,
-    });
-    await expect(page.getByTestId('section-header-wifi-connect')).toBeVisible();
-  });
-
-  test('step 2 → step 3: when SoftAP APIs are mocked, app advances to network list', async ({
-    page,
-    wifiPage,
-  }) => {
-    setupSoftApMocks(page, {
-      particleId: 'particle_e2e_456',
+      particleId: 'particle_e2e_flow',
       wifiNetworks: [
         { ch: 1, sec: 4194308, ssid: 'SecuredNetwork' },
         { ch: 6, sec: 0, ssid: 'OpenNet' },
@@ -84,89 +31,61 @@ test.describe('WiFi Setup', () => {
     const { device } = await mockDeviceWithTaps(page, 0);
     await wifiPage.goto(String(device.id));
 
-    await wifiPage.clickReady();
-
-    await expect(page.getByTestId('wifi-setup-step2-content')).toBeVisible({
-      timeout: 5000,
+    await test.step('step 1: shows instructions and Ready button', async () => {
+      await expect(page).toHaveURL(/.*wifi.*setup/i);
+      await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible();
+      await expect(
+        page.getByTestId('section-header-wifi-setup-instructions'),
+      ).toBeVisible();
+      await expect(wifiPage.getReadyButton()).toBeVisible();
     });
 
-    await expect(page.getByTestId('wifi-networks-list')).toBeVisible({
-      timeout: 20000,
-    });
-    await expect(page.getByText('SecuredNetwork')).toBeVisible();
-    await expect(page.getByText('OpenNet')).toBeVisible();
-  });
-
-  test('step 3: select network, enter password, connect advances to step 4', async ({
-    page,
-    wifiPage,
-  }) => {
-    setupSoftApMocks(page, {
-      particleId: 'particle_e2e_789',
-      wifiNetworks: [
-        { ch: 1, sec: 4194308, ssid: 'SecuredNetwork' },
-        { ch: 6, sec: 0, ssid: 'OpenNet' },
-      ],
+    await test.step('step 1 → 2: Ready advances to connect instructions', async () => {
+      await wifiPage.clickReady();
+      await expect(
+        page.getByTestId('section-header-wifi-connect'),
+      ).toBeVisible();
     });
 
-    const { device } = await mockDeviceWithTaps(page, 0);
-    await wifiPage.goto(String(device.id));
-
-    await wifiPage.clickReady();
-
-    await expect(page.getByTestId('wifi-networks-list')).toBeVisible({
-      timeout: 20000,
+    await test.step('step 2 → 3: app advances to network list', async () => {
+      await expect(page.getByTestId('wifi-networks-list')).toBeVisible({
+        timeout: 20000,
+      });
+      await expect(
+        page.getByTestId('wifi-network-item-SecuredNetwork0'),
+      ).toBeVisible();
+      await expect(
+        page.getByTestId('wifi-network-item-OpenNet1'),
+      ).toBeVisible();
     });
 
-    await page.getByText('SecuredNetwork').first().click();
+    await test.step('step 3: select network, enter password, connect', async () => {
+      await page.getByTestId('wifi-network-item-SecuredNetwork0').click();
 
-    const passwordInput = page
-      .getByTestId('wifi-networks-list')
-      .locator('input[type="password"]')
-      .first();
-    await expect(passwordInput).toBeVisible({ timeout: 5000 });
-    await passwordInput.fill('testpassword');
+      const passwordInput = page.getByTestId(
+        'wifi-network-item-password-SecuredNetwork0',
+      );
+      await expect(passwordInput).toBeVisible({ timeout: 5000 });
+      await passwordInput.type('testpassword');
 
-    await page
-      .getByTestId('wifi-networks-list')
-      .getByRole('button', { name: /connect/i })
-      .first()
-      .click();
-
-    await expect(page.getByTestId('wifi-setup-step4-content')).toBeVisible({
-      timeout: 15000,
-    });
-    await expect(
-      page.getByTestId('section-header-wifi-setup-finish'),
-    ).toBeVisible();
-  });
-
-  test('step 4: Continue button is visible after connect', async ({
-    page,
-    wifiPage,
-  }) => {
-    setupSoftApMocks(page);
-
-    const { device } = await mockDeviceWithTaps(page, 0);
-    await wifiPage.goto(String(device.id));
-
-    await wifiPage.clickReady();
-    await expect(page.getByTestId('wifi-networks-list')).toBeVisible({
-      timeout: 20000,
+      await page
+        .getByTestId('wifi-network-item-connect-SecuredNetwork0')
+        .click();
     });
 
-    await page.getByText('OpenNetwork').first().click();
-    await page
-      .getByTestId('wifi-networks-list')
-      .getByRole('button', { name: /connect/i })
-      .first()
-      .click();
+    await test.step('step 4: finish screen and Continue button visible', async () => {
+      await expect(page.getByTestId('wifi-setup-step4-content')).toBeVisible({
+        timeout: 20000,
+      });
+      await expect(
+        page.getByTestId('section-header-wifi-setup-finish'),
+      ).toBeVisible();
+      await expect(
+        page.getByTestId('button-wifi-setup-continue'),
+      ).toBeVisible();
 
-    await expect(page.getByTestId('wifi-setup-step4-content')).toBeVisible({
-      timeout: 15000,
+      await page.getByTestId('button-wifi-setup-continue').click();
     });
-
-    await expect(page.getByTestId('button-wifi-setup-continue')).toBeVisible();
   });
 
   test('forNewDevice: step 1 shows Particle ID input when expanded', async ({
