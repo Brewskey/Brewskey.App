@@ -27,7 +27,9 @@ test('should navigate between bottom tabs', async ({ page }) => {
   const notificationsTab = page.getByTestId('tab-notifications');
   await expect(notificationsTab).toBeVisible();
   await notificationsTab.click();
-  await expect(page.getByTestId('button-delete-all-notifications')).toBeVisible();
+  await expect(
+    page.getByTestId('button-delete-all-notifications'),
+  ).toBeVisible();
 
   // Menu tab has testID - use that instead of text-based locator
   const menuTab = page.getByTestId('tab-menu');

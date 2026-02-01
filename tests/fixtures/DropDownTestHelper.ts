@@ -30,7 +30,9 @@ class DropDownTestHelperInternal {
     }
     const option = this.modal
       .locator('[data-testid^="option-"]')
-      .filter({ hasText: typeof label === 'string' ? new RegExp(label, 'i') : label })
+      .filter({
+        hasText: typeof label === 'string' ? new RegExp(label, 'i') : label,
+      })
       .first();
     await option.scrollIntoViewIfNeeded();
     try {

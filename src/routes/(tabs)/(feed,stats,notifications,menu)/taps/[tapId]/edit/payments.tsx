@@ -52,7 +52,9 @@ const EditTapPaymentsRouteContent: React.FC = () => {
   // All hooks must be called unconditionally before any early returns
   const form = useFormContext<PriceVariantMutator>();
   const isFormReady = form.formState != null;
-  const { formState: { errors, isSubmitting } } = form;
+  const {
+    formState: { errors, isSubmitting },
+  } = form;
 
   const addSnackBarMessage = useAddSnackBarMessage();
 
@@ -193,13 +195,13 @@ const EditTapPaymentsRouteContent: React.FC = () => {
           />
 
           <FormField<PriceVariantMutator, typeof TextInput>
-              component={TextInput}
-              defaultValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
-              keyboardType="numeric"
-              label="Ounces"
-              name="ounces"
-              required="Ounces is required"
-            />
+            component={TextInput}
+            defaultValue={(formValue != null ? formValue.ounces : 0).toFixed(1)}
+            keyboardType="numeric"
+            label="Ounces"
+            name="ounces"
+            required="Ounces is required"
+          />
           <FormField<PriceVariantMutator, typeof TextInput>
             component={TextInput}
             keyboardType="numeric"

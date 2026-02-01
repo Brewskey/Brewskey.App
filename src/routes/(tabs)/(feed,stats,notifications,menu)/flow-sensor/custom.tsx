@@ -29,8 +29,7 @@ const NewFlowSensorCustomScreen = withErrorBoundary(
     const _onFormSubmit = async (values: FlowSensorMutator): Promise<void> => {
       await createFlowSensor.mutateAsync(values);
       router.navigate({
-        pathname:
-          '/taps/[tapId]/keg/new',
+        pathname: '/taps/[tapId]/keg/new',
         params: {
           tapId: String(tapId),
           ...(returnTo ? { returnTo } : {}),

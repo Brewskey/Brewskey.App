@@ -1,12 +1,12 @@
-import { test, expect } from '../../fixtures/test-fixtures';
 import { mockNewUserState } from '../../fixtures/entity-fixtures';
+import { expect, test } from '../../fixtures/test-fixtures';
 
 test('should display tap creation prompt', async ({ page, nuxPage }) => {
   // Set up explicit data: new user
   await mockNewUserState(page);
   await nuxPage.gotoTapStep();
 
-  await expect(page).toHaveURL(/.*nux.*tap/i);
+  await expect(page).toHaveURL('/tap');
   // Tap screen has testID - use that instead of text-based locator
   await expect(page.getByTestId('nux-tap-content')).toBeVisible();
   await expect(page.getByTestId('nux-tap-description')).toBeVisible();
@@ -39,8 +39,7 @@ test('should navigate to taps/new when Next is clicked with deviceId', async ({
   page,
   nuxPage,
 }) => {
-  const { mockDeviceWithTaps } =
-    await import('../../fixtures/entity-fixtures');
+  const { mockDeviceWithTaps } = await import('../../fixtures/entity-fixtures');
   await mockNewUserState(page);
   const { device } = await mockDeviceWithTaps(page, 0);
 

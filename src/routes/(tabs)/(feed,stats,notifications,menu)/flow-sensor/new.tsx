@@ -53,8 +53,7 @@ const NewFlowSensorScreen = withErrorBoundary(
         router.back();
       } else {
         router.navigate({
-          pathname:
-            '/taps/[tapId]/keg/new',
+          pathname: '/taps/[tapId]/keg/new',
           params: {
             tapId: String(tapId),
             ...(returnTo ? { returnTo } : {}),

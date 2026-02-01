@@ -81,7 +81,6 @@ export const KegForm: React.FC<Props> = ({
     },
   });
 
-
   const kegType = form.watch('kegType');
 
   const selectedKegTypeMaxOunces = MAX_OUNCES_BY_KEG_TYPE[kegType] || 0;
@@ -137,7 +136,10 @@ export const KegForm: React.FC<Props> = ({
             {!shouldShowFloatedButton ? null : (
               <SubmitButton<FormFields>
                 allowSubmitWhenValid
-                buttonStyle={{ backgroundColor: COLORS.accent, marginBottom: 4 }}
+                buttonStyle={{
+                  backgroundColor: COLORS.accent,
+                  marginBottom: 4,
+                }}
                 onSubmit={onFloatKegForm}
                 title="Keg Floated"
               />

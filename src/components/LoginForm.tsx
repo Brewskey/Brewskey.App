@@ -79,7 +79,9 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
         <SectionContent paddedVertical>
           <SubmitButton<FormProps>
             allowSubmitWhenValid
-            buttonStyle={isInverse ? { backgroundColor: COLORS.secondary } : undefined}
+            buttonStyle={
+              isInverse ? { backgroundColor: COLORS.secondary } : undefined
+            }
             onSubmit={onSubmit}
             testID="login-submit-button"
             title="Log in"
