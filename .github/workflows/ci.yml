@@ -8,6 +8,9 @@ on:
     branches:
       - v3
 
+permissions:
+  packages: read
+
 jobs:
   build-lint-test:
     runs-on: ubuntu-latest
