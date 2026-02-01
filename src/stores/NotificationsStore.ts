@@ -485,17 +485,23 @@ class NotificationsStore {
       // rawNotification.finish(PushNotificationIOS.FetchResult.NoData);
     }
 
-    const existingNotification = this._notificationsByID.get(
-      parsedNotification.id,
-    );
+    if (parsedNotification == null) {
+      return;
+    }
+
+    const id = String(parsedNotification.id ?? '');
+    const existingNotification = this._notificationsByID.get(id);
 
     const openedFromTray = !!parsedNotification.userInteraction;
 
-    const notification = {
+    const notification: Notification = {
       ...parsedNotification,
+      body: String(parsedNotification.body ?? ''),
       date: existingNotification ? existingNotification.date : new Date(),
+      id,
       isRead: openedFromTray,
-    } as const;
+      title: String(parsedNotification.title ?? ''),
+    } as Notification;
     this._addNotification(notification);
 
     if (openedFromTray) {
