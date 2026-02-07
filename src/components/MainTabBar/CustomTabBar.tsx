@@ -6,6 +6,7 @@ import { BadgeContainer } from 'components/MainTabBar/BadgeContainer';
 import { useMainTabBarSlot } from 'components/MainTabBar/MainTabBarSlot';
 import { PourButton } from 'components/MainTabBar/PourButton';
 import { TabBarButton } from 'components/MainTabBar/TabBarButton';
+import { useNotificationsUnreadCount } from 'hooks/queries/NotificationQueries';
 import { COLORS } from 'theme';
 
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
@@ -38,12 +39,16 @@ const styles = StyleSheet.create({
 
 const NotificationBadges: React.FC<
   React.ComponentProps<typeof TouchableItem>
-> = (props) => (
-  <BadgeContainer
-    {...props}
-    badgeCount={0 /* NotificationsStore.unreadCount */}
-  />
-);
+> = (props) => {
+  const unreadCount = useNotificationsUnreadCount();
+  return (
+    <BadgeContainer
+      {...props}
+      badgeCount={unreadCount}
+      testID="notifications-badge"
+    />
+  );
+};
 
 const FriendRequestBadge: React.FC<
   React.ComponentProps<typeof TouchableItem>

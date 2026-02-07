@@ -88,6 +88,7 @@ import {
   NUXPage,
   WiFiSetupPage,
   MenuPage,
+  NotificationsPage,
   StatsPage,
 } from './page-objects';
 import { DropDownTestHelper } from './DropDownTestHelper';
@@ -130,6 +131,7 @@ type TestFixtures = {
   nuxPage: NUXPage;
   wifiPage: WiFiSetupPage;
   menuPage: MenuPage;
+  notificationsPage: NotificationsPage;
   statsPage: StatsPage;
   dropDown: DropDownTestHelper;
 };
@@ -347,6 +349,10 @@ export const test = base.extend<TestOptions & TestFixtures>({
 
   menuPage: async ({ page }, use) => {
     await use(new MenuPage(page));
+  },
+
+  notificationsPage: async ({ page }, use) => {
+    await use(new NotificationsPage(page));
   },
 
   statsPage: async ({ page }, use) => {

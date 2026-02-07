@@ -484,6 +484,53 @@ export class StatsPage {
   }
 }
 
+export class NotificationsPage {
+  constructor(private page: Page) {}
+
+  async goto(): Promise<void> {
+    await this.page.goto(ROUTES.NOTIFICATIONS);
+    await this.page
+      .getByTestId('button-delete-all-notifications')
+      .waitFor({ state: 'visible', timeout: 15000 });
+  }
+
+  getNotificationsList(): Locator {
+    return this.page.getByTestId('notifications-list');
+  }
+
+  getDeleteAllButton(): Locator {
+    return this.page.getByTestId('button-delete-all-notifications');
+  }
+
+  getEmptyMessage(): Locator {
+    return this.page.getByTestId('notifications-list-empty');
+  }
+
+  getNotificationItem(testID: string): Locator {
+    return this.page.getByTestId(testID);
+  }
+
+  getModal(): Locator {
+    return this.page.getByTestId('modal-delete-all-notifications');
+  }
+
+  getModalCancelButton(): Locator {
+    return this.page.getByTestId(
+      'modal-delete-all-notifications-button-cancel',
+    );
+  }
+
+  getModalConfirmButton(): Locator {
+    return this.page.getByTestId(
+      'modal-delete-all-notifications-button-delete',
+    );
+  }
+
+  getBadge(): Locator {
+    return this.page.getByTestId('notifications-badge');
+  }
+}
+
 // Helper functions for common interactions
 export async function waitForQuery(page: Page, timeout = 5000): Promise<void> {
   await page.waitForFunction(

@@ -23,6 +23,7 @@ type Props<TItem> = (
       slideoutComponent: ReactNode;
       item: TItem;
       onPress?: ((item: TItem) => void) | undefined;
+      onSwipeBegin?: () => void;
     } & Omit<ComponentProps<typeof RNEListItem.Swipeable>, 'onPress'>)
   | ({ swipeable?: false } & (
       | {
@@ -134,6 +135,7 @@ const ListItem = <TItem,>(props: Props<TItem>): ReactElement => {
         bottomDivider
         containerStyle={[styles.container, containerStyle]}
         onPress={onPressHandler}
+        onSwipeBegin={swipeableProps.onSwipeBegin}
         testID={testID}
       >
         {content}

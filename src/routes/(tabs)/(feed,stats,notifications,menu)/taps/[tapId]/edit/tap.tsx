@@ -14,10 +14,15 @@ import { Section } from 'common/Section';
 import { TapForm } from 'components/TapForm';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import {
+  useNotificationsDisabledTaps,
+  useToggleNotificationsForTap,
+} from 'hooks/queries/NotificationQueries';
+import {
   useCreateTap,
   useGetTapById,
   useUpdateTap,
 } from 'hooks/queries/TapQueries';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 
 import type { EntityID, TapMutator } from '@brewskey/js-api';
 
@@ -33,10 +38,16 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(
     const { data: tap, isLoading } = useGetTapById(tapIdValue as EntityID);
     const createTap = useCreateTap();
     const updateTap = useUpdateTap();
-
-    const [areNotificationEnabled, setAreNotificationsEnabled] =
-      React.useState<boolean>(true);
+    const { data: disabledTaps = [] } = useNotificationsDisabledTaps();
+    const toggleNotificationsForTap = useToggleNotificationsForTap();
     const addSnackbarMessage = useAddSnackBarMessage();
+
+    const areNotificationsEnabled =
+      tap != null
+        ? !disabledTaps.some(
+            (id) => getStringFromEntityID(id) === getStringFromEntityID(tap.id),
+          )
+        : true;
 
     if (!tapIdValue) {
       return (
@@ -75,12 +86,14 @@ const EditTapBasicRoute: React.FC = withErrorBoundary(
               chevron={false}
               title="Notifications For Tap"
               switch={{
-                onValueChange: (value) => {
-                  console.error('Notifications have not been configured yet');
-                  setAreNotificationsEnabled(value);
+                onValueChange: () => {
+                  if (tap?.id) {
+                    toggleNotificationsForTap.mutate(tap.id);
+                  }
                 },
-                value: areNotificationEnabled,
+                value: areNotificationsEnabled,
               }}
+              testID="switch-notifications-for-tap"
             />
           </Section>
           <TapForm

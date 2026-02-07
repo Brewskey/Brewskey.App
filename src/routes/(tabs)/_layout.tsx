@@ -1,10 +1,19 @@
 import { Tabs } from 'expo-router';
 
 import { CustomTabBar } from 'components/MainTabBar/CustomTabBar';
+import {
+  NotificationRegistrationProvider,
+  useNotificationHandlers,
+} from 'hooks/useNotificationHandlers';
 
 export default function TabsLayout() {
+  const { requestPermissionAndRegister } = useNotificationHandlers();
+
   return (
-    <Tabs
+    <NotificationRegistrationProvider
+      requestPermissionAndRegister={requestPermissionAndRegister}
+    >
+      <Tabs
       tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
@@ -46,5 +55,6 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+    </NotificationRegistrationProvider>
   );
 }

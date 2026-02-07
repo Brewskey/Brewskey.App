@@ -9,12 +9,13 @@ import {
   View,
 } from 'react-native';
 
-import { NotificationComponentByType } from 'components/NotificationsList/NotificationComponentByType';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
 import {
   useGetCurrentSnackBarMessage,
   useRemoveSnackBarMessage,
 } from 'hooks/context/SnackBarContext';
-import { notificationsStore } from 'stores/NotificationsStore';
+import { useNotificationPress } from 'hooks/useNotificationHandlers';
+import { useDeleteNotification } from 'hooks/queries/NotificationQueries';
 import { COLORS } from 'theme';
 
 import type { LayoutChangeEvent } from 'react-native';
@@ -70,10 +71,6 @@ const styles = StyleSheet.create({
 
 const OFFSET = 20;
 
-const onItemOpen = (notification: Notification) => {
-  notificationsStore.deleteByID(notification.id);
-};
-
 const TextMessage = ({
   style = 'default',
   text,
@@ -107,8 +104,12 @@ const TextMessage = ({
 
 const Content = ({
   message,
+  onNotificationOpen,
+  onNotificationPress,
 }: {
   message: SnackBarMessage;
+  onNotificationOpen: (notification: Notification) => void;
+  onNotificationPress: (notification: Notification) => void;
 }): React.ReactElement | null => {
   if (message.type === 'text') {
     return <TextMessage style={message.style} text={message.text} />;
@@ -117,14 +118,15 @@ const Content = ({
   if (message.type === 'content') {
     snackContent = message.content;
   } else if (message.type === 'notification') {
-    const componentProps = {
-      isSwipeable: false,
-      notification: message.notification,
-      onOpen: onItemOpen,
-      onPress: notificationsStore.onNotificationPress,
-      onReadEnd: () => {},
-    } as const;
-    snackContent = <NotificationComponentByType {...componentProps} />;
+    snackContent = (
+      <NotificationListItem
+        isSwipeable={false}
+        notification={message.notification}
+        onOpen={onNotificationOpen}
+        onPress={onNotificationPress}
+        onReadEnd={() => {}}
+      />
+    );
   } else {
     return null;
   }
@@ -143,6 +145,15 @@ export const SnackBar: React.FC = () => {
   const animationValue = React.useRef(new Animated.Value(-OFFSET)).current;
   const dropCurrentMessage = useRemoveSnackBarMessage();
   const currentMessage = useGetCurrentSnackBarMessage();
+  const deleteNotification = useDeleteNotification();
+  const onNotificationPress = useNotificationPress();
+
+  const onNotificationOpen = React.useCallback(
+    (notification: Notification) => {
+      deleteNotification.mutate(notification.id);
+    },
+    [deleteNotification],
+  );
 
   const _onMessagePress = () => {
     Animated.timing(animationValue, {
@@ -218,7 +229,11 @@ export const SnackBar: React.FC = () => {
       ]}
     >
       <TouchableWithoutFeedback onPress={_onMessagePress}>
-        <Content message={currentMessage} />
+        <Content
+          message={currentMessage}
+          onNotificationOpen={onNotificationOpen}
+          onNotificationPress={onNotificationPress}
+        />
       </TouchableWithoutFeedback>
     </Animated.View>
   );

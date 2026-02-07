@@ -6,6 +6,7 @@
 import { Page } from '@playwright/test';
 import type { AuthResponse } from '@brewskey/js-api';
 import type { AppSettings } from '../../src/hooks/context/AppSettingsContext';
+import type { Notification } from '../../src/stores/NotificationTypes';
 
 /**
  * Sets auth data for Playwright tests
@@ -99,4 +100,21 @@ export async function setAppSettingsStorage(
 
   // Also set it on every navigation to ensure it persists
   page.on('framenavigated', setAppSettings);
+}
+
+/**
+ * Sets notifications list for Playwright tests. Injects via __PLAYWRIGHT_NOTIFICATIONS__
+ * so the list is available when the app loads (avoids Storage/session timing).
+ * Also writes to Storage when available so mutations (e.g. delete) persist.
+ */
+export async function setNotificationsStorage(
+  page: Page,
+  notifications: Notification[],
+): Promise<void> {
+  await page.addInitScript((list) => {
+    (window as any).__PLAYWRIGHT_NOTIFICATIONS__ = list;
+  }, notifications);
+  await page.evaluate((list) => {
+    (window as any).__PLAYWRIGHT_NOTIFICATIONS__ = list;
+  }, notifications);
 }

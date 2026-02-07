@@ -1,29 +1,44 @@
 import * as React from 'react';
 
+import { View } from 'react-native';
+
 import { ErrorBoundary } from 'common/ErrorBoundary';
 import { ErrorListItem } from 'common/ErrorListItem';
 import { List } from 'common/List';
 import { ListEmpty } from 'common/ListEmpty';
-import { NotificationComponentByType } from 'components/NotificationsList/NotificationComponentByType';
-import { notificationsStore } from 'stores/NotificationsStore';
+import { NotificationListItem } from 'components/NotificationsList/NotificationListItem';
+import {
+  useDeleteNotification,
+  useNotificationsList,
+  useSetNotificationRead,
+} from 'hooks/queries/NotificationQueries';
+import { useNotificationPress } from 'hooks/useNotificationHandlers';
 
 import type { Notification } from 'stores/NotificationTypes';
 
 const NotificationsList: React.FC = () => {
+  const { data: notifications = [] } = useNotificationsList();
+  const deleteNotification = useDeleteNotification();
+  const setRead = useSetNotificationRead();
+  const onNotificationPress = useNotificationPress();
+
   const keyExtractor = React.useCallback(
     (notification: Notification) => notification.id,
     [],
   );
 
-  const handleItemOpen = React.useCallback((notification: Notification) => {
-    notificationsStore.deleteByID(notification.id);
-  }, []);
-
-  const handleNotificationReadEnd = React.useCallback(
+  const handleItemOpen = React.useCallback(
     (notification: Notification) => {
-      notificationsStore.setRead(notification.id);
+      deleteNotification.mutate(notification.id);
     },
-    [],
+    [deleteNotification],
+  );
+
+  const handleReadEnd = React.useCallback(
+    (notification: Notification) => {
+      setRead.mutate(notification.id);
+    },
+    [setRead],
   );
 
   const renderItem = React.useCallback(
@@ -33,27 +48,31 @@ const NotificationsList: React.FC = () => {
           <ErrorListItem error={new Error('Component error')} />
         }
       >
-        {React.createElement(NotificationComponentByType, {
-          isSwipeable: true,
-          notification: item,
-          onOpen: handleItemOpen,
-          onPress: notificationsStore.onNotificationPress,
-          onReadEnd: handleNotificationReadEnd,
-        })}
+        <NotificationListItem
+          isSwipeable
+          notification={item}
+          onOpen={handleItemOpen}
+          onPress={onNotificationPress}
+          onReadEnd={handleReadEnd}
+          testID={`notification-item-${item.type}-${item.id}`}
+        />
       </ErrorBoundary>
     ),
-    [handleItemOpen, handleNotificationReadEnd],
+    [handleItemOpen, handleReadEnd, onNotificationPress],
   );
 
   return (
     <List
       keyExtractor={keyExtractor}
-      ListEmptyComponent={<ListEmpty message="No new notifications!" />}
+      ListEmptyComponent={
+        <View testID="notifications-list-empty">
+          <ListEmpty message="No new notifications!" />
+        </View>
+      }
       listType="flatList"
       renderItem={renderItem}
-      data={
-        { pages: [notificationsStore.notifications], pageParams: [0] } as any
-      }
+      data={{ pages: [notifications], pageParams: [0] }}
+      testID="notifications-list"
     />
   );
 };

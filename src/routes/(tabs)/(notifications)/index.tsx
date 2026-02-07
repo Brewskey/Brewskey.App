@@ -7,21 +7,28 @@ import { Container } from 'common/Container';
 import { Header } from 'common/Header';
 import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 import { DeleteModal } from 'components/modals/DeleteModal';
+import { NotificationsList } from 'components/NotificationsList';
+import { useRequestNotificationPermission } from 'hooks/useNotificationHandlers';
+import { useDeleteAllNotifications } from 'hooks/queries/NotificationQueries';
 
 export default function NotificationsIndex() {
-  const [, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const deleteAll = useDeleteAllNotifications();
+  const requestPermissionAndRegister = useRequestNotificationPermission();
 
   useFocusEffect(
     useCallback(() => {
       setIsFocused(true);
+      requestPermissionAndRegister?.();
       return () => setIsFocused(false);
-    }, []),
+    }, [requestPermissionAndRegister]),
   );
 
   const onDeleteAllConfirm = () => {
-    // NotificationsStore.deleteAllNotifications();
-    setIsDeleteModalVisible(false);
+    deleteAll.mutate(undefined, {
+      onSettled: () => setIsDeleteModalVisible(false),
+    });
   };
 
   return (
@@ -37,7 +44,7 @@ export default function NotificationsIndex() {
           />
         }
       />
-      {/* {isFocused ? <NotificationsList /> : null} */}
+      {isFocused ? <NotificationsList /> : null}
       <DeleteModal
         deleteButtonTitle="clear"
         isVisible={isDeleteModalVisible}
