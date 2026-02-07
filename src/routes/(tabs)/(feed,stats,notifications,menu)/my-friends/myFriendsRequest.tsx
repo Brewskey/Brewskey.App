@@ -5,8 +5,6 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { Badge } from '@rneui/themed';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { FriendRequestsList } from 'components/FriendRequestsList';
 import { useUserID } from 'hooks/context/AuthContext';
 import { useGetManyFriends } from 'hooks/queries/FriendQueries';
@@ -65,7 +63,4 @@ const _TabBarLabel: React.FC<{ tintColor: string }> = ({ tintColor }) => (
 
 const MyFriendsRequestRoute: React.FC = () => <FriendRequestsList />;
 
-export default withErrorBoundary(
-  MyFriendsRequestRoute,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default MyFriendsRequestRoute;

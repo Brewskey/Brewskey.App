@@ -4,114 +4,102 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
-import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
 import { OverviewItem2 } from 'common/OverviewItem2';
+import { ScreenFallback } from 'common/ScreenFallback';
 import { Section } from 'common/Section';
 import { SectionHeader } from 'common/SectionHeader';
 import { DeviceOnlineOverviewItem } from 'components/DeviceOnlineOverviewItem';
 import { DeviceStatusOverviewItem } from 'components/DeviceStateOverviewItem';
 import { TapsList } from 'components/TapsList';
-import { useGetDeviceById } from 'hooks/queries/DeviceQueries';
+import { useSuspenseGetDeviceById } from 'hooks/queries/DeviceQueries';
 
 import type { EntityID } from '@brewskey/js-api';
 
-const DeviceDetailsScreen = withErrorBoundary(
-  () => {
-    const router = useRouter();
-    const { id } = useLocalSearchParams<{ id: string }>();
-    // Normalize ID: expo-router may serialize numbers as strings
-    const normalizedDeviceId: EntityID =
-      typeof id === 'string' && !isNaN(Number(id))
-        ? Number(id)
-        : (id as EntityID);
+const DeviceDetailsContent: React.FC<{ deviceId: EntityID }> = ({
+  deviceId,
+}) => {
+  const router = useRouter();
+  const { data: device, refetch } = useSuspenseGetDeviceById(deviceId);
 
-    const {
-      data: device,
-      isLoading,
-      refetch,
-    } = useGetDeviceById(normalizedDeviceId);
+  const onAddTapPress = () => {
+    router.navigate({
+      pathname: '/taps/new',
+      params: { deviceId: device.id.toString() },
+    });
+  };
 
-    if (!normalizedDeviceId) {
-      return (
-        <NotFoundScreen
-          message="The device you're looking for could not be found."
-          title="Device Not Found"
-        />
-      );
-    }
+  return (
+    <Container>
+      <Header
+        shouldShowBackButton
+        title={device.name}
+        rightComponent={
+          <HeaderNavigationButton
+            name="edit"
+            href={{
+              pathname: '/devices/[id]/edit',
+              params: { id: device.id.toString() },
+            }}
+          />
+        }
+      />
+      <TapsList
+        onAddTapPress={onAddTapPress}
+        onRefresh={refetch}
+        ListHeaderComponent={
+          <Container>
+            <Section bottomPadded>
+              <OverviewItem2
+                testID="overview-item-box-id"
+                title="Box ID"
+                value={device.particleId}
+              />
+              <DeviceStatusOverviewItem deviceState={device.deviceStatus} />
+              <DeviceOnlineOverviewItem particleID={device.particleId} />
+            </Section>
+            <SectionHeader testID="section-header-taps" title="Taps" />
+          </Container>
+        }
+        queryOptions={{
+          filters: [createFilter('device/id').equals(deviceId)],
+        }}
+      />
+    </Container>
+  );
+};
 
-    const onAddTapPress = () => {
-      if (device) {
-        router.navigate({
-          pathname: '/taps/new',
-          params: { deviceId: device.id.toString() },
-        });
-      }
-    };
+const DeviceDetailsScreen = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const normalizedDeviceId: EntityID | undefined =
+    typeof id === 'string' && !isNaN(Number(id))
+      ? Number(id)
+      : (id as EntityID | undefined);
 
-    if (isLoading) {
-      return (
-        <Container>
-          <Header shouldShowBackButton />
-          <LoadingIndicator />
-        </Container>
-      );
-    }
-
-    if (!device) {
-      return (
-        <NotFoundScreen
-          message="The device you're looking for could not be found."
-          title="Device Not Found"
-        />
-      );
-    }
-
+  if (!normalizedDeviceId) {
     return (
-      <Container>
-        <Header
-          shouldShowBackButton
-          title={device.name}
-          rightComponent={
-            <HeaderNavigationButton
-              name="edit"
-              href={{
-                pathname: '/devices/[id]/edit',
-                params: { id: device.id.toString() },
-              }}
-            />
-          }
-        />
-        <TapsList
-          onAddTapPress={onAddTapPress}
-          onRefresh={refetch}
-          ListHeaderComponent={
-            <Container>
-              <Section bottomPadded>
-                <OverviewItem2
-                  testID="overview-item-box-id"
-                  title="Box ID"
-                  value={device.particleId}
-                />
-                <DeviceStatusOverviewItem deviceState={device.deviceStatus} />
-                <DeviceOnlineOverviewItem particleID={device.particleId} />
-              </Section>
-              <SectionHeader testID="section-header-taps" title="Taps" />
-            </Container>
-          }
-          queryOptions={{
-            filters: [createFilter('device/id').equals(normalizedDeviceId)],
-          }}
-        />
-      </Container>
+      <NotFoundScreen
+        message="The device you're looking for could not be found."
+        title="Device Not Found"
+      />
     );
-  },
-  <ErrorScreen shouldShowBackButton />,
-);
+  }
+
+  return (
+    <React.Suspense
+      fallback={
+        <ScreenFallback
+          shouldShowBackButton
+          testID="device-details"
+          title={undefined}
+        />
+      }
+    >
+      <DeviceDetailsContent deviceId={normalizedDeviceId} />
+    </React.Suspense>
+  );
+};
 
 export default DeviceDetailsScreen;

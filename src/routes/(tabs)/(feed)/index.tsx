@@ -4,8 +4,6 @@ import { StyleSheet, Text } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { NearbyLocationsList } from 'components/NearbyLocationsList/NearbyLocationsList';
 import { useGetNearbyLocations } from 'hooks/queries/LocationQueries';
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen = withErrorBoundary(() => {
+const HomeScreen = () => {
   const permissionQuery = useLocationPermission();
   const locationQuery = useDeviceLocation();
   const requestPermissionMutation = useRequestLocationPermission();
@@ -92,6 +90,6 @@ const HomeScreen = withErrorBoundary(() => {
       )}
     </Container>
   );
-}, ErrorScreen);
+};
 
 export default HomeScreen;

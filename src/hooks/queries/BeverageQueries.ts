@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  useSuspenseQuery,
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
@@ -41,6 +42,15 @@ export const useGetBeverageById = (
       return BeverageDAO.fetchByID(beverageId);
     },
     enabled: beverageId != null,
+  });
+
+export const useSuspenseGetBeverageById = (beverageId: EntityID) =>
+  useSuspenseQuery({
+    queryKey: [
+      BeverageQueryKeys.BeveragesById,
+      getStringFromEntityID(beverageId),
+    ],
+    queryFn: async () => BeverageDAO.fetchByID(beverageId),
   });
 
 export const useGetBeverages = (

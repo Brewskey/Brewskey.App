@@ -5,8 +5,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { View } from 'react-native';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
@@ -98,7 +96,4 @@ const StatsRoute: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  StatsRoute,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default StatsRoute;

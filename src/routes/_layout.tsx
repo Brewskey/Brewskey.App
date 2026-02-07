@@ -1,7 +1,10 @@
 import * as React from 'react';
 
 import BrewskeyJSApi from '@brewskey/js-api';
-import { QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClientProvider,
+  QueryErrorResetBoundary,
+} from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 
 import { SnackBar } from '../common/SnackBar';
@@ -103,16 +106,18 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppSettingsProvider>
-        <SnackBarProvider>
-          <PourProcessProvider>
-            <MainTabBarSlotProvider>
-              <RootLayoutNav />
-              <SnackBar />
-            </MainTabBarSlotProvider>
-          </PourProcessProvider>
-        </SnackBarProvider>
-      </AppSettingsProvider>
+      <QueryErrorResetBoundary>
+        <AppSettingsProvider>
+          <SnackBarProvider>
+            <PourProcessProvider>
+              <MainTabBarSlotProvider>
+                <RootLayoutNav />
+                <SnackBar />
+              </MainTabBarSlotProvider>
+            </PourProcessProvider>
+          </SnackBarProvider>
+        </AppSettingsProvider>
+      </QueryErrorResetBoundary>
     </QueryClientProvider>
   );
 }

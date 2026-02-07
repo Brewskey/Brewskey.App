@@ -2,9 +2,6 @@ import * as React from 'react';
 
 import { Stack } from 'expo-router';
 
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
-
 const KegLayout: React.FC = () => (
   <Stack
     screenOptions={{
@@ -16,7 +13,4 @@ const KegLayout: React.FC = () => (
   </Stack>
 );
 
-export default withErrorBoundary(
-  KegLayout,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default KegLayout;

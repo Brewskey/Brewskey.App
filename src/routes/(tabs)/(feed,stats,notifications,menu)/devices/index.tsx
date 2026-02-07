@@ -7,8 +7,6 @@ import { AppState, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
 import { Section } from 'common/Section';
@@ -97,7 +95,4 @@ const DevicesScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  DevicesScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default DevicesScreen;

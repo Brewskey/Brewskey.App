@@ -1,8 +1,5 @@
 import { Stack } from 'expo-router';
 
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
-
 /**
  * Tap details layout: Stack of index, (tap-tabs), keg, edit.
  * - index: redirects to on_tap
@@ -13,4 +10,4 @@ import { ErrorScreen } from 'common/ErrorScreen';
  */
 const TapDetailsLayout = () => <Stack screenOptions={{ headerShown: false }} />;
 
-export default withErrorBoundary(TapDetailsLayout, ErrorScreen);
+export default TapDetailsLayout;

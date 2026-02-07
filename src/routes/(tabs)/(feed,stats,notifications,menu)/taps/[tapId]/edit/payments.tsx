@@ -8,8 +8,6 @@ import { useForm, useFormContext } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Form } from 'common/form/Form';
 import { FormField } from 'common/form/FormField';
 import { SubmitButton } from 'common/form/SubmitButton';
@@ -269,4 +267,4 @@ const EditTapPaymentsRoute: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(EditTapPaymentsRoute, <ErrorScreen />);
+export default EditTapPaymentsRoute;

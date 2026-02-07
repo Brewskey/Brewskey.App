@@ -4,8 +4,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { DeviceForm } from 'components/DeviceForm';
@@ -76,7 +74,4 @@ const NewDeviceScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  NewDeviceScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default NewDeviceScreen;

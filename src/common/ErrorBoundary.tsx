@@ -1,14 +1,8 @@
-import { memo, PureComponent } from 'react';
+import { PureComponent } from 'react';
 
 import { getElementFromComponentProp } from 'utils';
 
-import type {
-  ComponentClass,
-  ComponentType,
-  ErrorInfo,
-  ReactElement,
-  ReactNode,
-} from 'react';
+import type { ComponentType, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -19,6 +13,13 @@ interface State {
   error: Error | null | undefined;
 }
 
+/**
+ * React Error Boundary for scoped error handling (e.g. wrapping a list so the rest
+ * of the screen still works). Layout-level errors are handled by Expo Router's
+ * ErrorBoundary export and RouteErrorFallback; use this class only when you need
+ * a boundary around a subtree. Pass fallbackComponent (e.g. ErrorScreen or a
+ * custom fallback) to render when an error is caught.
+ */
 export class ErrorBoundary extends PureComponent<Props, State> {
   constructor(props: Props) {
     super(props);
@@ -47,28 +48,3 @@ export class ErrorBoundary extends PureComponent<Props, State> {
     return children;
   }
 }
-
-export const withErrorBoundary = <
-  TProps extends Record<string, unknown>,
-  TComponent extends ComponentType<TProps>,
->(
-  ComponentToWrap: ComponentType<TProps>,
-  fallbackComponent: ReactNode | null | undefined | ComponentType,
-): TComponent => {
-  const WithErrorBoundary = memo(
-    (props: TProps): ReactElement => (
-      <ErrorBoundary fallbackComponent={fallbackComponent}>
-        <ComponentToWrap {...props} />
-      </ErrorBoundary>
-    ),
-  );
-
-  return WithErrorBoundary as unknown as TComponent;
-};
-
-export const errorBoundary =
-  <TComponent extends ComponentClass<Record<string, unknown>>>(
-    fallbackComponent?: ReactNode | ComponentType,
-  ): ((c: TComponent) => TComponent) =>
-  (WrappedComponent: TComponent): TComponent =>
-    withErrorBoundary(WrappedComponent, fallbackComponent);

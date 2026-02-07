@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { LoadingIndicator } from 'common/LoadingIndicator';
+import { StyleSheet, View } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +23,7 @@ const LoadingListFooter: React.FC<Props> = ({ isLoading }) => {
 
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" />
+      <LoadingIndicator testID="list-loading-footer" />
     </View>
   );
 };

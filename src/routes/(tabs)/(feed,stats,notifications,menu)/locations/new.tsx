@@ -4,8 +4,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LocationForm } from 'components/LocationForm/LocationForm';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
@@ -63,7 +61,4 @@ const NewLocationScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  NewLocationScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default NewLocationScreen;

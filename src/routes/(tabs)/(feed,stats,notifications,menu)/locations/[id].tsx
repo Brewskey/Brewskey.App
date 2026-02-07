@@ -4,16 +4,14 @@ import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
-import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
+import { ScreenFallback } from 'common/ScreenFallback';
 import { SectionContent } from 'common/SectionContent';
 import { SectionHeader } from 'common/SectionHeader';
 import { LocationAddress } from 'components/LocationAddress';
-import { useGetLocationById } from 'hooks/queries/LocationQueries';
+import { useSuspenseGetLocationById } from 'hooks/queries/LocationQueries';
 import { TYPOGRAPHY } from 'theme';
 
 import type { EntityID } from '@brewskey/js-api';
@@ -24,43 +22,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const LocationDetailsScreen: React.FC = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const locationId =
-    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
-  const {
-    data: location,
-    isLoading,
-    error,
-  } = useGetLocationById(locationId as EntityID);
-
-  if (!locationId) {
-    return (
-      <NotFoundScreen
-        message="The location you're looking for could not be found."
-        title="Location Not Found"
-      />
-    );
-  }
-
-  if (isLoading || !location) {
-    return (
-      <Container>
-        <Header shouldShowBackButton testID="header-location-details" />
-        <LoadingIndicator testID="location-details-loading" />
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <NotFoundScreen
-        message="The location you're looking for could not be found."
-        title="Location Not Found"
-      />
-    );
-  }
-
+const LocationDetailsContent: React.FC<{ locationId: EntityID }> = ({
+  locationId,
+}) => {
+  const { data: location } = useSuspenseGetLocationById(locationId);
   const { description, id: locId, name } = location;
 
   return (
@@ -98,7 +63,35 @@ const LocationDetailsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  LocationDetailsScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+const LocationDetailsScreen: React.FC = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const locationId =
+    typeof id === 'string' && !isNaN(Number(id)) ? Number(id) : id;
+
+  if (!locationId) {
+    return (
+      <NotFoundScreen
+        message="The location you're looking for could not be found."
+        title="Location Not Found"
+      />
+    );
+  }
+
+  const locationIdAsEntity = locationId as EntityID;
+
+  return (
+    <React.Suspense
+      fallback={
+        <ScreenFallback
+          shouldShowBackButton
+          testID="location-details"
+          title={undefined}
+        />
+      }
+    >
+      <LocationDetailsContent locationId={locationIdAsEntity} />
+    </React.Suspense>
+  );
+};
+
+export default LocationDetailsScreen;

@@ -5,10 +5,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { Dimensions } from 'react-native';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
-import { LoadingIndicator } from 'common/LoadingIndicator';
+import { ScreenFallback } from 'common/ScreenFallback';
 import { useGetTapById } from 'hooks/queries/TapQueries';
 
 import EditTapFlowSensorRoute from './flow-sensor';
@@ -38,14 +36,7 @@ const EditTapLayout: React.FC = () => {
   const { data: tap, isLoading } = useGetTapById(id as EntityID);
   if (isLoading || !tap) {
     return (
-      <Container>
-        <Header
-          shouldShowBackButton
-          testID="header-edit-tap"
-          title="Edit Tap"
-        />
-        <LoadingIndicator />
-      </Container>
+      <ScreenFallback shouldShowBackButton testID="edit-tap" title="Edit Tap" />
     );
   }
 
@@ -86,4 +77,4 @@ const EditTapLayout: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(EditTapLayout, <ErrorScreen />);
+export default EditTapLayout;

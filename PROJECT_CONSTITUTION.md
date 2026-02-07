@@ -8,10 +8,11 @@ This document serves as the foundational guide for all AI assistants and develop
 2. [Component Development](#component-development)
 3. [Code Style & Architecture](#code-style--architecture)
 4. [API & Data Management](#api--data-management)
-5. [File Organization](#file-organization)
-6. [Performance Guidelines](#performance-guidelines)
-7. [Accessibility](#accessibility)
-8. [Security](#security)
+5. [Loading and Error UI](#loading-and-error-ui)
+6. [File Organization](#file-organization)
+7. [Performance Guidelines](#performance-guidelines)
+8. [Accessibility](#accessibility)
+9. [Security](#security)
 
 ---
 
@@ -272,6 +273,29 @@ export const useTap = (tapId: number) => {
 - Handle errors at the query/mutation level
 - Display user-friendly error messages via SnackBar context
 - Log errors appropriately for debugging
+
+---
+
+## Loading and Error UI
+
+### Error boundaries
+
+- **Expo Router**: Layouts follow Expo best practices by exporting an `ErrorBoundary` component that receives `error` and `retry` from the router (see [Expo Router error handling](https://docs.expo.dev/router/error-handling/)). Export it from layout files (e.g. `(tabs)/(feed,stats,notifications,menu)/_layout.tsx` and `(tabs)/(nux)/_layout.tsx`). The fallback uses `RouteErrorFallback`, which shows `ErrorScreen`, a "Try again" button that calls both `retry()` and `useQueryErrorResetBoundary().reset()`, and in **development** displays the error message and stack so dev errors are visible.
+- **QueryErrorResetBoundary**: Wraps the app at the root (`_layout.tsx`) so any route ErrorBoundary can call `reset()` for React Query errors.
+- **Development**: Caught errors are logged with `console.error` in dev so they appear in LogBox; the fallback UI also shows error message and stack when `__DEV__` is true.
+- **Scoped boundaries**: For smaller subtrees (e.g. `NotificationsList`), use the class `ErrorBoundary` from `common/ErrorBoundary` with a `fallbackComponent` so only that section shows the error UI.
+
+### Loading UI
+
+- **Full-page (Suspense)**: Use `ScreenFallback` from `common/ScreenFallback` as the single full-page loading fallback. It renders `Container` + optional `Header` + centered `LoadingIndicator`. Use it as `<Suspense fallback={<ScreenFallback shouldShowBackButton testID="..." />}>` around screen content that uses `useSuspenseQuery` or `useSuspenseInfiniteQuery`.
+- **Inline / small**: Use `LoadingIndicator` from `common/LoadingIndicator` for spinners inside modals, forms, or tab content.
+- **List load-more**: Use `LoadingListFooter` from `common/LoadingListFooter` as `ListFooterComponent` for infinite lists. It uses `LoadingIndicator` internally and accepts `isLoading`; give it testID `list-loading-footer` when needed for e2e.
+
+### Data fetching and loading
+
+- **Detail screens (single entity)**: Prefer `useSuspenseQuery` (e.g. `useSuspenseGetLocationById`, `useSuspenseGetDeviceById`, `useSuspenseGetTapById`, `useSuspenseGetBeverageById`). Wrap the screen (or the part that uses the hook) in `<Suspense fallback={<ScreenFallback ... />}>`. No manual `if (isLoading)` or `if (error)` branches; "not found" can remain as a conditional when the id is missing. Query errors are handled by the layout ErrorBoundary.
+- **List screens**: Use `useInfiniteQuery` with `LoadingListFooter` for load-more. Where it fits, you can use `useSuspenseInfiniteQuery` and wrap with `<Suspense fallback={<ScreenFallback ... />}>` so the initial load shows the fallback; "load more" still uses `ListFooterComponent={<LoadingListFooter isLoading={...} />}`.
+- **New screens**: Prefer `useSuspenseQuery` or `useSuspenseInfiniteQuery` so loading is handled by Suspense and the layout error boundary handles errors.
 
 ---
 

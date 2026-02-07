@@ -4,11 +4,9 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { useLocalSearchParams } from 'expo-router';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
-import { LoadingIndicator } from 'common/LoadingIndicator';
+import { ScreenFallback } from 'common/ScreenFallback';
 import { useGetPermissionForEntityById } from 'hooks/queries/PermissionQueries';
 import { useGetTapById } from 'hooks/queries/TapQueries';
 import { checkCanEdit } from 'permissionHelpers';
@@ -22,7 +20,7 @@ import type { EntityID } from '@brewskey/js-api';
 
 const TapDetailsTab = createMaterialTopTabNavigator();
 
-const TapTabsLayout = withErrorBoundary(() => {
+const TapTabsLayout = () => {
   const { tapId } = useLocalSearchParams<{ tapId: string }>();
   const { data: tap, isLoading } = useGetTapById(tapId as EntityID);
   const { data: tapPermission } = useGetPermissionForEntityById(
@@ -32,10 +30,7 @@ const TapTabsLayout = withErrorBoundary(() => {
 
   if (isLoading || !tap) {
     return (
-      <Container>
-        <Header showBackButton title="Tap" />
-        <LoadingIndicator />
-      </Container>
+      <ScreenFallback shouldShowBackButton testID="tap-tabs" title="Tap" />
     );
   }
 
@@ -85,6 +80,6 @@ const TapTabsLayout = withErrorBoundary(() => {
       </TapDetailsTab.Navigator>
     </Container>
   );
-}, ErrorScreen);
+};
 
 export default TapTabsLayout;

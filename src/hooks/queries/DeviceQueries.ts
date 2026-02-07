@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  useSuspenseQuery,
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
@@ -34,6 +35,13 @@ export const useGetDeviceById = (
     queryFn: async () => DeviceDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
   });
+
+export const useSuspenseGetDeviceById = (id: EntityID) =>
+  useSuspenseQuery({
+    queryKey: [DeviceQueryKeys.DeviceById, getStringFromEntityID(id)],
+    queryFn: async () => DeviceDAO.fetchByID(id),
+  });
+
 export const useGetDevices = (
   queryOptions?: Omit<QueryOptions, 'skip'>,
 ): UseInfiniteQueryResult<InfiniteData<Device[]>> =>

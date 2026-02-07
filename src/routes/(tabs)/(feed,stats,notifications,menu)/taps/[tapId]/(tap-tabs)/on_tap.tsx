@@ -5,11 +5,10 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
-import { Container } from 'common/Container';
 import { Fragment } from 'common/Fragment';
 import { Header } from 'common/Header';
-import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
+import { ScreenFallback } from 'common/ScreenFallback';
 import { Section } from 'common/Section';
 import { SectionContent } from 'common/SectionContent';
 import { SectionHeader } from 'common/SectionHeader';
@@ -21,9 +20,11 @@ import { TapDetailsNoKeg } from 'components/TapDetailsNoKeg';
 import { useGetFlowSensorByTapId } from 'hooks/queries/FlowSensorQueries';
 import { useGetKegById } from 'hooks/queries/KegQueries';
 import { useGetPermissionForEntityById } from 'hooks/queries/PermissionQueries';
-import { useGetTapById } from 'hooks/queries/TapQueries';
+import { useSuspenseGetTapById } from 'hooks/queries/TapQueries';
 import { checkCanEdit } from 'permissionHelpers';
 import { COLORS, TYPOGRAPHY } from 'theme';
+
+import type { EntityID } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
   text: {
@@ -34,48 +35,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const OnTapRoute: React.FC = () => {
-  const { tapId } = useLocalSearchParams<{ tapId: string }>();
-  const id =
-    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+const OnTapContent: React.FC<{ tapId: EntityID }> = ({ tapId }) => {
   const router = useRouter();
-
-  // All hooks must be called unconditionally before any early returns
-  const { data: tap, isLoading } = useGetTapById(id as any);
-  const { data: tapPermission } = useGetPermissionForEntityById(
-    'tap',
-    id as any,
-  );
-  const { data: flowSensor } = useGetFlowSensorByTapId(id as any);
-  const kegId = tap?.currentKeg?.id ?? null;
-  const { data: currentKeg, refetch } = useGetKegById(kegId);
-
-  if (!id) {
-    return (
-      <NotFoundScreen
-        message="The tap you're looking for could not be found."
-        title="Tap Not Found"
-      />
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Container>
-        <Header shouldShowBackButton />
-        <LoadingIndicator />
-      </Container>
-    );
-  }
-
-  if (!tap) {
-    return (
-      <NotFoundScreen
-        message="The tap you're looking for could not be found."
-        title="Tap Not Found"
-      />
-    );
-  }
+  const { data: tap, refetch } = useSuspenseGetTapById(tapId);
+  const { data: tapPermission } = useGetPermissionForEntityById('tap', tapId);
+  const { data: flowSensor } = useGetFlowSensorByTapId(tapId);
+  const kegId = tap.currentKeg?.id ?? null;
+  const { data: currentKeg } = useGetKegById(kegId);
 
   const onWarningPress = () => {
     router.navigate({
@@ -96,13 +62,11 @@ const OnTapRoute: React.FC = () => {
       />
     ) : null;
 
-  const _onRefresh = () => {
-    refetch();
-  };
-
   return (
     <KegsList
-      onRefresh={_onRefresh}
+      onRefresh={() => {
+        void refetch();
+      }}
       ListHeaderComponent={
         <Fragment>
           {noFlowSensorWarning}
@@ -114,7 +78,7 @@ const OnTapRoute: React.FC = () => {
                   title="Keg level"
                 />
                 <SectionContent paddedHorizontal>
-                  <KegLevelBar kegID={tap.currentKeg.id} />
+                  <KegLevelBar kegID={tap.currentKeg!.id} />
                   <Text style={styles.text} testID="keg-level-text">
                     {Math.max(
                       0,
@@ -152,6 +116,37 @@ const OnTapRoute: React.FC = () => {
         skip: 1,
       }}
     />
+  );
+};
+
+const OnTapRoute: React.FC = () => {
+  const { tapId } = useLocalSearchParams<{ tapId: string }>();
+  const id =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+
+  if (!id) {
+    return (
+      <NotFoundScreen
+        message="The tap you're looking for could not be found."
+        title="Tap Not Found"
+      />
+    );
+  }
+
+  const tapIdAsEntity = id as EntityID;
+
+  return (
+    <React.Suspense
+      fallback={
+        <ScreenFallback
+          shouldShowBackButton
+          testID="on-tap"
+          title={undefined}
+        />
+      }
+    >
+      <OnTapContent tapId={tapIdAsEntity} />
+    </React.Suspense>
   );
 };
 

@@ -5,8 +5,6 @@ import { StyleSheet, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useCreateFlowSensor } from 'hooks/queries/FlowSensorQueries';
@@ -27,82 +25,77 @@ const styles = StyleSheet.create({
   },
 });
 
-const NewFlowSensorScreen = withErrorBoundary(
-  () => {
-    const router = useRouter();
-    const { tapId, shouldReturnOnFinish, returnTo, showBackButton } =
-      useLocalSearchParams<{
-        tapId: string;
-        shouldReturnOnFinish?: string;
-        returnTo?: string;
-        showBackButton?: string;
-      }>();
-    const createFlowSensor = useCreateFlowSensor();
-    const addSnackBarMessage = useAddSnackBarMessage();
+const NewFlowSensorScreen = () => {
+  const router = useRouter();
+  const { tapId, shouldReturnOnFinish, returnTo, showBackButton } =
+    useLocalSearchParams<{
+      tapId: string;
+      shouldReturnOnFinish?: string;
+      returnTo?: string;
+      showBackButton?: string;
+    }>();
+  const createFlowSensor = useCreateFlowSensor();
+  const addSnackBarMessage = useAddSnackBarMessage();
 
-    const tapIdValue =
-      typeof tapId === 'string' && !isNaN(Number(tapId))
-        ? Number(tapId)
-        : tapId;
-    const shouldReturn = shouldReturnOnFinish === 'true';
+  const tapIdValue =
+    typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
+  const shouldReturn = shouldReturnOnFinish === 'true';
 
-    const _onFlowSensorCreated = () => {
-      addSnackBarMessage({ content: 'Flow sensor set' });
+  const _onFlowSensorCreated = () => {
+    addSnackBarMessage({ content: 'Flow sensor set' });
 
-      if (shouldReturn && router.canGoBack()) {
-        router.back();
-      } else {
-        router.navigate({
-          pathname: '/taps/[tapId]/keg/new',
-          params: {
-            tapId: String(tapId),
-            ...(returnTo ? { returnTo } : {}),
-          },
-        });
-      }
-    };
-
-    const _onDefaultButtonPress = async () => {
-      await createFlowSensor.mutateAsync({
-        ...DEFAULT_FLOW_SENSOR,
-        tapId: tapIdValue as EntityID,
-      });
-      _onFlowSensorCreated();
-    };
-
-    const _onCustomButtonPress = () => {
+    if (shouldReturn && router.canGoBack()) {
+      router.back();
+    } else {
       router.navigate({
-        pathname: '/flow-sensor/custom',
+        pathname: '/taps/[tapId]/keg/new',
         params: {
-          tapId,
+          tapId: String(tapId),
           ...(returnTo ? { returnTo } : {}),
         },
       });
-    };
+    }
+  };
 
-    return (
-      <Container>
-        <Header
-          showBackButton={showBackButton !== 'false'}
-          title="Setup flow sensor"
+  const _onDefaultButtonPress = async () => {
+    await createFlowSensor.mutateAsync({
+      ...DEFAULT_FLOW_SENSOR,
+      tapId: tapIdValue as EntityID,
+    });
+    _onFlowSensorCreated();
+  };
+
+  const _onCustomButtonPress = () => {
+    router.navigate({
+      pathname: '/flow-sensor/custom',
+      params: {
+        tapId,
+        ...(returnTo ? { returnTo } : {}),
+      },
+    });
+  };
+
+  return (
+    <Container>
+      <Header
+        showBackButton={showBackButton !== 'false'}
+        title="Setup flow sensor"
+      />
+      <View style={styles.container}>
+        <Button
+          containerStyle={styles.buttonContainer}
+          onPress={_onDefaultButtonPress}
+          testID="button-i-got-my-sensor-from-brewskey"
+          title="I got my sensor from Brewskey"
         />
-        <View style={styles.container}>
-          <Button
-            containerStyle={styles.buttonContainer}
-            onPress={_onDefaultButtonPress}
-            testID="button-i-got-my-sensor-from-brewskey"
-            title="I got my sensor from Brewskey"
-          />
-          <Button
-            onPress={_onCustomButtonPress}
-            testID="button-i-would-like-to-setup-a-different-sensor"
-            title="I'd like to setup a different sensor"
-          />
-        </View>
-      </Container>
-    );
-  },
-  <ErrorScreen shouldShowBackButton />,
-);
+        <Button
+          onPress={_onCustomButtonPress}
+          testID="button-i-would-like-to-setup-a-different-sensor"
+          title="I'd like to setup a different sensor"
+        />
+      </View>
+    </Container>
+  );
+};
 
 export default NewFlowSensorScreen;

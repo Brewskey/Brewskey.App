@@ -5,8 +5,6 @@ import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { FormField } from 'common/form/FormField';
 import { Header } from 'common/Header';
 import { ListItem } from 'common/ListItem';
@@ -136,7 +134,4 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  SettingsScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default SettingsScreen;

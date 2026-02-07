@@ -6,8 +6,6 @@ import { useLocalSearchParams } from 'expo-router';
 import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
 import { FlowSensorForm } from 'components/FlowSensorForm/FlowSensorForm';
@@ -151,7 +149,4 @@ const EditFlowSensorRoute: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  EditFlowSensorRoute,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default EditFlowSensorRoute;

@@ -6,8 +6,6 @@ import { useLocalSearchParams } from 'expo-router';
 import nullthrows from 'nullthrows';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Fragment } from 'common/Fragment';
 import { Header } from 'common/Header';
 import { Section } from 'common/Section';
@@ -79,6 +77,4 @@ const StatsScreenComponent: React.FC = () => {
   );
 };
 
-const StatsScreen = withErrorBoundary(StatsScreenComponent, ErrorScreen);
-
-export default StatsScreen;
+export default StatsScreenComponent;

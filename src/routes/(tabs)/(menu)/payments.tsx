@@ -5,8 +5,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { IconButton } from 'common/buttons/IconButton';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { Section } from 'common/Section';
@@ -113,7 +111,4 @@ const PaymentsScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  PaymentsScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default PaymentsScreen;

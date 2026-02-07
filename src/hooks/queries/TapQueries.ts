@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  useSuspenseQuery,
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
@@ -32,6 +33,12 @@ export enum TapQueryKeys {
 
 export const useGetTapById = (id: EntityID): UseQueryResult<Tap> =>
   useQuery({
+    queryKey: [TapQueryKeys.TapById, getStringFromEntityID(id)],
+    queryFn: async () => TapDAO.fetchByID(id),
+  });
+
+export const useSuspenseGetTapById = (id: EntityID) =>
+  useSuspenseQuery({
     queryKey: [TapQueryKeys.TapById, getStringFromEntityID(id)],
     queryFn: async () => TapDAO.fetchByID(id),
   });

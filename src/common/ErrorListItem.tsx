@@ -6,7 +6,9 @@ import { COLORS } from 'theme';
 import type { FC } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 
-import type { LoaderErrorRowProps } from 'common/LoaderRowTypes';
+export type LoaderErrorRowProps<TExtraProps> = TExtraProps & {
+  error: Error;
+};
 
 const styles = StyleSheet.create({
   container: {

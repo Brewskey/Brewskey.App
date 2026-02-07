@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 import { FriendAddCustomModal } from 'components/modals/FriendAddCustomModal';
@@ -71,7 +69,4 @@ const MyFriendsLayout: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  MyFriendsLayout,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default MyFriendsLayout;

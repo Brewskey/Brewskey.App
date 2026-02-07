@@ -5,8 +5,6 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
@@ -67,7 +65,4 @@ const NuxDeviceScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  NuxDeviceScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default NuxDeviceScreen;

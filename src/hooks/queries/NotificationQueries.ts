@@ -21,9 +21,7 @@ function normalizeDates(list: Notification[]): Notification[] {
       date:
         n.date instanceof Date ? n.date : new Date(n.date as unknown as string),
     }))
-    .sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
 async function loadNotificationsFromStorage(): Promise<Notification[]> {

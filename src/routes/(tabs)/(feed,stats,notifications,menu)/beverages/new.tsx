@@ -5,8 +5,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { flushImageCache } from 'common/CachedImage';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { BeverageForm } from 'components/BeverageForm';
 import { CONFIG } from 'config';
@@ -83,7 +81,4 @@ const NewBeverageScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  NewBeverageScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default NewBeverageScreen;

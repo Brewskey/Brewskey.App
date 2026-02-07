@@ -1,8 +1,6 @@
 import * as React from 'react';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
 import { LocationsList } from 'components/LocationsList';
@@ -26,7 +24,4 @@ const LocationsScreen: React.FC = () => (
   </Container>
 );
 
-export default withErrorBoundary(
-  LocationsScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default LocationsScreen;

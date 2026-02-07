@@ -4,8 +4,6 @@ import { createFilter } from '@brewskey/js-api/dist/filters';
 import { StyleSheet, View } from 'react-native';
 
 import { UserAvatar } from 'common/avatars/UserAvatar';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { SectionHeader } from 'common/SectionHeader';
 import { BeveragePoursList } from 'components/poursLists/BeveragePoursList';
@@ -66,8 +64,4 @@ const ProfileOverviewScreenComponent: React.FC<Props> = ({
   );
 };
 
-const ProfileOverviewScreen = withErrorBoundary(
-  ProfileOverviewScreenComponent,
-  <ErrorScreen shouldShowBackButton />,
-);
-export { ProfileOverviewScreen };
+export { ProfileOverviewScreenComponent as ProfileOverviewScreen };

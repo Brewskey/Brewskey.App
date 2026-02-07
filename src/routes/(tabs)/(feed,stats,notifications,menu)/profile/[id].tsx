@@ -7,8 +7,6 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
@@ -142,7 +140,4 @@ const ProfileScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  ProfileScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default ProfileScreen;

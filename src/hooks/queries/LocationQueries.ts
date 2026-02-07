@@ -4,6 +4,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
+  useSuspenseQuery,
 } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 
@@ -38,6 +39,12 @@ export const useGetLocationById = (
     queryKey: [LocationQueryKeys.LocationById, getStringFromEntityID(id)],
     queryFn: async () => LocationDAO.fetchByID(nullthrows(id)),
     enabled: id != null,
+  });
+
+export const useSuspenseGetLocationById = (id: EntityID) =>
+  useSuspenseQuery({
+    queryKey: [LocationQueryKeys.LocationById, getStringFromEntityID(id)],
+    queryFn: async () => LocationDAO.fetchByID(id),
   });
 
 export const useGetLocations = (

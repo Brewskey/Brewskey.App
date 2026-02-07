@@ -6,8 +6,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { SubmitButton } from 'common/form/SubmitButton';
 import { Header } from 'common/Header';
 import { SectionContent } from 'common/SectionContent';
@@ -148,7 +146,4 @@ const NuxLocationScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  NuxLocationScreen as unknown as React.ComponentType<Record<string, unknown>>,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default NuxLocationScreen;

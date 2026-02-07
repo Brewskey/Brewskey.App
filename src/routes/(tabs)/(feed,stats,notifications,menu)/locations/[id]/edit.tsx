@@ -7,8 +7,6 @@ import nullthrows from 'nullthrows';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
-import { withErrorBoundary } from 'common/ErrorBoundary';
-import { ErrorScreen } from 'common/ErrorScreen';
 import { Header } from 'common/Header';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { NotFoundScreen } from 'common/NotFoundScreen';
@@ -85,7 +83,4 @@ const EditLocationScreen: React.FC = () => {
   );
 };
 
-export default withErrorBoundary(
-  EditLocationScreen,
-  <ErrorScreen shouldShowBackButton />,
-);
+export default EditLocationScreen;
