@@ -10,6 +10,8 @@ import { SectionContent } from 'common/SectionContent';
 import { useLogin } from 'hooks/queries/AuthQueries';
 import { COLORS } from 'theme';
 
+import type { AuthResponse } from '@brewskey/js-api';
+
 const styles = StyleSheet.create({
   input: {
     color: COLORS.textInverse,
@@ -27,7 +29,13 @@ interface FormProps {
   password: string;
 }
 
-export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
+interface LoginFormProps {
+  isInverse: boolean;
+  /** When provided, called after successful login with the auth response (e.g. for write-nfc flow). */
+  onSuccessAfterLogin?: (authResponse: AuthResponse) => void | Promise<void>;
+}
+
+export const LoginForm = ({ isInverse, onSuccessAfterLogin }: LoginFormProps) => {
   const methods = useForm<FormProps>({
     mode: 'onChange',
     defaultValues: {
@@ -39,7 +47,8 @@ export const LoginForm = ({ isInverse }: { isInverse: boolean }) => {
   const loginMutator = useLogin();
 
   const onSubmit = async (formData: FormProps) => {
-    await loginMutator.mutateAsync(formData);
+    const authResponse = await loginMutator.mutateAsync(formData);
+    await onSuccessAfterLogin?.(authResponse);
   };
 
   return (

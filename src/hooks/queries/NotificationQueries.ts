@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
 import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 import { Storage, StorageKeys } from 'utils/Storage';
 
@@ -128,7 +129,7 @@ export function normalizeNotificationFromExpo(
   },
   options: { isRead?: boolean } = {},
 ): Notification {
-  const content = expoNotification.request.content;
+  const { content } = expoNotification.request;
   const data = content.data ?? {};
   const merged: Record<string, unknown> = {
     ...data,

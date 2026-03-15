@@ -6,7 +6,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
 import { Fragment } from 'common/Fragment';
-import { Header } from 'common/Header';
 import { NotFoundScreen } from 'common/NotFoundScreen';
 import { ScreenFallback } from 'common/ScreenFallback';
 import { Section } from 'common/Section';

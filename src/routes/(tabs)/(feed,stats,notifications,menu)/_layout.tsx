@@ -1,7 +1,8 @@
 import { Stack } from 'expo-router';
-import type { ErrorBoundaryProps } from 'expo-router';
 
 import { RouteErrorFallback } from 'common/RouteErrorFallback';
+
+import type { ErrorBoundaryProps } from 'expo-router';
 
 export const unstable_settings = {
   feed: { initialRouteName: 'index' },

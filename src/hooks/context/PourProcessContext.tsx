@@ -1,22 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 
-import nullthrows from 'nullthrows';
 import { Platform } from 'react-native';
-import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
 
 import { CONFIG } from 'config';
 import { useAuthSession } from 'hooks/context/AuthContext';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeviceLocation, useLocationPermission } from 'hooks/useGetLocation';
+import { usePourWithHCE } from 'hooks/usePourWithHCE';
+import { getNfcManager } from 'services/nfc';
 import { fetchJSON } from 'utils';
 
 import type { EntityID } from '@brewskey/js-api';
 import type { PropsWithChildren } from 'react';
-import type {
-  NfcError,
-  RegisterTagEventOpts,
-  TagEvent,
-} from 'react-native-nfc-manager';
 
 interface PourProcessState {
   isVisible: boolean;
@@ -50,42 +45,6 @@ interface PourProcessContextValue {
 const PourProcessContext = React.createContext<PourProcessContextValue | null>(
   null,
 );
-
-const STANDARD_NFC_ERROR_MESSAGE =
-  'Could not read the full NFC message.\nTry Again!';
-
-const onNFCTagDiscovered = (
-  tag: TagEvent | null,
-  hasReadTag: boolean,
-): EntityID | undefined => {
-  if (tag == null) {
-    return undefined;
-  }
-
-  if (hasReadTag) {
-    return undefined;
-  }
-
-  const { payload } = tag.ndefMessage[1];
-
-  const tagValue = String.fromCharCode.apply(
-    null,
-    payload[0] === 0 ? payload.slice(1) : payload,
-  );
-
-  if (!tagValue.includes(CONFIG.HOST)) {
-    throw new Error(STANDARD_NFC_ERROR_MESSAGE);
-  }
-
-  const index = tagValue.indexOf('d/');
-
-  if (index < 0) {
-    throw new Error(STANDARD_NFC_ERROR_MESSAGE);
-  }
-
-  const result = nullthrows(/\d+/.exec(tagValue.substring(index)));
-  return result[0];
-};
 
 interface AuthPayloadParams {
   accessToken: string | undefined;
@@ -131,37 +90,9 @@ export const sendPourAuthorization = async (
   }
 };
 
-const listenForTagOnce = async (
-  options?: RegisterTagEventOpts,
-): Promise<TagEvent> => {
-  const cleanUp = () => {
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-    NfcManager.setEventListener(NfcEvents.SessionClosed, null);
-  };
-
-  return new Promise((resolve, reject) => {
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag: TagEvent) => {
-      console.log(tag);
-      NfcManager.unregisterTagEvent();
-      cleanUp();
-      resolve(tag);
-    });
-
-    NfcManager.setEventListener(
-      NfcEvents.SessionClosed,
-      (error?: NfcError.NfcErrorBase) => {
-        console.log('closed');
-        cleanUp();
-        reject(error);
-      },
-    );
-
-    NfcManager.registerTagEvent(options);
-  });
-};
-
 /**
- * Provider component that manages pour process state and NFC setup
+ * Provider component that manages pour process state and NFC setup.
+ * Uses getNfcManager() for NFC capability detection (no native NFC on web).
  */
 export const PourProcessProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -177,15 +108,31 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
     pourErrorText: null,
   });
 
-  // Set up NFC support detection
+  // Set up NFC support detection (via abstraction; no native NFC on web)
   useEffect(() => {
+    const nfc = getNfcManager() as {
+      default?: { start: () => Promise<void>; isSupported: () => Promise<boolean>; isEnabled: () => Promise<boolean>; close: () => Promise<void> };
+      start?: () => Promise<void>;
+      isSupported?: () => Promise<boolean>;
+      isEnabled?: () => Promise<boolean>;
+      close?: () => Promise<void>;
+    } | null;
+    if (!nfc) {
+      setState((prev) => ({
+        ...prev,
+        isNFCSupported: false,
+        isNFCEnabled: false,
+      }));
+      return;
+    }
+    const NfcManager = nfc.default ?? nfc;
     const bootstrap = async () => {
       try {
-        await NfcManager.start();
-        const isSupported = await NfcManager.isSupported();
+        await NfcManager.start?.();
+        const isSupported = await NfcManager.isSupported?.() ?? false;
 
         if (Platform.OS === 'android') {
-          const isEnabled = await NfcManager.isEnabled();
+          const isEnabled = await NfcManager.isEnabled?.() ?? false;
           setState((prev) => ({
             ...prev,
             isNFCSupported: isSupported,
@@ -210,7 +157,7 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
     void bootstrap();
     return () => {
       try {
-        void NfcManager.close();
+        void NfcManager.close?.();
       } catch (error) {
         console.error(error);
       }
@@ -227,10 +174,6 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
   }, []);
 
   const closeModal = useCallback(async () => {
-    if (state.isNFCEnabled) {
-      await NfcManager.unregisterTagEvent();
-      await NfcManager.cancelTechnologyRequest();
-    }
     setState((prev) => ({
       ...prev,
       isVisible: false,
@@ -238,7 +181,7 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
       shouldShowPaymentScreen: false,
       hasReadTag: false,
     }));
-  }, [state.isNFCEnabled]);
+  }, []);
 
   const setLoading = useCallback((isLoading: boolean) => {
     setState((prev) => ({ ...prev, isLoading }));
@@ -307,17 +250,15 @@ export const usePourModalContext = (): PourProcessContextValue => {
   const location = locationQuery.data ?? null;
   const permission = permissionQuery.data ?? null;
   const addSnackBarMessage = useAddSnackBarMessage();
+  const pourWithHCE = usePourWithHCE(session?.accessToken);
 
   const openModal = useCallback(async () => {
-    // Wait for queries to resolve before proceeding
     if (permissionQuery.isLoading || locationQuery.isLoading) {
       return;
     }
 
-    // Open the modal
     await context.openModal();
 
-    // Check geolocation permission
     if (!permission?.granted) {
       addSnackBarMessage({
         duration: 3000,
@@ -326,44 +267,29 @@ export const usePourModalContext = (): PourProcessContextValue => {
       });
     }
 
-    // Start NFC listening if enabled
-    if (context.isNFCEnabled) {
-      const sendPourAuthorizationParams = {
-        accessToken: session?.accessToken,
-        latitude: location?.coords.latitude ?? 0,
-        longitude: location?.coords.longitude ?? 0,
-        didAuthorizePayment: false,
-        totp: '',
-      };
-
+    // Start HCE (phone as card) when NFC is enabled; reader gets token and calls API
+    if (context.isNFCEnabled && pourWithHCE.isSupported) {
       try {
-        await listenForTagOnce({
-          alertMessage: 'Tap Brewskey Box',
-          invalidateAfterFirstRead: true,
+        await pourWithHCE.start({
+          onClosed: () => {
+            pourWithHCE.stop();
+            context.closeModal();
+          },
+          onSuccess: () => {
+            addSnackBarMessage({
+              duration: 3000,
+              style: 'success',
+              content: 'You can start pouring now!',
+            });
+          },
         });
-
-        const tag = await NfcManager.getTag();
-        const deviceId = await onNFCTagDiscovered(tag, context.hasReadTag);
-
-        if (deviceId != null) {
-          await sendPourAuthorization({
-            ...sendPourAuthorizationParams,
-            deviceId,
-          });
-          addSnackBarMessage({
-            duration: 3000,
-            style: 'success',
-            content: 'You can start pouring now!',
-          });
-          await context.closeModal();
-        }
       } catch (error) {
         addSnackBarMessage({
           duration: 3000,
           style: 'danger',
           content: (error as Error).message,
         });
-        NfcManager.cancelTechnologyRequest();
+        context.closeModal();
       }
     }
   }, [
@@ -371,10 +297,14 @@ export const usePourModalContext = (): PourProcessContextValue => {
     permissionQuery.isLoading,
     locationQuery.isLoading,
     permission,
-    location,
-    session?.accessToken,
+    pourWithHCE,
     addSnackBarMessage,
   ]);
+
+  const closeModal = useCallback(async () => {
+    pourWithHCE.stop();
+    await context.closeModal();
+  }, [context, pourWithHCE]);
 
   const startPourAuthorization = useCallback(
     async (totp: string) => {
@@ -426,6 +356,7 @@ export const usePourModalContext = (): PourProcessContextValue => {
   return {
     ...context,
     openModal,
+    closeModal,
     startPourAuthorization,
   };
 };

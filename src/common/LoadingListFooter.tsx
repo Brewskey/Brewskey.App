@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import { LoadingIndicator } from 'common/LoadingIndicator';
 import { StyleSheet, View } from 'react-native';
+
+import { LoadingIndicator } from 'common/LoadingIndicator';
 
 const styles = StyleSheet.create({
   container: {

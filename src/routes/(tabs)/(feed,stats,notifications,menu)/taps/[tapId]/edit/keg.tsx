@@ -65,6 +65,14 @@ const EditTapFeedRoute: React.FC = () => {
   const tapIdValue =
     typeof tapId === 'string' && !isNaN(Number(tapId)) ? Number(tapId) : tapId;
 
+  const createKeg = useCreateKeg();
+  const updateKeg = useUpdateKeg();
+  const floatKeg = useFloatKeg();
+  const addSnackBarMessage = useAddSnackBarMessage();
+  const { data: keg, isLoading } = useGetKegByQuery({
+    filters: [createFilter('tap/id').equals((tapIdValue ?? 0) as EntityID)],
+  });
+
   if (!tapIdValue) {
     return (
       <NotFoundScreen
@@ -73,14 +81,6 @@ const EditTapFeedRoute: React.FC = () => {
       />
     );
   }
-
-  const createKeg = useCreateKeg();
-  const updateKeg = useUpdateKeg();
-  const floatKeg = useFloatKeg();
-  const addSnackBarMessage = useAddSnackBarMessage();
-  const { data: keg, isLoading } = useGetKegByQuery({
-    filters: [createFilter('tap/id').equals(tapIdValue as EntityID)],
-  });
 
   const onReplaceSubmit = async (values: KegMutator): Promise<KegMutator> => {
     await createKeg.mutateAsync(values);

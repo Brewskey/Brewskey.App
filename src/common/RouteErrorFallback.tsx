@@ -1,10 +1,13 @@
+import * as React from 'react';
+
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
-import type { ErrorBoundaryProps } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { ErrorScreen } from 'common/ErrorScreen';
 import { COLORS, TYPOGRAPHY } from 'theme';
+
+import type { ErrorBoundaryProps } from 'expo-router';
 
 export interface RouteErrorFallbackProps extends ErrorBoundaryProps {
   shouldShowBackButton?: boolean;
@@ -16,11 +19,11 @@ export interface RouteErrorFallbackProps extends ErrorBoundaryProps {
  * route state and React Query errors. In __DEV__, shows error message and stack
  * so development errors are visible.
  */
-export function RouteErrorFallback({
+export const RouteErrorFallback = ({
   error,
   retry,
   shouldShowBackButton = true,
-}: RouteErrorFallbackProps): React.ReactElement {
+}: RouteErrorFallbackProps): React.ReactElement => {
   const { reset } = useQueryErrorResetBoundary();
 
   const handleRetry = () => {
@@ -36,9 +39,9 @@ export function RouteErrorFallback({
   }
 
   return (
-    <>
+    <React.Fragment>
       <ErrorScreen shouldShowBackButton={shouldShowBackButton} />
-      {__DEV__ && (
+      {__DEV__ ? (
         <View style={styles.devSection}>
           <Text style={styles.devTitle}>Development error</Text>
           <ScrollView
@@ -48,14 +51,14 @@ export function RouteErrorFallback({
             <Text selectable style={styles.devMessage}>
               {error.message}
             </Text>
-            {error.stack != null && (
+            {error.stack != null ? (
               <Text selectable style={styles.devStack}>
                 {error.stack}
               </Text>
-            )}
+            ) : null}
           </ScrollView>
         </View>
-      )}
+      ) : null}
       <View style={styles.actions}>
         <Button
           onPress={handleRetry}
@@ -63,9 +66,9 @@ export function RouteErrorFallback({
           testID="error-screen-try-again"
         />
       </View>
-    </>
+    </React.Fragment>
   );
-}
+};
 
 const styles = StyleSheet.create({
   actions: {

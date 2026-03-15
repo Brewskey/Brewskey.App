@@ -8,6 +8,7 @@ import { Container } from 'common/Container';
 import { Header } from 'common/Header';
 import { Section } from 'common/Section';
 import { LoginForm } from 'components/LoginForm';
+import { useWriteNfcFlow } from 'hooks/useWriteNfcFlow';
 import { TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
@@ -36,6 +37,13 @@ const styles = StyleSheet.create({
 });
 
 const WriteNFCScreen = () => {
+  const {
+    status,
+    goToLogin,
+    onLoginSuccess,
+    goBackToLogin,
+  } = useWriteNfcFlow();
+
   const onOpenLink = async () => {
     const url = 'https://brewskey.com/faq#supported-nfc-cards';
     const isSupported = await Linking.canOpenURL(url);
@@ -46,7 +54,6 @@ const WriteNFCScreen = () => {
     await Linking.openURL(url);
   };
 
-  const status = 'instructions' as string;
   let content = null;
 
   switch (status) {
@@ -96,6 +103,7 @@ const WriteNFCScreen = () => {
               3. Write to the NFC card.
             </Text>
             <Button
+              onPress={goToLogin}
               style={styles.nextButton}
               testID="button-nfc-next"
               title="Next"
@@ -115,7 +123,12 @@ const WriteNFCScreen = () => {
             </Text>
           </Section>
           <Section bottomPadded>
-            <LoginForm isInverse={false} />
+            <LoginForm
+              isInverse={false}
+              onSuccessAfterLogin={(authResponse) =>
+                onLoginSuccess(authResponse.accessToken)
+              }
+            />
           </Section>
         </React.Fragment>
       );
@@ -132,7 +145,12 @@ const WriteNFCScreen = () => {
             </Text>
           </Section>
           <Section bottomPadded innerContainerStyle={styles.section}>
-            <Button style={styles.nextButton} title="Go Back" />
+            <Button
+              onPress={goBackToLogin}
+              style={styles.nextButton}
+              testID="button-nfc-go-back"
+              title="Go Back"
+            />
           </Section>
         </React.Fragment>
       );

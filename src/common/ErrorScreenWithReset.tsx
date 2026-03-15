@@ -1,3 +1,5 @@
+import * as React from 'react';
+
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { StyleSheet, View } from 'react-native';
 
@@ -18,7 +20,7 @@ export const ErrorScreenWithReset = ({
   const { reset } = useQueryErrorResetBoundary();
 
   return (
-    <>
+    <React.Fragment>
       <ErrorScreen shouldShowBackButton={shouldShowBackButton} />
       <View style={styles.actions}>
         <Button
@@ -27,7 +29,7 @@ export const ErrorScreenWithReset = ({
           testID="error-screen-try-again"
         />
       </View>
-    </>
+    </React.Fragment>
   );
 };
 

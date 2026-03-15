@@ -14,8 +14,8 @@ import {
   useGetCurrentSnackBarMessage,
   useRemoveSnackBarMessage,
 } from 'hooks/context/SnackBarContext';
-import { useNotificationPress } from 'hooks/useNotificationHandlers';
 import { useDeleteNotification } from 'hooks/queries/NotificationQueries';
+import { useNotificationPress } from 'hooks/useNotificationHandlers';
 import { COLORS } from 'theme';
 
 import type { LayoutChangeEvent } from 'react-native';

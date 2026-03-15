@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Input } from '@rneui/themed';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import NfcManager from 'react-native-nfc-manager';
+import { getNfcManager } from 'services/nfc';
 import * as Progress from 'react-native-progress';
 import { useInterval } from 'usehooks-ts';
 
@@ -98,7 +98,9 @@ const PourProcessInputModal: React.FC = () => {
   const onHideModal = async () => closeModal();
 
   const onEnableNFC = async () => {
-    await NfcManager.goToNfcSetting();
+    const nfc = getNfcManager() as { default?: { goToNfcSetting?: () => Promise<void> }; goToNfcSetting?: () => Promise<void> } | null;
+    const manager = nfc?.default ?? nfc;
+    await manager?.goToNfcSetting?.();
   };
 
   const headerText = isNFCEnabled ? 'Tap phone to pour' : 'Enter code to pour';

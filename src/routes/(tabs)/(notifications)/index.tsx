@@ -8,8 +8,8 @@ import { Header } from 'common/Header';
 import { HeaderIconButton } from 'common/Header/HeaderIconButton';
 import { DeleteModal } from 'components/modals/DeleteModal';
 import { NotificationsList } from 'components/NotificationsList';
-import { useRequestNotificationPermission } from 'hooks/useNotificationHandlers';
 import { useDeleteAllNotifications } from 'hooks/queries/NotificationQueries';
+import { useRequestNotificationPermission } from 'hooks/useNotificationHandlers';
 
 export default function NotificationsIndex() {
   const [isFocused, setIsFocused] = useState(true);

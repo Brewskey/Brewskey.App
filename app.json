@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.NFC"],
-      "package": "com.anonymous.app"
+      "package": "com.brewskey.app"
     },
     "web": {
       "bundler": "metro",
@@ -51,7 +51,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "react-native-nfc-manager",
+      ["react-native-nfc-manager"],
       [
         "expo-location",
         {
@@ -65,7 +65,7 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
         }
       ],
-      "expo-secure-store"
+      ["expo-secure-store"]
     ]
   }
 }
