@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { Input } from '@rneui/themed';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { getNfcManager } from 'services/nfc';
 import * as Progress from 'react-native-progress';
 import { useInterval } from 'usehooks-ts';
 
@@ -10,7 +9,10 @@ import { TouchableItem } from 'common/buttons/TouchableItem';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { CenteredModal } from 'components/modals/CenteredModal';
 import { usePourModalContext } from 'hooks/context/PourProcessContext';
+import { getNfcManager } from 'services/nfc';
 import { COLORS } from 'theme';
+
+import type { TextStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   enableNFCContainer: {
@@ -39,7 +41,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '85%',
 
-    ...(Platform.OS === 'web' ? ({ outlineStyle: 'none' } as any) : {}),
+    ...(Platform.OS === 'web'
+      ? ({ outlineStyle: 'none' } as unknown as TextStyle)
+      : {}),
   },
   loadingIndicator: {
     height: 120,
@@ -98,7 +102,10 @@ const PourProcessInputModal: React.FC = () => {
   const onHideModal = async () => closeModal();
 
   const onEnableNFC = async () => {
-    const nfc = getNfcManager() as { default?: { goToNfcSetting?: () => Promise<void> }; goToNfcSetting?: () => Promise<void> } | null;
+    const nfc = getNfcManager() as {
+      default?: { goToNfcSetting?: () => Promise<void> };
+      goToNfcSetting?: () => Promise<void>;
+    } | null;
     const manager = nfc?.default ?? nfc;
     await manager?.goToNfcSetting?.();
   };

@@ -111,7 +111,12 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
   // Set up NFC support detection (via abstraction; no native NFC on web)
   useEffect(() => {
     const nfc = getNfcManager() as {
-      default?: { start: () => Promise<void>; isSupported: () => Promise<boolean>; isEnabled: () => Promise<boolean>; close: () => Promise<void> };
+      default?: {
+        start: () => Promise<void>;
+        isSupported: () => Promise<boolean>;
+        isEnabled: () => Promise<boolean>;
+        close: () => Promise<void>;
+      };
       start?: () => Promise<void>;
       isSupported?: () => Promise<boolean>;
       isEnabled?: () => Promise<boolean>;
@@ -129,10 +134,10 @@ export const PourProcessProvider: React.FC<PropsWithChildren> = ({
     const bootstrap = async () => {
       try {
         await NfcManager.start?.();
-        const isSupported = await NfcManager.isSupported?.() ?? false;
+        const isSupported = (await NfcManager.isSupported?.()) ?? false;
 
         if (Platform.OS === 'android') {
-          const isEnabled = await NfcManager.isEnabled?.() ?? false;
+          const isEnabled = (await NfcManager.isEnabled?.()) ?? false;
           setState((prev) => ({
             ...prev,
             isNFCSupported: isSupported,

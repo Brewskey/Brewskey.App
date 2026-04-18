@@ -8,7 +8,7 @@ import type { StyleProp, TextStyle } from 'react-native';
 
 export type TextInputProps<TFormFields extends FieldValues> = Omit<
   InputProps,
-  'onBlur' | 'onChangeText' | 'value' | 'name'
+  'onBlur' | 'onChangeText' | 'value' | 'name' | 'ref'
 > & {
   inputStyle?: StyleProp<TextStyle>;
   underlineColorAndroid?: string;

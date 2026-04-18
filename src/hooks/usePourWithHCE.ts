@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { useCallback, useRef } from 'react';
 
 import { useCreateNfcTagAuthorization } from 'hooks/queries/NfcQueries';

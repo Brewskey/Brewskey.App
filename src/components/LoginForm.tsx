@@ -35,7 +35,10 @@ interface LoginFormProps {
   onSuccessAfterLogin?: (authResponse: AuthResponse) => void | Promise<void>;
 }
 
-export const LoginForm = ({ isInverse, onSuccessAfterLogin }: LoginFormProps) => {
+export const LoginForm = ({
+  isInverse,
+  onSuccessAfterLogin,
+}: LoginFormProps) => {
   const methods = useForm<FormProps>({
     mode: 'onChange',
     defaultValues: {

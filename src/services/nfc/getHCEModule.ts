@@ -4,7 +4,7 @@ import { isWeb } from './isWeb';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type HCEModule = any;
 
-let cached: HCEModule | null | undefined = undefined;
+let cached: HCEModule | null | undefined;
 
 /**
  * Returns the HCE native module from @icedevml/react-native-host-card-emulation when not on web; otherwise null.
@@ -18,6 +18,8 @@ export function getHCEModule(): HCEModule | null {
     return cached;
   }
   try {
+    // Sync lazy load of optional native module (must not import at module scope)
+    // eslint-disable-next-line @typescript-eslint/no-require-imports -- conditional native require
     const pkg = require('@icedevml/react-native-host-card-emulation');
     cached = pkg?.default ?? pkg ?? null;
     return cached;

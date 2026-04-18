@@ -34,9 +34,22 @@ import { getUniqueDeviceId } from 'utils/getUniqueDeviceId';
 import { queryClient } from 'utils/queryClient';
 
 import type { EntityID } from '@brewskey/js-api';
+import type { NotificationPermissionsStatus } from 'expo-notifications';
 import type { ReactNode } from 'react';
 
 import type { Notification } from 'stores/NotificationTypes';
+
+/** Mirrors expo-notifications README; permission base types omit `granted` in some TS setups. */
+function isNotificationPermissionGranted(
+  settings: NotificationPermissionsStatus,
+): boolean {
+  const grantedFlag = (settings as { granted?: boolean }).granted === true;
+  const ios = settings.ios?.status;
+  const iosAllowed =
+    ios === Notifications.IosAuthorizationStatus.AUTHORIZED ||
+    ios === Notifications.IosAuthorizationStatus.PROVISIONAL;
+  return grantedFlag || iosAllowed;
+}
 
 const BASE_PUSH_URL = `${CONFIG.HOST}/api/v2/push`;
 const isWeb = Platform.OS === 'web';
@@ -63,6 +76,8 @@ function showNotificationInSnackBar(notification: Notification): void {
 
 function handleRegistrationError(errorMessage: string): void {
   if (typeof alert !== 'undefined') {
+    // Blocking alert for permission failures before SnackBar may be mounted
+    // eslint-disable-next-line no-alert -- push registration runs outside snack UI
     alert(errorMessage);
   }
 }
@@ -84,13 +99,13 @@ async function registerForPushNotificationsAsync(): Promise<
     return undefined;
   }
 
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
+  const existing = await Notifications.getPermissionsAsync();
+  let permitted = isNotificationPermissionGranted(existing);
+  if (!permitted) {
+    const requested = await Notifications.requestPermissionsAsync();
+    permitted = isNotificationPermissionGranted(requested);
   }
-  if (finalStatus !== 'granted') {
+  if (!permitted) {
     handleRegistrationError(
       'Permission not granted to get push token for push notification!',
     );
@@ -251,7 +266,9 @@ export function useNotificationHandlers(): {
   const runRegistrationRef = useRef<() => Promise<void>>(async () => {});
 
   useEffect(() => {
-    if (!authResponse?.accessToken || isWeb) return;
+    if (!authResponse?.accessToken || isWeb) {
+      return undefined;
+    }
 
     let tokenSub: Notifications.EventSubscription | undefined;
     const receivedSub = Notifications.addNotificationReceivedListener((n) => {
@@ -331,10 +348,10 @@ export function useNotificationHandlers(): {
     runRegistrationRef.current = runRegistration;
 
     return () => {
-      tokenSub?.remove();
-      receivedSub?.remove();
-      responseSub?.remove();
-      appStateSub.remove();
+      void tokenSub?.remove();
+      void receivedSub?.remove();
+      void responseSub?.remove();
+      void appStateSub.remove();
     };
   }, [authResponse?.accessToken, userIdStr, disabledTaps, router]);
 
@@ -357,7 +374,9 @@ export function useNotificationHandlers(): {
       typeof window !== 'undefined'
         ? (window as Window & { __PLAYWRIGHT_TEST__?: boolean })
         : null;
-    if (!win?.__PLAYWRIGHT_TEST__) return;
+    if (!win?.__PLAYWRIGHT_TEST__) {
+      return undefined;
+    }
     const simulate = async (payload: Record<string, unknown>) => {
       const notification = normalizeNotificationFromPayload(payload, {
         isRead: false,
@@ -369,7 +388,7 @@ export function useNotificationHandlers(): {
       win as Window & { __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: typeof simulate }
     ).__PLAYWRIGHT_SIMULATE_NOTIFICATION__ = simulate;
     return () => {
-      delete (
+      void delete (
         win as Window & { __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: unknown }
       ).__PLAYWRIGHT_SIMULATE_NOTIFICATION__;
     };

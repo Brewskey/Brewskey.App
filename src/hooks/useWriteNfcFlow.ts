@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
@@ -15,15 +13,22 @@ export function useWriteNfcFlow() {
   const addSnackBarMessage = useAddSnackBarMessage();
   const createNfcTag = useCreateNfcTagAuthorization();
 
-  type NfcManagerInstance = {
+  interface NfcManagerInstance {
     registerTagEvent?: () => Promise<void>;
     ndefHandler?: { writeNdefMessage: (p: number[]) => Promise<void> };
     cancelTechnologyRequest?: () => Promise<void>;
     unregisterTagEvent?: () => Promise<void>;
-  };
-  type NdefLike = { encodeMessage: (r: unknown[]) => number[]; textRecord: (t: string) => unknown };
-  const nfc = getNfcManager() as { default?: NfcManagerInstance; Ndef?: NdefLike } | null;
-  const NfcManager: NfcManagerInstance | null = (nfc?.default ?? nfc) as NfcManagerInstance | null;
+  }
+  interface NdefLike {
+    encodeMessage: (r: unknown[]) => number[];
+    textRecord: (t: string) => unknown;
+  }
+  const nfc = getNfcManager() as {
+    default?: NfcManagerInstance;
+    Ndef?: NdefLike;
+  } | null;
+  const NfcManager: NfcManagerInstance | null = (nfc?.default ??
+    nfc) as NfcManagerInstance | null;
   const Ndef = nfc?.Ndef ?? null;
   const isNfcSupported = Boolean(NfcManager && Ndef);
 
@@ -58,7 +63,9 @@ export function useWriteNfcFlow() {
         cancelledRef.current = false;
 
         await NfcManager?.registerTagEvent?.();
-        await new Promise((r) => setTimeout(r, 300));
+        await new Promise<void>((resolve) => {
+          setTimeout(() => resolve(), 300);
+        });
 
         const requestWriteTag = async () => {
           if (cancelledRef.current || tokenRef.current == null || !Ndef) return;
@@ -80,7 +87,9 @@ export function useWriteNfcFlow() {
             }
           }
           if (cancelledRef.current) return;
-          await new Promise((r) => setTimeout(r, 1000));
+          await new Promise<void>((resolve) => {
+            setTimeout(() => resolve(), 1000);
+          });
           requestWriteTag();
         };
         requestWriteTag();
@@ -91,13 +100,7 @@ export function useWriteNfcFlow() {
         });
       }
     },
-    [
-      isNfcSupported,
-      addSnackBarMessage,
-      createNfcTag,
-      NfcManager,
-      Ndef,
-    ],
+    [isNfcSupported, addSnackBarMessage, createNfcTag, NfcManager, Ndef],
   );
 
   const goBackToLogin = useCallback(async () => {
@@ -107,12 +110,13 @@ export function useWriteNfcFlow() {
     setStatus('login');
   }, [cleanupNfc]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       cancelledRef.current = true;
       cleanupNfc();
-    };
-  }, [cleanupNfc]);
+    },
+    [cleanupNfc],
+  );
 
   return {
     status,

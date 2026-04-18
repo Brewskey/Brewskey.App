@@ -8,7 +8,7 @@ node_modules/
 dist/
 web-build/
 
-# Continuous Native Generation — regenerate with `npm run prebuild`
+# Continuous Native Generation — regenerate with `npm run expo-prebuild`
 /android/
 /ios/
 

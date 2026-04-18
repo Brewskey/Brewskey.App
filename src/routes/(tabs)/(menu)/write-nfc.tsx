@@ -37,12 +37,8 @@ const styles = StyleSheet.create({
 });
 
 const WriteNFCScreen = () => {
-  const {
-    status,
-    goToLogin,
-    onLoginSuccess,
-    goBackToLogin,
-  } = useWriteNfcFlow();
+  const { status, goToLogin, onLoginSuccess, goBackToLogin } =
+    useWriteNfcFlow();
 
   const onOpenLink = async () => {
     const url = 'https://brewskey.com/faq#supported-nfc-cards';
@@ -125,7 +121,7 @@ const WriteNFCScreen = () => {
           <Section bottomPadded>
             <LoginForm
               isInverse={false}
-              onSuccessAfterLogin={(authResponse) =>
+              onSuccessAfterLogin={async (authResponse) =>
                 onLoginSuccess(authResponse.accessToken)
               }
             />
