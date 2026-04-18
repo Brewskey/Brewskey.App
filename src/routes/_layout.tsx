@@ -6,6 +6,9 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { COLORS } from 'theme';
 
 import { SnackBar } from '../common/SnackBar';
 import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
@@ -105,19 +108,21 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <QueryErrorResetBoundary>
-        <AppSettingsProvider>
-          <SnackBarProvider>
-            <PourProcessProvider>
-              <MainTabBarSlotProvider>
-                <RootLayoutNav />
-                <SnackBar />
-              </MainTabBarSlotProvider>
-            </PourProcessProvider>
-          </SnackBarProvider>
-        </AppSettingsProvider>
-      </QueryErrorResetBoundary>
-    </QueryClientProvider>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
+      <QueryClientProvider client={queryClient}>
+        <QueryErrorResetBoundary>
+          <AppSettingsProvider>
+            <SnackBarProvider>
+              <PourProcessProvider>
+                <MainTabBarSlotProvider>
+                  <RootLayoutNav />
+                  <SnackBar />
+                </MainTabBarSlotProvider>
+              </PourProcessProvider>
+            </SnackBarProvider>
+          </AppSettingsProvider>
+        </QueryErrorResetBoundary>
+      </QueryClientProvider>
+    </SafeAreaView>
   );
 }

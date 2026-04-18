@@ -85,7 +85,7 @@ export const LoginForm = ({ isInverse, onSuccessAfterLogin }: LoginFormProps) =>
           underlineColorAndroid={isInverse ? COLORS.secondary : undefined}
           validationTextStyle={styles.validationText}
         />
-        <SectionContent paddedVertical>
+        <SectionContent paddedHorizontal paddedVertical>
           <SubmitButton<FormProps>
             allowSubmitWhenValid
             buttonStyle={

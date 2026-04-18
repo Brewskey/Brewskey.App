@@ -45,7 +45,7 @@ export const FormValidationMessage: React.FC<{
   testID?: string;
   error?: string | null;
 }> = ({ fieldName, testID, error }) => {
-  const formContext = useFormContext();
+  const { formState } = useFormContext();
 
   // Default testID for form-level validation messages
   const defaultTestID =
@@ -65,17 +65,20 @@ export const FormValidationMessage: React.FC<{
   if (fieldName) {
     return (
       <ErrorMessage
+        errors={formState?.errors}
         name={fieldName}
-        as={(props: any) => (
-          <FormValidationText {...props} testID={defaultTestID} />
+        render={({ message }) => (
+          <FormValidationText testID={defaultTestID}>
+            {message}
+          </FormValidationText>
         )}
       />
     );
   }
 
   // For form-level errors, check errors.root
-  if (formContext) {
-    const rootError = formContext.formState.errors.root?.message;
+  if (formState?.errors?.root != null) {
+    const rootError = formState.errors.root?.message;
     if (rootError) {
       return (
         <FormValidationText testID={defaultTestID}>

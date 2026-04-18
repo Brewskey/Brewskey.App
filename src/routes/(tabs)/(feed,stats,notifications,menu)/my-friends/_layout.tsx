@@ -54,10 +54,16 @@ const MyFriendsLayout: React.FC = () => {
         <MyFriendsNavigator.Screen
           component={MyFriendsMainRoute}
           name="myFriendsMain"
+          options={{
+            title: 'Friends',
+          }}
         />
         <MyFriendsNavigator.Screen
           component={MyFriendsRequestRoute}
           name="myFriendsRequest"
+          options={{
+            title: 'Requests',
+          }}
         />
       </MyFriendsNavigator.Navigator>
       <FriendAddCustomModal

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from 'common/buttons/Button';
 import { IconButton } from 'common/buttons/IconButton';
@@ -18,6 +19,7 @@ import type { EntityID } from '@brewskey/js-api';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   headerContainer: {
     position: 'relative',
@@ -74,33 +76,36 @@ export const BeverageModal = React.forwardRef<
       isVisible={isVisible}
       onHideModal={() => setIsVisible(false)}
       transparent={false}
+      isTouchable={false}
     >
-      <View style={styles.container}>
-        <Section>
-          <View style={styles.headerContainer}>
-            <View style={styles.closeButton}>
-              <IconButton
-                color={COLORS.text}
-                name="close"
-                onPress={() => setIsVisible(false)}
-              />
-            </View>
-            <SectionHeader title={beverage.data.name} />
-          </View>
-        </Section>
-        <ScrollView style={styles.scrollContent}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
+        <View style={styles.container}>
           <Section>
-            <SectionContent>
-              <BeverageDetailsContent beverage={beverage.data} />
-            </SectionContent>
+            <View style={styles.headerContainer}>
+              <View style={styles.closeButton}>
+                <IconButton
+                  color={COLORS.text}
+                  name="close"
+                  onPress={() => setIsVisible(false)}
+                />
+              </View>
+              <SectionHeader title={beverage.data.name} />
+            </View>
           </Section>
-        </ScrollView>
-        <Section>
-          <View style={styles.bottomButton}>
-            <Button onPress={() => setIsVisible(false)} title="Close" />
-          </View>
-        </Section>
-      </View>
+          <ScrollView style={styles.scrollContent}>
+            <Section>
+              <SectionContent>
+                <BeverageDetailsContent beverage={beverage.data} />
+              </SectionContent>
+            </Section>
+          </ScrollView>
+          <Section>
+            <View style={styles.bottomButton}>
+              <Button onPress={() => setIsVisible(false)} title="Close" />
+            </View>
+          </Section>
+        </View>
+      </SafeAreaView>
     </Modal>
   );
 });

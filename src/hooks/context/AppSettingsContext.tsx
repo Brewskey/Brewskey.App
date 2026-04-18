@@ -103,6 +103,7 @@ const useAppSettingsQuery = () => {
       const stored = await loadAppSettingsFromStorage();
       return stored || { manageTapsEnabled: false, selectedOrganization: null };
     },
+    initialData: { manageTapsEnabled: false, selectedOrganization: null },
     staleTime: Infinity, // Settings don't become stale
     gcTime: Infinity, // Never garbage collect settings
     retry: false,

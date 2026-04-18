@@ -179,10 +179,7 @@ export const DropdownInput = <TFormFields extends FieldValues, TValueType>({
       defaultValue={defaultValue}
       name={dropdownName}
       rules={{ required }}
-      render={({
-        field: { onChange, onBlur, value },
-        formState: _formState,
-      }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleBlur = () => {
           setSearchText('');
           onBlur();
