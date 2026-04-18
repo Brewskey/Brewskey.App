@@ -9,9 +9,12 @@
     "lint:fix": "expo lint --fix --quiet",
     "format": "prettier --write \"{src,tests}/**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "reset-project": "node ./scripts/reset-project.js",
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web --go",
+    "android:deploy": "npx eas build --platform android --profile production",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
@@ -27,9 +30,9 @@
     "@hookform/error-message": "^2.0.1",
     "@icedevml/react-native-host-card-emulation": "^0.8.2",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@react-navigation/bottom-tabs": "^7.10.0",
+    "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/material-top-tabs": "^7.4.13",
-    "@react-navigation/native": "^7.1.28",
+    "@react-navigation/native": "^7.1.8",
     "@rneui/base": "4.0.0-rc.8",
     "@rneui/themed": "4.0.0-rc.8",
     "@tanstack/react-query": "^5.90.19",
@@ -110,7 +113,8 @@
     "wait-on": "^8.0.1"
   },
   "overrides": {
-    "@rneui/base": "4.0.0-rc.8"
+    "@rneui/base": "4.0.0-rc.8",
+    "expo-location": "~19.0.8"
   },
   "private": true
 }

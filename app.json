@@ -1,19 +1,22 @@
 {
   "expo": {
     "name": "Brewskey",
-    "slug": "Brewskey",
+    "slug": "brewskey",
     "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "scheme": "brewskey",
+    "jsEngine": "hermes",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./src/resources/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "config": {
@@ -25,7 +28,12 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.NFC"],
+      "permissions": [
+        "android.permission.NFC",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "com.brewskey.app"
     },
     "web": {
@@ -51,7 +59,9 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      ["react-native-nfc-manager"],
+      [
+        "react-native-nfc-manager"
+      ],
       [
         "expo-location",
         {
@@ -65,7 +75,18 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
         }
       ],
-      ["expo-secure-store"]
-    ]
+      [
+        "expo-secure-store"
+      ]
+    ],
+    "extra": {
+      "router": {
+        "root": "./src/routes"
+      },
+      "eas": {
+        "projectId": "7eca9044-2eec-4dca-9370-0f9fd507298d"
+      }
+    },
+    "owner": "brewskey"
   }
 }

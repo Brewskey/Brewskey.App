@@ -8,6 +8,10 @@ node_modules/
 dist/
 web-build/
 
+# Continuous Native Generation — regenerate with `npm run prebuild`
+/android/
+/ios/
+
 # Native
 *.orig.*
 *.jks
