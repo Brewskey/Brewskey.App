@@ -116,5 +116,16 @@
     "@rneui/base": "4.0.0-rc.8",
     "expo-location": "~19.0.8"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-nfc-manager",
+          "@icedevml/react-native-host-card-emulation",
+          "react-native-vector-icons"
+        ]
+      }
+    }
+  },
   "private": true
 }
