@@ -17,16 +17,22 @@ test('should pre-fill form with existing data', async ({ page }) => {
   await expect(page.getByTestId('location-dropdown')).toContainText(location.name);
 });
 
-test('should successfully update device', async ({ page, dropDown }) => {
+test('should successfully update device', async ({
+  page,
+  dropDown,
+  mockStore,
+}) => {
   // Set up: one device and a second location so we can mutate the location field
-  const { location: location2 } = await mockLocationWithTaps(page, 1);
+  await mockLocationWithTaps(page, 1);
   const { device } = await mockDeviceWithTaps(page, 0);
 
   await page.goto(`/devices/${device.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
+  await expect(page.getByTestId('main-tab-bar')).toHaveCount(0);
 
-  // Mutate every form field: name, location, deviceStatus, secondsToStayOpen,
-  // timeForValveOpen, ledBrightness, nfcStatus, isScreenDisabled, isTotpDisabled, shouldInvertScreen
+  // Mutate every form field: name, location, deviceStatus (unchanged Active),
+  // secondsToStayOpen (TextInput), timeForValveOpen, ledBrightness, nfcStatus,
+  // isScreenDisabled, isTotpDisabled, shouldInvertScreen
 
   await page.getByTestId('input-name').fill('Updated Device Name');
 
@@ -38,16 +44,8 @@ test('should successfully update device', async ({ page, dropDown }) => {
   await locationPicker.select(1);
   await expect(locationPicker.modal).not.toBeVisible();
 
-  // Device status (required) - WebDropdown uses option-{index}
-  const deviceStatusDd = dropDown.create('device-status-dropdown');
-  await deviceStatusDd.select(1);
-
-  // secondsToStayOpen: when Active/Inactive shows TextInput; after selecting Cleaning it becomes DeviceTimeOpenPicker
-  // Keep deviceStatus as Cleaning (option 1) - secondsToStayOpen is now DeviceTimeOpenPicker
-  const secondsDd = dropDown.create('time-to-stay-open-dropdown');
-  await secondsDd.input.click();
-  await secondsDd.scrollToItemByIndex(2);
-  await secondsDd.select(2);
+  // Stay on Active so secondsToStayOpen is a TextInput (Cleaning uses DeviceTimeOpenPicker).
+  await page.getByTestId('input-secondsToStayOpen').fill('900');
 
   await page.getByTestId('input-timeForValveOpen').fill('15');
 
@@ -80,13 +78,30 @@ test('should successfully update device', async ({ page, dropDown }) => {
   await page.getByTestId('input-isTotpDisabled').click();
   await page.getByTestId('input-shouldInvertScreen').click();
 
+  const putReqPromise = page.waitForRequest(
+    (req) =>
+      req.method() === 'PUT' && req.url().includes('/api/v2/devices'),
+  );
+
   const submitButton = page.getByTestId('submit-button-edit-device');
   await expect(submitButton).toBeEnabled();
   await submitButton.click();
+
+  const putReq = await putReqPromise;
+  const putBody = putReq.postDataJSON() as {
+    secondsToStayOpen?: number;
+    timeForValveOpen?: number;
+  };
+  expect(putBody.secondsToStayOpen).toBe(900);
+  expect(putBody.timeForValveOpen).toBe(15);
 
   await expect(page).toHaveURL(new RegExp(`/devices/${device.id}(?:/edit)?$`));
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
   await expect(page.getByTestId('snackbar-message')).toHaveText(
     'The Brewskey box was edited',
   );
+
+  const stored = mockStore.getDevice(device.id);
+  expect(stored?.secondsToStayOpen).toBe(900);
+  expect(stored?.timeForValveOpen).toBe(15);
 });

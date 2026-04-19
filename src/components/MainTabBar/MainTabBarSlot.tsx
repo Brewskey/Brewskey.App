@@ -1,37 +1,43 @@
 import * as React from 'react';
 
-import { usePathname } from 'expo-router';
-
 // Context to control MainTabBar visibility
 const MainTabBarSlotContext = React.createContext<{
   hideTabBar: boolean;
-  setHideTabBar: (hide: boolean) => void;
+  registerHide: () => void;
+  unregisterHide: () => void;
 }>({
   hideTabBar: false,
-  setHideTabBar: () => {},
+  registerHide: () => {},
+  unregisterHide: () => {},
 });
 
 export const MainTabBarSlotProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [hideTabBar, setHideTabBar] = React.useState(false);
-  const pathname = usePathname();
-  const prevPathnameRef = React.useRef(pathname);
+  const hideCountRef = React.useRef(0);
 
-  // Clear hideTabBar when navigating away from a screen that called useHideMainTabBar.
-  // This runs during render so CustomTabBar sees the update in the same commit.
-  if (prevPathnameRef.current !== pathname) {
-    prevPathnameRef.current = pathname;
-    if (hideTabBar) {
+  const registerHide = React.useCallback(() => {
+    hideCountRef.current += 1;
+    if (hideCountRef.current === 1) {
+      setHideTabBar(true);
+    }
+  }, []);
+
+  const unregisterHide = React.useCallback(() => {
+    hideCountRef.current = Math.max(0, hideCountRef.current - 1);
+    if (hideCountRef.current === 0) {
       setHideTabBar(false);
     }
-  }
+  }, []);
+
   const value = React.useMemo(
     () => ({
       hideTabBar,
-      setHideTabBar,
+      registerHide,
+      unregisterHide,
     }),
-    [hideTabBar, setHideTabBar],
+    [hideTabBar, registerHide, unregisterHide],
   );
 
   return (
@@ -43,11 +49,11 @@ export const MainTabBarSlotProvider: React.FC<{
 
 export const useMainTabBarSlot = () => React.useContext(MainTabBarSlotContext);
 
-/** Call in a screen to hide the MainTabBar; resets on unmount / navigation. */
+/** Call in a screen to hide the MainTabBar; resets when this component unmounts. */
 export const useHideMainTabBar = (): void => {
-  const { setHideTabBar } = useMainTabBarSlot();
+  const { registerHide, unregisterHide } = useMainTabBarSlot();
   React.useLayoutEffect(() => {
-    setHideTabBar(true);
-    return () => setHideTabBar(false);
-  }, [setHideTabBar]);
+    registerHide();
+    return () => unregisterHide();
+  }, [registerHide, unregisterHide]);
 };

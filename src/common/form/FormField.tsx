@@ -41,6 +41,10 @@ const styles = StyleSheet.create({
     color: COLORS.textFaded,
     marginHorizontal: 20,
   },
+  /** Aligns React-node descriptions with string descriptions (same inset as inputs / label column). */
+  descriptionNodeWrap: {
+    marginHorizontal: 20,
+  },
 });
 /**
  * Renders a form control with optional label, description, and validation message.
@@ -82,7 +86,9 @@ export const FormField = <
           {description}
         </Text>
       ) : (
-        <React.Fragment>{description}</React.Fragment>
+        <View style={[styles.descriptionNodeWrap, descriptionStyle]}>
+          {description}
+        </View>
       ))}
     {label ? (
       <FormValidationMessage

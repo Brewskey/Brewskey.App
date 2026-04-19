@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
 import { Header } from 'common/Header';
@@ -59,17 +58,15 @@ const NewDeviceScreen: React.FC = () => {
         showBackButton={showBackButton !== 'false'}
         title="New Brewskey box"
       />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <DeviceForm
-          device={{
-            particleId,
-            location,
-          }}
-          hideLocation={location != null}
-          onSubmit={onFormSubmit}
-          submitButtonLabel="Create Device"
-        />
-      </KeyboardAwareScrollView>
+      <DeviceForm
+        device={{
+          particleId,
+          location,
+        }}
+        hideLocation={location != null}
+        onSubmit={onFormSubmit}
+        submitButtonLabel="Create Device"
+      />
     </Container>
   );
 };

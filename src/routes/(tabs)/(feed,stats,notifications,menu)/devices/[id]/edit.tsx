@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
 import { Header } from 'common/Header';
@@ -45,9 +44,7 @@ const EditDeviceScreen: React.FC = () => {
     return (
       <Container>
         <Header shouldShowBackButton title="Edit Brewskey box" />
-        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <LoadingIndicator />
-        </KeyboardAwareScrollView>
+        <LoadingIndicator />
       </Container>
     );
   }
@@ -55,13 +52,11 @@ const EditDeviceScreen: React.FC = () => {
   return (
     <Container>
       <Header shouldShowBackButton title="Edit Brewskey box" />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <DeviceForm
-          device={device}
-          onSubmit={onFormSubmit}
-          submitButtonLabel="Edit Device"
-        />
-      </KeyboardAwareScrollView>
+      <DeviceForm
+        device={device}
+        onSubmit={onFormSubmit}
+        submitButtonLabel="Edit Device"
+      />
     </Container>
   );
 };

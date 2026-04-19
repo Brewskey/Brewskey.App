@@ -311,7 +311,9 @@ function filterEntities<T extends { id: EntityID }>(
   entities: T[],
   filter?: string,
 ): T[] {
-  if (!filter) return entities;
+  if (!filter) {
+    return entities;
+  }
 
   // Simple filter parsing - can be extended for complex filters
   // For now, handle common cases like eq, ne, contains
@@ -952,9 +954,8 @@ export function setupAPIMocks(page: Page): void {
         return fulfillJSONResponse(route, 200, nearbyLocations);
       }
 
-      // Handle entity endpoints
-      if (query.id) {
-        // GET by ID
+      // Handle entity endpoints — GET by ID only (PUT/PATCH/DELETE also have query.id from OData URLs)
+      if (query.id && method === 'GET') {
         // Normalize entity name to match EntityType (handle plural/singular variations)
         const normalizedEntity = normalizeEntityName(query.entity);
         let entity = getEntityById(normalizedEntity as EntityType, query.id);
@@ -1108,14 +1109,36 @@ export function setupAPIMocks(page: Page): void {
 
       // Handle PUT (update)
       if (method === 'PUT') {
-        const body = await route.request().postDataJSON();
-        const id = query.id || body.id;
-        const entity = getEntityById(query.entity as EntityType, id!);
+        let body: Record<string, unknown> = {};
+        const rawBody = route.request().postData();
+        if (rawBody != null && rawBody.length > 0) {
+          try {
+            body = JSON.parse(rawBody) as Record<string, unknown>;
+          } catch {
+            body = {};
+          }
+        } else {
+          const jsonBody = route.request().postDataJSON();
+          if (jsonBody != null && typeof jsonBody === 'object') {
+            body = jsonBody as Record<string, unknown>;
+          }
+        }
+        const id = (query.id ?? body.id) as EntityID | undefined;
+        const normalizedEntity = normalizeEntityName(query.entity);
+        const entity =
+          id != null
+            ? getEntityById(normalizedEntity as EntityType, id)
+            : undefined;
 
         if (entity) {
-          const updated = { ...entity, ...body };
+          // OData JSON uses string ids; preserve the entity's canonical id/key for Map lookups
+          const updated = {
+            ...entity,
+            ...body,
+            id: entity.id,
+          };
           // Update in store (simplified - would need setter for each type)
-          switch (query.entity) {
+          switch (normalizedEntity) {
             case 'locations':
               mockStore.setLocation(updated);
               break;
@@ -1124,6 +1147,12 @@ export function setupAPIMocks(page: Page): void {
               break;
             case 'kegs':
               mockStore.setKeg(updated);
+              break;
+            case 'devices':
+              mockStore.setDevice(updated as Device);
+              break;
+            case 'beverages':
+              mockStore.setBeverage(updated as Beverage);
               break;
             // Add other entities as needed
           }
