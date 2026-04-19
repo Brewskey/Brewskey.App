@@ -1,12 +1,20 @@
 import * as React from 'react';
 
-import { Modal as RNModal, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  Platform,
+  Modal as RNModal,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Fragment } from 'common/Fragment';
-import { StatusBarFake } from 'components/modals/StatusBarFake';
-
 const emptyFunction = () => {};
+
+// iOS reports a generous safe area inset which leaves visible breathing
+// room between the camera cutout / home indicator and the modal content.
+// Subtract that breathing room to keep modal content snug to the cutouts.
+// Mirrors IOS_TOP_INSET_TRIM in src/routes/_layout.tsx.
+const IOS_INSET_TRIM = 11;
 
 type Props<RNModalProps> = RNModalProps & {
   animationType?: 'none' | 'slide' | 'fade'; // todo add enum,
@@ -32,11 +40,17 @@ const Modal = <RNModalProps extends object>({
   ...rest
 }: Props<RNModalProps>): React.ReactElement => {
   const insets = useSafeAreaInsets();
-  // Inset content from the bottom so it doesn't render under the Android
-  // navigation bar (or iOS home indicator). Top inset is handled by
-  // StatusBarFake / individual modals as needed.
+  const paddingTop =
+    Platform.OS === 'ios'
+      ? Math.max(insets.top - IOS_INSET_TRIM, 20)
+      : insets.top;
+  const paddingBottom =
+    Platform.OS === 'ios'
+      ? Math.max(insets.bottom - IOS_INSET_TRIM, 0)
+      : insets.bottom;
+
   const content = (
-    <View style={{ flex: 1, paddingBottom: insets.bottom }}>{children}</View>
+    <View style={{ flex: 1, paddingTop, paddingBottom }}>{children}</View>
   );
   return (
     <RNModal
@@ -49,16 +63,13 @@ const Modal = <RNModalProps extends object>({
         shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
       }
     >
-      <Fragment>
-        <StatusBarFake />
-        {isTouchable ? (
-          <TouchableWithoutFeedback onPress={onHideModal}>
-            {content}
-          </TouchableWithoutFeedback>
-        ) : (
-          content
-        )}
-      </Fragment>
+      {isTouchable ? (
+        <TouchableWithoutFeedback onPress={onHideModal}>
+          {content}
+        </TouchableWithoutFeedback>
+      ) : (
+        content
+      )}
     </RNModal>
   );
 };

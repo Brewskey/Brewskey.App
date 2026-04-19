@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from 'common/buttons/Button';
 import { IconButton } from 'common/buttons/IconButton';
@@ -78,37 +77,32 @@ export const BeverageModal = React.forwardRef<
       transparent={false}
       isTouchable={false}
     >
-      <SafeAreaView
-        edges={['top', 'left', 'right']}
-        style={{ flex: 1, backgroundColor: COLORS.primary2 }}
-      >
-        <View style={styles.container}>
-          <Section>
-            <View style={styles.headerContainer}>
-              <View style={styles.closeButton}>
-                <IconButton
-                  color={COLORS.text}
-                  name="close"
-                  onPress={() => setIsVisible(false)}
-                />
-              </View>
-              <SectionHeader title={beverage.data.name} />
+      <View style={styles.container}>
+        <Section>
+          <View style={styles.headerContainer}>
+            <View style={styles.closeButton}>
+              <IconButton
+                color={COLORS.text}
+                name="close"
+                onPress={() => setIsVisible(false)}
+              />
             </View>
-          </Section>
-          <ScrollView style={styles.scrollContent}>
-            <Section>
-              <SectionContent>
-                <BeverageDetailsContent beverage={beverage.data} />
-              </SectionContent>
-            </Section>
-          </ScrollView>
+            <SectionHeader title={beverage.data.name} />
+          </View>
+        </Section>
+        <ScrollView style={styles.scrollContent}>
           <Section>
-            <View style={styles.bottomButton}>
-              <Button onPress={() => setIsVisible(false)} title="Close" />
-            </View>
+            <SectionContent>
+              <BeverageDetailsContent beverage={beverage.data} />
+            </SectionContent>
           </Section>
-        </View>
-      </SafeAreaView>
+        </ScrollView>
+        <Section>
+          <View style={styles.bottomButton}>
+            <Button onPress={() => setIsVisible(false)} title="Close" />
+          </View>
+        </Section>
+      </View>
     </Modal>
   );
 });
