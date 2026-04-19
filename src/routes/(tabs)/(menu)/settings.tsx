@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -19,12 +19,12 @@ import { useChangePassword } from 'hooks/queries/AuthQueries';
 import { useGetOrganizations } from 'hooks/queries/OrganizationQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
-import type { Organization } from '@brewskey/js-api';
+import type { EntityID, Organization, ShortenedEntity } from '@brewskey/js-api';
 
 import type { ChangePasswordFormFields } from 'components/ChangePasswordForm';
 
 interface SettingsOrganizationForm {
-  organization: Organization | null | undefined;
+  organization: EntityID | null;
 }
 
 const styles = StyleSheet.create({
@@ -48,27 +48,24 @@ const SettingsScreen: React.FC = () => {
   const changePasswordMutation = useChangePassword();
   const { data: organizationsData } = useGetOrganizations();
 
-  // Create a minimal form for OrganizationPicker2
-  const form = useForm<{ organization: typeof selectedOrganization }>({
-    defaultValues: {
-      organization: selectedOrganization,
-    },
+  const form = useForm<SettingsOrganizationForm>({
+    defaultValues: { organization: selectedOrganization?.id ?? null },
   });
 
+  // Mirror external context changes (e.g. storage hydration) into the form so
+  // the picker reflects them. User-initiated changes flow the other way via
+  // `handleOrganizationChange`; setValue is a no-op when the id is unchanged.
   React.useEffect(() => {
-    form.setValue('organization', selectedOrganization);
-  }, [selectedOrganization, form]);
+    form.setValue('organization', selectedOrganization?.id ?? null);
+  }, [selectedOrganization?.id, form]);
 
-  // Watch form value changes and sync with custom callback
-  const formOrganization = useWatch({
-    control: form.control,
-    name: 'organization',
-  });
-  React.useEffect(() => {
-    if (formOrganization !== selectedOrganization) {
-      onOrganizationChange(formOrganization);
-    }
-  }, [formOrganization, selectedOrganization, onOrganizationChange]);
+  const handleOrganizationChange = (
+    organization: Organization | ShortenedEntity | null,
+  ) => {
+    // The picker only emits full Organization rows from `useGetOrganizations`,
+    // never a `ShortenedEntity`, so this cast is safe in practice.
+    onOrganizationChange((organization as Organization | null) ?? undefined);
+  };
 
   const hasOrganizations =
     organizationsData?.pages?.[0] != null &&
@@ -114,6 +111,7 @@ const SettingsScreen: React.FC = () => {
                   defaultValue={selectedOrganization}
                   label="Organization"
                   name="organization"
+                  onChange={handleOrganizationChange}
                   testID="organization-dropdown"
                 />
               </FormProvider>

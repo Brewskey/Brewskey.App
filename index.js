@@ -29,5 +29,7 @@ if (typeof window !== 'undefined' && typeof window.crypto === 'undefined') {
 // Import other polyfills (expo-location mocks, etc.)
 import './src/polyfills';
 
+import 'react-native-gesture-handler';
+
 // Import expo-router entry - MUST be last
 import 'expo-router/entry';

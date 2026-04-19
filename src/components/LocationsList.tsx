@@ -137,7 +137,9 @@ const LocationsList: React.FC<Props> = ({
 
   // Flatten the InfiniteData pages into a single array for SwipeableList
   const flatData = useMemo(() => {
-    if (!locationsData?.pages) return undefined;
+    if (!locationsData?.pages) {
+      return undefined;
+    }
     return locationsData;
   }, [locationsData]);
 

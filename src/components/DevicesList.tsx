@@ -71,7 +71,9 @@ const DevicesList: React.FC<Props> = ({
   } = useGetDevices(mergedQueryOptions);
 
   const devicesDataFormatted = useMemo(() => {
-    if (!devicesData) return undefined;
+    if (!devicesData) {
+      return undefined;
+    }
     return devicesData;
   }, [devicesData]);
 

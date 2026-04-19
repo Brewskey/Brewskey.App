@@ -33,7 +33,9 @@ export const LeaderboardList: React.FC<Props> = ({
     item.userName || item.lastPourDate.toString();
 
   const _onItemPress = ({ userID }: LeaderboardItem) => {
-    if (!userID) return;
+    if (!userID) {
+      return;
+    }
     router.navigate({
       pathname: '/profile/[id]',
       params: { id: String(userID) },

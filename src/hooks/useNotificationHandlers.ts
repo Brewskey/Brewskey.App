@@ -298,7 +298,9 @@ export function useNotificationHandlers(): {
     });
 
     Notifications.getLastNotificationResponseAsync().then(async (last) => {
-      if (!last?.notification) return;
+      if (!last?.notification) {
+        return;
+      }
       const notification = normalizeNotificationFromExpo(last.notification, {
         isRead: true,
       });
@@ -310,7 +312,9 @@ export function useNotificationHandlers(): {
 
     const runRegistration = async () => {
       const token = await registerForPushNotificationsAsync();
-      if (!token) return;
+      if (!token) {
+        return;
+      }
 
       const removeTapIDs = Array.isArray(disabledTaps) ? disabledTaps : [];
       try {
@@ -360,7 +364,9 @@ export function useNotificationHandlers(): {
   }, []);
 
   useEffect(() => {
-    if (isWeb) return;
+    if (isWeb) {
+      return;
+    }
     const unread = Array.isArray(notificationsList)
       ? notificationsList.filter((n) => !n.isRead).length
       : 0;

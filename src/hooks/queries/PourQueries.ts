@@ -27,7 +27,9 @@ export const useGetPourById = (
   useQuery({
     queryKey: [PourQueryKeys.PourById, getStringFromEntityID(pourId)],
     queryFn: async () => {
-      if (pourId == null) throw new Error('pourId required');
+      if (pourId == null) {
+        throw new Error('pourId required');
+      }
       return PourDAO.fetchByID(pourId);
     },
     enabled: pourId != null,
@@ -43,7 +45,9 @@ export const useGetPoursByBeverageIds = (
       beverageIds?.map((id) => getStringFromEntityID(id)),
     ],
     queryFn: async () => {
-      if (beverageIds == null) throw new Error('beverageIds required');
+      if (beverageIds == null) {
+        throw new Error('beverageIds required');
+      }
       return PourDAO.getPoursByBeverageIDs(beverageIds, userId);
     },
     enabled: beverageIds != null,

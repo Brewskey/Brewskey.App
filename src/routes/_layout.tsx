@@ -6,6 +6,7 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { COLORS } from 'theme';
@@ -108,21 +109,23 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
-      <QueryClientProvider client={queryClient}>
-        <QueryErrorResetBoundary>
-          <AppSettingsProvider>
-            <SnackBarProvider>
-              <PourProcessProvider>
-                <MainTabBarSlotProvider>
-                  <RootLayoutNav />
-                  <SnackBar />
-                </MainTabBarSlotProvider>
-              </PourProcessProvider>
-            </SnackBarProvider>
-          </AppSettingsProvider>
-        </QueryErrorResetBoundary>
-      </QueryClientProvider>
-    </SafeAreaView>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
+        <QueryClientProvider client={queryClient}>
+          <QueryErrorResetBoundary>
+            <AppSettingsProvider>
+              <SnackBarProvider>
+                <PourProcessProvider>
+                  <MainTabBarSlotProvider>
+                    <RootLayoutNav />
+                    <SnackBar />
+                  </MainTabBarSlotProvider>
+                </PourProcessProvider>
+              </SnackBarProvider>
+            </AppSettingsProvider>
+          </QueryErrorResetBoundary>
+        </QueryClientProvider>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }

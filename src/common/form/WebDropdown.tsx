@@ -258,7 +258,9 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
 
   const resolveToItem = React.useCallback(
     (val: T | string | null | undefined): T | null => {
-      if (val == null) return null;
+      if (val == null) {
+        return null;
+      }
       if (
         valueField &&
         data.length > 0 &&
@@ -288,7 +290,9 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
   }, []);
 
   const handleOpen = React.useCallback(() => {
-    if (disable) return;
+    if (disable) {
+      return;
+    }
     measureTrigger();
     setIsOpen(true);
     onFocus?.();
@@ -303,8 +307,11 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
   }, [onBlur, onChangeText]);
 
   const handleToggle = React.useCallback(() => {
-    if (isOpen) handleClose();
-    else handleOpen();
+    if (isOpen) {
+      handleClose();
+    } else {
+      handleOpen();
+    }
   }, [isOpen, handleOpen, handleClose]);
 
   const handleSelectItem = React.useCallback(
@@ -314,7 +321,9 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
         return;
       }
       onChange(item);
-      if (closeModalWhenSelectedItem) handleClose();
+      if (closeModalWhenSelectedItem) {
+        handleClose();
+      }
     },
     [
       confirmSelectItem,
@@ -345,7 +354,6 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
         )
       : '';
 
-  console.log('selectedItem', selectedItem);
   const selectedContent =
     renderItem && selectedItem != null
       ? renderItem(selectedItem, true)
@@ -353,7 +361,9 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
   const hasSelection = selectedItem != null;
 
   const checkIsSelected = (item: T, index: number) => {
-    if (selectedItem == null) return false;
+    if (selectedItem == null) {
+      return false;
+    }
     const k = getItemKey(item, index);
     const sk = getItemKey(selectedItem, -1);
     return (

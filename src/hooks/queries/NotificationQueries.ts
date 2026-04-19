@@ -49,7 +49,9 @@ export function useNotificationsList() {
 
 export function useNotificationsUnreadCount(): number {
   const { data: list } = useNotificationsList();
-  if (!list) return 0;
+  if (!list) {
+    return 0;
+  }
   return list.filter((n) => !n.isRead).length;
 }
 

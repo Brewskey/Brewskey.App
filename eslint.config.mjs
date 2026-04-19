@@ -216,6 +216,7 @@ export default defineConfig([
   {
     name: 'import-react-structural',
     rules: {
+      curly: ['error', 'all'],
       'import-x/extensions': 'off',
       'import-x/no-unresolved': 'off',
       'import-x/no-anonymous-default-export': 'off',

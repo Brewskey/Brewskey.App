@@ -14,10 +14,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "icon": "./assets/icon-1024.png",
       "supportsTablet": true,
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "bundleIdentifier": "com.brewskey.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -55,7 +57,12 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      ["react-native-nfc-manager"],
+      [
+        "react-native-nfc-manager",
+        {
+          "includeNdefEntitlement": false
+        }
+      ],
       [
         "expo-location",
         {

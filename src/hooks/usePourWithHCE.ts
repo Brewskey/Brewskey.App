@@ -22,7 +22,9 @@ export function usePourWithHCE(accessToken: string | undefined) {
   const start = useCallback(
     async (opts: UsePourWithHCEOptions) => {
       optionsRef.current = opts;
-      if (!accessToken) return;
+      if (!accessToken) {
+        return;
+      }
 
       const hce = getHCEModule();
       if (!hce?.beginSession || !hce?.startHCE || !hce?.onEvent) {
@@ -31,7 +33,9 @@ export function usePourWithHCE(accessToken: string | undefined) {
 
       try {
         const { token } = await createNfcTag.mutateAsync(accessToken);
-        if (!token) return;
+        if (!token) {
+          return;
+        }
 
         await hce.beginSession();
         hce.setSessionAlertMessage?.('Tap Brewskey Box');

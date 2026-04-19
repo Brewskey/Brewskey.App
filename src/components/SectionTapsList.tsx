@@ -13,6 +13,7 @@ import { SwipeableRow } from 'common/SwipeableRow';
 import { TapListItem } from 'components/TapListItem';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeleteTap, useGetTaps } from 'hooks/queries/TapQueries';
+import { flattenInfinitePages } from 'utils/infiniteQuery';
 
 import type { Tap } from '@brewskey/js-api';
 
@@ -111,7 +112,7 @@ export const SectionTapsList: React.FC<Props> = ({
   });
 
   const sections = useMemo<Section<Tap>[]>(() => {
-    const flatTaps = tapsQuery.data?.pages.flatMap((page) => page) ?? [];
+    const flatTaps = flattenInfinitePages(tapsQuery.data);
     if (flatTaps.length === 0) {
       return [];
     }

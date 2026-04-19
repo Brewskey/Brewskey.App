@@ -33,7 +33,9 @@ export function useWriteNfcFlow() {
   const isNfcSupported = Boolean(NfcManager && Ndef);
 
   const cleanupNfc = useCallback(async () => {
-    if (!NfcManager) return;
+    if (!NfcManager) {
+      return;
+    }
     try {
       await NfcManager.cancelTechnologyRequest?.();
       await NfcManager.unregisterTagEvent?.();
@@ -68,7 +70,9 @@ export function useWriteNfcFlow() {
         });
 
         const requestWriteTag = async () => {
-          if (cancelledRef.current || tokenRef.current == null || !Ndef) return;
+          if (cancelledRef.current || tokenRef.current == null || !Ndef) {
+            return;
+          }
           const payload = Ndef.encodeMessage([
             Ndef.textRecord(tokenRef.current),
           ]);
@@ -86,7 +90,9 @@ export function useWriteNfcFlow() {
               });
             }
           }
-          if (cancelledRef.current) return;
+          if (cancelledRef.current) {
+            return;
+          }
           await new Promise<void>((resolve) => {
             setTimeout(() => resolve(), 1000);
           });

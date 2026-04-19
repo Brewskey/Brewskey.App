@@ -85,7 +85,9 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   const [deviceID] = React.useState<EntityID | null>(null);
 
   const queryOptions = React.useMemo(() => {
-    if (!deviceID) return undefined;
+    if (!deviceID) {
+      return undefined;
+    }
     return {
       filters: [
         createFilter('device/id').equals(deviceID),
@@ -113,7 +115,9 @@ const PourProcessPaymentModal: React.FC<Record<string, unknown>> = () => {
   const isVisible = shouldShowPaymentScreen;
   const onHideModal = async () => closeModal();
 
-  if (!deviceID) return null;
+  if (!deviceID) {
+    return null;
+  }
 
   return (
     <CenteredModal

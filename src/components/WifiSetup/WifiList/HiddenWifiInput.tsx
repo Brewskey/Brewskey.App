@@ -33,7 +33,10 @@ export const HiddenWifiInput: React.FC = () => {
   return (
     <Container style={styles.container}>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+        <TouchableOpacity
+          onPress={() => setIsExpanded(!isExpanded)}
+          testID="button-expand-hidden-wifi"
+        >
           <Text style={styles.title}>Hidden network</Text>
         </TouchableOpacity>
         {isExpanded ? <HiddenWifiForm onSubmit={setupWifi} /> : null}

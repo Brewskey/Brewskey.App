@@ -38,7 +38,9 @@ export const useGetBeverageById = (
       getStringFromEntityID(beverageId),
     ],
     queryFn: async () => {
-      if (beverageId == null) throw new Error('beverageId required');
+      if (beverageId == null) {
+        throw new Error('beverageId required');
+      }
       return BeverageDAO.fetchByID(beverageId);
     },
     enabled: beverageId != null,

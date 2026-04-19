@@ -20,7 +20,6 @@ export const SubmitButton = <TFieldValues extends FieldValues>({
   disabled?: boolean;
   allowSubmitWhenValid?: boolean;
 }) => {
-  console.log('form', useFormContext<TFieldValues>());
   const form = nullthrows(
     useFormContext<TFieldValues>(),
     'Form context not found. This component must be used within a Form component.',

@@ -22,6 +22,7 @@ interface Props {
   testID?: string;
   defaultValue?: Organization | ShortenedEntity | null | undefined;
   required?: boolean | string;
+  onChange?: (organization: Organization | ShortenedEntity | null) => void;
 }
 
 const OrganizationPickerItem = ({
@@ -52,6 +53,7 @@ export const OrganizationPicker: React.FC<Props> = ({
   testID,
   defaultValue,
   required,
+  onChange,
   ...props
 }) => {
   const onSearchFilter = React.useCallback(
@@ -73,6 +75,7 @@ export const OrganizationPicker: React.FC<Props> = ({
       defaultValue={defaultValue ?? undefined}
       labelField="name"
       name={name}
+      onChange={onChange}
       onSearchFilter={onSearchFilter}
       placeholder="None"
       queryOptions={props.queryOptions ?? {}}

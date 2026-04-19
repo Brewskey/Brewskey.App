@@ -35,7 +35,9 @@ export const MenuUserBlock: React.FC = () => {
   const { data: authResponse } = useAuthSession();
 
   const _onPress = () => {
-    if (!authResponse?.id) return;
+    if (!authResponse?.id) {
+      return;
+    }
     router.navigate({
       pathname: '/profile/[id]',
       params: { id: String(authResponse.id) },
