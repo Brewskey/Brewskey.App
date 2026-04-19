@@ -30,6 +30,7 @@
   "dependencies": {
     "@brewskey/js-api": "^2.0.7",
     "@expo/metro-runtime": "~55.0.9",
+    "@falcondev-oss/expo-event-source-polyfill": "^2.0.4",
     "@frsty/slot-fill": "^0.2.4",
     "@hookform/error-message": "^2.0.1",
     "@icedevml/react-native-host-card-emulation": "^0.8.2",

@@ -4,6 +4,9 @@
 // Custom entry point - Load polyfills BEFORE expo-router
 // This ensures Buffer and other globals are available before any code runs
 
+// SSE: Hermes/iOS/Android have no EventSource — install before expo-router evaluates.
+import './src/eventSourcePolyfill';
+
 // Initialize Buffer polyfill FIRST - before any other imports
 import { Buffer } from 'buffer';
 import * as Crypto from 'expo-crypto';

@@ -10,9 +10,20 @@ import {
 import DAOApi from '@brewskey/js-api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { AUTH_QUERY_KEY } from 'hooks/context/AuthContext';
 import { Storage, StorageKeys } from 'utils/Storage';
 
 import type { Organization } from '@brewskey/js-api';
+import type { Query } from '@tanstack/react-query';
+
+function isPersistedGlobalQuery(query: Query): boolean {
+  const key = query.queryKey;
+  return (
+    (key[0] === APP_SETTINGS_QUERY_KEY[0] &&
+      key[1] === APP_SETTINGS_QUERY_KEY[1]) ||
+    (key[0] === AUTH_QUERY_KEY[0] && key[1] === AUTH_QUERY_KEY[1])
+  );
+}
 
 export const APP_SETTINGS_QUERY_KEY = ['app', 'settings'] as const;
 
@@ -127,19 +138,30 @@ const useAppSettingsQuery = () => {
     }
   }, [appSettings.selectedOrganization]);
 
-  // Clear all queries when organization changes
+  const prevSelectedOrgIdRef = React.useRef<string | null | undefined>(
+    undefined,
+  );
+
+  // Drop org-scoped cache when the user switches organizations (not on initial mount).
   React.useEffect(() => {
-    // Clear all queries except app settings
-    // TODO: add this back in later but make it work with e2e tests
-    // queryClient.removeQueries({
-    //   predicate: (query) => {
-    //     // Remove all queries except app settings
-    //     return (
-    //       query.queryKey[0] !== 'app' || query.queryKey[1] !== 'settings'
-    //     );
-    //   },
-    // });
-  }, [appSettings.selectedOrganization, queryClient]);
+    const id = appSettings.selectedOrganization?.id;
+    const idKey = id != null ? String(id) : null;
+
+    if (prevSelectedOrgIdRef.current === undefined) {
+      prevSelectedOrgIdRef.current = idKey;
+      return;
+    }
+
+    if (prevSelectedOrgIdRef.current === idKey) {
+      return;
+    }
+
+    prevSelectedOrgIdRef.current = idKey;
+
+    queryClient.removeQueries({
+      predicate: (query) => !isPersistedGlobalQuery(query),
+    });
+  }, [appSettings.selectedOrganization?.id, queryClient]);
 
   const updateAppSettings = useCallback(
     async (newSettings: Partial<AppSettings>) => {
