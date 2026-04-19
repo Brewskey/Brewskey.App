@@ -91,10 +91,14 @@ const OnTapContent: React.FC<{ tapId: EntityID }> = ({ tapId }) => {
               <Section bottomPadded>
                 <SectionHeader
                   testID="section-header-beverage"
-                  title={currentKeg.beverage.name}
+                  title={currentKeg.beverage?.name ?? 'Beverage'}
                 />
                 <SectionContent>
-                  <BeverageDetailsLoader beverageID={currentKeg.beverage.id} />
+                  {currentKeg.beverage?.id != null ? (
+                    <BeverageDetailsLoader
+                      beverageID={currentKeg.beverage.id}
+                    />
+                  ) : null}
                 </SectionContent>
               </Section>
             </Fragment>

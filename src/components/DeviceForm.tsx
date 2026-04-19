@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import nullthrows from 'nullthrows';
 import { useForm, useWatch } from 'react-hook-form';
 import { View } from 'react-native';
 
@@ -63,10 +62,7 @@ const DeviceForm: React.FC<Props> = ({
   const form = useForm<FormProps>({
     defaultValues: {
       id: device.id,
-      particleId: nullthrows(
-        device.particleId,
-        'Particle ID is required for this form',
-      ),
+      particleId: device.particleId ?? '',
       name: device.name,
       deviceType: 'BrewskeyBox',
       locationId: device.location?.id,
@@ -119,6 +115,17 @@ const DeviceForm: React.FC<Props> = ({
           required
           testID="input-name"
         />
+        {!device.id ? (
+          <FormField<FormProps, typeof TextInput>
+            component={TextInput}
+            defaultValue={device.particleId ?? ''}
+            description="Hardware ID of your Brewskey box"
+            label="Internal ID"
+            name="particleId"
+            required
+            testID="input-particleId"
+          />
+        ) : null}
         {!hideLocation && (
           <FormField<FormProps, typeof LocationPicker>
             component={LocationPicker}

@@ -32,11 +32,26 @@ export const calculateKegLevel = ({
   maxOunces: number;
   ounces: number;
 }): number => {
-  const KEG_OUNCES = MAX_OUNCES_BY_KEG_TYPE[kegType];
+  const KEG_OUNCES =
+    kegType != null
+      ? MAX_OUNCES_BY_KEG_TYPE[
+          kegType as keyof typeof MAX_OUNCES_BY_KEG_TYPE
+        ]
+      : undefined;
+
+  if (
+    KEG_OUNCES == null ||
+    !Number.isFinite(KEG_OUNCES) ||
+    !Number.isFinite(maxOunces) ||
+    !Number.isFinite(ounces)
+  ) {
+    return 0;
+  }
 
   const level =
     ((KEG_OUNCES - (KEG_OUNCES - maxOunces) - ounces) / KEG_OUNCES) * 100;
-  return Math.min(Math.max(0, level), 100);
+  const clamped = Math.min(Math.max(0, level), 100);
+  return Number.isFinite(clamped) ? clamped : 0;
 };
 
 // todo this probably annotated wrong. It doesn't propogate props type to
