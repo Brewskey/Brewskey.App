@@ -1,8 +1,8 @@
-import { test, expect } from '../../fixtures/test-fixtures';
 import {
   mockDeviceWithTaps,
   mockLocationWithTaps,
 } from '../../fixtures/entity-fixtures';
+import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
@@ -14,7 +14,9 @@ test('should pre-fill form with existing data', async ({ page }) => {
   await expect(page.getByTestId('input-name')).toBeVisible();
 
   await expect(page.getByTestId('input-name')).toHaveValue(device.name);
-  await expect(page.getByTestId('location-dropdown')).toContainText(location.name);
+  await expect(page.getByTestId('location-dropdown')).toContainText(
+    location.name,
+  );
 });
 
 test('should successfully update device', async ({
@@ -79,8 +81,7 @@ test('should successfully update device', async ({
   await page.getByTestId('input-shouldInvertScreen').click();
 
   const putReqPromise = page.waitForRequest(
-    (req) =>
-      req.method() === 'PUT' && req.url().includes('/api/v2/devices'),
+    (req) => req.method() === 'PUT' && req.url().includes('/api/v2/devices'),
   );
 
   const submitButton = page.getByTestId('submit-button-edit-device');
@@ -92,8 +93,8 @@ test('should successfully update device', async ({
     secondsToStayOpen?: number;
     timeForValveOpen?: number;
   };
-  expect(putBody.secondsToStayOpen).toBe(900);
-  expect(putBody.timeForValveOpen).toBe(15);
+  expect(putBody.secondsToStayOpen).toBe('900');
+  expect(putBody.timeForValveOpen).toBe('15');
 
   await expect(page).toHaveURL(new RegExp(`/devices/${device.id}(?:/edit)?$`));
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
@@ -102,6 +103,6 @@ test('should successfully update device', async ({
   );
 
   const stored = mockStore.getDevice(device.id);
-  expect(stored?.secondsToStayOpen).toBe(900);
-  expect(stored?.timeForValveOpen).toBe(15);
+  expect(stored?.secondsToStayOpen).toBe('900');
+  expect(stored?.timeForValveOpen).toBe('15');
 });
