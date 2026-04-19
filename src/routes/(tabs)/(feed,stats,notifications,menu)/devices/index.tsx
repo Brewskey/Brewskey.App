@@ -43,8 +43,11 @@ const DevicesScreen: React.FC = () => {
 
   const onWifiSetupButtonPress = () => {
     router.navigate({
-      pathname: '/devices/new',
-      params: { wifiSetup: 'true' },
+      pathname: '/devices/[id]/wifi-setup',
+      params: {
+        id: 'new',
+        forNewDevice: 'true',
+      },
     });
   };
 
