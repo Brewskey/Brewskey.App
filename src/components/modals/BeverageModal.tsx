@@ -78,7 +78,10 @@ export const BeverageModal = React.forwardRef<
       transparent={false}
       isTouchable={false}
     >
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
+      <SafeAreaView
+        edges={['top', 'left', 'right']}
+        style={{ flex: 1, backgroundColor: COLORS.primary2 }}
+      >
         <View style={styles.container}>
           <Section>
             <View style={styles.headerContainer}>

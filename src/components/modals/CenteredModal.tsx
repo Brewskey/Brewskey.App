@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { DimensionValue, StyleProp, ViewStyle } from 'react-native';
 
@@ -50,21 +51,36 @@ const CenteredModal: React.FC<Props> = ({
   onHideModal,
   testID,
   width,
-}) => (
-  <Modal
-    transparent
-    onRequestClose={onHideModal}
-    testID={testID}
-    visible={isVisible}
-  >
-    <View style={styles.container}>
-      <Pressable onPress={onHideModal} style={styles.backdrop} />
-      <View style={[styles.modal, width != null && { width }]}>
-        {!header ? null : <View style={styles.header}>{header}</View>}
-        <View style={[styles.content, contentContainerStyle]}>{children}</View>
+}) => {
+  const insets = useSafeAreaInsets();
+  return (
+    <Modal
+      transparent
+      onRequestClose={onHideModal}
+      testID={testID}
+      visible={isVisible}
+    >
+      <View
+        style={[
+          styles.container,
+          {
+            paddingTop: insets.top,
+            paddingBottom: insets.bottom,
+            paddingLeft: insets.left,
+            paddingRight: insets.right,
+          },
+        ]}
+      >
+        <Pressable onPress={onHideModal} style={styles.backdrop} />
+        <View style={[styles.modal, width != null && { width }]}>
+          {!header ? null : <View style={styles.header}>{header}</View>}
+          <View style={[styles.content, contentContainerStyle]}>
+            {children}
+          </View>
+        </View>
       </View>
-    </View>
-  </Modal>
-);
+    </Modal>
+  );
+};
 
 export { CenteredModal };

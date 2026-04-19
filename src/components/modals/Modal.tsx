@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Modal as RNModal, TouchableWithoutFeedback } from 'react-native';
+import { Modal as RNModal, TouchableWithoutFeedback, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Fragment } from 'common/Fragment';
 import { StatusBarFake } from 'components/modals/StatusBarFake';
@@ -29,28 +30,37 @@ const Modal = <RNModalProps extends object>({
   testID,
   transparent = true,
   ...rest
-}: Props<RNModalProps>): React.ReactElement => (
-  <RNModal
-    {...rest}
-    animationType={animationType}
-    testID={testID}
-    transparent={transparent}
-    visible={isVisible}
-    onRequestClose={
-      shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
-    }
-  >
-    <Fragment>
-      <StatusBarFake />
-      {isTouchable ? (
-        <TouchableWithoutFeedback onPress={onHideModal}>
-          {children}
-        </TouchableWithoutFeedback>
-      ) : (
-        children
-      )}
-    </Fragment>
-  </RNModal>
-);
+}: Props<RNModalProps>): React.ReactElement => {
+  const insets = useSafeAreaInsets();
+  // Inset content from the bottom so it doesn't render under the Android
+  // navigation bar (or iOS home indicator). Top inset is handled by
+  // StatusBarFake / individual modals as needed.
+  const content = (
+    <View style={{ flex: 1, paddingBottom: insets.bottom }}>{children}</View>
+  );
+  return (
+    <RNModal
+      {...rest}
+      animationType={animationType}
+      testID={testID}
+      transparent={transparent}
+      visible={isVisible}
+      onRequestClose={
+        shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
+      }
+    >
+      <Fragment>
+        <StatusBarFake />
+        {isTouchable ? (
+          <TouchableWithoutFeedback onPress={onHideModal}>
+            {content}
+          </TouchableWithoutFeedback>
+        ) : (
+          content
+        )}
+      </Fragment>
+    </RNModal>
+  );
+};
 
 export { Modal };

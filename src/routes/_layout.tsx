@@ -6,8 +6,13 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { COLORS } from 'theme';
 
@@ -82,6 +87,36 @@ const RootLayoutNav = () => {
   );
 };
 
+// iOS reports a generous safe area top inset (~59pt on Dynamic Island
+// devices, ~47pt on notched devices) which leaves visible breathing room
+// between the camera cutout and the heading. Subtract that breathing room
+// so the heading sits snug to the bottom of the camera cutout.
+const IOS_TOP_INSET_TRIM = 11;
+
+const RootSafeArea: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const insets = useSafeAreaInsets();
+  const paddingTop =
+    Platform.OS === 'ios'
+      ? Math.max(insets.top - IOS_TOP_INSET_TRIM, 20)
+      : insets.top;
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.primary2,
+        paddingTop,
+        paddingLeft: insets.left,
+        paddingRight: insets.right,
+      }}
+    >
+      {children}
+    </View>
+  );
+};
+
 export default function RootLayout() {
   const [isHydrated, setIsHydrated] = React.useState(false);
 
@@ -110,22 +145,24 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary2 }}>
-        <QueryClientProvider client={queryClient}>
-          <QueryErrorResetBoundary>
-            <AppSettingsProvider>
-              <SnackBarProvider>
-                <PourProcessProvider>
-                  <MainTabBarSlotProvider>
-                    <RootLayoutNav />
-                    <SnackBar />
-                  </MainTabBarSlotProvider>
-                </PourProcessProvider>
-              </SnackBarProvider>
-            </AppSettingsProvider>
-          </QueryErrorResetBoundary>
-        </QueryClientProvider>
-      </SafeAreaView>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <RootSafeArea>
+          <QueryClientProvider client={queryClient}>
+            <QueryErrorResetBoundary>
+              <AppSettingsProvider>
+                <SnackBarProvider>
+                  <PourProcessProvider>
+                    <MainTabBarSlotProvider>
+                      <RootLayoutNav />
+                      <SnackBar />
+                    </MainTabBarSlotProvider>
+                  </PourProcessProvider>
+                </SnackBarProvider>
+              </AppSettingsProvider>
+            </QueryErrorResetBoundary>
+          </QueryClientProvider>
+        </RootSafeArea>
+      </SafeAreaProvider>
     </GestureHandlerRootView>
   );
 }
