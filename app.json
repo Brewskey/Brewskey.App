@@ -112,6 +112,12 @@
         "projectId": "7eca9044-2eec-4dca-9370-0f9fd507298d"
       }
     },
-    "owner": "brewskey"
+    "owner": "brewskey",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7eca9044-2eec-4dca-9370-0f9fd507298d"
+    }
   }
 }

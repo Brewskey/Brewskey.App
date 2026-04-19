@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import Constants from 'expo-constants';
 import { FormProvider, useForm } from 'react-hook-form';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Container } from 'common/Container';
@@ -19,6 +18,10 @@ import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useChangePassword } from 'hooks/queries/AuthQueries';
 import { useGetOrganizations } from 'hooks/queries/OrganizationQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import {
+  getNativeAppVersionLabel,
+  getOtaDetailsLabel,
+} from 'utils/appVersionInfo';
 
 import type { EntityID, Organization, ShortenedEntity } from '@brewskey/js-api';
 
@@ -28,28 +31,19 @@ interface SettingsOrganizationForm {
   organization: EntityID | null;
 }
 
-function getAppVersionLabel(): string {
-  const version =
-    Constants.expoConfig?.version ?? Constants.nativeApplicationVersion ?? '';
-  const build = Constants.nativeBuildVersion;
-  if (version && build) {
-    return `${version} (${build})`;
-  }
-  if (version) {
-    return version;
-  }
-  if (build) {
-    return build;
-  }
-  return 'Unknown';
-}
-
 const styles = StyleSheet.create({
+  versionBlock: {
+    marginLeft: 4,
+    marginTop: 12,
+  },
   versionText: {
     ...TYPOGRAPHY.small,
     color: COLORS.textFaded,
-    marginLeft: 4,
-    marginTop: 12,
+  },
+  versionOtaText: {
+    ...TYPOGRAPHY.small,
+    color: COLORS.textFaded,
+    marginTop: 4,
   },
 });
 
@@ -86,6 +80,8 @@ const SettingsScreen: React.FC = () => {
   const hasOrganizations =
     organizationsData?.pages?.[0] != null &&
     organizationsData.pages[0].length > 0;
+
+  const otaDetailsLabel = getOtaDetailsLabel();
 
   const onChangePasswordSubmit = async (values: ChangePasswordFormFields) => {
     await changePasswordMutation.mutateAsync({
@@ -136,9 +132,19 @@ const SettingsScreen: React.FC = () => {
         ) : null}
         <Section>
           <SectionContent>
-            <Text style={styles.versionText} testID="settings-app-version">
-              Version {getAppVersionLabel()}
-            </Text>
+            <View style={styles.versionBlock}>
+              <Text style={styles.versionText} testID="settings-app-version">
+                Version {getNativeAppVersionLabel()}
+              </Text>
+              {otaDetailsLabel ? (
+                <Text
+                  style={styles.versionOtaText}
+                  testID="settings-app-version-ota"
+                >
+                  {otaDetailsLabel}
+                </Text>
+              ) : null}
+            </View>
           </SectionContent>
         </Section>
       </KeyboardAwareScrollView>
