@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 
 import DAOApi from '@brewskey/js-api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -86,13 +80,6 @@ export const saveAppSettingsToStorage = async (
 interface AppSettingsContextValue {
   isManageTapsEnabled: boolean;
   selectedOrganization: Organization | null | undefined;
-  updateMetadata:
-    | {
-        appVersion: string;
-        label: string;
-      }
-    | null
-    | undefined;
   onToggleManageTaps: () => void;
   onOrganizationChange: (selectedOrganization?: Organization | null) => void;
   updateAppSettings: (appSettings: Partial<AppSettings>) => void;
@@ -190,10 +177,6 @@ export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { appSettings, isLoading, updateAppSettings } = useAppSettingsQuery();
-  const [updateMetadata] = useState<{
-    appVersion: string;
-    label: string;
-  } | null>(null);
 
   const onToggleManageTaps = useCallback(() => {
     updateAppSettings({
@@ -217,7 +200,6 @@ export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     () => ({
       isManageTapsEnabled: appSettings.manageTapsEnabled,
       selectedOrganization: appSettings.selectedOrganization,
-      updateMetadata,
       onToggleManageTaps,
       onOrganizationChange,
       updateAppSettings,
@@ -225,7 +207,6 @@ export const AppSettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     [
       appSettings.manageTapsEnabled,
       appSettings.selectedOrganization,
-      updateMetadata,
       onToggleManageTaps,
       onOrganizationChange,
       updateAppSettings,

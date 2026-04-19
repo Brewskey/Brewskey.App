@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Constants from 'expo-constants';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, Text } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -27,6 +28,22 @@ interface SettingsOrganizationForm {
   organization: EntityID | null;
 }
 
+function getAppVersionLabel(): string {
+  const version =
+    Constants.expoConfig?.version ?? Constants.nativeApplicationVersion ?? '';
+  const build = Constants.nativeBuildVersion;
+  if (version && build) {
+    return `${version} (${build})`;
+  }
+  if (version) {
+    return version;
+  }
+  if (build) {
+    return build;
+  }
+  return 'Unknown';
+}
+
 const styles = StyleSheet.create({
   versionText: {
     ...TYPOGRAPHY.small,
@@ -43,7 +60,6 @@ const SettingsScreen: React.FC = () => {
     onOrganizationChange,
     onToggleManageTaps,
     selectedOrganization,
-    updateMetadata,
   } = useAppSettings();
   const changePasswordMutation = useChangePassword();
   const { data: organizationsData } = useGetOrganizations();
@@ -103,7 +119,7 @@ const SettingsScreen: React.FC = () => {
           </SectionContent>
         </Section>
         {hasOrganizations ? (
-          <Section bottomPadded={updateMetadata != null}>
+          <Section bottomPadded>
             <SectionContent>
               <FormProvider {...form}>
                 <FormField<SettingsOrganizationForm, typeof OrganizationPicker>
@@ -118,15 +134,13 @@ const SettingsScreen: React.FC = () => {
             </SectionContent>
           </Section>
         ) : null}
-        {updateMetadata != null && (
-          <Section>
-            <SectionContent>
-              <Text style={styles.versionText}>
-                {updateMetadata.appVersion} - {updateMetadata.label}
-              </Text>
-            </SectionContent>
-          </Section>
-        )}
+        <Section>
+          <SectionContent>
+            <Text style={styles.versionText} testID="settings-app-version">
+              Version {getAppVersionLabel()}
+            </Text>
+          </SectionContent>
+        </Section>
       </KeyboardAwareScrollView>
     </Container>
   );
