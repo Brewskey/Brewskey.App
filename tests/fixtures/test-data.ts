@@ -201,7 +201,7 @@ export function createMockKeg(overrides?: KegOverrides): Keg {
   const now = faker.date.recent();
   const base: Keg = {
     id,
-    tap: tap ?? null,
+    tap,
     beverage,
     kegType: 'HalfBarrel',
     floatedDate: now,

@@ -8,12 +8,13 @@ test.use({ autoAuthenticate: true });
 
 test('should pre-fill form with existing data', async ({ page }) => {
   // Set up explicit data: one device
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { device, location } = await mockDeviceWithTaps(page, 0);
 
   await page.goto(`/devices/${device.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
 
   await expect(page.getByTestId('input-name')).toHaveValue(device.name);
+  await expect(page.getByTestId('location-dropdown')).toContainText(location.name);
 });
 
 test('should successfully update device', async ({ page, dropDown }) => {

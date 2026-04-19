@@ -3,12 +3,20 @@ import * as React from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import nullthrows from 'nullthrows';
 import { Controller, FieldValues, useFormContext } from 'react-hook-form';
-import { GestureResponderEvent, Platform, View } from 'react-native';
+import {
+  GestureResponderEvent,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 
 import { ClearButton } from './ClearButton';
+import { FORM_INPUT_PADDING_H } from './formInputLayout';
 import { WebDropdown } from './WebDropdown';
 import { useDebounce } from '../../hooks/useDebounce';
+import { COLORS } from '../../theme';
 import { flattenInfinitePages } from '../../utils/infiniteQuery';
 
 import type { QueryOptions } from '@brewskey/js-api';
@@ -66,10 +74,8 @@ export type DropdownInputProps<TFormFields extends FieldValues, TItem> = Omit<
   DropdownProps,
   'onChange' | 'data' | 'name' | 'value'
 > & {
-  // Form integration. The form field stores the primitive `valueField` id.
-  // `defaultValue` may be either that primitive or a full row (whose id will be
-  // extracted, and which will also be used to display the initial label before
-  // the data list resolves).
+  // Form field holds the primitive `valueField` id; `defaultValue` may be a row,
+  // a primitive id, or omitted when defaults come only from `useForm`.
   defaultValue?: TItem | FormFieldValue;
   name: Extract<keyof TFormFields, string>;
   required?: boolean | string;
@@ -98,25 +104,81 @@ export type DropdownInputProps<TFormFields extends FieldValues, TItem> = Omit<
   onConfirmSelectItem?: (item: TItem) => void;
 };
 
+/** Aligns inset with RNE `Input`: trigger row, search field, and list rows. */
+const nativeDropdownStyles = StyleSheet.create({
+  listItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 17,
+    paddingHorizontal: FORM_INPUT_PADDING_H,
+  },
+  listItemLabel: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.text,
+  },
+});
+
+function withNativeFormFieldLayout(props: DropdownProps): DropdownProps {
+  const {
+    style,
+    inputSearchStyle,
+    renderItem,
+    labelField,
+    renderLeftIcon,
+    renderRightIcon,
+    ...rest
+  } = props;
+
+  const labelKey = String(labelField);
+
+  return {
+    ...rest,
+    labelField,
+    renderLeftIcon,
+    renderRightIcon,
+    style: StyleSheet.flatten([
+      { paddingHorizontal: FORM_INPUT_PADDING_H },
+      style,
+    ]),
+    inputSearchStyle: StyleSheet.flatten([
+      { paddingHorizontal: FORM_INPUT_PADDING_H },
+      inputSearchStyle,
+    ]),
+    renderItem:
+      renderItem ??
+      ((item) => (
+        <View style={nativeDropdownStyles.listItemRow}>
+          <Text style={nativeDropdownStyles.listItemLabel} numberOfLines={1}>
+            {String((item as Record<string, unknown>)[labelKey] ?? '')}
+          </Text>
+        </View>
+      )),
+  };
+}
+
 const DropdownPlatform = (props: DropdownProps) => {
   if (Platform.OS === 'web') {
     return <WebDropdown {...props} />;
   }
 
+  const merged = withNativeFormFieldLayout(props);
+
   // On native, add a default clear affordance when a value is selected and the
   // caller hasn't customized `renderRightIcon`.
-  if (props.value == null || props.renderRightIcon != null) {
-    return <RNEDropdown {...props} />;
+  if (merged.value == null || merged.renderRightIcon != null) {
+    return <RNEDropdown {...merged} />;
   }
 
   const handleClear = (event: GestureResponderEvent) => {
     event.stopPropagation();
-    props.onChange?.(null as never);
+    merged.onChange?.(null as never);
   };
 
   return (
     <RNEDropdown
-      {...props}
+      {...merged}
       renderRightIcon={() => <ClearButton onPress={handleClear} />}
     />
   );
@@ -186,7 +248,7 @@ const ControlledDropdown = <TItem,>({
 
   const commitSelection = (item: TItem | null) => {
     const nextId = readValueFieldId(item, valueFieldKey);
-    onChange(nextId);
+    onChange(nextId as never);
     onChangeOuter?.(item);
     if (item != null && typeof item === 'object') {
       setSeedItem({ ...(item as object) } as TItem);
@@ -245,7 +307,7 @@ export const DropdownInput = <TFormFields extends FieldValues, TItem>({
     useFormContext<TFormFields>(),
     'DropdownInput must be rendered inside a FormProvider',
   );
-  const { control } = form;
+  const { control, getValues } = form;
 
   const [searchText, setSearchText] = React.useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
@@ -314,15 +376,31 @@ export const DropdownInput = <TFormFields extends FieldValues, TItem>({
     [filteredData],
   );
 
-  // Seed object (full row) used to render the label for the initial selection
-  // before the data list resolves. Only meaningful when `defaultValue` is an
-  // object; primitives carry no label info on their own.
+  const idFromProp = readValueFieldId(defaultValue, valueFieldKey);
+  const idFromFormDefaults = readValueFieldId(
+    getValues(name as never),
+    valueFieldKey,
+  );
+  const mergedPrimitiveId = idFromProp ?? idFromFormDefaults;
+
+  // Seed row so the trigger can resolve the label before / without list data.
   const initialSeed = React.useMemo<TItem | null>(() => {
-    if (defaultValue == null || typeof defaultValue !== 'object') {
-      return null;
+    if (defaultValue != null && typeof defaultValue === 'object') {
+      return { ...(defaultValue as object) } as TItem;
     }
-    return { ...(defaultValue as object) } as TItem;
-  }, [defaultValue]);
+    if (defaultValue != null && typeof defaultValue !== 'object') {
+      return {
+        [valueFieldKey]: defaultValue,
+      } as unknown as TItem;
+    }
+    if (mergedPrimitiveId != null) {
+      return {
+        [valueFieldKey]: mergedPrimitiveId,
+      } as unknown as TItem;
+    }
+    return null;
+  }, [defaultValue, valueFieldKey, mergedPrimitiveId]);
+
   const seedItemRef = React.useRef<TItem | null>(initialSeed);
   React.useEffect(() => {
     if (initialSeed != null) {
@@ -334,18 +412,12 @@ export const DropdownInput = <TFormFields extends FieldValues, TItem>({
     seedItemRef.current = item;
   }, []);
 
-  // `defaultValue` is only consumed at mount by react-hook-form; subsequent
-  // updates flow through `setValue` from the consumer.
-  const initialFieldValue = React.useMemo(
-    () => readValueFieldId(defaultValue, valueFieldKey),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   return (
     <Controller
       control={control}
-      defaultValue={initialFieldValue as never}
+      {...(mergedPrimitiveId != null
+        ? { defaultValue: mergedPrimitiveId as never }
+        : {})}
       name={name as never}
       rules={{ required }}
       render={({ field }) => (

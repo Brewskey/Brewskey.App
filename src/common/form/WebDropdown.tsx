@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Dropdown as RNEDropdown } from 'react-native-element-dropdown';
 
+import { FORM_INPUT_PADDING_H } from './formInputLayout';
 import { COLORS } from '../../theme';
 
 type DropdownProps = React.ComponentProps<typeof RNEDropdown>;
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
+    paddingHorizontal: FORM_INPUT_PADDING_H,
     backgroundColor: COLORS.secondary,
     borderWidth: 1,
     borderRadius: 8,
@@ -70,18 +71,22 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    paddingHorizontal: 12,
+    paddingHorizontal: FORM_INPUT_PADDING_H,
     fontSize: 16,
     color: COLORS.text,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.secondary3,
   },
-  listItem: { paddingVertical: 17, paddingHorizontal: 12 },
+  listItem: {
+    paddingVertical: 17,
+    paddingHorizontal: FORM_INPUT_PADDING_H,
+  },
   listItemSelected: { backgroundColor: COLORS.primary4 },
   listItemHovered: { backgroundColor: COLORS.secondary2 },
   listItemText: { fontSize: 16, color: COLORS.text },
   emptyText: {
-    padding: 17,
+    paddingVertical: 17,
+    paddingHorizontal: FORM_INPUT_PADDING_H,
     fontSize: 16,
     color: COLORS.textFaded,
     textAlign: 'center' as const,
@@ -261,22 +266,36 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
       if (val == null) {
         return null;
       }
+      if (typeof val === 'object') {
+        return val as T;
+      }
       if (
         valueField &&
-        data.length > 0 &&
         (typeof val === 'string' || typeof val === 'number')
       ) {
-        const m = data.find(
-          (i) =>
-            (i as Record<string, unknown>)[valueField as string] === val ||
-            String((i as Record<string, unknown>)[valueField as string]) ===
-              String(val),
-        );
-        return m ?? null;
+        if (data.length > 0) {
+          const match = data.find(
+            (i) =>
+              (i as Record<string, unknown>)[valueField as string] === val ||
+              String((i as Record<string, unknown>)[valueField as string]) ===
+                String(val),
+          );
+          if (match != null) {
+            return match;
+          }
+        }
+        // Value is set but the row is not in `data` yet (pagination, filters) or
+        // `data` is still empty: synthesize a minimal row so the trigger stays
+        // selected (label fills in when the real row appears or via seed objects).
+        const lf = String(labelField ?? '');
+        return {
+          [valueField]: val,
+          ...(lf ? { [lf]: '' } : {}),
+        } as T;
       }
       return val as T;
     },
-    [valueField, data],
+    [valueField, labelField, data],
   );
 
   const selectedItem = resolveToItem(value);

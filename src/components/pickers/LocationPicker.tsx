@@ -9,7 +9,11 @@ import { DropdownInput } from 'common/form/DropdownInput';
 import { useGetLocations } from 'hooks/queries/LocationQueries';
 import { COLORS } from 'theme';
 
-import type { Location, QueryOptions, ShortenedEntity } from '@brewskey/js-api';
+import type {
+  Location,
+  QueryOptions,
+  ShortenedEntity,
+} from '@brewskey/js-api';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 interface Props {
