@@ -61,11 +61,11 @@ const NewBeverageScreen: React.FC = () => {
       flushImageCache(`${CONFIG.CDN}beverages/${String(id)}`);
     }
 
-    router.navigate({
+    addSnackBarMessage({ content: 'New beverage created.' });
+    router.replace({
       pathname: '/beverages/[id]',
       params: { id: String(id) },
     });
-    addSnackBarMessage({ content: 'New beverage created.' });
   };
 
   return (

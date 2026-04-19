@@ -20,6 +20,8 @@ import { SrmPicker } from 'components/pickers/SrmPicker';
 import { StylePicker } from 'components/pickers/StylePicker';
 import { YearPicker } from 'components/pickers/YearPicker';
 
+import { useHideMainTabBar } from './MainTabBar/MainTabBarSlot';
+
 import type { Beverage, BeverageMutator } from '@brewskey/js-api';
 
 const styles = StyleSheet.create({
@@ -68,6 +70,7 @@ const BeverageForm: React.FC<Props> = ({
   submitButtonLabel,
   onSubmit,
 }) => {
+  useHideMainTabBar();
   const form = useForm<FormProps>({
     mode: 'all',
     defaultValues: {

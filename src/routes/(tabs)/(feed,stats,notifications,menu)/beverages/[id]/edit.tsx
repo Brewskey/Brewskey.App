@@ -91,10 +91,14 @@ const EditBeverageScreen: React.FC = () => {
     }
 
     addSnackBarMessage({ content: 'The beverage edited.' });
-    router.push({
-      pathname: '/beverages/[id]',
-      params: { id: beverageIdValue.toString() },
-    });
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace({
+        pathname: '/beverages/[id]',
+        params: { id: beverageIdValue.toString() },
+      });
+    }
   };
 
   if (isLoading || !beverage) {
