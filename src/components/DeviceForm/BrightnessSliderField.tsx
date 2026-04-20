@@ -29,13 +29,13 @@ type Props<TFormFields extends FieldValues> = Omit<
 const BrightnessSliderField = <TFormFields extends FieldValues>(
   props: Props<TFormFields>,
 ): React.ReactElement => {
-  const { testID } = props;
+  const { testID, ...sliderProps } = props;
 
   return (
     <View testID={testID}>
       <View style={styles.container}>
         <SliderInput<TFormFields>
-          {...props}
+          {...sliderProps}
           maximumValue={255}
           minimumValue={0}
           step={1}
