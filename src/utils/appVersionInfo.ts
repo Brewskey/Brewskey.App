@@ -1,14 +1,20 @@
+import * as Application from 'expo-application';
 import Constants from 'expo-constants';
 import * as Updates from 'expo-updates';
 import { Platform } from 'react-native';
 
 /**
- * User-facing app version from config / native metadata (store build).
+ * User-facing app version from native metadata (store build).
+ * Prefers `expo-application` values; falls back to `expo-constants` (e.g. web).
  */
 export function getNativeAppVersionLabel(): string {
   const version =
-    Constants.expoConfig?.version ?? Constants.nativeApplicationVersion ?? '';
-  const build = Constants.nativeBuildVersion;
+    Application.nativeApplicationVersion ??
+    Constants.expoConfig?.version ??
+    Constants.nativeApplicationVersion ??
+    '';
+  const build =
+    Application.nativeBuildVersion ?? Constants.nativeBuildVersion ?? '';
   if (version && build) {
     return `${version} (${build})`;
   }
