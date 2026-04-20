@@ -17,7 +17,7 @@
     ],
     "ios": {
       "icon": "./assets/icon-1024.png",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "config": {
         "usesNonExemptEncryption": false
       },
