@@ -64,9 +64,11 @@ export const TextInput = <TFormFields extends FieldValues>({
         name.toString(),
         'TextInput: name prop is required and must be a non-empty string',
       )}
-      render={({ field: { onChange, onBlur, value } }) => (
+      render={({ field: { onChange, onBlur, value, ref } }) => (
         <Input
+          returnKeyType={nextFocusTo ? 'next' : undefined}
           {...props}
+          ref={ref}
           onBlur={onBlur}
           onChangeText={onChange}
           testID={testID}
