@@ -33,7 +33,7 @@ const EditDeviceScreen: React.FC = () => {
 
   const onFormSubmit = async (values: DeviceMutator): Promise<void> => {
     await updateMutation.mutateAsync(values);
-    router.replace({
+    router.dismissTo({
       pathname: '/devices/[id]',
       params: { id: deviceId.toString() },
     });

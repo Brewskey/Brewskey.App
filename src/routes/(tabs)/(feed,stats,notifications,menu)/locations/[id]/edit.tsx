@@ -40,7 +40,10 @@ const EditLocationScreen: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: ['location_by_id', getStringFromEntityID(locationId)],
       });
-      router.back();
+      router.dismissTo({
+        pathname: '/locations/[id]',
+        params: { id: getStringFromEntityID(locationId as EntityID) },
+      });
       addSnackBarMessage({ content: 'Location edited.' });
     },
   });
