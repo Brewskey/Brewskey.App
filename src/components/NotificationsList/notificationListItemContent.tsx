@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import moment from 'moment';
 import { Text } from 'react-native';
 
 import { BADGE_BY_TYPE } from 'badges';
@@ -8,6 +7,7 @@ import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
 import { UserAvatar } from 'common/avatars/UserAvatar';
 import { BadgeIcon } from 'components/BadgeIcon';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import { fromNow } from 'utils/dateFormat';
 
 import type { Notification } from 'stores/NotificationTypes';
 
@@ -20,7 +20,7 @@ export interface NotificationListItemContent {
 }
 
 const formatDate = (date: Date | unknown): string =>
-  moment(date instanceof Date ? date : (date as string)).fromNow();
+  fromNow(date instanceof Date ? date : (date as string));
 
 /**
  * Maps a notification to title, subtitle, and leftAvatar for use with common/ListItem.

@@ -269,10 +269,7 @@ export function WebDropdown<T = any>(props: WebDropdownProps) {
       if (typeof val === 'object') {
         return val as T;
       }
-      if (
-        valueField &&
-        (typeof val === 'string' || typeof val === 'number')
-      ) {
+      if (valueField && (typeof val === 'string' || typeof val === 'number')) {
         if (data.length > 0) {
           const match = data.find(
             (i) =>

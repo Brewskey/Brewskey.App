@@ -3,12 +3,12 @@ import * as React from 'react';
 import { Input } from '@rneui/themed';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import * as Progress from 'react-native-progress';
-import { useInterval } from 'usehooks-ts';
 
 import { TouchableItem } from 'common/buttons/TouchableItem';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { CenteredModal } from 'components/modals/CenteredModal';
 import { usePourModalContext } from 'hooks/context/PourProcessContext';
+import { useInterval } from 'hooks/useInterval';
 import { getNfcManager } from 'services/nfc';
 import { COLORS } from 'theme';
 

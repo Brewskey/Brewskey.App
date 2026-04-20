@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useRouter } from 'expo-router';
-import moment from 'moment';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { UserAvatar } from 'common/avatars/UserAvatar';
@@ -13,6 +12,7 @@ import { PintCounter } from 'components/PintCounter';
 import { KegSectionHeader } from 'components/poursLists/KegSectionHeader';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeletePour, useGetPours } from 'hooks/queries/PourQueries';
+import { fromNow } from 'utils/dateFormat';
 
 import type { EntityID, Pour, QueryOptions } from '@brewskey/js-api';
 import type { SectionListData } from 'react-native';
@@ -78,7 +78,7 @@ export const SectionPoursList: React.FC<Props> = ({
       chevron: false,
       item: pour,
       title,
-      subtitle: moment(pour.pourDate).fromNow(),
+      subtitle: fromNow(pour.pourDate),
       testID: `pour-item-${pour.id}`,
     };
 

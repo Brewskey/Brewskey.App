@@ -1,13 +1,12 @@
 import * as React from 'react';
 
-import moment from 'moment';
-
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
 import { ListEmpty } from 'common/ListEmpty';
 import { ListItem } from 'common/ListItem';
 import { PintCounter } from 'components/PintCounter';
 import { BasePoursList } from 'components/poursLists/BasePoursList';
+import { fromNow } from 'utils/dateFormat';
 
 import type { Pour, QueryOptions } from '@brewskey/js-api';
 
@@ -27,7 +26,7 @@ const LoadedRow: React.FC<{
   <ListItem
     item={pour}
     onPress={() => onItemPress(pour)}
-    subtitle={moment(pour.pourDate).fromNow()}
+    subtitle={fromNow(pour.pourDate)}
     testID={`pour-item-${pour.id}`}
     leftAvatar={
       <BeverageAvatar beverageId={pour.beverage ? pour.beverage.id : ''} />

@@ -10,7 +10,6 @@ import './src/eventSourcePolyfill';
 // Initialize Buffer polyfill FIRST - before any other imports
 import { Buffer } from 'buffer';
 import * as Crypto from 'expo-crypto';
-import 'setimmediate';
 
 // Set Buffer on global for React Native/Node environments
 if (typeof global !== 'undefined' && typeof global.Buffer === 'undefined') {

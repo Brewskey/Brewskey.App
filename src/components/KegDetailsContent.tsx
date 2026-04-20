@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { createFilter } from '@brewskey/js-api/dist/filters';
 import { useRouter } from 'expo-router';
-import moment from 'moment';
 import {
   ScrollView,
   StyleSheet,
@@ -26,6 +25,7 @@ import { PintCounter } from 'components/PintCounter';
 import { useGetPours } from 'hooks/queries/PourQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
 import { calculateKegLevel } from 'utils';
+import { formatShortDate, fromNow } from 'utils/dateFormat';
 
 import type { EntityID, Keg, Pour } from '@brewskey/js-api';
 import type { ListRenderItemInfo } from 'react-native';
@@ -96,7 +96,7 @@ const PourRow: React.FC<{
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={pour.owner ? handlePress : undefined}
       rightIcon={<PintCounter beverageID={beverageId} ounces={pour.ounces} />}
-      subtitle={moment(pour.pourDate).fromNow()}
+      subtitle={fromNow(pour.pourDate)}
       title={title}
     />
   );
@@ -220,15 +220,12 @@ const KegDetailsContent: React.FC<Props> = ({ keg, onClose }) => {
               title="Ounces Poured"
               value={`${Math.round(ounces)} oz`}
             />
-            <OverviewItem
-              title="Tap Date"
-              value={moment(tapDate).format('l')}
-            />
+            <OverviewItem title="Tap Date" value={formatShortDate(tapDate)} />
             <OverviewItem
               title="Floated Date"
               value={
                 floatedDate
-                  ? moment(floatedDate).format('l')
+                  ? formatShortDate(floatedDate)
                   : NULL_STRING_PLACEHOLDER
               }
             />

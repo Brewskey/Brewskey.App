@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
-import moment from 'moment';
 import { StyleSheet, View } from 'react-native';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
@@ -13,6 +12,7 @@ import { KegDetailsContent } from 'components/KegDetailsContent';
 import { Modal } from 'components/modals/Modal';
 import { useGetKegById } from 'hooks/queries/KegQueries';
 import { COLORS } from 'theme';
+import { formatShortDate } from 'utils/dateFormat';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -84,9 +84,9 @@ export const KegModal = React.forwardRef<
   }
 
   const { tapDate, floatedDate } = keg.data;
-  const tappedDate = moment(tapDate).format('l');
+  const tappedDate = formatShortDate(tapDate);
   const floatedDateFormatted = floatedDate
-    ? moment(floatedDate).format('l')
+    ? formatShortDate(floatedDate)
     : NULL_STRING_PLACEHOLDER;
   const subtitle = `Tapped: ${tappedDate} • Floated: ${floatedDateFormatted}`;
 

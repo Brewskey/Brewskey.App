@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { Image, ImageBackground, StyleSheet } from 'react-native';
-import tinycolor from 'tinycolor2';
 
 import { useGetBeverageById } from 'hooks/queries/BeverageQueries';
+import { darkenHex, isLightColor } from 'utils/color';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -60,7 +60,8 @@ const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
     }
   };
 
-  const colorToDarken = tinycolor(_tintColor());
+  const tintColor = _tintColor();
+  const darkTintColor = darkenHex(tintColor, isLightColor(tintColor) ? 10 : 5);
 
   return (
     <ImageBackground
@@ -73,7 +74,7 @@ const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
           styles.beerLevel,
           {
             height: `${level <= 98 ? level : 98}%`,
-            tintColor: _tintColor(),
+            tintColor,
           },
         ]}
       />
@@ -83,9 +84,7 @@ const Pint: React.FC<Props> = ({ beverageID, level = 100 }) => {
           styles.beerLevel,
           {
             height: `${level <= 98 ? level : 98}%`,
-            tintColor: colorToDarken
-              .darken(colorToDarken.isLight() ? 10 : 5)
-              .toString(),
+            tintColor: darkTintColor,
           },
         ]}
       />

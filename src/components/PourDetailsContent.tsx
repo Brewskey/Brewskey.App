@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useRouter } from 'expo-router';
-import moment from 'moment';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
@@ -11,6 +10,7 @@ import { Fragment } from 'common/Fragment';
 import { OverviewItem } from 'common/OverviewItem';
 import { PintCounter } from 'components/PintCounter';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import { formatShortDateTime, fromNow } from 'utils/dateFormat';
 
 import type { Pour } from '@brewskey/js-api';
 
@@ -105,8 +105,8 @@ const PourDetailsContent: React.FC<Props> = ({
   const beverageName = pour.beverage?.name || NULL_STRING_PLACEHOLDER;
   const ownerName = pour.owner?.userName || NULL_STRING_PLACEHOLDER;
   const locationName = pour.location?.name || NULL_STRING_PLACEHOLDER;
-  const pourDate = moment(pour.pourDate).format('lll');
-  const pourDateRelative = moment(pour.pourDate).fromNow();
+  const pourDate = formatShortDateTime(pour.pourDate);
+  const pourDateRelative = fromNow(pour.pourDate);
 
   return (
     <Fragment>

@@ -34,9 +34,7 @@ export const calculateKegLevel = ({
 }): number => {
   const KEG_OUNCES =
     kegType != null
-      ? MAX_OUNCES_BY_KEG_TYPE[
-          kegType as keyof typeof MAX_OUNCES_BY_KEG_TYPE
-        ]
+      ? MAX_OUNCES_BY_KEG_TYPE[kegType as keyof typeof MAX_OUNCES_BY_KEG_TYPE]
       : undefined;
 
   if (

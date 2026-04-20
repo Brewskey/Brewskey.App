@@ -1,6 +1,5 @@
 import * as React from 'react';
 
-import moment from 'moment';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
@@ -8,6 +7,7 @@ import { BeverageAvatar } from 'common/avatars/BeverageAvatar';
 import { LoadingIndicator } from 'common/LoadingIndicator';
 import { useGetKegById } from 'hooks/queries/KegQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import { formatShortDate } from 'utils/dateFormat';
 
 import type { EntityID, Pour } from '@brewskey/js-api';
 import type { SectionListData } from 'react-native';
@@ -64,13 +64,13 @@ export const KegSectionHeader: React.FC<Props> = ({ section: { kegId } }) => {
         <View style={styles.datesContainer}>
           <View style={styles.dateContainer}>
             <Text style={styles.dateLabelText}>created date:</Text>
-            <Text>{moment(tapDate).format('l')}</Text>
+            <Text>{formatShortDate(tapDate)}</Text>
           </View>
           <View style={styles.dateContainer}>
             <Text style={styles.dateLabelText}>floated date:</Text>
             <Text>
               {floatedDate
-                ? moment(floatedDate).format('l')
+                ? formatShortDate(floatedDate)
                 : NULL_STRING_PLACEHOLDER}
             </Text>
           </View>

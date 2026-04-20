@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { useRouter } from 'expo-router';
-import moment from 'moment';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
 import { UserAvatar } from 'common/avatars/UserAvatar';
@@ -11,6 +10,7 @@ import { QuickActions } from 'common/QuickActions';
 import { BasePoursList } from 'components/poursLists/BasePoursList';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeletePour } from 'hooks/queries/PourQueries';
+import { fromNow } from 'utils/dateFormat';
 
 import type { Pour, QueryOptions } from '@brewskey/js-api';
 
@@ -44,7 +44,7 @@ const LoadedRow = ({
       item={pour}
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={() => onItemPress(pour)}
-      subtitle={moment(pour.pourDate).fromNow()}
+      subtitle={fromNow(pour.pourDate)}
       testID={`pour-item-${pour.id}`}
       title={title}
     />
@@ -75,7 +75,7 @@ const SwipeableRowItem = ({
       leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
       onPress={() => onItemPress(pour)}
       slideoutComponent={slideoutComponent}
-      subtitle={moment(pour.pourDate).fromNow()}
+      subtitle={fromNow(pour.pourDate)}
       testID={`pour-item-${pour.id}`}
       title={title}
     />

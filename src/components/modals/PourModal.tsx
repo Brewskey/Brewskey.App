@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useImperativeHandle } from 'react';
 
-import moment from 'moment';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { NULL_STRING_PLACEHOLDER } from '@/constants';
@@ -14,6 +13,7 @@ import { Modal } from 'components/modals/Modal';
 import { PourDetailsContent } from 'components/PourDetailsContent';
 import { useGetPourById } from 'hooks/queries/PourQueries';
 import { COLORS } from 'theme';
+import { formatShortDate } from 'utils/dateFormat';
 
 import type { EntityID } from '@brewskey/js-api';
 
@@ -85,7 +85,7 @@ export const PourModal = React.forwardRef<
   }
 
   const beverageName = pour.data.beverage?.name || NULL_STRING_PLACEHOLDER;
-  const pourDate = moment(pour.data.pourDate).format('l');
+  const pourDate = formatShortDate(pour.data.pourDate);
   const subtitle = `${pourDate} • ${pour.data.ounces.toFixed(1)} oz`;
 
   return (

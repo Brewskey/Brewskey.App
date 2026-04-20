@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import {
-  Platform,
   Modal as RNModal,
+  Platform,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
