@@ -41,6 +41,7 @@ jobs:
 
       - name: Run E2E tests
         run: npm run test:e2e
+        timeout-minutes: 10
         env:
           CI: true
 
