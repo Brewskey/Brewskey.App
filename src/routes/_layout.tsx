@@ -101,6 +101,11 @@ const RootSafeArea: React.FC<{ children: React.ReactNode }> = ({
     Platform.OS === 'ios'
       ? Math.max(insets.top - IOS_TOP_INSET_TRIM, 20)
       : insets.top;
+  // On Android the system navigation bar (gesture/3-button) remains visible
+  // at the bottom of the screen. Reserve space for it so the custom tab bar
+  // sits above it instead of being covered. iOS keeps its existing behavior
+  // (the tab bar extends into the home-indicator area).
+  const paddingBottom = Platform.OS === 'android' ? insets.bottom : 0;
 
   return (
     <View
@@ -108,6 +113,7 @@ const RootSafeArea: React.FC<{ children: React.ReactNode }> = ({
         flex: 1,
         backgroundColor: COLORS.primary2,
         paddingTop,
+        paddingBottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}
