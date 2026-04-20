@@ -2,7 +2,7 @@
   "expo": {
     "name": "Brewskey",
     "slug": "brewskey",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-1024.png",
       "supportsTablet": false,
@@ -91,9 +89,7 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
         }
       ],
-      [
-        "expo-secure-store"
-      ],
+      ["expo-secure-store"],
       "expo-image",
       [
         "expo-build-properties",

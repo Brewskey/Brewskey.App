@@ -5,8 +5,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SliderInput } from 'common/form/SliderInput';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
-import type { SliderInputProps } from 'common/form/SliderInput';
 import type { FieldValues } from 'react-hook-form';
+
+import type { SliderInputProps } from 'common/form/SliderInput';
 
 const styles = StyleSheet.create({
   container: {

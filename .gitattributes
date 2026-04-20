@@ -1,0 +1,21 @@
+# Normalize line endings: store as LF in the repo, check out as the OS default
+* text=auto eol=lf
+
+# Force LF for shell scripts (must be LF to run on Unix)
+*.sh text eol=lf
+
+# Binary files - never modify
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.webm binary
+*.mp4 binary
+*.zip binary
+*.pdf binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
