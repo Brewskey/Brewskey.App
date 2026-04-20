@@ -75,11 +75,12 @@ function showNotificationInSnackBar(notification: Notification): void {
 }
 
 function handleRegistrationError(errorMessage: string): void {
-  if (typeof alert !== 'undefined') {
-    // Blocking alert for permission failures before SnackBar may be mounted
-    // eslint-disable-next-line no-alert -- push registration runs outside snack UI
-    alert(errorMessage);
-  }
+  // Suppressed for now: Firebase/FCM is not yet configured on Android, so push
+  // token registration always fails with a "Default FirebaseApp is not
+  // initialized" error. Logging instead of alerting avoids interrupting the UI
+  // every time the user opens the Notifications tab.
+  // eslint-disable-next-line no-console -- intentional diagnostic logging
+  console.warn('[push-notifications]', errorMessage);
 }
 
 async function registerForPushNotificationsAsync(): Promise<

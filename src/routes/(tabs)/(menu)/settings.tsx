@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   versionBlock: {
     marginLeft: 4,
     marginTop: 12,
+    marginBottom: 24,
   },
   versionText: {
     ...TYPOGRAPHY.small,

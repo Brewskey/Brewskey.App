@@ -1,12 +1,12 @@
 import * as React from 'react';
 
-import { Slider } from '@rneui/themed';
-import { Controller, useFormContext } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { SliderInput } from 'common/form/SliderInput';
 import { COLORS, TYPOGRAPHY } from 'theme';
 
-import type { SliderProps as RNEUISliderProps } from '@rneui/themed';
+import type { SliderInputProps } from 'common/form/SliderInput';
+import type { FieldValues } from 'react-hook-form';
 
 const styles = StyleSheet.create({
   container: {
@@ -20,34 +20,24 @@ const styles = StyleSheet.create({
   subtitleText: { ...TYPOGRAPHY.small, color: COLORS.textFaded, marginTop: 8 },
 });
 
-type Props = RNEUISliderProps & {
-  name: string;
-  testID?: string;
-};
+type Props<TFormFields extends FieldValues> = Omit<
+  SliderInputProps<TFormFields>,
+  'minimumValue' | 'maximumValue' | 'step'
+>;
 
-const BrightnessSliderField = ({
-  name,
-  testID,
-  ...rest
-}: Props): React.ReactElement => {
-  const { control } = useFormContext();
+const BrightnessSliderField = <TFormFields extends FieldValues>(
+  props: Props<TFormFields>,
+): React.ReactElement => {
+  const { testID } = props;
 
   return (
     <View testID={testID}>
       <View style={styles.container}>
-        <Controller
-          control={control}
-          name={name}
-          render={({ field: { onChange, value } }) => (
-            <Slider
-              {...rest}
-              maximumValue={255}
-              minimumValue={0}
-              onValueChange={onChange}
-              step={1}
-              value={value}
-            />
-          )}
+        <SliderInput<TFormFields>
+          {...props}
+          maximumValue={255}
+          minimumValue={0}
+          step={1}
         />
         <View style={styles.sliderLabelContainer}>
           <Text>0%</Text>
