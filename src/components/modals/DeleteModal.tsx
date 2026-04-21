@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { CenteredModal } from 'components/modals/CenteredModal';
@@ -43,6 +43,8 @@ const DeleteModal = ({
   testID,
   title,
 }: Props): React.ReactElement => (
+  // RNE icon objects inside Button render an additional interactive element on web,
+  // which can nest a <button> inside the button and break hydration.
   <CenteredModal
     isVisible={isVisible}
     onHideModal={onCancelButtonPress}
@@ -62,7 +64,11 @@ const DeleteModal = ({
       <Button
         backgroundColor={COLORS.secondary}
         color={COLORS.danger}
-        icon={{ color: COLORS.danger, name: 'delete' }}
+        icon={
+          Platform.OS !== 'web'
+            ? { color: COLORS.danger, name: 'delete' }
+            : undefined
+        }
         onPress={onDeleteButtonPress}
         testID={`${testID}-button-delete`}
         title={deleteButtonTitle}
@@ -70,7 +76,11 @@ const DeleteModal = ({
       <Button
         backgroundColor={COLORS.secondary}
         color={COLORS.text}
-        icon={{ color: COLORS.text, name: 'close' }}
+        icon={
+          Platform.OS !== 'web'
+            ? { color: COLORS.text, name: 'close' }
+            : undefined
+        }
         onPress={onCancelButtonPress}
         testID={`${testID}-button-cancel`}
         title="cancel"

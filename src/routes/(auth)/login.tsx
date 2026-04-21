@@ -1,10 +1,12 @@
 import * as React from 'react';
 
+import { Divider } from '@rneui/themed';
 import { useRouter } from 'expo-router';
 import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Button } from '../../common/buttons/Button';
+import { GoogleLoginButton } from '../../components/GoogleLoginButton';
 import { LoginForm } from '../../components/LoginForm';
 import { COLORS } from '../../theme';
 
@@ -12,6 +14,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.primary2,
     flex: 1,
+  },
+  divider: {
+    marginHorizontal: 12,
+    marginTop: 24,
+    marginBottom: 36,
   },
   image: {
     height: 100,
@@ -54,6 +61,8 @@ export default function LoginScreen() {
           }}
         />
       </View>
+      <GoogleLoginButton />
+      <Divider color={COLORS.secondaryDisabled} style={styles.divider} />
       <LoginForm isInverse />
       <View style={{ paddingTop: 20 }}>
         <Button

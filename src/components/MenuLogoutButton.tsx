@@ -24,10 +24,12 @@ const MenuLogoutButton: React.FC = () => {
         title="Log Out"
       />
       <DeleteModal
+        deleteButtonTitle="logout"
         isVisible={isModalVisible}
         message="Are you sure you want to logout?"
         onCancelButtonPress={() => setIsModalVisible(false)}
         onDeleteButtonPress={onLogoutConfirm}
+        testID="logout-confirmation-modal"
         title="Logout"
       />
     </Fragment>

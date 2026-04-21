@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "icon": "./assets/icon-1024.png",
       "supportsTablet": false,
@@ -89,7 +91,9 @@
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
         }
       ],
-      ["expo-secure-store"],
+      [
+        "expo-secure-store"
+      ],
       "expo-image",
       [
         "expo-build-properties",
@@ -98,7 +102,14 @@
             "usesCleartextTraffic": true
           }
         }
-      ]
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.892379035045-ld6ai6u7649on1h33858rmk4c31rs3eu"
+        }
+      ],
+      "expo-web-browser"
     ],
     "extra": {
       "router": {

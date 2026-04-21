@@ -6,6 +6,7 @@ import {
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -16,6 +17,7 @@ import {
 
 import { COLORS } from 'theme';
 
+import { CONFIG } from '../config';
 import { SnackBar } from '../common/SnackBar';
 import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
 import {
@@ -32,7 +34,13 @@ import { PourProcessProvider } from '../hooks/context/PourProcessContext';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
 import { queryClient } from '../utils/queryClient';
 
-BrewskeyJSApi.initialize('https://brewskey.com');
+BrewskeyJSApi.initialize(CONFIG.HOST);
+
+// Required at module scope so the popup window opened by `expo-auth-session`
+// (used by `googleSignIn.ts` for the web Google login flow) can detect the
+// OAuth redirect and `postMessage` the result back to the opener. No-op on
+// native, where the in-app browser handles redirects via deep linking.
+WebBrowser.maybeCompleteAuthSession();
 
 // Hydrate auth state from Storage on app startup
 const hydrateAuthState = async () => {
