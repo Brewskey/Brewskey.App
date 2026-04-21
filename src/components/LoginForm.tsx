@@ -62,7 +62,7 @@ export const LoginForm = ({
           required
           autoCapitalize="none"
           autoCorrect={false}
-          disabled={!loginMutator.isIdle}
+          disabled={loginMutator.isPending}
           inputStyle={isInverse ? styles.input : undefined}
           label="User name"
           labelStyle={isInverse ? styles.label : undefined}
@@ -78,7 +78,7 @@ export const LoginForm = ({
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}
-          disabled={!loginMutator.isIdle}
+          disabled={loginMutator.isPending}
           inputStyle={isInverse ? styles.input : null}
           label="Password"
           labelStyle={isInverse ? styles.label : null}
