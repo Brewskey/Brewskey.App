@@ -97,7 +97,6 @@ export const sendPourAuthorization = async (
 export const PourProcessProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  console.log('PourProcessProvider');
   const [state, setState] = useState<PourProcessState>({
     isVisible: false,
     isNFCSupported: false,

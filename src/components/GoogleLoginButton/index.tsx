@@ -5,7 +5,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import { Button } from 'common/buttons/Button';
 import { SectionContent } from 'common/SectionContent';
-import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useLoginWithGoogle } from 'hooks/queries/AuthQueries';
 import { COLORS, getElevationStyle } from 'theme';
 import { isGoogleSignInConfigured } from 'utils/googleSignInConfig';
@@ -69,7 +68,6 @@ const styles = StyleSheet.create({
  */
 const GoogleLoginButton = (): React.ReactElement | null => {
   const loginMutator = useLoginWithGoogle();
-  const addSnackBarMessage = useAddSnackBarMessage();
 
   if (!isGoogleSignInConfigured()) {
     return null;
@@ -78,10 +76,14 @@ const GoogleLoginButton = (): React.ReactElement | null => {
   const onPress = (): void => {
     loginMutator.mutate(undefined, {
       onError: (error) => {
-        addSnackBarMessage({
-          content: error?.message ?? 'Google sign-in failed.',
-          style: 'danger',
-        });
+        // Rethrow on the next tick so the error escapes React Query's
+        // promise chain and is picked up by React Native's global error
+        // handler, which surfaces it as a LogBox / red-box error in the
+        // Expo dev UI with the full stack — much more useful than a
+        // truncated snackbar while debugging native Google sign-in.
+        setTimeout(() => {
+          throw error;
+        }, 0);
       },
     });
   };

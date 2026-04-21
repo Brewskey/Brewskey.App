@@ -1,5 +1,6 @@
-import { PermissionStatus } from 'expo-location';
-import { Platform, StyleSheet, Text } from 'react-native';
+import { useEffect, useState } from 'react';
+
+import { AppState, Linking, Platform, StyleSheet, Text } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
@@ -27,6 +28,9 @@ const HomeScreen = () => {
   const locationQuery = useDeviceLocation();
   const requestPermissionMutation = useRequestLocationPermission();
 
+  const [didAttemptPermissionRequest, setDidAttemptPermissionRequest] =
+    useState(false);
+
   const permission = permissionQuery.data;
   const location = locationQuery.data;
 
@@ -45,9 +49,38 @@ const HomeScreen = () => {
     },
   );
 
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState !== 'active') {
+        return;
+      }
+
+      void permissionQuery.refetch();
+      void locationQuery.refetch();
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [locationQuery, permissionQuery]);
+
+  useEffect(() => {
+    if (permission?.granted) {
+      setDidAttemptPermissionRequest(false);
+    }
+  }, [permission?.granted]);
+
   if (permissionQuery.isLoading || permission == null) {
     return null;
   }
+
+  // Android can report `canAskAgain: false` before any prompt — never send the user to Settings on
+  // the first tap. Only offer Settings after we've called `requestForegroundPermissionsAsync` once
+  // and the OS still won't show the dialog again (same pattern works on iOS).
+  const openSettingsOnContinue =
+    Platform.OS !== 'web' &&
+    permission.canAskAgain === false &&
+    didAttemptPermissionRequest;
 
   if (permission.granted && (locationQuery.isLoading || location == null)) {
     return (
@@ -74,14 +107,27 @@ const HomeScreen = () => {
           </Text>
           <Button
             testID={
-              permission.status === PermissionStatus.DENIED &&
-              Platform.OS !== 'web'
+              openSettingsOnContinue
                 ? 'button-open-location-settings'
                 : 'button-continue-location-permissions'
             }
             title="Continue"
             onPress={async () => {
-              await requestPermissionMutation.mutateAsync();
+              if (openSettingsOnContinue) {
+                await Linking.openSettings();
+                void permissionQuery.refetch();
+                return;
+              }
+
+              if (requestPermissionMutation.isPending) {
+                return;
+              }
+
+              try {
+                await requestPermissionMutation.mutateAsync();
+              } finally {
+                setDidAttemptPermissionRequest(true);
+              }
             }}
           />
         </Container>

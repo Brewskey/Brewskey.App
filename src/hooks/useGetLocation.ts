@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PermissionStatus } from 'expo-location';
 import * as Location from 'expo-location';
-import { Linking, Platform } from 'react-native';
 
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
@@ -37,8 +35,10 @@ export const useDeviceLocation =
   };
 
 /**
- * Mutation hook for requesting location permission (or opening system settings when the OS will
- * not show the prompt again — native + denied status).
+ * Mutation hook for requesting foreground location permission via the system prompt when available.
+ * Does not open Settings automatically — let the UI open Settings only on an explicit user action when
+ * `canAskAgain` is false (otherwise "Don't allow" reads like the app ignoring the user's choice).
+ * Same behavior on Android and iOS; web uses expo-location’s browser flow.
  */
 export const useRequestLocationPermission = (): UseMutationResult<
   Location.LocationPermissionResponse,
@@ -46,14 +46,14 @@ export const useRequestLocationPermission = (): UseMutationResult<
   void
 > => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async () => {
       const current = await Location.getForegroundPermissionsAsync();
-      if (current.status === PermissionStatus.DENIED && Platform.OS !== 'web') {
-        await Linking.openSettings();
-        return Location.getForegroundPermissionsAsync();
+      if (current.granted) {
+        return current;
       }
+      // Always call request first: `getForegroundPermissionsAsync()` can report `canAskAgain: false`
+      // before any prompt on some OS/builds, which wrongly routed to Settings if we trusted preflight only.
       return Location.requestForegroundPermissionsAsync();
     },
     onSettled: () => {
