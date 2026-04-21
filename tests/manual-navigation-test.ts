@@ -331,11 +331,13 @@ async function enableLocationPermissions(page: Page) {
     await page.goto(`${APP_URL}/`);
 
     // Check if permission button exists
-    const permissionButton = page.getByTestId('button-provide-permissions');
+    const permissionButton = page.getByTestId(
+      'button-continue-location-permissions',
+    );
     const isVisible = await permissionButton.isVisible().catch(() => false);
 
     if (isVisible) {
-      console.log('Clicking "Provide permissions" button...');
+      console.log('Clicking location permissions "Continue" button...');
       await permissionButton.click();
       console.log('Location permissions granted');
     } else {

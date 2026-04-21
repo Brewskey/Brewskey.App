@@ -2,7 +2,7 @@
   "expo": {
     "name": "Brewskey",
     "slug": "brewskey",
-    "version": "3.0.1",
+    "version": "3.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-1024.png",
       "supportsTablet": false,
@@ -81,19 +79,17 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+          "locationWhenInUsePermission": "$(PRODUCT_NAME) uses your location to show bars, breweries, and taprooms near you that have Brewskey-equipped beer taps. For example, your location is used to display a list of nearby venues sorted by distance so you can see what's currently on tap close by."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to let you share them with your friends.",
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to take photos."
+          "photosPermission": "$(PRODUCT_NAME) accesses your photo library so you can choose an existing image to use as your profile picture.",
+          "cameraPermission": "$(PRODUCT_NAME) uses your camera so you can take a new photo and set it as your profile picture."
         }
       ],
-      [
-        "expo-secure-store"
-      ],
+      ["expo-secure-store"],
       "expo-image",
       [
         "expo-build-properties",

@@ -1,6 +1,5 @@
-import * as React from 'react';
-
-import { StyleSheet, Text } from 'react-native';
+import { PermissionStatus } from 'expo-location';
+import { Platform, StyleSheet, Text } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
@@ -74,10 +73,15 @@ const HomeScreen = () => {
             In order to see nearby taps, we need location permissions
           </Text>
           <Button
-            testID="button-provide-permissions"
-            title="Provide permissions"
-            onPress={() => {
-              void requestPermissionMutation.mutateAsync();
+            testID={
+              permission.status === PermissionStatus.DENIED &&
+              Platform.OS !== 'web'
+                ? 'button-open-location-settings'
+                : 'button-continue-location-permissions'
+            }
+            title="Continue"
+            onPress={async () => {
+              await requestPermissionMutation.mutateAsync();
             }}
           />
         </Container>

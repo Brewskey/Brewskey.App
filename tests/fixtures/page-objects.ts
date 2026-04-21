@@ -55,7 +55,7 @@ export class HomePage {
   }
 
   getPermissionRequestButton(): Locator {
-    return this.page.getByTestId('button-provide-permissions');
+    return this.page.getByTestId('button-continue-location-permissions');
   }
 
   async clickLocation(locationName: string): Promise<void> {
