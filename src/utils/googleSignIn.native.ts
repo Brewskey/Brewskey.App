@@ -5,7 +5,10 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
-import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from './googleSignInConfig';
+import {
+  GOOGLE_IOS_CLIENT_ID,
+  GOOGLE_WEB_CLIENT_ID,
+} from './googleSignInConfig';
 
 export const isGoogleSignInAvailable = true;
 

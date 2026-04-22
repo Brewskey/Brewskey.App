@@ -100,7 +100,7 @@ export const useGoogleSignIn = (): {
     }
     if (result.type !== 'success') {
       const description =
-        ('error' in result && result.error?.message) ||
+        ('error' in result && (result.error as any)?.message) ||
         ('params' in result && result.params?.error_description) ||
         ('params' in result && result.params?.error) ||
         'Google sign-in failed.';

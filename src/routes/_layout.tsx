@@ -17,9 +17,9 @@ import {
 
 import { COLORS } from 'theme';
 
-import { CONFIG } from '../config';
 import { SnackBar } from '../common/SnackBar';
 import { MainTabBarSlotProvider } from '../components/MainTabBar/MainTabBarSlot';
+import { CONFIG } from '../config';
 import {
   APP_SETTINGS_QUERY_KEY,
   AppSettingsProvider,
