@@ -89,6 +89,12 @@
           "cameraPermission": "$(PRODUCT_NAME) uses your camera so you can take a new photo and set it as your profile picture."
         }
       ],
+      [
+        "expo-notifications",
+        {
+          "enableBackgroundRemoteNotifications": false
+        }
+      ],
       ["expo-secure-store"],
       "expo-image",
       [
@@ -113,7 +119,8 @@
       },
       "eas": {
         "projectId": "7eca9044-2eec-4dca-9370-0f9fd507298d"
-      }
+      },
+      "notificationsPermissionExplainer": "Brewskey can notify you about friend requests, achievements, low keg levels, and other activity on your taps. For example, you may get an alert when someone sends you a friend request or when a keg you care about is running low."
     },
     "owner": "brewskey",
     "runtimeVersion": {
