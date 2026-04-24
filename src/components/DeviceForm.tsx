@@ -79,6 +79,7 @@ const DeviceForm: React.FC<Props> = ({
   useHideMainTabBar();
   const insets = useSafeAreaInsets();
   const form = useForm<FormProps>({
+    mode: 'all',
     defaultValues: {
       id: device.id,
       particleId: device.particleId ?? '',
