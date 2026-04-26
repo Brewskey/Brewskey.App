@@ -77,6 +77,9 @@ const hydrateAppSettings = async () => {
 
 const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
+  const needsUsername =
+    authResponse?.isNewAccount === true ||
+    authResponse?.isNewAccount === 'true';
 
   if (isLoading) {
     return null;
@@ -84,8 +87,12 @@ const RootLayoutNav = () => {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!authResponse}>
+      <Stack.Protected guard={!!authResponse && !needsUsername}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack.Protected>
+
+      <Stack.Protected guard={!!authResponse && needsUsername}>
+        <Stack.Screen name="set-username" options={{ headerShown: false }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!authResponse}>
@@ -146,6 +153,7 @@ export default function RootLayout() {
   React.useEffect(() => {
     BrewskeyJSApi.setOnSessionUpdated((session, err) => {
       if (err) {
+        // eslint-disable-next-line no-console
         console.error(err);
       }
       setAuthSession(queryClient, session ?? null);

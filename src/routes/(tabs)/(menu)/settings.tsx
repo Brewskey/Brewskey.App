@@ -103,6 +103,11 @@ const SettingsScreen: React.FC = () => {
             <ChangePasswordForm onSubmit={onChangePasswordSubmit} />
           </SectionContent>
         </Section>
+        <Section bottomPadded testID="settings-delete-account-section">
+          <SectionContent>
+            <DeleteAccountButton />
+          </SectionContent>
+        </Section>
         <Section bottomPadded={hasOrganizations}>
           <SectionContent>
             <ListItem
@@ -147,12 +152,6 @@ const SettingsScreen: React.FC = () => {
                 </Text>
               ) : null}
             </View>
-          </SectionContent>
-        </Section>
-        <Section bottomPadded testID="settings-delete-account-section">
-          <SectionHeader title="Delete account" />
-          <SectionContent>
-            <DeleteAccountButton />
           </SectionContent>
         </Section>
       </KeyboardAwareScrollView>

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Icon } from '@rneui/themed';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
+import { Button } from 'common/buttons/Button';
 import { Fragment } from 'common/Fragment';
 import { DeleteModal } from 'components/modals/DeleteModal';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
@@ -12,25 +13,14 @@ import { COLORS } from 'theme';
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: COLORS.secondary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    width: '100%',
-  },
-  iconContainer: {
-    marginRight: 20,
-  },
-  text: {
-    color: COLORS.danger,
-    fontSize: 16,
+    borderColor: COLORS.danger,
+    borderWidth: 1,
+    marginHorizontal: 0,
   },
 });
 
 const deleteAccountMessage =
-  'This permanently deletes your Brewskey account, removes your profile, friends, and personal info, and cannot be undone. Your past pours on shared taps will remain visible but show as anonymous.';
+  'Permanently delete your account and remove personal information like your profile, email, phone number, friends, and linked sign-in data. Past pours on shared taps stay visible but become anonymous.';
 
 const DeleteAccountButton: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -45,22 +35,28 @@ const DeleteAccountButton: React.FC = () => {
 
   return (
     <Fragment>
-      <Pressable
-        disabled={deleteAccountMutation.isPending}
-        onPress={() => setIsModalVisible(true)}
-        style={styles.button}
-        testID="settings-delete-account-button"
-      >
-        <View style={[styles.iconContainer, { pointerEvents: 'none' }]}>
+      <Button
+        backgroundColor={COLORS.secondary}
+        color={COLORS.danger}
+        icon={
           <Icon
             color={COLORS.danger}
             name="delete"
             size={20}
             type="material-community"
           />
-        </View>
-        <Text style={styles.text}>Delete account</Text>
-      </Pressable>
+        }
+        iconPosition="left"
+        loading={deleteAccountMutation.isPending}
+        onPress={() => {
+          if (!deleteAccountMutation.isPending) {
+            setIsModalVisible(true);
+          }
+        }}
+        style={styles.button}
+        testID="settings-delete-account-button"
+        title="Delete Brewskey Account"
+      />
       <DeleteModal
         deleteButtonTitle="delete"
         isVisible={isModalVisible}

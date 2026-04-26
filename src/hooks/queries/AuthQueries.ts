@@ -1,7 +1,7 @@
-import { Auth } from '@brewskey/js-api';
+import { AccountDAO, Auth } from '@brewskey/js-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { setAuthSession } from 'hooks/context/AuthContext';
+import { AUTH_QUERY_KEY, setAuthSession } from 'hooks/context/AuthContext';
 import { useAppleSignIn } from 'utils/appleSignIn';
 import { signOutFromGoogle, useGoogleSignIn } from 'utils/googleSignIn';
 
@@ -11,6 +11,8 @@ import type {
   UserCredentials,
 } from '@brewskey/js-api';
 import type { UseMutationResult } from '@tanstack/react-query';
+
+import type { AuthSession } from 'hooks/context/AuthContext';
 
 export const useLogin = (): UseMutationResult<
   AuthResponse,
@@ -116,6 +118,37 @@ export const useDeleteAccount = (): UseMutationResult<void, Error, void> => {
     onSuccess: async () => {
       await signOutFromGoogle();
       setAuthSession(queryClient, null);
+    },
+  });
+};
+
+export const useUpdateUsername = (): UseMutationResult<
+  AuthSession,
+  Error,
+  { userName: string }
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userName }): Promise<AuthSession> => {
+      const authSession = queryClient.getQueryData<AuthSession>(AUTH_QUERY_KEY);
+      if (!authSession) {
+        throw new Error('You must be signed in to update your username.');
+      }
+
+      await AccountDAO.put(authSession.id, {
+        email: authSession.email,
+        id: authSession.id,
+        phoneNumber: authSession.phoneNumber ?? '',
+        userName,
+      });
+
+      const updatedSession: AuthSession = {
+        ...authSession,
+        isNewAccount: false,
+        userName,
+      };
+      setAuthSession(queryClient, updatedSession);
+      return updatedSession;
     },
   });
 };

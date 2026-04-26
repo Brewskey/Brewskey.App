@@ -8,20 +8,24 @@ import { Storage, StorageKeys } from 'utils/Storage';
 import type { AuthResponse } from '@brewskey/js-api';
 import type { QueryClient } from '@tanstack/react-query';
 
+export type AuthSession = AuthResponse & {
+  isNewAccount?: boolean | string;
+};
+
 export const AUTH_QUERY_KEY = ['auth', 'session'] as const;
 
 /**
  * Load auth state from Storage for hydration
  */
 export const loadAuthStateFromStorage =
-  async (): Promise<AuthResponse | null> => {
+  async (): Promise<AuthSession | null> => {
     try {
       // Check for Playwright test data first (for e2e tests)
       // This needs to be checked synchronously if possible, or we need to ensure
       // it's set before React Query runs
       if (typeof window !== 'undefined') {
         const playwrightAuth = (
-          window as Window & { __PLAYWRIGHT_AUTH_DATA__?: AuthResponse }
+          window as Window & { __PLAYWRIGHT_AUTH_DATA__?: AuthSession }
         ).__PLAYWRIGHT_AUTH_DATA__;
         if (playwrightAuth) {
           // Store it in Storage for consistency
@@ -34,7 +38,7 @@ export const loadAuthStateFromStorage =
         }
       }
 
-      return await Storage.getItem<AuthResponse>(StorageKeys.SessionData);
+      return await Storage.getItem<AuthSession>(StorageKeys.SessionData);
     } catch {
       return null;
     }
@@ -44,7 +48,7 @@ export const loadAuthStateFromStorage =
  * Save auth state to Storage
  */
 export const saveAuthStateToStorage = async (
-  authResponse: AuthResponse | null,
+  authResponse: AuthSession | null,
 ): Promise<void> => {
   try {
     if (authResponse) {
@@ -62,7 +66,7 @@ export const saveAuthStateToStorage = async (
  * @returns The current AuthResponse or undefined if not authenticated
  */
 export const useAuthSession = () =>
-  useQuery<AuthResponse | null>({
+  useQuery<AuthSession | null>({
     queryKey: AUTH_QUERY_KEY,
     queryFn: async () => loadAuthStateFromStorage(),
     staleTime: Infinity, // Auth state doesn't become stale
@@ -72,7 +76,7 @@ export const useAuthSession = () =>
 
 export const setAuthSession = (
   queryClient: QueryClient,
-  authResponse: AuthResponse | null,
+  authResponse: AuthSession | null,
 ) => {
   queryClient.setQueryData(AUTH_QUERY_KEY, authResponse);
   saveAuthStateToStorage(authResponse);
