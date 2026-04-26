@@ -2,14 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 
 import { Icon } from '@rneui/themed';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { Button } from 'common/buttons/Button';
 import { Fragment } from 'common/Fragment';
 import { DeleteModal } from 'components/modals/DeleteModal';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeleteAccount } from 'hooks/queries/AuthQueries';
-import { COLORS } from 'theme';
+import { COLORS, TYPOGRAPHY } from 'theme';
 
 const styles = StyleSheet.create({
   button: {
@@ -17,10 +17,28 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 0,
   },
+  messageText: {
+    ...TYPOGRAPHY.paragraph,
+    color: COLORS.secondary,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  messageTextBold: {
+    fontWeight: 'bold',
+  },
 });
 
-const deleteAccountMessage =
-  'Permanently delete your account and remove personal information like your profile, email, phone number, friends, and linked sign-in data. Past pours on shared taps stay visible but become anonymous.';
+const deleteAccountMessage = (
+  <Text
+    style={styles.messageText}
+    testID="delete-account-confirmation-modal-message"
+  >
+    This permanently deletes your Brewskey account, removes your profile,
+    friends, and personal info, and{' '}
+    <Text style={styles.messageTextBold}>cannot be undone</Text>. Your past
+    pours on shared taps will remain visible but show as anonymous.
+  </Text>
+);
 
 const DeleteAccountButton: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -29,8 +47,15 @@ const DeleteAccountButton: React.FC = () => {
 
   const onDeleteConfirm = async () => {
     setIsModalVisible(false);
-    await deleteAccountMutation.mutateAsync();
-    addSnackBarMessage({ content: 'Your account has been deleted.' });
+    try {
+      await deleteAccountMutation.mutateAsync();
+      addSnackBarMessage({ content: 'Your account has been deleted.' });
+    } catch {
+      addSnackBarMessage({
+        content:
+          "We couldn't delete your account. Please try again, or contact support if the problem continues.",
+      });
+    }
   };
 
   return (
@@ -55,7 +80,7 @@ const DeleteAccountButton: React.FC = () => {
         }}
         style={styles.button}
         testID="settings-delete-account-button"
-        title="Delete Brewskey Account"
+        title="Delete account"
       />
       <DeleteModal
         deleteButtonTitle="delete"

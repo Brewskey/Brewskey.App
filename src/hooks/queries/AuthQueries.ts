@@ -1,8 +1,4 @@
-import BrewskeyJSApi, {
-  AccountDAO,
-  Auth,
-  LastLoginMethodError,
-} from '@brewskey/js-api';
+import BrewskeyJSApi, { AccountDAO, Auth } from '@brewskey/js-api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AUTH_QUERY_KEY, setAuthSession } from 'hooks/context/AuthContext';
@@ -247,30 +243,7 @@ export const useUnlinkLogin = (): UseMutationResult<
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({ loginProvider, providerKey }) =>
-      BrewskeyJSApi.fetch('api/Account/RemoveLogin', {
-        body: JSON.stringify({
-          providerName: loginProvider,
-          providerKey,
-        }),
-        headers: [{ name: 'Content-type', value: 'application/json' }],
-        method: 'POST',
-        reformatError: (errorPayload) => {
-          if (errorPayload.error === 'last_login_method') {
-            throw new LastLoginMethodError(
-              errorPayload.Message ||
-                errorPayload.message ||
-                'Set a password before unlinking your last sign-in method.',
-            );
-          }
-          return (
-            errorPayload.error_description ||
-            errorPayload.Message ||
-            errorPayload.message ||
-            errorPayload.error ||
-            "Whoa! Brewskey had an error. We'll try to get it fixed soon."
-          );
-        },
-      }),
+      Auth.unlinkLogin(loginProvider, providerKey),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MANAGE_INFO_QUERY_KEY });
     },

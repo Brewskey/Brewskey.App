@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 interface Props {
   deleteButtonTitle?: string;
   isVisible: boolean;
-  message: string;
+  message: React.ReactNode | string;
   onCancelButtonPress: () => void;
   onDeleteButtonPress: () => void;
   testID?: string;
@@ -56,9 +56,13 @@ const DeleteModal = ({
     }
   >
     <View>
-      <Text style={styles.messageText} testID={`${testID}-message`}>
-        {message}
-      </Text>
+      {typeof message === 'string' ? (
+        <Text style={styles.messageText} testID={`${testID}-message`}>
+          {message}
+        </Text>
+      ) : (
+        message
+      )}
     </View>
     <View style={styles.buttonsContainer}>
       <Button

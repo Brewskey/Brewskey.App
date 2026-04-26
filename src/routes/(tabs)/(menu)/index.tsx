@@ -51,10 +51,7 @@ const MenuScreen = () => {
   });
   return (
     <Container>
-      <Header
-        testID="header-brewskey"
-        title="Brewskey"
-      />
+      <Header testID="header-brewskey" title="Brewskey" />
       <ScrollView>
         <Section bottomPadded>
           <MenuUserBlock />

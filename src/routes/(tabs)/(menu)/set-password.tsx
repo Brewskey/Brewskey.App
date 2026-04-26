@@ -43,8 +43,8 @@ const SetPasswordScreen: React.FC = () => {
         <Section bottomPadded>
           <SectionContent paddedHorizontal paddedVertical>
             <Text style={styles.helpText}>
-              Set a password so you can still sign in before unlinking your
-              last connected account.
+              Set a password so you can still sign in before unlinking your last
+              connected account.
             </Text>
           </SectionContent>
           <SectionContent>

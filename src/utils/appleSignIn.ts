@@ -1,4 +1,14 @@
-export const isAppleSignInAvailable = false;
+const isPlaywrightAppleSignInAvailable = (): boolean =>
+  typeof window !== 'undefined' &&
+  Boolean(
+    (
+      window as Window & {
+        __BREWSKEY_E2E_APPLE_SIGN_IN_AVAILABLE__?: boolean;
+      }
+    ).__BREWSKEY_E2E_APPLE_SIGN_IN_AVAILABLE__,
+  );
+
+export const isAppleSignInAvailable = isPlaywrightAppleSignInAvailable();
 
 export type AppleSignInResult =
   | {
@@ -15,8 +25,18 @@ export const useAppleSignIn = (): {
   isAvailable: boolean;
 } => ({
   signIn: async () => {
-    throw new Error('Apple sign-in is only available on supported iOS devices.');
+    if (isPlaywrightAppleSignInAvailable()) {
+      return {
+        authorizationCode: 'playwright-apple-authorization-code',
+        fullName: 'Playwright Apple User',
+        identityToken: 'playwright-apple-identity-token',
+        type: 'success',
+      };
+    }
+    throw new Error(
+      'Apple sign-in is only available on supported iOS devices.',
+    );
   },
   isReady: true,
-  isAvailable: false,
+  isAvailable: isAppleSignInAvailable,
 });

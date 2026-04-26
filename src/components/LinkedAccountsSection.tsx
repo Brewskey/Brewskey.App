@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-import { LastLoginMethodError } from '@brewskey/js-api';
+import {
+  EXTERNAL_LOGIN_ALREADY_LINKED_ERROR,
+  EXTERNAL_PROVIDER_ALREADY_LINKED_ERROR,
+  LAST_LOGIN_METHOD_ERROR,
+} from '@brewskey/js-api';
 import { useRouter } from 'expo-router';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 import Animated, {
@@ -24,6 +28,7 @@ import {
   useUnlinkLogin,
 } from 'hooks/queries/AuthQueries';
 import { COLORS, TYPOGRAPHY } from 'theme';
+import { formatErrorForUser, getApiErrorCode } from 'utils/errorParsing';
 
 import type { LinkResult, UserLoginInfo } from '@brewskey/js-api';
 
@@ -121,10 +126,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 });
-
-const isLastLoginMethodError = (error: Error): boolean =>
-  error instanceof LastLoginMethodError ||
-  error.name === 'LastLoginMethodError';
 
 const normalizeLogin = (login: unknown): UserLoginInfo | null => {
   if (typeof login === 'string') {
@@ -240,20 +241,39 @@ const LinkedAccountsSection: React.FC<Props> = ({ onRefreshStateChange }) => {
     });
   };
 
-  const showError = (error: Error) => {
-    addSnackBarMessage({ content: error.message });
+  const showError = (error: unknown) => {
+    addSnackBarMessage({ content: formatErrorForUser(error) });
+  };
+
+  const showLinkError = (provider: ExternalProvider, error: unknown) => {
+    const code = getApiErrorCode(error);
+    if (code === EXTERNAL_PROVIDER_ALREADY_LINKED_ERROR) {
+      addSnackBarMessage({
+        content: `This Brewskey account already has a ${PROVIDER_LABEL[provider]} sign-in linked. Unlink the current ${PROVIDER_LABEL[provider]} account before linking a different one.`,
+      });
+      return;
+    }
+
+    if (code === EXTERNAL_LOGIN_ALREADY_LINKED_ERROR) {
+      addSnackBarMessage({
+        content: `That ${PROVIDER_LABEL[provider]} account is already linked to another Brewskey account. Sign in with that Brewskey account and unlink ${PROVIDER_LABEL[provider]} first, then try again.`,
+      });
+      return;
+    }
+
+    showError(error);
   };
 
   const linkGoogle = () => {
     linkGoogleMutation.mutate(undefined, {
-      onError: showError,
+      onError: (error) => showLinkError('Google', error),
       onSuccess: (result) => showLinkSuccess('Google', result),
     });
   };
 
   const linkApple = () => {
     linkAppleMutation.mutate(undefined, {
-      onError: showError,
+      onError: (error) => showLinkError('Apple', error),
       onSuccess: (result) => showLinkSuccess('Apple', result),
     });
   };
@@ -272,16 +292,14 @@ const LinkedAccountsSection: React.FC<Props> = ({ onRefreshStateChange }) => {
         content: `Unlinked your ${PROVIDER_LABEL[target.provider]} account.`,
       });
     } catch (error) {
-      if (error instanceof Error && isLastLoginMethodError(error)) {
+      if (getApiErrorCode(error) === LAST_LOGIN_METHOD_ERROR) {
         setSetPasswordProvider(target.provider);
         addSnackBarMessage({
           content: 'Set a password first so you can still sign in.',
         });
         return;
       }
-      if (error instanceof Error) {
-        showError(error);
-      }
+      showError(error);
     }
   };
 
@@ -441,7 +459,7 @@ const LinkedAccountsSection: React.FC<Props> = ({ onRefreshStateChange }) => {
                     style={styles.helperLink}
                     testID="linked-account-set-password-link"
                   >
-                    Set a password
+                    Set a password first
                   </Text>
                 ) : null}
               </View>

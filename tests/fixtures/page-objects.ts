@@ -420,7 +420,7 @@ export class MenuPage {
   }
 
   getSettingsButton(): Locator {
-    return this.page.getByTestId('header-settings-button');
+    return this.page.getByTestId('menu-item-settings');
   }
 
   getLogoutButton(): Locator {

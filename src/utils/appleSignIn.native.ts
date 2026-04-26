@@ -45,7 +45,9 @@ const signInWithApple = async (): Promise<AppleSignInResult> => {
     });
 
     if (!credential.identityToken) {
-      throw new Error('Apple sign-in succeeded but no identity token was returned.');
+      throw new Error(
+        'Apple sign-in succeeded but no identity token was returned.',
+      );
     }
 
     return {

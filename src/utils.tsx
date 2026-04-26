@@ -3,7 +3,11 @@ import * as React from 'react';
 import { MAX_OUNCES_BY_KEG_TYPE } from '@brewskey/js-api';
 import { Dimensions, Platform, StatusBar } from 'react-native';
 
+import { parseError } from 'utils/errorParsing';
+
 import type { EntityID, KegType } from '@brewskey/js-api';
+
+export { parseError };
 
 const EMAIL_REGEXP =
   /^[a-z0-9][a-z0-9_.-]+@[a-z0-9][a-z0-9-]+[a-z0-9]\.[a-z0-9]{2,10}(?:\.[a-z]{2,10})?$/;
@@ -69,47 +73,6 @@ export const getElementFromComponentProp = <
 
   const CastedComponent = ComponentProp as React.ComponentType;
   return <CastedComponent />;
-};
-
-interface ErrorWithModelState {
-  ModelState?: Record<string, string[]>;
-  error_description?: string;
-  Message?: string;
-}
-
-export const parseError = (error: unknown): string => {
-  if (typeof error === 'string') {
-    return error;
-  }
-
-  if (typeof error === 'object' && error !== null) {
-    const errorObj = error as ErrorWithModelState;
-
-    if (errorObj.ModelState) {
-      let resultErrorMessage = '';
-      Array.from(Object.values(errorObj.ModelState)).forEach(
-        (fieldErrorArray) => {
-          if (Array.isArray(fieldErrorArray)) {
-            new Set(fieldErrorArray).forEach((fieldError: string) => {
-              resultErrorMessage = `${resultErrorMessage}\n${fieldError}`;
-            });
-          }
-        },
-      );
-
-      return resultErrorMessage;
-    }
-
-    if (errorObj.error_description) {
-      return errorObj.error_description;
-    }
-
-    if (errorObj.Message) {
-      return errorObj.Message;
-    }
-  }
-
-  return "Whoa! Brewskey had an error. We'll try to get it fixed soon.";
 };
 
 export const fetchJSON = async <TResult extends Record<string, unknown>>(

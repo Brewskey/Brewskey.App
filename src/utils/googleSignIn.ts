@@ -6,6 +6,8 @@ import {
   useAuthRequest,
 } from 'expo-auth-session';
 
+import { parseError } from 'utils/errorParsing';
+
 import { GOOGLE_WEB_CLIENT_ID } from './googleSignInConfig';
 
 import type {
@@ -24,6 +26,20 @@ export const isGoogleSignInAvailable = true;
 export type GoogleSignInResult =
   | { type: 'success'; idToken: string }
   | { type: 'cancelled' };
+
+const getPlaywrightGoogleIdToken = (): string | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const token = (
+    window as Window & {
+      __BREWSKEY_E2E_GOOGLE_SIGN_IN_ID_TOKEN__?: string;
+    }
+  ).__BREWSKEY_E2E_GOOGLE_SIGN_IN_ID_TOKEN__;
+
+  return token || null;
+};
 
 /**
  * Google's OpenID Connect discovery endpoints. Hard-coded rather than fetched
@@ -85,6 +101,11 @@ export const useGoogleSignIn = (): {
   );
 
   const signIn = React.useCallback(async (): Promise<GoogleSignInResult> => {
+    const playwrightIdToken = getPlaywrightGoogleIdToken();
+    if (playwrightIdToken) {
+      return { type: 'success', idToken: playwrightIdToken };
+    }
+
     if (!request) {
       throw new Error('Google sign-in request is not ready yet.');
     }
@@ -99,12 +120,7 @@ export const useGoogleSignIn = (): {
       return { type: 'cancelled' };
     }
     if (result.type !== 'success') {
-      const description =
-        ('error' in result && (result.error as any)?.message) ||
-        ('params' in result && result.params?.error_description) ||
-        ('params' in result && result.params?.error) ||
-        'Google sign-in failed.';
-      throw new Error(description);
+      throw new Error(parseError(result, 'Google sign-in failed.'));
     }
 
     const idToken = result.params?.id_token;
@@ -117,7 +133,7 @@ export const useGoogleSignIn = (): {
     return { type: 'success', idToken };
   }, [promptAsync, request]);
 
-  return { signIn, isReady: !!request };
+  return { signIn, isReady: !!request || getPlaywrightGoogleIdToken() != null };
 };
 
 /**

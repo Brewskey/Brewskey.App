@@ -31,7 +31,7 @@
     "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\""
   },
   "dependencies": {
-    "@brewskey/js-api": "^2.1.3",
+    "@brewskey/js-api": "^2.1.4",
     "@expo/metro-runtime": "~55.0.9",
     "@falcondev-oss/expo-event-source-polyfill": "^2.0.4",
     "@hookform/error-message": "^2.0.1",

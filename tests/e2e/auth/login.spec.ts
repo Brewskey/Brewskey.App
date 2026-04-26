@@ -1,3 +1,5 @@
+import { devices } from '@playwright/test';
+
 import { test, expect } from '../../fixtures/test-fixtures';
 import { createMockUser } from '../../fixtures/test-data';
 import { mockStore } from '../../fixtures/api-mocks';
@@ -79,4 +81,48 @@ test('should persist session on page reload', async ({ page, loginPage }) => {
   // Should still be logged in (session persisted in localStorage after login)
   // After reload, should still be on home or root
   await expect(page).toHaveURL(/.*home|\/$/);
+});
+
+test.describe('iOS-emulated login screen', () => {
+  test.use({
+    deviceScaleFactor: devices['iPhone 13'].deviceScaleFactor,
+    hasTouch: devices['iPhone 13'].hasTouch,
+    isMobile: devices['iPhone 13'].isMobile,
+    userAgent: devices['iPhone 13'].userAgent,
+    viewport: devices['iPhone 13'].viewport,
+  });
+
+  test('should render Apple login above Google login', async ({
+    page,
+    loginPage,
+  }) => {
+    await page.addInitScript(() => {
+      (window as Window & {
+        __BREWSKEY_E2E_APPLE_SIGN_IN_AVAILABLE__?: boolean;
+      }).__BREWSKEY_E2E_APPLE_SIGN_IN_AVAILABLE__ = true;
+    });
+
+    await loginPage.goto();
+
+    await expect(page.getByTestId('apple-login-button-container')).toBeVisible();
+    await expect(page.getByTestId('google-login-button-container')).toBeVisible();
+
+    const appleComesBeforeGoogle = await page.evaluate(() => {
+      const apple = document.querySelector(
+        '[data-testid="apple-login-button-container"]',
+      );
+      const google = document.querySelector(
+        '[data-testid="google-login-button-container"]',
+      );
+
+      return Boolean(
+        apple &&
+          google &&
+          (apple.compareDocumentPosition(google) &
+            Node.DOCUMENT_POSITION_FOLLOWING),
+      );
+    });
+
+    expect(appleComesBeforeGoogle).toBe(true);
+  });
 });

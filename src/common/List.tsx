@@ -103,6 +103,9 @@ const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
     setIsRefreshing(false);
   }, [onRefresh]);
 
+  // Avoid a second in-list spinner: native refresh already provides feedback.
+  const listFooterForRefresh = !onRefresh || !isRefreshing ? ListFooterComponent : null;
+
   const renderFlatList = useCallback(
     (info: ListRenderItemInfo<TEntity>): ReactElement | null => {
       if (renderItem == null) {
@@ -119,7 +122,7 @@ const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
         stickySectionHeadersEnabled
         contentContainerStyle={styles.contentContainerStyle}
         ListEmptyComponent={ListEmptyComponent}
-        ListFooterComponent={ListFooterComponent}
+        ListFooterComponent={listFooterForRefresh}
         ListHeaderComponent={ListHeaderComponent}
         renderSectionFooter={renderSectionFooter}
         renderSectionHeader={renderSectionHeader}
@@ -139,7 +142,7 @@ const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
   return (
     <FlatList<TEntity>
       ListEmptyComponent={ListEmptyComponent}
-      ListFooterComponent={ListFooterComponent}
+      ListFooterComponent={listFooterForRefresh}
       ListHeaderComponent={ListHeaderComponent}
       {...rest}
       bounces={bounceFirstRowOnMount}
@@ -149,7 +152,12 @@ const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
       onScroll={onScroll}
       renderItem={renderFlatList}
       refreshControl={
-        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+        onRefresh != null ? (
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={onRefreshHandler}
+          />
+        ) : undefined
       }
       testID={testID}
 

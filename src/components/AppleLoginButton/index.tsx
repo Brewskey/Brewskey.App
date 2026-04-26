@@ -6,6 +6,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { SectionContent } from 'common/SectionContent';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useLoginWithApple } from 'hooks/queries/AuthQueries';
+import { isAppleSignInAvailable } from 'utils/appleSignIn';
 
 const styles = StyleSheet.create({
   button: {
@@ -39,20 +40,28 @@ const AvailableAppleLoginButton = (): React.ReactElement | null => {
   return (
     <SectionContent paddedHorizontal paddedVertical>
       <View testID="apple-login-button-container">
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-          cornerRadius={3}
-          onPress={onPress}
-          style={styles.button}
-        />
+        {Platform.OS === 'web' ? (
+          <View style={styles.button} testID="apple-login-button" />
+        ) : (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonStyle={
+              AppleAuthentication.AppleAuthenticationButtonStyle.WHITE
+            }
+            buttonType={
+              AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN
+            }
+            cornerRadius={3}
+            onPress={onPress}
+            style={styles.button}
+          />
+        )}
       </View>
     </SectionContent>
   );
 };
 
 const AppleLoginButton = (): React.ReactElement | null => {
-  if (Platform.OS !== 'ios') {
+  if (Platform.OS !== 'ios' && !isAppleSignInAvailable) {
     return null;
   }
 

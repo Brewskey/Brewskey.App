@@ -5,6 +5,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 
+import { parseError } from 'utils/errorParsing';
+
 import {
   GOOGLE_IOS_CLIENT_ID,
   GOOGLE_WEB_CLIENT_ID,
@@ -46,7 +48,7 @@ const configureGoogleSignIn = (): void => {
  */
 const describeGoogleSignInError = (error: unknown): string => {
   if (!isErrorWithCode(error)) {
-    return error instanceof Error ? error.message : 'Google sign-in failed.';
+    return parseError(error, 'Google sign-in failed.');
   }
 
   const code = String(error.code);
@@ -65,7 +67,7 @@ const describeGoogleSignInError = (error: unknown): string => {
   if (code === statusCodes.IN_PROGRESS) {
     return 'Google sign-in is already in progress.';
   }
-  const baseMessage = error.message || 'Google sign-in failed.';
+  const baseMessage = parseError(error, 'Google sign-in failed.');
   return `${baseMessage} (code ${code})`;
 };
 

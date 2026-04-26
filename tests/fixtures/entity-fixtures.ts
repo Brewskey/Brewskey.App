@@ -195,7 +195,9 @@ export async function mockNewUserState(
     expiresIn: 3600,
     expiresAt: new Date(Date.now() + 3600000),
     issuedAt: new Date(),
-    isNewAccount: true,
+    // NUX specs exercise setup for a signed-in user who already has a username;
+    // otherwise the root guard routes to the username screen before NUX.
+    isNewAccount: false,
     tokenType: 'Bearer',
     roles: [],
     userLogins: [],

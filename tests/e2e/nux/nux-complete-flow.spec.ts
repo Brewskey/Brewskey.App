@@ -35,7 +35,7 @@ test('should complete full NUX flow', async ({
 
   await test.step('Go to settings and enable Manage taps', async () => {
     await page.goto(ROUTES.MENU);
-    await page.getByTestId('header-settings-button').click();
+    await page.getByTestId('menu-item-settings').click();
     await expect(page).toHaveURL(/\/settings/i);
     await settingsPage.toggleManageTaps();
   });

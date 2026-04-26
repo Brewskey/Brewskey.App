@@ -724,14 +724,49 @@ export function setupAPIMocks(page: Page): void {
     return fulfillErrorResponse(route, 405, 'Method not allowed');
   });
 
-  // Handle account endpoints (not under /api/v2/)
-  page.route('**/api/account/**', async (route: Route) => {
+  // Handle account endpoints (not under /api/v2/). Use a case-insensitive
+  // regex because the legacy API mixes /api/account and /api/Account paths.
+  page.route(/.*\/api\/account(?:\/|\?|$).*/i, async (route: Route) => {
     const url = route.request().url();
     const method = route.request().method();
+    const normalizedUrl = url.toLowerCase();
 
     try {
+      if (method === 'GET') {
+        if (normalizedUrl.includes('/api/account/manageinfo')) {
+          const authHeader = route.request().headers().authorization;
+          const token = authHeader?.replace(/^Bearer\s+/i, '');
+          const authResponse = token
+            ? mockStore.getAuthToken(token)
+            : undefined;
+          const user = authResponse
+            ? mockStore.getUser(authResponse.id)
+            : mockStore.getUsers()[0];
+          const userLogins = authResponse?.userLogins ?? [];
+          const logins =
+            userLogins.length > 0
+              ? userLogins.map((login) =>
+                  typeof login === 'string'
+                    ? { LoginProvider: login, ProviderKey: `${login}-key` }
+                    : login,
+                )
+              : [
+                  {
+                    LoginProvider: 'Local',
+                    ProviderKey: user?.id?.toString() ?? 'local',
+                  },
+                ];
+
+          return fulfillJSONResponse(route, 200, {
+            LocalLoginProvider: 'Local',
+            Logins: logins,
+            UserName: user?.userName ?? '',
+          });
+        }
+      }
+
       if (method === 'POST') {
-        if (url.includes('/api/account/register/')) {
+        if (normalizedUrl.includes('/api/account/register/')) {
           const body = await route.request().postDataJSON();
 
           // Check for duplicate email
@@ -768,13 +803,26 @@ export function setupAPIMocks(page: Page): void {
           return fulfillJSONResponse(route, 200, { success: true });
         }
 
-        // Both change-password and reset-password return empty success
+        // Password endpoints return empty success.
         if (
-          url.includes('/api/account/change-password/') ||
-          url.includes('/api/account/reset-password/')
+          normalizedUrl.includes('/api/account/change-password') ||
+          normalizedUrl.includes('/api/account/reset-password') ||
+          normalizedUrl.includes('/api/account/setpassword')
         ) {
           return fulfillJSONResponse(route, 200, {});
         }
+
+        if (normalizedUrl.includes('/api/account/removeLogin'.toLowerCase())) {
+          return fulfillJSONResponse(route, 200, {});
+        }
+
+        if (normalizedUrl.includes('/api/account/link-external')) {
+          return fulfillJSONResponse(route, 200, { merged: false });
+        }
+      }
+
+      if (method === 'DELETE' && /\/api\/account(?:\?|$)/i.test(url)) {
+        return fulfillJSONResponse(route, 200, {});
       }
 
       // Default: 404
