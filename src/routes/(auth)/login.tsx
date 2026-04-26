@@ -12,9 +12,16 @@ import { LoginForm } from '../../components/LoginForm';
 import { COLORS } from '../../theme';
 
 const styles = StyleSheet.create({
+  bottomContent: {
+    marginTop: 'auto',
+    marginBottom: 40,
+  },
   container: {
     backgroundColor: COLORS.primary2,
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
   },
   divider: {
     marginHorizontal: 12,
@@ -28,6 +35,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 60,
     paddingHorizontal: 40,
     paddingBottom: 60,
   },
@@ -48,6 +56,7 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAwareScrollView
+      contentContainerStyle={styles.contentContainer}
       keyboardShouldPersistTaps="handled"
       style={styles.container}
     >
@@ -65,20 +74,22 @@ export default function LoginScreen() {
       <AppleLoginButton />
       <GoogleLoginButton />
       <Divider color={COLORS.secondaryDisabled} style={styles.divider} />
-      <LoginForm isInverse />
-      <View style={{ paddingTop: 20 }}>
-        <Button
-          onPress={onRegisterPress}
-          testID="button-register"
-          title="Register"
-          type="clear"
-        />
-        <Button
-          onPress={onForgotPasswordPress}
-          testID="button-forgot-password"
-          title="Forgot password"
-          type="clear"
-        />
+      <View style={styles.bottomContent}>
+        <LoginForm isInverse />
+        <View style={{ paddingTop: 20 }}>
+          <Button
+            onPress={onRegisterPress}
+            testID="button-register"
+            title="Register"
+            type="clear"
+          />
+          <Button
+            onPress={onForgotPasswordPress}
+            testID="button-forgot-password"
+            title="Forgot password"
+            type="clear"
+          />
+        </View>
       </View>
     </KeyboardAwareScrollView>
   );

@@ -8,7 +8,6 @@ import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Container } from 'common/Container';
 import { Header } from 'common/Header';
-import { HeaderNavigationButton } from 'common/Header/HeaderNavigationButton';
 import { Section } from 'common/Section';
 import { MenuLogoutButton } from 'components/MenuLogoutButton';
 import { MenuNavigationButton } from 'components/MenuNavigationButton';
@@ -55,13 +54,6 @@ const MenuScreen = () => {
       <Header
         testID="header-brewskey"
         title="Brewskey"
-        rightComponent={
-          <HeaderNavigationButton
-            href={{ pathname: '/settings', params: {} }}
-            name="settings"
-            testID="header-settings-button"
-          />
-        }
       />
       <ScrollView>
         <Section bottomPadded>
@@ -181,6 +173,18 @@ const MenuScreen = () => {
             }}
           />
           <DrawerSeparator />
+          <MenuNavigationButton
+            icon={{ name: 'settings' }}
+            routeName="settings"
+            testID="menu-item-settings"
+            title="Settings"
+            onPress={() => {
+              router.navigate({
+                pathname: '/settings',
+                params: {},
+              });
+            }}
+          />
           <MenuLogoutButton />
         </Section>
       </ScrollView>

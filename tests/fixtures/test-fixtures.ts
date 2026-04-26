@@ -184,6 +184,7 @@ export const test = base.extend<TestOptions & TestFixtures>({
           expiresIn: 3600,
           expiresAt: new Date(Date.now() + 3600000),
           issuedAt: new Date(),
+          isNewAccount: false,
           tokenType: 'Bearer',
           roles: [],
           userLogins: [],

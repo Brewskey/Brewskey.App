@@ -1,5 +1,9 @@
-import { AccountDAO, Auth } from '@brewskey/js-api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BrewskeyJSApi, {
+  AccountDAO,
+  Auth,
+  LastLoginMethodError,
+} from '@brewskey/js-api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { AUTH_QUERY_KEY, setAuthSession } from 'hooks/context/AuthContext';
 import { useAppleSignIn } from 'utils/appleSignIn';
@@ -8,11 +12,54 @@ import { signOutFromGoogle, useGoogleSignIn } from 'utils/googleSignIn';
 import type {
   AuthResponse,
   ChangePasswordArgs,
+  LinkResult,
+  ManageInfo,
+  SetPasswordArgs,
   UserCredentials,
+  UserLoginInfo,
 } from '@brewskey/js-api';
 import type { UseMutationResult } from '@tanstack/react-query';
 
 import type { AuthSession } from 'hooks/context/AuthContext';
+
+export const MANAGE_INFO_QUERY_KEY = ['account', 'manage-info'] as const;
+
+const clearAuthenticatedCache = (
+  queryClient: ReturnType<typeof useQueryClient>,
+) => {
+  queryClient.removeQueries({
+    predicate: (query) => query.queryKey[0] !== AUTH_QUERY_KEY[0],
+  });
+  setAuthSession(queryClient, null);
+};
+
+interface ManageInfoResponse {
+  LocalLoginProvider?: string;
+  Logins?: ManageInfoLoginResponse[];
+  UserName?: string;
+  localLoginProvider?: string;
+  logins?: ManageInfoLoginResponse[];
+  userName?: string;
+}
+
+interface ManageInfoLoginResponse {
+  LoginProvider?: string;
+  ProviderKey?: string;
+  loginProvider?: string;
+  providerKey?: string;
+}
+
+const reformatManageInfoResponse = (
+  response: ManageInfoResponse,
+): ManageInfo => ({
+  userName: response.UserName ?? response.userName ?? '',
+  localLoginProvider:
+    response.LocalLoginProvider ?? response.localLoginProvider ?? 'Local',
+  logins: (response.Logins ?? response.logins ?? []).map((login) => ({
+    loginProvider: login.LoginProvider ?? login.loginProvider ?? '',
+    providerKey: login.ProviderKey ?? login.providerKey ?? '',
+  })),
+});
 
 export const useLogin = (): UseMutationResult<
   AuthResponse,
@@ -55,14 +102,7 @@ export const useLoginWithGoogle = (): UseMutationResult<
       if (result.type !== 'success') {
         return null;
       }
-      // Cast: `loginWithGoogle` exists in @brewskey/js-api source but is not
-      // yet exposed in the published d.ts of the version this app pins. Drop
-      // the cast once the package is republished with the new method.
-      return (
-        Auth as typeof Auth & {
-          loginWithGoogle: (idToken: string) => Promise<AuthResponse>;
-        }
-      ).loginWithGoogle(result.idToken);
+      return Auth.loginWithGoogle(result.idToken);
     },
     onSuccess: (data) => {
       if (data) {
@@ -105,8 +145,11 @@ export const useLogout = (): UseMutationResult<void, Error, void> => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      await signOutFromGoogle();
-      setAuthSession(queryClient, null);
+      try {
+        await signOutFromGoogle();
+      } finally {
+        clearAuthenticatedCache(queryClient);
+      }
     },
   });
 };
@@ -116,8 +159,120 @@ export const useDeleteAccount = (): UseMutationResult<void, Error, void> => {
   return useMutation({
     mutationFn: async () => Auth.deleteAccount(),
     onSuccess: async () => {
-      await signOutFromGoogle();
-      setAuthSession(queryClient, null);
+      try {
+        await signOutFromGoogle();
+      } finally {
+        clearAuthenticatedCache(queryClient);
+      }
+    },
+  });
+};
+
+export const useGetManageInfo = () =>
+  useQuery<ManageInfo>({
+    queryKey: MANAGE_INFO_QUERY_KEY,
+    queryFn: async () =>
+      BrewskeyJSApi.fetch<ManageInfoResponse>(
+        'api/Account/ManageInfo?returnUrl=%2F',
+      ).then(reformatManageInfoResponse),
+  });
+
+export const useLinkGoogle = (): UseMutationResult<
+  LinkResult | null,
+  Error,
+  void
+> & { isReady: boolean } => {
+  const queryClient = useQueryClient();
+  const { signIn, isReady } = useGoogleSignIn();
+  const mutation = useMutation({
+    mutationFn: async (): Promise<LinkResult | null> => {
+      const result = await signIn();
+      if (result.type !== 'success') {
+        return null;
+      }
+      return Auth.linkGoogle(result.idToken);
+    },
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
+      if (data.merged) {
+        await queryClient.invalidateQueries({ queryKey: [] });
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: MANAGE_INFO_QUERY_KEY });
+    },
+  });
+  return Object.assign(mutation, { isReady });
+};
+
+export const useLinkApple = (): UseMutationResult<
+  LinkResult | null,
+  Error,
+  void
+> & { isReady: boolean; isAvailable: boolean } => {
+  const queryClient = useQueryClient();
+  const { signIn, isReady, isAvailable } = useAppleSignIn();
+  const mutation = useMutation({
+    mutationFn: async (): Promise<LinkResult | null> => {
+      const result = await signIn();
+      if (result.type !== 'success') {
+        return null;
+      }
+      return Auth.linkApple(
+        result.identityToken,
+        result.fullName,
+        result.authorizationCode,
+      );
+    },
+    onSuccess: async (data) => {
+      if (!data) {
+        return;
+      }
+      if (data.merged) {
+        await queryClient.invalidateQueries({ queryKey: [] });
+        return;
+      }
+      await queryClient.invalidateQueries({ queryKey: MANAGE_INFO_QUERY_KEY });
+    },
+  });
+  return Object.assign(mutation, { isReady, isAvailable });
+};
+
+export const useUnlinkLogin = (): UseMutationResult<
+  void,
+  Error,
+  UserLoginInfo
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ loginProvider, providerKey }) =>
+      BrewskeyJSApi.fetch('api/Account/RemoveLogin', {
+        body: JSON.stringify({
+          providerName: loginProvider,
+          providerKey,
+        }),
+        headers: [{ name: 'Content-type', value: 'application/json' }],
+        method: 'POST',
+        reformatError: (errorPayload) => {
+          if (errorPayload.error === 'last_login_method') {
+            throw new LastLoginMethodError(
+              errorPayload.Message ||
+                errorPayload.message ||
+                'Set a password before unlinking your last sign-in method.',
+            );
+          }
+          return (
+            errorPayload.error_description ||
+            errorPayload.Message ||
+            errorPayload.message ||
+            errorPayload.error ||
+            "Whoa! Brewskey had an error. We'll try to get it fixed soon."
+          );
+        },
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: MANAGE_INFO_QUERY_KEY });
     },
   });
 };
@@ -191,3 +346,17 @@ export const useChangePassword = (): UseMutationResult<
     mutationFn: async (params: ChangePasswordArgs) =>
       Auth.changePassword(params),
   });
+
+export const useSetPassword = (): UseMutationResult<
+  Record<string, never>,
+  Error,
+  SetPasswordArgs
+> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: SetPasswordArgs) => Auth.setPassword(params),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: MANAGE_INFO_QUERY_KEY });
+    },
+  });
+};

@@ -1,9 +1,10 @@
 import * as React from 'react';
 
+import { useRouter } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
-import { StyleSheet, Text, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { Button } from 'common/buttons/Button';
 import { Container } from 'common/Container';
 import { FormField } from 'common/form/FormField';
 import { Header } from 'common/Header';
@@ -33,6 +34,11 @@ interface SettingsOrganizationForm {
 }
 
 const styles = StyleSheet.create({
+  linkedAccountsButton: {
+    borderColor: COLORS.primary2,
+    borderWidth: 1,
+    marginHorizontal: 0,
+  },
   versionBlock: {
     marginLeft: 4,
     marginTop: 12,
@@ -50,11 +56,12 @@ const styles = StyleSheet.create({
 });
 
 const SettingsScreen: React.FC = () => {
+  const router = useRouter();
   const addSnackBarMessage = useAddSnackBarMessage();
   const {
     isManageTapsEnabled,
     onOrganizationChange,
-    onToggleManageTaps,
+    updateAppSettings,
     selectedOrganization,
   } = useAppSettings();
   const changePasswordMutation = useChangePassword();
@@ -87,38 +94,41 @@ const SettingsScreen: React.FC = () => {
 
   const onChangePasswordSubmit = async (values: ChangePasswordFormFields) => {
     await changePasswordMutation.mutateAsync({
-      oldPassword: values.oldPassword,
+      oldPassword: values.oldPassword ?? '',
       newPassword: values.newPassword,
     });
     addSnackBarMessage({ content: 'Password changed!' });
   };
 
+  const onManageTapsChange = (value: boolean) => {
+    updateAppSettings({ manageTapsEnabled: value });
+  };
+
   return (
     <Container>
       <Header shouldShowBackButton testID="header-settings" title="Settings" />
-      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Section bottomPadded>
           <SectionHeader title="Change password" />
           <SectionContent>
             <ChangePasswordForm onSubmit={onChangePasswordSubmit} />
           </SectionContent>
         </Section>
+        <Section bottomPadded>
+          <SectionContent>
+            <Button
+              backgroundColor={COLORS.secondary}
+              color={COLORS.primary2}
+              onPress={() => router.navigate('/(tabs)/(menu)/linked-accounts')}
+              style={styles.linkedAccountsButton}
+              testID="settings-linked-accounts-button"
+              title="Linked Login Providers"
+            />
+          </SectionContent>
+        </Section>
         <Section bottomPadded testID="settings-delete-account-section">
           <SectionContent>
             <DeleteAccountButton />
-          </SectionContent>
-        </Section>
-        <Section bottomPadded={hasOrganizations}>
-          <SectionContent>
-            <ListItem
-              chevron={false}
-              testID="switch-manage-taps"
-              title="Manage taps"
-              switch={{
-                onValueChange: onToggleManageTaps,
-                value: isManageTapsEnabled,
-              }}
-            />
           </SectionContent>
         </Section>
         {hasOrganizations ? (
@@ -137,7 +147,20 @@ const SettingsScreen: React.FC = () => {
             </SectionContent>
           </Section>
         ) : null}
-        <Section>
+        <Section bottomPadded>
+          <SectionContent>
+            <ListItem
+              chevron={false}
+              testID="switch-manage-taps"
+              title="Manage taps"
+              switch={{
+                onValueChange: onManageTapsChange,
+                value: isManageTapsEnabled,
+              }}
+            />
+          </SectionContent>
+        </Section>
+        <Section bottomPadded>
           <SectionContent>
             <View style={styles.versionBlock}>
               <Text style={styles.versionText} testID="settings-app-version">
@@ -154,7 +177,7 @@ const SettingsScreen: React.FC = () => {
             </View>
           </SectionContent>
         </Section>
-      </KeyboardAwareScrollView>
+      </ScrollView>
     </Container>
   );
 };

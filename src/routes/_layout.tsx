@@ -77,9 +77,7 @@ const hydrateAppSettings = async () => {
 
 const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
-  const needsUsername =
-    authResponse?.isNewAccount === true ||
-    authResponse?.isNewAccount === 'true';
+  const needsUsername = authResponse?.isNewAccount === true;
 
   if (isLoading) {
     return null;

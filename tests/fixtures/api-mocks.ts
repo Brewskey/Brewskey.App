@@ -447,6 +447,7 @@ function createAuthResponseFromUser(
     expiresIn: 3600,
     expiresAt: new Date(now + 3600000),
     issuedAt: new Date(now),
+    isNewAccount: false,
     tokenType: 'Bearer',
     roles: [],
     userLogins: [],

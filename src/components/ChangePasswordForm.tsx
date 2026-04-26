@@ -13,14 +13,15 @@ import { SectionContent } from 'common/SectionContent';
 
 export interface ChangePasswordFormFields {
   newPassword: string;
-  oldPassword: string;
+  oldPassword?: string;
 }
 
 interface Props {
+  mode?: 'change' | 'set';
   onSubmit: (values: ChangePasswordFormFields) => undefined | Promise<unknown>;
 }
 
-const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
+const ChangePasswordForm: React.FC<Props> = ({ mode = 'change', onSubmit }) => {
   const form = useForm<ChangePasswordFormFields>({
     defaultValues: {
       newPassword: '',
@@ -35,7 +36,7 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
   const validate = (values: ChangePasswordFormFields): boolean => {
     const errors: Record<string, string> = {};
 
-    if (!values.oldPassword) {
+    if (mode === 'change' && !values.oldPassword) {
       errors.oldPassword = 'Old password is required';
     }
 
@@ -43,7 +44,11 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
       errors.newPassword = 'New password is required';
     }
 
-    if (values.newPassword && values.newPassword === values.oldPassword) {
+    if (
+      mode === 'change' &&
+      values.oldPassword &&
+      values.newPassword === values.oldPassword
+    ) {
       errors.newPassword = 'New password the same as old';
     }
 
@@ -70,20 +75,30 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
 
   return (
     <Form form={form}>
-      <View testID="change-password-form">
-        <FormValidationMessage testID="change-password-error-message" />
-        <FormField<ChangePasswordFormFields, typeof TextInput>
-          secureTextEntry
-          autoCapitalize="none"
-          autoCorrect={false}
-          component={TextInput}
-          disabled={isSubmitting}
-          label="Old password"
-          name="oldPassword"
-          nextFocusTo="newPassword"
-          required
-          testID="input-oldPassword"
+      <View
+        testID={mode === 'set' ? 'set-password-form' : 'change-password-form'}
+      >
+        <FormValidationMessage
+          testID={
+            mode === 'set'
+              ? 'set-password-error-message'
+              : 'change-password-error-message'
+          }
         />
+        {mode === 'change' ? (
+          <FormField<ChangePasswordFormFields, typeof TextInput>
+            secureTextEntry
+            autoCapitalize="none"
+            autoCorrect={false}
+            component={TextInput}
+            disabled={isSubmitting}
+            label="Old password"
+            name="oldPassword"
+            nextFocusTo="newPassword"
+            required
+            testID="input-oldPassword"
+          />
+        ) : null}
         <FormField<ChangePasswordFormFields, typeof TextInput>
           secureTextEntry
           autoCapitalize="none"
@@ -94,14 +109,18 @@ const ChangePasswordForm: React.FC<Props> = ({ onSubmit }) => {
           name="newPassword"
           onSubmitEditing={handleSubmitWithError(form, onSubmitForm)}
           required
-          testID="input-newPassword"
+          testID={
+            mode === 'set' ? 'input-set-newPassword' : 'input-newPassword'
+          }
         />
         <SectionContent paddedVertical>
           <SubmitButton<ChangePasswordFormFields>
             allowSubmitWhenValid
             onSubmit={onSubmitForm}
-            testID="button-change-password"
-            title="Change password"
+            testID={
+              mode === 'set' ? 'button-set-password' : 'button-change-password'
+            }
+            title={mode === 'set' ? 'Set password' : 'Change password'}
           />
         </SectionContent>
       </View>
