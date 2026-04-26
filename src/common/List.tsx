@@ -104,7 +104,8 @@ const List = <TEntity,>(props: Props<TEntity>): ReactElement => {
   }, [onRefresh]);
 
   // Avoid a second in-list spinner: native refresh already provides feedback.
-  const listFooterForRefresh = !onRefresh || !isRefreshing ? ListFooterComponent : null;
+  const listFooterForRefresh =
+    !onRefresh || !isRefreshing ? ListFooterComponent : null;
 
   const renderFlatList = useCallback(
     (info: ListRenderItemInfo<TEntity>): ReactElement | null => {
