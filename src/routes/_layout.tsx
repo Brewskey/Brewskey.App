@@ -32,6 +32,7 @@ import {
 } from '../hooks/context/AuthContext';
 import { PourProcessProvider } from '../hooks/context/PourProcessContext';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
+import { useEASUpdateAutoReload } from '../hooks/useEASUpdateAutoReload';
 import { queryClient } from '../utils/queryClient';
 
 BrewskeyJSApi.initialize(CONFIG.HOST);
@@ -138,6 +139,7 @@ const RootSafeArea: React.FC<{ children: React.ReactNode }> = ({
 
 export default function RootLayout() {
   const [isHydrated, setIsHydrated] = React.useState(false);
+  useEASUpdateAutoReload();
 
   React.useEffect(() => {
     // Hydrate auth state first, then app settings
