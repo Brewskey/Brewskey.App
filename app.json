@@ -20,6 +20,7 @@
         "usesNonExemptEncryption": false
       },
       "bundleIdentifier": "com.brewskey.app",
+      "usesAppleSignIn": true,
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
@@ -79,7 +80,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "$(PRODUCT_NAME) uses your location to show bars, breweries, and taprooms near you that have Brewskey-equipped beer taps. For example, your location is used to display a list of nearby venues sorted by distance so you can see what's currently on tap close by."
+          "locationWhenInUsePermission": "$(PRODUCT_NAME) uses your location to show nearby venues with Brewskey-equipped taps."
         }
       ],
       [
@@ -111,6 +112,7 @@
           "iosUrlScheme": "com.googleusercontent.apps.892379035045-ld6ai6u7649on1h33858rmk4c31rs3eu"
         }
       ],
+      "expo-apple-authentication",
       "expo-web-browser"
     ],
     "extra": {

@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native';
 
 import { COLORS } from 'theme';
 
-import type { ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 
 const styles = StyleSheet.create({
   secondaryDisabledButton: {
@@ -25,6 +25,7 @@ type Props = React.ComponentProps<typeof RNEButton> & {
   secondary?: boolean;
   style?: ViewStyle;
   title: string;
+  titleStyle?: StyleProp<TextStyle>;
   type?: 'solid' | 'clear' | 'outline';
   testID?: string;
   // react-native-elemenets button porps
@@ -40,6 +41,7 @@ const Button: React.FC<Props> = ({
   style,
   testID,
   title,
+  titleStyle,
   type,
   ...rest
 }) => {
@@ -78,9 +80,7 @@ const Button: React.FC<Props> = ({
       testID={testID}
       title={title}
       type={type}
-      titleStyle={{
-        color: secondary ? COLORS.text : color,
-      }}
+      titleStyle={[{ color: secondary ? COLORS.text : color }, titleStyle]}
     />
   );
 };

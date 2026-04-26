@@ -12,6 +12,7 @@ import { Section } from 'common/Section';
 import { SectionContent } from 'common/SectionContent';
 import { SectionHeader } from 'common/SectionHeader';
 import { ChangePasswordForm } from 'components/ChangePasswordForm';
+import { DeleteAccountButton } from 'components/DeleteAccountButton';
 import { OrganizationPicker } from 'components/pickers/OrganizationPicker';
 import { useAppSettings } from 'hooks/context/AppSettingsContext';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
@@ -146,6 +147,12 @@ const SettingsScreen: React.FC = () => {
                 </Text>
               ) : null}
             </View>
+          </SectionContent>
+        </Section>
+        <Section bottomPadded testID="settings-delete-account-section">
+          <SectionHeader title="Delete account" />
+          <SectionContent>
+            <DeleteAccountButton />
           </SectionContent>
         </Section>
       </KeyboardAwareScrollView>

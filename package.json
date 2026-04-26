@@ -31,7 +31,7 @@
     "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\""
   },
   "dependencies": {
-    "@brewskey/js-api": "^2.0.11",
+    "@brewskey/js-api": "^2.1.1",
     "@expo/metro-runtime": "~55.0.9",
     "@falcondev-oss/expo-event-source-polyfill": "^2.0.4",
     "@hookform/error-message": "^2.0.1",
@@ -47,6 +47,7 @@
     "@teovilla/react-native-web-maps": "^0.9.5",
     "buffer": "^6.0.3",
     "expo": "~55.0.17",
+    "expo-apple-authentication": "~55.0.13",
     "expo-application": "~55.0.14",
     "expo-auth-session": "~55.0.15",
     "expo-build-properties": "~55.0.13",

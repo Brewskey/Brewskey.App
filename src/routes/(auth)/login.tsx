@@ -6,6 +6,7 @@ import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { Button } from '../../common/buttons/Button';
+import { AppleLoginButton } from '../../components/AppleLoginButton';
 import { GoogleLoginButton } from '../../components/GoogleLoginButton';
 import { LoginForm } from '../../components/LoginForm';
 import { COLORS } from '../../theme';
@@ -61,6 +62,7 @@ export default function LoginScreen() {
           }}
         />
       </View>
+      <AppleLoginButton />
       <GoogleLoginButton />
       <Divider color={COLORS.secondaryDisabled} style={styles.divider} />
       <LoginForm isInverse />

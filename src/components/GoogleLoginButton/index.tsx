@@ -14,12 +14,11 @@ const styles = StyleSheet.create({
   // into its `buttonStyle` so we match the full width of the `Log in` submit
   // button above (which uses RNE Button directly).
   //
-  // Border lives on the Button itself (instead of the wrapper) so it hugs the
-  // button's border-radius; the subtle white outline makes the edge visible
-  // against the teal login background.
+  // `height` and `borderRadius` match the native Apple auth button so both
+  // social sign-in actions read as one visual group.
   button: {
-    borderColor: COLORS.textInverseFaded,
-    borderWidth: 1,
+    borderRadius: 3,
+    height: 44,
     marginHorizontal: 0,
   },
   logo: {
@@ -41,6 +40,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     ...getElevationStyle(4),
   },
+  title: {
+    color: '#000',
+    fontSize: 17,
+    fontWeight: 500,
+  },
 });
 
 /**
@@ -51,9 +55,8 @@ const styles = StyleSheet.create({
  * `useGoogleSignIn` (web: `expo-auth-session`, native:
  * `@react-native-google-signin/google-signin`).
  *
- * Themed with dark teal (`COLORS.primary3`) on white text so it reads as a
- * secondary action next to the white "Log in" button above it while still
- * staying inside the app's brand palette.
+ * Themed with a white background and black text to match the native Apple
+ * sign-in button shown beside it.
  *
  * The Google "G" glyph is rendered from `MaterialCommunityIcons` imported
  * directly from `react-native-vector-icons` rather than via RNE's `Icon`
@@ -90,9 +93,9 @@ const GoogleLoginButton = (): React.ReactElement | null => {
 
   const icon = (
     <MaterialCommunityIcons
-      color={COLORS.textInverse}
+      color="#000"
       name="google"
-      size={20}
+      size={14}
       style={styles.logo}
     />
   );
@@ -101,8 +104,8 @@ const GoogleLoginButton = (): React.ReactElement | null => {
     <SectionContent paddedHorizontal paddedVertical>
       <View style={styles.shadowWrapper} testID="google-login-button-container">
         <Button
-          backgroundColor={COLORS.primary3}
-          color={COLORS.textInverse}
+          backgroundColor={COLORS.secondary}
+          color="#000"
           disabled={!loginMutator.isReady}
           icon={icon}
           iconPosition="left"
@@ -111,6 +114,7 @@ const GoogleLoginButton = (): React.ReactElement | null => {
           style={styles.button}
           testID="google-login-button"
           title="Sign in with Google"
+          titleStyle={styles.title}
         />
       </View>
     </SectionContent>

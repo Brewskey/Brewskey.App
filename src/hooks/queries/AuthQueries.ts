@@ -2,7 +2,8 @@ import { Auth } from '@brewskey/js-api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { setAuthSession } from 'hooks/context/AuthContext';
-import { useGoogleSignIn } from 'utils/googleSignIn';
+import { useAppleSignIn } from 'utils/appleSignIn';
+import { signOutFromGoogle, useGoogleSignIn } from 'utils/googleSignIn';
 
 import type {
   AuthResponse,
@@ -70,10 +71,52 @@ export const useLoginWithGoogle = (): UseMutationResult<
   return Object.assign(mutation, { isReady });
 };
 
+export const useLoginWithApple = (): UseMutationResult<
+  AuthResponse | null,
+  Error,
+  void
+> & { isReady: boolean; isAvailable: boolean } => {
+  const queryClient = useQueryClient();
+  const { signIn, isReady, isAvailable } = useAppleSignIn();
+  const mutation = useMutation({
+    mutationFn: async (): Promise<AuthResponse | null> => {
+      const result = await signIn();
+      if (result.type !== 'success') {
+        return null;
+      }
+      return Auth.loginWithApple(
+        result.identityToken,
+        result.fullName,
+        result.authorizationCode,
+      );
+    },
+    onSuccess: (data) => {
+      if (data) {
+        setAuthSession(queryClient, data);
+      }
+    },
+  });
+  return Object.assign(mutation, { isReady, isAvailable });
+};
+
 export const useLogout = (): UseMutationResult<void, Error, void> => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async () => setAuthSession(queryClient, null),
+    mutationFn: async () => {
+      await signOutFromGoogle();
+      setAuthSession(queryClient, null);
+    },
+  });
+};
+
+export const useDeleteAccount = (): UseMutationResult<void, Error, void> => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => Auth.deleteAccount(),
+    onSuccess: async () => {
+      await signOutFromGoogle();
+      setAuthSession(queryClient, null);
+    },
   });
 };
 
