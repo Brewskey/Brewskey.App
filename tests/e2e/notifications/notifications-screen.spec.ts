@@ -5,7 +5,10 @@
  */
 
 import { createMockNotificationsByType } from '../../fixtures/notification-fixtures';
-import { setNotificationsStorage } from '../../fixtures/storage-helper';
+import {
+  setAuthStorage,
+  setNotificationsStorage,
+} from '../../fixtures/storage-helper';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({
@@ -225,5 +228,34 @@ test('simulated notification response is saved and persists after reload', async
     notificationsPage.getNotificationItem(
       'notification-item-newFriendRequest-sim-response-1',
     ),
+  ).toBeVisible({ timeout: 10000 });
+});
+
+test('logout and login preserves persisted notifications list', async ({
+  page,
+  notificationsPage,
+  authenticatedUser,
+}) => {
+  const notifications = createMockNotificationsByType();
+  await setNotificationsStorage(page, notifications);
+  await notificationsPage.goto();
+  await expect(
+    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
+  ).toBeVisible({ timeout: 8000 });
+
+  await page.goto('/(menu)');
+  await page.getByTestId('menu-item-logout').click();
+  await page.getByTestId('logout-confirmation-modal-button-delete').click();
+  await expect(page.getByTestId('login-username-input')).toBeVisible({
+    timeout: 10000,
+  });
+
+  if (authenticatedUser?.authResponse) {
+    await setAuthStorage(page, authenticatedUser.authResponse);
+  }
+
+  await notificationsPage.goto();
+  await expect(
+    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
   ).toBeVisible({ timeout: 10000 });
 });
