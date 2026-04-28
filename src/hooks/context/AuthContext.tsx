@@ -4,6 +4,7 @@ import BrewskeyJSApi from '@brewskey/js-api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Storage, StorageKeys } from 'utils/Storage';
+import { clearBrewskeyExpoImageCaches } from 'utils/clearExpoImageCache';
 
 import type { AuthResponse } from '@brewskey/js-api';
 import type { QueryClient } from '@tanstack/react-query';
@@ -81,6 +82,9 @@ export const setAuthSession = (
   queryClient.setQueryData(AUTH_QUERY_KEY, authResponse);
   saveAuthStateToStorage(authResponse);
   BrewskeyJSApi.initializeForSession(authResponse ?? null);
+  if (authResponse == null) {
+    void clearBrewskeyExpoImageCaches();
+  }
 };
 
 /**

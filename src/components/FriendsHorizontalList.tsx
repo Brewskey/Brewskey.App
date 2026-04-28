@@ -55,7 +55,11 @@ const LoadedRow: React.FC<LoadedRowProps> = ({ item: friend, onItemPress }) => {
       style={styles.friendContainer}
       testID={`friend-item-${friend.friendAccount.id}`}
     >
-      <UserAvatar rounded size={100} userName={friend.friendAccount.userName} />
+      <UserAvatar
+        rounded
+        size={100}
+        userName={friend.friendAccount.userName}
+      />
       <Text style={styles.userNameText}>{friend.friendAccount.userName}</Text>
     </TouchableOpacity>
   );

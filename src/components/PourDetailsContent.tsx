@@ -162,7 +162,10 @@ const PourDetailsContent: React.FC<Props> = ({
               onPress={handleProfilePress}
               style={styles.touchableRow}
             >
-              <UserAvatar size={24} userName={pour.owner.userName} />
+              <UserAvatar
+                size={24}
+                userName={pour.owner.userName}
+              />
               <Text style={[styles.ownerName, { marginLeft: 8 }]}>
                 {ownerName}
               </Text>

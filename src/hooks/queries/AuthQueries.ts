@@ -263,7 +263,7 @@ export const useUpdateUsername = (): UseMutationResult<
         throw new Error('You must be signed in to update your username.');
       }
 
-      await AccountDAO.put(authSession.id, {
+      const updatedAccount = await AccountDAO.put(authSession.id, {
         email: authSession.email,
         id: authSession.id,
         phoneNumber: authSession.phoneNumber ?? '',
@@ -273,7 +273,7 @@ export const useUpdateUsername = (): UseMutationResult<
       const updatedSession: AuthSession = {
         ...authSession,
         isNewAccount: false,
-        userName,
+        userName: updatedAccount.userName,
       };
       setAuthSession(queryClient, updatedSession);
       return updatedSession;

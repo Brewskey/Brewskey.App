@@ -92,7 +92,10 @@ const ProfileScreen: React.FC = () => {
             {userID === account.id ? (
               <AvatarPicker />
             ) : (
-              <UserAvatar size={200} userName={account.userName} />
+              <UserAvatar
+                size={200}
+                userName={account.userName}
+              />
             )}
           </SectionContent>
         </Section>

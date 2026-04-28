@@ -93,7 +93,11 @@ const PourRow: React.FC<{
     <ListItem
       chevron={false}
       item={pour}
-      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      leftAvatar={
+        <UserAvatar
+          userName={pourOwnerUserName}
+        />
+      }
       onPress={pour.owner ? handlePress : undefined}
       rightIcon={<PintCounter beverageID={beverageId} ounces={pour.ounces} />}
       subtitle={fromNow(pour.pourDate)}

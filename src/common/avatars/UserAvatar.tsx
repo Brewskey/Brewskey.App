@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { BaseAvatar } from 'common/avatars/BaseAvatar';
-import { CONFIG } from 'config';
+import { createUserProfileCdnUrl } from 'utils/userProfileCdnUrl';
 
 import type { BaseAvatarProps } from 'common/avatars/BaseAvatar';
 
@@ -21,7 +21,7 @@ const UserAvatarComponent: React.FC<Props> = ({
     {...otherProps}
     rounded={rounded}
     size={size}
-    uri={`${CONFIG.CDN}photos/${userName}.jpg?w=${size}&h=${size}&mode=crop`}
+    uri={createUserProfileCdnUrl(userName, size)}
   />
 );
 

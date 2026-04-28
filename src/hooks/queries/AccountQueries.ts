@@ -7,7 +7,7 @@ import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 import type { Account, EntityID } from '@brewskey/js-api';
 import type { UseQueryResult } from '@tanstack/react-query';
 
-enum AccountQueryKeys {
+export enum AccountQueryKeys {
   AccountById = 'account_by_id',
 }
 

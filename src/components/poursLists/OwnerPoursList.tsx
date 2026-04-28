@@ -42,7 +42,11 @@ const LoadedRow = ({
     <ListItem
       chevron={false}
       item={pour}
-      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      leftAvatar={
+        <UserAvatar
+          userName={pourOwnerUserName}
+        />
+      }
       onPress={() => onItemPress(pour)}
       subtitle={fromNow(pour.pourDate)}
       testID={`pour-item-${pour.id}`}
@@ -72,7 +76,11 @@ const SwipeableRowItem = ({
       swipeable
       chevron={false}
       item={pour}
-      leftAvatar={<UserAvatar userName={pourOwnerUserName} />}
+      leftAvatar={
+        <UserAvatar
+          userName={pourOwnerUserName}
+        />
+      }
       onPress={() => onItemPress(pour)}
       slideoutComponent={slideoutComponent}
       subtitle={fromNow(pour.pourDate)}

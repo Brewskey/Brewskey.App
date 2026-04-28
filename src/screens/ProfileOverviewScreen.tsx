@@ -49,7 +49,10 @@ const ProfileOverviewScreenComponent: React.FC<Props> = ({
       ListHeaderComponent={
         <View>
           <View style={styles.avatarContainer}>
-            <UserAvatar size={200} userName={account.userName} />
+            <UserAvatar
+              size={200}
+              userName={account.userName}
+            />
           </View>
           <SectionHeader title="Badges" />
           <UserBadges userID={account.id} />

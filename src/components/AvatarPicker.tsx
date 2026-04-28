@@ -10,7 +10,11 @@ import { LoadingIndicator } from 'common/LoadingIndicator';
 import { CONFIG } from 'config';
 import { useAuthSession } from 'hooks/context/AuthContext';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
+import { AccountQueryKeys } from 'hooks/queries/AccountQueries';
 import { COLORS } from 'theme';
+import { clearBrewskeyExpoImageCaches } from 'utils/clearExpoImageCache';
+import { getStringFromEntityID } from 'utils/getStringFromEntityID';
+import { useQueryClient } from '@tanstack/react-query';
 
 const styles = StyleSheet.create({
   loadingIndicator: {
@@ -35,6 +39,7 @@ const AvatarPicker: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const addSnackBarMessage = useAddSnackBarMessage();
   const { data: authResponse } = useAuthSession();
+  const queryClient = useQueryClient();
 
   const onAvatarPress = async () => {
     // Request permissions
@@ -62,8 +67,7 @@ const AvatarPicker: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // Update avatar using direct fetch call
-      await fetch(`${CONFIG.HOST}/api/profile/photo/`, {
+      const response = await fetch(`${CONFIG.HOST}/api/profile/photo/`, {
         body: JSON.stringify({ photo: base64 }),
         headers: {
           Accept: 'application/json',
@@ -72,7 +76,22 @@ const AvatarPicker: React.FC = () => {
         },
         method: 'PUT',
       });
-      // Force re-render by updating key or state
+      if (!response.ok) {
+        addSnackBarMessage({
+          content: 'Failed to update avatar',
+          style: 'danger',
+        });
+        return;
+      }
+      if (authResponse?.id) {
+        await queryClient.invalidateQueries({
+          queryKey: [
+            AccountQueryKeys.AccountById,
+            getStringFromEntityID(authResponse.id),
+          ],
+        });
+      }
+      void clearBrewskeyExpoImageCaches();
       addSnackBarMessage({ content: 'Avatar updated' });
     } catch (fetchError) {
       addSnackBarMessage({

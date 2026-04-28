@@ -30,7 +30,11 @@ const LoadedRow = ({
   <ListItem
     chevron={false}
     item={friend}
-    leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
+    leftAvatar={
+      <UserAvatar
+        userName={friend.friendAccount.userName}
+      />
+    }
     onPress={onItemPress}
     testID={`friend-item-${friend.friendAccount.id}`}
     title={friend.friendAccount.userName}

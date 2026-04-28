@@ -33,7 +33,11 @@ const FriendPendingRequestListItemComponent: React.FC<Props> = ({
   return (
     <ListItem
       item={friend}
-      leftAvatar={<UserAvatar userName={friend.friendAccount.userName} />}
+      leftAvatar={
+        <UserAvatar
+          userName={friend.friendAccount.userName}
+        />
+      }
       onPress={onPress}
       title={friend.friendAccount.userName}
       rightIcon={

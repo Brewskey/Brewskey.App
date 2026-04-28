@@ -70,7 +70,11 @@ export const SectionPoursList: React.FC<Props> = ({
       : `${pour.ounces.toFixed(1)} oz`;
 
     const params = {
-      leftAvatar: <UserAvatar userName={pourOwnerUserName} />,
+      leftAvatar: (
+        <UserAvatar
+          userName={pourOwnerUserName}
+        />
+      ),
       rightIcon: (
         <PintCounter beverageID={pour?.beverage?.id} ounces={pour.ounces} />
       ),

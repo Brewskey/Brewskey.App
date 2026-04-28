@@ -51,7 +51,11 @@ export const LeaderboardList: React.FC<Props> = ({
   }): React.ReactElement => (
     <ListItem
       item={item}
-      leftAvatar={<UserAvatar userName={item.userName || ''} />}
+      leftAvatar={
+        <UserAvatar
+          userName={item.userName || ''}
+        />
+      }
       onPress={item.userID ? _onItemPress : undefined}
       rightIcon={<PintCounter beverageID={null} ounces={item.totalOunces} />}
       subtitle={`${item.totalOunces.toFixed(1)} oz`}
