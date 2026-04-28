@@ -9,6 +9,8 @@ export enum StorageKeys {
   AppSettings = 'app_settings',
   Notifications = 'notifications',
   NotificationsDisabledTaps = 'notifications/disabledTaps',
+  PushRegistration = 'notifications/pushRegistration',
+  PendingPushUnregister = 'notifications/pendingPushUnregister',
 }
 
 type PerUserStorageKeys = `${string}/${StorageKeys}`;

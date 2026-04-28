@@ -7,7 +7,6 @@ import {
   useRef,
 } from 'react';
 
-import Constants from 'expo-constants';
 import { isDevice } from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useRouter } from 'expo-router';
@@ -32,6 +31,7 @@ import {
 import { getStringFromEntityID } from 'utils/getStringFromEntityID';
 import { getUniqueDeviceId } from 'utils/getUniqueDeviceId';
 import { queryClient } from 'utils/queryClient';
+import { Storage, StorageKeys } from 'utils/Storage';
 
 import type { EntityID } from '@brewskey/js-api';
 import type { NotificationPermissionsStatus } from 'expo-notifications';
@@ -83,6 +83,47 @@ function handleRegistrationError(errorMessage: string): void {
   console.warn('[push-notifications]', errorMessage);
 }
 
+type PushRegistrationMetadata = {
+  installationId: string;
+  deviceToken: string;
+  platform: 'fcm' | 'ios';
+  registeredAtISO: string;
+};
+
+type PendingPushUnregister = {
+  installationId: string;
+  queuedAtISO: string;
+};
+
+async function loadPushRegistrationMetadata(): Promise<PushRegistrationMetadata | null> {
+  return Storage.getItem<PushRegistrationMetadata>(StorageKeys.PushRegistration);
+}
+
+async function savePushRegistrationMetadata(
+  metadata: PushRegistrationMetadata,
+): Promise<void> {
+  await Storage.setItem(StorageKeys.PushRegistration, metadata);
+}
+
+async function clearPushRegistrationMetadata(): Promise<void> {
+  await Storage.removeItem(StorageKeys.PushRegistration);
+}
+
+async function loadPendingPushUnregister(): Promise<PendingPushUnregister | null> {
+  return Storage.getItem<PendingPushUnregister>(StorageKeys.PendingPushUnregister);
+}
+
+async function savePendingPushUnregister(installationId: string): Promise<void> {
+  await Storage.setItem(StorageKeys.PendingPushUnregister, {
+    installationId,
+    queuedAtISO: new Date().toISOString(),
+  });
+}
+
+async function clearPendingPushUnregister(): Promise<void> {
+  await Storage.removeItem(StorageKeys.PendingPushUnregister);
+}
+
 async function registerForPushNotificationsAsync(): Promise<
   string | undefined
 > {
@@ -113,18 +154,13 @@ async function registerForPushNotificationsAsync(): Promise<
     return undefined;
   }
 
-  const projectId =
-    Constants?.expoConfig?.extra?.eas?.projectId ??
-    Constants?.easConfig?.projectId;
-  if (!projectId) {
-    handleRegistrationError('Project ID not found');
-    return undefined;
-  }
-
   try {
-    const token = (await Notifications.getExpoPushTokenAsync({ projectId }))
-      .data;
-    return token;
+    const nativeToken = await Notifications.getDevicePushTokenAsync();
+    if (!nativeToken?.data) {
+      handleRegistrationError('Native push token was empty');
+      return undefined;
+    }
+    return String(nativeToken.data);
   } catch (e: unknown) {
     handleRegistrationError(String(e));
     return undefined;
@@ -152,6 +188,28 @@ async function registerTokenWithBackend(
     },
     method: 'PUT',
   });
+}
+
+async function unregisterTokenWithBackend(
+  installationId: string,
+  accessToken: string | null,
+): Promise<void> {
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+  };
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+  const response = await fetch(
+    `${BASE_PUSH_URL}/${encodeURIComponent(installationId)}`,
+    {
+      headers,
+      method: 'DELETE',
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Push unregister failed: ${response.status}`);
+  }
 }
 
 function handleNotificationPress(
@@ -265,6 +323,7 @@ export function useNotificationHandlers(): {
     authResponse?.id != null ? getStringFromEntityID(authResponse.id) : null;
 
   const runRegistrationRef = useRef<() => Promise<void>>(async () => {});
+  const previousAccessTokenRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!authResponse?.accessToken || isWeb) {
@@ -272,24 +331,37 @@ export function useNotificationHandlers(): {
     }
 
     let tokenSub: Notifications.EventSubscription | undefined;
+    const persistNotification = async (
+      expoNotification: Notifications.Notification,
+      options: { isRead: boolean; shouldNavigate: boolean },
+    ): Promise<Notification> => {
+      const notification = normalizeNotificationFromExpo(expoNotification, {
+        isRead: options.isRead,
+      });
+      await addRef.current(notification);
+      if (options.isRead) {
+        await setReadRef.current(notification.id);
+      }
+      if (options.shouldNavigate) {
+        handleNotificationPress(notification, userIdStr, router);
+      }
+      return notification;
+    };
+
     const receivedSub = Notifications.addNotificationReceivedListener((n) => {
-      const notification = normalizeNotificationFromExpo(n, {
-        isRead: false,
-      });
-      addRef.current(notification).then(() => {
-        Vibration.vibrate(500);
-        showNotificationInSnackBar(notification);
-      });
+      persistNotification(n, { isRead: false, shouldNavigate: false }).then(
+        (notification) => {
+          Vibration.vibrate(500);
+          showNotificationInSnackBar(notification);
+        },
+      );
     });
     const responseSub = Notifications.addNotificationResponseReceivedListener(
       async (response) => {
-        const notification = normalizeNotificationFromExpo(
-          response.notification,
-          { isRead: true },
-        );
-        await addRef.current(notification);
-        await setReadRef.current(notification.id);
-        handleNotificationPress(notification, userIdStr, router);
+        await persistNotification(response.notification, {
+          isRead: true,
+          shouldNavigate: true,
+        });
       },
     );
     const appStateSub = AppState.addEventListener('change', (state) => {
@@ -302,28 +374,51 @@ export function useNotificationHandlers(): {
       if (!last?.notification) {
         return;
       }
-      const notification = normalizeNotificationFromExpo(last.notification, {
+      await persistNotification(last.notification, {
         isRead: true,
+        shouldNavigate: true,
       });
-      await addRef.current(notification);
-      await setReadRef.current(notification.id);
-      handleNotificationPress(notification, userIdStr, router);
       await Notifications.clearLastNotificationResponseAsync();
     });
 
+    const processPendingUnregister = async () => {
+      const pending = await loadPendingPushUnregister();
+      if (!pending) {
+        return;
+      }
+      try {
+        await unregisterTokenWithBackend(
+          pending.installationId,
+          authResponse.accessToken,
+        );
+        await clearPendingPushUnregister();
+      } catch {
+        // Keep pending for next retry.
+      }
+    };
+
     const runRegistration = async () => {
+      await processPendingUnregister();
       const token = await registerForPushNotificationsAsync();
       if (!token) {
         return;
       }
 
       const removeTapIDs = Array.isArray(disabledTaps) ? disabledTaps : [];
+      const installationId = await getUniqueDeviceId();
+      const platform = Platform.OS === 'android' ? 'fcm' : 'ios';
       try {
         await registerTokenWithBackend(
           authResponse.accessToken,
           token,
           removeTapIDs,
         );
+        await savePushRegistrationMetadata({
+          installationId,
+          deviceToken: token,
+          platform,
+          registeredAtISO: new Date().toISOString(),
+        });
       } catch {
         /* non-fatal */
       }
@@ -344,6 +439,12 @@ export function useNotificationHandlers(): {
             t,
             removeTapIDs,
           );
+          await savePushRegistrationMetadata({
+            installationId,
+            deviceToken: t,
+            platform,
+            registeredAtISO: new Date().toISOString(),
+          });
         } catch {
           /* non-fatal */
         }
@@ -359,6 +460,39 @@ export function useNotificationHandlers(): {
       void appStateSub.remove();
     };
   }, [authResponse?.accessToken, userIdStr, disabledTaps, router]);
+
+  useEffect(() => {
+    if (isWeb) {
+      previousAccessTokenRef.current = authResponse?.accessToken ?? null;
+      return;
+    }
+
+    const previousAccessToken = previousAccessTokenRef.current;
+    const currentAccessToken = authResponse?.accessToken ?? null;
+    previousAccessTokenRef.current = currentAccessToken;
+    if (!previousAccessToken || currentAccessToken) {
+      return;
+    }
+
+    const cleanupPushOnLogout = async () => {
+      try {
+        const metadata = await loadPushRegistrationMetadata();
+        const installationId =
+          metadata?.installationId ?? (await getUniqueDeviceId());
+        await unregisterTokenWithBackend(installationId, null);
+        await clearPendingPushUnregister();
+      } catch {
+        const metadata = await loadPushRegistrationMetadata();
+        if (metadata?.installationId) {
+          await savePendingPushUnregister(metadata.installationId);
+        }
+      } finally {
+        await clearPushRegistrationMetadata();
+      }
+    };
+
+    void cleanupPushOnLogout();
+  }, [authResponse?.accessToken]);
 
   const requestPermissionAndRegister = useCallback(async () => {
     await runRegistrationRef.current();
@@ -379,7 +513,12 @@ export function useNotificationHandlers(): {
   useEffect(() => {
     const win =
       typeof window !== 'undefined'
-        ? (window as Window & { __PLAYWRIGHT_TEST__?: boolean })
+        ? (window as Window & {
+            __PLAYWRIGHT_TEST__?: boolean;
+            __PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__?: (
+              payload: Record<string, unknown>,
+            ) => Promise<void>;
+          })
         : null;
     if (!win?.__PLAYWRIGHT_TEST__) {
       return undefined;
@@ -391,15 +530,25 @@ export function useNotificationHandlers(): {
       await addRef.current(notification);
       showNotificationInSnackBar(notification);
     };
+    const simulateResponse = async (payload: Record<string, unknown>) => {
+      const notification = normalizeNotificationFromPayload(payload, {
+        isRead: true,
+      });
+      await addRef.current(notification);
+      await setReadRef.current(notification.id);
+      handleNotificationPress(notification, userIdStr, router);
+    };
     (
       win as Window & { __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: typeof simulate }
     ).__PLAYWRIGHT_SIMULATE_NOTIFICATION__ = simulate;
+    win.__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__ = simulateResponse;
     return () => {
       void delete (
         win as Window & { __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: unknown }
       ).__PLAYWRIGHT_SIMULATE_NOTIFICATION__;
+      void delete win.__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__;
     };
-  }, []);
+  }, [router, userIdStr]);
 
   return { requestPermissionAndRegister };
 }

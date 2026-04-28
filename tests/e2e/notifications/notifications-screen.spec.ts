@@ -17,6 +17,11 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     delete (window as Window & { __PLAYWRIGHT_NOTIFICATIONS__?: unknown })
       .__PLAYWRIGHT_NOTIFICATIONS__;
+    delete (
+      window as Window & {
+        __PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__?: unknown;
+      }
+    ).__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__;
   });
 });
 
@@ -110,13 +115,15 @@ test('should show badge when there are unread notifications', async ({
   await expect(page.getByTestId('notifications-badge')).toBeVisible();
 });
 
-// Skip: list does not re-render with new item after __PLAYWRIGHT_SIMULATE_NOTIFICATION__ (cache/refetch timing).
-test.skip('simulated notification received while app is open', async ({
+test('simulated notification received while app is open', async ({
   page,
   notificationsPage,
 }) => {
   await setNotificationsStorage(page, []);
-  await notificationsPage.goto();
+  await page.goto('/(notifications)');
+  await expect(notificationsPage.getNotificationsList()).toBeVisible({
+    timeout: 15000,
+  });
   await expect(notificationsPage.getEmptyMessage()).toBeVisible();
 
   const payload = {
@@ -134,10 +141,89 @@ test.skip('simulated notification received while app is open', async ({
       ) => Promise<void>;
     };
     const fn = win.__PLAYWRIGHT_SIMULATE_NOTIFICATION__;
-    if (fn) await fn(p);
+    if (fn) {
+      await fn(p);
+    }
   }, payload);
 
   await expect(
     notificationsPage.getNotificationItem('notification-item-text-sim-1'),
+  ).toBeVisible({ timeout: 10000 });
+});
+
+test('simulated notification response is saved and persists after reload', async ({
+  page,
+  notificationsPage,
+}) => {
+  await page.goto('/(notifications)');
+  await page.evaluate(() => {
+    (
+      window as Window & { __PLAYWRIGHT_NOTIFICATIONS__?: unknown[] }
+    ).__PLAYWRIGHT_NOTIFICATIONS__ = [];
+  });
+  await page.goto('/(notifications)');
+  await expect(notificationsPage.getNotificationsList()).toBeVisible({
+    timeout: 15000,
+  });
+  await expect(notificationsPage.getEmptyMessage()).toBeVisible();
+
+  const payload = {
+    id: 'sim-response-1',
+    type: 'newFriendRequest',
+    title: 'Friend request',
+    body: 'Someone sent you a request',
+    friendId: '123',
+    friendUserName: 'friend-user',
+    date: new Date().toISOString(),
+    isRead: true,
+  };
+  await page.waitForFunction(
+    () =>
+      typeof (
+        window as Window & {
+          __PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__?: unknown;
+        }
+      ).__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__ === 'function',
+  );
+  await page.evaluate(async (p: Record<string, unknown>) => {
+    const win = window as Window & {
+      __PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__?: (
+        payload: Record<string, unknown>,
+      ) => Promise<void>;
+    };
+    const fn = win.__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__;
+    if (fn) {
+      await fn(p);
+    }
+  }, payload);
+
+  await expect
+    .poll(async () => {
+      const list = await page.evaluate(async () => {
+        const storage = (window as Window & { Storage?: unknown }).Storage as {
+          getForCurrentUser?: (key: string) => Promise<{ id: string }[] | null>;
+        };
+        if (!storage?.getForCurrentUser) {
+          return null;
+        }
+        return storage.getForCurrentUser('notifications');
+      });
+      return (list ?? []).some((n) => n.id === 'sim-response-1');
+    })
+    .toBe(true);
+
+  await page.evaluate(() => {
+    delete (window as Window & { __PLAYWRIGHT_NOTIFICATIONS__?: unknown })
+      .__PLAYWRIGHT_NOTIFICATIONS__;
+  });
+  await page.reload();
+  await page.goto('/(notifications)');
+  await expect(notificationsPage.getNotificationsList()).toBeVisible({
+    timeout: 15000,
+  });
+  await expect(
+    notificationsPage.getNotificationItem(
+      'notification-item-newFriendRequest-sim-response-1',
+    ),
   ).toBeVisible({ timeout: 10000 });
 });
