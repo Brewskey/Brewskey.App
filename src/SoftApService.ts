@@ -43,6 +43,58 @@ const HEADERS = {
   'Content-Type': 'application/x-www-form-urlencoded',
 };
 
+/** node-forge accepts an options object here at runtime; @types/node-forge only lists boolean. */
+const asn1FromDerCompat = forge.asn1.fromDer as (
+  bytes: string | forge.util.ByteBuffer,
+  options?: boolean | { parseAllBytes?: boolean; strict?: boolean },
+) => forge.asn1.Asn1;
+
+/**
+ * Particle SoftAP returns hex-encoded DER with a vendor prefix and optional suffix.
+ * Legacy apps assumed a fixed 22-byte (44 hex char) strip before PKCS#1 DER; firmware may
+ * append trailing bytes or vary prefix length. Parse only the first ASN.1 structure so trailing
+ * DER does not trigger forge's "Unparsed DER bytes remain after ASN.1 parsing".
+ */
+function rsaPublicKeyFromSoftApHex(rawHex: string): forge.pki.rsa.PublicKey {
+  const normalizedHex = rawHex.replace(/\s+/g, '').toLowerCase();
+  if (normalizedHex.length % 2 !== 0) {
+    throw new Error('Invalid public key hex length.');
+  }
+
+  const stripPrefixesHexChars = [
+    44, // 22-byte prefix — historical Particle SoftAP framing
+    48,
+    52,
+    56,
+    40,
+    36,
+    32,
+    0,
+  ];
+
+  let lastError: unknown;
+  for (const stripChars of stripPrefixesHexChars) {
+    const derHex =
+      stripChars === 0 ? normalizedHex : normalizedHex.slice(stripChars);
+    if (derHex.length < 32) {
+      continue;
+    }
+    try {
+      const derBytes = forge.util.hexToBytes(derHex);
+      const asn1PublicKey = asn1FromDerCompat(derBytes, {
+        parseAllBytes: false,
+      });
+      return forge.pki.publicKeyFromAsn1(asn1PublicKey);
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  const detail =
+    lastError instanceof Error ? lastError.message : String(lastError);
+  throw new Error(`Could not parse Brewskey Box RSA public key (${detail}).`);
+}
+
 class SoftAPService {
   static configureWifi = async ({
     channel = DEFAULT_WIFI_CHANNEL,
@@ -138,14 +190,7 @@ class SoftAPService {
               return;
             }
 
-            // Device sends DER with 22-byte prefix; remainder is PKCS#1 public key DER
-            const pkcs1DerHex = rawDerPublicKey.slice(44); // 22 bytes = 44 hex chars
-            const pkcs1DerBytes = forge.util.hexToBytes(pkcs1DerHex);
-            const pem = forge.pem.encode({
-              type: 'RSA PUBLIC KEY',
-              body: pkcs1DerBytes,
-            });
-            const publicKey = forge.pki.publicKeyFromPem(pem);
+            const publicKey = rsaPublicKeyFromSoftApHex(rawDerPublicKey);
 
             resolve({
               encrypt: (plaintext: string): string => {
