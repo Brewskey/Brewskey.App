@@ -130,7 +130,7 @@ export async function registerTokenWithBackend(
     platform: Platform.OS === 'android' ? 'fcm' : 'ios',
     removeTapIDs: removeTapIDs.map((id) => getStringFromEntityID(id)),
   });
-  await fetch(`${BASE_PUSH_URL}/`, {
+  const response = await fetch(`${BASE_PUSH_URL}/`, {
     body,
     headers: {
       Accept: 'application/json',
@@ -139,6 +139,9 @@ export async function registerTokenWithBackend(
     },
     method: 'PUT',
   });
+  if (!response.ok) {
+    throw new Error(`Push register failed: ${response.status}`);
+  }
 }
 
 export async function unregisterTokenWithBackend(

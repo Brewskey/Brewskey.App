@@ -15,6 +15,11 @@ export enum StorageKeys {
 
 type PerUserStorageKeys = `${string}/${StorageKeys}`;
 
+/** SecureStore keys may only use [a-zA-Z0-9._-]; logical keys use "/". */
+function nativeSecureStoreKey(key: StorageKeys): string {
+  return key.replace(/\//g, '_');
+}
+
 export class Storage {
   // Basic storage methods (use SecureStore on native, AsyncStorage on web)
   static async setItem<TResult>(
@@ -24,7 +29,7 @@ export class Storage {
     if (Platform.OS === 'web') {
       await AsyncStorage.setItem(key, JSON.stringify(value));
     } else {
-      await setItemAsync(key, JSON.stringify(value));
+      await setItemAsync(nativeSecureStoreKey(key), JSON.stringify(value));
     }
   }
 
@@ -33,7 +38,7 @@ export class Storage {
     if (Platform.OS === 'web') {
       result = await AsyncStorage.getItem(key);
     } else {
-      result = await getItemAsync(key);
+      result = await getItemAsync(nativeSecureStoreKey(key));
     }
 
     if (result == null) {
@@ -47,7 +52,7 @@ export class Storage {
     if (Platform.OS === 'web') {
       return AsyncStorage.removeItem(key);
     }
-    return deleteItemAsync(key);
+    return deleteItemAsync(nativeSecureStoreKey(key));
   }
 
   // Legacy methods for backward compatibility (always use AsyncStorage)

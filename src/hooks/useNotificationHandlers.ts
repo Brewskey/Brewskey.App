@@ -172,6 +172,7 @@ export function useNotificationHandlers(): {
     authResponse?.id != null ? getStringFromEntityID(authResponse.id) : null;
 
   const runRegistrationRef = useRef<() => Promise<void>>(async () => {});
+  const processPendingUnregisterRef = useRef<() => Promise<void>>(async () => {});
   const previousAccessTokenRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -243,6 +244,7 @@ export function useNotificationHandlers(): {
         // Keep pending for next retry.
       }
     };
+    processPendingUnregisterRef.current = processPendingUnregister;
 
     const runRegistration = async () => {
       await processPendingUnregister();
@@ -307,6 +309,13 @@ export function useNotificationHandlers(): {
       void appStateSub.remove();
     };
   }, [authResponse?.accessToken, userIdStr, disabledTaps, router]);
+
+  useEffect(() => {
+    if (!authResponse?.accessToken || isWeb) {
+      return;
+    }
+    void processPendingUnregisterRef.current();
+  }, [authResponse?.accessToken]);
 
   useEffect(() => {
     if (isWeb) {
@@ -375,7 +384,7 @@ export function useNotificationHandlers(): {
         isRead: false,
       });
       await addRef.current(notification);
-      showNotificationInSnackBar(notification);
+      onForegroundNotificationPersisted(notification);
     };
     const simulateResponse = async (payload: Record<string, unknown>) => {
       const notification = normalizeNotificationFromPayload(payload, {
