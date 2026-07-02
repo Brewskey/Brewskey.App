@@ -86,7 +86,13 @@ export function usePourWithHCE(accessToken: string | undefined) {
     optionsRef.current = null;
   }, []);
 
-  const isSupported = Boolean(getHCEModule());
+  // HCE pour is not functional yet: the APDU responder only returns 9000
+  // (never the token as an NDEF Type 4 file) and the Android
+  // HostApduService/apduservice.xml registration is missing. Keep the path
+  // disabled so NFC support detection doesn't auto-start a broken session
+  // that closes the pour modal on open.
+  const HCE_POUR_ENABLED = false;
+  const isSupported = HCE_POUR_ENABLED && Boolean(getHCEModule());
 
   return { start, stop, isSupported };
 }

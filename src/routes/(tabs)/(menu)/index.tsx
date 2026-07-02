@@ -152,6 +152,20 @@ const MenuScreen = () => {
               }}
             />
           )}
+          {Platform.OS === 'web' ? null : (
+            <MenuNavigationButton
+              icon={{ name: 'cellphone-nfc', type: 'material-community' }}
+              routeName="nfcDebug"
+              testID="menu-item-nfc-debug"
+              title="NFC Box Test"
+              onPress={() => {
+                router.navigate({
+                  pathname: '/nfc-debug',
+                  params: {},
+                });
+              }}
+            />
+          )}
           {/* <MenuNavigationButton
               icon={{ name: 'credit-card' }}
               routeName="payments"

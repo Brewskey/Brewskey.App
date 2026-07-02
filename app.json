@@ -74,7 +74,9 @@
       [
         "react-native-nfc-manager",
         {
-          "includeNdefEntitlement": false
+          "includeNdefEntitlement": false,
+          "nfcPermission": "$(PRODUCT_NAME) uses NFC to authorize pours at Brewskey boxes.",
+          "selectIdentifiers": ["D2760000850101"]
         }
       ],
       [
