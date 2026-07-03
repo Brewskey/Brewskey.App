@@ -58,7 +58,7 @@ type IconButtonProps = Object;
  */
 export type IconType =
   | 'material'
-  | 'material-community'
+  | 'material-design'
   | 'simple-line-icon'
   | 'zocial'
   | 'font-awesome'
@@ -1065,7 +1065,7 @@ declare export class Header extends React.Component<HeaderProps, any> {}
 export type IconProps = {|
   ...IconButtonProps,
   /**
-   * Type (defaults to material, options are material-community, zocial, font-awesome, octicon, ionicon, foundation, evilicon, simple-line-icon, or entypo)
+   * Type (defaults to material, options are material-design, zocial, font-awesome, octicon, ionicon, foundation, evilicon, simple-line-icon, or entypo)
    * @default 'material'
    */
   type?: IconType,

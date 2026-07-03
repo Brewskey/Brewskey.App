@@ -101,7 +101,7 @@ const NuxLocationScreen: React.FC = () => {
             containerStyle={styles.iconContainer}
             name="map-marker"
             size={200}
-            type="material-community"
+            type="material-design"
           />
           <Text
             style={styles.descriptionText}

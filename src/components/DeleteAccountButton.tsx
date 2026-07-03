@@ -68,7 +68,7 @@ const DeleteAccountButton: React.FC = () => {
             color={COLORS.danger}
             name="delete"
             size={20}
-            type="material-community"
+            type="material-design"
           />
         }
         iconPosition="left"

@@ -85,7 +85,7 @@ const MenuScreen = () => {
                 <DrawerSeparator key="separator1" />,
                 <MenuNavigationButton
                   key="locations"
-                  icon={{ name: 'map-marker', type: 'material-community' }}
+                  icon={{ name: 'map-marker', type: 'material-design' }}
                   routeName="locations"
                   testID="menu-item-locations"
                   title="Locations"
@@ -98,7 +98,7 @@ const MenuScreen = () => {
                 />,
                 <MenuNavigationButton
                   key="taps"
-                  icon={{ name: 'stocking', type: 'material-community' }}
+                  icon={{ name: 'stocking', type: 'material-design' }}
                   routeName="taps"
                   testID="menu-item-taps"
                   title="Taps"
@@ -111,7 +111,7 @@ const MenuScreen = () => {
                 />,
                 <MenuNavigationButton
                   key="devices"
-                  icon={{ name: 'cube', type: 'material-community' }}
+                  icon={{ name: 'cube', type: 'material-design' }}
                   routeName="devices"
                   testID="menu-item-devices"
                   title="Brewskey boxes"
@@ -124,7 +124,7 @@ const MenuScreen = () => {
                 />,
                 <MenuNavigationButton
                   key="myBeverages"
-                  icon={{ name: 'beer', type: 'material-community' }}
+                  icon={{ name: 'beer', type: 'material-design' }}
                   routeName="myBeverages"
                   testID="menu-item-beverages"
                   title="Homebrew"
@@ -154,7 +154,7 @@ const MenuScreen = () => {
           )}
           {Platform.OS === 'web' ? null : (
             <MenuNavigationButton
-              icon={{ name: 'cellphone-nfc', type: 'material-community' }}
+              icon={{ name: 'cellphone-nfc', type: 'material-design' }}
               routeName="nfcDebug"
               testID="menu-item-nfc-debug"
               title="NFC Box Test"

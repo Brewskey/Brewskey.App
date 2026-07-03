@@ -9,8 +9,11 @@ import { TabBarButton } from 'components/MainTabBar/TabBarButton';
 import { useNotificationsUnreadCount } from 'hooks/queries/NotificationQueries';
 import { COLORS } from 'theme';
 
-import type { BottomTabBarProps } from "expo-router/js-tabs";
-import type { NavigationRoute, ParamListBase } from "expo-router/react-navigation";
+import type { BottomTabBarProps } from 'expo-router/js-tabs';
+import type {
+  NavigationRoute,
+  ParamListBase,
+} from 'expo-router/react-navigation';
 
 import type { TouchableItem } from 'common/buttons/TouchableItem';
 
@@ -94,7 +97,7 @@ export const CustomTabBar: React.FC<BottomTabBarProps> = ({
           testID="tab-feed"
         />
         <TabBarButton
-          icon={{ name: 'chart-pie', type: 'material-community' }}
+          icon={{ name: 'chart-pie', type: 'material-design' }}
           isFocused={state.index === 1}
           onPress={_onTabPress}
           route={state.routes[1]}

@@ -56,7 +56,7 @@ const LocationAddress: React.FC<Props> = ({ location }) => {
                 name="earth"
                 onPress={toggleMapModal}
                 size={40}
-                type="material-community"
+                type="material-design"
               />
             </View>,
             <LocationMapModal

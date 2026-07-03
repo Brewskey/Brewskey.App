@@ -7,7 +7,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "brewskey",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "icon": "./assets/icon-1024.png",
       "supportsTablet": false,
@@ -16,7 +18,9 @@
       },
       "bundleIdentifier": "com.brewskey.app",
       "usesAppleSignIn": true,
-      "associatedDomains": ["applinks:brewskey.com"],
+      "associatedDomains": [
+        "applinks:brewskey.com"
+      ],
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
@@ -54,7 +58,10 @@
               "pathPrefix": "/d/"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ]
     },
@@ -85,7 +92,9 @@
         "react-native-nfc-manager",
         {
           "nfcPermission": "$(PRODUCT_NAME) uses NFC to authorize pours at Brewskey boxes.",
-          "selectIdentifiers": ["D2760000850101"]
+          "selectIdentifiers": [
+            "D2760000850101"
+          ]
         }
       ],
       [
@@ -107,7 +116,9 @@
           "enableBackgroundRemoteNotifications": false
         }
       ],
-      ["expo-secure-store"],
+      [
+        "expo-secure-store"
+      ],
       "./plugins/with-nfc-ndef-intent-filter",
       "expo-image",
       [
@@ -126,7 +137,10 @@
                 "name": "GoogleUtilities/UserDefaults",
                 "modular_headers": true
               },
-              { "name": "RecaptchaInterop", "modular_headers": true }
+              {
+                "name": "RecaptchaInterop",
+                "modular_headers": true
+              }
             ]
           }
         }
@@ -138,7 +152,8 @@
         }
       ],
       "expo-apple-authentication",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@react-native-vector-icons/material-design-icons"
     ],
     "extra": {
       "router": {

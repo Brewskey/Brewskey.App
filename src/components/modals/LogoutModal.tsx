@@ -53,7 +53,7 @@ const DeleteModal = ({
         icon={{
           color: COLORS.secondary,
           name: 'logout',
-          type: 'material-community',
+          type: 'material-design',
         }}
       />
       <Button

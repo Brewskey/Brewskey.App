@@ -37,11 +37,15 @@
     "@hookform/error-message": "^2.0.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-google-signin/google-signin": "^16.1.2",
+    "@react-native-vector-icons/fontawesome": "^13.1.2",
+    "@react-native-vector-icons/ionicons": "^13.1.2",
+    "@react-native-vector-icons/material-design-icons": "^13.1.2",
+    "@react-native-vector-icons/material-icons": "^13.1.2",
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/material-top-tabs": "^7.4.23",
     "@react-navigation/native": "^7.1.33",
-    "@rneui/base": "4.0.0-rc.8",
-    "@rneui/themed": "4.0.0-rc.8",
+    "@rneui/base": "^5.0.0",
+    "@rneui/themed": "^5.0.0",
     "@tanstack/react-query": "^5.99.1",
     "@teovilla/react-native-web-maps": "^0.9.5",
     "buffer": "^6.0.3",
@@ -66,10 +70,10 @@
     "expo-web-browser": "~57.0.0",
     "node-forge": "^1.4.0",
     "nullthrows": "^1.1.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "react-hook-form": "^7.72.1",
-    "react-native": "0.86.0",
+    "react-native": "^0.86.0",
     "react-native-element-dropdown": "^2.12.4",
     "react-native-gesture-handler": "~2.32.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
@@ -81,7 +85,6 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-svg": "15.15.4",
-    "react-native-vector-icons": "^10.3.0",
     "react-native-web": "^0.21.0",
     "react-native-worklets": "0.10.0",
     "react-native-worklets-core": "1.6.3",
@@ -114,17 +117,17 @@
     "wait-on": "^9.0.5"
   },
   "overrides": {
-    "@rneui/base": "4.0.0-rc.8",
     "@teovilla/react-native-web-maps": {
       "expo-location": "^57.0.2"
-    }
+    },
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
   },
   "expo": {
     "doctor": {
       "reactNativeDirectoryCheck": {
         "exclude": [
-          "react-native-nfc-manager",
-          "react-native-vector-icons"
+          "react-native-nfc-manager"
         ]
       }
     }

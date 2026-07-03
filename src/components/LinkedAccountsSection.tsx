@@ -12,7 +12,7 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "@react-native-vector-icons/material-design-icons/static";
 
 import { Button } from 'common/buttons/Button';
 import { ListItem } from 'common/ListItem';
