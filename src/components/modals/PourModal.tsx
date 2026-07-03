@@ -52,7 +52,6 @@ export const PourModal = React.forwardRef<
   const pour = useGetPourById(pourID);
 
   const handleClose = React.useCallback(() => {
-    console.log('closing');
     setIsVisible(false);
     onClose?.();
   }, [onClose]);

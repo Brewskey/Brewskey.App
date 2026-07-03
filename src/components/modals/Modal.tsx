@@ -62,6 +62,7 @@ const Modal = <RNModalProps extends object>({
       onRequestClose={
         shouldHideOnRequestClose && onHideModal ? onHideModal : emptyFunction
       }
+      style={{ backgroundColor: '#000' }}
     >
       {isTouchable ? (
         <TouchableWithoutFeedback onPress={onHideModal}>

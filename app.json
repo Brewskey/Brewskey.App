@@ -2,14 +2,12 @@
   "expo": {
     "name": "Brewskey",
     "slug": "brewskey",
-    "version": "3.0.6",
+    "version": "3.0.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "brewskey",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-1024.png",
       "supportsTablet": false,
@@ -18,9 +16,7 @@
       },
       "bundleIdentifier": "com.brewskey.app",
       "usesAppleSignIn": true,
-      "associatedDomains": [
-        "applinks:brewskey.com"
-      ],
+      "associatedDomains": ["applinks:brewskey.com"],
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
@@ -58,10 +54,7 @@
               "pathPrefix": "/d/"
             }
           ],
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
@@ -92,9 +85,7 @@
         "react-native-nfc-manager",
         {
           "nfcPermission": "$(PRODUCT_NAME) uses NFC to authorize pours at Brewskey boxes.",
-          "selectIdentifiers": [
-            "D2760000850101"
-          ]
+          "selectIdentifiers": ["D2760000850101"]
         }
       ],
       [
@@ -116,9 +107,7 @@
           "enableBackgroundRemoteNotifications": false
         }
       ],
-      [
-        "expo-secure-store"
-      ],
+      ["expo-secure-store"],
       "./plugins/with-nfc-ndef-intent-filter",
       "expo-image",
       [
