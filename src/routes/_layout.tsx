@@ -84,35 +84,70 @@ const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
   const needsUsername = authResponse?.isNewAccount === true;
 
-  // Android: when the app is cold-started by tapping the box's NFC tag (the
-  // Android Application Record dispatches NDEF_DISCOVERED, not a URL), pull
-  // the launch tag and route to the same /d/<id> screen App Links use.
+  // Android: route Brewskey Box tag taps to the /d/<id> pour screen. The
+  // tag arrives three ways: on the launch intent (cold start via the tag's
+  // NDEF_DISCOVERED dispatch), stashed as a background tag (warm start
+  // before this listener attached), or as a live background-tag event (tag
+  // tapped while the app is already running without the pour modal open —
+  // the modal's own foreground listener takes precedence when active).
   React.useEffect(() => {
     if (Platform.OS !== 'android' || !authResponse) {
-      return;
+      return undefined;
     }
     const nfc = getNfcManager();
     const NfcManager = nfc?.default ?? null;
-    NfcManager?.getLaunchTagEvent?.()
-      .then((tag: unknown) => {
-        if (tag == null) {
+    const NfcEvents = nfc?.NfcEvents ?? null;
+    if (NfcManager == null) {
+      return undefined;
+    }
+
+    const routeFromTag = (tag: unknown) => {
+      try {
+        const deviceId = getDeviceIdFromTag(
+          tag as Parameters<typeof getDeviceIdFromTag>[0],
+        );
+        if (deviceId == null) {
           return;
         }
-        try {
-          const deviceId = getDeviceIdFromTag(
-            tag as Parameters<typeof getDeviceIdFromTag>[0],
-          );
-          if (deviceId != null) {
-            router.replace({
-              pathname: '/d/[deviceId]',
-              params: { deviceId: String(deviceId) },
-            });
-          }
-        } catch {
-          // Not a Brewskey tag; ignore.
+        // Next tick: the navigator may not be mounted yet on cold start.
+        setTimeout(() => {
+          router.replace({
+            pathname: '/d/[deviceId]',
+            params: { deviceId: String(deviceId) },
+          });
+        }, 0);
+      } catch {
+        // Not a Brewskey tag; ignore.
+      }
+    };
+
+    NfcManager.getLaunchTagEvent?.()
+      .then((tag: unknown) => {
+        if (tag != null) {
+          routeFromTag(tag);
         }
       })
       .catch(() => {});
+
+    NfcManager.getBackgroundTag?.()
+      .then((tag: unknown) => {
+        if (tag != null) {
+          routeFromTag(tag);
+          NfcManager.clearBackgroundTag?.().catch(() => {});
+        }
+      })
+      .catch(() => {});
+
+    if (NfcEvents != null) {
+      NfcManager.setEventListener(
+        NfcEvents.DiscoverBackgroundTag,
+        (tag: unknown) => routeFromTag(tag),
+      );
+      return () => {
+        NfcManager.setEventListener(NfcEvents.DiscoverBackgroundTag, null);
+      };
+    }
+    return undefined;
   }, [authResponse]);
 
   if (isLoading) {

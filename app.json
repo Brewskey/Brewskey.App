@@ -114,6 +114,7 @@
         }
       ],
       ["expo-secure-store"],
+      "./plugins/with-nfc-ndef-intent-filter",
       "expo-image",
       [
         "expo-build-properties",
