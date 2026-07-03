@@ -35,7 +35,6 @@
     "@expo/metro-runtime": "~55.0.9",
     "@falcondev-oss/expo-event-source-polyfill": "^2.0.4",
     "@hookform/error-message": "^2.0.1",
-    "@icedevml/react-native-host-card-emulation": "^0.8.2",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-google-signin/google-signin": "^16.1.2",
     "@react-navigation/bottom-tabs": "^7.15.5",
@@ -125,7 +124,6 @@
       "reactNativeDirectoryCheck": {
         "exclude": [
           "react-native-nfc-manager",
-          "@icedevml/react-native-host-card-emulation",
           "react-native-vector-icons"
         ]
       }
