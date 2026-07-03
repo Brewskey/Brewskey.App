@@ -21,6 +21,7 @@
       },
       "bundleIdentifier": "com.brewskey.app",
       "usesAppleSignIn": true,
+      "associatedDomains": ["applinks:brewskey.com"],
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSExceptionDomains": {
@@ -46,7 +47,21 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.brewskey.app"
+      "package": "com.brewskey.app",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "brewskey.com",
+              "pathPrefix": "/d/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",

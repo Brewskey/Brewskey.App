@@ -5,7 +5,7 @@ import {
   QueryClientProvider,
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -30,9 +30,13 @@ import {
   setAuthSession,
   useAuthSession,
 } from '../hooks/context/AuthContext';
-import { PourProcessProvider } from '../hooks/context/PourProcessContext';
+import {
+  getDeviceIdFromTag,
+  PourProcessProvider,
+} from '../hooks/context/PourProcessContext';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
 import { useEASUpdateAutoReload } from '../hooks/useEASUpdateAutoReload';
+import { getNfcManager } from '../services/nfc';
 import { queryClient } from '../utils/queryClient';
 
 BrewskeyJSApi.initialize(CONFIG.HOST);
@@ -80,6 +84,37 @@ const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
   const needsUsername = authResponse?.isNewAccount === true;
 
+  // Android: when the app is cold-started by tapping the box's NFC tag (the
+  // Android Application Record dispatches NDEF_DISCOVERED, not a URL), pull
+  // the launch tag and route to the same /d/<id> screen App Links use.
+  React.useEffect(() => {
+    if (Platform.OS !== 'android' || !authResponse) {
+      return;
+    }
+    const nfc = getNfcManager();
+    const NfcManager = nfc?.default ?? null;
+    NfcManager?.getLaunchTagEvent?.()
+      .then((tag: unknown) => {
+        if (tag == null) {
+          return;
+        }
+        try {
+          const deviceId = getDeviceIdFromTag(
+            tag as Parameters<typeof getDeviceIdFromTag>[0],
+          );
+          if (deviceId != null) {
+            router.replace({
+              pathname: '/d/[deviceId]',
+              params: { deviceId: String(deviceId) },
+            });
+          }
+        } catch {
+          // Not a Brewskey tag; ignore.
+        }
+      })
+      .catch(() => {});
+  }, [authResponse]);
+
   if (isLoading) {
     return null;
   }
@@ -88,6 +123,7 @@ const RootLayoutNav = () => {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={!!authResponse && !needsUsername}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="d/[deviceId]" options={{ headerShown: false }} />
       </Stack.Protected>
 
       <Stack.Protected guard={!!authResponse && needsUsername}>

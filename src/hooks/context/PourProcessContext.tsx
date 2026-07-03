@@ -6,12 +6,111 @@ import { CONFIG } from 'config';
 import { useAuthSession } from 'hooks/context/AuthContext';
 import { useAddSnackBarMessage } from 'hooks/context/SnackBarContext';
 import { useDeviceLocation, useLocationPermission } from 'hooks/useGetLocation';
-import { usePourWithHCE } from 'hooks/usePourWithHCE';
 import { getNfcManager } from 'services/nfc';
 import { fetchJSON } from 'utils';
 
 import type { EntityID } from '@brewskey/js-api';
 import type { PropsWithChildren } from 'react';
+
+const STANDARD_NFC_ERROR_MESSAGE =
+  'Could not read the full NFC message.\nTry Again!';
+
+interface NdefRecordLike {
+  tnf: number;
+  type: number[] | string;
+  payload: number[];
+}
+
+interface TagEventLike {
+  ndefMessage?: NdefRecordLike[];
+}
+
+/**
+ * Extracts the Brewskey device id from a scanned tag's NDEF message. The
+ * box's tag carries a URI record (https://brewskey.com/d/<id>); its position
+ * in the message has changed across firmware versions, so search for it
+ * instead of assuming a record index.
+ */
+export const getDeviceIdFromTag = (
+  tag: TagEventLike | null | undefined,
+): EntityID | undefined => {
+  const records = tag?.ndefMessage;
+  if (records == null || records.length === 0) {
+    return undefined;
+  }
+
+  const uriRecord = records.find((record) => {
+    const type = Array.isArray(record.type)
+      ? String.fromCharCode(...record.type)
+      : String(record.type);
+    return record.tnf === 1 && type === 'U';
+  });
+
+  if (uriRecord == null) {
+    throw new Error(STANDARD_NFC_ERROR_MESSAGE);
+  }
+
+  const { payload } = uriRecord;
+  // First payload byte is the URI prefix code; 0 means no abbreviation.
+  const tagValue = String.fromCharCode.apply(
+    null,
+    payload[0] === 0 ? payload.slice(1) : payload,
+  );
+
+  const index = tagValue.indexOf('d/');
+
+  if (!tagValue.includes(CONFIG.HOST) || index < 0) {
+    throw new Error(STANDARD_NFC_ERROR_MESSAGE);
+  }
+
+  const match = /\d+/.exec(tagValue.substring(index));
+
+  if (match == null) {
+    throw new Error(STANDARD_NFC_ERROR_MESSAGE);
+  }
+
+  return match[0];
+};
+
+/**
+ * Waits for a single tag scan via the OS NDEF dispatch (foreground tag
+ * event). Resolves with the tag, or null when NFC is unavailable.
+ */
+const listenForTagOnce = async (): Promise<TagEventLike | null> => {
+  const nfc = getNfcManager();
+  const NfcManager = nfc?.default ?? null;
+  const NfcEvents = nfc?.NfcEvents ?? null;
+
+  if (NfcManager == null || NfcEvents == null) {
+    return null;
+  }
+
+  const cleanUp = () => {
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
+    NfcManager.setEventListener(NfcEvents.SessionClosed, null);
+  };
+
+  return new Promise((resolve, reject) => {
+    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag: TagEventLike) => {
+      NfcManager.unregisterTagEvent();
+      cleanUp();
+      resolve(tag);
+    });
+
+    NfcManager.setEventListener(
+      NfcEvents.SessionClosed,
+      (error?: Error | null) => {
+        cleanUp();
+        reject(error ?? new Error(''));
+      },
+    );
+
+    NfcManager.registerTagEvent({
+      alertMessage: 'Tap Brewskey Box',
+      invalidateAfterFirstRead: true,
+    });
+  });
+};
 
 interface PourProcessState {
   isVisible: boolean;
@@ -254,7 +353,6 @@ export const usePourModalContext = (): PourProcessContextValue => {
   const location = locationQuery.data ?? null;
   const permission = permissionQuery.data ?? null;
   const addSnackBarMessage = useAddSnackBarMessage();
-  const pourWithHCE = usePourWithHCE(session?.accessToken);
 
   const openModal = useCallback(async () => {
     if (permissionQuery.isLoading || locationQuery.isLoading) {
@@ -271,29 +369,41 @@ export const usePourModalContext = (): PourProcessContextValue => {
       });
     }
 
-    // Start HCE (phone as card) when NFC is enabled; reader gets token and calls API
-    if (context.isNFCEnabled && pourWithHCE.isSupported) {
+    // When NFC is available, listen for a Brewskey Box tap: read the device
+    // id from the tag's NDEF message and authorize the pour directly. The
+    // TOTP input stays available in the modal as the fallback.
+    if (context.isNFCEnabled) {
       try {
-        await pourWithHCE.start({
-          onClosed: () => {
-            pourWithHCE.stop();
-            context.closeModal();
-          },
-          onSuccess: () => {
-            addSnackBarMessage({
-              duration: 3000,
-              style: 'success',
-              content: 'You can start pouring now!',
-            });
-          },
-        });
+        const tag = await listenForTagOnce();
+        const deviceId = getDeviceIdFromTag(tag);
+
+        if (deviceId != null) {
+          await sendPourAuthorization({
+            accessToken: session?.accessToken,
+            latitude: location?.coords.latitude ?? 0,
+            longitude: location?.coords.longitude ?? 0,
+            didAuthorizePayment: false,
+            totp: '',
+            deviceId,
+          });
+          addSnackBarMessage({
+            duration: 3000,
+            style: 'success',
+            content: 'You can start pouring now!',
+          });
+          await context.closeModal();
+        }
       } catch (error) {
-        addSnackBarMessage({
-          duration: 3000,
-          style: 'danger',
-          content: (error as Error).message,
-        });
-        context.closeModal();
+        // Session cancellation surfaces as an empty message; keep the modal
+        // open either way so the TOTP fallback remains usable.
+        const message = error instanceof Error ? error.message : '';
+        if (message) {
+          addSnackBarMessage({
+            duration: 3000,
+            style: 'danger',
+            content: message,
+          });
+        }
       }
     }
   }, [
@@ -301,14 +411,21 @@ export const usePourModalContext = (): PourProcessContextValue => {
     permissionQuery.isLoading,
     locationQuery.isLoading,
     permission,
-    pourWithHCE,
+    location,
+    session?.accessToken,
     addSnackBarMessage,
   ]);
 
   const closeModal = useCallback(async () => {
-    pourWithHCE.stop();
+    const nfc = getNfcManager();
+    const NfcManager = nfc?.default ?? null;
+    try {
+      await NfcManager?.unregisterTagEvent?.();
+    } catch {
+      // ignore
+    }
     await context.closeModal();
-  }, [context, pourWithHCE]);
+  }, [context]);
 
   const startPourAuthorization = useCallback(
     async (totp: string) => {
