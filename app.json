@@ -7,11 +7,6 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "brewskey",
-    "splash": {
-      "image": "./src/resources/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "icon": "./assets/icon-1024.png",
@@ -120,6 +115,19 @@
         {
           "android": {
             "usesCleartextTraffic": true
+          },
+          "ios": {
+            "extraPods": [
+              {
+                "name": "GoogleUtilities/Environment",
+                "modular_headers": true
+              },
+              {
+                "name": "GoogleUtilities/UserDefaults",
+                "modular_headers": true
+              },
+              { "name": "RecaptchaInterop", "modular_headers": true }
+            ]
           }
         }
       ],

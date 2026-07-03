@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "expo-router/js-top-tabs";
 
 import { Container } from 'common/Container';
 import { Header } from 'common/Header';

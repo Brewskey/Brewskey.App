@@ -9,8 +9,8 @@ import { TabBarButton } from 'components/MainTabBar/TabBarButton';
 import { useNotificationsUnreadCount } from 'hooks/queries/NotificationQueries';
 import { COLORS } from 'theme';
 
-import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
+import type { BottomTabBarProps } from "expo-router/js-tabs";
+import type { NavigationRoute, ParamListBase } from "expo-router/react-navigation";
 
 import type { TouchableItem } from 'common/buttons/TouchableItem';
 

@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableItem } from 'common/buttons/TouchableItem';
 import { COLORS } from 'theme';
 
-import type { NavigationRoute, ParamListBase } from '@react-navigation/native';
+import type { NavigationRoute, ParamListBase } from "expo-router/react-navigation";
 
 const styles = StyleSheet.create({
   container: {

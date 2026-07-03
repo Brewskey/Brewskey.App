@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "expo-router/js-top-tabs";
 import { Dimensions } from 'react-native';
 
 import { theme } from 'theme';
 
-import type { NavigationState, Route } from '@react-navigation/native';
+import type { NavigationState, Route } from "expo-router/react-navigation";
 
 type TabConfig = Record<
   string,

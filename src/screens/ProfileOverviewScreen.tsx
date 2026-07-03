@@ -11,7 +11,7 @@ import { UserBadges } from 'components/UserBadges/UserBadges';
 import { useGetAccountById } from 'hooks/queries/AccountQueries';
 
 import type { Account, EntityID } from '@brewskey/js-api';
-import type { StaticScreenProps } from '@react-navigation/native';
+import type { StaticScreenProps } from "expo-router/react-navigation";
 
 const styles = StyleSheet.create({
   // todo make separate components for such things

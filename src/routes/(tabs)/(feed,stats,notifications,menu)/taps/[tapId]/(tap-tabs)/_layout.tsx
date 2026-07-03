@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from "expo-router/js-top-tabs";
 import { useLocalSearchParams } from 'expo-router';
 
 import { Container } from 'common/Container';
