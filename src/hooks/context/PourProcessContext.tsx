@@ -189,6 +189,70 @@ export const sendPourAuthorization = async (
   }
 };
 
+// Guards against rapid repeat taps (and double-delivery of the same tag
+// event) hammering the pour endpoint, which rate-limits with "Too many
+// pour requests". Module-level on purpose: taps can arrive through the
+// deep-link route and the root-layout tag handler simultaneously.
+let isPourAuthorizationInFlight = false;
+let lastPourAuthorizationAt = 0;
+const POUR_AUTHORIZATION_COOLDOWN_MS = 8000;
+
+/**
+ * Fire-and-forget pour authorization for a known device id (from the box's
+ * NFC tag or its /d/<id> link). Reports the outcome via snackbar toasts —
+ * no navigation, no dedicated screen. Repeat calls inside the cooldown
+ * window are ignored silently.
+ */
+export const useAuthorizeDevicePour = (): ((
+  deviceId: EntityID,
+) => Promise<void>) => {
+  const { data: session } = useAuthSession();
+  const locationQuery = useDeviceLocation();
+  const addSnackBarMessage = useAddSnackBarMessage();
+
+  return useCallback(
+    async (deviceId: EntityID) => {
+      if (session?.accessToken == null) {
+        return;
+      }
+      const now = Date.now();
+      if (
+        isPourAuthorizationInFlight ||
+        now - lastPourAuthorizationAt < POUR_AUTHORIZATION_COOLDOWN_MS
+      ) {
+        return;
+      }
+      isPourAuthorizationInFlight = true;
+      try {
+        await sendPourAuthorization({
+          accessToken: session.accessToken,
+          latitude: locationQuery.data?.coords.latitude ?? 0,
+          longitude: locationQuery.data?.coords.longitude ?? 0,
+          didAuthorizePayment: false,
+          totp: '',
+          deviceId,
+        });
+        addSnackBarMessage({
+          duration: 3000,
+          style: 'success',
+          content: 'You can start pouring now!',
+        });
+      } catch (error) {
+        addSnackBarMessage({
+          duration: 3000,
+          style: 'danger',
+          content: (error as Error).message,
+        });
+      } finally {
+        // Errors cool down too, so tap-spam can't stack error toasts.
+        lastPourAuthorizationAt = Date.now();
+        isPourAuthorizationInFlight = false;
+      }
+    },
+    [session?.accessToken, locationQuery.data, addSnackBarMessage],
+  );
+};
+
 /**
  * Provider component that manages pour process state and NFC setup.
  * Uses getNfcManager() for NFC capability detection (no native NFC on web).

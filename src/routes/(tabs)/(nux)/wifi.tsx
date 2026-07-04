@@ -51,10 +51,10 @@ const NuxWifiScreen: React.FC = () => {
       <Header title="2. Setup Wifi" />
       <View style={styles.container} testID="nux-wifi-content">
         <Icon
-          color={COLORS.textInverse}
+          // rneui v5 typings dropped the vector-icon props after the
+          // vector-icons migration; the runtime still forwards them.
+          {...{ color: COLORS.textInverse, name: 'wifi', size: 200 }}
           containerStyle={styles.iconContainer}
-          name="wifi"
-          size={200}
         />
         <Text style={styles.descriptionText} testID="nux-wifi-description">
           Next, you need to setup WiFi on your Brewskey box.

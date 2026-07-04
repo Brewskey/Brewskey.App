@@ -97,10 +97,10 @@ const NuxLocationScreen: React.FC = () => {
         <Header shouldShowBackButton title="1. Setup location" />
         <View style={styles.container} testID="nux-location-content">
           <Icon
-            color={COLORS.textInverse}
+            // rneui v5 typings dropped the vector-icon props after the
+            // vector-icons migration; the runtime still forwards them.
+            {...{ color: COLORS.textInverse, name: 'map-marker', size: 200 }}
             containerStyle={styles.iconContainer}
-            name="map-marker"
-            size={200}
             type="material-design"
           />
           <Text

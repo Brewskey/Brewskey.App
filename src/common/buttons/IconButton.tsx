@@ -15,10 +15,14 @@ const styles = StyleSheet.create({
   },
 });
 
+// rneui v5 typings dropped the vector-icon props (color/name/size) after the
+// vector-icons migration; the runtime still forwards them, so re-add them here.
 type Props = React.ComponentProps<typeof Icon> & {
+  color?: string;
   containerStyle?: StyleProp<ViewStyle>;
   name: string;
   onPress?: () => void | Promise<void>;
+  size?: number;
   testID?: string;
 };
 

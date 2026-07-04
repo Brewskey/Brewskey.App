@@ -5,7 +5,7 @@ import {
   QueryClientProvider,
   QueryErrorResetBoundary,
 } from '@tanstack/react-query';
-import { router, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { Platform, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -33,6 +33,7 @@ import {
 import {
   getDeviceIdFromTag,
   PourProcessProvider,
+  useAuthorizeDevicePour,
 } from '../hooks/context/PourProcessContext';
 import { SnackBarProvider } from '../hooks/context/SnackBarContext';
 import { useEASUpdateAutoReload } from '../hooks/useEASUpdateAutoReload';
@@ -83,13 +84,17 @@ const hydrateAppSettings = async () => {
 const RootLayoutNav = () => {
   const { data: authResponse, isLoading } = useAuthSession();
   const needsUsername = authResponse?.isNewAccount === true;
+  const authorizeDevicePour = useAuthorizeDevicePour();
+  const launchTagHandledRef = React.useRef(false);
 
-  // Android: route Brewskey Box tag taps to the /d/<id> pour screen. The
-  // tag arrives three ways: on the launch intent (cold start via the tag's
-  // NDEF_DISCOVERED dispatch), stashed as a background tag (warm start
-  // before this listener attached), or as a live background-tag event (tag
-  // tapped while the app is already running without the pour modal open —
-  // the modal's own foreground listener takes precedence when active).
+  // Android: a Brewskey Box tag tap authorizes the pour in place — the app
+  // just opens (or stays) where it is and the outcome arrives as a toast.
+  // The tag reaches us three ways: on the launch intent (cold start via the
+  // tag's NDEF_DISCOVERED dispatch), stashed as a background tag (warm
+  // start before this listener attached), or as a live background-tag event
+  // (tag tapped while the app is already running without the pour modal
+  // open — the modal's own foreground listener takes precedence when
+  // active).
   React.useEffect(() => {
     if (Platform.OS !== 'android' || !authResponse) {
       return undefined;
@@ -101,54 +106,53 @@ const RootLayoutNav = () => {
       return undefined;
     }
 
-    const routeFromTag = (tag: unknown) => {
+    const pourFromTag = (tag: unknown) => {
       try {
         const deviceId = getDeviceIdFromTag(
           tag as Parameters<typeof getDeviceIdFromTag>[0],
         );
-        if (deviceId == null) {
-          return;
+        if (deviceId != null) {
+          void authorizeDevicePour(deviceId);
         }
-        // Next tick: the navigator may not be mounted yet on cold start.
-        setTimeout(() => {
-          router.replace({
-            pathname: '/d/[deviceId]',
-            params: { deviceId: String(deviceId) },
-          });
-        }, 0);
       } catch {
         // Not a Brewskey tag; ignore.
       }
     };
 
-    NfcManager.getLaunchTagEvent?.()
-      .then((tag: unknown) => {
-        if (tag != null) {
-          routeFromTag(tag);
-        }
-      })
-      .catch(() => {});
+    // The launch/stashed tag is an action (a pour), so consume it exactly
+    // once even if this effect re-runs.
+    if (!launchTagHandledRef.current) {
+      launchTagHandledRef.current = true;
 
-    NfcManager.getBackgroundTag?.()
-      .then((tag: unknown) => {
-        if (tag != null) {
-          routeFromTag(tag);
-          NfcManager.clearBackgroundTag?.().catch(() => {});
-        }
-      })
-      .catch(() => {});
+      NfcManager.getLaunchTagEvent?.()
+        .then((tag: unknown) => {
+          if (tag != null) {
+            pourFromTag(tag);
+          }
+        })
+        .catch(() => {});
+
+      NfcManager.getBackgroundTag?.()
+        .then((tag: unknown) => {
+          if (tag != null) {
+            pourFromTag(tag);
+            NfcManager.clearBackgroundTag?.().catch(() => {});
+          }
+        })
+        .catch(() => {});
+    }
 
     if (NfcEvents != null) {
       NfcManager.setEventListener(
         NfcEvents.DiscoverBackgroundTag,
-        (tag: unknown) => routeFromTag(tag),
+        (tag: unknown) => pourFromTag(tag),
       );
       return () => {
         NfcManager.setEventListener(NfcEvents.DiscoverBackgroundTag, null);
       };
     }
     return undefined;
-  }, [authResponse]);
+  }, [authResponse, authorizeDevicePour]);
 
   if (isLoading) {
     return null;
