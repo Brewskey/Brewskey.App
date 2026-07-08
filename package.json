@@ -28,7 +28,11 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report",
     "test:e2e:expo": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test\"",
-    "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\""
+    "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\"",
+    "e2e-stack:up": "docker compose -f tests/e2e-stack/docker-compose.yml up -d --wait",
+    "e2e-stack:down": "docker compose -f tests/e2e-stack/docker-compose.yml down",
+    "test:e2e:real": "cross-env REAL_API=1 playwright test",
+    "test:e2e:real:ui": "cross-env REAL_API=1 playwright test --ui"
   },
   "dependencies": {
     "@brewskey/js-api": "^2.1.4",
@@ -103,6 +107,7 @@
     "@typescript-eslint/parser": "^8.58.2",
     "babel-plugin-module-resolver": "^5.0.3",
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.4",
     "eslint-config-airbnb-extended": "3.0.1",
     "eslint-config-expo": "~57.0.0",

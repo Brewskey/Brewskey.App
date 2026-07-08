@@ -1,0 +1,67 @@
+# Real-API stack for Playwright e2e: the actual Brewskey.Web image (GHCR)
+# against a fresh SQL Server, instead of the Playwright route mocks.
+#
+#   docker compose -f tests/e2e-stack/docker-compose.yml up -d --wait
+#   REAL_API=1 npm run test:e2e
+#   docker compose -f tests/e2e-stack/docker-compose.yml down
+#
+# `down` discards all state, so every stack boot is a deterministic fresh
+# database (the API builds the schema + seeds roles via Keg__EnsureCreatedOnBoot).
+# Override E2E_API_IMAGE to test a locally built image.
+
+services:
+  api:
+    image: ${E2E_API_IMAGE:-ghcr.io/jlkalberer/brewskey.web:latest}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Tappt: "Server=sqlserver,1433;Database=brewskey_e2e;User Id=sa;Password=E2e_strong!Passw0rd;TrustServerCertificate=true;MultipleActiveResultSets=true;"
+      Search__Elasticsearch__Endpoint: "http://elasticsearch:9200"
+      # Fresh-database bootstrap: EnsureCreated from the EF model + role seed.
+      Keg__EnsureCreatedOnBoot: "true"
+      # Playwright hammers from one IP; the per-IP limiter would 429 the run.
+      Keg__DisableThrottling: "true"
+      # Register/ChangeEmail send confirmation email — sink it in smtp4dev
+      # (UI at http://localhost:5010) so those flows succeed offline.
+      Smtp__Host: "smtp4dev"
+      Smtp__Port: "25"
+      Smtp__EnableSsl: "false"
+      Smtp__UserName: ""
+      Smtp__Password: ""
+      # Deterministic JWT signing for the e2e environment.
+      Jwt__SigningKey: "brewskey-e2e-signing-key-not-for-production-0123456789"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "E2e_strong!Passw0rd"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'E2e_strong!Passw0rd' -Q 'SELECT 1' -b -o /dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.24
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    ports:
+      - "5010:80"

@@ -76,6 +76,11 @@ import {
   getFailedRequests,
 } from './api-monitoring';
 import { setAuthStorage, setAppSettingsStorage } from './storage-helper';
+import {
+  REAL_API,
+  registerRealUser,
+  seedRealAuthenticatedUser,
+} from './real-api-helpers';
 import type { AppSettings } from '../../src/hooks/context/AppSettingsContext';
 import * as path from 'path';
 import {
@@ -122,6 +127,14 @@ type TestFixtures = {
   authenticatedUser: { user: Account; authResponse: AuthResponse } | null;
   mockStore: typeof mockStore;
   resetStores: void;
+  /**
+   * Mode-agnostic user seeding: registers a real account through the API in
+   * REAL_API mode, or inserts a mock-store user otherwise. Returns the
+   * credentials the login screen should use.
+   */
+  seedUser: (
+    overrides?: Partial<Account>,
+  ) => Promise<{ userName: string; password: string; email: string }>;
   loginPage: LoginPage;
   homePage: HomePage;
   locationPage: LocationPage;
@@ -166,11 +179,30 @@ export const test = base.extend<TestOptions & TestFixtures>({
   // Auto fixture: Set up authentication if autoAuthenticate is true
   // This runs after resetStores and before authenticatedUser fixture
   __setup: [
-    async ({ page, user, autoAuthenticate, resetStores: _ }, use) => {
+    async ({ page, request, user, autoAuthenticate, resetStores: _ }, use) => {
       // Reset auth setup data
       authSetupData = null;
 
-      if (autoAuthenticate) {
+      if (autoAuthenticate && REAL_API) {
+        // Real-API mode: register + password-grant through the running
+        // Docker stack; store the API's actual session so the app boots
+        // authenticated exactly as after a real login.
+        const seeded = await seedRealAuthenticatedUser(request, user ?? {});
+        const account = createMockUser({
+          ...user,
+          id: seeded.authResponse.id,
+          userName: seeded.user.userName,
+          email: seeded.user.email,
+        });
+
+        await setAuthStorage(page, seeded.authResponse);
+        await setAppSettingsStorage(page, {
+          manageTapsEnabled: true,
+          selectedOrganization: null,
+        });
+
+        authSetupData = { user: account, authResponse: seeded.authResponse };
+      } else if (autoAuthenticate) {
         const mockUser = createMockUser(user);
         mockStore.setUser(mockUser);
 
@@ -233,8 +265,28 @@ export const test = base.extend<TestOptions & TestFixtures>({
       // Set up API monitoring
       setupAPIMonitoring(page, testInfo.file, testInfo.title);
 
-      // Set up API mocks
-      setupAPIMocks(page);
+      if (REAL_API) {
+        // Real-API mode: no route mocks — the app talks to the Docker stack
+        // (tests/e2e-stack). Entity auto-seeding via test.use() counts is a
+        // mock-store feature; specs that rely on it must seed through the
+        // API instead, so fail loudly rather than run against missing data.
+        const requestedEntities =
+          (locationCount || 0) +
+          (tapCount || 0) +
+          (deviceCount || 0) +
+          (beverageCount || 0) +
+          (organizationCount || 0);
+        if (requestedEntities > 0) {
+          throw new Error(
+            'REAL_API mode: this spec uses mock-store entity counts ' +
+              '(locationCount/tapCount/…) and has not been converted to ' +
+              'API-based seeding yet. Run it without REAL_API, or convert it.',
+          );
+        }
+      } else {
+        // Set up API mocks (mock mode only)
+        setupAPIMocks(page);
+      }
 
       // Populate stores based on configuration options
       // Create locations with taps
@@ -307,6 +359,33 @@ export const test = base.extend<TestOptions & TestFixtures>({
   // Mock store fixture - provides access to the mock data store
   mockStore: async ({}, use) => {
     await use(mockStore);
+  },
+
+  // Mode-agnostic user seeding (see TestFixtures.seedUser doc)
+  seedUser: async ({ request }, use) => {
+    await use(async (overrides = {}) => {
+      if (REAL_API) {
+        const user = await registerRealUser(request, {
+          userName: overrides.userName,
+          email: overrides.email ?? undefined,
+        });
+        return {
+          userName: user.userName,
+          password: user.password,
+          email: user.email,
+        };
+      }
+
+      const mockUser = createMockUser(overrides);
+      mockStore.setUser(mockUser);
+      // The mock /token handler accepts any password for a stored user;
+      // 'password123' is the convention existing specs use.
+      return {
+        userName: mockUser.userName,
+        password: 'password123',
+        email: mockUser.email ?? '',
+      };
+    });
   },
 
   // Authenticated user fixture - reads from __setup fixture data

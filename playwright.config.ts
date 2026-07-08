@@ -33,8 +33,21 @@ export default defineConfig({
     command: 'npm run web',
     url: 'http://localhost:8081',
     timeout: 120 * 1000, // 2 minutes for Expo to start
-    reuseExistingServer: !process.env.CI, // Always restart in CI for clean state
+    // Always restart in CI for clean state. REAL_API must also never reuse:
+    // EXPO_PUBLIC_API_HOST is inlined into the bundle by the Expo dev server,
+    // so a server started in mock mode would serve a brewskey.com-pointed app.
+    reuseExistingServer: !process.env.CI && !process.env.REAL_API,
     stdout: 'ignore',
     stderr: 'pipe',
+    env: {
+      ...(process.env as Record<string, string>),
+      // Real-API mode points the app at the Docker stack (tests/e2e-stack).
+      ...(process.env.REAL_API
+        ? {
+            EXPO_PUBLIC_API_HOST:
+              process.env.EXPO_PUBLIC_API_HOST ?? 'http://localhost:8080',
+          }
+        : {}),
+    },
   },
 });
