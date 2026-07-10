@@ -1,14 +1,14 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 import {
-  mockTapWithCustomFlowSensor,
-  mockTapWithStandardFlowSensor,
+  seedTapWithCustomFlowSensor,
+  seedTapWithStandardFlowSensor,
 } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to edit flow sensor', async ({ page }) => {
+test('should navigate to edit flow sensor', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with standard flow sensor
-  const { tap } = await mockTapWithStandardFlowSensor(page);
+  const { tap } = await seedTapWithStandardFlowSensor(seedApi);
 
   await page.goto(`/flow-sensor/${tap.id}/edit`);
 
@@ -17,10 +17,9 @@ test('should navigate to edit flow sensor', async ({ page }) => {
 });
 
 test('should pre-fill form with existing standard flow sensor data', async ({
-  page,
-}) => {
+  page, seedApi,}) => {
   // Set up explicit data: one tap with standard flow sensor
-  const { tap } = await mockTapWithStandardFlowSensor(page);
+  const { tap } = await seedTapWithStandardFlowSensor(seedApi);
 
   await page.goto(`/flow-sensor/${tap.id}/edit`);
 
@@ -32,10 +31,9 @@ test('should pre-fill form with existing standard flow sensor data', async ({
 });
 
 test('should pre-fill form with existing custom flow sensor data', async ({
-  page,
-}) => {
+  page, seedApi,}) => {
   // Set up explicit data: one tap with custom flow sensor
-  const { tap } = await mockTapWithCustomFlowSensor(page);
+  const { tap } = await seedTapWithCustomFlowSensor(seedApi);
 
   await page.goto(`/flow-sensor/${tap.id}/edit`);
 
@@ -46,9 +44,9 @@ test('should pre-fill form with existing custom flow sensor data', async ({
   await expect(page.getByTestId('pulses-per-gallon-input')).toBeVisible();
 });
 
-test('should successfully update standard flow sensor', async ({ page }) => {
+test('should successfully update standard flow sensor', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with standard flow sensor
-  const { tap } = await mockTapWithStandardFlowSensor(page);
+  const { tap } = await seedTapWithStandardFlowSensor(seedApi);
 
   await page.goto(`/flow-sensor/${tap.id}/edit`);
 
@@ -89,9 +87,9 @@ test('should successfully update standard flow sensor', async ({ page }) => {
   await expect(page.getByTestId('snackbar-message')).toBeVisible();
 });
 
-test('should successfully update custom flow sensor', async ({ page }) => {
+test('should successfully update custom flow sensor', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with custom flow sensor
-  const { tap } = await mockTapWithCustomFlowSensor(page);
+  const { tap } = await seedTapWithCustomFlowSensor(seedApi);
 
   await page.goto(`/flow-sensor/${tap.id}/edit`);
 

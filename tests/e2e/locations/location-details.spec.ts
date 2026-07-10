@@ -1,46 +1,16 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
-import { setupLocationPermissions } from '../../fixtures/test-helpers';
-import { createMockOrganization } from '../../fixtures/test-data';
-import { mockStore } from '../../fixtures/api-mocks';
+import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
 test('should navigate to edit location', async ({
   page,
-  authenticatedUser,
-}) => {
-  // Set up explicit data: one location with Edit permission
-  const { location } = await mockLocationWithTaps(page, 0);
-
-  // Create organization for permissions and associate with location
-  const organization = createMockOrganization();
-  mockStore.setOrganization(organization);
-
-  // Update location to include organization, owner, and address (LocationAddress requires street, city, state, zipCode)
+  authenticatedUser, seedApi,}) => {
+  // The authenticated user creates the location, so the API's creator-grant
+  // gives them Administrator (edit) permission — real, not mocked. The seeded
+  // location carries a full street address.
   if (!authenticatedUser) throw new Error('authenticatedUser is required');
-  const locationWithOrg = {
-    ...location,
-    id: location.id,
-    street: location.street ?? '123 Test St',
-    organization: {
-      id: organization.id,
-      name: organization.name,
-      isDeleted: false,
-    },
-    owner: {
-      id: authenticatedUser.user.id,
-      userName: authenticatedUser.user.userName,
-    },
-  };
-  mockStore.setLocation(locationWithOrg);
-
-  await setupLocationPermissions(
-    authenticatedUser.user,
-    locationWithOrg,
-    organization,
-    ['Edit'],
-  );
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto(`/locations/${location.id}`);
 

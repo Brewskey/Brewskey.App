@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should pre-fill form with existing data', async ({ page }) => {
+test('should pre-fill form with existing data', async ({ page, seedApi}) => {
   // Set up explicit data: one location
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto(`/locations/${location.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
@@ -13,9 +13,9 @@ test('should pre-fill form with existing data', async ({ page }) => {
   await expect(page.getByTestId('input-name')).toHaveValue(location.name);
 });
 
-test('should successfully update location', async ({ page, dropDown }) => {
+test('should successfully update location', async ({ page, dropDown, seedApi}) => {
   // Set up explicit data: one location
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto(`/locations/${location.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();

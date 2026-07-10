@@ -1,4 +1,4 @@
-import { mockUserWithOrganizations } from '../../fixtures/entity-fixtures';
+import { seedUserWithOrganizations } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 import type { Page, Route } from '@playwright/test';
@@ -83,13 +83,18 @@ test('should validate password form', async ({ page, settingsPage }) => {
   ).toBeVisible();
 });
 
-test('should successfully change password', async ({ page, settingsPage }) => {
-  // Set up explicit data: authenticated user with valid password
+test('should successfully change password', async ({
+  page,
+  settingsPage,
+  authenticatedUser,
+}) => {
+  // The real API validates the current password — use the seeded account's.
+  if (!authenticatedUser) throw new Error('authenticatedUser required');
   await settingsPage.goto();
 
   await settingsPage.fillPasswordForm({
-    oldPassword: 'oldpassword123',
-    newPassword: 'newpassword123',
+    oldPassword: authenticatedUser.credentials.password,
+    newPassword: 'newpassword123!',
   });
   await settingsPage.submitPasswordForm();
 
@@ -111,18 +116,17 @@ test('should toggle manage taps setting', async ({ settingsPage }) => {
 
 test('should show organization picker when user has organizations', async ({
   page,
-  settingsPage,
-}) => {
+  settingsPage, seedApi,}) => {
   // Set up explicit data: user with 2 organizations
-  await mockUserWithOrganizations(page, 2);
+  await seedUserWithOrganizations(seedApi, 2);
   await settingsPage.goto();
 
   await expect(settingsPage.getOrganizationPicker()).toBeVisible();
 });
 
-test('should allow selecting organization', async ({ page, settingsPage }) => {
+test('should allow selecting organization', async ({ page, settingsPage, seedApi}) => {
   // Set up explicit data: user with 2 organizations
-  const { organizations } = await mockUserWithOrganizations(page, 2);
+  const { organizations } = await seedUserWithOrganizations(seedApi, 2);
   await settingsPage.goto();
 
   // Organization name is dynamic content, so text-based locator is acceptable
@@ -135,15 +139,7 @@ test('should delete account from settings and return to login', async ({
   page,
   settingsPage,
 }) => {
-  let deleteCalled = false;
-  await page.route(/.*\/api\/account(?:\?|$).*/i, async (route) => {
-    if (route.request().method() === 'DELETE') {
-      deleteCalled = true;
-      return fulfillJSON(route, 200, {});
-    }
-    return route.fallback();
-  });
-
+  // Real account deletion — the seeded account is disposable.
   await settingsPage.goto();
 
   await expect(
@@ -173,7 +169,6 @@ test('should delete account from settings and return to login', async ({
     .click();
 
   await expect(page.getByTestId('login-username-input')).toBeVisible();
-  expect(deleteCalled).toBe(true);
 });
 
 test('should show an app-owned message when account deletion fails', async ({

@@ -1,7 +1,7 @@
 import {
-  mockDeviceWithTaps,
-  mockLocationOnly,
-  mockNewUserState,
+  seedDeviceWithTaps,
+  seedLocationOnly,
+  seedNewUserState,
 } from '../../fixtures/entity-fixtures';
 import { setAppSettingsStorage } from '../../fixtures/storage-helper';
 import { expect, test } from '../../fixtures/test-fixtures';
@@ -28,11 +28,10 @@ test.beforeEach(async ({ page }) => {
 test.describe('NUX Partial Completion - Location Only', () => {
   test('should show NUX on devices screen when user has location but no devices', async ({
     page,
-    devicePage,
-  }) => {
+    devicePage, seedApi,}) => {
     // Set up: user has created a location but no devices
-    await mockNewUserState(page);
-    await mockLocationOnly(page); // Location only, no devices
+    await seedNewUserState(page, seedApi);
+    await seedLocationOnly(seedApi); // Location only, no devices
 
     // Navigate to devices screen
     await devicePage.goto();
@@ -51,11 +50,10 @@ test.describe('NUX Partial Completion - Location Only', () => {
 
   test('should show NUX on taps screen when user has location but no devices', async ({
     page,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Set up: user has created a location but no devices
-    await mockNewUserState(page);
-    await mockLocationOnly(page); // Location only, no devices
+    await seedNewUserState(page, seedApi);
+    await seedLocationOnly(seedApi); // Location only, no devices
 
     // Navigate to taps screen through menu
     await menuPage.goto();
@@ -73,11 +71,10 @@ test.describe('NUX Partial Completion - Location Only', () => {
 
   test('should NOT show NUX on locations screen when user has location', async ({
     page,
-    locationPage,
-  }) => {
+    locationPage, seedApi,}) => {
     // Set up: user has created a location
-    await mockNewUserState(page);
-    const { location } = await mockLocationOnly(page);
+    await seedNewUserState(page, seedApi);
+    const { location } = await seedLocationOnly(seedApi);
 
     // Navigate to locations screen
     await locationPage.goto();
@@ -92,11 +89,10 @@ test.describe('NUX Partial Completion - Location Only', () => {
 test.describe('NUX Partial Completion - Location and Device', () => {
   test('should show NUX on taps screen when user has location and device but no taps', async ({
     page,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Set up: user has created location and device but no taps
-    await mockNewUserState(page);
-    const { location, device } = await mockDeviceWithTaps(page, 0); // Device with no taps
+    await seedNewUserState(page, seedApi);
+    const { location, device } = await seedDeviceWithTaps(seedApi, 0); // Device with no taps
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
@@ -114,11 +110,10 @@ test.describe('NUX Partial Completion - Location and Device', () => {
 
   test('should NOT show NUX on devices screen when user has devices', async ({
     page,
-    devicePage,
-  }) => {
+    devicePage, seedApi,}) => {
     // Set up: user has created location and device
-    await mockNewUserState(page);
-    const { device } = await mockDeviceWithTaps(page, 0);
+    await seedNewUserState(page, seedApi);
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
 
     // Navigate to devices screen
     await devicePage.goto();
@@ -131,11 +126,10 @@ test.describe('NUX Partial Completion - Location and Device', () => {
 
   test('should NOT show NUX on locations screen when user has location and device', async ({
     page,
-    locationPage,
-  }) => {
+    locationPage, seedApi,}) => {
     // Set up: user has created location and device
-    await mockNewUserState(page);
-    const { location, device } = await mockDeviceWithTaps(page, 0);
+    await seedNewUserState(page, seedApi);
+    const { location, device } = await seedDeviceWithTaps(seedApi, 0);
 
     // Navigate to locations screen
     await locationPage.goto();
@@ -152,11 +146,10 @@ test.describe('NUX Partial Completion - Complete Setup', () => {
     page,
     locationPage,
     devicePage,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Set up: user has completed full setup (location, device, tap)
-    await mockNewUserState(page);
-    const { location, device, taps } = await mockDeviceWithTaps(page, 1); // Device with 1 tap
+    await seedNewUserState(page, seedApi);
+    const { location, device, taps } = await seedDeviceWithTaps(seedApi, 1); // Device with 1 tap
 
     // Navigate to locations screen - should NOT show NUX
     await locationPage.goto();
@@ -179,11 +172,10 @@ test.describe('NUX Partial Completion - Complete Setup', () => {
 test.describe('NUX Navigation Flow - Partial Completion', () => {
   test('should allow user to continue NUX flow from devices screen after creating location', async ({
     page,
-    devicePage,
-  }) => {
+    devicePage, seedApi,}) => {
     // Set up: user has created a location but no devices
-    await mockNewUserState(page);
-    await mockLocationOnly(page);
+    await seedNewUserState(page, seedApi);
+    await seedLocationOnly(seedApi);
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
@@ -205,11 +197,10 @@ test.describe('NUX Navigation Flow - Partial Completion', () => {
 
   test('should allow user to continue NUX flow from taps screen after creating location and device', async ({
     page,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Set up: user has created location and device but no taps
-    await mockNewUserState(page);
-    const { location, device } = await mockDeviceWithTaps(page, 0);
+    await seedNewUserState(page, seedApi);
+    const { location, device } = await seedDeviceWithTaps(seedApi, 0);
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
@@ -234,11 +225,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
   test('should persist NUX requirement across navigation when setup incomplete', async ({
     page,
     devicePage,
-    locationPage,
-  }) => {
+    locationPage, seedApi,}) => {
     // Set up: user has created a location but no devices
-    await mockNewUserState(page);
-    await mockLocationOnly(page);
+    await seedNewUserState(page, seedApi);
+    await seedLocationOnly(seedApi);
 
     // Navigate to devices screen - should show NUX
     await devicePage.goto();
@@ -268,11 +258,10 @@ test.describe('NUX State Persistence - Multiple Sessions', () => {
   test('should persist NUX requirement on taps screen until taps are created', async ({
     page,
     devicePage,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Set up: user has created location and device but no taps
-    await mockNewUserState(page);
-    const { location, device } = await mockDeviceWithTaps(page, 0);
+    await seedNewUserState(page, seedApi);
+    const { location, device } = await seedDeviceWithTaps(seedApi, 0);
 
     // Load menu first, then navigate to taps
     await menuPage.goto();
@@ -307,10 +296,9 @@ test.describe('NUX Progressive Completion', () => {
     page,
     locationPage,
     devicePage,
-    menuPage,
-  }) => {
+    menuPage, seedApi,}) => {
     // Start with new user - no entities
-    await mockNewUserState(page);
+    await seedNewUserState(page, seedApi);
 
     // Step 1: Check locations screen - should show NUX (no locations)
     await locationPage.goto();
@@ -323,7 +311,7 @@ test.describe('NUX Progressive Completion', () => {
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a location (add location to mock store)
-    const { location } = await mockLocationOnly(page);
+    const { location } = await seedLocationOnly(seedApi);
 
     // Step 2: Check locations screen again - should NOT show NUX (location exists)
     await locationPage.goto();
@@ -341,7 +329,7 @@ test.describe('NUX Progressive Completion', () => {
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a device (add device to mock store)
-    const { device } = await mockDeviceWithTaps(page, 0);
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
 
     // Step 4: Check devices screen again - should NOT show NUX (device exists)
     await devicePage.goto();
@@ -360,7 +348,7 @@ test.describe('NUX Progressive Completion', () => {
     await expect(page.getByTestId('nux-no-entity-content')).toBeVisible();
 
     // Simulate user creating a tap (add tap to mock store)
-    const { taps } = await mockDeviceWithTaps(page, 1);
+    const { taps } = await seedDeviceWithTaps(seedApi, 1);
 
     // Step 6: Check taps screen again - should NOT show NUX (tap exists)
     await menuPage.goto();

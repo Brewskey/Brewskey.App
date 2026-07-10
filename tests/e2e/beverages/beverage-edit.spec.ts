@@ -1,14 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import {
-  mockBeverageWithPours,
-  setupSrmData,
-} from '../../fixtures/entity-fixtures';
+import { seedBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should pre-fill form with existing data', async ({ page }) => {
+test('should pre-fill form with existing data', async ({ page, seedApi}) => {
   // Set up explicit data: one beverage
-  const { beverage } = await mockBeverageWithPours(page, 0);
+  const { beverage } = await seedBeverageWithPours(seedApi, 0);
 
   await page.goto(`/beverages/${beverage.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
@@ -28,19 +25,13 @@ test.describe('update to each Beverage Type', () => {
     test(`should successfully update beverage to type ${label}`, async ({
       page,
       dropDown,
+      seedApi,
     }) => {
       // For "edit to Beer": start with Cider so we can change to Beer and fill Beer-only fields.
       // For others: start with Beer (default).
       const initialType =
         label === 'Beer' ? { beverageType: 'Cider' as const } : undefined;
-      const { beverage } = await mockBeverageWithPours(
-        page,
-        0,
-        undefined,
-        undefined,
-        initialType,
-      );
-      await setupSrmData(page, 40);
+      const { beverage } = await seedBeverageWithPours(seedApi, 0, undefined, initialType);
 
       await page.goto(`/beverages/${beverage.id}/edit`);
       await expect(page.getByTestId('input-name')).toBeVisible();

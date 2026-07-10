@@ -1,7 +1,8 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 
 /**
- * Test to validate that fixture configuration options work correctly
+ * Validates the fixture configuration options: entities are created through
+ * the REAL API (owned by the authenticated user) per the test.use() counts.
  */
 test.use({
   autoAuthenticate: true,
@@ -12,47 +13,44 @@ test.use({
   organizationCount: 1,
 });
 
-test('should populate stores based on configuration', async ({
-  page,
-  mockStore,
+test('should seed entities based on configuration', async ({
+  seededEntities,
+  seedApi,
 }) => {
-  // Verify locations were created
-  const locations = mockStore.getLocations();
-  expect(locations.length).toBe(2);
-  expect(locations[0].name).toBe('Location 1');
-  expect(locations[1].name).toBe('Location 2');
-
-  // Verify taps were created (3 per location = 6 total)
-  const taps = mockStore.getTaps();
-  expect(taps.length).toBe(6);
-
-  // Verify all taps belong to the created locations
-  const locationIds = locations.map((l) => l.id);
-  taps.forEach((tap) => {
-    expect(tap.location).toBeTruthy();
-    if (tap.location) {
-      expect(locationIds).toContain(tap.location.id);
-    }
+  // Locations were created
+  expect(seededEntities.locations.length).toBe(2);
+  expect(seededEntities.locations[0].name).toBe('Location 1');
+  expect(seededEntities.locations[1].name).toBe('Location 2');
+  seededEntities.locations.forEach((location) => {
+    expect(location.id).toBeTruthy();
   });
 
-  // Verify devices were created
-  // Note: devices are created per location (required for taps)
-  // So with locationCount: 2, we get 2 devices (one per location)
-  const devices = mockStore.getDevices();
-  expect(devices.length).toBe(2); // 2 locations = 2 devices
-  expect(devices[0].name).toBe('Device 1');
-  expect(devices[1].name).toBe('Device 2');
+  // Taps were created (3 per location = 6 total), each on a real location.
+  // The create response doesn't expand navs — verify through the read path.
+  expect(seededEntities.taps.length).toBe(6);
+  const locationIds = seededEntities.locations.map((l) => l.id);
+  for (const tap of seededEntities.taps) {
+    const fetched = await seedApi.fetchTap(tap.id);
+    expect(fetched.location).toBeTruthy();
+    if (fetched.location) {
+      expect(locationIds).toContain(fetched.location.id);
+    }
+  }
 
-  // Verify beverages were created
-  const beverages = mockStore.getBeverages();
-  expect(beverages.length).toBe(2);
-  expect(beverages[0].name).toBe('Beverage 1');
-  expect(beverages[1].name).toBe('Beverage 2');
+  // Devices are created per location (required for taps), so with
+  // locationCount: 2 we get 2 devices (deviceCount: 1 is already covered)
+  expect(seededEntities.devices.length).toBe(2);
+  expect(seededEntities.devices[0].name).toBe('Device 1');
+  expect(seededEntities.devices[1].name).toBe('Device 2');
 
-  // Verify organizations were created
-  const organizations = mockStore.getOrganizations();
-  expect(organizations.length).toBe(1);
-  expect(organizations[0].name).toBe('Organization 1');
+  // Beverages were created
+  expect(seededEntities.beverages.length).toBe(2);
+  expect(seededEntities.beverages[0].name).toBe('Beverage 1');
+  expect(seededEntities.beverages[1].name).toBe('Beverage 2');
+
+  // Organizations were created
+  expect(seededEntities.organizations.length).toBe(1);
+  expect(seededEntities.organizations[0].name).toBe('Organization 1');
 });
 
 test.describe('with zero counts', () => {
@@ -65,17 +63,11 @@ test.describe('with zero counts', () => {
     organizationCount: 0,
   });
 
-  test('should work with zero counts', async ({ page, mockStore }) => {
-    const locations = mockStore.getLocations();
-    const taps = mockStore.getTaps();
-    const devices = mockStore.getDevices();
-    const beverages = mockStore.getBeverages();
-    const organizations = mockStore.getOrganizations();
-
-    expect(locations.length).toBe(0);
-    expect(taps.length).toBe(0);
-    expect(devices.length).toBe(0);
-    expect(beverages.length).toBe(0);
-    expect(organizations.length).toBe(0);
+  test('should work with zero counts', async ({ seededEntities }) => {
+    expect(seededEntities.locations.length).toBe(0);
+    expect(seededEntities.taps.length).toBe(0);
+    expect(seededEntities.devices.length).toBe(0);
+    expect(seededEntities.beverages.length).toBe(0);
+    expect(seededEntities.organizations.length).toBe(0);
   });
 });

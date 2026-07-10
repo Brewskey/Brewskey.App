@@ -1,14 +1,13 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
+import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
 test('should show device online/offline status', async ({
   page,
-  devicePage,
-}) => {
+  devicePage, seedApi,}) => {
   // Set up explicit data: one device with online status (default)
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
   await devicePage.goto();
 
   await expect(devicePage.getDevicesList()).toBeVisible();
@@ -17,9 +16,9 @@ test('should show device online/offline status', async ({
   await expect(page.getByTestId(`device-item-${device.id}`)).toBeVisible();
 });
 
-test('should navigate to device details', async ({ page, devicePage }) => {
+test('should navigate to device details', async ({ page, devicePage, seedApi}) => {
   // Set up explicit data: one device with no taps
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
   await devicePage.goto();
 
   // Wait for list to load

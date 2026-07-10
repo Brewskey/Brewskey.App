@@ -1,503 +1,270 @@
+/**
+ * Entity seeding helpers — REAL API edition.
+ *
+ * Every helper creates data through the actual Brewskey.Web stack via
+ * SeedApi (the app's own @brewskey/js-api client), replacing the legacy
+ * mock-store versions. Helpers act as the CURRENT js-api session (the
+ * authenticatedUser fixture's account), so created entities carry real
+ * creator-Administrator permissions and are visible to the signed-in app.
+ */
 import { Page } from '@playwright/test';
 import type {
   Account,
-  Location,
-  Tap,
-  Beverage,
-  Keg,
-  Device,
-  Organization,
   AuthResponse,
+  Beverage,
+  Device,
+  Keg,
+  Location,
+  Organization,
   Pour,
-  FlowSensor,
-  EntityID,
+  Tap,
 } from '@brewskey/js-api';
-import type { Srm } from '@brewskey/js-api/dist/dao/SrmDAO';
-import {
-  createMockUser,
-  createMockLocation,
-  createMockTap,
-  createMockBeverage,
-  createMockKeg,
-  createMockDevice,
-  createMockOrganization,
-  createMockPour,
-  createMockFlowSensor,
-  createMockSrm,
-  createShortenedEntity,
-} from './test-data';
-import { mockStore } from './api-mocks';
+
+import { SeedApi } from './seed-api';
+import { createMockUser } from './test-data';
+import { setAuthStorage } from './storage-helper';
 
 /**
- * Sets up an authenticated user session
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
+ * Registers + logs in a real account and pre-loads the app's session
+ * storage. Prefer the `authenticatedUser` fixture (test.use({
+ * autoAuthenticate: true })) — this exists for specs that need a second
+ * account or manual control.
  */
-export async function mockAuthenticatedUser(
+export async function seedAuthenticatedUser(
   page: Page,
+  seedApi: SeedApi,
   overrides?: Partial<Account>,
 ): Promise<{ user: Account; authResponse: AuthResponse }> {
-  const user = createMockUser(overrides);
-  mockStore.setUser(user);
+  const { credentials, authResponse } = await seedApi.registerAndLogin(
+    overrides ?? {},
+  );
+  const user = createMockUser({
+    ...overrides,
+    id: authResponse.id,
+    userName: credentials.userName,
+    email: credentials.email,
+  });
 
-  const authResponse: AuthResponse = {
-    accessToken: `mock_token_${user.id}`,
-    refreshToken: `mock_refresh_${user.id}`,
-    id: user.id,
-    email: user.email || '',
-    userName: user.userName,
-    phoneNumber: user.phoneNumber || '',
-    expiresIn: 3600,
-    expiresAt: new Date(Date.now() + 3600000),
-    issuedAt: new Date(),
-    isNewAccount: false,
-    tokenType: 'Bearer',
-    roles: [],
-    userLogins: [],
-  };
-
-  mockStore.setAuthToken(authResponse.accessToken, authResponse);
-
-  // Set auth state in localStorage/sessionStorage
-  await page.addInitScript((authData) => {
-    localStorage.setItem('session_data', JSON.stringify(authData));
-  }, authResponse);
+  await setAuthStorage(page, authResponse);
 
   return { user, authResponse };
 }
 
 /**
- * Sets up a location with associated taps
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- * Hierarchy: Organization => Location => Devices => Taps => Kegs
+ * A location with a device and `tapCount` taps (each tap gets a flow
+ * sensor — real taps can't pour without one).
  */
-export async function mockLocationWithTaps(
-  page: Page,
+export async function seedLocationWithTaps(
+  seedApi: SeedApi,
   tapCount: number = 3,
 ): Promise<{ location: Location; taps: Tap[]; devices: Device[] }> {
-  const location = createMockLocation();
-  mockStore.setLocation(location);
-
-  // Create a device for this location (required for taps)
-  const device = createMockDevice({
-    location: createShortenedEntity(location.id, location.name),
-  });
-  mockStore.setDevice(device);
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
 
   const taps: Tap[] = [];
-  const devices: Device[] = [device];
   for (let i = 0; i < tapCount; i++) {
-    const tap = createMockTap({
-      locationId: location.id,
-      deviceId: device.id,
-      description: `Tap ${i + 1}`,
-    });
-    mockStore.setTap(tap);
-    taps.push(tap);
+    taps.push(
+      await seedApi.createTap(location, device, {
+        description: `Tap ${i + 1}`,
+      }),
+    );
   }
 
-  return { location, taps, devices };
+  return { location, taps, devices: [device] };
 }
 
-/**
- * Sets up a tap with an active keg
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- * Hierarchy: Organization => Location => Devices => Taps => Kegs
- */
-export async function mockTapWithKeg(
-  page: Page,
+/** A tap with an active keg (full real hierarchy under one location). */
+export async function seedTapWithKeg(
+  seedApi: SeedApi,
   description?: string,
 ): Promise<{
   tap: Tap;
   keg: Keg;
   beverage: Beverage;
-  organization: Organization;
   location: Location;
   device: Device;
 }> {
-  const organization = createMockOrganization();
-  mockStore.setOrganization(organization);
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
+  const beverage = await seedApi.createBeverage();
+  const tap = await seedApi.createTap(location, device, { description });
+  const keg = (await seedApi.createKeg(tap, beverage)) as Keg;
 
-  const location = createMockLocation();
-  mockStore.setLocation(location);
+  // Re-fetch so tap.currentKeg reflects the keg the API attached
+  const updatedTap = await seedApi.fetchTap(tap.id);
 
-  const device = createMockDevice({
-    location: createShortenedEntity(location.id, location.name),
-    organization: createShortenedEntity(organization.id, organization.name),
-  });
-  mockStore.setDevice(device);
-
-  const beverage = createMockBeverage();
-  mockStore.setBeverage(beverage);
-
-  const tap = createMockTap({
-    locationId: location.id,
-    deviceId: device.id,
-    organization: createShortenedEntity(organization.id, organization.name),
-    isPaymentEnabled: false, // Ensure this field exists
-    description,
-  });
-  mockStore.setTap(tap);
-
-  const keg = createMockKeg({
-    tapId: tap.id,
-    beverage: createShortenedEntity(beverage.id, beverage.name),
-    ouncesTotal: 1984, // Half barrel
-    ouncesRemaining: 1500,
-  });
-  mockStore.setKeg(keg);
-
-  // Set currentKeg on the tap - this is required for TapDetailsScreen
-  // Ensure beverage.id is a string as required by CurrentKeg type
-  const updatedTap = {
-    ...tap,
-    currentKeg: {
-      id: String(keg.id),
-      beverage: {
-        id: String(keg.beverage!.id),
-        name: keg.beverage!.name,
-      },
-      kegType: keg.kegType,
-      maxOunces: keg.maxOunces ?? 1984,
-      ounces: keg.ounces ?? 1500,
-    },
-  };
-  mockStore.setTap(updatedTap);
-
-  return { tap: updatedTap, keg, beverage, organization, location, device };
+  return { tap: updatedTap, keg, beverage, location, device };
 }
 
-/**
- * Sets up empty state for new users
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- */
-export async function mockEmptyState(page: Page): Promise<void> {
-  // Store is already empty, mocks are set up by auto fixture
-}
+/** Empty state — nothing to seed against the real API. */
+export async function seedEmptyState(): Promise<void> {}
 
 /**
- * Sets up new user state with no entities (for NUX flow)
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
+ * A signed-in user with no entities (NUX flow). Same as
+ * seedAuthenticatedUser; kept as a named helper for the NUX specs.
  */
-export async function mockNewUserState(
+export async function seedNewUserState(
   page: Page,
+  seedApi: SeedApi,
   user?: Partial<Account>,
 ): Promise<{ user: Account; authResponse: AuthResponse }> {
-  const newUser = createMockUser(user);
-  mockStore.setUser(newUser);
-
-  const authResponse: AuthResponse = {
-    accessToken: `mock_token_${newUser.id}`,
-    refreshToken: `mock_refresh_${newUser.id}`,
-    id: newUser.id,
-    email: newUser.email || '',
-    userName: newUser.userName,
-    phoneNumber: newUser.phoneNumber || '',
-    expiresIn: 3600,
-    expiresAt: new Date(Date.now() + 3600000),
-    issuedAt: new Date(),
-    // NUX specs exercise setup for a signed-in user who already has a username;
-    // otherwise the root guard routes to the username screen before NUX.
-    isNewAccount: false,
-    tokenType: 'Bearer',
-    roles: [],
-    userLogins: [],
-  };
-
-  mockStore.setAuthToken(authResponse.accessToken, authResponse);
-
-  await page.addInitScript((authData) => {
-    localStorage.setItem('session_data', JSON.stringify(authData));
-  }, authResponse);
-
-  return { user: newUser, authResponse };
+  return seedAuthenticatedUser(page, seedApi, user);
 }
 
-/**
- * Sets up a location only (no devices or taps)
- * Useful for testing NUX scenarios where user has location but no devices
- */
-export async function mockLocationOnly(
-  page: Page,
-): Promise<{ location: Location; organization: Organization }> {
-  const organization = createMockOrganization();
-  mockStore.setOrganization(organization);
-
-  const location = createMockLocation();
-  mockStore.setLocation(location);
-
-  return { location, organization };
+/** A location only (no devices or taps). */
+export async function seedLocationOnly(
+  seedApi: SeedApi,
+): Promise<{ location: Location }> {
+  const location = await seedApi.createLocation();
+  return { location };
 }
 
-/**
- * Sets up a device with associated taps
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- * Hierarchy: Organization => Location => Devices => Taps => Kegs
- */
-export async function mockDeviceWithTaps(
-  page: Page,
+/** A device with `tapCount` taps under one location. */
+export async function seedDeviceWithTaps(
+  seedApi: SeedApi,
   tapCount: number = 2,
-): Promise<{
-  device: Device;
-  taps: Tap[];
-  location: Location;
-  organization: Organization;
-}> {
-  // Create organization first (required for device)
-  const organization = createMockOrganization();
-  mockStore.setOrganization(organization);
-
-  // Create location first (required for device)
-  const location = createMockLocation();
-  mockStore.setLocation(location);
-
-  // Create device with location and organization
-  const device = createMockDevice({
-    location: createShortenedEntity(location.id, location.name),
-    organization: createShortenedEntity(organization.id, organization.name),
-  });
-  mockStore.setDevice(device);
+): Promise<{ device: Device; taps: Tap[]; location: Location }> {
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
 
   const taps: Tap[] = [];
   for (let i = 0; i < tapCount; i++) {
-    const tap = createMockTap({
-      locationId: location.id,
-      deviceId: device.id,
-      tapNumber: i + 1,
-      description: `Tap ${i + 1}`,
-    });
-    mockStore.setTap(tap);
-    taps.push(tap);
+    taps.push(
+      await seedApi.createTap(location, device, {
+        description: `Tap ${i + 1}`,
+      }),
+    );
   }
 
-  return { device, taps, location, organization };
+  return { device, taps, location };
 }
 
 /**
- * Sets up a beverage with pour history
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
+ * A beverage plus real pour history for the current user, fabricated
+ * through the actual pour pipeline (admin POST api/pour/test). Requires a
+ * pourable hierarchy, which this creates.
  */
-export async function mockBeverageWithPours(
-  page: Page,
+export async function seedBeverageWithPours(
+  seedApi: SeedApi,
   pourCount: number = 5,
-  userID?: EntityID,
-  userName?: string,
-  beverageOverrides?: Partial<Beverage>,
-): Promise<{ beverage: Beverage; pours: any[] }> {
-  // Get the authenticated user from mockStore if userID not provided
-  let finalUserID = userID;
-  let finalUserName = userName;
-
-  if (!finalUserID) {
-    const users = mockStore.getUsers();
-    if (users.length > 0) {
-      finalUserID = users[0].id;
-      finalUserName = users[0].userName;
-    }
+  ownerUserName?: string,
+  beverageOverrides?: Record<string, unknown>,
+): Promise<{ beverage: Beverage; pours: Pour[]; tap: Tap }> {
+  const owner = ownerUserName ?? seedApi.credentials?.userName;
+  if (!owner) {
+    throw new Error('seedBeverageWithPours requires an authenticated user.');
   }
 
-  // Create SRM for the beverage (required field)
-  const srm = createMockSrm();
-  mockStore.setSrm(srm);
-
-  const beverage = createMockBeverage({
-    beverageType: 'Beer',
-    srm: srm,
-    ...(finalUserID && finalUserName
-      ? {
-          createdBy: {
-            id: finalUserID,
-            userName: finalUserName,
-          },
-        }
-      : {}),
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
+  const beverage = await seedApi.createBeverage({
+    srmId: 10,
     ...beverageOverrides,
   });
-  mockStore.setBeverage(beverage);
+  const tap = await seedApi.createTap(location, device);
+  await seedApi.createKeg(tap, beverage);
 
-  const pours: Pour[] = [];
-  for (let i = 0; i < pourCount; i++) {
-    const pour = createMockPour({
-      beverage: createShortenedEntity(beverage.id, beverage.name),
-      ounces: 16,
-      pourDate: new Date(Date.now() - i * 86400000).toISOString(), // Days ago
-    });
-    mockStore.setPour(pour);
-    pours.push(pour);
-  }
+  const pours = (await seedApi.createPours(tap, owner, pourCount)) as Pour[];
 
-  return { beverage, pours };
+  return { beverage, pours, tap };
 }
 
-/**
- * Sets up a user with multiple organizations
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- */
-export async function mockUserWithOrganizations(
-  page: Page,
+/** Organizations owned by the current user. */
+export async function seedUserWithOrganizations(
+  seedApi: SeedApi,
   orgCount: number = 2,
-): Promise<{ user: Account; organizations: Organization[] }> {
-  const user = createMockUser();
-  mockStore.setUser(user);
-
+): Promise<{ organizations: Organization[] }> {
   const organizations: Organization[] = [];
   for (let i = 0; i < orgCount; i++) {
-    const org = createMockOrganization({
-      name: `Organization ${i + 1}`,
-    });
-    mockStore.setOrganization(org);
-    organizations.push(org);
+    organizations.push(
+      await seedApi.createOrganization({ name: `Organization ${i + 1}` }),
+    );
   }
-
-  return { user, organizations };
+  return { organizations };
 }
 
-/**
- * Sets up a tap with a flow sensor
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
- */
-export async function mockTapWithFlowSensor(
-  page: Page,
+/** A tap with a flow sensor of the given type. */
+export async function seedTapWithFlowSensor(
+  seedApi: SeedApi,
   flowSensorType: 'Titan' | 'Custom' = 'Titan',
 ): Promise<{
   tap: Tap;
-  flowSensor: FlowSensor;
-  organization: Organization;
+  flowSensor: unknown;
   location: Location;
   device: Device;
 }> {
-  const organization = createMockOrganization();
-  mockStore.setOrganization(organization);
-
-  const location = createMockLocation();
-  mockStore.setLocation(location);
-
-  const device = createMockDevice({
-    location: createShortenedEntity(location.id, location.name),
-    organization: createShortenedEntity(organization.id, organization.name),
-  });
-  mockStore.setDevice(device);
-
-  const tap = createMockTap({
-    locationId: location.id,
-    deviceId: device.id,
-    organization: createShortenedEntity(organization.id, organization.name),
-  });
-  mockStore.setTap(tap);
-
-  const flowSensor = createMockFlowSensor({
-    tap: { id: tap.id, isDeleted: false },
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
+  // createTap seeds a Titan sensor; create the tap bare and attach the
+  // requested sensor type explicitly instead.
+  const tap = await seedApi.createTapWithoutSensor(location, device);
+  const flowSensor = await seedApi.createFlowSensor(tap, {
     flowSensorType,
     pulsesPerGallon: flowSensorType === 'Custom' ? 1000 : 5375,
   });
-  mockStore.setFlowSensor(flowSensor);
 
-  return { tap, flowSensor, organization, location, device };
+  return { tap, flowSensor, location, device };
 }
 
-export async function mockTapWithCustomFlowSensor(page: Page): Promise<{
-  tap: Tap;
-  flowSensor: FlowSensor;
-  organization: Organization;
-  location: Location;
-  device: Device;
-}> {
-  return mockTapWithFlowSensor(page, 'Custom');
+export async function seedTapWithCustomFlowSensor(seedApi: SeedApi) {
+  return seedTapWithFlowSensor(seedApi, 'Custom');
 }
 
-export async function mockTapWithStandardFlowSensor(page: Page): Promise<{
-  tap: Tap;
-  flowSensor: FlowSensor;
-  organization: Organization;
-  location: Location;
-  device: Device;
-}> {
-  return mockTapWithFlowSensor(page, 'Titan');
+export async function seedTapWithStandardFlowSensor(seedApi: SeedApi) {
+  return seedTapWithFlowSensor(seedApi, 'Titan');
 }
 
 /**
- * Sets up available WiFi networks for device setup
- * Note: setupAPIMocks is handled by the auto fixture, so it's not called here
+ * Real pour history for the stats screen: a pourable hierarchy with
+ * `beverageCount` beverages rotated across `pourCount` real pours.
  */
-export async function mockWiFiNetworks(
-  page: Page,
-): Promise<Array<{ ssid: string; signal: number; security: string }>> {
-  const networks = [
-    { ssid: 'TestWiFi1', signal: -50, security: 'WPA2' },
-    { ssid: 'TestWiFi2', signal: -60, security: 'WPA2' },
-    { ssid: 'TestWiFi3', signal: -70, security: 'WPA' },
-  ];
-  return networks;
-}
-
-/**
- * Sets up a Particle device for WiFi setup
- */
-export async function mockParticleDevice(
-  page: Page,
-): Promise<{ id: string; name: string; online: boolean }> {
-  const device = {
-    id: 'particle_12345',
-    name: 'Test Particle Device',
-    online: true,
-  };
-  return device;
-}
-
-/**
- * Sets up stats data (badges, beverages, pours) for stats screen
- * Ensures stats sections are always visible with data
- */
-export async function setupStatsData(
-  page: Page,
+export async function seedStatsData(
+  seedApi: SeedApi,
   pourCount: number = 10,
   beverageCount: number = 5,
 ): Promise<{ beverages: Beverage[]; pours: Pour[] }> {
+  const owner = seedApi.credentials?.userName;
+  if (!owner) {
+    throw new Error('seedStatsData requires an authenticated user.');
+  }
+
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
+
   const beverages: Beverage[] = [];
-  const pours: Pour[] = [];
-
-  // Create beverages
   for (let i = 0; i < beverageCount; i++) {
-    const beverage = createMockBeverage({ name: `Beverage ${i + 1}` });
-    mockStore.setBeverage(beverage);
-    beverages.push(beverage);
+    beverages.push(
+      await seedApi.createBeverage({ name: `Beverage ${i + 1}` }),
+    );
   }
 
-  // Create pours for stats (recent pours list)
-  for (let i = 0; i < pourCount; i++) {
-    const beverage = beverages[i % beverageCount];
-    const pour = createMockPour({
-      beverage: createShortenedEntity(beverage.id, beverage.name),
-      ounces: 16,
-      pourDate: new Date(Date.now() - i * 3600000).toISOString(), // Hours ago
-    });
-    mockStore.setPour(pour);
-    pours.push(pour);
-  }
+  // One tap; rotate kegs is overkill for stats — pour against the first
+  // beverage's keg (pour history is what the stats screens read).
+  const tap = await seedApi.createTap(location, device);
+  await seedApi.createKeg(tap, beverages[0]);
+
+  const pours = (await seedApi.createPours(tap, owner, pourCount)) as Pour[];
 
   return { beverages, pours };
 }
 
-/**
- * Sets up SRM data for beverage forms
- * Creates common SRM values (1-40) that are typically used
- */
-export async function setupSrmData(
-  page: Page,
-  count: number = 40,
-): Promise<Srm[]> {
-  const srms: Srm[] = [];
+// WiFi setup runs against physical device hardware (a SoftAP http server on
+// the local network) which cannot exist in e2e — the soft-ap browser shim in
+// soft-ap-mocks.ts stays. These helpers only describe the fake networks.
+export async function mockWiFiNetworks(): Promise<
+  Array<{ ssid: string; signal: number; security: string }>
+> {
+  return [
+    { ssid: 'TestWiFi1', signal: -50, security: 'WPA2' },
+    { ssid: 'TestWiFi2', signal: -60, security: 'WPA2' },
+    { ssid: 'TestWiFi3', signal: -70, security: 'WPA' },
+  ];
+}
 
-  // Create SRMs with names 1-40 (typical SRM range)
-  for (let i = 1; i <= count; i++) {
-    const srm = createMockSrm({
-      name: i.toString(),
-      hex: `#${Math.floor(Math.random() * 16777215)
-        .toString(16)
-        .padStart(6, '0')}`,
-    });
-    mockStore.setSrm(srm);
-    srms.push(srm);
-  }
-
-  return srms;
+export async function mockParticleDevice(): Promise<{
+  id: string;
+  name: string;
+  online: boolean;
+}> {
+  return { id: 'particle_12345', name: 'Test Particle Device', online: true };
 }

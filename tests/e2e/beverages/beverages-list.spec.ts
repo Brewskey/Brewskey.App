@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockBeverageWithPours } from '../../fixtures/entity-fixtures';
+import { seedBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
@@ -7,12 +7,12 @@ test('should navigate to beverage details', async ({
   page,
   menuPage,
   authenticatedUser,
+  seedApi,
 }) => {
   // Set up explicit data: one beverage created by the authenticated user
-  const { beverage } = await mockBeverageWithPours(
-    page,
+  const { beverage } = await seedBeverageWithPours(
+    seedApi,
     0,
-    authenticatedUser?.user.id,
     authenticatedUser?.user.userName,
   );
 

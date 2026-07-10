@@ -1,13 +1,13 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
 
-test('should display nearby locations', async ({ page, homePage }) => {
+test('should display nearby locations', async ({ page, homePage, seedApi}) => {
   // Set up explicit data: one location nearby
   // Geolocation permission is already granted via test-fixtures.ts
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
   await homePage.goto();
 
   await expect(homePage.getNearbyLocationsList()).toBeVisible();
@@ -61,10 +61,10 @@ test.describe(() => {
     await expect(homePage.getNearbyLocationsList()).toBeVisible();
   });
 });
-test('should allow refreshing locations', async ({ page, homePage }) => {
+test('should allow refreshing locations', async ({ page, homePage, seedApi}) => {
   // Set up explicit data: one location nearby
   // Geolocation permission is already granted via test-fixtures.ts
-  await mockLocationWithTaps(page, 0);
+  await seedLocationWithTaps(seedApi, 0);
   await homePage.goto();
 
   // Refresh is typically handled via pull-to-refresh on mobile

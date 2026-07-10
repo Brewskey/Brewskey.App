@@ -1,30 +1,29 @@
 import {
-  mockLocationWithTaps,
-  mockNewUserState,
+  seedLocationWithTaps,
+  seedNewUserState,
 } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 test('should display location setup screen for new user', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-description')).toBeVisible({
     timeout: 15000,
   });
 });
 
-test('should handle no locations scenario', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
+test('should handle no locations scenario', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-description')).toBeVisible({
     timeout: 15000,
   });
 });
 
-test('should handle single location scenario', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
-  await mockLocationWithTaps(page, 0);
+test('should handle single location scenario', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
+  await seedLocationWithTaps(seedApi, 0);
   await nuxPage.gotoLocationStep(1);
   await expect(page.getByTestId('nux-location-description')).toBeVisible({
     timeout: 15000,
@@ -34,10 +33,10 @@ test('should handle single location scenario', async ({ page, nuxPage }) => {
   );
 });
 
-test('should handle multiple locations scenario', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
-  await mockLocationWithTaps(page, 0);
-  await mockLocationWithTaps(page, 0);
+test('should handle multiple locations scenario', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
+  await seedLocationWithTaps(seedApi, 0);
+  await seedLocationWithTaps(seedApi, 0);
   await nuxPage.gotoLocationStep(2);
   await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
   await expect(nuxPage.getContinueButton()).toBeDisabled();
@@ -45,11 +44,10 @@ test('should handle multiple locations scenario', async ({ page, nuxPage }) => {
 
 test('should enable continue button when location selected', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
-  const { location } = await mockLocationWithTaps(page, 0);
-  await mockLocationWithTaps(page, 0);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
+  await seedLocationWithTaps(seedApi, 0);
   await nuxPage.gotoLocationStep(2);
   await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
   await nuxPage.selectLocation(location.name);
@@ -58,9 +56,8 @@ test('should enable continue button when location selected', async ({
 
 test('should navigate to locations/new when Next is clicked with no locations', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-content')).toBeVisible({
     timeout: 15000,
@@ -75,11 +72,10 @@ test('should navigate to locations/new when Next is clicked with no locations', 
 
 test('should navigate to nux/wifi when Next is clicked with location selected', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
-  const { location } = await mockLocationWithTaps(page, 0);
-  await mockLocationWithTaps(page, 0);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
+  await seedLocationWithTaps(seedApi, 0);
   await nuxPage.gotoLocationStep(2);
   await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
   await nuxPage.selectLocation(location.name);

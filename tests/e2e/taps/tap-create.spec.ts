@@ -1,16 +1,15 @@
-import { mockStore } from '../../fixtures/api-mocks';
 import {
-  mockDeviceWithTaps,
-  mockLocationWithTaps,
+  seedDeviceWithTaps,
+  seedLocationWithTaps,
 } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should successfully create tap', async ({ page, tapPage }) => {
+test('should successfully create tap', async ({ page, tapPage, seedApi}) => {
   // Set up explicit data: one location and one device
-  const { location } = await mockLocationWithTaps(page, 0);
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/taps/new?deviceId=${device.id}`);
   // Playwright's auto-waiting will handle timing
@@ -41,14 +40,11 @@ test('should successfully create tap', async ({ page, tapPage }) => {
 test('should set up tap and select beverage with image rendering', async ({
   page,
   tapPage,
-  dropDown,
-}) => {
+  dropDown, seedApi,}) => {
   // Set up explicit data: location, device, and beverage
-  const { location } = await mockLocationWithTaps(page, 0);
-  const { device } = await mockDeviceWithTaps(page, 0);
-  const { createMockBeverage } = await import('../../fixtures/test-data');
-  const beverage = createMockBeverage({ name: 'Test IPA' });
-  mockStore.setBeverage(beverage);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
+  const beverage = await seedApi.createBeverage({ name: 'Test IPA' });
 
   // Step 1: Create a tap
   await page.goto(`/taps/new?deviceId=${device.id}`);
@@ -71,14 +67,10 @@ test('should set up tap and select beverage with image rendering', async ({
     'New tap created',
   );
 
-  // Step 2: Create a tap with known ID via mock for navigation
-  const { createMockTap } = await import('../../fixtures/test-data');
-  const tap = createMockTap({
-    locationId: location.id,
-    deviceId: device.id,
+  // Step 2: Seed a real tap for navigation
+  const tap = await seedApi.createTap(location, device, {
     description: 'New Tap with Beverage',
   });
-  mockStore.setTap(tap);
 
   // Navigate to tap details and then to keg creation (Expo web paths without (tabs))
   await page.goto(`/taps/${tap.id}`);

@@ -6,13 +6,12 @@ test.use({ autoAuthenticate: true, locationCount: 1 });
 test('should successfully create device', async ({
   page,
   devicePage,
-  dropDown,
-}) => {
+  dropDown, seedApi,}) => {
   // Set up explicit data: authenticated user (handled by autoAuthenticate)
   // Need location for device creation
-  const { mockLocationWithTaps } =
+  const { seedLocationWithTaps } =
     await import('../../fixtures/entity-fixtures');
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto('/devices/new?particleId=test_particle_1');
   await expect(page.getByTestId('input-name')).toBeVisible();
@@ -47,11 +46,10 @@ test('should successfully create device', async ({
 test('should redirect to nux/tap when returnTo=nux-tap after create', async ({
   page,
   devicePage,
-  dropDown,
-}) => {
-  const { mockLocationWithTaps } =
+  dropDown, seedApi,}) => {
+  const { seedLocationWithTaps } =
     await import('../../fixtures/entity-fixtures');
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto(
     '/devices/new?particleId=test_particle_2&returnTo=nux-tap&showBackButton=false',

@@ -20,7 +20,12 @@ test.describe('Pour Button', () => {
     });
   });
 
-  test('should show loading indicator when pouring', async ({ page }) => {
+  test('should show loading indicator when pouring', async ({
+    page,
+    seedApi,
+  }) => {
+    // A real pourable device at the browser's mocked geolocation.
+    const { device } = await seedApi.createPourableDevice();
     await page.goto('/');
 
     // Wait for pour button to be visible
@@ -40,12 +45,13 @@ test.describe('Pour Button', () => {
     const input = page.getByTestId('pour-modal-totp-input');
     await expect(input).toBeVisible();
 
-    // Type a valid TOTP code - this triggers async authorization
-    await input.fill('123456');
+    // Fetch the device's live TOTP at the last moment (codes roll every 30s)
+    // and enter it — this triggers a real pour authorization.
+    await input.fill(await seedApi.deviceTotp(device.id));
 
     // Authorization completes and modal closes. Loading (input disabled) can be too fast to assert.
     await expect(page.getByTestId('pour-process-modal')).toBeHidden({
-      timeout: 5000,
+      timeout: 10000,
     });
   });
 
@@ -84,7 +90,8 @@ test.describe('Pour Button', () => {
     });
   });
 
-  test('should validate TOTP code length', async ({ page }) => {
+  test('should validate TOTP code length', async ({ page, seedApi }) => {
+    const { device } = await seedApi.createPourableDevice();
     await page.goto('/');
 
     // Wait for pour button to be visible
@@ -112,39 +119,18 @@ test.describe('Pour Button', () => {
     await expect(page.getByTestId('pour-process-modal')).toBeVisible();
     await expect(input).toBeEnabled();
 
-    // Now enter a valid 6-digit code to trigger authorization
-    await input.fill('123456');
+    // Now enter the device's real 6-digit TOTP to trigger authorization
+    await input.fill(await seedApi.deviceTotp(device.id));
 
-    // Wait for input to become disabled (loading state) and then modal to close
     // Authorization completes and modal closes automatically
     await expect(page.getByTestId('pour-process-modal')).toBeHidden({
-      timeout: 5000,
+      timeout: 10000,
     });
   });
 
   test('should display error message for invalid code', async ({ page }) => {
-    // Mock the API to return an error for invalid codes
-    await page.route('**/api/authorizations/pour/**', async (route) => {
-      const body = await route.request().postDataJSON();
-
-      // Return error for specific invalid code
-      if (body.totp === '000000') {
-        await route.fulfill({
-          status: 400,
-          contentType: 'application/json',
-          body: JSON.stringify({
-            error: 'Invalid code',
-            error_description:
-              'The passcode you entered was incorrect or expired. Please try a new code.',
-          }),
-        });
-        return;
-      }
-
-      // Otherwise, continue with normal mock
-      await route.continue();
-    });
-
+    // No device matches '000000' at this location, so the REAL API rejects
+    // the authorization and the modal surfaces the error.
     await page.goto('/');
 
     // Wait for pour button to be visible

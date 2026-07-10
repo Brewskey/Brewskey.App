@@ -112,7 +112,25 @@ const BeverageForm: React.FC<Props> = ({
       return;
     }
 
-    await onSubmit(formValues);
+    // TextInputs yield strings; the API's numeric fields reject empty
+    // strings (400) and need real numbers. Blank optional fields are omitted.
+    const toOptionalNumber = (value: unknown): number | undefined => {
+      if (value === '' || value == null) {
+        return undefined;
+      }
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? undefined : parsed;
+    };
+
+    await onSubmit({
+      ...formValues,
+      abv: toOptionalNumber(formValues.abv) as FormProps['abv'],
+      ibu: toOptionalNumber(formValues.ibu) as FormProps['ibu'],
+      originalGravity: toOptionalNumber(
+        formValues.originalGravity,
+      ) as FormProps['originalGravity'],
+      year: toOptionalNumber(formValues.year) as FormProps['year'],
+    });
   };
 
   return (

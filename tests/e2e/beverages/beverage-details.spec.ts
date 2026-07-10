@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockBeverageWithPours } from '../../fixtures/entity-fixtures';
+import { seedBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should show pour history', async ({ page }) => {
+test('should show pour history', async ({ page, seedApi}) => {
   // Set up explicit data: one beverage with 5 pours
-  const { beverage, pours } = await mockBeverageWithPours(page, 5);
+  const { beverage, pours } = await seedBeverageWithPours(seedApi, 5);
 
   await page.goto(`/beverages/${beverage.id}`);
 
@@ -16,9 +16,9 @@ test('should show pour history', async ({ page }) => {
   await expect(page.getByTestId(`pour-item-${pours[0].id}`)).toBeVisible();
 });
 
-test('should navigate to edit beverage', async ({ page }) => {
+test('should navigate to edit beverage', async ({ page, seedApi}) => {
   // Set up explicit data: one beverage (edit button should be visible for owned beverages)
-  const { beverage } = await mockBeverageWithPours(page, 0);
+  const { beverage } = await seedBeverageWithPours(seedApi, 0);
 
   await page.goto(`/beverages/${beverage.id}`);
 

@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should allow selecting beverage', async ({ page, dropDown }) => {
+test('should allow selecting beverage', async ({ page, dropDown, seedApi}) => {
   // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await mockTapWithKeg(page);
+  const { tap, beverage } = await seedTapWithKeg(seedApi);
 
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
@@ -20,10 +20,9 @@ test('should allow selecting beverage', async ({ page, dropDown }) => {
 
 test('should render beverage picker with images', async ({
   page,
-  dropDown,
-}) => {
+  dropDown, seedApi,}) => {
   // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await mockTapWithKeg(page);
+  const { tap, beverage } = await seedTapWithKeg(seedApi);
 
   // Navigate to keg creation form
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
@@ -57,9 +56,9 @@ test('should render beverage picker with images', async ({
   await expect(beveragePicker.modal).toBeHidden();
 });
 
-test('should successfully create keg', async ({ page, dropDown }) => {
+test('should successfully create keg', async ({ page, dropDown, seedApi}) => {
   // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await mockTapWithKeg(page);
+  const { tap, beverage } = await seedTapWithKeg(seedApi);
 
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   // NewKegScreen expects tapId as a query parameter
@@ -100,9 +99,8 @@ test('should successfully create keg', async ({ page, dropDown }) => {
 
 test('should redirect to nux/finish when returnTo=nux-finish after create', async ({
   page,
-  dropDown,
-}) => {
-  const { tap } = await mockTapWithKeg(page);
+  dropDown, seedApi,}) => {
+  const { tap } = await seedTapWithKeg(seedApi);
 
   await page.goto(
     `/(tabs)/taps/${tap.id}/keg/new?tapId=${tap.id}&returnTo=nux-finish`,

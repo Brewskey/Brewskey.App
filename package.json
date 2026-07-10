@@ -30,9 +30,7 @@
     "test:e2e:expo": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test\"",
     "test:e2e:expo:ui": "concurrently \"npm run web\" \"wait-on http://localhost:8081 && playwright test --ui\"",
     "e2e-stack:up": "docker compose -f tests/e2e-stack/docker-compose.yml up -d --wait",
-    "e2e-stack:down": "docker compose -f tests/e2e-stack/docker-compose.yml down",
-    "test:e2e:real": "cross-env REAL_API=1 playwright test",
-    "test:e2e:real:ui": "cross-env REAL_API=1 playwright test --ui"
+    "e2e-stack:down": "docker compose -f tests/e2e-stack/docker-compose.yml down"
   },
   "dependencies": {
     "@brewskey/js-api": "^2.1.4",

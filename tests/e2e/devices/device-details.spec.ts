@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
+import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should show device online/offline status', async ({ page }) => {
+test('should show device online/offline status', async ({ page, seedApi}) => {
   // Set up explicit data: one device with online status (default)
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/devices/${device.id}`);
 
@@ -13,9 +13,9 @@ test('should show device online/offline status', async ({ page }) => {
   await expect(page.getByTestId('overview-item-online-status')).toBeVisible();
 });
 
-test('should display associated taps', async ({ page }) => {
+test('should display associated taps', async ({ page, seedApi}) => {
   // Set up explicit data: one device with 3 taps
-  const { device, taps } = await mockDeviceWithTaps(page, 3);
+  const { device, taps } = await seedDeviceWithTaps(seedApi, 3);
 
   await page.goto(`/devices/${device.id}`);
 
@@ -25,9 +25,9 @@ test('should display associated taps', async ({ page }) => {
   }
 });
 
-test('should navigate to add tap', async ({ page }) => {
+test('should navigate to add tap', async ({ page, seedApi}) => {
   // Set up explicit data: one device (add tap button should be visible when no taps)
-  const { device } = await mockDeviceWithTaps(page, 0);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/devices/${device.id}`);
 

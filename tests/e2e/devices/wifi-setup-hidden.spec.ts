@@ -10,7 +10,7 @@
  *   - Submitting an OPEN network sends a request with no encrypted password
  *   - Submitting a secured network sends ssid + selected security + a password
  */
-import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
+import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 import { setupSoftApMocks } from '../../fixtures/soft-ap-mocks';
 import { expect, test } from '../../fixtures/test-fixtures';
 
@@ -27,14 +27,13 @@ test.describe('WiFi Setup - Hidden network form', () => {
   test('expand → defaults → conditional password → submit', async ({
     page,
     wifiPage,
-    dropDown,
-  }) => {
+    dropDown, seedApi,}) => {
     setupSoftApMocks(page, {
       particleId: 'particle_e2e_hidden_wifi',
       wifiNetworks: [],
     });
 
-    const { device } = await mockDeviceWithTaps(page, 0);
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
     await wifiPage.goto(String(device.id));
     await wifiPage.clickReady();
 
@@ -109,14 +108,13 @@ test.describe('WiFi Setup - Hidden network form', () => {
   test('submitting a secured hidden network sends ssid + security + encrypted password', async ({
     page,
     wifiPage,
-    dropDown,
-  }) => {
+    dropDown, seedApi,}) => {
     setupSoftApMocks(page, {
       particleId: 'particle_e2e_hidden_wifi_secured',
       wifiNetworks: [],
     });
 
-    const { device } = await mockDeviceWithTaps(page, 0);
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
     await wifiPage.goto(String(device.id));
     await wifiPage.clickReady();
 

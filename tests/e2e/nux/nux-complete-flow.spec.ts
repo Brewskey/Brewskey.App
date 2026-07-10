@@ -1,12 +1,6 @@
-import { mockStore } from '../../fixtures/api-mocks';
-import { mockNewUserState } from '../../fixtures/entity-fixtures';
+import { seedNewUserState } from '../../fixtures/entity-fixtures';
 import { ROUTES } from '../../fixtures/routes';
 import { setAppSettingsStorage } from '../../fixtures/storage-helper';
-import {
-  createMockBeverage,
-  createMockOrganization,
-  createShortenedEntity,
-} from '../../fixtures/test-data';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test('should complete full NUX flow', async ({
@@ -16,21 +10,17 @@ test('should complete full NUX flow', async ({
   locationPage,
   devicePage,
   tapPage,
-  dropDown,
-}) => {
+  dropDown, seedApi,}) => {
   test.setTimeout(60000);
 
-  let org: ReturnType<typeof createMockOrganization>;
   await test.step('Setup: new user state and test data', async () => {
-    await mockNewUserState(page);
+    await seedNewUserState(page, seedApi);
     await setAppSettingsStorage(page, {
       manageTapsEnabled: false,
       selectedOrganization: null,
     });
-    org = createMockOrganization();
-    mockStore.setOrganization(org);
-    const beverage = createMockBeverage({ name: 'Test Beverage' });
-    mockStore.setBeverage(beverage);
+    await seedApi.createOrganization();
+    await seedApi.createBeverage({ name: 'Test Beverage' });
   });
 
   await test.step('Go to settings and enable Manage taps', async () => {
@@ -115,17 +105,10 @@ test('should complete full NUX flow', async ({
     await deviceNameInput.fill('Test Device');
     await devicePage.submitForm();
     await expect(page).toHaveURL(/\/tap/i);
-    const devices = mockStore.getDevices();
+    // The UI created a REAL device — find it through the API
+    const devices = await seedApi.fetchDevices();
     const createdDevice = devices[devices.length - 1];
     deviceId = createdDevice?.id?.toString() ?? '';
-    // Set device organization so tap form can load (taps/new requires device.organization)
-    const device = mockStore.getDevice(Number(deviceId));
-    if (device) {
-      mockStore.setDevice({
-        ...device,
-        organization: createShortenedEntity(org.id, org.name),
-      });
-    }
   });
 
   await test.step('NUX Tap: create tap', async () => {

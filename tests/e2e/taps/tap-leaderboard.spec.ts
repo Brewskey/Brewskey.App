@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should allow filtering by duration', async ({ page }) => {
+test('should allow filtering by duration', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with leaderboard enabled and filters visible
-  const { tap } = await mockTapWithKeg(page);
+  const { tap } = await seedTapWithKeg(seedApi);
 
   await page.goto(`/taps/${tap.id}/leaderboard`);
 

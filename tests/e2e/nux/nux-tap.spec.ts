@@ -1,9 +1,9 @@
-import { mockNewUserState } from '../../fixtures/entity-fixtures';
+import { seedNewUserState } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
-test('should display tap creation prompt', async ({ page, nuxPage }) => {
+test('should display tap creation prompt', async ({ page, nuxPage, seedApi}) => {
   // Set up explicit data: new user
-  await mockNewUserState(page);
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoTapStep();
 
   await expect(page).toHaveURL('/tap');
@@ -12,9 +12,9 @@ test('should display tap creation prompt', async ({ page, nuxPage }) => {
   await expect(page.getByTestId('nux-tap-description')).toBeVisible();
 });
 
-test('should show tap setup instructions', async ({ page, nuxPage }) => {
+test('should show tap setup instructions', async ({ page, nuxPage, seedApi}) => {
   // Set up explicit data: new user
-  await mockNewUserState(page);
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoTapStep();
 
   // Instructions text has testID - use that instead of text-based locator
@@ -23,9 +23,8 @@ test('should show tap setup instructions', async ({ page, nuxPage }) => {
 
 test('should navigate to devices list when Next is clicked without deviceId', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoTapStep();
   await expect(page.getByTestId('nux-tap-content')).toBeVisible();
 
@@ -37,11 +36,10 @@ test('should navigate to devices list when Next is clicked without deviceId', as
 
 test('should navigate to taps/new when Next is clicked with deviceId', async ({
   page,
-  nuxPage,
-}) => {
-  const { mockDeviceWithTaps } = await import('../../fixtures/entity-fixtures');
-  await mockNewUserState(page);
-  const { device } = await mockDeviceWithTaps(page, 0);
+  nuxPage, seedApi,}) => {
+  const { seedDeviceWithTaps } = await import('../../fixtures/entity-fixtures');
+  await seedNewUserState(page, seedApi);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/(nux)/tap?deviceId=${device.id}`);
   await expect(page.getByTestId('nux-tap-content')).toBeVisible();
@@ -52,8 +50,8 @@ test('should navigate to taps/new when Next is clicked with deviceId', async ({
   await expect(page).toHaveURL(/\/taps\/new/i);
 });
 
-test('should have continue button', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
+test('should have continue button', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoTapStep();
 
   await expect(nuxPage.getContinueButton()).toBeVisible();

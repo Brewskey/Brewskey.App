@@ -1,8 +1,8 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockNewUserState } from '../../fixtures/entity-fixtures';
+import { seedNewUserState } from '../../fixtures/entity-fixtures';
 
-test('should display WiFi setup instructions', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
+test('should display WiFi setup instructions', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoWifiStep();
 
   await expect(page).toHaveURL(/\/wifi/i);
@@ -12,9 +12,8 @@ test('should display WiFi setup instructions', async ({ page, nuxPage }) => {
 
 test('should navigate to WiFi setup screen when Next is clicked', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoWifiStep();
   await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
 
@@ -24,9 +23,9 @@ test('should navigate to WiFi setup screen when Next is clicked', async ({
   await expect(page).toHaveURL(/\/wifi-setup/i);
 });
 
-test('should have continue button', async ({ page, nuxPage }) => {
+test('should have continue button', async ({ page, nuxPage, seedApi}) => {
   // Set up explicit data: new user
-  await mockNewUserState(page);
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoWifiStep();
 
   await expect(nuxPage.getContinueButton()).toBeVisible();

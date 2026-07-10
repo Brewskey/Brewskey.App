@@ -1,14 +1,14 @@
 import {
-  mockDeviceWithTaps,
-  mockLocationWithTaps,
+  seedDeviceWithTaps,
+  seedLocationWithTaps,
 } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should pre-fill form with existing data', async ({ page }) => {
+test('should pre-fill form with existing data', async ({ page, seedApi}) => {
   // Set up explicit data: one device
-  const { device, location } = await mockDeviceWithTaps(page, 0);
+  const { device, location } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/devices/${device.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
@@ -22,11 +22,11 @@ test('should pre-fill form with existing data', async ({ page }) => {
 test('should successfully update device', async ({
   page,
   dropDown,
-  mockStore,
+  seedApi,
 }) => {
   // Set up: one device and a second location so we can mutate the location field
-  await mockLocationWithTaps(page, 1);
-  const { device } = await mockDeviceWithTaps(page, 0);
+  await seedLocationWithTaps(seedApi, 1);
+  const { device } = await seedDeviceWithTaps(seedApi, 0);
 
   await page.goto(`/devices/${device.id}/edit`);
   await expect(page.getByTestId('input-name')).toBeVisible();
@@ -102,7 +102,7 @@ test('should successfully update device', async ({
     'The Brewskey box was edited',
   );
 
-  const stored = mockStore.getDevice(device.id);
-  expect(stored?.secondsToStayOpen).toBe('900');
-  expect(stored?.timeForValveOpen).toBe('15');
+  const stored = await seedApi.fetchDevice(device.id);
+  expect(Number(stored?.secondsToStayOpen)).toBe(900);
+  expect(Number(stored?.timeForValveOpen)).toBe(15);
 });

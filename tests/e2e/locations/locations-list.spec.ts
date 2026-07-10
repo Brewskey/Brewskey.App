@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
@@ -27,10 +27,9 @@ test('should show empty state when no locations exist', async ({
 test('should navigate to location details', async ({
   page,
   locationPage,
-  menuPage,
-}) => {
+  menuPage, seedApi,}) => {
   // Set up explicit data: one location with no taps
-  const { location } = await mockLocationWithTaps(page, 0);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   // Navigate through menu to locations
   await menuPage.goto();

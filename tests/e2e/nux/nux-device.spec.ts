@@ -1,18 +1,18 @@
 import {
-  mockLocationWithTaps,
-  mockNewUserState,
+  seedLocationWithTaps,
+  seedNewUserState,
 } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
-test('should show device setup instructions', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
+test('should show device setup instructions', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoDeviceStep();
 
   await expect(page.getByTestId('nux-device-description')).toBeVisible();
 });
 
-test('should have continue button', async ({ page, nuxPage }) => {
-  await mockNewUserState(page);
+test('should have continue button', async ({ page, nuxPage, seedApi}) => {
+  await seedNewUserState(page, seedApi);
   await nuxPage.gotoDeviceStep();
 
   await expect(nuxPage.getContinueButton()).toBeVisible();
@@ -21,10 +21,9 @@ test('should have continue button', async ({ page, nuxPage }) => {
 
 test('should navigate to devices/new when Next is clicked', async ({
   page,
-  nuxPage,
-}) => {
-  await mockNewUserState(page);
-  const { location } = await mockLocationWithTaps(page, 0);
+  nuxPage, seedApi,}) => {
+  await seedNewUserState(page, seedApi);
+  const { location } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto(
     `/(nux)/device?particleId=particle_test&locationId=${location.id}`,

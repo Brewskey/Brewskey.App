@@ -1,15 +1,14 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
-import { createMockBeverage } from '../../fixtures/test-data';
-import { mockStore } from '../../fixtures/api-mocks';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should successfully update keg', async ({ page, dropDown }) => {
+test('should successfully update keg', async ({ page, dropDown, seedApi}) => {
   // Set up: one tap with keg and a second beverage so we can mutate the beverage field
-  const { tap } = await mockTapWithKeg(page);
-  const otherBeverage = createMockBeverage({ name: 'Other Keg Beverage' });
-  mockStore.setBeverage(otherBeverage);
+  const { tap } = await seedTapWithKeg(seedApi);
+  const otherBeverage = await seedApi.createBeverage({
+    name: 'Other Keg Beverage',
+  });
 
   // Edit tap layout uses tab name "keg" for the feed/on-tap screen
   await page.goto(`/taps/${tap.id}/edit/keg`);

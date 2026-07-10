@@ -1,7 +1,7 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 import {
-  mockLocationWithTaps,
-  mockTapWithKeg,
+  seedLocationWithTaps,
+  seedTapWithKeg,
 } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate and create test data
@@ -21,9 +21,9 @@ test('should show empty state', async ({ page, tapPage, menuPage }) => {
   await expect(page.getByTestId('button-get-started')).toBeVisible();
 });
 
-test('should navigate to tap details', async ({ page, tapPage, menuPage }) => {
+test('should navigate to tap details', async ({ page, tapPage, menuPage, seedApi}) => {
   // Set up explicit data: one location with 1 tap
-  const { taps } = await mockLocationWithTaps(page, 1);
+  const { taps } = await seedLocationWithTaps(seedApi, 1);
 
   // Navigate through menu to taps
   await menuPage.goto();
@@ -38,10 +38,10 @@ test('should navigate to tap details', async ({ page, tapPage, menuPage }) => {
   await expect(page).toHaveURL(/.*tap.*details|tap.*\d+/i);
 });
 
-test('should navigate to create tap', async ({ page, tapPage, menuPage }) => {
+test('should navigate to create tap', async ({ page, tapPage, menuPage, seedApi}) => {
   // Set up explicit data: device for tap creation
   // NewTapScreen requires deviceId to render the form
-  const { device } = await mockTapWithKeg(page);
+  const { device } = await seedTapWithKeg(seedApi);
 
   // Navigate through menu to taps
   await menuPage.goto();

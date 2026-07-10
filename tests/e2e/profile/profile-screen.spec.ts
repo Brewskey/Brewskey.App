@@ -1,13 +1,10 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { createMockUser } from '../../fixtures/test-data';
-import { mockStore } from '../../fixtures/api-mocks';
 
 test.use({ autoAuthenticate: true });
 
-test('should show friend status', async ({ page }) => {
-  // Set up explicit data: another user's profile
-  const otherUser = createMockUser({ userName: 'otheruser' });
-  mockStore.setUser(otherUser);
+test('should show friend status', async ({ page, seedApi }) => {
+  // Another real user's profile
+  const otherUser = await seedApi.registerOtherUser({ userName: 'otheruser' });
 
   await page.goto(`/profile/${otherUser.id}`);
 
@@ -23,10 +20,9 @@ test('should show friend status', async ({ page }) => {
   await expect(notFriendsHeader.or(addFriendButton).first()).toBeVisible();
 });
 
-test('should allow sending friend request', async ({ page }) => {
-  // Set up explicit data: another user's profile (not a friend)
-  const otherUser = createMockUser({ userName: 'otheruser' });
-  mockStore.setUser(otherUser);
+test('should allow sending friend request', async ({ page, seedApi }) => {
+  // Another real user's profile (not a friend)
+  const otherUser = await seedApi.registerOtherUser({ userName: 'otheruser' });
 
   await page.goto(`/profile/${otherUser.id}`);
 

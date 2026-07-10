@@ -1,5 +1,4 @@
 /* eslint-disable no-restricted-syntax */
-import { setupSrmData } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
@@ -18,7 +17,6 @@ test.describe('create with each Beverage Type', () => {
       menuPage,
       dropDown,
     }) => {
-      await setupSrmData(page, 40);
 
       await menuPage.goto();
       await menuPage.clickBeverages();

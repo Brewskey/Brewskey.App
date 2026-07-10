@@ -9,7 +9,7 @@
  * 192.168.0.1 (Private Network Access). To enable them, the app would need a
  * test-only override for the SoftAP base URL (e.g. same-origin mock path).
  */
-import { mockDeviceWithTaps } from '../../fixtures/entity-fixtures';
+import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 import { setupSoftApMocks } from '../../fixtures/soft-ap-mocks';
 import { expect, test } from '../../fixtures/test-fixtures';
 
@@ -18,8 +18,7 @@ test.use({ autoAuthenticate: true });
 test.describe('WiFi Setup', () => {
   test('full flow: step 1 → step 2 → step 3 → step 4', async ({
     page,
-    wifiPage,
-  }) => {
+    wifiPage, seedApi,}) => {
     setupSoftApMocks(page, {
       particleId: 'particle_e2e_flow',
       wifiNetworks: [
@@ -28,7 +27,7 @@ test.describe('WiFi Setup', () => {
       ],
     });
 
-    const { device } = await mockDeviceWithTaps(page, 0);
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
     await wifiPage.goto(String(device.id));
 
     await test.step('step 1: shows instructions and Ready button', async () => {
@@ -89,9 +88,8 @@ test.describe('WiFi Setup', () => {
   });
 
   test('forNewDevice: step 1 shows Particle ID input when expanded', async ({
-    page,
-  }) => {
-    const { device } = await mockDeviceWithTaps(page, 0);
+    page, seedApi,}) => {
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
     await page.goto(`/devices/${device.id}/wifi-setup?forNewDevice=true`);
 
     await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible();
@@ -100,9 +98,8 @@ test.describe('WiFi Setup', () => {
   });
 
   test('forNewDevice: step 4 Continue redirects to devices/new with particleId when no returnTo', async ({
-    page,
-  }) => {
-    const { device } = await mockDeviceWithTaps(page, 0);
+    page, seedApi,}) => {
+    const { device } = await seedDeviceWithTaps(seedApi, 0);
     await page.goto(`/devices/${device.id}/wifi-setup?forNewDevice=true`);
     await expect(page.getByTestId('wifi-setup-step1-content')).toBeVisible({
       timeout: 10000,
@@ -118,9 +115,8 @@ test.describe('WiFi Setup', () => {
   });
 
   test('returnTo=nux-device: step 4 Continue redirects to nux/device with particleId', async ({
-    page,
-  }) => {
-    const { device, location } = await mockDeviceWithTaps(page, 0);
+    page, seedApi,}) => {
+    const { device, location } = await seedDeviceWithTaps(seedApi, 0);
 
     await page.goto(
       `/devices/${device.id}/wifi-setup?forNewDevice=true&returnTo=nux-device&locationId=${location.id}`,

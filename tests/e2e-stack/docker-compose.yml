@@ -28,8 +28,12 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__Tappt: "Server=sqlserver,1433;Database=brewskey_e2e;User Id=sa;Password=E2e_strong!Passw0rd;TrustServerCertificate=true;MultipleActiveResultSets=true;"
       Search__Elasticsearch__Endpoint: "http://elasticsearch:9200"
-      # Fresh-database bootstrap: EnsureCreated from the EF model + role seed.
+      # Fresh-database bootstrap: EnsureCreated from the EF model + role seed
+      # + SRM reference metadata + the admin account below (used by seeding
+      # for admin-only endpoints like POST api/pour/test).
       Keg__EnsureCreatedOnBoot: "true"
+      Keg__BootstrapAdminUserName: "e2eadmin"
+      Keg__BootstrapAdminPassword: "E2e_Admin1!"
       # Playwright hammers from one IP; the per-IP limiter would 429 the run.
       Keg__DisableThrottling: "true"
       # Register/ChangeEmail send confirmation email — sink it in smtp4dev
@@ -41,6 +45,8 @@ services:
       Smtp__Password: ""
       # Deterministic JWT signing for the e2e environment.
       Jwt__SigningKey: "brewskey-e2e-signing-key-not-for-production-0123456789"
+      # Real blob storage via Azurite (image upload + /cdn serving).
+      ConnectionStrings__Blob.Storage.ConnectionString: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -65,3 +71,7 @@ services:
     image: rnwood/smtp4dev:v3
     ports:
       - "5010:80"
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: azurite-blob --blobHost 0.0.0.0

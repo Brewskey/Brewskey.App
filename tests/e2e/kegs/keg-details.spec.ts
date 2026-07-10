@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should display keg information', async ({ page }) => {
+test('should display keg information', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with keg - keg details are shown in a modal
-  const { tap, keg, beverage } = await mockTapWithKeg(page);
+  const { tap, keg, beverage } = await seedTapWithKeg(seedApi);
 
   // Navigate to tap details page which shows kegs list
   // Route format: /taps/[tapId] redirects to /taps/[tapId]/on_tap
@@ -31,9 +31,9 @@ test('should display keg information', async ({ page }) => {
   );
 });
 
-test('should show pour history', async ({ page }) => {
+test('should show pour history', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with keg - keg details are shown in a modal
-  const { tap, keg } = await mockTapWithKeg(page);
+  const { tap, keg } = await seedTapWithKeg(seedApi);
 
   // Navigate to tap details page which shows kegs list
   // Route format: /taps/[tapId] redirects to /taps/[tapId]/on_tap
@@ -55,9 +55,9 @@ test('should show pour history', async ({ page }) => {
   await expect(page.getByTestId('keg-details-tab-pours')).toBeVisible();
 });
 
-test('should show keg level visualization', async ({ page }) => {
+test('should show keg level visualization', async ({ page, seedApi}) => {
   // Set up explicit data: one tap with keg - keg details are shown in a modal
-  const { tap, keg } = await mockTapWithKeg(page);
+  const { tap, keg } = await seedTapWithKeg(seedApi);
 
   // Navigate to tap details page which shows kegs list
   // Route format: /taps/[tapId] redirects to /taps/[tapId]/on_tap

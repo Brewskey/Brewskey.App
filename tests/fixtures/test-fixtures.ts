@@ -1,74 +1,56 @@
 /**
- * Playwright Test Fixtures with Dependency Injection
+ * Playwright Test Fixtures — real-API e2e
  *
- * This module provides custom Playwright test fixtures that automatically:
- * - Reset mock data stores before each test
- * - Set up API monitoring and mocking
- * - Provide authenticated user sessions
- * - Configure mock data via test.use()
+ * Every test runs against the actual Brewskey.Web Docker stack
+ * (tests/e2e-stack/docker-compose.yml) — there are no API mocks. Fixtures
+ * follow the canonical Playwright patterns (https://playwright.dev/docs/test-fixtures):
+ * dependency injection between fixtures, option fixtures via test.use(),
+ * auto fixtures for per-test setup, and no module-level shared state.
  *
- * @example Basic usage with auto-authentication
+ * @example Auto-authentication (registers + logs in a real account)
  * ```ts
  * import { test, expect } from '../fixtures/test-fixtures';
  *
  * test.use({ autoAuthenticate: true });
  *
  * test('my test', async ({ page, authenticatedUser }) => {
- *   // authenticatedUser is automatically available
  *   await page.goto('/home');
  * });
  * ```
  *
- * @example Configure mock data via test.use()
+ * @example Entity seeding via test.use() (created through the real API)
  * ```ts
- * import { test, expect } from '../fixtures/test-fixtures';
+ * test.use({ autoAuthenticate: true, locationCount: 2, tapCount: 3 });
  *
- * test.use({
- *   autoAuthenticate: true,
- *   user: { userName: 'customuser' },
- *   locationCount: 2,
- *   tapCount: 3,
- * });
- *
- * test('my test', async ({ page }) => {
- *   // 2 locations with 3 taps each are automatically created
+ * test('my test', async ({ page, seededEntities }) => {
+ *   // 2 locations (each with a device) and 3 taps each, owned by the
+ *   // authenticated user
  *   await page.goto('/taps');
  * });
  * ```
  *
- * @example Per-test configuration
+ * @example Ad-hoc seeding inside a test
  * ```ts
- * test('specific test', async ({ page, mockStore }) => {
- *   // Use mockStore to manually add data
- *   const customLocation = createMockLocation({ name: 'Custom' });
- *   mockStore.setLocation(customLocation);
+ * test('specific test', async ({ seedApi, authenticatedUser }) => {
+ *   const location = await seedApi.createLocation({ name: 'Custom' });
  * });
  * ```
  */
 
-import { test as base, Page, TestInfo } from '@playwright/test';
+import { test as base, TestInfo } from '@playwright/test';
 import type {
   Account,
-  Location,
-  Tap,
-  Beverage,
-  Keg,
-  Device,
-  Organization,
   AuthResponse,
+  Beverage,
+  Device,
+  Location,
+  Organization,
+  Tap,
 } from '@brewskey/js-api';
-import {
-  createMockUser,
-  createMockLocation,
-  createMockTap,
-  createMockBeverage,
-  createMockKeg,
-  createMockDevice,
-  createMockOrganization,
-  createShortenedEntity,
-  resetIdCounter,
-} from './test-data';
-import { mockStore, setupAPIMocks, resetMockStore } from './api-mocks';
+import * as path from 'path';
+
+import { SeedApi, Credentials } from './seed-api';
+import { createMockUser } from './test-data';
 import {
   setupAPIMonitoring,
   clearFailedRequests,
@@ -76,13 +58,6 @@ import {
   getFailedRequests,
 } from './api-monitoring';
 import { setAuthStorage, setAppSettingsStorage } from './storage-helper';
-import {
-  REAL_API,
-  registerRealUser,
-  seedRealAuthenticatedUser,
-} from './real-api-helpers';
-import type { AppSettings } from '../../src/hooks/context/AppSettingsContext';
-import * as path from 'path';
 import {
   LoginPage,
   HomePage,
@@ -98,43 +73,57 @@ import {
 } from './page-objects';
 import { DropDownTestHelper } from './DropDownTestHelper';
 
-// Store for authentication setup data (set by __setup fixture)
-let authSetupData: { user: Account; authResponse: AuthResponse } | null = null;
-
-// Test options that can be configured via test.use()
+// Test options configured via test.use()
 export type TestOptions = {
   // User configuration
   user?: Partial<Account>;
   autoAuthenticate?: boolean;
 
-  // Location configuration
+  // Entity seeding configuration (created through the real API, owned by
+  // the authenticated user)
   locationCount?: number;
   tapCount?: number;
-
-  // Device configuration
   deviceCount?: number;
-
-  // Beverage configuration
   beverageCount?: number;
-
-  // Organization configuration
   organizationCount?: number;
 };
 
-// Fixture return types
+export type AuthenticatedUser = {
+  user: Account;
+  authResponse: AuthResponse;
+  credentials: Credentials;
+};
+
+export type SeededEntities = {
+  locations: Location[];
+  devices: Device[];
+  taps: Tap[];
+  beverages: Beverage[];
+  organizations: Organization[];
+};
+
 type TestFixtures = {
-  __setup: void;
-  authenticatedUser: { user: Account; authResponse: AuthResponse } | null;
-  mockStore: typeof mockStore;
-  resetStores: void;
+  /** Authenticated js-api client bound to the e2e stack, for seeding. */
+  seedApi: SeedApi;
+  /** Auto: API monitoring + failure report around every test. */
+  apiMonitoring: void;
   /**
-   * Mode-agnostic user seeding: registers a real account through the API in
-   * REAL_API mode, or inserts a mock-store user otherwise. Returns the
-   * credentials the login screen should use.
+   * Auto: when `autoAuthenticate` is set, registers a fresh real account,
+   * logs it in, and pre-loads the app's session storage — the app boots
+   * authenticated exactly as after a real login. Null otherwise.
    */
-  seedUser: (
-    overrides?: Partial<Account>,
-  ) => Promise<{ userName: string; password: string; email: string }>;
+  authenticatedUser: AuthenticatedUser | null;
+  /**
+   * Auto: entities created through the real API per the count options,
+   * owned by the authenticated user (mirrors the legacy mock hierarchy:
+   * Location → Device → Taps, plus beverages/organizations).
+   */
+  seededEntities: SeededEntities;
+  /**
+   * Registers a real account WITHOUT logging the app in — for specs that
+   * exercise the login flow itself. Returns the credentials to type.
+   */
+  seedUser: (overrides?: Partial<Account>) => Promise<Credentials>;
   loginPage: LoginPage;
   homePage: HomePage;
   locationPage: LocationPage;
@@ -149,25 +138,11 @@ type TestFixtures = {
   dropDown: DropDownTestHelper;
 };
 
-/**
- * Custom Playwright test fixtures with dependency injection
- *
- * Usage:
- * ```ts
- * import { test, expect } from '../fixtures/test-fixtures';
- *
- * test('my test', async ({ page, authenticatedUser }) => {
- *   // authenticatedUser is automatically set up if autoAuthenticate is true
- * });
- *
- * // Configure via test.use()
- * test.use({ autoAuthenticate: true, user: { userName: 'customuser' } });
- * ```
- */
 export const test = base.extend<TestOptions & TestFixtures>({
   permissions: ['geolocation'],
   geolocation: { latitude: 40.7128, longitude: -74.006 },
-  // Default options
+
+  // Option fixtures (overridable via test.use())
   user: [undefined, { option: true }],
   autoAuthenticate: [false, { option: true }],
   locationCount: [0, { option: true }],
@@ -176,177 +151,18 @@ export const test = base.extend<TestOptions & TestFixtures>({
   beverageCount: [0, { option: true }],
   organizationCount: [0, { option: true }],
 
-  // Auto fixture: Set up authentication if autoAuthenticate is true
-  // This runs after resetStores and before authenticatedUser fixture
-  __setup: [
-    async ({ page, request, user, autoAuthenticate, resetStores: _ }, use) => {
-      // Reset auth setup data
-      authSetupData = null;
+  seedApi: async ({}, use) => {
+    await use(new SeedApi());
+  },
 
-      if (autoAuthenticate && REAL_API) {
-        // Real-API mode: register + password-grant through the running
-        // Docker stack; store the API's actual session so the app boots
-        // authenticated exactly as after a real login.
-        const seeded = await seedRealAuthenticatedUser(request, user ?? {});
-        const account = createMockUser({
-          ...user,
-          id: seeded.authResponse.id,
-          userName: seeded.user.userName,
-          email: seeded.user.email,
-        });
-
-        await setAuthStorage(page, seeded.authResponse);
-        await setAppSettingsStorage(page, {
-          manageTapsEnabled: true,
-          selectedOrganization: null,
-        });
-
-        authSetupData = { user: account, authResponse: seeded.authResponse };
-      } else if (autoAuthenticate) {
-        const mockUser = createMockUser(user);
-        mockStore.setUser(mockUser);
-
-        const authResponse: AuthResponse = {
-          accessToken: `mock_token_${mockUser.id}`,
-          refreshToken: `mock_refresh_${mockUser.id}`,
-          id: mockUser.id,
-          email: mockUser.email || '',
-          userName: mockUser.userName,
-          phoneNumber: mockUser.phoneNumber || '',
-          expiresIn: 3600,
-          expiresAt: new Date(Date.now() + 3600000),
-          issuedAt: new Date(),
-          isNewAccount: false,
-          tokenType: 'Bearer',
-          roles: [],
-          userLogins: [],
-        };
-
-        mockStore.setAuthToken(authResponse.accessToken, authResponse);
-
-        // Set auth state - this handles __PLAYWRIGHT_AUTH_DATA__ and Storage setup
-        await setAuthStorage(page, authResponse);
-
-        // Set app settings to enable manageTapsEnabled by default for tests
-        const appSettings: AppSettings = {
-          manageTapsEnabled: true,
-          selectedOrganization: null,
-        };
-        await setAppSettingsStorage(page, appSettings);
-
-        // Store the auth setup data for authenticatedUser fixture to use
-        authSetupData = { user: mockUser, authResponse };
-      }
-
-      await use();
-    },
-    { auto: true },
-  ],
-
-  // Auto fixture: Reset stores and set up API monitoring for every test
-  resetStores: [
-    async (
-      {
-        page,
-        locationCount,
-        tapCount,
-        deviceCount,
-        beverageCount,
-        organizationCount,
-      },
-      use: () => Promise<void>,
-      testInfo: TestInfo,
-    ) => {
-      // Reset mock store and ID counter before test
-      resetMockStore();
-      resetIdCounter();
+  // Auto fixture: request monitoring + failure report around every test
+  apiMonitoring: [
+    async ({ page }, use: () => Promise<void>, testInfo: TestInfo) => {
       clearFailedRequests();
-
-      // Set up API monitoring
       setupAPIMonitoring(page, testInfo.file, testInfo.title);
 
-      if (REAL_API) {
-        // Real-API mode: no route mocks — the app talks to the Docker stack
-        // (tests/e2e-stack). Entity auto-seeding via test.use() counts is a
-        // mock-store feature; specs that rely on it must seed through the
-        // API instead, so fail loudly rather than run against missing data.
-        const requestedEntities =
-          (locationCount || 0) +
-          (tapCount || 0) +
-          (deviceCount || 0) +
-          (beverageCount || 0) +
-          (organizationCount || 0);
-        if (requestedEntities > 0) {
-          throw new Error(
-            'REAL_API mode: this spec uses mock-store entity counts ' +
-              '(locationCount/tapCount/…) and has not been converted to ' +
-              'API-based seeding yet. Run it without REAL_API, or convert it.',
-          );
-        }
-      } else {
-        // Set up API mocks (mock mode only)
-        setupAPIMocks(page);
-      }
-
-      // Populate stores based on configuration options
-      // Create locations with taps
-      // Hierarchy: Organization => Location => Devices => Taps => Kegs
-      const locations: Location[] = [];
-      const devicesCreatedForLocations: Device[] = [];
-
-      for (let i = 0; i < (locationCount || 0); i++) {
-        const location = createMockLocation({ name: `Location ${i + 1}` });
-        mockStore.setLocation(location);
-        locations.push(location);
-
-        // Create a device for this location (required for taps)
-        const device = createMockDevice({
-          name: `Device ${i + 1}`,
-          location: createShortenedEntity(location.id, location.name),
-        });
-        mockStore.setDevice(device);
-        devicesCreatedForLocations.push(device);
-
-        // Create taps for this location with the device
-        for (let j = 0; j < (tapCount || 0); j++) {
-          const tap = createMockTap({
-            locationId: location.id,
-            deviceId: device.id,
-          });
-          mockStore.setTap(tap);
-        }
-      }
-
-      // Create additional devices (beyond those created for locations)
-      // Only create if deviceCount > devicesCreatedForLocations.length
-      const additionalDeviceCount = Math.max(
-        0,
-        (deviceCount || 0) - devicesCreatedForLocations.length,
-      );
-      for (let i = 0; i < additionalDeviceCount; i++) {
-        const device = createMockDevice({
-          name: `Device ${devicesCreatedForLocations.length + i + 1}`,
-        });
-        mockStore.setDevice(device);
-      }
-
-      // Create beverages
-      for (let i = 0; i < (beverageCount || 0); i++) {
-        const beverage = createMockBeverage({ name: `Beverage ${i + 1}` });
-        mockStore.setBeverage(beverage);
-      }
-
-      // Create organizations
-      for (let i = 0; i < (organizationCount || 0); i++) {
-        const organization = createMockOrganization({
-          name: `Organization ${i + 1}`,
-        });
-        mockStore.setOrganization(organization);
-      }
-
       await use();
 
-      // After test: Write failure report if there were failures
       const failedRequests = getFailedRequests();
       if (failedRequests.length > 0) {
         const reportPath = path.join(process.cwd(), 'tests', 'API_FAILURES.md');
@@ -356,42 +172,137 @@ export const test = base.extend<TestOptions & TestFixtures>({
     { auto: true },
   ],
 
-  // Mock store fixture - provides access to the mock data store
-  mockStore: async ({}, use) => {
-    await use(mockStore);
-  },
-
-  // Mode-agnostic user seeding (see TestFixtures.seedUser doc)
-  seedUser: async ({ request }, use) => {
-    await use(async (overrides = {}) => {
-      if (REAL_API) {
-        const user = await registerRealUser(request, {
-          userName: overrides.userName,
-          email: overrides.email ?? undefined,
-        });
-        return {
-          userName: user.userName,
-          password: user.password,
-          email: user.email,
-        };
+  // Auto fixture: real authentication when autoAuthenticate is set
+  authenticatedUser: [
+    async ({ page, seedApi, user, autoAuthenticate, apiMonitoring: _ }, use) => {
+      if (!autoAuthenticate) {
+        await use(null);
+        return;
       }
 
-      const mockUser = createMockUser(overrides);
-      mockStore.setUser(mockUser);
-      // The mock /token handler accepts any password for a stored user;
-      // 'password123' is the convention existing specs use.
-      return {
-        userName: mockUser.userName,
-        password: 'password123',
-        email: mockUser.email ?? '',
-      };
-    });
-  },
+      const { credentials, authResponse } = await seedApi.registerAndLogin(
+        user ?? {},
+      );
 
-  // Authenticated user fixture - reads from __setup fixture data
-  authenticatedUser: async ({ __setup }, use) => {
-    // Read from the auth setup data that was set by __setup fixture
-    await use(authSetupData);
+      // Account-shaped view of the real user for specs that read
+      // authenticatedUser.user.*
+      const account = createMockUser({
+        ...user,
+        id: authResponse.id,
+        userName: credentials.userName,
+        email: credentials.email,
+      });
+
+      // Pre-load the app's session storage so it boots authenticated
+      await setAuthStorage(page, authResponse);
+      await setAppSettingsStorage(page, {
+        manageTapsEnabled: true,
+        selectedOrganization: null,
+      });
+
+      await use({ user: account, authResponse, credentials });
+    },
+    { auto: true },
+  ],
+
+  // Auto fixture: entity seeding through the real API
+  seededEntities: [
+    async (
+      {
+        seedApi,
+        authenticatedUser,
+        locationCount,
+        tapCount,
+        deviceCount,
+        beverageCount,
+        organizationCount,
+      },
+      use,
+    ) => {
+      const seeded: SeededEntities = {
+        locations: [],
+        devices: [],
+        taps: [],
+        beverages: [],
+        organizations: [],
+      };
+
+      const requested =
+        (locationCount || 0) +
+        (tapCount || 0) +
+        (deviceCount || 0) +
+        (beverageCount || 0) +
+        (organizationCount || 0);
+
+      if (requested > 0) {
+        if (!authenticatedUser) {
+          throw new Error(
+            'Entity seeding requires autoAuthenticate: entities are owned ' +
+              'by (and visible to) the user that creates them.',
+          );
+        }
+
+        // Hierarchy mirrors the legacy mock seeding:
+        // Location → Device → Taps
+        for (let i = 0; i < (locationCount || 0); i++) {
+          const location = await seedApi.createLocation({
+            name: `Location ${i + 1}`,
+          });
+          seeded.locations.push(location);
+
+          const device = await seedApi.createDevice(location, {
+            name: `Device ${i + 1}`,
+          });
+          seeded.devices.push(device);
+
+          for (let j = 0; j < (tapCount || 0); j++) {
+            seeded.taps.push(await seedApi.createTap(location, device));
+          }
+        }
+
+        // Additional devices beyond those created for locations need a
+        // location to live in — create one if none was requested.
+        const additionalDeviceCount = Math.max(
+          0,
+          (deviceCount || 0) - seeded.devices.length,
+        );
+        if (additionalDeviceCount > 0) {
+          let deviceLocation = seeded.locations[0];
+          if (!deviceLocation) {
+            deviceLocation = await seedApi.createLocation({
+              name: 'Device Location',
+            });
+            seeded.locations.push(deviceLocation);
+          }
+          for (let i = 0; i < additionalDeviceCount; i++) {
+            seeded.devices.push(
+              await seedApi.createDevice(deviceLocation, {
+                name: `Device ${seeded.devices.length + 1}`,
+              }),
+            );
+          }
+        }
+
+        for (let i = 0; i < (beverageCount || 0); i++) {
+          seeded.beverages.push(
+            await seedApi.createBeverage({ name: `Beverage ${i + 1}` }),
+          );
+        }
+
+        for (let i = 0; i < (organizationCount || 0); i++) {
+          seeded.organizations.push(
+            await seedApi.createOrganization({ name: `Organization ${i + 1}` }),
+          );
+        }
+      }
+
+      await use(seeded);
+    },
+    { auto: true },
+  ],
+
+  seedUser: async ({ seedApi }, use) => {
+    await use(async (overrides = {}) => seedApi.register(overrides));
   },
 
   // Page object fixtures - automatically instantiated with page dependency

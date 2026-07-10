@@ -1,13 +1,12 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
 test('should pre-fill form with existing data when tap has description', async ({
-  page,
-}) => {
+  page, seedApi,}) => {
   // Set up explicit data: one tap with description
-  const { tap } = await mockTapWithKeg(page, 'Test Tap Description');
+  const { tap } = await seedTapWithKeg(seedApi, 'Test Tap Description');
 
   await page.goto(`/taps/${tap.id}/edit/tap`);
 
@@ -30,10 +29,9 @@ test('should pre-fill form with existing data when tap has description', async (
 });
 
 test('should pre-fill form with existing data when tap has no description', async ({
-  page,
-}) => {
-  // Use mockTapWithKeg with description '' so tap has organization, location, device (required for edit route)
-  const { tap } = await mockTapWithKeg(page, '');
+  page, seedApi,}) => {
+  // Use seedTapWithKeg with description '' so tap has organization, location, device (required for edit route)
+  const { tap } = await seedTapWithKeg(seedApi, '');
 
   await page.goto(`/taps/${tap.id}/edit/tap`);
 
@@ -44,9 +42,9 @@ test('should pre-fill form with existing data when tap has no description', asyn
   await expect(page.getByTestId('input-description')).toHaveValue('');
 });
 
-test('should successfully update tap', async ({ page, dropDown }) => {
+test('should successfully update tap', async ({ page, dropDown, seedApi}) => {
   // Set up explicit data: one tap with keg
-  const { tap } = await mockTapWithKeg(page);
+  const { tap } = await seedTapWithKeg(seedApi);
 
   await page.goto(`/taps/${tap.id}/edit/tap`);
   await expect(page.getByTestId('header-edit-tap')).toBeVisible();

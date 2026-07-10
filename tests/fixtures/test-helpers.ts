@@ -6,9 +6,6 @@
 
 import { expect, Page } from '@playwright/test';
 
-import { mockStore } from './api-mocks';
-import { createMockPermission, createShortenedEntity } from './test-data';
-
 import type {
   Account,
   Device,
@@ -37,100 +34,32 @@ export async function submitForm(
 }
 
 /**
- * Set up permissions for a tap
+ * Real-API: the creating user is granted an Administrator permission row by
+ * the API itself on every POST (creator-grant), so entities seeded by the
+ * authenticated user are already visible/editable — these helpers are
+ * retained as no-ops so converted specs read the same. Specs that need a
+ * DIFFERENT permission level must seed as a second account instead.
  */
 export async function setupTapPermissions(
-  authenticatedUser: Account,
-  tap: Tap,
-  organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
-    'Read',
-  ],
-): Promise<void> {
-  for (const permissionType of permissionTypes) {
-    const permission = createMockPermission({
-      permissionType,
-      tap: { id: tap.id, isDeleted: false },
-      forUser: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      createdBy: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      organization: createShortenedEntity(organization.id, organization.name),
-      invalid: false,
-      isDeleted: false,
-      createdDate: new Date(),
-    });
-    mockStore.setPermission(permission);
-  }
-}
+  _authenticatedUser: Account,
+  _tap: Tap,
+  _organization?: Organization,
+  _permissionTypes?: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[],
+): Promise<void> {}
 
-/**
- * Set up permissions for a location
- */
 export async function setupLocationPermissions(
-  authenticatedUser: Account,
-  location: Location,
-  organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
-    'Read',
-  ],
-): Promise<void> {
-  for (const permissionType of permissionTypes) {
-    const permission = createMockPermission({
-      permissionType,
-      location: { id: location.id, name: location.name, isDeleted: false },
-      forUser: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      createdBy: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      organization: createShortenedEntity(organization.id, organization.name),
-      invalid: false,
-      isDeleted: false,
-      createdDate: new Date(),
-    });
-    mockStore.setPermission(permission);
-  }
-}
+  _authenticatedUser: Account,
+  _location: Location,
+  _organization?: Organization,
+  _permissionTypes?: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[],
+): Promise<void> {}
 
-/**
- * Set up permissions for a device
- */
 export async function setupDevicePermissions(
-  authenticatedUser: Account,
-  device: Device,
-  organization: Organization,
-  permissionTypes: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[] = [
-    'Read',
-  ],
-): Promise<void> {
-  for (const permissionType of permissionTypes) {
-    const permission = createMockPermission({
-      permissionType,
-      device: { id: device.id, name: device.name, isDeleted: false },
-      forUser: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      createdBy: {
-        id: authenticatedUser.id,
-        userName: authenticatedUser.userName,
-      },
-      organization: createShortenedEntity(organization.id, organization.name),
-      invalid: false,
-      isDeleted: false,
-      createdDate: new Date(),
-    });
-    mockStore.setPermission(permission);
-  }
-}
+  _authenticatedUser: Account,
+  _device: Device,
+  _organization?: Organization,
+  _permissionTypes?: ('Read' | 'Edit' | 'Administrator' | 'BannedFromTap')[],
+): Promise<void> {}
 
 /** URL path segment per entity type (Expo Router shared routes) */
 const DETAIL_PATH: Record<

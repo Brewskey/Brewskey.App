@@ -1,6 +1,6 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { createMockUser } from '../../fixtures/test-data';
-import { mockStore } from '../../fixtures/api-mocks';
+
+
 
 test('should display register screen', async ({ page }) => {
   // Set up explicit data: no user (register screen)
@@ -60,19 +60,15 @@ test('should show validation error for weak password', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('should handle duplicate email error', async ({ page, mockStore }) => {
-  // Set up explicit data: user with this email already exists
-  const existingUser = createMockUser({
-    email: 'existing@example.com',
-    userName: 'existinguser',
-  });
-  mockStore.setUser(existingUser);
+test('should handle duplicate email error', async ({ page, seedUser }) => {
+  // A real account with this email already exists
+  const existing = await seedUser({ userName: 'existinguser' });
 
   await page.goto('/register');
   await expect(page.getByTestId('input-email')).toBeVisible();
 
-  await page.getByTestId('input-userName').fill('newuser');
-  await page.getByTestId('input-email').fill('existing@example.com');
+  await page.getByTestId('input-userName').fill(`new${existing.userName}`);
+  await page.getByTestId('input-email').fill(existing.email);
   await page.getByTestId('input-password').fill('password123');
   await expect(page.getByTestId('register-submit-button')).toBeVisible();
   await page.getByTestId('register-submit-button').click();

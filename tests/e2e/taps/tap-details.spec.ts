@@ -1,24 +1,14 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { mockTapWithKeg } from '../../fixtures/entity-fixtures';
-import {
-  createMockPermission,
-  createShortenedEntity,
-} from '../../fixtures/test-data';
-import { mockStore } from '../../fixtures/api-mocks';
+import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate between tabs', async ({ page, authenticatedUser }) => {
+test('should navigate between tabs', async ({ page, authenticatedUser, seedApi}) => {
   // Set up tap with stats and leaderboard tabs visible (explicit data setup)
-  const { tap } = await mockTapWithKeg(page);
+  const { tap } = await seedTapWithKeg(seedApi);
 
-  // Update tap to show stats and leaderboard tabs
-  const tapWithTabs = {
-    ...tap,
-    hideStats: false,
-    hideLeaderboard: false,
-  };
-  mockStore.setTap(tapWithTabs);
+  // Seeded taps default to hideStats/hideLeaderboard = false, so the stats
+  // and leaderboard tabs are visible.
 
   await page.goto(`/taps/${tap.id}`);
 
@@ -44,8 +34,8 @@ test('should navigate between tabs', async ({ page, authenticatedUser }) => {
   await expect(leaderboardTab).toHaveAttribute('aria-selected', 'true');
 });
 
-test('should show flow sensor warning when missing', async ({ page }) => {
-  const { tap, beverage } = await mockTapWithKeg(page);
+test('should show flow sensor warning when missing', async ({ page, seedApi}) => {
+  const { tap, beverage } = await seedTapWithKeg(seedApi);
 
   await page.goto(`/taps/${tap.id}`);
 
@@ -62,29 +52,10 @@ test('should show flow sensor warning when missing', async ({ page }) => {
 
 test('should show edit button when user has permissions', async ({
   page,
-  authenticatedUser,
-}) => {
-  // Set up tap with Edit permission explicitly (explicit data setup)
-  const { tap, beverage, organization } = await mockTapWithKeg(page);
-
-  // Create Edit permission for the authenticated user with all required fields
-  const permission = createMockPermission({
-    permissionType: 'Edit',
-    tap: { id: tap.id, isDeleted: false },
-    forUser: {
-      id: authenticatedUser!.user.id,
-      userName: authenticatedUser!.user.userName,
-    },
-    createdBy: {
-      id: authenticatedUser!.user.id,
-      userName: authenticatedUser!.user.userName,
-    },
-    organization: createShortenedEntity(organization.id, organization.name),
-    invalid: false,
-    isDeleted: false,
-    createdDate: new Date(),
-  });
-  mockStore.setPermission(permission);
+  authenticatedUser, seedApi,}) => {
+  // The authenticated user created the tap, so the API's creator-grant gives
+  // them an Administrator permission row — edit access is real, not mocked.
+  const { tap } = await seedTapWithKeg(seedApi);
 
   await page.goto(`/taps/${tap.id}`);
 

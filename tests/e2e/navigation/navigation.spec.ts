@@ -1,13 +1,12 @@
 import { test, expect } from '../../fixtures/test-fixtures';
 import {
-  mockAuthenticatedUser,
-  mockLocationWithTaps,
+  seedAuthenticatedUser,
+  seedLocationWithTaps,
 } from '../../fixtures/entity-fixtures';
-import { mockStore } from '../../fixtures/api-mocks';
 
-test('should navigate between bottom tabs', async ({ page }) => {
+test('should navigate between bottom tabs', async ({ page, seedApi}) => {
   // Set up explicit data: authenticated user
-  await mockAuthenticatedUser(page);
+  await seedAuthenticatedUser(page, seedApi);
 
   // Home tab
   await page.goto('/');
@@ -46,10 +45,10 @@ test('should redirect to login when signed out', async ({ page }) => {
   await expect(page).toHaveURL(/.*login/i);
 });
 
-test('should navigate back from detail screens', async ({ page }) => {
+test('should navigate back from detail screens', async ({ page, seedApi}) => {
   // Set up explicit data: authenticated user with one device (device details works, location details is blocked)
-  await mockAuthenticatedUser(page);
-  const { devices } = await mockLocationWithTaps(page, 0);
+  await seedAuthenticatedUser(page, seedApi);
+  const { devices } = await seedLocationWithTaps(seedApi, 0);
 
   await page.goto('/devices');
 
@@ -65,16 +64,13 @@ test('should navigate back from detail screens', async ({ page }) => {
   await expect(page).toHaveURL(/.*devices/i);
 });
 
-test('should handle deep linking', async ({ page }) => {
+test('should handle deep linking', async ({ page, seedApi}) => {
   // Set up explicit data: authenticated user with tap ID 1
-  await mockAuthenticatedUser(page);
-  const { taps } = await mockLocationWithTaps(page, 1);
+  await seedAuthenticatedUser(page, seedApi);
+  const { taps } = await seedLocationWithTaps(seedApi, 1);
 
-  // Update tap ID to 1 for deep link test
-  const tapWithId1 = { ...taps[0], id: 1 as any };
-  mockStore.setTap(tapWithId1);
+  // Deep link straight to the real tap's detail page
+  await page.goto(`/taps/${taps[0].id}`);
 
-  await page.goto('/taps/1');
-
-  await expect(page).toHaveURL(/.*taps.*1/i);
+  await expect(page).toHaveURL(new RegExp(`taps.*${taps[0].id}`, 'i'));
 });
