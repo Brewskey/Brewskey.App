@@ -4,10 +4,13 @@ import { seedNearbyLocationWithTaps } from '../../fixtures/entity-fixtures';
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
 
+// A geolocation far from the shared fixture point so only THIS test's
+// location is nearby (the stack DB persists locations across tests).
+test.use({ geolocation: { latitude: 12.3456, longitude: 65.4321 } });
+
 test('should display nearby locations', async ({ page, homePage, seedApi}) => {
-  // Set up explicit data: one location nearby
-  // Geolocation permission is already granted via test-fixtures.ts
-  const { location } = await seedNearbyLocationWithTaps(seedApi, 0);
+  // A location at this test's unique coordinates
+  const { location } = await seedNearbyLocationWithTaps(seedApi, 0, {}, 12.3456, 65.4321);
   await homePage.goto();
 
   await expect(homePage.getNearbyLocationsList()).toBeVisible();

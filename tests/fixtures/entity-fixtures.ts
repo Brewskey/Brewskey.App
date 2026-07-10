@@ -81,8 +81,10 @@ export async function seedNearbyLocationWithTaps(
   seedApi: SeedApi,
   tapCount: number = 0,
   overrides: Record<string, unknown> = {},
+  latitude = 40.7128,
+  longitude = -74.006,
 ): Promise<{ location: Location; taps: Tap[]; device: Device }> {
-  const location = await seedApi.createNearbyLocation(overrides);
+  const location = await seedApi.createNearbyLocation(overrides, latitude, longitude);
   const device = await seedApi.createDevice(location);
   const taps: Tap[] = [];
   for (let i = 0; i < tapCount; i++) {
