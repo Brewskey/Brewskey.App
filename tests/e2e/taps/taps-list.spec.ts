@@ -24,6 +24,8 @@ test('should show empty state', async ({ page, tapPage, menuPage }) => {
 test('should navigate to tap details', async ({ page, tapPage, menuPage, seedApi}) => {
   // Set up explicit data: one location with 1 tap
   const { taps } = await seedLocationWithTaps(seedApi, 1);
+  // The create response doesn't include the server-assigned tapNumber; refetch.
+  const tap = await seedApi.fetchTap(taps[0].id);
 
   // Navigate through menu to taps
   await menuPage.goto();
@@ -33,7 +35,7 @@ test('should navigate to tap details', async ({ page, tapPage, menuPage, seedApi
   await expect(tapPage.getTapsList()).toBeVisible();
 
   // Tap number is dynamic content, so text-based locator is acceptable
-  await tapPage.clickTap(taps[0].tapNumber);
+  await tapPage.clickTap(tap.tapNumber);
 
   await expect(page).toHaveURL(/.*tap.*details|tap.*\d+/i);
 });

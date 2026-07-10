@@ -56,6 +56,16 @@ export const unique = (base: string): string => {
   return `${base}${process.pid.toString(36)}${Date.now().toString(36)}${uniqueCounter}`;
 };
 
+/**
+ * A unique 24-hex-char Particle device id (the ParticleId column is 24 chars,
+ * and real Particle ids are 24 hex digits).
+ */
+export const uniqueParticleId = (): string => {
+  uniqueCounter += 1;
+  const hex = `${process.pid.toString(16)}${Date.now().toString(16)}${uniqueCounter.toString(16)}`;
+  return hex.padStart(24, '0').slice(-24);
+};
+
 export type Credentials = {
   userName: string;
   email: string;
@@ -159,7 +169,7 @@ export class SeedApi {
   ): Promise<Location> {
     return LocationDAO.post({
       id: undefined,
-      name: 'Seeded Location',
+      name: unique('Seeded Location '),
       description: 'Seeded by e2e',
       street: '123 Test Street',
       suite: '',
@@ -181,7 +191,7 @@ export class SeedApi {
       deviceType: 'BrewskeyBox',
       deviceStatus: 'Active',
       nfcStatus: 'Disabled',
-      particleId: unique('e2eparticle'),
+      particleId: uniqueParticleId(),
       locationId: location.id,
       isScreenDisabled: false,
       isTotpDisabled: false,
@@ -312,6 +322,61 @@ export class SeedApi {
   }
 
   /**
+   * Sets a location's geolocation directly via the admin e2e seam (bypassing
+   * Google geocoding). Restores the current session afterwards.
+   */
+  async geolocateLocation(
+    locationId: Location['id'],
+    latitude = 40.7128,
+    longitude = -74.006,
+    timeZone = 'America/New_York',
+  ): Promise<void> {
+    const restore = this.credentials;
+    await this.loginAsAdmin();
+    try {
+      const response = await fetch(
+        `${API_HOST}/api/e2e/locations/${locationId}/geolocation`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Config.token}`,
+          },
+          body: JSON.stringify({ latitude, longitude, timeZone }),
+        },
+      );
+      if (!response.ok) {
+        throw new Error(
+          `Seed geolocation failed (${response.status}): ${await response.text()}`,
+        );
+      }
+    } finally {
+      if (restore) {
+        await this.login(restore);
+      }
+    }
+  }
+
+  /** A location geolocated at the browser's mocked coordinates (nearby). */
+  async createNearbyLocation(
+    overrides: Record<string, unknown> = {},
+    latitude = 40.7128,
+    longitude = -74.006,
+  ): Promise<Location> {
+    const location = await this.createLocation({
+      name: unique('Nearby Location '),
+      ...overrides,
+    });
+    await this.geolocateLocation(location.id, latitude, longitude);
+    return location;
+  }
+
+  /** All taps visible to the current session. */
+  async fetchTaps(): Promise<Tap[]> {
+    return TapDAO.fetchMany();
+  }
+
+  /**
    * A fully pourable device placed at the given coordinates (defaults to the
    * Playwright fixture's mocked geolocation), with an active keg and its
    * current live TOTP code. Entering the returned `totp` in the pour modal
@@ -327,49 +392,9 @@ export class SeedApi {
     const beverage = await this.createBeverage();
     await this.createKeg(tap, beverage);
 
-    // Geolocation + TOTP need admin (the e2e seam is admin-gated, and reading
-    // a device's TOTP creates its authorization token).
-    const restore = this.credentials;
-    await this.loginAsAdmin();
-    try {
-      const geoResponse = await fetch(
-        `${API_HOST}/api/e2e/locations/${location.id}/geolocation`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${Config.token}`,
-          },
-          body: JSON.stringify({
-            latitude,
-            longitude,
-            timeZone: 'America/New_York',
-          }),
-        },
-      );
-      if (!geoResponse.ok) {
-        throw new Error(
-          `Seed geolocation failed (${geoResponse.status}): ${await geoResponse.text()}`,
-        );
-      }
-
-      const totpResponse = await fetch(
-        `${API_HOST}/api/devices/${device.id}/totp`,
-        { headers: { Authorization: `Bearer ${Config.token}` } },
-      );
-      if (!totpResponse.ok) {
-        throw new Error(
-          `Seed device TOTP failed (${totpResponse.status}): ${await totpResponse.text()}`,
-        );
-      }
-      const { totp } = (await totpResponse.json()) as { totp: string };
-
-      return { location, device, tap, totp };
-    } finally {
-      if (restore) {
-        await this.login(restore);
-      }
-    }
+    await this.geolocateLocation(location.id, latitude, longitude);
+    const totp = await this.deviceTotp(device.id);
+    return { location, device, tap, totp };
   }
 
   /**

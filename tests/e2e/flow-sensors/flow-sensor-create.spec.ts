@@ -1,12 +1,12 @@
 /* eslint-disable no-await-in-loop */
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
+import { seedBareTap } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
 
 test('should navigate to create flow sensor', async ({ page, seedApi}) => {
   // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+  const { tap } = await seedBareTap(seedApi);
 
   await page.goto(`/flow-sensor/new?tapId=${tap.id}`);
 
@@ -19,7 +19,7 @@ test('should navigate to create flow sensor', async ({ page, seedApi}) => {
 
 test('should allow selecting sensor type', async ({ page, seedApi}) => {
   // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+  const { tap } = await seedBareTap(seedApi);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -29,7 +29,7 @@ test('should allow selecting sensor type', async ({ page, seedApi}) => {
 
 test('should allow setting gallon calibration', async ({ page, seedApi}) => {
   // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+  const { tap } = await seedBareTap(seedApi);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -42,7 +42,7 @@ test('should successfully create flow sensor with default sensor type', async ({
   page,
   dropDown, seedApi,}) => {
   // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+  const { tap } = await seedBareTap(seedApi);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -97,7 +97,7 @@ test('should successfully create flow sensor with custom sensor', async ({
   page,
   dropDown, seedApi,}) => {
   // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+  const { tap } = await seedBareTap(seedApi);
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 

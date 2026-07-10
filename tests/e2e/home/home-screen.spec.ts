@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
+import { seedNearbyLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
@@ -7,7 +7,7 @@ test.use({ autoAuthenticate: true });
 test('should display nearby locations', async ({ page, homePage, seedApi}) => {
   // Set up explicit data: one location nearby
   // Geolocation permission is already granted via test-fixtures.ts
-  const { location } = await seedLocationWithTaps(seedApi, 0);
+  const { location } = await seedNearbyLocationWithTaps(seedApi, 0);
   await homePage.goto();
 
   await expect(homePage.getNearbyLocationsList()).toBeVisible();
@@ -15,7 +15,9 @@ test('should display nearby locations', async ({ page, homePage, seedApi}) => {
   // Location name is dynamic content, but we can check within the nearby-locations-list
   // NearbyLocationsList shows location names in section headers
   const nearbyList = page.getByTestId('nearby-locations-list');
-  await expect(nearbyList.locator(`text=${location.name}`)).toBeVisible();
+  await expect(
+    nearbyList.getByText(location.name, { exact: false }).first(),
+  ).toBeVisible();
 });
 
 test('should request location permission', async ({ page, homePage }) => {
@@ -64,7 +66,7 @@ test.describe(() => {
 test('should allow refreshing locations', async ({ page, homePage, seedApi}) => {
   // Set up explicit data: one location nearby
   // Geolocation permission is already granted via test-fixtures.ts
-  await seedLocationWithTaps(seedApi, 0);
+  await seedNearbyLocationWithTaps(seedApi, 0);
   await homePage.goto();
 
   // Refresh is typically handled via pull-to-refresh on mobile

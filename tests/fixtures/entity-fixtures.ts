@@ -73,6 +73,24 @@ export async function seedLocationWithTaps(
   return { location, taps, devices: [device] };
 }
 
+/**
+ * A location geolocated at the browser's mocked coordinates (so it appears in
+ * the nearby-locations list), with a device and taps.
+ */
+export async function seedNearbyLocationWithTaps(
+  seedApi: SeedApi,
+  tapCount: number = 0,
+  overrides: Record<string, unknown> = {},
+): Promise<{ location: Location; taps: Tap[]; device: Device }> {
+  const location = await seedApi.createNearbyLocation(overrides);
+  const device = await seedApi.createDevice(location);
+  const taps: Tap[] = [];
+  for (let i = 0; i < tapCount; i++) {
+    taps.push(await seedApi.createTap(location, device, { description: `Tap ${i + 1}` }));
+  }
+  return { location, taps, device };
+}
+
 /** A tap with an active keg (full real hierarchy under one location). */
 export async function seedTapWithKeg(
   seedApi: SeedApi,
@@ -94,6 +112,16 @@ export async function seedTapWithKeg(
   const updatedTap = await seedApi.fetchTap(tap.id);
 
   return { tap: updatedTap, keg, beverage, location, device };
+}
+
+/** A tap with NO flow sensor (for the flow-sensor create flow). */
+export async function seedBareTap(
+  seedApi: SeedApi,
+): Promise<{ tap: Tap; location: Location; device: Device }> {
+  const location = await seedApi.createLocation();
+  const device = await seedApi.createDevice(location);
+  const tap = await seedApi.createTapWithoutSensor(location, device);
+  return { tap, location, device };
 }
 
 /** Empty state — nothing to seed against the real API. */
@@ -176,9 +204,9 @@ export async function seedUserWithOrganizations(
 ): Promise<{ organizations: Organization[] }> {
   const organizations: Organization[] = [];
   for (let i = 0; i < orgCount; i++) {
-    organizations.push(
-      await seedApi.createOrganization({ name: `Organization ${i + 1}` }),
-    );
+    // Unique names: the stack DB persists across tests, and the picker
+    // selects by visible text.
+    organizations.push(await seedApi.createOrganization());
   }
   return { organizations };
 }
