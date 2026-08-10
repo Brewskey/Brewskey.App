@@ -1,16 +1,15 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// Tap with isPaymentEnabled so Payments tab is shown; no organization means
+// canEnablePayments is false, showing "Payments are disabled" and avoiding
+// Square/fetchSquareLocations and price-variant dependencies.
+test.use({
+  autoAuthenticate: true,
+  seed: { taps: [{ isPaymentEnabled: true }] },
+});
 
-test('should display payment options', async ({ page, seedApi}) => {
-  // Tap with isPaymentEnabled so Payments tab is shown; use canEnablePayments: false to show
-  // "Payments are disabled" and avoid Square/fetchSquareLocations and price-variant mocks
-  const location = await seedApi.createLocation();
-  const device = await seedApi.createDevice(location);
-  const tap = await seedApi.createTap(location, device, {
-    isPaymentEnabled: true,
-  });
+test('should display payment options', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}/edit/payments`);
   await expect(page.getByTestId('header-edit-tap')).toBeVisible();

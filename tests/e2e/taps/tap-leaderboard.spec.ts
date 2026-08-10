@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// One kegged tap; seeded taps default to hideLeaderboard = false so the
+// leaderboard and its filters are visible.
+test.use({ autoAuthenticate: true, seed: { taps: [{ keg: true }] } });
 
-test('should allow filtering by duration', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap with leaderboard enabled and filters visible
-  const { tap } = await seedTapWithKeg(seedApi);
+test('should allow filtering by duration', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}/leaderboard`);
 

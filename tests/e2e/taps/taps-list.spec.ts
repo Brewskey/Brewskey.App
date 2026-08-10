@@ -1,17 +1,9 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import {
-  seedLocationWithTaps,
-  seedTapWithKeg,
-} from '../../fixtures/entity-fixtures';
 
-// Configure tests to auto-authenticate and create test data
 test.use({ autoAuthenticate: true });
 
 test('should show empty state', async ({ page, tapPage, menuPage }) => {
-  // Set up explicit data: no taps (empty state)
-  // Store is already empty from resetStores fixture
-
-  // Navigate through menu to taps
+  // No seed: a fresh account owns no taps.
   await menuPage.goto();
   await menuPage.clickTaps();
 
@@ -21,60 +13,71 @@ test('should show empty state', async ({ page, tapPage, menuPage }) => {
   await expect(page.getByTestId('button-get-started')).toBeVisible();
 });
 
-test('should navigate to tap details', async ({ page, tapPage, menuPage, seedApi}) => {
-  // Set up explicit data: one location with 1 tap
-  const { taps } = await seedLocationWithTaps(seedApi, 1);
-  // The create response doesn't include the server-assigned tapNumber; refetch.
-  const tap = await seedApi.fetchTap(taps[0].id);
+test.describe('with one tap', () => {
+  test.use({ seed: { taps: 1 } });
 
-  // Navigate through menu to taps
-  await menuPage.goto();
-  await menuPage.clickTaps();
+  test('should navigate to tap details', async ({
+    page,
+    tapPage,
+    menuPage,
+    taps,
+  }) => {
+    const [tap] = taps;
 
-  // Wait for list to load
-  await expect(tapPage.getTapsList()).toBeVisible();
+    // Navigate through menu to taps
+    await menuPage.goto();
+    await menuPage.clickTaps();
 
-  // Tap number is dynamic content, so text-based locator is acceptable
-  await tapPage.clickTap(tap.tapNumber);
+    // Wait for list to load
+    await expect(tapPage.getTapsList()).toBeVisible();
 
-  await expect(page).toHaveURL(/.*tap.*details|tap.*\d+/i);
+    // Click by the item's stable testid — a bare tap number matches many
+    // elements on screen and is flaky under parallel load.
+    const tapItem = page.getByTestId(`tap-item-${tap.id}`);
+    await expect(tapItem).toBeVisible();
+    await tapItem.click();
+
+    await expect(page).toHaveURL(/.*tap.*details|tap.*\d+/i);
+  });
 });
 
-test('should navigate to create tap', async ({ page, tapPage, menuPage, seedApi}) => {
-  // Set up explicit data: device for tap creation
-  // NewTapScreen requires deviceId to render the form
-  const { device } = await seedTapWithKeg(seedApi);
+test.describe('with a kegged tap', () => {
+  // NewTapScreen requires a deviceId to render the form.
+  test.use({ seed: { taps: [{ keg: true }] } });
 
-  // Navigate through menu to taps
-  await menuPage.goto();
-  await menuPage.clickTaps();
+  test('should navigate to create tap', async ({
+    page,
+    tapPage,
+    menuPage,
+    devices,
+  }) => {
+    const [device] = devices;
 
-  // Wait for page to load
-  await expect(tapPage.getTapsList()).toBeVisible();
+    // Navigate through menu to taps
+    await menuPage.goto();
+    await menuPage.clickTaps();
 
-  // Navigate to new tap screen with deviceId parameter
-  // NewTapScreen gets organizationId from the device, so we only need deviceId
-  await page.goto(`/taps/new?deviceId=${device.id}`);
+    // Wait for page to load
+    await expect(tapPage.getTapsList()).toBeVisible();
 
-  // Wait for the form to load - TapForm queries organization by ID from device
-  // The form container has testID="tap-form" when organization is loaded
-  // Organization query should complete and form should render
-  // Wait for the form to appear (organization query completes)
-  // Playwright's auto-waiting will handle timing
-  await expect(
-    page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form')),
-  ).toBeVisible();
+    // Navigate to new tap screen with deviceId parameter
+    // NewTapScreen gets organizationId from the device, so we only need deviceId
+    await page.goto(`/taps/new?deviceId=${device.id}`);
 
-  // Wait for loading to complete and form to be visible
-  const loadingIndicator = page.getByTestId('tap-form-loading');
-  if (await loadingIndicator.isVisible().catch(() => false)) {
-    await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
-  }
+    // Wait for the form to load - TapForm queries organization by ID from device
+    await expect(
+      page.getByTestId('tap-form-loading').or(page.getByTestId('tap-form')),
+    ).toBeVisible();
 
-  // Playwright's auto-waiting will handle timing
-  await expect(page.getByTestId('tap-form')).toBeVisible();
+    // Wait for loading to complete and form to be visible
+    const loadingIndicator = page.getByTestId('tap-form-loading');
+    if (await loadingIndicator.isVisible().catch(() => false)) {
+      await expect(loadingIndicator).toBeHidden({ timeout: 20000 });
+    }
 
-  // After form is visible, check for the description input field
-  // TapForm uses "description" field, not "tapNumber"
-  await expect(page.getByTestId('input-description')).toBeVisible();
+    await expect(page.getByTestId('tap-form')).toBeVisible();
+
+    // TapForm uses "description" field, not "tapNumber"
+    await expect(page.getByTestId('input-description')).toBeVisible();
+  });
 });

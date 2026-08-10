@@ -1,14 +1,17 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// One tap with keg and a second beverage so we can mutate the beverage field.
+// The standalone beverage is seeded after the keg's, so it is newest by id.
+test.use({
+  autoAuthenticate: true,
+  seed: {
+    taps: [{ keg: true }],
+    beverages: [{ name: 'Other Keg Beverage' }],
+  },
+});
 
-test('should successfully update keg', async ({ page, dropDown, seedApi}) => {
-  // Set up: one tap with keg and a second beverage so we can mutate the beverage field
-  const { tap } = await seedTapWithKeg(seedApi);
-  const otherBeverage = await seedApi.createBeverage({
-    name: 'Other Keg Beverage',
-  });
+test('should successfully update keg', async ({ page, dropDown, taps }) => {
+  const [tap] = taps;
 
   // Edit tap layout uses tab name "keg" for the feed/on-tap screen
   await page.goto(`/taps/${tap.id}/edit/keg`);

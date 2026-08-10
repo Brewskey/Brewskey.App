@@ -1,36 +1,44 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should show device online/offline status', async ({
-  page,
-  devicePage, seedApi,}) => {
-  // Set up explicit data: one device with online status (default)
-  const { device } = await seedDeviceWithTaps(seedApi, 0);
-  await devicePage.goto();
+test.describe('with one device', () => {
+  test.use({ seed: { devices: 1 } });
 
-  await expect(devicePage.getDevicesList()).toBeVisible();
+  test('should show device online/offline status', async ({
+    page,
+    devicePage,
+    devices,
+  }) => {
+    const [device] = devices;
+    await devicePage.goto();
 
-  // Use testID for device item - device list item includes online status indicator
-  await expect(page.getByTestId(`device-item-${device.id}`)).toBeVisible();
-});
+    await expect(devicePage.getDevicesList()).toBeVisible();
 
-test('should navigate to device details', async ({ page, devicePage, seedApi}) => {
-  // Set up explicit data: one device with no taps
-  const { device } = await seedDeviceWithTaps(seedApi, 0);
-  await devicePage.goto();
+    // Use testID for device item - device list item includes online status indicator
+    await expect(page.getByTestId(`device-item-${device.id}`)).toBeVisible();
+  });
 
-  // Wait for list to load
-  await expect(devicePage.getDevicesList()).toBeVisible();
+  test('should navigate to device details', async ({
+    page,
+    devicePage,
+    devices,
+  }) => {
+    const [device] = devices;
+    await devicePage.goto();
 
-  // Use testID for device item
-  await page.getByTestId(`device-item-${device.id}`).click();
+    // Wait for list to load
+    await expect(devicePage.getDevicesList()).toBeVisible();
 
-  await expect(page).toHaveURL(/.*device.*details|device.*\d+/i);
+    // Use testID for device item
+    await page.getByTestId(`device-item-${device.id}`).click();
+
+    await expect(page).toHaveURL(/.*device.*details|device.*\d+/i);
+  });
 });
 
 test('should navigate to create device', async ({ page, devicePage }) => {
+  // No seed: a fresh account owns no devices.
   await devicePage.goto();
 
   // Wait for page to load

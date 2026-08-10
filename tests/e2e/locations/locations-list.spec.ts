@@ -1,5 +1,4 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
 // Configure tests to auto-authenticate
 test.use({ autoAuthenticate: true });
@@ -9,8 +8,7 @@ test('should show empty state when no locations exist', async ({
   locationPage,
   menuPage,
 }) => {
-  // Set up explicit data: no locations (empty state)
-  // Store is already empty from resetStores fixture
+  // No seed: a fresh account owns no locations.
 
   // Navigate through menu to locations
   await menuPage.goto();
@@ -24,24 +22,29 @@ test('should show empty state when no locations exist', async ({
   await expect(page.getByTestId('button-get-started')).toBeVisible();
 });
 
-test('should navigate to location details', async ({
-  page,
-  locationPage,
-  menuPage, seedApi,}) => {
-  // Set up explicit data: one location with no taps
-  const { location } = await seedLocationWithTaps(seedApi, 0);
+test.describe('with one location', () => {
+  test.use({ seed: { devices: 1 } });
 
-  // Navigate through menu to locations
-  await menuPage.goto();
-  await menuPage.clickLocations();
+  test('should navigate to location details', async ({
+    page,
+    locationPage,
+    menuPage,
+    locations,
+  }) => {
+    const [location] = locations;
 
-  // Wait for list to load
-  await expect(locationPage.getLocationsList()).toBeVisible();
+    // Navigate through menu to locations
+    await menuPage.goto();
+    await menuPage.clickLocations();
 
-  // Location name is dynamic content, but we can use location-item testID
-  await page.getByTestId(`location-item-${location.id}`).click();
+    // Wait for list to load
+    await expect(locationPage.getLocationsList()).toBeVisible();
 
-  await expect(page).toHaveURL(/.*location.*details|location.*\d+/i);
+    // Location name is dynamic content, but we can use location-item testID
+    await page.getByTestId(`location-item-${location.id}`).click();
+
+    await expect(page).toHaveURL(/.*location.*details|location.*\d+/i);
+  });
 });
 
 test('should navigate to create location', async ({

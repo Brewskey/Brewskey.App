@@ -1,32 +1,30 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedBeverageWithPours } from '../../fixtures/entity-fixtures';
 
 test.use({ autoAuthenticate: true });
 
-test('should navigate to beverage details', async ({
-  page,
-  menuPage,
-  authenticatedUser,
-  seedApi,
-}) => {
-  // Set up explicit data: one beverage created by the authenticated user
-  const { beverage } = await seedBeverageWithPours(
-    seedApi,
-    0,
-    authenticatedUser?.user.userName,
-  );
+test.describe('with a beverage', () => {
+  // One beverage created by (and owned by) the authenticated user.
+  test.use({ seed: { taps: [{ keg: { srmId: 10 } }] } });
 
-  // Navigate through menu to beverages
-  await menuPage.goto();
-  await menuPage.clickBeverages();
+  test('should navigate to beverage details', async ({
+    page,
+    menuPage,
+    beverages,
+  }) => {
+    const [beverage] = beverages;
 
-  // Wait for beverages list to be visible
-  await expect(page.getByTestId('beverages-list')).toBeVisible();
+    // Navigate through menu to beverages
+    await menuPage.goto();
+    await menuPage.clickBeverages();
 
-  // Beverage item has testID - use that instead of text-based locator
-  await page.getByTestId(`beverage-item-${beverage.id}`).click();
+    // Wait for beverages list to be visible
+    await expect(page.getByTestId('beverages-list')).toBeVisible();
 
-  await expect(page).toHaveURL(/.*beverage.*details|beverage.*\d+/i);
+    // Beverage item has testID - use that instead of text-based locator
+    await page.getByTestId(`beverage-item-${beverage.id}`).click();
+
+    await expect(page).toHaveURL(/.*beverage.*details|beverage.*\d+/i);
+  });
 });
 
 test('should navigate to create beverage', async ({ page, menuPage }) => {

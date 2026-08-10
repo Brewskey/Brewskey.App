@@ -70,7 +70,10 @@ export const useCreateDevice = () => {
   return useMutation({
     mutationFn: async (mutator: DeviceMutator) => {
       const device = await DeviceDAO.post(mutator);
-      return device;
+      // The create response doesn't populate navigation properties (e.g.
+      // organization), so re-fetch to get the fully expanded device before
+      // caching it — screens like tap creation gate on device.organization.
+      return DeviceDAO.fetchByID(device.id);
     },
     onSuccess: (device) => {
       queryClient.setQueryData(

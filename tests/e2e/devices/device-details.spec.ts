@@ -1,11 +1,9 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedDeviceWithTaps } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+test.use({ autoAuthenticate: true, seed: { devices: 1 } });
 
-test('should show device online/offline status', async ({ page, seedApi}) => {
-  // Set up explicit data: one device with online status (default)
-  const { device } = await seedDeviceWithTaps(seedApi, 0);
+test('should show device online/offline status', async ({ page, devices }) => {
+  const [device] = devices;
 
   await page.goto(`/devices/${device.id}`);
 
@@ -13,21 +11,24 @@ test('should show device online/offline status', async ({ page, seedApi}) => {
   await expect(page.getByTestId('overview-item-online-status')).toBeVisible();
 });
 
-test('should display associated taps', async ({ page, seedApi}) => {
-  // Set up explicit data: one device with 3 taps
-  const { device, taps } = await seedDeviceWithTaps(seedApi, 3);
+test.describe('with taps', () => {
+  test.use({ seed: { devices: 1, taps: 3 } });
 
-  await page.goto(`/devices/${device.id}`);
+  test('should display associated taps', async ({ page, devices, taps }) => {
+    const [device] = devices;
 
-  for (const tap of taps) {
-    // Use testID from TapListItem for reliable identification
-    await expect(page.getByTestId(`tap-item-${tap.id}`)).toBeVisible();
-  }
+    await page.goto(`/devices/${device.id}`);
+
+    for (const tap of taps) {
+      // Use testID from TapListItem for reliable identification
+      await expect(page.getByTestId(`tap-item-${tap.id}`)).toBeVisible();
+    }
+  });
 });
 
-test('should navigate to add tap', async ({ page, seedApi}) => {
-  // Set up explicit data: one device (add tap button should be visible when no taps)
-  const { device } = await seedDeviceWithTaps(seedApi, 0);
+test('should navigate to add tap', async ({ page, devices }) => {
+  // Add tap button should be visible when the device has no taps
+  const [device] = devices;
 
   await page.goto(`/devices/${device.id}`);
 

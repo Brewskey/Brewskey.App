@@ -18,15 +18,24 @@
  * });
  * ```
  *
- * @example Entity seeding via test.use() (created through the real API)
+ * @example Declarative entity seeding via test.use() (real API)
  * ```ts
- * test.use({ autoAuthenticate: true, locationCount: 2, tapCount: 3 });
+ * test.use({ autoAuthenticate: true, seed: { locations: 2, taps: 3 } });
  *
- * test('my test', async ({ page, seededEntities }) => {
- *   // 2 locations (each with a device) and 3 taps each, owned by the
- *   // authenticated user
+ * test('my test', async ({ page, locations, taps }) => {
+ *   // `locations` and `taps` are the real seeded entities, owned by the
+ *   // authenticated user. Each entity option is `number | Config[]`:
+ *   //   seed: { taps: [{ description: 'Left', flowSensor: 'Custom' }] }
  *   await page.goto('/taps');
  * });
+ * ```
+ *
+ * @example Organization-scoped seeding
+ * ```ts
+ * // Creates + selects an org; every seeded entity (and the app) is scoped to it.
+ * test.use({ autoAuthenticate: true, seed: { organization: true, devices: 1 } });
+ *
+ * test('my test', async ({ organization, devices }) => { ... });
  * ```
  *
  * @example Ad-hoc seeding inside a test
@@ -45,11 +54,14 @@ import type {
   Device,
   Location,
   Organization,
+  Pour,
   Tap,
 } from '@brewskey/js-api';
 import * as path from 'path';
 
-import { SeedApi, Credentials } from './seed-api';
+import type { Notification } from '../../src/stores/NotificationTypes';
+
+import { SeedApi, Credentials, SeedSpec, SeedResult } from './seed-api';
 import { createMockUser } from './test-data';
 import {
   setupAPIMonitoring,
@@ -57,7 +69,12 @@ import {
   writeFailureReport,
   getFailedRequests,
 } from './api-monitoring';
-import { setAuthStorage, setAppSettingsStorage } from './storage-helper';
+import { setupSoftApMocks, SoftApMockOptions } from './soft-ap-mocks';
+import {
+  setAuthStorage,
+  setAppSettingsStorage,
+  setNotificationsStorage,
+} from './storage-helper';
 import {
   LoginPage,
   HomePage,
@@ -79,13 +96,27 @@ export type TestOptions = {
   user?: Partial<Account>;
   autoAuthenticate?: boolean;
 
-  // Entity seeding configuration (created through the real API, owned by
-  // the authenticated user)
-  locationCount?: number;
-  tapCount?: number;
-  deviceCount?: number;
-  beverageCount?: number;
-  organizationCount?: number;
+  /**
+   * Declarative entity seeding, created through the real API and owned by the
+   * authenticated user. Each entity is `number | Config[]` and the parent
+   * hierarchy auto-fills. See {@link SeedSpec}.
+   */
+  seed?: SeedSpec;
+
+  /**
+   * Install the device SoftAP shim (the Brewskey box's WiFi-setup HTTP server
+   * at 192.168.0.1 — physical hardware that cannot exist in e2e). `true` for
+   * defaults, or per-test networks/particleId. Everything else stays real.
+   */
+  softAp?: SoftApMockOptions | boolean;
+
+  /**
+   * Pre-load the app's client-side notification store. Notifications arrive
+   * via native push (no API surface on web), so they are injected into app
+   * storage rather than seeded server-side. Wrapped in an object because a
+   * bare array in test.use() is parsed as a [value, options] fixture tuple.
+   */
+  notifications?: { list: Notification[] };
 };
 
 export type AuthenticatedUser = {
@@ -94,19 +125,17 @@ export type AuthenticatedUser = {
   credentials: Credentials;
 };
 
-export type SeededEntities = {
-  locations: Location[];
-  devices: Device[];
-  taps: Tap[];
-  beverages: Beverage[];
-  organizations: Organization[];
-};
+export type SeededEntities = SeedResult;
 
 type TestFixtures = {
   /** Authenticated js-api client bound to the e2e stack, for seeding. */
   seedApi: SeedApi;
   /** Auto: API monitoring + failure report around every test. */
   apiMonitoring: void;
+  /** Auto: installs the SoftAP shim when the `softAp` option is set. */
+  softApShim: void;
+  /** Auto: injects the `notifications` option into the app's store. */
+  notificationsStore: void;
   /**
    * Auto: when `autoAuthenticate` is set, registers a fresh real account,
    * logs it in, and pre-loads the app's session storage — the app boots
@@ -114,11 +143,27 @@ type TestFixtures = {
    */
   authenticatedUser: AuthenticatedUser | null;
   /**
-   * Auto: entities created through the real API per the count options,
-   * owned by the authenticated user (mirrors the legacy mock hierarchy:
-   * Location → Device → Taps, plus beverages/organizations).
+   * Auto: entities created through the real API per the `seed` option, owned
+   * by the authenticated user. The individual entity fixtures below
+   * (`locations`, `devices`, `taps`, `beverages`, `organizations`,
+   * `organization`) are derived from this and are the ergonomic way to reach
+   * the seeded data.
    */
   seededEntities: SeededEntities;
+  /** The selected organization from `seed.organization`, or null. */
+  organization: Organization | null;
+  /** All organizations created by `seed` (selected + extra). */
+  organizations: Organization[];
+  /** Locations created by `seed`. */
+  locations: Location[];
+  /** Devices created by `seed`. */
+  devices: Device[];
+  /** Taps created by `seed`. */
+  taps: Tap[];
+  /** Beverages created by `seed` (standalone + any attached via `keg`). */
+  beverages: Beverage[];
+  /** Pours fabricated by `seed` (via `taps[n].pours`). */
+  pours: Pour[];
   /**
    * Registers a real account WITHOUT logging the app in — for specs that
    * exercise the login flow itself. Returns the credentials to type.
@@ -145,11 +190,35 @@ export const test = base.extend<TestOptions & TestFixtures>({
   // Option fixtures (overridable via test.use())
   user: [undefined, { option: true }],
   autoAuthenticate: [false, { option: true }],
-  locationCount: [0, { option: true }],
-  tapCount: [0, { option: true }],
-  deviceCount: [0, { option: true }],
-  beverageCount: [0, { option: true }],
-  organizationCount: [0, { option: true }],
+  seed: [undefined, { option: true }],
+  softAp: [false, { option: true }],
+  notifications: [undefined, { option: true }],
+
+  // Auto fixture: SoftAP hardware shim (see the `softAp` option)
+  softApShim: [
+    async ({ page, softAp }, use: () => Promise<void>) => {
+      if (softAp) {
+        setupSoftApMocks(page, typeof softAp === 'object' ? softAp : {});
+      }
+      await use();
+    },
+    { auto: true },
+  ],
+
+  // Auto fixture: client-side notification store (see the `notifications`
+  // option). Depends on authenticatedUser so injection follows session setup.
+  notificationsStore: [
+    async (
+      { page, notifications, authenticatedUser: _ },
+      use: () => Promise<void>,
+    ) => {
+      if (notifications) {
+        await setNotificationsStorage(page, notifications.list);
+      }
+      await use();
+    },
+    { auto: true },
+  ],
 
   seedApi: async ({}, use) => {
     await use(new SeedApi());
@@ -205,101 +274,73 @@ export const test = base.extend<TestOptions & TestFixtures>({
     { auto: true },
   ],
 
-  // Auto fixture: entity seeding through the real API
+  // Auto fixture: declarative entity seeding through the real API
   seededEntities: [
-    async (
-      {
-        seedApi,
-        authenticatedUser,
-        locationCount,
-        tapCount,
-        deviceCount,
-        beverageCount,
-        organizationCount,
-      },
-      use,
-    ) => {
-      const seeded: SeededEntities = {
+    async ({ page, seedApi, authenticatedUser, seed, geolocation }, use) => {
+      const empty: SeededEntities = {
+        organization: null,
+        organizations: [],
         locations: [],
         devices: [],
         taps: [],
         beverages: [],
-        organizations: [],
+        pours: [],
       };
 
-      const requested =
-        (locationCount || 0) +
-        (tapCount || 0) +
-        (deviceCount || 0) +
-        (beverageCount || 0) +
-        (organizationCount || 0);
+      if (!seed) {
+        await use(empty);
+        return;
+      }
 
-      if (requested > 0) {
-        if (!authenticatedUser) {
-          throw new Error(
-            'Entity seeding requires autoAuthenticate: entities are owned ' +
-              'by (and visible to) the user that creates them.',
-          );
-        }
-
-        // Hierarchy mirrors the legacy mock seeding:
-        // Location → Device → Taps
-        for (let i = 0; i < (locationCount || 0); i++) {
-          const location = await seedApi.createLocation({
-            name: `Location ${i + 1}`,
-          });
-          seeded.locations.push(location);
-
-          const device = await seedApi.createDevice(location, {
-            name: `Device ${i + 1}`,
-          });
-          seeded.devices.push(device);
-
-          for (let j = 0; j < (tapCount || 0); j++) {
-            seeded.taps.push(await seedApi.createTap(location, device));
-          }
-        }
-
-        // Additional devices beyond those created for locations need a
-        // location to live in — create one if none was requested.
-        const additionalDeviceCount = Math.max(
-          0,
-          (deviceCount || 0) - seeded.devices.length,
+      if (!authenticatedUser) {
+        throw new Error(
+          'Entity seeding requires autoAuthenticate: entities are owned ' +
+            'by (and visible to) the user that creates them.',
         );
-        if (additionalDeviceCount > 0) {
-          let deviceLocation = seeded.locations[0];
-          if (!deviceLocation) {
-            deviceLocation = await seedApi.createLocation({
-              name: 'Device Location',
-            });
-            seeded.locations.push(deviceLocation);
-          }
-          for (let i = 0; i < additionalDeviceCount; i++) {
-            seeded.devices.push(
-              await seedApi.createDevice(deviceLocation, {
-                name: `Device ${seeded.devices.length + 1}`,
-              }),
-            );
-          }
-        }
+      }
 
-        for (let i = 0; i < (beverageCount || 0); i++) {
-          seeded.beverages.push(
-            await seedApi.createBeverage({ name: `Beverage ${i + 1}` }),
-          );
-        }
+      // `nearby: true` locations are seeded at the context's geolocation so
+      // the app and the data always agree on where "here" is.
+      const seeded = await seedApi.seed(seed, geolocation ?? undefined);
 
-        for (let i = 0; i < (organizationCount || 0); i++) {
-          seeded.organizations.push(
-            await seedApi.createOrganization({ name: `Organization ${i + 1}` }),
-          );
-        }
+      // A selected organization must be reflected in the app's settings so the
+      // app scopes its queries to it (matching how the seeded entities were
+      // created). This overrides the default set by authenticatedUser.
+      if (seeded.organization) {
+        await setAppSettingsStorage(page, {
+          manageTapsEnabled: true,
+          selectedOrganization: seeded.organization,
+        });
       }
 
       await use(seeded);
     },
     { auto: true },
   ],
+
+  // Derived fixtures: ergonomic access to the seeded entities so tests can
+  // destructure `{ organization, taps, devices }` directly.
+  organization: async ({ seededEntities }, use) => {
+    await use(seededEntities.organization);
+  },
+  organizations: async ({ seededEntities }, use) => {
+    await use(seededEntities.organizations);
+  },
+  locations: async ({ seededEntities }, use) => {
+    await use(seededEntities.locations);
+  },
+  devices: async ({ seededEntities }, use) => {
+    await use(seededEntities.devices);
+  },
+  taps: async ({ seededEntities }, use) => {
+    await use(seededEntities.taps);
+  },
+  beverages: async ({ seededEntities }, use) => {
+    await use(seededEntities.beverages);
+  },
+  pours: async ({ seededEntities }, use) => {
+    await use(seededEntities.pours);
+  },
 
   seedUser: async ({ seedApi }, use) => {
     await use(async (overrides = {}) => seedApi.register(overrides));

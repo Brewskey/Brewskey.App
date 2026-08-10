@@ -2,45 +2,6 @@ import { Page } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Note: mockLocationPermission is a helper function, not part of api-monitoring
-export async function mockLocationPermission(
-  page: Page,
-  granted: boolean = true,
-): Promise<void> {
-  await page.addInitScript((granted) => {
-    const mockGetCurrentPosition: Geolocation['getCurrentPosition'] = (
-      success: PositionCallback,
-      error?: PositionErrorCallback,
-    ) => {
-      if (granted) {
-        success({
-          coords: {
-            latitude: 40.7128,
-            longitude: -74.006,
-            accuracy: 10,
-            altitude: null,
-            altitudeAccuracy: null,
-            heading: null,
-            speed: null,
-          },
-          timestamp: Date.now(),
-        } as GeolocationPosition);
-      } else {
-        error?.({
-          code: 1,
-          message: 'User denied geolocation',
-          PERMISSION_DENIED: 1,
-          POSITION_UNAVAILABLE: 2,
-          TIMEOUT: 3,
-        } as GeolocationPositionError);
-      }
-    };
-    Object.assign(navigator.geolocation, {
-      getCurrentPosition: mockGetCurrentPosition,
-    });
-  }, granted);
-}
-
 export interface FailedRequest {
   url: string;
   method: string;
@@ -54,6 +15,28 @@ export interface FailedRequest {
 }
 
 const failedRequests: FailedRequest[] = [];
+
+/**
+ * Documented API contracts that respond 4xx during normal app operation —
+ * production traffic produces these too, so they are not failures. Keep this
+ * list narrow: method + path + status + exact body.
+ */
+function isExpectedContractResponse(
+  method: string,
+  url: string,
+  status: number,
+  responseBody: unknown,
+): boolean {
+  // GET /api/v2/cloud-devices/{particleId} returns 400 "Device does not
+  // exist" until the Brewskey device record is created (the NUX/WiFi screens
+  // poll online status before creation) — the legacy-pinned contract.
+  return (
+    method === 'GET' &&
+    /\/api\/v2\/cloud-devices\/[^/]+\/?(\?|$)/.test(url) &&
+    status === 400 &&
+    responseBody === 'Device does not exist'
+  );
+}
 
 export function setupAPIMonitoring(
   page: Page,
@@ -72,9 +55,29 @@ export function setupAPIMonitoring(
         if (postData) {
           requestBody = JSON.parse(postData);
         }
-        responseBody = await response.json();
       } catch (e) {
         // Ignore parsing errors
+      }
+      try {
+        responseBody = await response.json();
+      } catch (e) {
+        try {
+          // Plain-text error bodies (e.g. ASP.NET Core BadRequest(string))
+          responseBody = await response.text();
+        } catch (textError) {
+          // Ignore body-read errors
+        }
+      }
+
+      if (
+        isExpectedContractResponse(
+          response.request().method(),
+          url,
+          response.status(),
+          responseBody,
+        )
+      ) {
+        return;
       }
 
       failedRequests.push({

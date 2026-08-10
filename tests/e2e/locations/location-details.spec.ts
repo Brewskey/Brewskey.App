@@ -1,16 +1,12 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedLocationWithTaps } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+test.use({ autoAuthenticate: true, seed: { devices: 1 } });
 
-test('should navigate to edit location', async ({
-  page,
-  authenticatedUser, seedApi,}) => {
+test('should navigate to edit location', async ({ page, locations }) => {
   // The authenticated user creates the location, so the API's creator-grant
   // gives them Administrator (edit) permission — real, not mocked. The seeded
   // location carries a full street address.
-  if (!authenticatedUser) throw new Error('authenticatedUser is required');
-  const { location } = await seedLocationWithTaps(seedApi, 0);
+  const [location] = locations;
 
   await page.goto(`/locations/${location.id}`);
 

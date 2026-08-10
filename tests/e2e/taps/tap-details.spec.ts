@@ -1,14 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// Tap with an active keg; seeded taps default to hideStats/hideLeaderboard =
+// false, so the stats and leaderboard tabs are visible.
+test.use({ autoAuthenticate: true, seed: { taps: [{ keg: true }] } });
 
-test('should navigate between tabs', async ({ page, authenticatedUser, seedApi}) => {
-  // Set up tap with stats and leaderboard tabs visible (explicit data setup)
-  const { tap } = await seedTapWithKeg(seedApi);
-
-  // Seeded taps default to hideStats/hideLeaderboard = false, so the stats
-  // and leaderboard tabs are visible.
+test('should navigate between tabs', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}`);
 
@@ -34,8 +31,8 @@ test('should navigate between tabs', async ({ page, authenticatedUser, seedApi})
   await expect(leaderboardTab).toHaveAttribute('aria-selected', 'true');
 });
 
-test('should show flow sensor warning when missing', async ({ page, seedApi}) => {
-  const { tap, beverage } = await seedTapWithKeg(seedApi);
+test('should show flow sensor warning when missing', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}`);
 
@@ -52,10 +49,11 @@ test('should show flow sensor warning when missing', async ({ page, seedApi}) =>
 
 test('should show edit button when user has permissions', async ({
   page,
-  authenticatedUser, seedApi,}) => {
+  taps,
+}) => {
   // The authenticated user created the tap, so the API's creator-grant gives
   // them an Administrator permission row — edit access is real, not mocked.
-  const { tap } = await seedTapWithKeg(seedApi);
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}`);
 

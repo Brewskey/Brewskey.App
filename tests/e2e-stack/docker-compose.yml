@@ -15,6 +15,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+      devicecloud:
+        condition: service_healthy
     ports:
       - "8080:8080"
     restart: unless-stopped
@@ -47,6 +49,12 @@ services:
       Jwt__SigningKey: "brewskey-e2e-signing-key-not-for-production-0123456789"
       # Real blob storage via Azurite (image upload + /cdn serving).
       ConnectionStrings__Blob.Storage.ConnectionString: "DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;"
+      # Real device cloud behind the Particle proxy (/api/v2/cloud-devices
+      # etc.). The token is the admin user seeded by
+      # mongo-init/seed-cloud-admin.js; seed-api.ts uses the same token to
+      # provision seeded devices into the cloud.
+      Particle__CloudBaseUrl: "http://devicecloud"
+      Particle__CloudAccessToken: "e2e-cloud-admin-token-3f9c1a7e5d2b4860"
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -71,6 +79,46 @@ services:
     image: rnwood/smtp4dev:v3
     ports:
       - "5010:80"
+
+  # Real Particle device cloud (spark-server). Runs as root so
+  # ServerKeyRepository can write /usr/src/app/data on first boot. Port 8082
+  # is exposed for the seed layer (tests/fixtures/seed-api.ts provisions each
+  # seeded device here so device-status reads return real data).
+  devicecloud:
+    image: ghcr.io/jlkalberer/brewskey.devicecloud:master
+    user: root
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8082:80"
+    environment:
+      MONGO_DB_CONNECTION: "mongodb://mongo:27017/spark-server"
+    healthcheck:
+      # Any HTTP response (including 401) means the express server is up.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "require('http').get('http://localhost:80/v1/devices',(r)=>process.exit(0)).on('error',()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  mongo:
+    image: mongo:7.0
+    volumes:
+      # Seeds the deterministic cloud admin token on first boot.
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite

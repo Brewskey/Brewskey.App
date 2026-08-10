@@ -14,8 +14,14 @@ export default defineConfig({
   globalSetup: './tests/e2e-stack/global-setup.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
+  // Locally: zero retries — tests must pass deterministically every run.
+  // CI keeps retries to absorb infra hiccups only.
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // One shared stateful backend + one Expo dev server. A bounded worker count
+  // keeps the dev server from thrashing under load (which caused render
+  // timeouts); every test isolates its own data (unique names / coordinates)
+  // so bounded parallelism is still deterministic.
+  workers: process.env.CI ? 1 : 4,
   reporter: [
     ['html'],
     ['json', { outputFile: 'test-results/results.json' }],

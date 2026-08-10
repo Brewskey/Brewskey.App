@@ -1,6 +1,5 @@
+import { unique } from '../../fixtures/seed-api';
 import { test, expect } from '../../fixtures/test-fixtures';
-
-
 
 test('should display register screen', async ({ page }) => {
   // Set up explicit data: no user (register screen)
@@ -13,12 +12,14 @@ test('should display register screen', async ({ page }) => {
 });
 
 test('should successfully register new user', async ({ page }) => {
-  // Set up explicit data: no existing user with this email
+  // The stack DB persists across runs, so a fixed email/username collides with
+  // a prior run's account. Use a unique identity every time.
+  const userName = unique('newuser');
   await page.goto('/register');
   await expect(page.getByTestId('input-email')).toBeVisible();
 
-  await page.getByTestId('input-userName').fill('newuser');
-  await page.getByTestId('input-email').fill('newuser@example.com');
+  await page.getByTestId('input-userName').fill(userName);
+  await page.getByTestId('input-email').fill(`${userName}@example.com`);
   await page.getByTestId('input-password').fill('password123');
   await expect(page.getByTestId('register-submit-button')).toBeVisible();
   await page.getByTestId('register-submit-button').click();

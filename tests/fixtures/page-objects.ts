@@ -290,8 +290,26 @@ export class SettingsPage {
   async selectOrganization(organizationName: string): Promise<void> {
     const picker = this.page.getByTestId('organization-dropdown');
     await picker.click();
-    // Wait for modal to open and select the organization by text
-    await this.page.getByText(organizationName).click();
+
+    // Filter to the target org via the search box (server-side `name contains`),
+    // then click the option by its stable testid — the raw visible text is
+    // rendered in multiple layers by React Native Web and clicks unreliably.
+    const modal = this.page.getByTestId('organization-dropdown-modal');
+    const search = this.page.getByTestId('organization-dropdown-search');
+    if (await search.isVisible()) {
+      await search.fill(organizationName);
+    }
+
+    const option = modal
+      .locator('[data-testid^="option-"]')
+      .filter({ hasText: organizationName })
+      .first();
+    await option.scrollIntoViewIfNeeded();
+    try {
+      await option.click({ timeout: 5000 });
+    } catch {
+      await option.dispatchEvent('click');
+    }
   }
 }
 

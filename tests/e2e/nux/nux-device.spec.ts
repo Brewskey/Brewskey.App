@@ -1,36 +1,40 @@
-import {
-  seedLocationWithTaps,
-  seedNewUserState,
-} from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
-test('should show device setup instructions', async ({ page, nuxPage, seedApi}) => {
-  await seedNewUserState(page, seedApi);
+test.use({ autoAuthenticate: true });
+
+test('should show device setup instructions', async ({ page, nuxPage }) => {
   await nuxPage.gotoDeviceStep();
 
   await expect(page.getByTestId('nux-device-description')).toBeVisible();
 });
 
-test('should have continue button', async ({ page, nuxPage, seedApi}) => {
-  await seedNewUserState(page, seedApi);
+test('should have continue button', async ({ nuxPage }) => {
   await nuxPage.gotoDeviceStep();
 
   await expect(nuxPage.getContinueButton()).toBeVisible();
   await expect(nuxPage.getContinueButton()).toBeEnabled();
 });
 
-test('should navigate to devices/new when Next is clicked', async ({
-  page,
-  nuxPage, seedApi,}) => {
-  await seedNewUserState(page, seedApi);
-  const { location } = await seedLocationWithTaps(seedApi, 0);
+test.describe('with a location', () => {
+  test.use({ seed: { devices: 1 } });
 
-  await page.goto(
-    `/(nux)/device?particleId=particle_test&locationId=${location.id}`,
-  );
-  await expect(page.getByTestId('nux-device-content')).toBeVisible();
+  test('should navigate to devices/new when Next is clicked', async ({
+    page,
+    nuxPage,
+    locations,
+    seedApi,
+  }) => {
+    const [location] = locations;
 
-  await nuxPage.getContinueButton().click();
+    // The box this flow sets up would already exist in the device cloud.
+    await seedApi.registerCloudDevice('particle_test');
+    await page.goto(
+      `/(nux)/device?particleId=particle_test&locationId=${location.id}`,
+    );
+    await expect(page.getByTestId('nux-device-content')).toBeVisible();
 
-  await expect(page).toHaveURL(/\/devices\/new/i);
+    await nuxPage.getContinueButton().click();
+
+    await expect(page).toHaveURL(/\/devices\/new/i);
+  });
 });

@@ -1,63 +1,28 @@
-import {
-  seedLocationWithTaps,
-  seedNewUserState,
-} from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
+
+test.use({ autoAuthenticate: true });
+
 test('should display location setup screen for new user', async ({
   page,
-  nuxPage, seedApi,}) => {
-  await seedNewUserState(page, seedApi);
+  nuxPage,
+}) => {
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-description')).toBeVisible({
     timeout: 15000,
   });
 });
 
-test('should handle no locations scenario', async ({ page, nuxPage, seedApi}) => {
-  await seedNewUserState(page, seedApi);
+test('should handle no locations scenario', async ({ page, nuxPage }) => {
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-description')).toBeVisible({
     timeout: 15000,
   });
-});
-
-test('should handle single location scenario', async ({ page, nuxPage, seedApi}) => {
-  await seedNewUserState(page, seedApi);
-  await seedLocationWithTaps(seedApi, 0);
-  await nuxPage.gotoLocationStep(1);
-  await expect(page.getByTestId('nux-location-description')).toBeVisible({
-    timeout: 15000,
-  });
-  await expect(page.getByTestId('nux-location-description')).toContainText(
-    "You've already set up the location",
-  );
-});
-
-test('should handle multiple locations scenario', async ({ page, nuxPage, seedApi}) => {
-  await seedNewUserState(page, seedApi);
-  await seedLocationWithTaps(seedApi, 0);
-  await seedLocationWithTaps(seedApi, 0);
-  await nuxPage.gotoLocationStep(2);
-  await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
-  await expect(nuxPage.getContinueButton()).toBeDisabled();
-});
-
-test('should enable continue button when location selected', async ({
-  page,
-  nuxPage, seedApi,}) => {
-  await seedNewUserState(page, seedApi);
-  const { location } = await seedLocationWithTaps(seedApi, 0);
-  await seedLocationWithTaps(seedApi, 0);
-  await nuxPage.gotoLocationStep(2);
-  await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
-  await nuxPage.selectLocation(location.name);
-  await expect(nuxPage.getContinueButton()).toBeEnabled();
 });
 
 test('should navigate to locations/new when Next is clicked with no locations', async ({
   page,
-  nuxPage, seedApi,}) => {
-  await seedNewUserState(page, seedApi);
+  nuxPage,
+}) => {
   await nuxPage.gotoLocationStep();
   await expect(page.getByTestId('nux-location-content')).toBeVisible({
     timeout: 15000,
@@ -70,18 +35,54 @@ test('should navigate to locations/new when Next is clicked with no locations', 
   await expect(page).toHaveURL(/\/locations\/new/i);
 });
 
-test('should navigate to nux/wifi when Next is clicked with location selected', async ({
-  page,
-  nuxPage, seedApi,}) => {
-  await seedNewUserState(page, seedApi);
-  const { location } = await seedLocationWithTaps(seedApi, 0);
-  await seedLocationWithTaps(seedApi, 0);
-  await nuxPage.gotoLocationStep(2);
-  await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
-  await nuxPage.selectLocation(location.name);
+test.describe('with one location', () => {
+  test.use({ seed: { devices: 1 } });
 
-  await nuxPage.getContinueButton().click();
+  test('should handle single location scenario', async ({ page, nuxPage }) => {
+    await nuxPage.gotoLocationStep(1);
+    await expect(page.getByTestId('nux-location-description')).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByTestId('nux-location-description')).toContainText(
+      "You've already set up the location",
+    );
+  });
+});
 
-  await expect(page).toHaveURL(/\/wifi/i);
-  await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
+test.describe('with two locations', () => {
+  // One device per location (devices spread across seeded locations).
+  test.use({ seed: { locations: 2, devices: 2 } });
+
+  test('should handle multiple locations scenario', async ({ nuxPage }) => {
+    await nuxPage.gotoLocationStep(2);
+    await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
+    await expect(nuxPage.getContinueButton()).toBeDisabled();
+  });
+
+  test('should enable continue button when location selected', async ({
+    nuxPage,
+    locations,
+  }) => {
+    const [location] = locations;
+    await nuxPage.gotoLocationStep(2);
+    await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
+    await nuxPage.selectLocation(location.name);
+    await expect(nuxPage.getContinueButton()).toBeEnabled();
+  });
+
+  test('should navigate to nux/wifi when Next is clicked with location selected', async ({
+    page,
+    nuxPage,
+    locations,
+  }) => {
+    const [location] = locations;
+    await nuxPage.gotoLocationStep(2);
+    await expect(nuxPage.getLocationPicker()).toBeVisible({ timeout: 15000 });
+    await nuxPage.selectLocation(location.name);
+
+    await nuxPage.getContinueButton().click();
+
+    await expect(page).toHaveURL(/\/wifi/i);
+    await expect(page.getByTestId('nux-wifi-content')).toBeVisible();
+  });
 });

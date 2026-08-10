@@ -35,6 +35,14 @@ export const FlowSensorForm: React.FC<Props> = ({
   flowSensor,
   tapId,
 }) => {
+  // The calibration slider produces a continuous value; the server column is
+  // an integer, so round before submitting.
+  const handleSubmit = (values: FlowSensorMutator): void | Promise<void> =>
+    onSubmit({
+      ...values,
+      pulsesPerGallon: Math.round(Number(values.pulsesPerGallon)),
+    });
+
   const initialFlowSensorType =
     flowSensor?.flowSensorType ?? FLOW_SENSOR_ITEMS[0].value;
   const initialFlowSensorItem =
@@ -101,7 +109,7 @@ export const FlowSensorForm: React.FC<Props> = ({
           <SubmitButton
             allowSubmitWhenValid={!flowSensor}
             disabled={!isFormReady}
-            onSubmit={onSubmit}
+            onSubmit={handleSubmit}
             testID="submit-button-save"
             title="Set Sensor"
           />

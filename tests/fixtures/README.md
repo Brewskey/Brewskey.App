@@ -1,262 +1,115 @@
-# Test Fixtures
+# Test Fixtures — real-API e2e
 
-This directory contains Playwright test fixtures with dependency injection for the Brewskey app tests.
+Playwright fixtures with dependency injection for the Brewskey app e2e suite.
+Every test runs against the actual Brewskey.Web Docker stack
+(`tests/e2e-stack/docker-compose.yml`) — **there are no API mocks**. All data
+setup flows through the declarative fixture system in `test-fixtures.ts`,
+following the canonical patterns from
+<https://playwright.dev/docs/test-fixtures>: option fixtures configured via
+`test.use()`, auto fixtures for per-test setup, and derived fixtures for
+ergonomic access.
 
-## Routes
-
-Use Expo Router deep link paths from `routes.ts` so tests match the app routing:
-
-- **Tab screens**: `/(menu)`, `/(feed)`, `/(stats)`, `/(notifications)` – use group names in parentheses
-- **Menu sub-routes**: `/(menu)/settings`, `/(menu)/my-friends`, `/(menu)/help`, etc.
-- **Shared routes**: `/locations`, `/taps`, `/devices`, `/beverages` – same path from any tab
-- **Nux**: `/(nux)/location`, `/(nux)/wifi`, etc.
-
-```typescript
-import { ROUTES } from '../fixtures/routes';
-
-test('menu screen', async ({ page }) => {
-  await page.goto(ROUTES.MENU);
-});
+```
+npm run e2e-stack:up   # API + SQL Server + ES + smtp4dev + Azurite + device cloud (+ mongo)
+npx playwright test
+npm run e2e-stack:down # discard all state
 ```
 
-## Overview
+The Particle proxy (`/api/v2/cloud-devices/*`) talks to a real
+`brewskey.devicecloud` container; seeded devices are registered there
+automatically (they report offline — the true state of hardware that never
+connects), so device-status reads are real too.
 
-The test fixtures automatically handle:
+## Options (configure via `test.use()`)
 
-- **Mock data store reset** - Automatically resets before each test
-- **API monitoring** - Tracks failed API requests during tests
-- **API mocking** - Sets up route handlers for all API endpoints
-- **Authentication** - Optional automatic user authentication
+| Option | Type | What it does |
+|---|---|---|
+| `autoAuthenticate` | `boolean` | Registers + logs in a fresh REAL account; the app boots authenticated. |
+| `user` | `Partial<Account>` | Overrides for the registered account. |
+| `seed` | `SeedSpec` | Declarative REAL-API entity seeding owned by the authenticated user (below). |
+| `softAp` | `SoftApMockOptions \| boolean` | Installs the device SoftAP shim (the Brewskey box's WiFi-setup HTTP server at 192.168.0.1 — physical hardware that cannot exist in e2e). |
+| `notifications` | `{ list: Notification[] }` | Pre-loads the app's client-side notification store (push data; no API surface on web). Wrapped in an object because a bare array in `test.use()` is parsed as a `[value, options]` fixture tuple. |
+| `geolocation` | Playwright built-in | Browser coordinates. `nearby: true` seeded locations are placed AT this point, so app and data always agree on where "here" is. Use `uniqueGeolocation()` from `seed-api.ts` for geolocation-sensitive suites. |
 
-## Usage
+## Seeding (`seed` option)
 
-### Basic Setup
-
-Import the custom test fixtures instead of the default Playwright test:
-
-```typescript
-import { test, expect } from '../fixtures/test-fixtures';
-```
-
-### Auto-Authentication
-
-Enable automatic authentication for all tests in a file:
-
-```typescript
-import { test, expect } from '../fixtures/test-fixtures';
-
-test.use({ autoAuthenticate: true });
-
-test('my test', async ({ page, authenticatedUser }) => {
-  // authenticatedUser is automatically available
-  // { user: Account, authResponse: AuthResponse }
-  await page.goto('/home');
-});
-```
-
-### Custom User Configuration
-
-Configure user properties via `test.use()`:
+Entities are created through the app's own `@brewskey/js-api` client against
+the live API — identical wire shapes, real permissions. Each entity accepts a
+count or per-item configs (`Partial<XMutator>`, strongly typed); the parent
+hierarchy auto-fills.
 
 ```typescript
 test.use({
   autoAuthenticate: true,
-  user: { userName: 'customuser', email: 'custom@example.com' },
+  seed: {
+    organization: true,            // created AND selected (scopes app + seeds)
+    organizations: 2,              // extra orgs, not selected
+    locations: [{ nearby: true }], // placed at the context's geolocation
+    devices: 1,
+    taps: [{ keg: { srmId: 10 }, pours: 5, flowSensor: 'Custom' }],
+    beverages: [{ name: 'Test IPA' }],
+  },
 });
 
-test('my test', async ({ authenticatedUser }) => {
-  expect(authenticatedUser?.user.userName).toBe('customuser');
-});
-```
-
-### Per-Test Configuration
-
-Override configuration for specific tests:
-
-```typescript
-test('specific test', async ({ page, mockStore }) => {
-  // Use mockStore to manually add data
-  const customLocation = createMockLocation({ name: 'Custom Location' });
-  mockStore.setLocation(customLocation);
-
-  await page.goto('/locations');
+test('...', async ({ organization, locations, devices, taps, beverages, pours }) => {
+  const [tap] = taps; // fully fetched: tapNumber + currentKeg populated
 });
 ```
 
-### Using Helper Functions
+Tap extras: `flowSensor: 'Titan' (default) | 'Custom' | false`,
+`keg: true | Partial<BeverageMutator>`, `pours: N` (real pours through the
+actual pipeline via the stack's bootstrap admin; auto-attaches a keg),
+`deviceIndex`. Device extras: `locationIndex`.
 
-For complex data setups, use helper functions from `entity-fixtures.ts`:
+## Fixtures
 
-```typescript
-import { mockLocationWithTaps } from '../../fixtures/entity-fixtures';
+- `authenticatedUser` — `{ user, authResponse, credentials } | null`.
+- `organization` / `organizations` / `locations` / `devices` / `taps` /
+  `beverages` / `pours` — entities created by `seed`.
+- `seedApi` — the authenticated js-api client, for MID-TEST dynamic actions
+  only (create during a flow, `fetchDevice`/`fetchTap` persistence re-checks,
+  `registerOtherUser`). Initial state belongs in `seed`.
+- `seedUser` — registers a real account WITHOUT logging the app in (for
+  login-flow specs); returns credentials to type into the form.
+- Page objects: `loginPage`, `homePage`, `locationPage`, `tapPage`,
+  `devicePage`, `settingsPage`, `nuxPage`, `wifiPage`, `menuPage`,
+  `notificationsPage`, `statsPage`, `dropDown`.
+- Auto: `apiMonitoring` (writes `tests/API_FAILURES.md` when API requests
+  fail during a test), `softApShim`, `notificationsStore`.
 
-test('my test', async ({ page }) => {
-  const { location, taps } = await mockLocationWithTaps(page, 3);
-  // 1 location with 3 taps is now available
+## Per-group seeds
 
-  await page.goto('/taps');
-});
-```
-
-## Available Fixtures
-
-### `authenticatedUser`
-
-Optional fixture that provides authenticated user session.
-
-- **Type**: `{ user: Account; authResponse: AuthResponse } | null`
-- **Auto-setup**: Only when `autoAuthenticate: true` is set
-- **Usage**: Access user data and auth tokens
-
-### `mockStore`
-
-Provides direct access to the mock data store.
-
-- **Type**: `MockDataStore`
-- **Usage**: Manually add/remove mock data
-- **Methods**: `setUser()`, `setLocation()`, `setTap()`, `getUsers()`, etc.
-
-### `page`
-
-Standard Playwright page fixture (overridden to ensure API mocks are set up).
-
-- **Type**: `Page`
-- **Usage**: Standard Playwright page interactions
-
-### `resetStores` (Auto Fixture)
-
-Automatically resets stores and sets up monitoring before each test.
-
-- **Auto**: Yes (runs automatically)
-- **What it does**:
-  - Resets mock data store
-  - Resets ID counter
-  - Clears failed requests
-  - Sets up API monitoring
-  - Sets up API mocks
-  - Writes failure report after test if needed
-
-## Configuration Options
-
-Configure via `test.use()`:
+`test.use()` works at file or describe level — wrap tests that need different
+seeds in `test.describe` blocks:
 
 ```typescript
-test.use({
-  // User configuration
-  user: { userName: 'testuser' }, // Partial<Account>
-  autoAuthenticate: true, // boolean, default: false
-
-  // Data counts (automatically populates stores)
-  locationCount: 2, // number - creates 2 locations
-  tapCount: 3, // number - creates 3 taps per location
-  deviceCount: 1, // number - creates 1 device
-  beverageCount: 5, // number - creates 5 beverages
-  organizationCount: 2, // number - creates 2 organizations
-});
-```
-
-## Migration from test.beforeEach
-
-**Before:**
-
-```typescript
-import { test, expect } from '@playwright/test';
-import {
-  setupAPIMonitoring,
-  clearFailedRequests,
-} from '../../fixtures/api-monitoring';
-import {
-  mockAuthenticatedUser,
-  resetMockStore,
-} from '../../fixtures/entity-fixtures';
-
-test.beforeEach(async ({ page }) => {
-  setupAPIMonitoring(page, test.info().file, test.info().title);
-  resetMockStore();
-  clearFailedRequests();
-  await mockAuthenticatedUser(page);
-});
-```
-
-**After:**
-
-```typescript
-import { test, expect } from '../../fixtures/test-fixtures';
-
 test.use({ autoAuthenticate: true });
 
-// No beforeEach needed! Everything is handled automatically.
-```
+test('empty state', async ({ page }) => { /* fresh account owns nothing */ });
 
-## Helper Functions
-
-For complex scenarios, use helper functions from `entity-fixtures.ts`:
-
-- `mockAuthenticatedUser(page, overrides?)` - Set up authenticated user
-- `mockLocationWithTaps(page, tapCount)` - Create location with taps
-- `mockTapWithKeg(page)` - Create tap with active keg
-- `mockDeviceWithTaps(page, tapCount)` - Create device with taps
-- `mockBeverageWithPours(page, pourCount)` - Create beverage with pour history
-- `mockUserWithOrganizations(page, orgCount)` - Create user with organizations
-- `mockEmptyState(page)` - Set up empty state
-- `mockNewUserState(page, user?)` - Set up new user state for NUX flow
-
-## Examples
-
-### Example 1: Simple authenticated test
-
-```typescript
-import { test, expect } from '../fixtures/test-fixtures';
-
-test.use({ autoAuthenticate: true });
-
-test('should display user dashboard', async ({ page }) => {
-  await page.goto('/dashboard');
-  await expect(page.getByText('Welcome')).toBeVisible();
+test.describe('with a kegged tap', () => {
+  test.use({ seed: { taps: [{ keg: true }] } });
+  test('details', async ({ taps }) => { const [tap] = taps; /* ... */ });
 });
 ```
 
-### Example 2: Test with custom data
+## Routes
 
-```typescript
-import { test, expect } from '../fixtures/test-fixtures';
-import { mockLocationWithTaps } from '../fixtures/entity-fixtures';
+Use Expo Router deep link paths from `routes.ts` so tests match the app
+routing: tab screens `/(menu)`, `/(feed)`, `/(stats)`, `/(notifications)`;
+menu sub-routes `/(menu)/settings` etc.; shared routes `/locations`, `/taps`,
+`/devices`, `/beverages`; NUX `/(nux)/location`, `/(nux)/wifi`, …
 
-test.use({ autoAuthenticate: true });
+## What is still injected (and why)
 
-test('should display taps', async ({ page }) => {
-  const { location, taps } = await mockLocationWithTaps(page, 3);
+- **SoftAP** (`soft-ap-mocks.ts`) — the device's local WiFi-setup HTTP server
+  is physical hardware.
+- **Notifications** (`notification-fixtures.ts` data + `notifications`
+  option) — native push has no web API surface.
+- **Injected API error contracts** (`menu/settings.spec.ts` only) — a 500 on
+  account delete and Google link/unlink flows require Google's identity
+  service; the server side of those paths is covered by Brewskey.Web's
+  integration suite.
 
-  await page.goto('/taps');
-  await expect(page.getByText(location.name)).toBeVisible();
-  for (const tap of taps) {
-    await expect(page.getByText(tap.name)).toBeVisible();
-  }
-});
-```
-
-### Example 3: Manual data setup
-
-```typescript
-import { test, expect } from '../fixtures/test-fixtures';
-import { createMockLocation } from '../fixtures/test-data';
-
-test.use({ autoAuthenticate: true });
-
-test('should handle custom location', async ({ page, mockStore }) => {
-  const customLocation = createMockLocation({ name: 'My Custom Location' });
-  mockStore.setLocation(customLocation);
-
-  await page.goto('/locations');
-  await expect(page.getByText('My Custom Location')).toBeVisible();
-});
-```
-
-## Benefits
-
-1. **No repetition** - No need for `test.beforeEach` in every file
-2. **Automatic cleanup** - Stores are reset automatically
-3. **Type-safe** - Full TypeScript support
-4. **Flexible** - Use `test.use()` to configure per file or per test
-5. **Composable** - Fixtures can depend on each other
-6. **On-demand** - Only fixtures you use are set up
+Everything else is real. If you find yourself reaching for `page.route` on an
+API endpoint, seed real data instead.

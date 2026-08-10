@@ -1,6 +1,21 @@
+import type { Page } from '@playwright/test';
+
+import { uniqueGeolocation, SeedApi } from '../../fixtures/seed-api';
 import { test, expect } from '../../fixtures/test-fixtures';
 
 test.use({ autoAuthenticate: true });
+
+/**
+ * Seeds a pourable device at unique coordinates and points the browser
+ * geolocation at the same spot, so the pour-authorization endpoint (which
+ * matches a TOTP against the 10 locations nearest the caller) can always find
+ * this device regardless of what the persistent stack DB has accumulated.
+ */
+async function seedIsolatedPourableDevice(page: Page, seedApi: SeedApi) {
+  const coords = uniqueGeolocation();
+  await page.context().setGeolocation(coords);
+  return seedApi.createPourableDevice(coords.latitude, coords.longitude);
+}
 
 test.describe('Pour Button', () => {
   test('should open pour modal when button is clicked', async ({ page }) => {
@@ -24,8 +39,9 @@ test.describe('Pour Button', () => {
     page,
     seedApi,
   }) => {
-    // A real pourable device at the browser's mocked geolocation.
-    const { device } = await seedApi.createPourableDevice();
+    // A real pourable device at unique coordinates (browser geolocation set
+    // to match) so pour authorization can always locate it.
+    const { device } = await seedIsolatedPourableDevice(page, seedApi);
     await page.goto('/');
 
     // Wait for pour button to be visible
@@ -91,7 +107,7 @@ test.describe('Pour Button', () => {
   });
 
   test('should validate TOTP code length', async ({ page, seedApi }) => {
-    const { device } = await seedApi.createPourableDevice();
+    const { device } = await seedIsolatedPourableDevice(page, seedApi);
     await page.goto('/');
 
     // Wait for pour button to be visible

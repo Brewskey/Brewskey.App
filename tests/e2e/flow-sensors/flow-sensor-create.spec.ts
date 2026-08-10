@@ -1,12 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import { seedBareTap } from '../../fixtures/entity-fixtures';
 import { expect, test } from '../../fixtures/test-fixtures';
 
-test.use({ autoAuthenticate: true });
+// One tap with NO flow sensor (the create flow attaches one).
+test.use({ autoAuthenticate: true, seed: { taps: [{ flowSensor: false }] } });
 
-test('should navigate to create flow sensor', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedBareTap(seedApi);
+test('should navigate to create flow sensor', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/new?tapId=${tap.id}`);
 
@@ -17,9 +16,8 @@ test('should navigate to create flow sensor', async ({ page, seedApi}) => {
   ).toBeVisible();
 });
 
-test('should allow selecting sensor type', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedBareTap(seedApi);
+test('should allow selecting sensor type', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -27,9 +25,8 @@ test('should allow selecting sensor type', async ({ page, seedApi}) => {
   await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
 });
 
-test('should allow setting gallon calibration', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedBareTap(seedApi);
+test('should allow setting gallon calibration', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -40,9 +37,10 @@ test('should allow setting gallon calibration', async ({ page, seedApi}) => {
 
 test('should successfully create flow sensor with default sensor type', async ({
   page,
-  dropDown, seedApi,}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedBareTap(seedApi);
+  dropDown,
+  taps,
+}) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -95,9 +93,10 @@ test('should successfully create flow sensor with default sensor type', async ({
 
 test('should successfully create flow sensor with custom sensor', async ({
   page,
-  dropDown, seedApi,}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedBareTap(seedApi);
+  dropDown,
+  taps,
+}) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 

@@ -33,16 +33,49 @@ import type {
   Account,
   AuthResponse,
   Beverage,
+  BeverageMutator,
   Device,
+  DeviceMutator,
+  FlowSensor,
+  FlowSensorMutator,
+  Keg,
+  KegMutator,
   Location,
+  LocationMutator,
   Organization,
+  OrganizationMutator,
+  Pour,
   Tap,
+  TapMutator,
 } from '@brewskey/js-api';
 
 export const API_HOST =
   process.env.EXPO_PUBLIC_API_HOST ?? 'http://localhost:8080';
 
 export const DEFAULT_E2E_PASSWORD = 'E2e_Pass1!';
+
+/** The device cloud service in tests/e2e-stack/docker-compose.yml. */
+export const CLOUD_HOST =
+  process.env.E2E_CLOUD_HOST ?? 'http://localhost:8082';
+
+/**
+ * The cloud admin's deterministic access token, seeded by
+ * tests/e2e-stack/mongo-init/seed-cloud-admin.js and also configured as the
+ * API's Particle__CloudAccessToken in docker-compose.yml.
+ */
+export const CLOUD_ADMIN_TOKEN = 'e2e-cloud-admin-token-3f9c1a7e5d2b4860';
+
+/**
+ * Static RSA public key registered for every provisioned e2e device. The
+ * cloud's provisioning endpoint requires a valid public key; e2e devices
+ * never open a real TCP session, so one shared throwaway key is fine.
+ */
+const E2E_DEVICE_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU7/J78ObgTNAM7yauSw6351wx
+eQPjfUEOVZUfaJjiiM220ttrs6PvYNpDorHGsViv0/egPvq922T992iaiMfUYDYO
+YLm+D9aiPk68ImsAm6+zriX0a5s7dCklomC1nfe2n48F/gwfUjocsW2kflD4ucdo
+r0wh5E3kR67TacqcYwIDAQAB
+-----END PUBLIC KEY-----`;
 
 let uniqueCounter = 0;
 
@@ -73,6 +106,101 @@ export type Credentials = {
 };
 
 /**
+ * Unique, widely-spread coordinates for pour tests. The pour-authorization
+ * endpoint matches a TOTP against the devices at the 10 locations NEAREST the
+ * caller's coordinates; because the stack DB persists and every pourable/
+ * nearby seed drops a location at the SAME fixture point, a shared point would
+ * eventually push a freshly-seeded device out of that top-10 window. Giving
+ * each pour test its own coordinates (>3km from any other test's, the match
+ * radius) isolates its device. Set both the browser geolocation AND the
+ * seeded device to these coordinates.
+ */
+export const uniqueGeolocation = (): {
+  latitude: number;
+  longitude: number;
+} => {
+  uniqueCounter += 1;
+  const seed = (process.pid * 100_000 + Date.now() + uniqueCounter) % 4_000_000;
+  // 0.1° steps (~11km lat, >5km lon at these latitudes) across a wide land box.
+  const latitude = 10 + (seed % 500) * 0.1; // 10.0 .. 59.9
+  const longitude = -160 + (Math.floor(seed / 500) % 800) * 0.1; // -160 .. -80.1
+  return { latitude, longitude };
+};
+
+/**
+ * Declarative seed configuration. Every entity accepts either a count (create
+ * N with defaults) or an array of per-item configs (override fields on each).
+ * The hierarchy auto-fills: request `taps` without `devices`/`locations` and
+ * the parents are created for you.
+ *
+ * @example
+ * ```ts
+ * test.use({ seed: { organization: true, devices: 2, taps: 1 } });
+ * test('...', async ({ organization, devices, taps }) => { ... });
+ * ```
+ */
+export type LocationSeed = Partial<LocationMutator> & {
+  /** Geolocate at the browser's mocked coordinates (appears in "nearby"). */
+  nearby?: boolean;
+};
+export type DeviceSeed = Partial<DeviceMutator> & {
+  /** Index into the seeded locations to place this device (default: spread). */
+  locationIndex?: number;
+};
+export type TapSeed = Partial<TapMutator> & {
+  /** Index into the seeded devices to attach this tap to (default: spread). */
+  deviceIndex?: number;
+  /** Flow sensor to attach: 'Titan' (default), 'Custom', or false for none. */
+  flowSensor?: 'Titan' | 'Custom' | false;
+  /** Attach an active keg — true for a default beverage, or a beverage config. */
+  keg?: boolean | BeverageSeed;
+  /**
+   * Fabricate N real pours for the authenticated user on this tap through
+   * the actual pour pipeline (admin POST api/pour/test). Auto-attaches a
+   * keg when none is configured — pours need an active keg.
+   */
+  pours?: number;
+};
+export type BeverageSeed = Partial<BeverageMutator>;
+export type OrganizationSeed = Partial<OrganizationMutator>;
+
+export type SeedSpec = {
+  /**
+   * Create ONE organization and select it — scopes all seeded entities AND
+   * the app (via app settings) to that org. `true` for defaults, or a config.
+   */
+  organization?: boolean | OrganizationSeed;
+  /** Extra organizations (created but NOT selected). */
+  organizations?: number | OrganizationSeed[];
+  locations?: number | LocationSeed[];
+  devices?: number | DeviceSeed[];
+  taps?: number | TapSeed[];
+  beverages?: number | BeverageSeed[];
+};
+
+export type SeedResult = {
+  /** The selected organization (from `organization`), or null. */
+  organization: Organization | null;
+  organizations: Organization[];
+  locations: Location[];
+  devices: Device[];
+  taps: Tap[];
+  beverages: Beverage[];
+  /** Pours fabricated via `taps[n].pours`, in creation order. */
+  pours: Pour[];
+};
+
+const toConfigs = <T>(value: number | T[] | undefined): T[] => {
+  if (value == null) {
+    return [];
+  }
+  if (typeof value === 'number') {
+    return Array.from({ length: value }, () => ({}) as T);
+  }
+  return value;
+};
+
+/**
  * One authenticated session against the e2e stack, with entity factories
  * that mirror the old mock factories' defaults (names like "Location 1")
  * so existing spec assertions keep working.
@@ -84,6 +212,18 @@ export class SeedApi {
 
   constructor() {
     BrewskeyApi.initialize(API_HOST);
+    // Config is a process singleton shared across tests in a worker; clear any
+    // organization scope a previous test selected so seeding starts unscoped.
+    BrewskeyApi.setOrganizationID(null);
+  }
+
+  /**
+   * Scope all subsequent seed writes/reads to an organization (appends
+   * `?organizationID=` on every DAO call, exactly as the app does when an org
+   * is selected). Pass null to clear.
+   */
+  useOrganization(organizationID: Organization['id'] | null): void {
+    BrewskeyApi.setOrganizationID(organizationID);
   }
 
   /**
@@ -165,7 +305,7 @@ export class SeedApi {
   // (LocationMutator, DeviceMutator, TapMutator, BeverageMutator, KegMutator).
 
   async createLocation(
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<LocationMutator> = {},
   ): Promise<Location> {
     return LocationDAO.post({
       id: undefined,
@@ -184,14 +324,14 @@ export class SeedApi {
 
   async createDevice(
     location: Location,
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<DeviceMutator> = {},
   ): Promise<Device> {
-    return DeviceDAO.post({
+    const particleId = overrides.particleId ?? uniqueParticleId();
+    const device = await DeviceDAO.post({
       name: 'Seeded Device',
       deviceType: 'BrewskeyBox',
       deviceStatus: 'Active',
       nfcStatus: 'Disabled',
-      particleId: uniqueParticleId(),
       locationId: location.id,
       isScreenDisabled: false,
       isTotpDisabled: false,
@@ -200,14 +340,61 @@ export class SeedApi {
       secondsToStayOpen: 2,
       timeForValveOpen: 2,
       ...overrides,
+      particleId,
     });
+
+    // Register the device with the real device cloud so cloud-backed reads
+    // (online status via /api/v2/cloud-devices/{particleId}) return real
+    // data instead of "no such device".
+    await this.registerCloudDevice(particleId);
+
+    return device;
+  }
+
+  /**
+   * Registers a device in the device cloud through its real provisioning
+   * API (creates the device's key + attribute records — what a physical
+   * device's first handshake would). The device never connects, so the
+   * cloud reports it offline; that is the real, expected state for e2e
+   * hardware. Requires spark-server >= 1.0.17 in the cloud image (earlier
+   * versions 400 on provisioning never-connected devices).
+   */
+  async registerCloudDevice(particleId: string): Promise<void> {
+    const response = await fetch(
+      `${CLOUD_HOST}/v1/provisioning/${particleId}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${CLOUD_ADMIN_TOKEN}`,
+        },
+        body: JSON.stringify({
+          algorithm: 'rsa',
+          publicKey: E2E_DEVICE_PUBLIC_KEY,
+          filename: 'cli',
+          order: 'e2e',
+        }),
+      },
+    ).catch((error: Error) => {
+      throw new Error(
+        `Cloud device provisioning failed (${error.message}). If the stack ` +
+          'predates the devicecloud service, recreate it: ' +
+          'npm run e2e-stack:down && npm run e2e-stack:up',
+      );
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Cloud device provisioning failed (${response.status}): ` +
+          `${await response.text()}`,
+      );
+    }
   }
 
   /** Tap without a flow sensor (for sensor-specific specs). */
   async createTapWithoutSensor(
     location: Location,
     device: Device,
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<TapMutator> = {},
   ): Promise<Tap> {
     return TapDAO.post({
       id: undefined,
@@ -226,7 +413,7 @@ export class SeedApi {
   async createTap(
     location: Location,
     device: Device,
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<TapMutator> = {},
   ): Promise<Tap> {
     const tap = await this.createTapWithoutSensor(location, device, overrides);
 
@@ -261,11 +448,11 @@ export class SeedApi {
     tap: Tap,
     ownerUserName: string,
     count: number,
-  ): Promise<unknown[]> {
+  ): Promise<Pour[]> {
     const restore = this.credentials;
     await this.loginAsAdmin();
     try {
-      const pours: unknown[] = [];
+      const pours: Pour[] = [];
       for (let i = 0; i < count; i++) {
         pours.push(await this.createPour(tap, ownerUserName));
       }
@@ -279,8 +466,8 @@ export class SeedApi {
 
   async createFlowSensor(
     tap: Tap,
-    overrides: Record<string, unknown> = {},
-  ): Promise<unknown> {
+    overrides: Partial<FlowSensorMutator> = {},
+  ): Promise<FlowSensor> {
     return FlowSensorDAO.post({
       flowSensorType: 'Titan',
       pulsesPerGallon: 5375,
@@ -295,7 +482,7 @@ export class SeedApi {
    * PourBLL.AddPour → SignalR broadcast). Admin-only endpoint — call as
    * the bootstrap admin (loginAsAdmin) and pass the pour's owner.
    */
-  async createPour(tap: Tap, ownerUserName: string): Promise<unknown> {
+  async createPour(tap: Tap, ownerUserName: string): Promise<Pour> {
     // api/pour/test rolls a random pulse count (120-800); the real pour
     // pipeline rejects rolls that exceed the physical 2.5 oz/sec limit for
     // the Titan sensor, so retry until a valid roll lands (~60% pass rate).
@@ -309,7 +496,7 @@ export class SeedApi {
         },
       );
       if (response.ok) {
-        return response.json();
+        return (await response.json()) as Pour;
       }
       lastError = `${response.status}: ${await response.text()}`;
     }
@@ -359,7 +546,7 @@ export class SeedApi {
 
   /** A location geolocated at the browser's mocked coordinates (nearby). */
   async createNearbyLocation(
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<LocationMutator> = {},
     latitude = 40.7128,
     longitude = -74.006,
   ): Promise<Location> {
@@ -426,7 +613,7 @@ export class SeedApi {
   }
 
   async createBeverage(
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<BeverageMutator> = {},
   ): Promise<Beverage> {
     return BeverageDAO.post({
       id: undefined,
@@ -450,8 +637,8 @@ export class SeedApi {
   async createKeg(
     tap: Tap,
     beverage: Beverage,
-    overrides: Record<string, unknown> = {},
-  ): Promise<unknown> {
+    overrides: Partial<KegMutator> = {},
+  ): Promise<Keg> {
     return KegDAO.post({
       beverageId: beverage.id,
       tapId: tap.id,
@@ -468,7 +655,7 @@ export class SeedApi {
    * restores the session.
    */
   async createOrganization(
-    overrides: Record<string, unknown> = {},
+    overrides: Partial<OrganizationMutator> = {},
   ): Promise<Organization> {
     const restore = this.credentials;
     const userId = this.session?.id;
@@ -498,5 +685,129 @@ export class SeedApi {
         await this.login(restore);
       }
     }
+  }
+
+  /**
+   * Resolves a declarative {@link SeedSpec} into real entities through the
+   * live API. The parent hierarchy auto-fills (ask for taps and the device +
+   * location are created), each entity accepts a count or per-item configs,
+   * and a selected `organization` scopes everything to that org.
+   *
+   * `nearbyCoordinates` (the browser context's geolocation, injected by the
+   * seededEntities fixture) is where `nearby: true` locations are placed, so
+   * seeded coordinates can never drift from where the app thinks it is.
+   */
+  async seed(
+    spec: SeedSpec,
+    nearbyCoordinates?: { latitude: number; longitude: number },
+  ): Promise<SeedResult> {
+    const result: SeedResult = {
+      organization: null,
+      organizations: [],
+      locations: [],
+      devices: [],
+      beverages: [],
+      taps: [],
+      pours: [],
+    };
+
+    // A selected organization scopes every subsequent write to that org (so
+    // the app, also scoped to it, can see the seeded entities).
+    if (spec.organization) {
+      const overrides =
+        typeof spec.organization === 'object' ? spec.organization : {};
+      const organization = await this.createOrganization(overrides);
+      this.useOrganization(organization.id);
+      result.organization = organization;
+      result.organizations.push(organization);
+    }
+
+    // Extra, unselected organizations.
+    for (const overrides of toConfigs<OrganizationSeed>(spec.organizations)) {
+      result.organizations.push(await this.createOrganization(overrides));
+    }
+
+    for (const config of toConfigs<LocationSeed>(spec.locations)) {
+      const { nearby, ...overrides } = config;
+      result.locations.push(
+        nearby
+          ? await this.createNearbyLocation(
+              overrides,
+              nearbyCoordinates?.latitude,
+              nearbyCoordinates?.longitude,
+            )
+          : await this.createLocation(overrides),
+      );
+    }
+
+    // Track each device's location so taps land in the right place.
+    const deviceLocations: Location[] = [];
+    const deviceConfigs = toConfigs<DeviceSeed>(spec.devices);
+    if (deviceConfigs.length > 0 && result.locations.length === 0) {
+      result.locations.push(await this.createLocation());
+    }
+    for (let i = 0; i < deviceConfigs.length; i++) {
+      const { locationIndex, ...overrides } = deviceConfigs[i];
+      const location =
+        result.locations[locationIndex ?? i % result.locations.length];
+      result.devices.push(await this.createDevice(location, overrides));
+      deviceLocations.push(location);
+    }
+
+    const tapConfigs = toConfigs<TapSeed>(spec.taps);
+    if (tapConfigs.length > 0 && result.devices.length === 0) {
+      if (result.locations.length === 0) {
+        result.locations.push(await this.createLocation());
+      }
+      result.devices.push(await this.createDevice(result.locations[0]));
+      deviceLocations.push(result.locations[0]);
+    }
+    for (let i = 0; i < tapConfigs.length; i++) {
+      const {
+        deviceIndex,
+        flowSensor = 'Titan',
+        keg,
+        pours,
+        ...overrides
+      } = tapConfigs[i];
+      const index = deviceIndex ?? i % result.devices.length;
+      const device = result.devices[index];
+      const location = deviceLocations[index];
+
+      const tap = await this.createTapWithoutSensor(location, device, overrides);
+      if (flowSensor) {
+        await this.createFlowSensor(
+          tap,
+          flowSensor === 'Custom'
+            ? { flowSensorType: 'Custom', pulsesPerGallon: 1000 }
+            : {},
+        );
+      }
+      // Pours flow through the real pipeline, which needs an active keg.
+      const kegConfig = keg ?? (pours ? true : undefined);
+      if (kegConfig) {
+        const beverage = await this.createBeverage(
+          typeof kegConfig === 'object' ? kegConfig : {},
+        );
+        result.beverages.push(beverage);
+        await this.createKeg(tap, beverage);
+      }
+      if (pours) {
+        const owner = this.credentials?.userName;
+        if (!owner) {
+          throw new Error('Seeding pours requires an authenticated user.');
+        }
+        result.pours.push(...(await this.createPours(tap, owner, pours)));
+      }
+      // Re-fetch so server-assigned fields (tapNumber, currentKeg) are
+      // populated on the fixture value.
+      result.taps.push(await this.fetchTap(tap.id));
+    }
+
+    for (const overrides of toConfigs<BeverageSeed>(spec.beverages)) {
+      result.beverages.push(await this.createBeverage(overrides));
+    }
+
+    return result;
   }
 }

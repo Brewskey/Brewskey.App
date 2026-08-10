@@ -1,35 +1,30 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedStatsData } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// Stats data: beverages plus a kegged tap with real pours.
+test.use({
+  autoAuthenticate: true,
+  seed: { beverages: 5, taps: [{ keg: true, pours: 10 }] },
+});
 
-test('should display badges section', async ({ page, statsPage, seedApi}) => {
-  // Set up explicit data: stats data with beverages and pours
-  await seedStatsData(seedApi, 10, 5);
+test('should display badges section', async ({ statsPage }) => {
   await statsPage.goto();
 
   await expect(statsPage.getBadgesSection()).toBeVisible();
 });
 
-test('should display beverages poured section', async ({ page, statsPage, seedApi}) => {
-  // Set up explicit data: stats data with beverages and pours
-  await seedStatsData(seedApi, 10, 5);
+test('should display beverages poured section', async ({ statsPage }) => {
   await statsPage.goto();
 
   await expect(statsPage.getBeveragesSection()).toBeVisible();
 });
 
-test('should display recent pours list', async ({ page, statsPage, seedApi}) => {
-  // Set up explicit data: stats data with beverages and pours
-  await seedStatsData(seedApi, 10, 5);
+test('should display recent pours list', async ({ statsPage }) => {
   await statsPage.goto();
 
   await expect(statsPage.getRecentPoursList()).toBeVisible();
 });
 
-test('should allow refreshing stats', async ({ page, statsPage, seedApi}) => {
-  // Set up explicit data: stats data with beverages and pours
-  await seedStatsData(seedApi, 10, 5);
+test('should allow refreshing stats', async ({ statsPage }) => {
   await statsPage.goto();
 
   // Refresh is typically handled via pull-to-refresh on mobile

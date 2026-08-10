@@ -1,11 +1,12 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+test.use({ autoAuthenticate: true, seed: { taps: [{ keg: true }] } });
 
-test('should navigate to custom flow sensor creation', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+test('should navigate to custom flow sensor creation', async ({
+  page,
+  taps,
+}) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -13,9 +14,8 @@ test('should navigate to custom flow sensor creation', async ({ page, seedApi}) 
   await expect(page.getByTestId('flow-sensor-type-selector')).toBeVisible();
 });
 
-test('should allow custom calibration input', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+test('should allow custom calibration input', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 
@@ -36,9 +36,11 @@ test('should allow custom calibration input', async ({ page, seedApi}) => {
   await calibrationInput.fill('1.5');
 });
 
-test('should successfully create custom flow sensor', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap
-  const { tap } = await seedTapWithKeg(seedApi);
+test('should successfully create custom flow sensor', async ({
+  page,
+  taps,
+}) => {
+  const [tap] = taps;
 
   await page.goto(`/flow-sensor/custom?tapId=${tap.id}`);
 

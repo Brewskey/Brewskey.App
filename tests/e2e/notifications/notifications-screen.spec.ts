@@ -1,14 +1,15 @@
 /**
  * Notifications screen e2e tests.
- * App closed / background receipt is not testable in web e2e; only in-app receipt
- * and list/actions are covered. For full flow use a dev build on device.
+ *
+ * Notifications arrive via native push, which has no API surface on web —
+ * the `notifications` option fixture pre-loads the app's client-side store
+ * (everything else runs against the real API). App closed / background
+ * receipt is not testable in web e2e; only in-app receipt and list/actions
+ * are covered. For full flow use a dev build on device.
  */
 
 import { createMockNotificationsByType } from '../../fixtures/notification-fixtures';
-import {
-  setAuthStorage,
-  setNotificationsStorage,
-} from '../../fixtures/storage-helper';
+import { setAuthStorage } from '../../fixtures/storage-helper';
 import { expect, test } from '../../fixtures/test-fixtures';
 
 test.use({
@@ -16,59 +17,9 @@ test.use({
   permissions: ['geolocation', 'notifications'],
 });
 
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    delete (window as Window & { __PLAYWRIGHT_NOTIFICATIONS__?: unknown })
-      .__PLAYWRIGHT_NOTIFICATIONS__;
-    delete (
-      window as Window & {
-        __PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__?: unknown;
-      }
-    ).__PLAYWRIGHT_SIMULATE_NOTIFICATION_RESPONSE__;
-  });
-});
-
 test('should show delete all button', async ({ notificationsPage }) => {
   await notificationsPage.goto();
   await expect(notificationsPage.getDeleteAllButton()).toBeVisible();
-});
-
-test('should show empty state when no notifications', async ({
-  notificationsPage,
-  page,
-}) => {
-  await setNotificationsStorage(page, []);
-  await notificationsPage.goto();
-  await expect(notificationsPage.getNotificationsList()).toBeVisible();
-  await expect(notificationsPage.getEmptyMessage()).toBeVisible();
-});
-
-test('should show list with multiple notification types', async ({
-  notificationsPage,
-  page,
-}) => {
-  const notifications = createMockNotificationsByType();
-  await setNotificationsStorage(page, notifications);
-  await notificationsPage.goto();
-  await expect(notificationsPage.getNotificationsList()).toBeVisible();
-  await expect(
-    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
-  ).toBeVisible({ timeout: 8000 });
-  await expect(
-    notificationsPage.getNotificationItem(
-      'notification-item-lowKegLevel-n-lowkeg-1',
-    ),
-  ).toBeVisible();
-  await expect(
-    notificationsPage.getNotificationItem(
-      'notification-item-newAchievement-n-achievement-1',
-    ),
-  ).toBeVisible();
-  await expect(
-    notificationsPage.getNotificationItem(
-      'notification-item-newFriendRequest-n-friend-1',
-    ),
-  ).toBeVisible();
 });
 
 test('should show delete all modal', async ({ page, notificationsPage }) => {
@@ -88,72 +39,57 @@ test('should allow canceling delete', async ({ notificationsPage }) => {
   await expect(notificationsPage.getModal()).not.toBeVisible();
 });
 
-// Skip: modal does not open when list has items (RNW/layout or z-index).
-test.skip('should allow confirming delete all', async ({
-  page,
-  notificationsPage,
-}) => {
-  const notifications = createMockNotificationsByType();
-  await setNotificationsStorage(page, notifications);
-  await notificationsPage.goto();
-  await expect(
-    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
-  ).toBeVisible({ timeout: 8000 });
-  await notificationsPage.getDeleteAllButton().click();
-  await expect(
-    page.getByTestId('modal-delete-all-notifications-title'),
-  ).toBeVisible({ timeout: 10000 });
-  await notificationsPage.getModalConfirmButton().click();
-  await expect(notificationsPage.getModal()).not.toBeVisible();
-  await expect(notificationsPage.getEmptyMessage()).toBeVisible();
-});
+test.describe('with an empty notification store', () => {
+  test.use({ notifications: { list: [] } });
 
-test('should show badge when there are unread notifications', async ({
-  page,
-  notificationsPage,
-}) => {
-  const notifications = createMockNotificationsByType();
-  await setNotificationsStorage(page, notifications);
-  await notificationsPage.goto();
-  await expect(page.getByTestId('notifications-badge')).toBeVisible();
-});
-
-test('simulated notification received while app is open', async ({
-  page,
-  notificationsPage,
-}) => {
-  await setNotificationsStorage(page, []);
-  await page.goto('/(notifications)');
-  await expect(notificationsPage.getNotificationsList()).toBeVisible({
-    timeout: 15000,
+  test('should show empty state when no notifications', async ({
+    notificationsPage,
+  }) => {
+    await notificationsPage.goto();
+    await expect(notificationsPage.getNotificationsList()).toBeVisible();
+    await expect(notificationsPage.getEmptyMessage()).toBeVisible();
   });
-  await expect(notificationsPage.getEmptyMessage()).toBeVisible();
 
-  const payload = {
-    id: 'sim-1',
-    type: 'text',
-    title: 'Simulated',
-    body: 'E2E simulated notification',
-    date: new Date().toISOString(),
-    isRead: false,
-  };
-  await page.evaluate(async (p: Record<string, unknown>) => {
-    const win = window as Window & {
-      __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: (
-        payload: Record<string, unknown>,
-      ) => Promise<void>;
+  test('simulated notification received while app is open', async ({
+    page,
+    notificationsPage,
+  }) => {
+    await page.goto('/(notifications)');
+    await expect(notificationsPage.getNotificationsList()).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(notificationsPage.getEmptyMessage()).toBeVisible();
+
+    const payload = {
+      id: 'sim-1',
+      type: 'text',
+      title: 'Simulated',
+      body: 'E2E simulated notification',
+      date: new Date().toISOString(),
+      isRead: false,
     };
-    const fn = win.__PLAYWRIGHT_SIMULATE_NOTIFICATION__;
-    if (fn) {
-      await fn(p);
-    }
-  }, payload);
+    await page.evaluate(async (p: Record<string, unknown>) => {
+      const win = window as Window & {
+        __PLAYWRIGHT_SIMULATE_NOTIFICATION__?: (
+          payload: Record<string, unknown>,
+        ) => Promise<void>;
+      };
+      const fn = win.__PLAYWRIGHT_SIMULATE_NOTIFICATION__;
+      if (fn) {
+        await fn(p);
+      }
+    }, payload);
 
-  await expect(
-    notificationsPage.getNotificationItem('notification-item-text-sim-1'),
-  ).toBeVisible({ timeout: 10000 });
+    await expect(
+      notificationsPage.getNotificationItem('notification-item-text-sim-1'),
+    ).toBeVisible({ timeout: 10000 });
+  });
 });
 
+// This test manages the injection flags manually: it verifies that a
+// simulated push RESPONSE is persisted to real app storage and survives a
+// reload with the injection flag gone — the option fixture would re-inject
+// on reload and mask the persistence path.
 test('simulated notification response is saved and persists after reload', async ({
   page,
   notificationsPage,
@@ -231,31 +167,90 @@ test('simulated notification response is saved and persists after reload', async
   ).toBeVisible({ timeout: 10000 });
 });
 
-test('logout and login preserves persisted notifications list', async ({
-  page,
-  notificationsPage,
-  authenticatedUser,
-}) => {
-  const notifications = createMockNotificationsByType();
-  await setNotificationsStorage(page, notifications);
-  await notificationsPage.goto();
-  await expect(
-    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
-  ).toBeVisible({ timeout: 8000 });
+test.describe('with notifications of every type', () => {
+  test.use({ notifications: { list: createMockNotificationsByType() } });
 
-  await page.goto('/(menu)');
-  await page.getByTestId('menu-item-logout').click();
-  await page.getByTestId('logout-confirmation-modal-button-delete').click();
-  await expect(page.getByTestId('login-username-input')).toBeVisible({
-    timeout: 10000,
+  test('should show list with multiple notification types', async ({
+    notificationsPage,
+  }) => {
+    await notificationsPage.goto();
+    await expect(notificationsPage.getNotificationsList()).toBeVisible();
+    await expect(
+      notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
+    ).toBeVisible({ timeout: 8000 });
+    await expect(
+      notificationsPage.getNotificationItem(
+        'notification-item-lowKegLevel-n-lowkeg-1',
+      ),
+    ).toBeVisible();
+    await expect(
+      notificationsPage.getNotificationItem(
+        'notification-item-newAchievement-n-achievement-1',
+      ),
+    ).toBeVisible();
+    await expect(
+      notificationsPage.getNotificationItem(
+        'notification-item-newFriendRequest-n-friend-1',
+      ),
+    ).toBeVisible();
   });
 
-  if (authenticatedUser?.authResponse) {
-    await setAuthStorage(page, authenticatedUser.authResponse);
-  }
+  // Known app bug (not test flakiness): when the list is populated, the header
+  // delete-all button's onPress never fires, so the confirm modal never opens.
+  // Verified the click reaches the (un-occluded) button but the RNModal stays
+  // hidden across network-idle waits, deliberate press gestures, force-clicks
+  // and double-clicks; the same button works with an EMPTY list ("should show
+  // delete all modal" / "should allow canceling delete"). Root cause is an RNW
+  // touch-responder interaction with the populated list — tracked separately.
+  test.skip('should allow confirming delete all', async ({
+    page,
+    notificationsPage,
+  }) => {
+    await notificationsPage.goto();
+    await expect(
+      notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
+    ).toBeVisible({ timeout: 8000 });
+    await notificationsPage.getDeleteAllButton().click();
+    await expect(
+      page.getByTestId('modal-delete-all-notifications-title'),
+    ).toBeVisible({ timeout: 10000 });
+    await notificationsPage.getModalConfirmButton().click();
+    await expect(notificationsPage.getModal()).not.toBeVisible();
+    await expect(notificationsPage.getEmptyMessage()).toBeVisible();
+  });
 
-  await notificationsPage.goto();
-  await expect(
-    notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
-  ).toBeVisible({ timeout: 10000 });
+  test('should show badge when there are unread notifications', async ({
+    page,
+    notificationsPage,
+  }) => {
+    await notificationsPage.goto();
+    await expect(page.getByTestId('notifications-badge')).toBeVisible();
+  });
+
+  test('logout and login preserves persisted notifications list', async ({
+    page,
+    notificationsPage,
+    authenticatedUser,
+  }) => {
+    await notificationsPage.goto();
+    await expect(
+      notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
+    ).toBeVisible({ timeout: 8000 });
+
+    await page.goto('/(menu)');
+    await page.getByTestId('menu-item-logout').click();
+    await page.getByTestId('logout-confirmation-modal-button-delete').click();
+    await expect(page.getByTestId('login-username-input')).toBeVisible({
+      timeout: 10000,
+    });
+
+    if (authenticatedUser?.authResponse) {
+      await setAuthStorage(page, authenticatedUser.authResponse);
+    }
+
+    await notificationsPage.goto();
+    await expect(
+      notificationsPage.getNotificationItem('notification-item-text-n-text-1'),
+    ).toBeVisible({ timeout: 10000 });
+  });
 });

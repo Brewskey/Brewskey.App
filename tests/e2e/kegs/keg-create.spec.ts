@@ -1,11 +1,9 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+test.use({ autoAuthenticate: true, seed: { taps: [{ keg: true }] } });
 
-test('should allow selecting beverage', async ({ page, dropDown, seedApi}) => {
-  // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await seedTapWithKeg(seedApi);
+test('should allow selecting beverage', async ({ page, dropDown, taps }) => {
+  const [tap] = taps;
 
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
@@ -20,9 +18,12 @@ test('should allow selecting beverage', async ({ page, dropDown, seedApi}) => {
 
 test('should render beverage picker with images', async ({
   page,
-  dropDown, seedApi,}) => {
-  // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await seedTapWithKeg(seedApi);
+  dropDown,
+  taps,
+  beverages,
+}) => {
+  const [tap] = taps;
+  const [beverage] = beverages;
 
   // Navigate to keg creation form
   await page.goto(`/(tabs)/taps/${tap.id}/keg/new`);
@@ -56,9 +57,8 @@ test('should render beverage picker with images', async ({
   await expect(beveragePicker.modal).toBeHidden();
 });
 
-test('should successfully create keg', async ({ page, dropDown, seedApi}) => {
-  // Set up explicit data: one tap with beverage available
-  const { tap, beverage } = await seedTapWithKeg(seedApi);
+test('should successfully create keg', async ({ page, dropDown, taps }) => {
+  const [tap] = taps;
 
   // Route is /taps/{tapId}/keg/new (singular "keg", not "kegs")
   // NewKegScreen expects tapId as a query parameter
@@ -99,8 +99,10 @@ test('should successfully create keg', async ({ page, dropDown, seedApi}) => {
 
 test('should redirect to nux/finish when returnTo=nux-finish after create', async ({
   page,
-  dropDown, seedApi,}) => {
-  const { tap } = await seedTapWithKeg(seedApi);
+  dropDown,
+  taps,
+}) => {
+  const [tap] = taps;
 
   await page.goto(
     `/(tabs)/taps/${tap.id}/keg/new?tapId=${tap.id}&returnTo=nux-finish`,

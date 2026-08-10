@@ -1,11 +1,11 @@
 import { test, expect } from '../../fixtures/test-fixtures';
-import { seedTapWithKeg } from '../../fixtures/entity-fixtures';
 
-test.use({ autoAuthenticate: true });
+// One kegged tap; seeded taps default to hideStats = false so the stats
+// screen and its filters are visible.
+test.use({ autoAuthenticate: true, seed: { taps: [{ keg: true }] } });
 
-test('should allow filtering by time period', async ({ page, seedApi}) => {
-  // Set up explicit data: one tap with stats enabled and filters visible
-  const { tap } = await seedTapWithKeg(seedApi);
+test('should allow filtering by time period', async ({ page, taps }) => {
+  const [tap] = taps;
 
   await page.goto(`/taps/${tap.id}/stats`);
 

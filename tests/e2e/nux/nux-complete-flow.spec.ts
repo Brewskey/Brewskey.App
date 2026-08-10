@@ -1,7 +1,14 @@
-import { seedNewUserState } from '../../fixtures/entity-fixtures';
 import { ROUTES } from '../../fixtures/routes';
 import { setAppSettingsStorage } from '../../fixtures/storage-helper';
 import { expect, test } from '../../fixtures/test-fixtures';
+
+// A selected organization (the tap form requires the device to belong to one,
+// and the UI scopes newly created entities to the selected org) plus a
+// beverage for the keg step. autoAuthenticate registers + signs in the user.
+test.use({
+  autoAuthenticate: true,
+  seed: { organization: true, beverages: [{ name: 'Test Beverage' }] },
+});
 
 test('should complete full NUX flow', async ({
   page,
@@ -10,17 +17,19 @@ test('should complete full NUX flow', async ({
   locationPage,
   devicePage,
   tapPage,
-  dropDown, seedApi,}) => {
+  dropDown,
+  seedApi,
+  organization,
+}) => {
   test.setTimeout(60000);
 
-  await test.step('Setup: new user state and test data', async () => {
-    await seedNewUserState(page, seedApi);
+  await test.step('Setup: start with Manage taps off, org selected', async () => {
+    // The flow enables Manage taps via the UI below, so start it off while
+    // keeping the seeded organization selected.
     await setAppSettingsStorage(page, {
       manageTapsEnabled: false,
-      selectedOrganization: null,
+      selectedOrganization: organization,
     });
-    await seedApi.createOrganization();
-    await seedApi.createBeverage({ name: 'Test Beverage' });
   });
 
   await test.step('Go to settings and enable Manage taps', async () => {
@@ -72,6 +81,9 @@ test('should complete full NUX flow', async ({
   });
 
   await test.step('NUX WiFi: enter particle ID and continue', async () => {
+    // A physical box joins the device cloud during WiFi setup — register it
+    // there so the app's later device-status reads return real data.
+    await seedApi.registerCloudDevice('particle_nux_1');
     await page
       .getByTestId('nux-wifi-content')
       .getByTestId('button-next')

@@ -1,18 +1,18 @@
 import { expect, test } from '../../fixtures/test-fixtures';
 
 // Need at least one location for device form (location picker)
-test.use({ autoAuthenticate: true, locationCount: 1 });
+test.use({ autoAuthenticate: true, seed: { locations: 1 } });
 
 test('should successfully create device', async ({
   page,
   devicePage,
-  dropDown, seedApi,}) => {
-  // Set up explicit data: authenticated user (handled by autoAuthenticate)
-  // Need location for device creation
-  const { seedLocationWithTaps } =
-    await import('../../fixtures/entity-fixtures');
-  const { location } = await seedLocationWithTaps(seedApi, 0);
-
+  dropDown,
+  seedApi,
+}) => {
+  // A physical box registers with the device cloud before the user creates
+  // its Brewskey record — mirror that so the details screen's online-status
+  // read returns real data.
+  await seedApi.registerCloudDevice('test_particle_1');
   await page.goto('/devices/new?particleId=test_particle_1');
   await expect(page.getByTestId('input-name')).toBeVisible();
 
@@ -20,7 +20,7 @@ test('should successfully create device', async ({
     name: 'New Device',
   });
 
-  // Select location (required field) - one location from mock, use index 0
+  // Select location (required field) - one seeded location, use index 0
   const locationPicker = dropDown.create('location-dropdown');
   await locationPicker.select(0);
   await expect(locationPicker.modal).not.toBeVisible();
@@ -46,11 +46,10 @@ test('should successfully create device', async ({
 test('should redirect to nux/tap when returnTo=nux-tap after create', async ({
   page,
   devicePage,
-  dropDown, seedApi,}) => {
-  const { seedLocationWithTaps } =
-    await import('../../fixtures/entity-fixtures');
-  const { location } = await seedLocationWithTaps(seedApi, 0);
-
+  dropDown,
+  seedApi,
+}) => {
+  await seedApi.registerCloudDevice('test_particle_2');
   await page.goto(
     '/devices/new?particleId=test_particle_2&returnTo=nux-tap&showBackButton=false',
   );

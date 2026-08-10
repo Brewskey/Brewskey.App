@@ -23,6 +23,7 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
         leftComponent={undefined}
         particleID={particleID}
         rightComponent={DeviceOnlineIndicator}
+        testID="overview-item-online-status"
         title="Online Status"
         value="Loading..."
       />
@@ -36,6 +37,7 @@ const DeviceOnlineOverviewItem: React.FC<Props> = ({ particleID }) => {
         leftComponent={undefined}
         particleID={particleID}
         rightComponent={DeviceOnlineIndicator}
+        testID="overview-item-online-status"
         title="Online Status"
         value="Error!"
       />

@@ -1,7 +1,7 @@
 import { expect, test } from '../../fixtures/test-fixtures';
 
 // Need at least one location so app doesn't redirect to NUX when visiting /locations
-test.use({ autoAuthenticate: true, locationCount: 1 });
+test.use({ autoAuthenticate: true, seed: { locations: 1 } });
 
 test('should successfully create location', async ({ page, locationPage }) => {
   await locationPage.goto();
